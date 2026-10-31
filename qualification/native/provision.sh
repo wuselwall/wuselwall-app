@@ -96,7 +96,7 @@ fi
 export PATH="$JAVA_HOME/bin:$tools/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH"
 python3 - "$tools/source.properties" "$(read_config revision)" <<'PY'
 import pathlib,sys
-props=dict(line.split('=',1) for line in pathlib.Path(sys.argv[1]).read_text().splitlines() if '=' in line)
+props=dict((key.strip(), value.strip()) for key, value in (line.split('=',1) for line in pathlib.Path(sys.argv[1]).read_text().splitlines() if '=' in line))
 actual = props.get('Pkg.Revision','').strip()
 if actual != sys.argv[2]:
  raise SystemExit(f'Command-tools revision mismatch: expected {sys.argv[2]}, found {actual or "<missing>"}. Keep the dedicated tools directory and review the pin before retrying.')
@@ -114,8 +114,9 @@ config=json.load(open(sys.argv[1])); sdk=pathlib.Path(sys.argv[2]); listing=path
 for p in config['packages']:
  props=sdk/p['directory']/'source.properties'
  if props.exists():
-  values=dict(line.split('=',1) for line in props.read_text().splitlines() if '=' in line)
-  if values.get('Pkg.Revision','').strip()!=p['revision']: raise SystemExit(f'Installed SDK pin differs: {p["path"]}; inspect dedicated tools directory')
+  values=dict((key.strip(), value.strip()) for key, value in (line.split('=',1) for line in props.read_text().splitlines() if '=' in line))
+  actual=values.get('Pkg.Revision','')
+  if actual!=p['revision']: raise SystemExit(f'Installed SDK revision mismatch for {p["path"]}: expected {p["revision"]}, found {actual or "<missing>"}; keep the dedicated tools directory and review the pin')
   continue
  versions=[line.split('|')[1].strip() for line in listing.splitlines() if len(line.split('|'))>1 and line.split('|')[0].strip()==p['path']]
  if p['revision'] not in versions: raise SystemExit(f'Pinned package revision no longer offered: {p["path"]} r{p["revision"]}; review toolchain pins')
@@ -125,8 +126,9 @@ while IFS=$'\t' read -r package directory revision; do
   "$sdkmanager" --sdk_root="$ANDROID_HOME" --install "$package" --channel=0 </dev/null
   python3 - "$ANDROID_HOME/$directory/source.properties" "$revision" <<'PY'
 import pathlib,sys
-p=pathlib.Path(sys.argv[1]); values=dict(line.split('=',1) for line in p.read_text().splitlines() if '=' in line)
-assert values.get('Pkg.Revision','').strip()==sys.argv[2], f'Installed package revision differs: {p.parent.name}'
+p=pathlib.Path(sys.argv[1]); values=dict((key.strip(), value.strip()) for key, value in (line.split('=',1) for line in p.read_text().splitlines() if '=' in line))
+actual=values.get('Pkg.Revision','')
+if actual!=sys.argv[2]: raise SystemExit(f'Installed package revision mismatch for {p.parent.name}: expected {sys.argv[2]}, found {actual or "<missing>"}')
 PY
 done < "$scratch/install.tsv"
 python3 - "$config" <<'PY' > "$scratch/avds.tsv"
@@ -137,7 +139,7 @@ while IFS=$'\t' read -r name device image; do
   if [[ -f "$ANDROID_AVD_HOME/$name.avd/config.ini" ]]; then
     python3 - "$ANDROID_AVD_HOME/$name.avd/config.ini" "$image" "$device" <<'PY'
 import pathlib,sys
-props=dict(line.split('=',1) for line in pathlib.Path(sys.argv[1]).read_text().splitlines() if '=' in line)
+props=dict((key.strip(), value.strip()) for key, value in (line.split('=',1) for line in pathlib.Path(sys.argv[1]).read_text().splitlines() if '=' in line))
 assert props.get('abi.type')=='arm64-v8a', 'Existing CI AVD ABI differs'
 assert props.get('image.sysdir.1','').rstrip('/')==sys.argv[2].replace(';','/'), 'Existing CI AVD image differs'
 assert props.get('hw.device.name')==sys.argv[3], 'Existing CI AVD hardware profile differs'

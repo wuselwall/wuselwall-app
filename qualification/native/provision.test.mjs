@@ -77,6 +77,7 @@ function applyWithFakeMac(fixture, overrides = {}) {
       QUALIFICATION_IOS_VERSION: '99.0',
       QUALIFICATION_IOS_BUILD: 'F00',
       QUALIFICATION_IOS_RUNTIME: 'com.apple.CoreSimulator.SimRuntime.iOS-99-0',
+      QUALIFICATION_ACCEPT_ANDROID_LICENSES: 'false',
       ...overrides,
     },
   });
@@ -158,6 +159,7 @@ async function preseededCommandTools(t, revision) {
   const config = JSON.parse(await fs.readFile('qualification/native/toolchain.json', 'utf8'));
   const sdkManagerCalls = path.join(root, 'sdkmanager-calls');
   const curlMarker = path.join(root, 'curl-was-run');
+  const avdManagerCalls = path.join(root, 'avdmanager-calls');
   const sdkManagerPath = path.join(
     toolsRoot,
     'android-sdk',
@@ -197,13 +199,145 @@ async function preseededCommandTools(t, revision) {
     root,
     toolsRoot,
     javaHome,
+    config,
+    commandTools,
+    androidHome,
+    sdkManagerPath,
     sdkManagerCalls,
+    avdManagerCalls,
     curlMarker,
     avdSentinel,
     packageSentinel,
     path: `${bin}:${process.env.PATH}`,
   };
 }
+
+function sdkManagerStub({config, callsPath, listingPath, ndkInstall}) {
+  const installBehavior = ndkInstall
+    ? `if [ "$package" = '${ndkInstall.path}' ]; then\n  mkdir -p "$ANDROID_HOME/${ndkInstall.directory}"\n  printf ' Pkg.Revision = ${ndkInstall.revision} \\n' > "$ANDROID_HOME/${ndkInstall.directory}/source.properties"\n  exit 0\nfi\n`
+    : '';
+  return `#!/bin/sh
+printf '%s\\n' "$*" >> '${callsPath}'
+if [ "$2" = '--list' ]; then
+  cat '${listingPath}'
+  exit 0
+fi
+if [ "$2" = '--install' ]; then
+  package="$3"
+  ${installBehavior}exit 91
+fi
+exit 92
+`;
+}
+
+function sdkPackageListing(config) {
+  return config.packages.map(pkg => `${pkg.path} | ${pkg.revision} | Test package`).join('\n') + '\n';
+}
+
+async function writePackageRevision(androidHome, pkg, revision = pkg.revision) {
+  const properties = path.join(androidHome, pkg.directory, 'source.properties');
+  await fs.mkdir(path.dirname(properties), {recursive: true});
+  await fs.writeFile(properties, ` Pkg.Revision = ${revision} \n`);
+  return properties;
+}
+
+async function installFixture(t, {ndkInstall = false} = {}) {
+  const config = JSON.parse(await fs.readFile('qualification/native/toolchain.json', 'utf8'));
+  const fixture = await preseededCommandTools(t, config.commandLineTools.revision);
+  await fs.writeFile(
+    path.join(fixture.commandTools, 'source.properties'),
+    ` Pkg.Revision = ${config.commandLineTools.revision} \n`,
+  );
+  const listingPath = path.join(fixture.root, 'packages.txt');
+  await fs.writeFile(listingPath, sdkPackageListing(config));
+  const ndk = config.packages.find(pkg => pkg.path.startsWith('ndk;'));
+  await fs.writeFile(
+    fixture.sdkManagerPath,
+    sdkManagerStub({
+      config,
+      callsPath: fixture.sdkManagerCalls,
+      listingPath,
+      ndkInstall: ndkInstall && ndk ? ndk : null,
+    }),
+  );
+  await fs.chmod(fixture.sdkManagerPath, 0o755);
+  return {...fixture, config, listingPath, ndk};
+}
+
+function sdkmanagerInstallCount(calls, packagePath) {
+  return calls
+    .split('\n')
+    .filter(line => line.includes(`--install ${packagePath} `)).length;
+}
+
+test('valid pinned SDK package metadata reaches AVD creation and preserves existing trees', async t => {
+  const fixture = await installFixture(t);
+  await fs.writeFile(
+    path.join(fixture.commandTools, 'source.properties'),
+    ` Pkg.Revision = ${fixture.config.commandLineTools.revision} \n`,
+  );
+  for (const pkg of fixture.config.packages) await writePackageRevision(fixture.androidHome, pkg);
+
+  const phone = fixture.config.avds[0];
+  const phoneConfig = path.join(fixture.toolsRoot, 'avd', `${phone.name}.avd`, 'config.ini');
+  await fs.mkdir(path.dirname(phoneConfig), {recursive: true});
+  await fs.writeFile(
+    phoneConfig,
+    ` abi.type = arm64-v8a \n image.sysdir.1 = ${phone.image.replaceAll(';', '/')} \n hw.device.name = ${phone.device} \n`,
+  );
+  const avdmanager = path.join(fixture.commandTools, 'bin', 'avdmanager');
+  await fs.writeFile(avdmanager, `#!/bin/sh\nprintf '%s\\n' "$*" >> '${fixture.avdManagerCalls}'\nexit 90\n`);
+  await fs.chmod(avdmanager, 0o755);
+
+  const result = applyWithFakeMac(fixture, {QUALIFICATION_TOOLS_ROOT: fixture.toolsRoot});
+  assert.equal(result.status, 90, `${result.stdout}\n${result.stderr}`);
+  const calls = await fs.readFile(fixture.sdkManagerCalls, 'utf8');
+  assert.match(calls, /--list --channel=0/);
+  assert.doesNotMatch(calls, /--install/);
+  assert.match(await fs.readFile(fixture.avdManagerCalls, 'utf8'), /create avd/);
+  assert.equal(await fs.readFile(fixture.avdSentinel, 'utf8'), 'keep this AVD\n');
+  assert.equal(await fs.readFile(phoneConfig, 'utf8'), ` abi.type = arm64-v8a \n image.sysdir.1 = ${phone.image.replaceAll(';', '/')} \n hw.device.name = ${phone.device} \n`);
+  await assert.rejects(fs.stat(fixture.curlMarker), {code: 'ENOENT'});
+  assert.equal(await fs.readFile(fixture.packageSentinel, 'utf8'), 'keep this package tree\n');
+});
+
+test('padded metadata still rejects an installed NDK revision outside the exact pin', async t => {
+  const fixture = await installFixture(t);
+  for (const pkg of fixture.config.packages) await writePackageRevision(fixture.androidHome, pkg);
+  const wrongRevision = `${fixture.ndk.revision}-beta1`;
+  const properties = await writePackageRevision(fixture.androidHome, fixture.ndk, wrongRevision);
+  const result = applyWithFakeMac(fixture, {QUALIFICATION_TOOLS_ROOT: fixture.toolsRoot});
+  assert.notEqual(result.status, 0);
+  assert.ok(result.stderr.includes(`expected ${fixture.ndk.revision}, found ${wrongRevision}`), result.stderr);
+  assert.doesNotMatch(await fs.readFile(fixture.sdkManagerCalls, 'utf8'), /--install/);
+  assert.equal(await fs.readFile(properties, 'utf8'), ` Pkg.Revision = ${wrongRevision} \n`);
+  assert.equal(await fs.readFile(fixture.avdSentinel, 'utf8'), 'keep this AVD\n');
+  await assert.rejects(fs.stat(fixture.curlMarker), {code: 'ENOENT'});
+});
+
+test('installed NDK metadata with padded key is accepted and skipped on retry', async t => {
+  const fixture = await installFixture(t, {ndkInstall: true});
+  const ndkProperties = path.join(fixture.androidHome, fixture.ndk.directory, 'source.properties');
+  for (const pkg of fixture.config.packages) {
+    if (pkg.path !== fixture.ndk.path && pkg.path !== 'cmake;3.22.1') {
+      await writePackageRevision(fixture.androidHome, pkg);
+    }
+  }
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const result = applyWithFakeMac(fixture, {QUALIFICATION_TOOLS_ROOT: fixture.toolsRoot});
+    assert.equal(result.status, 91, `${result.stdout}\n${result.stderr}`);
+    const properties = await fs.readFile(ndkProperties, 'utf8');
+    assert.equal(properties, ` Pkg.Revision = ${fixture.ndk.revision} \n`);
+  }
+
+  const calls = await fs.readFile(fixture.sdkManagerCalls, 'utf8');
+  assert.equal(sdkmanagerInstallCount(calls, fixture.ndk.path), 1);
+  assert.equal(sdkmanagerInstallCount(calls, 'cmake;3.22.1'), 2);
+  assert.equal(await fs.readFile(fixture.avdSentinel, 'utf8'), 'keep this AVD\n');
+  assert.equal(await fs.readFile(fixture.packageSentinel, 'utf8'), 'keep this package tree\n');
+  await assert.rejects(fs.stat(fixture.curlMarker), {code: 'ENOENT'});
+});
 
 test('valid preseeded command tools reach sdkmanager on retry without deleting SDK or AVD files', async t => {
   const config = JSON.parse(await fs.readFile('qualification/native/toolchain.json', 'utf8'));
