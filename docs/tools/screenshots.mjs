@@ -249,7 +249,7 @@ const shots = [
   // ticked item); the store shots press "Einkaufen gehen", which opens the trip page.
   { name: 'shopping-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.shopping, { exact: false }) },
   { name: 'shopping-store', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await tapAny(p, t.startShopping); } },
-  { name: 'shopping-store-add', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await tapAny(p, t.startShopping); await press(p, t.addInStore); } },
+  { name: 'shopping-store-add', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await tapAny(p, t.startShopping); await press(p, t.addInStore); await p.mouse.move(0, 0); await settle(p); } },
   { name: 'shopping-search', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await p.getByRole('textbox', { name: t.search }).fill(t.searchQuery); await settle(p); } },
   { name: 'shopping-new-list', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await tapNode(p, 'checkbox', t.newList); } },
   { name: 'shopping-laptop', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.shopping, { exact: false }) },
