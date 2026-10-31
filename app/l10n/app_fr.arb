@@ -3110,5 +3110,15 @@
   "shoppingTilePin": "Épingler la tuile",
   "shoppingTileUnpin": "Désépingler",
   "shoppingTilePinHelp": "Les tuiles épinglées viennent toujours en premier.",
-  "shoppingTilePinned": "Épinglée"
+  "shoppingTilePinned": "Épinglée",
+  "shoppingTileStarter": "Suggestion",
+  "settingsGroupShoppingTitle": "Courses",
+  "settingsGroupShoppingSubtitle": "Mots appris",
+  "settingsSectionLearnedWords": "Mots appris",
+  "learnedWordsHelp": "La famille a appris ces mots : l’article ira désormais dans cette catégorie. Oublier retire un mot.",
+  "learnedWordsEmpty": "Rien d’appris pour l’instant. Quand quelqu’un change la catégorie d’un article, la famille retient le mot ici.",
+  "learnedWordsMeta": "{category} · {date}",
+  "learnedWordsMetaBy": "{category} · par {name}, {date}",
+  "learnedWordsForget": "Oublier",
+  "learnedWordsForgetWord": "Oublier « {word} »"
 }

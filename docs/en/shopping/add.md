@@ -20,6 +20,14 @@ Each tile shows a picture of the item: WuselWall recognises common items by thei
 
 **Pinned tiles** always come first, most often bought first, and carry a small pin. So the milk stays where it is even if something else was bought last. **Unpin tile** (in the same long-press menu) lets the tile find its place again. Pinning needs a connection.
 
+## Suggestions to start {#starter-suggestions}
+
+A new list has bought nothing yet, and empty tiles help nobody. So as long as a list's catalogue has **fewer than 24 tiles**, WuselWall shows **suggestions** after your own tiles: common items for that kind of list (supermarket, drugstore, hardware store), in the family's language, with Swiss or Austrian names where the family has set its German that way ("Gipfeli", "Semmeln").
+
+<Shot name="shopping-starter" alt="The Pharmacy list with suggested tiles before anything was bought" />
+
+A suggestion looks like a tile, a little quieter, and its description says "Suggested". **Tap** puts the item on the list; **press and hold** offers **Add** and **Add and edit**. Renaming, pinning and removing come once it is a tile of your own, after the first trip. Whatever is a tile or on the list already is not suggested again. With every trip your catalogue grows and the suggestions step back; from 24 tiles of your own they no longer appear. Search still finds them.
+
 ## Search and create
 
 Start typing and the tiles shrink to the matching ones. Case, umlauts and accents don't matter: "kaese" finds "Käse", "klopapier" finds "Toilettenpapier".

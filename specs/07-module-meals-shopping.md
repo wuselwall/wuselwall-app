@@ -92,11 +92,47 @@ anything. The picker inverts that, in the shape people already know from choosin
   cannot send in the background, so the pending state is shown honestly rather than implied
   away.
 
+### Starter catalogue (2026-10-31)
+
+A new list has nothing bought, so its picker would be empty, and a family with a few
+purchases has a grid of five tiles. The picker therefore fills up with **suggestions**
+(issue #197):
+
+- **Source.** `dictionary/starter/catalogue.txt`, rendered by `scripts/starter.mjs` into
+  `app/assets/matching/starter.json` — per kind of list (`supermarket`, `drugstore`,
+  `hardware`) and language tag (`de`, `de-CH`, `de-AT`, `en`, `fr`, `es`) the full list in
+  popularity order, each with a category key and an optional picture key. The Swiss and
+  Austrian lists carry their regional names already. The file is bundled; nothing is fetched.
+- **Language and kind.** The tag is the app's locale (the family's German variant included),
+  German for anything else. The app has no `kind` on a list, and the server is not changed
+  for this, so the kind is told from the list's seeded categories: `produce` is a
+  supermarket, `care` a drugstore, `tools` a hardware store, otherwise the default list is a
+  supermarket and any other list has no suggestions.
+- **Fill.** With no query, when the list's own catalogue has **fewer than 24 entries**, the
+  grid continues after the family's tiles (pinned, recent, frequent — `rankTiles`,
+  unchanged) with suggestions in popularity order up to 24 tiles in all, skipping names that
+  are in the catalogue (compared folded) or already on the list. At 24 entries or more there
+  are none.
+- **Search.** With a query, suggestions that match by the same rules (prefix, word start,
+  substring on the folded name; popularity order within a score) follow the catalogue's
+  hits, without the names already shown, up to the same 24. They count as an exact match for
+  the "… neu anlegen" tile, which keeps its place when nothing matches exactly, and Enter
+  takes the first catalogue hit, else the first suggestion.
+- **Look and long press.** A suggestion looks like a tile, a little quieter, with the hint
+  "Vorschlag"; its picture comes from its `icon`, else from its category. It is not the
+  family's yet: the long-press sheet offers only **Hinzufügen** and **Hinzufügen und
+  bearbeiten**, never renaming, pinning or forgetting. A tap adds by name as for any tile; the
+  catalogue entry arises when the trip is finished, so the suggestion gives way to it.
+- **Picture bridge.** The server picks `icon_key` from a name it knows; it learns the new
+  pictures later than the app. A catalogue entry or an item without one takes the picture
+  the starter list gives its name.
+- **Wall and children's register** use the same picker and show the same suggestions.
+
 ### Settled on 2026-09-02
 
 | Question | Decision | Consequence |
 |---|---|---|
-| Tiles with a picture, or a text list? | **Tiles**, four per row | Every `catalog_item` gets an `icon_key`, which the server picks from its name (`app.catalog_icon_for`, in all four application languages (DE/EN/FR/ES); a name it does not know shows its category's icon). The pictures are a bundled icon set (Fluent Emoji Flat, MIT, as specs/17 decides; `scripts/emoji-pictures.mjs`), never product photos — those would mean an outbound request per tile, which NFR-9 rules out |
+| Tiles with a picture, or a text list? | **Tiles**, four per row | Every `catalog_item` gets an `icon_key`, which the server picks from its name (`app.catalog_icon_for`, since specs/29 the layered matcher over the shared dictionary `dictionary/shopping.txt`, DE with Swiss and Austrian words, EN, FR, ES, with typo tolerance; a name it does not know, or one whose words have no picture of their own, shows its category's icon). The app runs the same matcher on the device, so the picker proposes the right tile while the name is typed. The pictures are a bundled icon set (Fluent Emoji Flat, MIT, as specs/17 decides; `scripts/emoji-pictures.mjs`), never product photos — those would mean an outbound request per tile, which NFR-9 rules out |
 | May the children add items? | **Yes**, on the same screen as everyone else | No kid mode on this path. Each row shows a dot in the adder's colour (FR-4.10), which settles "who put Gummibärchen on the list" without a rule |
 | One list or several? | **Several** — the starter set is Supermarkt, Drogerie, Baumarkt; households rename, add and remove lists ([21](21-household-settings.md#shopping)) | FR-4.8 rises from `C` to `M` and moves into M1.1. Each list offers only its own categories, so the Baumarkt list never suggests bananas. Supermarkt is `is_default` |
 | How do quantities work? | **Long press → free text** | No numeric field on the fast path. Tap counts up (2 ×, 3 ×); a long press opens one text field for "Bio", "500 g", "Dose", "E14 warmweiß". Parsed into quantity and unit only where unambiguous, kept verbatim regardless (FR-4.9) |

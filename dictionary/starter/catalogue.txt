@@ -1,0 +1,176 @@
+# WuselWall starter catalogue (issue #197, dictionary/README.md "Starter catalogue").
+#
+# The most common items of each shopping-list kind, so that a new family's list has tiles and
+# search suggestions before anything was bought. Rendered by scripts/starter.mjs into
+# app/assets/matching/starter.json, with the picture of each name looked up in the shopping
+# dictionary (shopping.txt) by the same rule as the server: the whole name, then its last word,
+# then the longest known word the last word ends with.
+#
+# Format
+#   [kind]            a list kind: supermarket | drugstore | hardware
+#   produce:          a category key, as app.shopping_seed_categories seeds it; the sections of a
+#                     kind come in walking order (supermarket: produce, bakery, dairy, meat_fish,
+#                     pantry, snacks, frozen, drinks, household, other)
+#     de: A, B, C     a tag and comma-separated names in natural spelling, most common first.
+#                     de and en are required in every section; fr and es are optional.
+#     de-CH: A = B, + C
+#     de-AT: A = B    overrides of the de list, never a full list. `base = regional` replaces the
+#                     base name by the regional one at the same place; `+ Name` appends a name.
+#                     The rendered de-CH and de-AT lists are full lists.
+#
+# A name may appear once per kind and tag. Plural where people buy plural (Bananen, Äpfel),
+# singular for bulk (Milch, Brot, Mehl). Everyday things a family really buys.
+# Run: node scripts/starter.mjs build | check | stats
+
+[supermarket]
+
+produce:
+  de: Bananen, Äpfel, Tomaten, Gurken, Karotten, Zwiebeln, Kartoffeln, Paprika, Zitronen, Salat, Knoblauch, Orangen, Birnen, Trauben, Erdbeeren, Zucchini, Brokkoli, Champignons, Avocados, Blumenkohl, Mandarinen, Heidelbeeren, Himbeeren, Lauch, Spinat, Eisbergsalat, Radieschen, Ingwer, Petersilie, Basilikum, Schnittlauch, Kürbis, Auberginen, Rote Bete, Sellerie, Fenchel, Kohlrabi, Rotkohl, Weißkohl, Maiskolben, Süßkartoffeln, Frühlingszwiebeln, Rucola, Feldsalat, Wassermelone, Ananas, Kiwis, Mango, Pfirsiche, Nektarinen, Kirschen, Pflaumen, Limetten, Grapefruit, Aprikosen, Johannisbeeren, Meerrettich, Dill, Minze, Rosmarin, Thymian, Rosenkohl, Spargel
+  de-CH: Karotten = Rüebli, Paprika = Peperoni, Zucchini = Zucchetti, Feldsalat = Nüsslisalat, Weißkohl = Weisskabis, Rotkohl = Rotkabis, Rote Bete = Randen, Süßkartoffeln = Süsskartoffeln, Pflaumen = Zwetschgen, Brokkoli = Broccoli
+  de-AT: Kartoffeln = Erdäpfel, Tomaten = Paradeiser, Karotten = Gelbe Rüben, Blumenkohl = Karfiol, Auberginen = Melanzani, Aprikosen = Marillen, Johannisbeeren = Ribisel, Meerrettich = Kren, Pflaumen = Zwetschken, Feldsalat = Vogerlsalat, Weißkohl = Weißkraut, Rotkohl = Rotkraut, Rote Bete = Rote Rübe, Frühlingszwiebeln = Jungzwiebeln, Rosenkohl = Kohlsprossen
+  en: bananas, apples, tomatoes, cucumbers, carrots, onions, potatoes, bell peppers, lemons, lettuce, garlic, oranges, pears, grapes, strawberries, zucchini, broccoli, mushrooms, avocados, cauliflower, mandarins, blueberries, raspberries, leeks, spinach, iceberg lettuce, radishes, ginger, parsley, basil, chives, pumpkin, aubergines, beetroot, celery, fennel, kohlrabi, red cabbage, white cabbage, corn on the cob, sweet potatoes, spring onions, rocket, lamb's lettuce, watermelon, pineapple, kiwis, mango, peaches, nectarines, cherries, plums, limes, grapefruit, apricots, redcurrants, horseradish, dill, mint, rosemary, thyme, brussels sprouts, asparagus
+  fr: bananes, pommes, tomates, concombres, carottes, oignons, pommes de terre, poivrons, citrons, salade, ail, oranges, poires, raisin, fraises, courgettes, brocoli, champignons, avocats, chou-fleur, mandarines, myrtilles, framboises, poireaux, épinards, salade iceberg, radis, gingembre, persil, basilic, ciboulette, potiron, aubergines, betteraves, céleri, fenouil, chou-rave, chou rouge, chou blanc, épis de maïs, patates douces, oignons nouveaux, roquette, mâche, pastèque, ananas, kiwis, mangue, pêches, nectarines, cerises, prunes, citrons verts, pamplemousse, abricots, groseilles, raifort, aneth, menthe, romarin, thym, choux de Bruxelles, asperges
+  es: plátanos, manzanas, tomates, pepinos, zanahorias, cebollas, patatas, pimientos, limones, lechuga, ajo, naranjas, peras, uvas, fresas, calabacines, brócoli, champiñones, aguacates, coliflor, mandarinas, arándanos, frambuesas, puerros, espinacas, lechuga iceberg, rábanos, jengibre, perejil, albahaca, cebollino, calabaza, berenjenas, remolacha, apio, hinojo, colinabo, col lombarda, col blanca, mazorcas de maíz, batatas, cebolletas, rúcula, canónigos, sandía, piña, kiwis, mango, melocotones, nectarinas, cerezas, ciruelas, limas, pomelo, albaricoques, grosellas, rábano picante, eneldo, menta, romero, tomillo, coles de Bruselas, espárragos
+
+bakery:
+  de: Brot, Brötchen, Toastbrot, Vollkornbrot, Croissants, Baguette, Weißbrot, Brezeln, Laugenbrötchen, Kuchen, Knäckebrot, Wraps, Tortillas, Fladenbrot, Burgerbrötchen, Pizzateig, Blätterteig, Mürbeteig, Muffins, Zwieback, Berliner, Hefezopf
+  de-CH: Brötchen = Weggli, Croissants = Gipfeli, Weißbrot = Weissbrot, Hefezopf = Zopf, Laugenbrötchen = Laugenweggli, + Bürli
+  de-AT: Brötchen = Semmeln, Berliner = Krapfen, Brezeln = Brezen, Hefezopf = Striezel, Laugenbrötchen = Laugensemmeln
+  en: bread, bread rolls, sliced bread, wholemeal bread, croissants, baguette, white bread, pretzels, pretzel rolls, cake, crispbread, wraps, tortillas, flatbread, burger buns, pizza dough, puff pastry, shortcrust pastry, muffins, rusks, doughnuts, brioche
+  fr: pain, petits pains, pain de mie, pain complet, croissants, baguette, pain blanc, bretzels, pains au lait, gâteau, pain suédois, wraps, tortillas, pain pita, pains à burger, pâte à pizza, pâte feuilletée, pâte brisée, muffins, biscottes, beignets, brioche
+  es: pan, panecillos, pan de molde, pan integral, croissants, baguette, pan blanco, pretzels, bollos de leche, pastel, pan crujiente, wraps, tortillas, pan de pita, pan de hamburguesa, masa de pizza, hojaldre, masa quebrada, magdalenas, tostadas, donuts, brioche
+
+dairy:
+  de: Milch, Eier, Butter, Joghurt, Käse, Quark, Sahne, Frischkäse, Mozzarella, Parmesan, Gouda, Käsescheiben, Reibkäse, Naturjoghurt, Fruchtjoghurt, Skyr, Schmand, Crème fraîche, Feta, Margarine, Haferdrink, Sojadrink, Mascarpone, Hüttenkäse, Buttermilch, Emmentaler, Camembert, Pudding, Halloumi, Ricotta, Kefir
+  de-CH: Sahne = Rahm, Butter = Anke, Schmand = Sauerrahm, + Gruyère
+  de-AT: Quark = Topfen, Sahne = Obers, Schmand = Sauerrahm
+  en: milk, eggs, butter, yoghurt, cheese, cream, cream cheese, mozzarella, parmesan, cheddar, sliced cheese, grated cheese, natural yoghurt, fruit yoghurt, Greek yoghurt, skyr, sour cream, crème fraîche, feta, margarine, oat milk, soy milk, mascarpone, cottage cheese, buttermilk, gouda, camembert, pudding, halloumi, ricotta, kefir
+  fr: lait, œufs, beurre, yaourt, fromage, crème liquide, fromage frais, mozzarella, parmesan, emmental, fromage en tranches, fromage râpé, yaourt nature, yaourt aux fruits, yaourt grec, skyr, crème fraîche, feta, margarine, lait d'avoine, lait de soja, mascarpone, fromage blanc, gruyère, camembert, crème dessert, halloumi, ricotta, kéfir, chèvre, comté
+  es: leche, huevos, mantequilla, yogur, queso, nata, queso crema, mozzarella, parmesano, cheddar, queso en lonchas, queso rallado, yogur natural, yogur de frutas, yogur griego, skyr, nata agria, feta, margarina, bebida de avena, bebida de soja, mascarpone, requesón, manchego, camembert, natillas, halloumi, ricotta, kéfir, queso fresco, queso de cabra
+
+meat_fish:
+  de: Hähnchenbrust, Hackfleisch, Schinken, Salami, Würstchen, Bratwurst, Speck, Lachs, Hähnchenschenkel, Aufschnitt, Putenbrust, Schnitzel, Rindersteak, Rindfleisch, Schweinefleisch, Leberwurst, Fleischkäse, Kochschinken, Räucherlachs, Garnelen, Fischfilet, Forelle, Gulasch, Mortadella, Brathähnchen, Kassler, Rinderbraten, Schweinebauch, Seelachs, Putenschnitzel, Mettwurst
+  de-CH: Würstchen = Wienerli, Hähnchenbrust = Pouletbrust, Hähnchenschenkel = Pouletschenkel, Brathähnchen = Poulet, Garnelen = Crevetten, Rinderbraten = Rindsbraten, Rindersteak = Rindssteak, Räucherlachs = Rauchlachs, Kassler = Rippli, + Cervelat
+  de-AT: Hackfleisch = Faschiertes, Würstchen = Frankfurter, Fleischkäse = Leberkäse, Brathähnchen = Backhendl, Hähnchenbrust = Hühnerbrust, Hähnchenschenkel = Hühnerkeule, Kassler = Selchfleisch, Schweinebauch = Bauchfleisch
+  en: chicken breast, minced meat, ham, salami, sausages, bratwurst, bacon, salmon, chicken legs, cold cuts, turkey breast, schnitzel, beef steak, beef, pork, liver sausage, meatloaf, cooked ham, smoked salmon, prawns, fish fillet, trout, goulash, mortadella, roast chicken, smoked pork chops, roast beef, pork belly, white fish, turkey schnitzel, mettwurst
+  fr: blanc de poulet, viande hachée, jambon, salami, saucisses, bratwurst, lardons, saumon, cuisses de poulet, charcuterie, blanc de dinde, escalope, steak de bœuf, bœuf, porc, pâté de foie, pain de viande, jambon cuit, saumon fumé, crevettes, filet de poisson, truite, goulache, mortadelle, poulet rôti, côtelettes fumées, rôti de bœuf, poitrine de porc, colin, escalope de dinde, saucisson
+  es: pechuga de pollo, carne picada, jamón, salami, salchichas, bratwurst, beicon, salmón, muslos de pollo, embutido, pechuga de pavo, escalope, filete de ternera, ternera, cerdo, paté de hígado, pastel de carne, jamón cocido, salmón ahumado, gambas, filete de pescado, trucha, gulash, mortadela, pollo asado, chuletas ahumadas, rosbif, panceta, merluza, escalope de pavo, chorizo
+
+pantry:
+  de: Nudeln, Spaghetti, Reis, Mehl, Zucker, Salz, Pfeffer, Olivenöl, Sonnenblumenöl, Essig, Passierte Tomaten, Gehackte Tomaten, Tomatenmark, Ketchup, Mayonnaise, Senf, Müsli, Haferflocken, Cornflakes, Honig, Marmelade, Nuss-Nougat-Creme, Erdnussbutter, Kaffee, Tee, Linsen, Kichererbsen, Kidneybohnen, Mais, Thunfisch, Gemüsebrühe, Backpulver, Vanillezucker, Trockenhefe, Speisestärke, Paniermehl, Couscous, Penne, Basmatireis, Kakaopulver, Puddingpulver, Sojasoße, Pesto, Paprikapulver, Zimt, Oregano, Currypulver, Muskat, Rosinen, Mandeln, Walnüsse, Erdnüsse, Cashewkerne, Sonnenblumenkerne, Kokosmilch, Nudelsoße, Oliven, Gewürzgurken, Sauerkraut, Fertigsuppe, Ravioli, Grieß, Apfelmus, Ahornsirup, Chiasamen, Leinsamen, Salsa, Barbecuesoße, Balsamico
+  de-CH: Nudeln = Teigwaren, Müsli = Müesli, Marmelade = Konfitüre, Thunfisch = Thon, Gewürzgurken = Cornichons, Grieß = Griess, Sojasoße = Sojasauce, Nudelsoße = Teigwarensauce, Barbecuesoße = Barbecuesauce
+  de-AT: Passierte Tomaten = Passierte Paradeiser, Gehackte Tomaten = Gehackte Paradeiser, Tomatenmark = Paradeisermark, Paniermehl = Semmelbrösel, Gewürzgurken = Essiggurkerl, Nuss-Nougat-Creme = Nougatcreme
+  en: pasta, spaghetti, rice, flour, sugar, salt, pepper, olive oil, sunflower oil, vinegar, passata, chopped tomatoes, tomato paste, ketchup, mayonnaise, mustard, muesli, oats, cornflakes, honey, jam, chocolate spread, peanut butter, coffee, tea, lentils, chickpeas, kidney beans, sweetcorn, tuna, vegetable stock, baking powder, vanilla sugar, dried yeast, cornflour, breadcrumbs, couscous, penne, basmati rice, cocoa powder, custard powder, soy sauce, pesto, paprika, cinnamon, oregano, curry powder, nutmeg, raisins, almonds, walnuts, peanuts, cashews, sunflower seeds, coconut milk, pasta sauce, olives, gherkins, sauerkraut, instant soup, ravioli, semolina, apple sauce, maple syrup, chia seeds, flaxseed, salsa, barbecue sauce, balsamic vinegar
+  fr: pâtes, spaghettis, riz, farine, sucre, sel, poivre, huile d'olive, huile de tournesol, vinaigre, purée de tomates, tomates concassées, concentré de tomates, ketchup, mayonnaise, moutarde, muesli, flocons d'avoine, corn flakes, miel, confiture, pâte à tartiner, beurre de cacahuète, café, thé, lentilles, pois chiches, haricots rouges, maïs, thon, bouillon de légumes, levure chimique, sucre vanillé, levure de boulanger, maïzena, chapelure, couscous, penne, riz basmati, cacao en poudre, préparation pour flan, sauce soja, pesto, paprika, cannelle, origan, curry, muscade, raisins secs, amandes, noix, cacahuètes, noix de cajou, graines de tournesol, lait de coco, sauce tomate, olives, cornichons, choucroute, soupe en sachet, raviolis, semoule, compote de pommes, sirop d'érable, graines de chia, graines de lin, salsa, sauce barbecue, vinaigre balsamique
+  es: pasta, espaguetis, arroz, harina, azúcar, sal, pimienta, aceite de oliva, aceite de girasol, vinagre, tomate triturado, tomate troceado, concentrado de tomate, kétchup, mayonesa, mostaza, muesli, copos de avena, cereales, miel, mermelada, crema de cacao, mantequilla de cacahuete, café, té, lentejas, garbanzos, alubias, maíz, atún, caldo de verduras, levadura química, azúcar vainillado, levadura de panadería, maicena, pan rallado, cuscús, macarrones, arroz basmati, cacao en polvo, preparado para flan, salsa de soja, pesto, pimentón, canela, orégano, curry, nuez moscada, pasas, almendras, nueces, cacahuetes, anacardos, pipas de girasol, leche de coco, salsa de tomate, aceitunas, pepinillos, chucrut, sopa instantánea, raviolis, sémola, compota de manzana, sirope de arce, semillas de chía, semillas de lino, salsa, salsa barbacoa, vinagre balsámico
+
+snacks:
+  de: Schokolade, Chips, Kekse, Gummibärchen, Salzstangen, Popcorn, Müsliriegel, Schokoriegel, Studentenfutter, Reiswaffeln, Tortilla Chips, Erdnussflips, Waffeln, Pralinen, Bonbons, Kaugummi, Zartbitterschokolade, Fruchtgummi, Trockenfrüchte, Lakritz, Cracker, Fruchtriegel
+  de-CH: Kekse = Guetzli, Gummibärchen = Gummibärli, Pralinen = Pralinés
+  de-AT: Bonbons = Zuckerl
+  en: chocolate, crisps, biscuits, gummy bears, pretzel sticks, popcorn, muesli bars, chocolate bars, trail mix, rice cakes, tortilla chips, cheese puffs, waffles, pralines, sweets, chewing gum, dark chocolate, fruit gums, dried fruit, liquorice, crackers, fruit bars
+  fr: chocolat, chips, biscuits, oursons en gélatine, bretzels salés, pop-corn, barres de céréales, barres chocolatées, mélange de fruits secs, galettes de riz, tortilla chips, biscuits apéritifs, gaufres, chocolats, bonbons, chewing-gum, chocolat noir, bonbons gélifiés, fruits secs, réglisse, crackers, barres de fruits
+  es: chocolate, patatas fritas, galletas, gominolas, palitos salados, palomitas, barritas de cereales, barras de chocolate, frutos secos, tortitas de arroz, nachos, gusanitos, barquillos, bombones, caramelos, chicles, chocolate negro, golosinas, fruta deshidratada, regaliz, crackers, barritas de fruta
+
+frozen:
+  de: Tiefkühlpizza, Pommes frites, Eis, Fischstäbchen, Tiefkühlgemüse, Erbsen, Blattspinat, Rahmspinat, Tiefkühlbeeren, Chicken Nuggets, Kroketten, Lasagne, Eiswürfel, Eis am Stiel, Gemüsepfanne
+  de-CH: Eis = Glace, Eis am Stiel = Glace am Stiel
+  en: frozen pizza, fries, ice cream, fish fingers, frozen vegetables, peas, leaf spinach, creamed spinach, frozen berries, chicken nuggets, croquettes, lasagne, ice cubes, ice lollies, stir-fry vegetables
+  fr: pizza surgelée, frites, glace, bâtonnets de poisson, légumes surgelés, petits pois, épinards en branches, épinards à la crème, fruits rouges surgelés, nuggets de poulet, croquettes de pommes de terre, lasagnes, glaçons, glaces à l'eau, poêlée de légumes
+  es: pizza congelada, patatas fritas congeladas, helado, palitos de pescado, verduras congeladas, guisantes, espinacas congeladas, espinacas a la crema, frutos rojos congelados, nuggets de pollo, croquetas, lasaña, cubitos de hielo, polos, salteado de verduras
+
+drinks:
+  de: Mineralwasser, Stilles Wasser, Apfelschorle, Orangensaft, Apfelsaft, Cola, Limonade, Bier, Rotwein, Weißwein, Sekt, Eistee, Saft, Multivitaminsaft, Traubensaft, Sirup, Tonic Water, Ginger Ale, Energydrink, Kakao, Alkoholfreies Bier, Prosecco, Radler, Smoothie, Sprudelwasser
+  de-CH: Weißwein = Weisswein, Radler = Panaché, Sekt = Schaumwein
+  de-AT: Apfelschorle = Gespritzter Apfelsaft, Limonade = Limo
+  en: mineral water, still water, apple spritzer, orange juice, apple juice, cola, lemonade, beer, red wine, white wine, sparkling wine, iced tea, juice, multivitamin juice, grape juice, squash, tonic water, ginger ale, energy drink, cocoa, alcohol-free beer, prosecco, shandy, smoothie, sparkling water
+  fr: eau minérale, eau plate, jus de pomme pétillant, jus d'orange, jus de pomme, cola, limonade, bière, vin rouge, vin blanc, mousseux, thé glacé, jus de fruits, jus multivitaminé, jus de raisin, sirop, tonic, ginger ale, boisson énergisante, cacao, bière sans alcool, prosecco, panaché, smoothie, eau gazeuse
+  es: agua mineral, agua sin gas, refresco de manzana, zumo de naranja, zumo de manzana, cola, limonada, cerveza, vino tinto, vino blanco, cava, té helado, zumo, zumo multivitaminas, zumo de uva, sirope, tónica, ginger ale, bebida energética, cacao, cerveza sin alcohol, prosecco, clara, smoothie, agua con gas
+
+household:
+  de: Toilettenpapier, Küchenrolle, Spülmittel, Müllbeutel, Spülmaschinentabs, Waschmittel, Taschentücher, Servietten, Alufolie, Backpapier, Frischhaltefolie, Allzweckreiniger, Schwämme, Gefrierbeutel, Kaffeefilter, Batterien, Glühbirnen, Kerzen, Weichspüler, Streichhölzer, Putztücher, WC-Reiniger, Spülmaschinensalz, Teelichter
+  de-CH: Toilettenpapier = WC-Papier, Küchenrolle = Haushaltpapier, Spülmittel = Abwaschmittel, Müllbeutel = Kehrichtsäcke
+  de-AT: Müllbeutel = Müllsackerl, Gefrierbeutel = Gefriersackerl
+  en: toilet paper, kitchen roll, washing-up liquid, bin bags, dishwasher tablets, laundry detergent, tissues, napkins, aluminium foil, baking paper, cling film, all-purpose cleaner, sponges, freezer bags, coffee filters, batteries, light bulbs, candles, fabric softener, matches, cleaning cloths, toilet cleaner, dishwasher salt, tealights
+  fr: papier toilette, essuie-tout, liquide vaisselle, sacs poubelle, pastilles lave-vaisselle, lessive, mouchoirs, serviettes en papier, papier aluminium, papier cuisson, film alimentaire, nettoyant multi-usage, éponges, sacs de congélation, filtres à café, piles, ampoules, bougies, adoucissant, allumettes, chiffons, nettoyant WC, sel pour lave-vaisselle, bougies chauffe-plat
+  es: papel higiénico, papel de cocina, lavavajillas, bolsas de basura, pastillas para el lavavajillas, detergente, pañuelos, servilletas, papel de aluminio, papel de horno, film transparente, limpiador multiusos, estropajos, bolsas de congelación, filtros de café, pilas, bombillas, velas, suavizante, cerillas, bayetas, limpiador de inodoros, sal para lavavajillas, velas de té
+
+other:
+  de: Katzenfutter, Hundefutter, Katzenstreu, Blumen, Grußkarte, Geschenkpapier, Zeitung, Klebeband, Stifte, Vogelfutter
+  de-CH: Grußkarte = Grusskarte
+  en: cat food, dog food, cat litter, flowers, greeting card, wrapping paper, newspaper, sticky tape, pens, bird food
+  fr: croquettes pour chat, croquettes pour chien, litière pour chat, fleurs, carte de vœux, papier cadeau, journal, ruban adhésif, stylos, graines pour oiseaux
+  es: comida para gatos, comida para perros, arena para gatos, flores, tarjeta de felicitación, papel de regalo, periódico, cinta adhesiva, bolígrafos, comida para pájaros
+
+[drugstore]
+
+care:
+  de: Zahnpasta, Zahnbürste, Shampoo, Duschgel, Deo, Seife, Handcreme, Körperlotion, Sonnencreme, Rasierer, Rasierschaum, Haarspülung, Haargel, Zahnseide, Mundspülung, Wattestäbchen, Wattepads, Gesichtscreme, Lippenbalsam, Abschminktücher, Nagellackentferner, Damenbinden, Tampons, Slipeinlagen, Taschentücher
+  de-CH: Haarspülung = Spülung
+  en: toothpaste, toothbrush, shampoo, shower gel, deodorant, soap, hand cream, body lotion, sun cream, razors, shaving foam, conditioner, hair gel, dental floss, mouthwash, cotton buds, cotton pads, face cream, lip balm, makeup remover wipes, nail polish remover, sanitary pads, tampons, panty liners, tissues
+  fr: dentifrice, brosse à dents, shampooing, gel douche, déodorant, savon, crème pour les mains, lait corporel, crème solaire, rasoirs, mousse à raser, après-shampooing, gel coiffant, fil dentaire, bain de bouche, cotons-tiges, disques de coton, crème de jour, baume à lèvres, lingettes démaquillantes, dissolvant, serviettes hygiéniques, tampons, protège-slips, mouchoirs
+  es: pasta de dientes, cepillo de dientes, champú, gel de ducha, desodorante, jabón, crema de manos, loción corporal, crema solar, cuchillas de afeitar, espuma de afeitar, acondicionador, gel para el pelo, hilo dental, enjuague bucal, bastoncillos, discos de algodón, crema facial, bálsamo labial, toallitas desmaquillantes, quitaesmalte, compresas, tampones, protegeslips, pañuelos
+
+baby:
+  de: Windeln, Babyfeuchttücher, Babybrei, Babyshampoo, Wundschutzcreme, Schnuller, Babyöl, Milchpulver, Stilleinlagen
+  en: nappies, baby wipes, baby cereal, baby shampoo, nappy cream, dummies, baby oil, baby milk powder, nursing pads
+  fr: couches, lingettes pour bébé, bouillie pour bébé, shampooing bébé, crème pour le siège, tétines, huile pour bébé, lait en poudre, coussinets d'allaitement
+  es: pañales, toallitas para bebé, papilla, champú para bebé, crema para el culito, chupetes, aceite para bebé, leche en polvo, discos de lactancia
+
+cleaning:
+  de: Waschmittel, Spülmittel, Allzweckreiniger, WC-Reiniger, Weichspüler, Glasreiniger, Badreiniger, Spülmaschinentabs, Entkalker, Müllbeutel, Putztücher, Schwämme, Toilettenpapier, Backofenreiniger, Fleckenentferner
+  de-CH: Spülmittel = Abwaschmittel, Müllbeutel = Kehrichtsäcke, Toilettenpapier = WC-Papier
+  de-AT: Müllbeutel = Müllsackerl
+  en: laundry detergent, washing-up liquid, all-purpose cleaner, toilet cleaner, fabric softener, glass cleaner, bathroom cleaner, dishwasher tablets, descaler, bin bags, cleaning cloths, sponges, toilet paper, oven cleaner, stain remover
+  fr: lessive, liquide vaisselle, nettoyant multi-usage, nettoyant WC, adoucissant, nettoyant vitres, nettoyant salle de bain, pastilles lave-vaisselle, anticalcaire, sacs poubelle, chiffons, éponges, papier toilette, nettoyant four, détachant
+  es: detergente, lavavajillas, limpiador multiusos, limpiador de inodoros, suavizante, limpiacristales, limpiador de baño, pastillas para el lavavajillas, antical, bolsas de basura, bayetas, estropajos, papel higiénico, limpiador de horno, quitamanchas
+
+health:
+  de: Pflaster, Ibuprofen, Paracetamol, Fieberthermometer, Hustensaft, Nasenspray, Halsbonbons, Vitamine, Magnesium, Desinfektionsmittel, Mückenspray, Verband, Zeckenzange, Wundsalbe
+  en: plasters, ibuprofen, paracetamol, thermometer, cough syrup, nasal spray, throat lozenges, vitamins, magnesium, disinfectant, mosquito spray, bandage, tick remover, wound ointment
+  fr: pansements, ibuprofène, paracétamol, thermomètre, sirop contre la toux, spray nasal, pastilles pour la gorge, vitamines, magnésium, désinfectant, spray anti-moustiques, bandage, tire-tique, pommade cicatrisante
+  es: tiritas, ibuprofeno, paracetamol, termómetro, jarabe para la tos, spray nasal, caramelos para la garganta, vitaminas, magnesio, desinfectante, repelente de mosquitos, vendas, pinza para garrapatas, pomada cicatrizante
+
+other:
+  de: Batterien, Glühbirnen, Kerzen, Geschenkpapier
+  en: batteries, light bulbs, candles, wrapping paper
+  fr: piles, ampoules, bougies, papier cadeau
+  es: pilas, bombillas, velas, papel de regalo
+
+[hardware]
+
+tools:
+  de: Hammer, Schraubendreher, Zange, Maßband, Wasserwaage, Säge, Akkuschrauber, Bohrmaschine, Cuttermesser, Schleifpapier, Leiter, Schraubenschlüssel, Pinsel, Farbroller, Malerkrepp, Wandfarbe, Klebeband, Montagekleber, Sekundenkleber, Silikon, Arbeitshandschuhe
+  de-CH: Schraubendreher = Schraubenzieher, Maßband = Massband
+  de-AT: Schraubendreher = Schraubenzieher
+  en: hammer, screwdriver, pliers, tape measure, spirit level, saw, cordless screwdriver, drill, craft knife, sandpaper, ladder, spanner, paintbrush, paint roller, masking tape, wall paint, duct tape, construction adhesive, superglue, silicone sealant, work gloves
+  fr: marteau, tournevis, pince, mètre ruban, niveau à bulle, scie, visseuse sans fil, perceuse, cutter, papier de verre, échelle, clé à molette, pinceau, rouleau de peinture, ruban de masquage, peinture murale, ruban adhésif, colle de montage, colle forte, silicone, gants de travail
+  es: martillo, destornillador, alicates, metro, nivel, sierra, atornillador inalámbrico, taladro, cúter, papel de lija, escalera, llave inglesa, pincel, rodillo, cinta de carrocero, pintura para paredes, cinta adhesiva, adhesivo de montaje, pegamento instantáneo, silicona, guantes de trabajo
+
+screws:
+  de: Schrauben, Dübel, Nägel, Muttern, Unterlegscheiben, Haken, Holzschrauben, Bohrer, Bits, Scharniere, Bilderhaken, Klebehaken
+  en: screws, wall plugs, nails, nuts, washers, hooks, wood screws, drill bits, screwdriver bits, hinges, picture hooks, adhesive hooks
+  fr: vis, chevilles, clous, écrous, rondelles, crochets, vis à bois, forets, embouts, charnières, crochets pour tableaux, crochets adhésifs
+  es: tornillos, tacos, clavos, tuercas, arandelas, ganchos, tornillos para madera, brocas, puntas, bisagras, colgadores de cuadros, ganchos adhesivos
+
+electrical:
+  de: Glühbirnen, LED-Lampen, Batterien, Verlängerungskabel, Steckdosenleiste, Steckdosen, Lichtschalter, Kabelbinder, Isolierband, Taschenlampe, Zeitschaltuhr, Lichterkette
+  de-CH: Steckdosenleiste = Steckerleiste
+  en: light bulbs, LED bulbs, batteries, extension lead, power strip, sockets, light switch, cable ties, insulating tape, torch, timer plug, fairy lights
+  fr: ampoules, ampoules LED, piles, rallonge, multiprise, prises, interrupteur, serre-câbles, ruban isolant, lampe de poche, prise programmable, guirlande lumineuse
+  es: bombillas, bombillas LED, pilas, alargador, regleta, enchufes, interruptor, bridas, cinta aislante, linterna, programador, guirnalda de luces
+
+garden:
+  de: Blumenerde, Blumensamen, Gartenschlauch, Gießkanne, Rasensamen, Dünger, Spaten, Rechen, Gartenhandschuhe, Gartenschere, Blumentöpfe, Pflanzen, Holzkohle, Grillanzünder
+  de-CH: Gießkanne = Giesskanne
+  en: potting compost, flower seeds, garden hose, watering can, grass seed, fertiliser, spade, rake, gardening gloves, secateurs, flower pots, plants, charcoal, firelighters
+  fr: terreau, graines de fleurs, tuyau d'arrosage, arrosoir, semences de gazon, engrais, bêche, râteau, gants de jardinage, sécateur, pots de fleurs, plantes, charbon de bois, allume-feu
+  es: tierra para macetas, semillas de flores, manguera, regadera, semillas de césped, abono, pala, rastrillo, guantes de jardinería, tijeras de podar, macetas, plantas, carbón, pastillas de encendido
+
+other:
+  de: Müllsäcke, Putzlappen, Schmieröl, Kerzen, Streichhölzer, Vorhängeschloss
+  de-CH: Müllsäcke = Kehrichtsäcke
+  de-AT: Müllsäcke = Müllsackerl
+  en: bin liners, rags, lubricating oil, candles, matches, padlock
+  fr: sacs poubelle, chiffons, huile lubrifiante, bougies, allumettes, cadenas
+  es: bolsas de basura, trapos, aceite lubricante, velas, cerillas, candado

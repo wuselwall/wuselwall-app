@@ -150,7 +150,11 @@ void main() {
         expect(groupTile(group), findsOneWidget, reason: group.name);
       }
       // These hold Advanced settings only.
-      for (final group in const [SettingsGroup.kitchen, SettingsGroup.server]) {
+      for (final group in const [
+        SettingsGroup.kitchen,
+        SettingsGroup.server,
+        SettingsGroup.shopping,
+      ]) {
         expect(groupTile(group), findsNothing, reason: group.name);
       }
       await t.scrollUntilVisible(

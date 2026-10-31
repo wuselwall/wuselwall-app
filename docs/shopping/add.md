@@ -20,6 +20,14 @@ Jede Kachel zeigt ein Bild dazu: WuselWall erkennt gängige Artikel am Namen, et
 
 **Angeheftete Kacheln** stehen immer ganz vorn, nach Häufigkeit sortiert, und tragen eine kleine Stecknadel. So bleibt die Milch an ihrem Platz, auch wenn zuletzt etwas anderes gekauft wurde. Mit **Anheften aufheben** (ebenfalls im Menü der langen Berührung) ordnet sich die Kachel wieder von selbst ein. Anheften geht nur mit Verbindung.
 
+## Vorschläge für den Anfang
+
+Eine neue Liste hat noch nichts gekauft, und leere Kacheln helfen niemandem. Deshalb zeigt WuselWall, solange der Katalog einer Liste **weniger als 24 Kacheln** hat, hinter euren eigenen Kacheln **Vorschläge** an: gängige Artikel für diese Art Liste (Supermarkt, Drogerie, Baumarkt), in der Sprache der Familie – mit Schweizer oder österreichischen Namen, wenn die Familie ihr Deutsch so eingestellt hat („Gipfeli“, „Semmeln“).
+
+<Shot name="shopping-starter" alt="Die Liste Drogerie mit Vorschlägen als Kacheln, bevor etwas gekauft wurde" />
+
+Ein Vorschlag sieht aus wie eine Kachel und etwas ruhiger; seine Beschreibung sagt „Vorschlag“. **Tippen** setzt den Artikel auf die Liste, **lange drücken** bietet **Hinzufügen** und **Hinzufügen und bearbeiten** an – umbenennen, anheften oder wegnehmen gibt es erst, wenn es eine eigene Kachel ist, also nach dem ersten Einkauf. Was schon als Kachel oder auf der Liste steht, wird nicht noch einmal vorgeschlagen. Mit jedem Einkauf wächst euer Katalog, die Vorschläge weichen zurück, und ab 24 eigenen Kacheln erscheinen sie nicht mehr. Beim Suchen findest du sie weiterhin.
+
 ## Suchen und neu anlegen
 
 Fängst du an zu tippen, schrumpfen die Kacheln auf die passenden. Groß-/Kleinschreibung, Umlaute und Akzente sind egal: „kaese“ findet „Käse“, „klopapier“ findet „Toilettenpapier“.

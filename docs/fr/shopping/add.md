@@ -18,6 +18,14 @@ Les tuiles forment le **catalogue** de vos achats : d’abord les **8 produits a
 
 Les **tuiles épinglées** viennent toujours en premier, les plus achetées d’abord, avec une petite épingle. Le lait reste ainsi à sa place, même si autre chose a été acheté en dernier. **Désépingler** (dans le même menu d’appui long) laisse la tuile reprendre sa place. Épingler nécessite une connexion.
 
+## Suggestions pour commencer {#starter-suggestions}
+
+Une nouvelle liste n’a encore rien acheté, et des tuiles vides n’aident personne. Tant que le catalogue d’une liste compte **moins de 24 tuiles**, WuselWall affiche donc des **suggestions** après vos propres tuiles : des articles courants pour ce type de liste (supermarché, droguerie, bricolage), dans la langue de la famille, avec les noms suisses ou autrichiens si la famille a réglé son allemand ainsi (« Gipfeli », « Semmeln »).
+
+<Shot name="shopping-starter" alt="La liste Droguerie avec des tuiles suggérées avant tout achat" />
+
+Une suggestion ressemble à une tuile, en un peu plus discret, et sa description dit « Suggestion ». **Toucher** met l’article sur la liste ; **un appui long** propose **Ajouter** et **Ajouter et modifier**. Renommer, épingler et retirer viennent une fois que c’est une tuile à vous, après la première course. Ce qui est déjà une tuile ou sur la liste n’est pas suggéré une seconde fois. À chaque course votre catalogue grandit et les suggestions reculent ; à partir de 24 tuiles à vous, elles disparaissent. La recherche les trouve toujours.
+
 ## Chercher et créer {#search-and-create}
 
 Saisissez quelques lettres pour filtrer les tuiles. La recherche ignore la casse et les accents. **Entrée** ajoute le premier résultat. Si le nom est inconnu, la tuile d’ajout crée un article libre ; après vos prochains achats, il devient une tuile habituelle. Un nouvel article reçoit une **catégorie choisie automatiquement d’après son nom** (« chocolat » va dans Snacks, « pâtes » dans Épicerie) ; si elle ne convient pas, changez-la sur la fiche de l’article (ci-dessous).

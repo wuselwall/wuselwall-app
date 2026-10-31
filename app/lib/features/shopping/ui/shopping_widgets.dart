@@ -7,13 +7,17 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/matching/matcher.dart' as matching;
+import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/application/starter_providers.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_labels.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_starter.dart';
 
 // The pieces the shopping tab and the shopping trip page share.
 
@@ -265,6 +269,30 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
 
   void _changed() => setState(() {});
 
+  /// The picture of the "Neu: ..." tile: what the matcher knows the typed name as, else
+  /// the icon of the first category it names that this list has, else the plus.
+  Widget _createPicture(
+    matching.Match? match,
+    Iterable<ShoppingCategory> listCategories, {
+    required bool kiosk,
+  }) {
+    if (match == null) return const Icon(Icons.add_circle_outline, size: 28);
+    if (shoppingIconAsset(match.iconKey) case final asset?) {
+      return Image.asset(
+        asset,
+        width: kiosk ? 40 : 32,
+        height: kiosk ? 40 : 32,
+        // The tile's label names the item; the picture adds nothing for a screen reader.
+        excludeFromSemantics: true,
+      );
+    }
+    for (final key in match.categories) {
+      final category = listCategories.where((c) => c.key == key).firstOrNull;
+      if (category != null) return Icon(categoryIcon(category), size: 28);
+    }
+    return const Icon(Icons.add_circle_outline, size: 28);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -279,9 +307,23 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
         c.id: c,
     };
     final query = widget.search.text.trim();
-    final tiles = rankTiles(catalog, query);
+    final matcher = ref.watch(shoppingMatcherProvider);
+    final tiles = rankTiles(
+      catalog,
+      query,
+      iconKeyFor: matcher == null ? null : (q) => matcher.match(q)?.iconKey,
+    );
+    final starter = ref.watch(starterSetProvider(widget.list.id));
+    final starters = starter.forPicker(
+      catalog: catalog,
+      shown: tiles,
+      onList: widget.items,
+      query: query,
+    );
     final folded = fold(query);
-    final exact = tiles.any((t) => t.foldedName == folded);
+    final exact =
+        tiles.any((t) => t.foldedName == folded) ||
+        starters.any((s) => s.folded == folded);
 
     int countOf(String foldedName) => widget.items
         .where((i) => !i.checked && fold(i.name) == foldedName)
@@ -295,7 +337,9 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
           child: ShoppingTile(
             key: ValueKey('shopping-tile-${t.foldedName}'),
             width: width,
-            picture: switch (shoppingIconAsset(t.iconKey)) {
+            picture: switch (shoppingIconAsset(
+              starter.pictureKey(t.iconKey, t.name),
+            )) {
               final asset? => Image.asset(
                 asset,
                 width: kiosk ? 40 : 32,
@@ -312,12 +356,28 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
             onLongPress: () => widget.onLongPress(t.name),
           ),
         ),
+      ...starterTileWidgets(
+        context,
+        starters: starters,
+        categories: categories.values.toList(),
+        width: width,
+        kiosk: kiosk,
+        busy: widget.busy,
+        orderBase: 200 + tiles.length.toDouble(),
+        countOf: countOf,
+        onAdd: widget.onAdd,
+        onLongPress: widget.onLongPress,
+      ),
       if (query.isNotEmpty && !exact)
         FocusTraversalOrder(
           order: NumericFocusOrder(200 + tiles.length.toDouble()),
           child: ShoppingTile(
             width: width,
-            picture: const Icon(Icons.add_circle_outline, size: 28),
+            picture: _createPicture(
+              matcher?.match(query),
+              categories.values.where((c) => c.listId == widget.list.id),
+              kiosk: kiosk,
+            ),
             label: l10n.shoppingCreateTile(query),
             count: 0,
             onTap: widget.busy ? null : () => widget.onAdd(query),
@@ -375,7 +435,11 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
                         // document (A4): "done" unfocuses by default before onSubmitted runs.
                         onSubmitted: (value) {
                           widget.onAdd(
-                            tiles.isNotEmpty ? tiles.first.name : value,
+                            tiles.isNotEmpty
+                                ? tiles.first.name
+                                : starters.isNotEmpty
+                                ? starters.first.name
+                                : value,
                           );
                           _searchFocus.requestFocus();
                         },
@@ -383,7 +447,7 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
                     ),
                   ),
                 const SizedBox(height: Tokens.space2),
-                if (tiles.isEmpty && query.isEmpty)
+                if (tiles.isEmpty && starters.isEmpty && query.isEmpty)
                   Text(
                     l10n.shoppingTilesEmpty,
                     style: Theme.of(context).textTheme.bodySmall,
@@ -458,6 +522,7 @@ class ShoppingTile extends StatefulWidget {
     required this.onTap,
     required this.onLongPress,
     this.pinned = false,
+    this.starter = false,
   });
 
   final double width;
@@ -466,6 +531,9 @@ class ShoppingTile extends StatefulWidget {
 
   /// A pinned tile always comes first; it carries a small pin.
   final bool pinned;
+
+  /// A suggestion of the starter catalogue, not one of the family's own tiles yet.
+  final bool starter;
   final int count;
   final VoidCallback? onTap;
   final VoidCallback onLongPress;
@@ -504,7 +572,11 @@ class _ShoppingTileState extends State<ShoppingTile> {
         focusNode: _focusNode,
         child: Card(
           margin: EdgeInsets.zero,
-          color: onList ? scheme.primaryContainer : null,
+          color: onList
+              ? scheme.primaryContainer
+              : widget.starter
+              ? scheme.surfaceContainer
+              : null,
           child: InkWell(
             focusNode: _focusNode,
             onFocusChange: _onFocusChange,
@@ -572,6 +644,7 @@ class _ShoppingTileState extends State<ShoppingTile> {
     );
     final note = [
       if (widget.pinned) context.l10n.shoppingTilePinned,
+      if (widget.starter) context.l10n.shoppingTileStarter,
       if (onList) context.l10n.shoppingTileOnList,
     ].join(', ');
     if (note.isEmpty) return tile;
@@ -680,6 +753,7 @@ class _ShoppingItemListState extends ConsumerState<ShoppingItemList> {
         if (c.listId == widget.listId) c.foldedName: c.iconKey,
     };
     final categoryById = {for (final c in categories) c.id: c};
+    final starter = ref.watch(starterSetProvider(widget.listId));
     final planning = widget.mode == ShoppingMode.plan;
     final members = {
       for (final m in ref.watch(membersProvider).value ?? const <Member>[])
@@ -700,7 +774,11 @@ class _ShoppingItemListState extends ConsumerState<ShoppingItemList> {
         adder: members[i.addedBy],
         plain: plain,
         picture: plain
-            ? _itemPicture(i, icons[fold(i.name)], categoryById[i.categoryId])
+            ? _itemPicture(
+                i,
+                starter.pictureKey(icons[fold(i.name)], i.name),
+                categoryById[i.categoryId],
+              )
             : null,
         showLess: widget.mode != ShoppingMode.shop,
         onToggle: plain ? () => widget.onEdit(i) : () => _tap(i),

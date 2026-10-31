@@ -2437,5 +2437,15 @@
   "shoppingTilePin": "Kachel anheften",
   "shoppingTileUnpin": "Anheften aufheben",
   "shoppingTilePinHelp": "Angeheftete Kacheln stehen immer vorn.",
-  "shoppingTilePinned": "Angeheftet"
+  "shoppingTilePinned": "Angeheftet",
+  "shoppingTileStarter": "Vorschlag",
+  "settingsGroupShoppingTitle": "Einkaufen",
+  "settingsGroupShoppingSubtitle": "Gelernte Wörter",
+  "settingsSectionLearnedWords": "Gelernte Wörter",
+  "learnedWordsHelp": "Diese Wörter hat die Familie gelernt: Der Artikel kommt künftig in diese Kategorie. Vergessen nimmt ein Wort wieder weg.",
+  "learnedWordsEmpty": "Noch nichts gelernt. Wenn jemand die Kategorie eines Artikels ändert, merkt sich die Familie das Wort hier.",
+  "learnedWordsMeta": "{category} · {date}",
+  "learnedWordsMetaBy": "{category} · von {name}, {date}",
+  "learnedWordsForget": "Vergessen",
+  "learnedWordsForgetWord": "„{word}“ vergessen"
 }

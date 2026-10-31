@@ -11,11 +11,15 @@ class DictionaryEntry {
     required this.words,
   });
 
+  /// The picture in `assets/emoji/<domain>/`, or a `@name` for words that have none and
+  /// only carry a category (the tile then shows the category's icon).
   final String key;
   final List<String> categories;
 
   /// Normalised words and phrases ("milch", "creme fraiche").
   final List<String> words;
+
+  bool get hasPicture => !key.startsWith('@');
 }
 
 /// The entries of one domain (shopping, meals) plus the lookups the matcher needs,
