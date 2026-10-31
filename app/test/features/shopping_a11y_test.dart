@@ -9,6 +9,7 @@ import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -39,6 +40,7 @@ Future<void> _pumpAdultBody(
   WidgetTester t, {
   Size size = const Size(1280, 800),
   double textScale = 1,
+  bool includeOnListTile = false,
 }) async {
   t.view.physicalSize = size;
   t.view.devicePixelRatio = 1;
@@ -79,7 +81,11 @@ Future<void> _pumpAdultBody(
                 ),
               ],
               categories: const <ShoppingCategory>[],
-              catalog: [_entry('Kartoffeln'), _entry('Milch')],
+              catalog: [
+                _entry('Kartoffeln'),
+                _entry('Milch'),
+                if (includeOnListTile) _entry('Nudeln'),
+              ],
               pendingCount: 0,
             ),
           ),
@@ -158,7 +164,9 @@ void main() {
       await _pumpAdultBody(t);
       final checkedNodes = <SemanticsNode>[];
       void visit(SemanticsNode node) {
-        if (node.flagsCollection.isChecked != CheckedState.none) {
+        if (!node.isMergedIntoParent &&
+            node.getSemanticsData().flagsCollection.isChecked !=
+                CheckedState.none) {
           checkedNodes.add(node);
         }
         node.visitChildren((child) {
@@ -170,10 +178,45 @@ void main() {
       visit(
         t.binding.renderViews.first.owner!.semanticsOwner!.rootSemanticsNode!,
       );
-      expect(checkedNodes.map((node) => node.label), ['Nudeln', 'Käse']);
+      expect(checkedNodes.map((node) => node.getSemanticsData().label), [
+        'Nudeln',
+        'Käse',
+      ]);
       for (final node in checkedNodes) {
         expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
       }
+    } finally {
+      semantics.dispose();
+    }
+  });
+
+  testWidgets('A5: an on-list tile keeps its hint on its named action', (
+    t,
+  ) async {
+    final semantics = t.ensureSemantics();
+    try {
+      await _pumpAdultBody(t, includeOnListTile: true);
+      final hint = t.element(find.byType(ShoppingBody)).l10n.shoppingTileOnList;
+      final hintedNodes = <SemanticsNode>[];
+      void visit(SemanticsNode node) {
+        if (!node.isMergedIntoParent && node.getSemanticsData().hint == hint) {
+          hintedNodes.add(node);
+        }
+        node.visitChildren((child) {
+          visit(child);
+          return true;
+        });
+      }
+
+      visit(
+        t.binding.renderViews.first.owner!.semanticsOwner!.rootSemanticsNode!,
+      );
+      expect(hintedNodes, hasLength(1));
+      expect(hintedNodes.single.getSemanticsData().label, contains('Nudeln'));
+      expect(
+        hintedNodes.single.getSemanticsData().hasAction(SemanticsAction.tap),
+        isTrue,
+      );
     } finally {
       semantics.dispose();
     }

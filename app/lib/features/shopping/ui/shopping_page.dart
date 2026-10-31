@@ -1083,7 +1083,9 @@ class _TileState extends State<_Tile> {
     return Tooltip(
       message: note,
       excludeFromSemantics: true,
-      child: Semantics(hint: note, child: tile),
+      child: MergeSemantics(
+        child: Semantics(hint: note, child: tile),
+      ),
     );
   }
 }

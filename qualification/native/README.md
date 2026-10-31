@@ -114,6 +114,16 @@ cases, subprocess failures, framework errors, detector misses or missing PNGs fa
 the evidence. ATF `NOT_RUN` checks remain visible in the report; Flutter contrast
 checks remain a separate required layer.
 
+iOS findings retain the issue element's label, type, bounds and debug description;
+the semantic snapshot also records bounds. Inspect those before changing a target
+or assigning a label. With the pinned Flutter version, a label around a scroll
+view labels a separate parent, and a label inside `buildViewport` can attach to
+the first row instead of the generated native scroll container. These findings
+remain open. Do not merge an entire list to quiet an audit: its controls must
+remain independently discoverable and actionable. Merge a checkbox row only when
+its name, state and action belong to that one control. See Flutter's
+[Semantics API](https://api.flutter.dev/flutter/widgets/Semantics-class.html).
+
 `QUALIFY_MODE=capture` produces `build/qualification/native/capture` for review.
 Capture never approves a release. After review, seal the bundle with its source
 commit:

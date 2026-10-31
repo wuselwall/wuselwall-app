@@ -50,12 +50,12 @@ Expanded Linux validation rendered all 180 direct fixtures and executed the earl
 fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
 label or target-size findings. The exact audit below attributes eligible SDK border
 misattribution; ambiguous findings remain blocking. The ordinary
-suite passed 1,713 tests, with seven backend integration tests intentionally skipped without
+suite passed 1,715 tests, with seven backend integration tests intentionally skipped without
 backend configuration. Those seven require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile. An unsigned iOS diagnostic booted a simulator,
-captured five smoke screens and compiled XCTest. Apple's auditor rejected the deliberate
-bad control. The keyboard detector then failed with a Flutter inherited-element error;
-the stable-host and dependency-free inspection fixes need another runtime check. Android
+captured five smoke screens and compiled XCTest. Both the deliberately bad control and
+native keyboard detectors passed, and all seven audit entries were recorded without
+framework errors. Native screen findings remain blocking and retain element diagnostics. Android
 runtime execution still needs its dedicated SDK/AVDs. No native baseline has been approved
 by these diagnostics.
 
