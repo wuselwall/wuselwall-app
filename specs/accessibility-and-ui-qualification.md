@@ -201,6 +201,15 @@ exported Flutter nodes. Missing nodes or failed detector controls fail aggregati
 mark contrast `NOT_RUN` for virtual nodes, which cannot replace the required Flutter contrast
 check; reports must not invent measurements for elements the platform cannot inspect.
 
+One iOS audit issue is recorded under `excluded` instead of failing: a missing description
+on an unnamed `FlutterSemanticsScrollView` whose frame contains named elements. Flutter's
+embedder exposes an overflowing scroll view as an element only while VoiceOver is off (so
+UI tests can scroll it); with VoiceOver on, an unnamed scroll view is not an element. The
+bad-control checkpoint must still report both a description and a hit-region issue. A
+hit-region issue on a control clipped at a scroll viewport's edge stays blocking; the
+report lists the small interactive elements and whether each is flush with a viewport edge
+until a real-input checkpoint like the web lane's can clear it.
+
 Native's focused inventory covers server choice, Today, shopping, calendar, settings and
 kid/kiosk surfaces across phone/tablet and four locales in light/dark. Enlarged-text profiles
 check iOS accessibility text size and Android 200% font with increased display density. A

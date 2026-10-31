@@ -66,6 +66,69 @@ final class AccessibilityAuditTests: XCTestCase {
             "children": node.children.map { semantics($0) }]
   }
 
+  private static let interactive: Set<XCUIElement.ElementType> = [
+    .button, .link, .textField, .secureTextField, .searchField, .switch, .slider, .stepper,
+    .checkBox, .radioButton, .segmentedControl, .picker, .cell, .menuItem, .textView,
+  ]
+
+  private func rect(_ value: Any?) -> CGRect? {
+    guard let frame = value as? [String: Double], let x = frame["x"], let y = frame["y"],
+          let width = frame["width"], let height = frame["height"] else { return nil }
+    return CGRect(x: x, y: y, width: width, height: height)
+  }
+
+  private func nodes(_ node: any XCUIElementSnapshot) -> [any XCUIElementSnapshot] {
+    return [node] + node.children.flatMap { nodes($0) }
+  }
+
+  @available(iOS 17.0, *)
+  private func isAudit(_ issue: [String: Any], _ type: XCUIAccessibilityAuditType) -> Bool {
+    return issue["auditType"] as? XCUIAccessibilityAuditType.RawValue == type.rawValue
+  }
+
+  // Flutter's iOS embedder (FlutterSemanticsScrollView isAccessibilityElement, Flutter
+  // 3.47.7) makes a scroll view whose content overflows an accessibility element while
+  // VoiceOver is off, so that UI tests can scroll it; with VoiceOver on, a scroll view is an
+  // element only when it has a label. Apple's description audit runs without VoiceOver and
+  // so reports an element VoiceOver users never meet. Such an issue is recorded under
+  // "excluded" and not counted, and only while the scroll view's content is itself named.
+  // Every other description issue, including on any other unnamed element, still fails.
+  @available(iOS 17.0, *)
+  private func voiceOverHiddenScrollView(_ issue: [String: Any], _ tree: [any XCUIElementSnapshot]) -> Bool {
+    guard isAudit(issue, .sufficientElementDescription),
+          (issue["detail"] as? String)?.contains("FlutterSemanticsScrollView") == true,
+          let element = issue["element"] as? [String: Any],
+          element["type"] as? XCUIElement.ElementType.RawValue == XCUIElement.ElementType.scrollView.rawValue,
+          (element["label"] as? String)?.isEmpty == true,
+          let frame = rect(element["frame"]), !frame.isEmpty
+    else { return false }
+    return tree.contains { node in
+      node.elementType != .application && !node.label.isEmpty && !node.frame.isEmpty &&
+        frame.insetBy(dx: -0.5, dy: -0.5).contains(node.frame)
+    }
+  }
+
+  // Flutter clips a node's rect to its scroll viewport, so a control peeking out at the
+  // viewport's edge reports a sliver, and Apple's hit-region audit may not resolve the
+  // element. Record every small interactive element and whether it is flush with a scroll
+  // view's edge, so the finding is attributable. Attribution only: the issue stays blocking.
+  private func hitRegionCandidates(_ tree: [any XCUIElementSnapshot]) -> [[String: Any]] {
+    let viewports = tree.filter { $0.elementType == .scrollView }.map { $0.frame }
+    return tree.filter { node in
+      Self.interactive.contains(node.elementType) && !node.frame.isEmpty &&
+        (node.frame.width < 44 || node.frame.height < 44)
+    }.map { node in
+      let f = node.frame
+      let flush = viewports.contains { v in
+        v.insetBy(dx: -0.5, dy: -0.5).contains(f) &&
+          ((f.height < 44 && f.width >= 44 && (abs(f.maxY - v.maxY) < 0.5 || abs(f.minY - v.minY) < 0.5)) ||
+           (f.width < 44 && f.height >= 44 && (abs(f.maxX - v.maxX) < 0.5 || abs(f.minX - v.minX) < 0.5)))
+      }
+      return ["type": node.elementType.rawValue, "identifier": node.identifier, "label": node.label,
+              "frame": frame(f), "flushWithScrollViewport": flush] as [String: Any]
+    }
+  }
+
   func testAccessibilityForEveryNativeState() throws {
     guard #available(iOS 17.0, *) else {
       XCTFail("Native qualification requires iOS 17+ accessibility audits")
@@ -84,6 +147,8 @@ final class AccessibilityAuditTests: XCTestCase {
       if state["done"] as? Bool == true { break }
       let id = try XCTUnwrap(state["id"] as? String)
       var issues: [[String: Any]] = []
+      var excluded: [[String: Any]] = []
+      var candidates: [[String: Any]] = []
       if id == "detector-keyboard" {
         let field = app.descendants(matching: .any)["native-keyboard-field"]
         if field.waitForExistence(timeout: 5) {
@@ -119,8 +184,9 @@ final class AccessibilityAuditTests: XCTestCase {
         }
         // Capture every issue and report failure explicitly after recording the case.
         // Returning true here collects results; it never makes findings pass.
+        var reported: [[String: Any]] = []
         try app.performAccessibilityAudit(for: .all) { issue in
-          issues.append([
+          reported.append([
             "type": "ERROR",
             "auditType": issue.auditType.rawValue,
             "description": issue.compactDescription,
@@ -130,7 +196,22 @@ final class AccessibilityAuditTests: XCTestCase {
           ])
           return true
         }
-        if id == "detector-bad" { detector = !issues.isEmpty }
+        let tree = nodes(try app.snapshot())
+        for issue in reported {
+          if voiceOverHiddenScrollView(issue, tree) {
+            excluded.append(issue.merging(["reason": "flutter-scroll-view-not-an-element-under-voiceover"]) { $1 })
+          } else {
+            issues.append(issue)
+          }
+        }
+        if issues.contains(where: { isAudit($0, .hitRegion) }) {
+          candidates = hitRegionCandidates(tree)
+        }
+        // The bad control must still trip both checks the exclusions touch.
+        if id == "detector-bad" {
+          detector = issues.contains { isAudit($0, .sufficientElementDescription) } &&
+            issues.contains { isAudit($0, .hitRegion) }
+        }
       }
       let frameworkErrors = state["frameworkErrors"] as? [String] ?? ["Missing framework error evidence"]
       let passed: Bool
@@ -141,7 +222,9 @@ final class AccessibilityAuditTests: XCTestCase {
       } else {
         passed = issues.isEmpty && frameworkErrors.isEmpty
       }
-      _ = try request("result", ["id": id, "platform": "ios", "passed": passed, "issues": issues, "semantics": semantics(try app.snapshot())])
+      _ = try request("result", ["id": id, "platform": "ios", "passed": passed, "issues": issues,
+                                 "excluded": excluded, "hitRegionCandidates": candidates,
+                                 "semantics": semantics(try app.snapshot())])
       if !passed { failures += 1 }
       cases += 1
       let attachment = XCTAttachment(screenshot: app.screenshot())
