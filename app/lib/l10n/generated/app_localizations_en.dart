@@ -512,6 +512,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shoppingCat_pantry => 'Pantry';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Frozen';
 
   @override
@@ -6481,4 +6484,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Deleting an account needs a fresh sign-in. Enter the password of $email.';
   }
+
+  @override
+  String get shoppingModePlan => 'Plan mode';
+
+  @override
+  String get shoppingStartShopping => 'Go shopping';
+
+  @override
+  String get shoppingAddInStore => 'Add';
+
+  @override
+  String get shoppingShopEmpty =>
+      'Nothing on the list. Tap “Add” or go back to “Plan”.';
+
+  @override
+  String get shoppingSearchClear => 'Clear and close';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Done';
+
+  @override
+  String get shoppingAddOne => 'One more';
+
+  @override
+  String get shoppingCategoryAuto => 'Category set automatically from the name';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Pin tile';
+
+  @override
+  String get shoppingTileUnpin => 'Unpin tile';
+
+  @override
+  String get shoppingTilePinHelp => 'Pinned tiles always come first.';
+
+  @override
+  String get shoppingTilePinned => 'Pinned';
 }

@@ -45,6 +45,7 @@ import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
@@ -633,6 +634,9 @@ class FakeShoppingRepository implements ShoppingRepository {
   List<ShoppingItem> list;
   final toggles = <({String? actor, String id})>[];
 
+  /// The names of the items added, in order.
+  final adds = <String>[];
+
   /// The meals behind each item id, for the item's sheet.
   final Map<String, List<ShoppingItemMeal>> mealsByItem;
 
@@ -662,6 +666,7 @@ class FakeShoppingRepository implements ShoppingRepository {
     for (final op in ops.whereType<CheckItemOp>()) {
       toggles.add((actor: op.actor, id: op.itemId));
     }
+    adds.addAll(ops.whereType<AddItemOp>().map((op) => op.name));
     final view = projectShopping((await snapshot()).valueOrNull!, ops);
     list = [for (final i in view.items) i.copyWith(pending: false)];
     return Ok(
@@ -685,6 +690,7 @@ class FakeShoppingRepository implements ShoppingRepository {
   final deletedCategories = <String>[];
   final reorderedCategories = <List<String>>[];
   final catalogUpdates = <({String id, String? name})>[];
+  final pins = <({String id, bool pinned})>[];
   final forgottenTiles = <String>[];
 
   @override
@@ -765,6 +771,16 @@ class FakeShoppingRepository implements ShoppingRepository {
     String? categoryId,
   }) async {
     catalogUpdates.add((id: itemId, name: name));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) async {
+    pins.add((id: itemId, pinned: pinned));
     return const Ok(null);
   }
 
@@ -1010,6 +1026,9 @@ List<Override> baseOverrides({
   SettingsView settingsView = SettingsView.basic,
   SettingsViewStore? settingsViewStore,
 
+  /// The shopping mode the device was left in; planning, as on a new device.
+  ShoppingModeStore? shoppingModeStore,
+
   /// The app's configuration; a test of a server's discovery document passes one with
   /// [AppConfig.server] set.
   AppConfig? appConfig,
@@ -1058,6 +1077,9 @@ List<Override> baseOverrides({
   ),
   settingsViewStoreProvider.overrideWithValue(
     settingsViewStore ?? MemorySettingsViewStore(settingsView),
+  ),
+  shoppingModeStoreProvider.overrideWithValue(
+    shoppingModeStore ?? MemoryShoppingModeStore(),
   ),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),

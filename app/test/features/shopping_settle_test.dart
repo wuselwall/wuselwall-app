@@ -25,6 +25,9 @@ Future<FakeShoppingRepository> openShopping(WidgetTester t) async {
   // The adult home opens on the calendar: go to the shopping tab first.
   await t.tap(find.text('Einkauf'));
   await t.pumpAndSettle();
+  // Ticking is what the shopping trip is for (planning has no ticks).
+  await t.tap(find.byKey(const ValueKey('shopping-start')));
+  await t.pumpAndSettle();
   return shopping;
 }
 
@@ -77,5 +80,38 @@ void main() {
     await t.pump(const Duration(seconds: 1));
     await t.pumpAndSettle();
     expect(shopping.toggles.map((r) => r.id).toSet(), {'1', '2'});
+  });
+
+  testWidgets('the item sheet\'s plus changes the row behind it at once', (
+    t,
+  ) async {
+    t.view.physicalSize = const Size(1280, 800);
+    t.view.devicePixelRatio = 1;
+    addTearDown(t.view.resetPhysicalSize);
+    addTearDown(t.view.resetDevicePixelRatio);
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+        shopping: FakeShoppingRepository([item('1', 'Milch')]),
+      ),
+    );
+    await t.tap(find.text('Einkauf'));
+    await t.pumpAndSettle();
+    expect(find.byKey(const ValueKey('item-count-1')), findsNothing);
+
+    await t.tap(find.byKey(const ValueKey('shopping-item-1')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('item-more')));
+    await t.pump();
+    // Offline-capable: queued and shown before the server has answered.
+    await t.pump(const Duration(milliseconds: 50));
+    expect(find.byKey(const ValueKey('item-count-1')), findsOneWidget);
+    expect(t.widget<Text>(find.byKey(const ValueKey('item-count'))).data, '2');
+    await t.tap(find.byKey(const ValueKey('item-less')));
+    await t.pump(const Duration(milliseconds: 50));
+    expect(find.byKey(const ValueKey('item-count-1')), findsNothing);
+    await t.tap(find.byKey(const ValueKey('item-done')));
+    await t.pumpAndSettle();
   });
 }

@@ -10,7 +10,7 @@ Nicht alles gibt es im selben Laden. Deshalb hat WuselWall mehrere Listen, zum B
 2. Gib einen **Namen** ein und wähle die **Aufteilung**: Supermarkt, Drogerie, Baumarkt oder Sonstiges.
 3. Speichern.
 
-Die Aufteilung legt die **Kategorien** fest, in der Reihenfolge, in der man durch den Laden geht – so liest sich die Liste im Laden von oben nach unten, ohne Hin und Her. Die Baumarkt-Liste schlägt deshalb keine Bananen vor.
+Die Aufteilung legt die **Kategorien** fest, in der Reihenfolge, in der man durch den Laden geht – so liest sich die Liste im Laden von oben nach unten, ohne Hin und Her. Die Supermarkt-Aufteilung kennt zum Beispiel Obst & Gemüse, Brot & Backwaren, Milch & Käse, Fleisch & Fisch, Vorrat, **Snacks**, Tiefkühl, Getränke und Haushalt. Die Baumarkt-Liste schlägt deshalb keine Bananen vor.
 
 ## Die Standardliste
 

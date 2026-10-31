@@ -55,6 +55,7 @@ import 'package:wuselwall/features/school/ui/timetable_scan.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
@@ -143,6 +144,8 @@ List<Override> _overrides(String scenario) => [
     DemoAccountAdminRepository(),
   ),
   shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
+  // The shots and the first look start at home; the docs go to the store themselves.
+  shoppingModeStoreProvider.overrideWithValue(MemoryShoppingModeStore()),
   householdSettingsRepositoryProvider.overrideWithValue(
     DemoHouseholdSettingsRepository(),
   ),

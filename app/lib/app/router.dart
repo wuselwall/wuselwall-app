@@ -62,6 +62,7 @@ import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 import 'package:wuselwall/features/system/ui/system_page.dart';
 
@@ -113,6 +114,10 @@ abstract final class Routes {
   static const shoppingListEdit = '/shopping/list';
   static const system = '/system';
   static const shoppingHistory = '/shopping/history';
+
+  /// The shopping trip: a full screen, outside the home shell, without the app bar and
+  /// the navigation (specs/09).
+  static const shoppingTrip = '/shopping/trip';
   static const eventNew = '/calendar/new';
   static const eventEdit = '/calendar/edit';
   static const recipes = '/meals/recipes';
@@ -486,6 +491,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       _materialRoute(
         path: Routes.shoppingHistory,
         builder: (_, _) => const ShoppingHistoryPage(),
+      ),
+      _materialRoute(
+        path: Routes.shoppingTrip,
+        builder: (_, _) => const ShoppingTripPage(),
       ),
       // Neuer Termin starts on its tiles (specs/28); a tradition or a chosen template
       // goes straight to the editor.

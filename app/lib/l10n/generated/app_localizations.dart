@@ -1046,6 +1046,12 @@ abstract class AppLocalizations {
   /// **'Pantry'**
   String get shoppingCat_pantry;
 
+  /// Seeded shopping category: crisps, biscuits and the like
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks'**
+  String get shoppingCat_snacks;
+
   /// No description provided for @shoppingCat_frozen.
   ///
   /// In en, this message translates to:
@@ -10991,6 +10997,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deleting an account needs a fresh sign-in. Enter the password of {email}.'**
   String accountDeleteReauthPasswordBody(String email);
+
+  /// Shopping list, mode control: the segment for planning at home (search, tiles, items without ticks)
+  ///
+  /// In en, this message translates to:
+  /// **'Plan mode'**
+  String get shoppingModePlan;
+
+  /// Shopping list, planning mode: the button that switches to the shopping mode
+  ///
+  /// In en, this message translates to:
+  /// **'Go shopping'**
+  String get shoppingStartShopping;
+
+  /// Shopping list, shopping mode: tooltip of the plus button that opens the picker for a forgotten item
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get shoppingAddInStore;
+
+  /// Shopping list in shopping mode with nothing on it
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the list. Tap “Add” or go back to “Plan”.'**
+  String get shoppingShopEmpty;
+
+  /// Tooltip of the button in the shopping search field that clears the text and closes the keyboard
+  ///
+  /// In en, this message translates to:
+  /// **'Clear and close'**
+  String get shoppingSearchClear;
+
+  /// Shopping trip page: the slim top row, the list name and how many items are still open
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · {open}'**
+  String shoppingTripTitle(String name, int open);
+
+  /// Item sheet of the shopping list: the button that saves the note and closes the sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get shoppingItemDone;
+
+  /// Item sheet of the shopping list: tooltip of the plus button of the count stepper
+  ///
+  /// In en, this message translates to:
+  /// **'One more'**
+  String get shoppingAddOne;
+
+  /// Item sheet of the shopping list: a small line shown while the category was set by the server from the item name
+  ///
+  /// In en, this message translates to:
+  /// **'Category set automatically from the name'**
+  String get shoppingCategoryAuto;
+
+  /// Shopping list row: the count of an item for a screen reader and next to the name
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ×'**
+  String shoppingCountTimes(int count);
+
+  /// Tile sheet of the shopping list: pins the tile so it always comes first
+  ///
+  /// In en, this message translates to:
+  /// **'Pin tile'**
+  String get shoppingTilePin;
+
+  /// Tile sheet of the shopping list: removes the pin from a tile
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin tile'**
+  String get shoppingTileUnpin;
+
+  /// Tile sheet of the shopping list: explains pinning
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned tiles always come first.'**
+  String get shoppingTilePinHelp;
+
+  /// Shopping list tile: tooltip and hint of the small pin on a pinned tile
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get shoppingTilePinned;
 }
 
 class _AppLocalizationsDelegate

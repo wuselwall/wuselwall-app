@@ -229,8 +229,8 @@ reset role;
 select is((select array_agg(column_name::text order by ordinal_position) from information_schema.columns
             where table_schema = 'api' and table_name = 'shopping_items'),
   array['id', 'name', 'quantity', 'checked', 'added_by', 'checked_by', 'checked_at', 'created_at',
-        'list_id', 'category_id', 'count', 'catalog_item_id', 'source_meal_entry_ids'],
-  'api.shopping_items keeps its columns and appends the meal source');
+        'list_id', 'category_id', 'count', 'catalog_item_id', 'source_meal_entry_ids', 'category_auto'],
+  'api.shopping_items keeps its columns and appends the meal source and the category flag');
 
 select ok(exists (select 1 from app.audit_log where entity_type = 'recipe' and action = 'create'
                   and household_id = (select id from ids where name = 'hh_a')),

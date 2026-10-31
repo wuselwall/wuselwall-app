@@ -520,6 +520,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shoppingCat_pantry => 'Épicerie';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Surgelés';
 
   @override
@@ -6555,4 +6558,53 @@ class AppLocalizationsFr extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Supprimer un compte demande une connexion récente. Saisis le mot de passe de $email.';
   }
+
+  @override
+  String get shoppingModePlan => 'Mode préparation';
+
+  @override
+  String get shoppingStartShopping => 'Aller faire les courses';
+
+  @override
+  String get shoppingAddInStore => 'Ajouter';
+
+  @override
+  String get shoppingShopEmpty =>
+      'Rien sur la liste. Touchez « Ajouter » ou revenez à « Préparer ».';
+
+  @override
+  String get shoppingSearchClear => 'Effacer et fermer';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Terminé';
+
+  @override
+  String get shoppingAddOne => 'Un de plus';
+
+  @override
+  String get shoppingCategoryAuto =>
+      'Catégorie choisie automatiquement d’après le nom';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Épingler la tuile';
+
+  @override
+  String get shoppingTileUnpin => 'Désépingler';
+
+  @override
+  String get shoppingTilePinHelp =>
+      'Les tuiles épinglées viennent toujours en premier.';
+
+  @override
+  String get shoppingTilePinned => 'Épinglée';
 }
