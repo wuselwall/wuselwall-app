@@ -209,6 +209,21 @@ errors. It is not evidence for every production permission dialog or authenticat
 Retain notification/lifecycle, Display Zoom, VoiceOver/TalkBack and signed-build smoke in the
 physical-device checklist.
 
+Confirmed framework false positives have an explicit review mechanism, initially limited
+to the iOS generated scroll-container description finding. Collection success and raw
+accessibility success are separate: collector tests enforce execution and detector
+controls; raw case findings remain unchanged in the report. A review cannot cover
+missing evidence, detector/input failures, framework errors, failed processes, unknown
+issue kinds, other unnamed application controls or a target that Apple cannot identify.
+No current finding is preapproved.
+
+A pending candidate record binds the exact commit, profile/case, toolchain and display
+environment, PNG bytes, semantic snapshot and issue identity/geometry. Individual review
+records require a rationale, reviewer and timestamp; wildcard, duplicate, unused, pending
+and stale entries fail closed. Changes to bound evidence require a fresh review. The
+[native runbook](../qualification/native/README.md#explicitly-reviewed-framework-findings)
+describes the separate review artifact and deliberately manual approval procedure.
+
 The separate production web lane compiles `lib/main.dart` in release mode and exercises
 server discovery, encrypted-storage migration and shopping with intercepted APIs. Real
 backend-connected integration tests belong to the disposable-backend CI lane, never a
@@ -345,6 +360,13 @@ and physical-device evidence. `summary.json` retains `qualified: false` even whe
 evidence passes: `READY_FOR_REVIEW` invites acceptance, not an automated conformance claim.
 Operator-run local deployment utilities and independent documentation/marketing releases
 remain outside these project publishing workflows.
+
+When a review bundle is supplied, full comparison qualification first requires a separate
+`review_approval` job in that same protected environment. Its approval and exact manifest
+digest must appear in the native evidence, aggregate summary and promotion guard. A tag,
+checksum, review-file assertion or locally supplied approval flag alone cannot authorize
+promotion. The final publishing approval remains separate, and raw findings stay visible
+beside every applied review record.
 
 Build distributables once where possible and promote the tested artifacts, recording
 their digests. Simulator and instrumented test builds differ from store artifacts: record

@@ -292,6 +292,13 @@ Android acceleration needs proven `/dev/kvm` access and its own baseline environ
 
 ## Configure and use release promotion
 
+Confirmed native framework false positives have an optional
+[explicit review procedure](native/README.md#explicitly-reviewed-framework-findings).
+It requires a candidate/evidence-bound manifest and protected approval before
+application; raw findings remain visible. It does not relax detector, execution,
+coverage, baseline or final release-review requirements. No current exception is
+preapproved.
+
 Create the GitHub environment **release-promotion**, configure at least one required
 reviewer, and disable administrator bypass. The read-only promotion guard rejects missing
 or weaker protection. Keep distribution signing credentials in protected release jobs.

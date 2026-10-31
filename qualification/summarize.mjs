@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cases, inventory, root } from './matrix.mjs';
 import { sha256 } from './baseline.mjs';
+import { validateReviewApproval } from './promotion.mjs';
 
 export function flutterCaseIds(coverage) {
   return [
@@ -46,6 +47,18 @@ export function summarize({ sha, jobs, matrix, mode, reports, coverage = invento
     require(audit?.supported === true && audit?.detectorsPassed === true && audit?.passed === true && audit?.cases > 0,
       `${platform} audit or its detector is incomplete`);
   }
+  const review = native?.review;
+  require(review === undefined || typeof review?.used === 'boolean', 'Invalid native review provenance');
+  const accessibilityReview = review?.used === true ? {
+    required: true, manifestSha256: review.manifestSha256,
+    appliedCount: review.appliedCount,
+    applied: Array.isArray(review.applied) ? review.applied.map(entry => ({
+      id: entry?.id, profile: entry?.profile, caseId: entry?.caseId, issueSha256: entry?.issueSha256,
+    })) : null,
+  } : {required: false, manifestSha256: null, appliedCount: 0, applied: []};
+  if (review?.used !== true) require(!review?.appliedCount && !review?.applied?.length, 'Exceptions lack a review manifest');
+  try { validateReviewApproval(accessibilityReview, jobs); }
+  catch (error) { require(false, error.message); }
   const production = reports.production;
   require(production?.candidateSha === sha && production?.executionPassed === true && production?.entryPoint === 'lib/main.dart',
     'Production entry-point smoke is incomplete');
@@ -53,7 +66,7 @@ export function summarize({ sha, jobs, matrix, mode, reports, coverage = invento
   const manual = ['physical-device-review', 'approved-baseline-review'];
   require(coverage.openGates.every(g => manual.includes(g)), 'Implementation gates remain open');
   return { schema: 2, candidateSha: sha || null, matrix, mode, jobs,
-    automaticPass: failures.length === 0, qualified: false,
+    automaticPass: failures.length === 0, qualified: false, accessibilityReview,
     qualification: failures.length ? 'INCOMPLETE' : 'READY_FOR_REVIEW',
     baselineVerified: web?.baselineVerified === true,
     failures, openGates: coverage.openGates, pendingRoutes: coverage.pendingRoutes,
@@ -75,6 +88,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const summary = `## Candidate evidence: ${result.qualification}\n\nCommit: \`${result.candidateSha || 'unknown'}\`\n\n`
     + Object.entries(result.jobs).map(([name, value]) => `- ${name}: ${value.result}`).join('\n')
     + '\n\n' + result.failures.map(f => `- ${f}`).join('\n')
+    + (result.accessibilityReview.required ? `\n\nReviewed accessibility manifest: \`${result.accessibilityReview.manifestSha256}\`; ${result.accessibilityReview.appliedCount} applied record(s). Raw findings remain in native evidence.\n` : '')
     + '\n\nHuman review is required in the protected release environment before promotion.\n';
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
   console.log(summary);

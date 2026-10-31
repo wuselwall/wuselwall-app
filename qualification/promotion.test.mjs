@@ -46,6 +46,27 @@ test('human review must be configured and artifacts must be current, immutable a
   }
 });
 
+test('promotion requires the protected job and exact manifest for accessibility exceptions', () => {
+  const reviewed = {...summary,
+    jobs: {...summary.jobs, review_approval: {result: 'success', outputs: {approved: 'true', manifest_sha256: 'c'.repeat(64)}}},
+    accessibilityReview: {required: true, manifestSha256: 'c'.repeat(64), appliedCount: 1,
+      applied: [{id: 'review-1', profile: 'ios-phone', caseId: 'today-de-light', issueSha256: 'd'.repeat(64)}]}};
+  validateSummary(reviewed, sha);
+  for (const mutate of [
+    c => { c.jobs.review_approval.result = 'skipped'; },
+    c => { c.jobs.review_approval.outputs.approved = 'false'; },
+    c => { c.jobs.review_approval.outputs.manifest_sha256 = 'e'.repeat(64); },
+    c => { delete c.accessibilityReview; },
+    c => { c.accessibilityReview.appliedCount++; },
+    c => { c.accessibilityReview.applied[0].caseId = 'detector-bad'; },
+    c => { c.accessibilityReview.applied.push(c.accessibilityReview.applied[0]); c.accessibilityReview.appliedCount++; },
+    c => { c.accessibilityReview.required = false; },
+  ]) {
+    const c = structuredClone(reviewed); mutate(c);
+    assert.throws(() => validateSummary(c, sha));
+  }
+});
+
 test('an API error never turns missing qualification into authorization', async () => {
   await assert.rejects(authorize({ sha, repository: 'test/app', token: 'test',
     fetcher: async () => ({ ok: false, status: 403 }) }), /HTTP 403/);

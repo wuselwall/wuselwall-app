@@ -124,6 +124,58 @@ remain independently discoverable and actionable. Merge a checkbox row only when
 its name, state and action belong to that one control. See Flutter's
 [Semantics API](https://api.flutter.dev/flutter/widgets/Semantics-class.html).
 
+## Explicitly reviewed framework findings
+
+No exceptions are enabled by default. The first supported review kind is an iOS
+element-description finding for an unnamed `FlutterSemanticsScrollView`. Other
+missing names, small targets, findings without element identity, Android findings,
+detector/input failures, framework errors and failed subprocesses remain blocking.
+Do not approve an application defect as a framework false positive.
+
+Native XCTest/instrumentation collection checks execution, case accounting,
+framework errors and detector controls. Accessibility errors still set each raw
+case's `passed` value to false. The report, rather than the collector's exit status
+alone, enforces accessibility findings and any explicitly approved adjudications.
+Both the raw report and the applied review records remain in the evidence.
+
+After a complete full native collection, the report writes
+`native-review-candidates.json` alongside the evidence. These entries have
+`disposition: pending`, no reviewer and no rationale. They cannot authorize
+anything. Incomplete collection and smoke diagnostics cannot generate an eligible
+review bundle.
+
+To prepare a review:
+
+1. Inspect the raw finding, its PNG and native semantic snapshot. Perform the
+   relevant VoiceOver/device check and establish why it is a framework false
+   positive. Keep the capture and its native manifest as review evidence.
+2. Create a separate `native-review.json` with exactly these root fields:
+   `schemaVersion: 1`, `kind: native-accessibility-reviews`, `candidateSha` and
+   `entries`. Copy only individually reviewed entries from the candidate file.
+   Change their disposition to `framework-false-positive`; supply a meaningful
+   `rationale`, `reviewer` and ISO-8601 `reviewedAt`. Leave all fingerprints intact.
+3. Publish that file as the `native-review.json` asset of a separate
+   `a11y-review-*` GitHub Release, as an explicit operator action. Record its exact
+   SHA-256 (`shasum -a 256 native-review.json`). Publication is not approval.
+4. Dispatch a **full comparison** for that same candidate, supplying `review_tag`
+   and `review_sha256` as well as the approved web/native baselines. The
+   `review_approval` job requires approval through the existing protected
+   `release-promotion` environment before the native job can apply the bundle.
+   Its required reviewers and disabled administrator bypass are verified.
+
+Each entry binds the full candidate SHA, device profile and case, complete native
+environment fingerprint, exact PNG bytes, semantic snapshot and finding identity
+(including type, label and bounds). Only the volatile native debug description is
+excluded from the issue fingerprint. Source, toolchain, layout, pixels, semantics
+or finding changes invalidate the entry. Unused, duplicate, malformed, wildcard,
+pending or stale entries fail closed; a review cannot carry over to another commit.
+
+The final summary records the approved manifest digest and applied record IDs.
+Promotion verifies that digest against the protected review job's outputs. The
+normal protected release approval is still required afterwards, and the automatic
+summary continues to say `qualified: false`. No current finding has been approved
+by implementing this mechanism.
+
 `QUALIFY_MODE=capture` produces `build/qualification/native/capture` for review.
 Capture never approves a release. After review, seal the bundle with its source
 commit:

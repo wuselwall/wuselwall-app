@@ -20,7 +20,8 @@ async function fixture(t) {
     const cases = expectedCases(profile, true);
     await fs.writeFile(path.join(out, 'audit.json'), JSON.stringify({schemaVersion: 1, done: true,
       candidateSha: sha, expected: cases.length + 2, results: [...cases, 'detector-bad', 'detector-keyboard']
-        .map(id => ({id, passed: true, frameworkErrors: []}))}));
+        .map(id => ({id, passed: true, frameworkErrors: [], issues: [],
+          semantics: {type: 1, label: id, children: []}}))}));
     await fs.writeFile(path.join(out, 'results.json'), JSON.stringify({candidateSha: sha, expected: cases.length,
       captured: cases.length, logicalWidth: 390, logicalHeight: 844, devicePixelRatio: 2}));
     await Promise.all(cases.map(id => fs.writeFile(path.join(out, `${id}.png`), png)));

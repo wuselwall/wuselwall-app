@@ -74,10 +74,10 @@ final class AccessibilityAuditTests: XCTestCase {
     continueAfterFailure = true
     app.launch()
     _ = try waitForState(ready: false)
-    var detector = false
+    var badControlFindings = Set<Int>()
     var keyboard = false
     var cases = 0
-    var failures = 0
+    var frameworkErrorCount = 0
     while true {
       _ = try request("next", [:])
       let state = try waitForState(ready: true)
@@ -130,19 +130,24 @@ final class AccessibilityAuditTests: XCTestCase {
           ])
           return true
         }
-        if id == "detector-bad" { detector = !issues.isEmpty }
+        if id == "detector-bad" {
+          for issue in issues where issue["identifier"] as? String == "native-bad-action" {
+            guard let auditType = issue["auditType"] as? NSNumber else { continue }
+            if [4, 8].contains(auditType.intValue) { badControlFindings.insert(auditType.intValue) }
+          }
+        }
       }
       let frameworkErrors = state["frameworkErrors"] as? [String] ?? ["Missing framework error evidence"]
+      frameworkErrorCount += frameworkErrors.count
       let passed: Bool
       if id == "detector-bad" {
-        passed = detector
+        passed = badControlFindings.isSuperset(of: [4, 8]) && frameworkErrors.isEmpty
       } else if id == "detector-keyboard" {
         passed = keyboard && issues.isEmpty && frameworkErrors.isEmpty
       } else {
-        passed = issues.isEmpty && frameworkErrors.isEmpty
+        passed = !issues.contains { $0["type"] as? String == "ERROR" } && frameworkErrors.isEmpty
       }
       _ = try request("result", ["id": id, "platform": "ios", "passed": passed, "issues": issues, "semantics": semantics(try app.snapshot())])
-      if !passed { failures += 1 }
       cases += 1
       let attachment = XCTAttachment(screenshot: app.screenshot())
       attachment.name = id
@@ -156,8 +161,9 @@ final class AccessibilityAuditTests: XCTestCase {
     attachment.lifetime = .keepAlways
     add(attachment)
     XCTAssertEqual(cases, report["expected"] as? Int)
-    XCTAssertTrue(detector, "Bad control was not rejected by Apple's native auditor")
+    XCTAssertTrue(badControlFindings.isSuperset(of: [4, 8]),
+                  "Apple's native auditor must flag the identified bad control for hit area and description")
     XCTAssertTrue(keyboard, "Native keyboard input failed")
-    XCTAssertEqual(failures, 0, "Native accessibility/framework findings; see retained case attachments")
+    XCTAssertEqual(frameworkErrorCount, 0, "Flutter framework errors; see retained case attachments")
   }
 }

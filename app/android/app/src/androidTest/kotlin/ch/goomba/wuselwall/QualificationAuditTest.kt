@@ -86,7 +86,7 @@ class QualificationAuditTest {
         assertNotNull("Audit bridge never started", state)
         var detector = false
         var keyboard = false
-        var failures = 0
+        var frameworkErrorCount = 0
         var cases = 0
         while (true) {
             request("next", JSONObject())
@@ -116,16 +116,24 @@ class QualificationAuditTest {
                 for (check in AccessibilityCheckPreset.getAccessibilityHierarchyChecksForPreset(AccessibilityCheckPreset.LATEST)) {
                     for (result in check.runCheckOnHierarchy(hierarchy)) {
                         issues.put(JSONObject().put("check", check.javaClass.simpleName).put("type", result.type.toString())
-                            .put("message", result.getMessage(Locale.ENGLISH).toString()).put("resultId", result.resultId))
+                            .put("message", result.getMessage(Locale.ENGLISH).toString()).put("resultId", result.resultId)
+                            .put("identifier", result.element?.resourceName ?: ""))
                     }
                 }
                 if (id == "detector-bad") {
-                    detector = (0 until issues.length()).any { issues.getJSONObject(it).optString("type") == "ERROR" }
+                    detector = listOf("TouchTargetSizeCheck", "SpeakableTextPresentCheck").all { expectedCheck ->
+                        (0 until issues.length()).any { index ->
+                            val issue = issues.getJSONObject(index)
+                            val identifier = issue.optString("identifier")
+                            issue.optString("type") == "ERROR" && issue.optString("check") == expectedCheck &&
+                                (identifier == "native-bad-action" || identifier.endsWith("/native-bad-action"))
+                        }
+                    }
                 }
             }
             val failed = (0 until issues.length()).any { issues.getJSONObject(it).optString("type") == "ERROR" } ||
                 sample.getJSONArray("frameworkErrors").length() != 0
-            if (id != "detector-bad" && failed) failures++
+            frameworkErrorCount += sample.getJSONArray("frameworkErrors").length()
             request("result", JSONObject().put("id", id).put("platform", "android").put("issues", issues)
                 .put("passed", if (id == "detector-bad") detector else !failed).put("nodesSource", "UiAutomation.AccessibilityNodeInfo").put("semantics", semantics(root)))
             cases++
@@ -135,6 +143,6 @@ class QualificationAuditTest {
         assertEquals(report.getInt("expected"), cases)
         assertTrue("Bad control was not rejected by ATF", detector)
         assertTrue("Native editable semantics did not update Flutter", keyboard)
-        assertEquals("Native accessibility/framework findings", 0, failures)
+        assertEquals("Flutter framework errors", 0, frameworkErrorCount)
     }
 }

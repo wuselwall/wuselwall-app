@@ -20,6 +20,37 @@ export function validateRun(run, { sha, repository, branch, workflowId }) {
   assert.equal(run.conclusion, 'success', 'Qualification did not pass');
 }
 
+export function validateReviewApproval(review, jobs) {
+  const approval = jobs?.review_approval;
+  if (approval) assert.ok(['success', 'skipped'].includes(approval.result), 'Accessibility review approval did not complete');
+  if (review === undefined) {
+    assert.notEqual(approval?.outputs?.approved, 'true', 'Approved review provenance is missing');
+    return; // Older evidence cannot contain adjudications.
+  }
+  assert.equal(typeof review.required, 'boolean', 'Missing accessibility review requirement');
+  assert.ok(Number.isSafeInteger(review.appliedCount) && review.appliedCount >= 0, 'Invalid reviewed-exception count');
+  assert.ok(Array.isArray(review.applied), 'Missing reviewed-exception records');
+  assert.equal(review.applied.length, review.appliedCount, 'Reviewed-exception records differ from their count');
+  if (!review.required) {
+    assert.equal(review.appliedCount, 0, 'Exceptions lack approval provenance');
+    assert.equal(review.manifestSha256, null, 'Unapproved review manifest');
+    assert.notEqual(approval?.outputs?.approved, 'true', 'Approved review provenance was omitted');
+    return;
+  }
+  assert.match(review.manifestSha256 ?? '', /^[a-f0-9]{64}$/, 'Missing approved review digest');
+  assert.equal(approval?.result, 'success', 'Accessibility exceptions require protected approval');
+  assert.equal(approval?.outputs?.approved, 'true', 'Accessibility approval was not recorded');
+  assert.equal(approval?.outputs?.manifest_sha256, review.manifestSha256, 'Protected approval belongs to a different review manifest');
+  const ids = new Set();
+  for (const entry of review.applied) {
+    assert.ok(typeof entry.id === 'string' && entry.id.length > 0 && !ids.has(entry.id), 'Invalid or duplicate reviewed-exception ID');
+    ids.add(entry.id);
+    assert.match(entry.profile ?? '', /^ios-(?:phone|tablet)(?:-large)?$/, 'Unexpected reviewed platform');
+    assert.match(entry.caseId ?? '', /^[a-z0-9-]+-(?:de|en|fr|es)-(?:light|dark)$/, 'Invalid or detector review case');
+    assert.match(entry.issueSha256 ?? '', /^[a-f0-9]{64}$/, 'Missing reviewed finding fingerprint');
+  }
+}
+
 export function validateSummary(summary, sha) {
   assert.equal(summary.schema, 2, 'Unsupported evidence schema');
   assert.equal(summary.candidateSha, sha, 'Evidence belongs to a different commit');
@@ -37,6 +68,7 @@ export function validateSummary(summary, sha) {
   }
   assert.ok(summary.evidence?.flutter && summary.evidence?.web && summary.evidence?.native && summary.evidence?.production,
     'Missing evidence checksums');
+  validateReviewApproval(summary.accessibilityReview, summary.jobs);
 }
 
 export function validateEnvironment(environment) {
@@ -97,7 +129,8 @@ export async function authorize({ sha, repository, token, fetcher = fetch, api =
       assert.equal(read.status, 0, 'Cannot read qualification summary');
       const summary = JSON.parse(read.stdout);
       validateSummary(summary, sha);
-      return { candidateSha: sha, runId: run.id, artifactId: artifact.id, digest: artifact.digest, environment: promotionEnvironment };
+      return { candidateSha: sha, runId: run.id, artifactId: artifact.id, digest: artifact.digest, environment: promotionEnvironment,
+        accessibilityReview: summary.accessibilityReview ?? null };
     } finally { fs.rmSync(dir, { recursive: true, force: true }); }
   }
   throw new Error('No successful full comparison qualification exists for this exact commit');
@@ -107,5 +140,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const result = await authorize({ sha: process.env.GITHUB_SHA, repository: process.env.GITHUB_REPOSITORY, token: process.env.GH_TOKEN });
   console.log(`Verified candidate ${result.candidateSha}; review qualification run ${result.runId} before approving ${result.environment}.`);
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-    `## Release review required\n\nCommit: \`${result.candidateSha}\`\n\n[Qualification evidence](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${result.runId})\n\nReview screenshot changes, baseline acceptance and physical-device checks before approving the release environment.\n`);
+    `## Release review required\n\nCommit: \`${result.candidateSha}\`\n\n[Qualification evidence](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${result.runId})\n\n`
+    + (result.accessibilityReview?.required ? `Accessibility review manifest: \`${result.accessibilityReview.manifestSha256}\`; ${result.accessibilityReview.appliedCount} explicitly reviewed finding(s).\n\n` : '')
+    + 'Review screenshot changes, accepted accessibility exceptions, baseline acceptance and physical-device checks before approving the release environment.\n');
 }

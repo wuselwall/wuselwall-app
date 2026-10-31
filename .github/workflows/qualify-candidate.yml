@@ -27,6 +27,12 @@ on:
       native_baseline_sha256:
         description: Reviewed native manifest.json SHA-256 (compare only)
         type: string
+      review_tag:
+        description: Optional a11y-review-* release containing native-review.json; requires protected approval
+        type: string
+      review_sha256:
+        description: Exact native-review.json SHA-256; never approves findings by itself
+        type: string
 permissions:
   contents: read
   actions: read
@@ -55,9 +61,17 @@ jobs:
           CANDIDATE: ${{ inputs.candidate_sha }}
           EVENT_SHA: ${{ github.sha }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          REVIEW_TAG: ${{ inputs.review_tag }}
+          REVIEW_SHA256: ${{ inputs.review_sha256 }}
+          MATRIX: ${{ inputs.matrix }}
+          MODE: ${{ inputs.mode }}
         shell: bash
         run: |
           set -euo pipefail
+          if [[ -n "$REVIEW_TAG" || -n "$REVIEW_SHA256" ]]; then
+            [[ "$REVIEW_TAG" =~ ^a11y-review-[a-zA-Z0-9.-]+$ && "$REVIEW_SHA256" =~ ^[a-f0-9]{64}$ ]]
+            [[ "$MATRIX" == full && "$MODE" == compare ]] || { echo 'Reviewed exceptions require a full comparison.' >&2; exit 1; }
+          fi
           [[ "$CANDIDATE" =~ ^[a-f0-9]{40}$ ]] || { echo 'A full commit SHA is required.' >&2; exit 1; }
           [[ "$CANDIDATE" == "$EVENT_SHA" ]] || { echo 'Candidate must match the default-branch head captured at dispatch.' >&2; exit 1; }
           [[ "$(git cat-file -t "$CANDIDATE")" == commit ]]
@@ -66,6 +80,49 @@ jobs:
           version=$(git show "$CANDIDATE:app/pubspec.yaml" | sed -n 's/^  flutter: *\([0-9][0-9.]*\) *$/\1/p')
           [[ -n "$version" ]]
           printf 'sha=%s\nflutter=%s\n' "$CANDIDATE" "$version" >> "$GITHUB_OUTPUT"
+
+  review_approval:
+    if: inputs.review_tag != ''
+    needs: prepare
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 10
+    environment: release-promotion
+    outputs:
+      approved: ${{ steps.review.outputs.approved }}
+      manifest_sha256: ${{ steps.review.outputs.manifest_sha256 }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - name: Read the review artifact and protected-environment configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_TAG: ${{ inputs.review_tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$REVIEW_TAG" =~ ^a11y-review-[a-zA-Z0-9.-]+$ ]]
+          review_dir=$(mktemp -d "$RUNNER_TEMP/a11y-review-XXXXXX")
+          gh release download "$REVIEW_TAG" --pattern native-review.json --dir "$review_dir"
+          gh api "repos/$GITHUB_REPOSITORY/environments/release-promotion" > "$review_dir/protection.json"
+          printf 'QUALIFY_REVIEW_DIR=%s\n' "$review_dir" >> "$GITHUB_ENV"
+      - name: Validate the explicitly approved review without repository credentials
+        id: review
+        env:
+          REVIEW_SHA256: ${{ inputs.review_sha256 }}
+          CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {validateEnvironment} from './qualification/promotion.mjs';
+          validateEnvironment(JSON.parse(fs.readFileSync(path.join(process.env.QUALIFY_REVIEW_DIR, 'protection.json'), 'utf8')));
+          JS
+          node qualification/native/reviews.mjs validate "$QUALIFY_REVIEW_DIR/native-review.json" "$REVIEW_SHA256" "$CANDIDATE_SHA" --approved
+          printf 'approved=true\nmanifest_sha256=%s\n' "$REVIEW_SHA256" >> "$GITHUB_OUTPUT"
 
   flutter:
     needs: prepare
@@ -161,15 +218,31 @@ jobs:
           retention-days: 30
 
   native:
-    needs: prepare
+    if: always() && needs.prepare.result == 'success' && ((inputs.review_tag != '' && needs.review_approval.result == 'success') || (inputs.review_tag == '' && needs.review_approval.result == 'skipped'))
+    needs: [prepare, review_approval]
     runs-on: [self-hosted, macOS]
     timeout-minutes: 180
+    env:
+      QUALIFY_NATIVE_REVIEW_APPROVED: ${{ needs.review_approval.outputs.approved }}
+      QUALIFY_NATIVE_REVIEW_SHA256: ${{ needs.review_approval.outputs.manifest_sha256 }}
     concurrency:
       group: native-qualification-devices
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - name: Download the explicitly approved native review
+        if: inputs.review_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_TAG: ${{ inputs.review_tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$REVIEW_TAG" =~ ^a11y-review-[a-zA-Z0-9.-]+$ ]]
+          review_dir=$(mktemp -d "$RUNNER_TEMP/a11y-review-XXXXXX")
+          gh release download "$REVIEW_TAG" --pattern native-review.json --dir "$review_dir"
+          printf 'QUALIFY_NATIVE_REVIEW_FILE=%s\n' "$review_dir/native-review.json" >> "$GITHUB_ENV"
       - name: Download the reviewed native baseline
         if: inputs.mode == 'compare'
         env:
@@ -251,7 +324,7 @@ jobs:
 
   evidence:
     if: always() && needs.prepare.result == 'success'
-    needs: [prepare, flutter, web, native, production]
+    needs: [prepare, review_approval, flutter, web, native, production]
     runs-on: [self-hosted, Linux, build]
     timeout-minutes: 5
     steps:
