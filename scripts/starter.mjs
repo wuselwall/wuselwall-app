@@ -191,11 +191,14 @@ export function render(kinds, words) {
       items[tag] = [];
       for (const s of k.sections) {
         for (const name of sectionNames(s, tag)) {
-          const icon = iconFor(name, words);
+          // A key starting with @ names no picture (category-only words, e.g. cereals): no icon, and
+          // not a gap to fill either.
+          let icon = iconFor(name, words);
+          if (icon !== null && icon.startsWith('@')) icon = undefined;
           if (icon === null && !unmatched.some((u) => u.kind === k.kind && u.name === name && u.tag === tag)) {
             unmatched.push({ kind: k.kind, tag, category: s.category, name });
           }
-          items[tag].push({ name, category: s.category, icon });
+          items[tag].push({ name, category: s.category, icon: icon === undefined ? null : icon });
         }
       }
     }

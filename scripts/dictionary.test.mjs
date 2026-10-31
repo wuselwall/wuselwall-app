@@ -103,14 +103,12 @@ function sqlPairs(file, fn) {
   return pairs;
 }
 
-// Pairs where the dictionary deliberately (or pending review) files a word under another key than
-// the SQL function. The test pins the dictionary's key, so a change in either place shows up.
+// The meals pairs where the dictionary deliberately (or pending review) files a word under another
+// key than the SQL function. The test pins the dictionary's key, so a change in either place shows
+// up. The shopping dictionary has moved on from app.catalog_icon_for (flour, hammer, kiwi, baby, ...
+// have pictures of their own now), so for shopping the legacy list only has to stay KNOWN.
 const differs = {
-  shopping: {
-    erdnussbutter: 'honey', 'peanut butter': 'honey', // a spread, not nuts
-    // cereals have no picture of their own (#196 files them under pantry, the bowl is yoghurt)
-    muesli: '@cereal', cornflakes: '@cereal', haferflocken: '@cereal', cereal: '@cereal', porridge: '@cereal', oats: '@cereal',
-  },
+  shopping: {},
   meals: { gratin: 'pie', parmentier: 'pie', tostadas: 'sandwich', wedges: 'fries' },
 };
 
@@ -118,12 +116,14 @@ for (const [domain, file, fn] of [
   ['shopping', 'supabase/migrations/20261015120000_catalog_icons.sql', 'app.catalog_icon_for'],
   ['meals', 'supabase/migrations/20261025130000_rituals_wishes_story.sql', 'app.meal_icon_for'],
 ]) {
-  test(`the ${domain} dictionary contains every pair of ${fn}`, () => {
+  test(`the ${domain} dictionary ${domain === 'shopping' ? 'still knows every word' : 'contains every pair'} of ${fn}`, () => {
     const have = index(domain);
-    const wrong = sqlPairs(file, fn)
-      .map(([word, key]) => [normalize(word), key])
-      .filter(([word, key]) => (differs[domain][word] ?? key) !== have.get(word))
-      .map(([word, key]) => `${word}: SQL ${key}, dictionary ${have.get(word) ?? 'missing'}`);
+    const pairs = sqlPairs(file, fn).map(([word, key]) => [normalize(word), key]);
+    const wrong = domain === 'shopping'
+      ? pairs.filter(([word]) => !have.has(word)).map(([word, key]) => `${word}: SQL ${key}, dictionary missing`)
+      : pairs
+        .filter(([word, key]) => (differs[domain][word] ?? key) !== have.get(word))
+        .map(([word, key]) => `${word}: SQL ${key}, dictionary ${have.get(word) ?? 'missing'}`);
     assert.deepEqual(wrong, []);
   });
 }
