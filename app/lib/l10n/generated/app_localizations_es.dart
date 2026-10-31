@@ -517,6 +517,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shoppingCat_pantry => 'Despensa';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Congelados';
 
   @override
@@ -6543,4 +6546,52 @@ class AppLocalizationsEs extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Para eliminar una cuenta hace falta iniciar sesión de nuevo. Introduce la contraseña de $email.';
   }
+
+  @override
+  String get shoppingModePlan => 'Modo planificar';
+
+  @override
+  String get shoppingStartShopping => 'Ir a comprar';
+
+  @override
+  String get shoppingAddInStore => 'Añadir';
+
+  @override
+  String get shoppingShopEmpty =>
+      'No hay nada en la lista. Toca «Añadir» o vuelve a «Planificar».';
+
+  @override
+  String get shoppingSearchClear => 'Borrar y cerrar';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Listo';
+
+  @override
+  String get shoppingAddOne => 'Uno más';
+
+  @override
+  String get shoppingCategoryAuto =>
+      'Categoría asignada automáticamente por el nombre';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Fijar la ficha';
+
+  @override
+  String get shoppingTileUnpin => 'Desfijar';
+
+  @override
+  String get shoppingTilePinHelp => 'Las fichas fijadas siempre van primero.';
+
+  @override
+  String get shoppingTilePinned => 'Fijada';
 }

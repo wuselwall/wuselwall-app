@@ -34,13 +34,14 @@ class ShoppingRepository {
   Future<Result<List<ShoppingList>>> lists() => _api.select(
     'shopping_lists',
     parse: ShoppingList.fromJson,
-    build: (q) => q.order('sort_order'),
+    // supabase-dart's order() descends by default: the walking order is ascending.
+    build: (q) => q.order('sort_order', ascending: true),
   );
 
   Future<Result<List<ShoppingCategory>>> categories() => _api.select(
     'shopping_categories',
     parse: ShoppingCategory.fromJson,
-    build: (q) => q.order('sort_order'),
+    build: (q) => q.order('sort_order', ascending: true),
   );
 
   Future<Result<List<CatalogEntry>>> catalog() => _api.select(
@@ -248,6 +249,17 @@ class ShoppingRepository {
       'p_name': name,
       'p_category': categoryId,
     },
+    parse: (_) {},
+  );
+
+  /// Pins a tile so it always comes first in the picker, or lets it go again.
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) => _api.rpc(
+    'shopping_catalog_pin',
+    params: {'p_actor': actor, 'p_item': itemId, 'p_pinned': pinned},
     parse: (_) {},
   );
 

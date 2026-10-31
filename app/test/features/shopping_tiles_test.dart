@@ -8,15 +8,22 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_widgets.dart';
 
 import '../support/fakes.dart';
 
-CatalogEntry entry(String name, int count, {DateTime? last}) => CatalogEntry(
+CatalogEntry entry(
+  String name,
+  int count, {
+  DateTime? last,
+  bool pinned = false,
+}) => CatalogEntry(
   id: name,
   listId: 'l1',
   name: name,
@@ -24,6 +31,7 @@ CatalogEntry entry(String name, int count, {DateTime? last}) => CatalogEntry(
   categoryId: null,
   purchaseCount: count,
   lastPurchasedAt: last,
+  pinned: pinned,
 );
 
 /// Pumps the shopping body on the wall (or in [register]), with [catalog] as the
@@ -34,6 +42,7 @@ Future<void> pumpBody(
   UiRegister register = UiRegister.kiosk,
   Size size = const Size(1280, 800),
   List<ShoppingItem>? items,
+  List<ShoppingCategory> categories = const [],
   List<ShoppingList> lists = const [
     ShoppingList(id: 'l1', name: 'Supermarkt', isDefault: true, openCount: 1),
   ],
@@ -53,13 +62,14 @@ Future<void> pumpBody(
             ShoppingView(
               items: shown,
               lists: lists,
-              categories: const [],
+              categories: categories,
               catalog: catalog,
               pendingCount: 0,
             ),
           ),
         ),
         shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
+        shoppingModeStoreProvider.overrideWithValue(MemoryShoppingModeStore()),
         shoppingRepositoryProvider.overrideWithValue(
           FakeShoppingRepository(shown),
         ),
@@ -158,15 +168,16 @@ void main() {
           item('$i', n),
       ],
     );
-    // A row and a half of tiles, not three: the list below keeps its rows.
+    // 30% of the screen (192 of 640), not two and a half rows: the list below keeps
+    // its rows.
     final grid = find
         .ancestor(
           of: find.byType(Wrap),
           matching: find.byType(SingleChildScrollView),
         )
         .first;
-    expect(t.getSize(grid).height, lessThanOrEqualTo(112));
-    final finish = t.getRect(find.text('Einkauf beenden')).top;
+    expect(t.getSize(grid).height, lessThanOrEqualTo(192));
+    final finish = t.getRect(find.text('Einkaufen gehen')).top;
     final whole = [
       for (final n in ['Tomaten', 'Gurke', 'Brot', 'Käse'])
         for (final e in find.text(n).evaluate())
@@ -175,6 +186,44 @@ void main() {
     ].where((r) => r.bottom <= finish);
     expect(whole.length, greaterThanOrEqualTo(2));
   });
+
+  test('the tile grid is 30% of the screen, between 112 and 240', () {
+    expect(tileGridHeight(300), 112);
+    expect(tileGridHeight(400), closeTo(120, 0.01));
+    expect(tileGridHeight(640), closeTo(192, 0.01));
+    expect(tileGridHeight(800), 240);
+    expect(tileGridHeight(1400), 240);
+  });
+
+  test('pinned tiles come first, most bought first, then by name', () {
+    final tiles = rankTiles([
+      entry('Milch', 9),
+      entry('Brot', 7, pinned: true),
+      entry('Zucker', 1, pinned: true),
+      entry('Apfel', 1, pinned: true),
+      entry('Kaffee', 20, last: DateTime(2026, 10, 10)),
+    ], '');
+    expect(tiles.map((t) => t.name), [
+      'Brot',
+      'Apfel',
+      'Zucker',
+      'Kaffee',
+      'Milch',
+    ]);
+  });
+
+  test(
+    'with a query a pinned match beats an unpinned one of the same score',
+    () {
+      final names = rankTiles([
+        entry('Milch', 9),
+        entry('Milchreis', 2, pinned: true),
+        entry('Buttermilch', 30),
+      ], 'milch').map((t) => t.name);
+      // Both prefix matches first (the pinned one ahead), the word-less substring last.
+      expect(names, ['Milchreis', 'Milch', 'Buttermilch']);
+    },
+  );
 
   testWidgets('the tiles fill the width of a wide phone', (t) async {
     await pumpBody(

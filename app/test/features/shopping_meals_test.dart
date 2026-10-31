@@ -65,7 +65,7 @@ void main() {
       expect(find.textContaining('Für:'), findsOneWidget);
       expect(t.takeException(), isNull);
 
-      await t.tap(find.widgetWithText(TextButton, 'Abbrechen'));
+      await t.tap(find.byKey(const ValueKey('item-done')));
       await t.pumpAndSettle();
       await t.longPress(find.text('Milch'));
       await t.pumpAndSettle();

@@ -516,6 +516,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shoppingCat_pantry => 'Vorrat';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Tiefkühl';
 
   @override
@@ -6527,6 +6530,54 @@ class AppLocalizationsDe extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Zum Löschen eines Kontos brauchst du eine frische Anmeldung. Gib das Passwort von $email ein.';
   }
+
+  @override
+  String get shoppingModePlan => 'Planungsmodus';
+
+  @override
+  String get shoppingStartShopping => 'Einkaufen gehen';
+
+  @override
+  String get shoppingAddInStore => 'Hinzufügen';
+
+  @override
+  String get shoppingShopEmpty =>
+      'Nichts auf der Liste. Tippe auf „Hinzufügen“ oder geh zurück zu „Planen“.';
+
+  @override
+  String get shoppingSearchClear => 'Leeren und schließen';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Fertig';
+
+  @override
+  String get shoppingAddOne => 'Eins mehr';
+
+  @override
+  String get shoppingCategoryAuto =>
+      'Kategorie automatisch aus dem Namen gewählt';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Kachel anheften';
+
+  @override
+  String get shoppingTileUnpin => 'Anheften aufheben';
+
+  @override
+  String get shoppingTilePinHelp => 'Angeheftete Kacheln stehen immer vorn.';
+
+  @override
+  String get shoppingTilePinned => 'Angeheftet';
 }
 
 /// The translations for German, as used in Austria (`de_AT`).
@@ -7002,4 +7053,7 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get eventStarterHoliday => 'Ferien / Reise';
+
+  @override
+  String get shoppingSearchClear => 'Leeren und schliessen';
 }

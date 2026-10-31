@@ -10,7 +10,7 @@ Elige arriba la lista del **supermercado**, la **droguería**, la **ferretería*
 2. Escribe el **nombre** y elige el tipo de tienda.
 3. Guarda.
 
-El tipo fija las **categorías** en el orden de los pasillos. Cada lista tiene **sus propias tarjetas**: la ferretería no sugiere plátanos.
+El tipo fija las **categorías** en el orden de los pasillos; el de supermercado incluye, por ejemplo, Frutas y verduras, Pan y bollería, Lácteos y quesos, Carne y pescado, Despensa, **Snacks**, Congelados, Bebidas y Hogar. Cada lista tiene **sus propias tarjetas**: la ferretería no sugiere plátanos.
 
 ## Lista predeterminada {#the-default-list}
 

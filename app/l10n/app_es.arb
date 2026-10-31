@@ -216,6 +216,7 @@
   "shoppingCat_dairy": "Lácteos y quesos",
   "shoppingCat_meat_fish": "Carne y pescado",
   "shoppingCat_pantry": "Despensa",
+  "shoppingCat_snacks": "Snacks",
   "shoppingCat_frozen": "Congelados",
   "shoppingCat_drinks": "Bebidas",
   "shoppingCat_household": "Hogar",
@@ -3078,5 +3079,36 @@
   "settingsPasswordNoMail": "El servidor de tu familia no envía correos: inicias sesión con tu dirección y esta contraseña.",
   "passwordDialogBodyNoMail": "Al menos 10 caracteres. Si la olvidas, un responsable de tu familia puede darte un código para elegir otra.",
   "errEmailNotConfirmed": "Este servidor quiere confirmar la dirección por correo, pero no envía ninguno. Pregunta a quien lo administra.",
-  "accountDeleteReauthPasswordBody": "Para eliminar una cuenta hace falta iniciar sesión de nuevo. Introduce la contraseña de {email}."
+  "accountDeleteReauthPasswordBody": "Para eliminar una cuenta hace falta iniciar sesión de nuevo. Introduce la contraseña de {email}.",
+  "shoppingModePlan": "Modo planificar",
+  "shoppingStartShopping": "Ir a comprar",
+  "shoppingAddInStore": "Añadir",
+  "shoppingShopEmpty": "No hay nada en la lista. Toca «Añadir» o vuelve a «Planificar».",
+  "shoppingSearchClear": "Borrar y cerrar",
+  "shoppingTripTitle": "{name} · {open}",
+  "@shoppingTripTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "open": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemDone": "Listo",
+  "shoppingAddOne": "Uno más",
+  "shoppingCategoryAuto": "Categoría asignada automáticamente por el nombre",
+  "shoppingCountTimes": "{count} ×",
+  "@shoppingCountTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingTilePin": "Fijar la ficha",
+  "shoppingTileUnpin": "Desfijar",
+  "shoppingTilePinHelp": "Las fichas fijadas siempre van primero.",
+  "shoppingTilePinned": "Fijada"
 }
