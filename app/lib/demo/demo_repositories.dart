@@ -500,6 +500,32 @@ class DemoShoppingRepository implements ShoppingRepository {
       purchaseCount: c.purchaseCount,
       lastPurchasedAt: c.lastPurchasedAt,
       iconKey: c.iconKey,
+      pinned: c.pinned,
+      categoryAuto: false,
+    );
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) async {
+    final i = _catalog.indexWhere((c) => c.id == itemId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'catalog_not_found'));
+    final c = _catalog[i];
+    _catalog[i] = CatalogEntry(
+      id: c.id,
+      listId: c.listId,
+      name: c.name,
+      foldedName: c.foldedName,
+      categoryId: c.categoryId,
+      purchaseCount: c.purchaseCount,
+      lastPurchasedAt: c.lastPurchasedAt,
+      iconKey: c.iconKey,
+      pinned: pinned,
+      categoryAuto: c.categoryAuto,
     );
     return const Ok(null);
   }

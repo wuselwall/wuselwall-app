@@ -7,11 +7,13 @@ import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 
 import '../support/fakes.dart';
 
@@ -21,7 +23,11 @@ import '../support/fakes.dart';
 /// pump the real theme at the real UiRegister, as the board and kiosk app do,
 /// and measure the widget's actual laid-out size rather than reading back the
 /// style's requested minimum.
-Future<void> _pumpShopping(WidgetTester t, UiRegister register) async {
+Future<void> _pumpShopping(
+  WidgetTester t,
+  UiRegister register, {
+  bool trip = false,
+}) async {
   t.view.physicalSize = const Size(1280, 800);
   t.view.devicePixelRatio = 1;
   addTearDown(t.view.resetPhysicalSize);
@@ -50,6 +56,7 @@ Future<void> _pumpShopping(WidgetTester t, UiRegister register) async {
           ),
         ),
         shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
+        shoppingModeStoreProvider.overrideWithValue(MemoryShoppingModeStore()),
         shoppingRepositoryProvider.overrideWithValue(
           FakeShoppingRepository([item('1', 'Milch')]),
         ),
@@ -59,7 +66,9 @@ Future<void> _pumpShopping(WidgetTester t, UiRegister register) async {
         localizationsDelegates: localizationsDelegates,
         supportedLocales: supportedLocales,
         locale: const Locale('de'),
-        home: const Scaffold(body: ShoppingBody()),
+        home: trip
+            ? const ShoppingTripPage()
+            : const Scaffold(body: ShoppingBody()),
       ),
     ),
   );
@@ -71,12 +80,8 @@ void main() {
     testWidgets('${register.name}: "Einkauf beenden" is at least 56x56', (
       t,
     ) async {
-      await _pumpShopping(t, register);
-      // The wall has one combined view; the kid's register finishes in shopping mode.
-      if (register == UiRegister.kid) {
-        await t.tap(find.byKey(const ValueKey('shopping-mode-shop')));
-        await t.pump();
-      }
+      // The wall has one combined view; the kid's register finishes on the trip page.
+      await _pumpShopping(t, register, trip: register == UiRegister.kid);
 
       final finishButton = find.ancestor(
         of: find.text('Einkauf beenden'),
@@ -89,22 +94,30 @@ void main() {
     });
   }
 
-  testWidgets(
-    'kid: the mode control and "Einkaufen gehen" are at least 56 high',
-    (t) async {
-      await _pumpShopping(t, UiRegister.kid);
+  testWidgets('kid: "Einkaufen gehen" is at least 56 high', (t) async {
+    await _pumpShopping(t, UiRegister.kid);
 
-      final mode = find.byType(SegmentedButton<ShoppingMode>);
-      expect(mode, findsOneWidget);
-      expect(t.getSize(mode).height, greaterThanOrEqualTo(56));
-      final start = find.ancestor(
-        of: find.text('Einkaufen gehen'),
-        matching: find.byType(FilledButton),
-      );
-      expect(start, findsOneWidget);
-      expect(t.getSize(start).height, greaterThanOrEqualTo(56));
-    },
-  );
+    final start = find.byKey(const ValueKey('shopping-start'));
+    expect(start, findsOneWidget);
+    expect(t.getSize(start).height, greaterThanOrEqualTo(56));
+    expect(find.byType(SegmentedButton<ShoppingMode>), findsNothing);
+  });
+
+  testWidgets('kid: the trip page\'s three controls are at least 56 high', (
+    t,
+  ) async {
+    await _pumpShopping(t, UiRegister.kid, trip: true);
+
+    for (final key in [
+      'shopping-add-in-store',
+      'shopping-mode-plan',
+      'shopping-finish',
+    ]) {
+      final size = t.getSize(find.byKey(ValueKey(key)));
+      expect(size.height, greaterThanOrEqualTo(56), reason: key);
+      expect(size.width, greaterThanOrEqualTo(56), reason: key);
+    }
+  });
 
   testWidgets('kid: the shopping history icon action is at least 56x56', (
     t,

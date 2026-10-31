@@ -252,6 +252,17 @@ class ShoppingRepository {
     parse: (_) {},
   );
 
+  /// Pins a tile so it always comes first in the picker, or lets it go again.
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) => _api.rpc(
+    'shopping_catalog_pin',
+    params: {'p_actor': actor, 'p_item': itemId, 'p_pinned': pinned},
+    parse: (_) {},
+  );
+
   /// "Nicht mehr vorschlagen": the tile goes, the history keeps its text (guardians only).
   Future<Result<void>> deleteCatalogItem({
     required String? actor,

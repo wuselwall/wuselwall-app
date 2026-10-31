@@ -4,15 +4,18 @@ Die Liste ist für den Einkauf gebaut: große Flächen, einhändig und mit Hands
 
 ## Zum Einkaufen wechseln
 
-Unter den Listen wählst du den Modus: **Planen** zuhause, **Einkaufen** im Laden. Auf **Einkaufen gehen** unten im Modus Planen kommst du mit einem Tipp hinüber. Hast du schon etwas abgehakt (etwa weil jemand anderes gerade einkauft), öffnet die Liste gleich im Modus Einkaufen.
+Auf **Einkaufen gehen** unten in der Liste kommst du mit einem Tipp in den Einkauf. Er füllt den ganzen Bildschirm: keine Leiste oben und keine Navigation unten, damit nichts im Weg ist. Oben steht nur der Name der Liste mit der Zahl der offenen Artikel („Supermarkt · 5“), darunter die Artikel nach Kategorien in der Reihenfolge des Ladens – ohne Suchfeld und Kacheln, jede Zeile mit einem Kästchen.
 
-Im Modus Einkaufen fehlen Suchfeld und Kacheln: Die Artikel stehen gleich unter dem Schalter, nach Kategorien in der Reihenfolge des Ladens, und jede Zeile hat ein Kästchen.
+<Shot name="shopping-store" alt="Der Einkauf als eigene Seite mit Kästchen zum Abhaken" />
 
-<Shot name="shopping-store" alt="Einkaufsliste im Modus Einkaufen mit Kästchen zum Abhaken" />
+Unten stehen drei Knöpfe: **Hinzufügen**, **Planen** und **Einkauf beenden**. Mit **Planen** (oder der Zurück-Geste deines Handys) kommst du zurück zur normalen Liste.
+
+WuselWall merkt sich auf diesem Gerät, ob du zuletzt geplant oder eingekauft hast. Hast du das Handy im Laden zugemacht, öffnet die Liste beim nächsten Mal gleich wieder im Einkauf. Das gilt nur für dieses Gerät; die Familie sieht davon nichts.
 
 ## Abhaken
 
-- Tippe irgendwo auf die Zeile (mindestens 56 Pixel hoch), um einen Artikel abzuhaken.
+- Tippe irgendwo auf die Zeile (mindestens 56 Pixel hoch), um einen Artikel abzuhaken. Eine Menge über 1 steht als dicke Marke „2×“ gleich hinter dem Namen, damit du sie im Gang nicht übersiehst.
+- **Lange drücken** öffnet die [Artikelkarte](/shopping/add#die-artikelkarte) mit Anzahl, Notiz und Kategorie.
 - Die Zeile bleibt noch kurz stehen: Erst 800 Millisekunden nach dem letzten Haken
   werden die Haken gesendet und die Liste neu sortiert. Noch einmal tippen nimmt einen
   solchen Haken sofort zurück. Beim Verlassen der Liste werden wartende Haken gesendet.
@@ -22,7 +25,7 @@ Im Modus Einkaufen fehlen Suchfeld und Kacheln: Die Artikel stehen gleich unter 
 
 ## Etwas vergessen?
 
-Unten steht ein **+**. Es öffnet Suchfeld und Kacheln in einem Blatt über der Liste. Du kannst dort mehrere Artikel nacheinander hinzufügen; das Blatt bleibt offen, bis du es nach unten wischst oder zurückgehst. Wer das Tippen beenden will, tippt auf das **×** im Suchfeld: Es leert das Feld und schließt die Tastatur.
+Unten steht **Hinzufügen** (auf schmalen Handys nur ein **+**). Es öffnet Suchfeld und Kacheln in einem Blatt über der Liste. Du kannst dort mehrere Artikel nacheinander hinzufügen; das Blatt bleibt offen, bis du es nach unten wischst oder zurückgehst. Wer das Tippen beenden will, tippt auf das **×** im Suchfeld: Es leert das Feld und schließt die Tastatur.
 
 <Shot name="shopping-store-add" alt="Blatt zum Hinzufügen im Laden mit Suchfeld und Kacheln" />
 
@@ -32,7 +35,7 @@ Zwei Personen in verschiedenen Gängen sehen die Haken der anderen **nach ein bi
 
 ## Einkauf beenden
 
-Wenn ihr fertig seid, tippt ihr unten auf **Einkauf beenden**. Danach springt die Liste zurück in den Modus **Planen**.
+Wenn ihr fertig seid, tippt ihr unten auf **Einkauf beenden**. Danach schließt sich der Einkauf, und du bist zurück in der Liste zum **Planen**.
 
 - Alles **Abgehakte** wird abgeschlossen und im [Verlauf](/shopping/history) gespeichert.
 - Was **nicht abgehakt** ist, bleibt auf der Liste.

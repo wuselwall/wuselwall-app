@@ -74,7 +74,8 @@ void main() {
     await _settle(tester, 2);
     await _shot(binding, tester, 'shopping-plan');
 
-    await _tapKey(tester, 'shopping-mode-shop');
+    // "Einkaufen gehen" opens the trip, a page of its own without the navigation.
+    await _tapKey(tester, 'shopping-start');
     await _shot(binding, tester, 'shopping-shop');
 
     await _tapKey(tester, 'shopping-add-in-store');
@@ -85,5 +86,18 @@ void main() {
 
     await _tapKey(tester, 'shopping-mode-plan');
     await _shot(binding, tester, 'shopping-plan-again');
+
+    // A tap on the first plain row opens the item sheet.
+    final row = find
+        .byWidgetPredicate(
+          (w) =>
+              w is ListTile &&
+              w.key is ValueKey<String> &&
+              (w.key! as ValueKey<String>).value.startsWith('shopping-item-'),
+        )
+        .first;
+    await tester.tap(row);
+    await _settle(tester, 1);
+    await _shot(binding, tester, 'shopping-item-sheet');
   });
 }

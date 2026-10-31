@@ -6535,23 +6535,49 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shoppingModePlan => 'Planen';
 
   @override
-  String get shoppingModeShop => 'Einkaufen';
-
-  @override
   String get shoppingStartShopping => 'Einkaufen gehen';
 
   @override
-  String get shoppingAddInStore => 'Etwas hinzufügen';
+  String get shoppingAddInStore => 'Hinzufügen';
 
   @override
   String get shoppingShopEmpty =>
-      'Nichts auf der Liste. Zum Hinzufügen wechsle zu „Planen“.';
-
-  @override
-  String get shoppingModeLabel => 'Modus';
+      'Nichts auf der Liste. Tippe auf „Hinzufügen“ oder geh zurück zu „Planen“.';
 
   @override
   String get shoppingSearchClear => 'Leeren und schließen';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Fertig';
+
+  @override
+  String get shoppingAddOne => 'Eins mehr';
+
+  @override
+  String get shoppingCategoryAuto =>
+      'Kategorie automatisch aus dem Namen gewählt';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Kachel anheften';
+
+  @override
+  String get shoppingTileUnpin => 'Anheften aufheben';
+
+  @override
+  String get shoppingTilePinHelp => 'Angeheftete Kacheln stehen immer vorn.';
+
+  @override
+  String get shoppingTilePinned => 'Angeheftet';
 }
 
 /// The translations for German, as used in Austria (`de_AT`).

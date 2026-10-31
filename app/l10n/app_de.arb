@@ -2408,10 +2408,34 @@
   "errEmailNotConfirmed": "Dieser Server will die Adresse per E-Mail bestätigen, verschickt aber keine. Frag, wer ihn betreibt.",
   "accountDeleteReauthPasswordBody": "Zum Löschen eines Kontos brauchst du eine frische Anmeldung. Gib das Passwort von {email} ein.",
   "shoppingModePlan": "Planen",
-  "shoppingModeShop": "Einkaufen",
   "shoppingStartShopping": "Einkaufen gehen",
-  "shoppingAddInStore": "Etwas hinzufügen",
-  "shoppingShopEmpty": "Nichts auf der Liste. Zum Hinzufügen wechsle zu „Planen“.",
-  "shoppingModeLabel": "Modus",
-  "shoppingSearchClear": "Leeren und schließen"
+  "shoppingAddInStore": "Hinzufügen",
+  "shoppingShopEmpty": "Nichts auf der Liste. Tippe auf „Hinzufügen“ oder geh zurück zu „Planen“.",
+  "shoppingSearchClear": "Leeren und schließen",
+  "shoppingTripTitle": "{name} · {open}",
+  "@shoppingTripTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "open": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemDone": "Fertig",
+  "shoppingAddOne": "Eins mehr",
+  "shoppingCategoryAuto": "Kategorie automatisch aus dem Namen gewählt",
+  "shoppingCountTimes": "{count} ×",
+  "@shoppingCountTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingTilePin": "Kachel anheften",
+  "shoppingTileUnpin": "Anheften aufheben",
+  "shoppingTilePinHelp": "Angeheftete Kacheln stehen immer vorn.",
+  "shoppingTilePinned": "Angeheftet"
 }

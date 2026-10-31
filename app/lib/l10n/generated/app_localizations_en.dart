@@ -6489,21 +6489,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shoppingModePlan => 'Plan';
 
   @override
-  String get shoppingModeShop => 'Shop';
-
-  @override
   String get shoppingStartShopping => 'Go shopping';
 
   @override
-  String get shoppingAddInStore => 'Add something';
+  String get shoppingAddInStore => 'Add';
 
   @override
   String get shoppingShopEmpty =>
-      'Nothing on the list. Switch to “Plan” to add items.';
-
-  @override
-  String get shoppingModeLabel => 'Mode';
+      'Nothing on the list. Tap “Add” or go back to “Plan”.';
 
   @override
   String get shoppingSearchClear => 'Clear and close';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Done';
+
+  @override
+  String get shoppingAddOne => 'One more';
+
+  @override
+  String get shoppingCategoryAuto => 'Category set automatically from the name';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Pin tile';
+
+  @override
+  String get shoppingTileUnpin => 'Unpin tile';
+
+  @override
+  String get shoppingTilePinHelp => 'Pinned tiles always come first.';
+
+  @override
+  String get shoppingTilePinned => 'Pinned';
 }

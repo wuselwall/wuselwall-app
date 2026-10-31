@@ -2,17 +2,20 @@
 
 The list is built for shopping: big targets, usable one-handed and with gloves.
 
-## Switching to Shop
+## Starting the trip
 
-Just under the lists you choose the mode: **Plan** at home, **Shop** in the store. **Go shopping** at the bottom of Plan mode takes you over with one tap. If something is already ticked (say, someone else is shopping right now), the list opens straight in Shop mode.
+**Go shopping** at the bottom of the list takes you into the trip with one tap. It fills the whole screen: no bar on top and no navigation at the bottom, so nothing is in the way. The top shows only the list's name with the number of open items ("Supermarket · 5"), then the items by category in the order of the store — no search field and no tiles, every row with a tick box.
 
-Shop mode has no search field and no tiles: the items start right under the switch, by category in the order of the store, and every row has a tick box.
+<Shot name="shopping-store" alt="The shopping trip as a page of its own, with tick boxes" />
 
-<Shot name="shopping-store" alt="Shopping list in Shop mode with tick boxes" />
+Three buttons sit at the bottom: **Add**, **Plan** and **Finish shopping**. **Plan** (or your phone's back gesture) takes you back to the normal list.
+
+WuselWall remembers on this device whether you were last planning or shopping. If you closed the phone in the store, the list reopens in the trip next time. This is only for this device; the family sees nothing of it.
 
 ## Ticking
 
-- Tap anywhere on a row (at least 56 pixels tall) to tick an item.
+- Tap anywhere on a row (at least 56 pixels tall) to tick an item. A count above 1 shows as a bold "2×" badge right after the name, so you can't miss it in the aisle.
+- **Press and hold** opens the [item card](/en/shopping/add#the-item-card) with count, note and category.
 - The row stays put briefly: ticks are sent and the list reorders 800 milliseconds after
   the last tick. Tap again to undo a waiting tick immediately. Leaving the list sends
   waiting ticks.
@@ -22,7 +25,7 @@ Shop mode has no search field and no tiles: the items start right under the swit
 
 ## Forgot something?
 
-There is a **+** at the bottom. It opens the search field and tiles in a sheet over the list. You can add several items one after another; the sheet stays open until you swipe it down or go back. To stop typing, tap the **×** in the search field: it clears the field and closes the keyboard.
+**Add** at the bottom (on narrow phones just a **+**) opens the search field and tiles in a sheet over the list. You can add several items one after another; the sheet stays open until you swipe it down or go back. To stop typing, tap the **×** in the search field: it clears the field and closes the keyboard.
 
 <Shot name="shopping-store-add" alt="Add sheet in the store with the search field and tiles" />
 
@@ -32,7 +35,7 @@ Two people in different aisles see each other's ticks **within a second or two**
 
 ## Finishing the trip
 
-When you're done, tap **Finish shopping** at the bottom. The list then switches back to **Plan**.
+When you're done, tap **Finish shopping** at the bottom. The trip then closes and you are back in the list for planning.
 
 - Everything **ticked** is completed and stored in the [history](/en/shopping/history).
 - Whatever is **not ticked** stays on the list.

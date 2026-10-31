@@ -6551,21 +6551,47 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shoppingModePlan => 'Planificar';
 
   @override
-  String get shoppingModeShop => 'Comprar';
-
-  @override
   String get shoppingStartShopping => 'Ir a comprar';
 
   @override
-  String get shoppingAddInStore => 'Añadir algo';
+  String get shoppingAddInStore => 'Añadir';
 
   @override
   String get shoppingShopEmpty =>
-      'No hay nada en la lista. Cambia a «Planificar» para añadir artículos.';
-
-  @override
-  String get shoppingModeLabel => 'Modo';
+      'No hay nada en la lista. Toca «Añadir» o vuelve a «Planificar».';
 
   @override
   String get shoppingSearchClear => 'Borrar y cerrar';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Listo';
+
+  @override
+  String get shoppingAddOne => 'Uno más';
+
+  @override
+  String get shoppingCategoryAuto =>
+      'Categoría asignada automáticamente por el nombre';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Fijar la ficha';
+
+  @override
+  String get shoppingTileUnpin => 'Desfijar';
+
+  @override
+  String get shoppingTilePinHelp => 'Las fichas fijadas siempre van primero.';
+
+  @override
+  String get shoppingTilePinned => 'Fijada';
 }

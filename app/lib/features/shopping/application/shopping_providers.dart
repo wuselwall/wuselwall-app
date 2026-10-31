@@ -1,11 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_mode.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
+
+export 'package:wuselwall/features/shopping/domain/shopping_mode.dart';
 
 /// What the list screen shows: the server's last state with this device's pending
 /// changes replayed on top, so it looks the same online and offline (specs/07#offline).
@@ -83,22 +89,32 @@ final currentListProvider = Provider.autoDispose<AsyncValue<ShoppingList?>>((
   });
 });
 
-/// Tiles for the picker: with no query the household's most bought, then the most
-/// recent; with one, prefix beats word-start beats substring, ties broken by purchases.
+/// Tiles for the picker. Pinned tiles come first, most bought first, then by name. After
+/// them, with no query the household's most recent purchases, then its most bought; with
+/// one, prefix beats word-start beats substring, ties broken by purchases (pinned
+/// matches ahead of the others of the same score).
 List<CatalogEntry> rankTiles(
   List<CatalogEntry> catalog,
   String query, {
   int limit = 24,
 }) {
   final q = fold(query.trim());
+  int byBought(CatalogEntry a, CatalogEntry b) =>
+      b.purchaseCount.compareTo(a.purchaseCount);
+  int byPinned(CatalogEntry a, CatalogEntry b) {
+    final byCount = byBought(a, b);
+    return byCount != 0 ? byCount : a.foldedName.compareTo(b.foldedName);
+  }
+
   if (q.isEmpty) {
-    final byFrequency = [...catalog]
-      ..sort((a, b) => b.purchaseCount.compareTo(a.purchaseCount));
-    final recent = catalog.where((c) => c.lastPurchasedAt != null).toList()
+    final pinned = catalog.where((c) => c.pinned).toList()..sort(byPinned);
+    final rest = catalog.where((c) => !c.pinned).toList();
+    final byFrequency = [...rest]..sort(byBought);
+    final recent = rest.where((c) => c.lastPurchasedAt != null).toList()
       ..sort((a, b) => b.lastPurchasedAt!.compareTo(a.lastPurchasedAt!));
     final seen = <String>{};
     return [
-      for (final c in [...recent.take(8), ...byFrequency])
+      for (final c in [...pinned, ...recent.take(8), ...byFrequency])
         if (seen.add(c.id)) c,
     ].take(limit).toList();
   }
@@ -116,37 +132,39 @@ List<CatalogEntry> rankTiles(
           if (score(c) case final s?) (s, c),
       ]..sort((a, b) {
         final byScore = a.$1.compareTo(b.$1);
-        return byScore != 0
-            ? byScore
-            : b.$2.purchaseCount.compareTo(a.$2.purchaseCount);
+        if (byScore != 0) return byScore;
+        if (a.$2.pinned != b.$2.pinned) return a.$2.pinned ? -1 : 1;
+        return byBought(a.$2, b.$2);
       });
   return [for (final s in scored.take(limit)) s.$2];
 }
 
-/// What the list screen is for right now (2026-10-31): at home editing the list, or in
-/// the store ticking it off. The wall keeps one combined view and ignores this.
-enum ShoppingMode { plan, shop }
-
-/// The mode of this device for the session, in memory. It starts in [ShoppingMode.shop]
-/// when the list on screen already has a ticked item (a trip is under way), else in
-/// [ShoppingMode.plan]. Read first when the list has loaded, so the state is known.
+/// The mode of this device, kept across restarts (the last one chosen). It is
+/// [ShoppingMode.plan] until the stored value has been read, and a choice made before
+/// that wins over it.
 final shoppingModeProvider =
     NotifierProvider<ShoppingModeNotifier, ShoppingMode>(
       ShoppingModeNotifier.new,
     );
 
 class ShoppingModeNotifier extends Notifier<ShoppingMode> {
+  bool _chosen = false;
+
   @override
   ShoppingMode build() {
-    final list = ref.read(currentListProvider).value;
-    final items = ref.read(shoppingItemsProvider).value ?? const [];
-    final ticked = items.any(
-      (i) => i.checked && (i.listId == null || i.listId == list?.id),
+    final store = ref.read(shoppingModeStoreProvider);
+    unawaited(
+      store.read().then((mode) {
+        if (!_chosen && ref.mounted) state = mode;
+      }),
     );
-    return ticked ? ShoppingMode.shop : ShoppingMode.plan;
+    return ShoppingMode.plan;
   }
 
-  // A setter-style method: Riverpod 3 notifiers expose state changes this way.
-  // ignore: use_setters_to_change_properties
-  void select(ShoppingMode mode) => state = mode;
+  /// Applies [mode] at once and keeps it for the next start.
+  void select(ShoppingMode mode) {
+    _chosen = true;
+    state = mode;
+    unawaited(ref.read(shoppingModeStoreProvider).write(mode));
+  }
 }

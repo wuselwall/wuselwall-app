@@ -6563,21 +6563,48 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shoppingModePlan => 'Préparer';
 
   @override
-  String get shoppingModeShop => 'En magasin';
-
-  @override
   String get shoppingStartShopping => 'Aller faire les courses';
 
   @override
-  String get shoppingAddInStore => 'Ajouter quelque chose';
+  String get shoppingAddInStore => 'Ajouter';
 
   @override
   String get shoppingShopEmpty =>
-      'Rien sur la liste. Passez à « Préparer » pour ajouter des articles.';
-
-  @override
-  String get shoppingModeLabel => 'Mode';
+      'Rien sur la liste. Touchez « Ajouter » ou revenez à « Préparer ».';
 
   @override
   String get shoppingSearchClear => 'Effacer et fermer';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Terminé';
+
+  @override
+  String get shoppingAddOne => 'Un de plus';
+
+  @override
+  String get shoppingCategoryAuto =>
+      'Catégorie choisie automatiquement d’après le nom';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Épingler la tuile';
+
+  @override
+  String get shoppingTileUnpin => 'Désépingler';
+
+  @override
+  String get shoppingTilePinHelp =>
+      'Les tuiles épinglées viennent toujours en premier.';
+
+  @override
+  String get shoppingTilePinned => 'Épinglée';
 }

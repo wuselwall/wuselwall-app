@@ -45,6 +45,7 @@ import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
@@ -689,6 +690,7 @@ class FakeShoppingRepository implements ShoppingRepository {
   final deletedCategories = <String>[];
   final reorderedCategories = <List<String>>[];
   final catalogUpdates = <({String id, String? name})>[];
+  final pins = <({String id, bool pinned})>[];
   final forgottenTiles = <String>[];
 
   @override
@@ -769,6 +771,16 @@ class FakeShoppingRepository implements ShoppingRepository {
     String? categoryId,
   }) async {
     catalogUpdates.add((id: itemId, name: name));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) async {
+    pins.add((id: itemId, pinned: pinned));
     return const Ok(null);
   }
 
@@ -1014,6 +1026,9 @@ List<Override> baseOverrides({
   SettingsView settingsView = SettingsView.basic,
   SettingsViewStore? settingsViewStore,
 
+  /// The shopping mode the device was left in; planning, as on a new device.
+  ShoppingModeStore? shoppingModeStore,
+
   /// The app's configuration; a test of a server's discovery document passes one with
   /// [AppConfig.server] set.
   AppConfig? appConfig,
@@ -1062,6 +1077,9 @@ List<Override> baseOverrides({
   ),
   settingsViewStoreProvider.overrideWithValue(
     settingsViewStore ?? MemorySettingsViewStore(settingsView),
+  ),
+  shoppingModeStoreProvider.overrideWithValue(
+    shoppingModeStore ?? MemoryShoppingModeStore(),
   ),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),

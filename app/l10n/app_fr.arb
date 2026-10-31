@@ -3081,10 +3081,34 @@
   "errEmailNotConfirmed": "Ce serveur veut confirmer l’adresse par e-mail mais n’en envoie aucun. Demande à la personne qui le gère.",
   "accountDeleteReauthPasswordBody": "Supprimer un compte demande une connexion récente. Saisis le mot de passe de {email}.",
   "shoppingModePlan": "Préparer",
-  "shoppingModeShop": "En magasin",
   "shoppingStartShopping": "Aller faire les courses",
-  "shoppingAddInStore": "Ajouter quelque chose",
-  "shoppingShopEmpty": "Rien sur la liste. Passez à « Préparer » pour ajouter des articles.",
-  "shoppingModeLabel": "Mode",
-  "shoppingSearchClear": "Effacer et fermer"
+  "shoppingAddInStore": "Ajouter",
+  "shoppingShopEmpty": "Rien sur la liste. Touchez « Ajouter » ou revenez à « Préparer ».",
+  "shoppingSearchClear": "Effacer et fermer",
+  "shoppingTripTitle": "{name} · {open}",
+  "@shoppingTripTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "open": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemDone": "Terminé",
+  "shoppingAddOne": "Un de plus",
+  "shoppingCategoryAuto": "Catégorie choisie automatiquement d’après le nom",
+  "shoppingCountTimes": "{count} ×",
+  "@shoppingCountTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingTilePin": "Épingler la tuile",
+  "shoppingTileUnpin": "Désépingler",
+  "shoppingTilePinHelp": "Les tuiles épinglées viennent toujours en premier.",
+  "shoppingTilePinned": "Épinglée"
 }

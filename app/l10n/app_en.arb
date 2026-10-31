@@ -3904,28 +3904,69 @@
   "@shoppingModePlan": {
     "description": "Shopping list, mode control: the segment for planning at home (search, tiles, items without ticks)"
   },
-  "shoppingModeShop": "Shop",
-  "@shoppingModeShop": {
-    "description": "Shopping list, mode control: the segment for being in the store (tick rows, add with a button)"
-  },
   "shoppingStartShopping": "Go shopping",
   "@shoppingStartShopping": {
     "description": "Shopping list, planning mode: the button that switches to the shopping mode"
   },
-  "shoppingAddInStore": "Add something",
+  "shoppingAddInStore": "Add",
   "@shoppingAddInStore": {
     "description": "Shopping list, shopping mode: tooltip of the plus button that opens the picker for a forgotten item"
   },
-  "shoppingShopEmpty": "Nothing on the list. Switch to “Plan” to add items.",
+  "shoppingShopEmpty": "Nothing on the list. Tap “Add” or go back to “Plan”.",
   "@shoppingShopEmpty": {
     "description": "Shopping list in shopping mode with nothing on it"
-  },
-  "shoppingModeLabel": "Mode",
-  "@shoppingModeLabel": {
-    "description": "Screen reader label of the plan/shop mode control on the shopping list"
   },
   "shoppingSearchClear": "Clear and close",
   "@shoppingSearchClear": {
     "description": "Tooltip of the button in the shopping search field that clears the text and closes the keyboard"
+  },
+  "shoppingTripTitle": "{name} · {open}",
+  "@shoppingTripTitle": {
+    "description": "Shopping trip page: the slim top row, the list name and how many items are still open",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "open": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemDone": "Done",
+  "@shoppingItemDone": {
+    "description": "Item sheet of the shopping list: the button that saves the note and closes the sheet"
+  },
+  "shoppingAddOne": "One more",
+  "@shoppingAddOne": {
+    "description": "Item sheet of the shopping list: tooltip of the plus button of the count stepper"
+  },
+  "shoppingCategoryAuto": "Category set automatically from the name",
+  "@shoppingCategoryAuto": {
+    "description": "Item sheet of the shopping list: a small line shown while the category was set by the server from the item name"
+  },
+  "shoppingCountTimes": "{count} ×",
+  "@shoppingCountTimes": {
+    "description": "Shopping list row: the count of an item for a screen reader and next to the name",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingTilePin": "Pin tile",
+  "@shoppingTilePin": {
+    "description": "Tile sheet of the shopping list: pins the tile so it always comes first"
+  },
+  "shoppingTileUnpin": "Unpin tile",
+  "@shoppingTileUnpin": {
+    "description": "Tile sheet of the shopping list: removes the pin from a tile"
+  },
+  "shoppingTilePinHelp": "Pinned tiles always come first.",
+  "@shoppingTilePinHelp": {
+    "description": "Tile sheet of the shopping list: explains pinning"
+  },
+  "shoppingTilePinned": "Pinned",
+  "@shoppingTilePinned": {
+    "description": "Shopping list tile: tooltip and hint of the small pin on a pinned tile"
   }
 }

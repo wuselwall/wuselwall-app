@@ -168,33 +168,64 @@ several times a day, usually while doing something else.
   counters incremented, list cleared. Archived items are the training data for
   autocomplete.
 
-### Two modes (2026-10-31)
+### Two modes (2026-10-31, reworked the same day)
 
-The list screen has two explicit modes on the adult and the children's register, chosen
-with a segmented control directly under the list chips; the wall keeps its single combined
-view and has no control. The reason is space and the right controls for each situation:
-at home the screen is for putting things on the list, in the aisle it is for ticking them.
+The list has two explicit modes on the adult and the children's register; the wall keeps
+its single combined view and has no control. The reason is space and the right controls
+for each situation: at home the screen is for putting things on the list, in the aisle it
+is for ticking them. There is no switch on the list: planning is the tab, the shopping
+trip is a page of its own.
 
-- **Plan** ("Planen"): the search field and the tile grid (about two and a half rows on a
-  normal phone), and the items by category in walking order as plain rows with the item's
-  picture instead of a checkbox. A tap opens the item (note, category, remove; the long
-  press stays), a swipe removes it (adults), "−" lowers a count. Ticked items stay in the
+- **Plan** ("Planen") is the normal shopping tab inside the home shell (app bar and bottom
+  navigation stay). The list chips, the search field and the tile grid (at most 30% of the
+  screen height, between 112 and 240 px), and the items by category in walking order as
+  plain rows with the item's picture instead of a checkbox. A tap opens the item sheet
+  (below), a swipe removes it (adults), "−" lowers a count. Ticked items stay in the
   collapsed trolley, where a tap un-ticks, so nothing is hidden from someone planning
   while another is in the store. The bottom bar has the history and "Einkaufen gehen",
-  which switches to the other mode.
-- **Shop** ("Einkaufen"): no search field and no tiles; the tick rows of the section
-  above, with the 800 ms settle, the trolley and the end-of-trip celebration unchanged and
-  without "−". A forgotten item is added with "+" in the bottom bar, which opens the same
-  picker in a bottom sheet that stays open for several items. "Einkauf abschließen"
-  returns to planning.
+  which sets the mode to Shop and pushes the trip route.
+- **Shop** ("Einkaufen") is the route `/shopping/trip` (`ShoppingTripPage`), outside the
+  home shell like the other full-screen pages: no app bar and no bottom navigation until
+  the mode is left ([09](09-clients-and-ux.md)). A slim top row names the list and its open
+  count ("Supermarkt · 5"); then the tick rows of the section above, with the 800 ms
+  settle, the trolley and the end-of-trip celebration unchanged, and without "−". The
+  bottom bar is `[Hinzufügen] [Planen] [Einkauf beenden]`: "Hinzufügen" opens the same
+  picker as Plan in a bottom sheet that stays open for several items (on screens under
+  400 px it is an icon button with a tooltip, so three controls fit); "Planen" sets the
+  mode back to Plan and pops; "Einkauf beenden" confirms, finishes and then does the same.
+  The system back and the swipe back also set the mode to Plan.
+- The last mode is **kept on the device** (secure storage, `plan` | `shop`; the demo and the
+  tests use a memory store). When the shopping tab builds while the stored mode is Shop and
+  the trip page is not already open, it pushes the trip once, so a phone closed in the
+  store reopens into the trip. No heuristic on ticked items any more. The wall never
+  pushes.
 
-The mode is kept per device in memory for the session; a list opens in Shop when it
-already has a ticked item (a trip is under way), else in Plan.
+**The item sheet** replaces the edit dialog: a modal bottom sheet opened by a tap on a plain
+row (Plan) and by a long press on any row. Its title is the item's name (with the meal icon
+and "Für: …" lines for an item from the meal plan); a stepper `[−] n [+]` with 48 px
+targets (56 on the children's register) changes the count at once through the outbox
+(`count` ops, offline-capable), "−" stops at 1 (taking an item off is "Entfernen", adults
+only); the note (`maxLength` 40) is saved on "Fertig" or when the sheet closes; the
+category is a horizontally scrolling row of chips ("Ohne Kategorie", then the list's
+categories in walking order) and a tap saves at once.
 
-Categories are also guessed: when the catalogue knows no category for a new item, the
-server infers one from its name by a word list (German and English), and a supermarket
-list is seeded with a `snacks` category between `pantry` and `frozen`. Whatever is guessed
-can be corrected in the item dialog.
+**Quantities** show as a bold "2×" pill (primary container) right after the name in both
+row kinds when `count > 1`; the subtitle carries only the note. The pill is excluded from
+semantics; the row's semantics value carries "2 ×" and the pending state.
+
+Categories are also set automatically: when the catalogue knows no category for a new item,
+the server infers one from its name by a word list (German and English) and flags the item
+(`category_auto`, `shopping_apply` and the item view carry it; the catalogue entry carries
+the same flag), and a supermarket list is seeded with a `snacks` category between `pantry`
+and `frozen`. While the flag is set the item sheet says "Kategorie automatisch aus dem
+Namen gewählt"; any category chosen by a person clears it (the outbox projection does the
+same locally). An app talking to an older server reads a missing flag as false.
+
+**Pinned tiles.** Anyone with a connection can pin a catalogue tile from its
+long-press menu ("Kachel anheften" / "Anheften aufheben", `shopping_catalog_pin`,
+online-only like rename and forget). Pinned tiles come first in the picker, most bought
+first and then by name, ahead of the recent/frequent ranking; with a query a pinned match
+ranks above others of the same score. A pinned tile shows a small pin.
 
 ## Offline — the one place it is non-negotiable
 

@@ -235,6 +235,8 @@ abstract final class DemoData {
         purchaseCount: n,
         lastPurchasedAt: _now.subtract(Duration(days: i + 1)),
         iconKey: icon,
+        // Two tiles are pinned, so the shots and the guide show the pin.
+        pinned: i < 2,
       ),
   ];
 
@@ -328,6 +330,8 @@ abstract final class DemoData {
         createdAt: _now.add(Duration(minutes: i)),
         listId: 'l-super',
         categoryId: 'c-$cat',
+        // The crisps were sorted by the server from their name (shows in the item sheet).
+        categoryAuto: cat == 'snacks',
         addedBy: by,
         count: count,
         // The pasta came from two of the week's meals (see DemoShoppingRepository.itemMeals).

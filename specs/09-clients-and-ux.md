@@ -34,7 +34,12 @@ on the parent's phone gives `kid` or `kiosk`.
 - Stundenplan: the grid per child, exceptions, terms, bell times, holidays
 - Tasks: my tasks, family board, definitions admin, approvals
 - Meals: week grid, recipes
-- Shopping: list, catalogue, stores
+- Shopping: list, catalogue, stores. The list is the tab (**Plan**); **Einkaufen gehen** opens the
+  shopping trip, a full-screen route (`/shopping/trip`) outside the home shell, so the app bar
+  and the bottom navigation are hidden until the trip is left (Planen, the system back, or the
+  end of the trip). It is the one place the home navigation is hidden on purpose, so the thumb
+  has the store to itself; the children's register has the same page
+  ([07](07-module-meals-shopping.md#two-modes-2026-10-31-reworked-the-same-day)).
 - Settings: account and sign-in methods; members (edit, order, invite) and invitations;
   devices (connect, rename, revoke); the family (name, timezone, export, delete); household
   settings, presence baselines, feed tokens, subscribed calendars, reminders, getting
@@ -124,7 +129,7 @@ everywhere, so the rules are the same on every screen:
 | Mein Stundenplan (kid) | The next school day, Monday to Friday | The day tabs |
 | Week board (kiosk) | Next week; back is this week, never further | **Nächste Woche** beside **Alle Termine** |
 | Dienstplan picker in the event editor | The next month | Previous / next month |
-| Shopping list item (adult only) | Takes it off, with **Rückgängig** for 5 s | Long press → **Entfernen**; in Plan mode a tap opens the item too (the long press stays) |
+| Shopping list item (adult only) | Takes it off, with **Rückgängig** for 5 s | Item sheet (long press, or a tap in Plan) → **Entfernen** |
 
 - **A swipe is only a shortcut.** Every step it makes has a visible control, and that
   control stays. VoiceOver and TalkBack keep swipes for themselves, so the buttons (and,
