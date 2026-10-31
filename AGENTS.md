@@ -43,6 +43,12 @@ role, order by dragging, "Nicht mehr dabei"), the family (name, time zone, local
 (rename, last active) on their own pages, and the shopping structure (lists renamed and
 removed, categories added, renamed, ordered and removed, catalogue tiles renamed and
 forgotten), each page with the Basic/Advanced switch of specs/21.
+The shopping list has two modes since 2026-10-31 ([specs/07](specs/07-module-meals-shopping.md)
+"Two modes"): Planen in the tab, Einkaufen as a full-screen trip page without the app bar and the
+navigation, the last mode kept on the device, the item sheet with a count stepper, pinned tiles,
+a seeded `snacks` category, and a category inferred from a new item's name by the server's word
+list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
+grow in issue #197).
 MCP and AI assistant work is **on hold** (2026-10-24), removed from the app UI and active
 milestones. The backend, keys and proposal data are retained for compatibility; existing
 MCP clients are not disabled. Siri/automations, structured timetable text import and the
