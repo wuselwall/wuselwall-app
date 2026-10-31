@@ -2,7 +2,7 @@
 // Renders the matching dictionary (specs/29) from its human-written source:
 //   node scripts/dictionary.mjs build        (from the repo root)
 //   node scripts/dictionary.mjs check        exits 1 if the committed JSON is stale or the source invalid
-//   node scripts/dictionary.mjs sql <domain> prints `('word', 'key'),` rows for a migration
+//   node scripts/dictionary.mjs sql          prints the migration that fills app.match_word (all domains)
 //   node scripts/dictionary.mjs stats        words per domain and per language tag
 // Reads dictionary/<domain>.txt (every .txt there except corpus.txt; the file name is the domain:
 // shopping, meals, events, tasks) and writes app/assets/matching/dictionary.json, which the app
@@ -10,8 +10,13 @@
 //
 // Source format: `#` starts a comment line. A block starts at column 0 with `<icon_key>`,
 // optionally followed by ` -> cat1, cat2` (seeded shopping category keys, most likely first;
-// shopping only). Indented lines inside a block are `<tag>: word, word, two words` with the tag
-// one of de, de-CH, de-AT, en, fr, es. Words are written naturally (umlauts, accents, capitals).
+// shopping only). A key starting with `@` (`@tools -> tools`) names no picture: the words only
+// get a category, and the tile shows the category's icon, as a name nobody knows does. Such a
+// block needs the arrow. A picture may head several blocks when its words differ in category:
+// `fries -> snacks, frozen` (crisps) and `fries.frozen -> frozen, snacks` (chips); the part after
+// the dot only tells the blocks apart. Indented lines inside a block are `<tag>: word, word, two words` with
+// the tag one of de, de-CH, de-AT, en, fr, es. Words are written naturally (umlauts, accents,
+// capitals).
 //
 // normalize() is the contract with the Dart side; fold() mirrors app.fold in
 // supabase/migrations/20261011160000_shopping_m11.sql. Keep the three in step.
@@ -66,10 +71,13 @@ export function parseSource(text, domain, file = `${domain}.txt`) {
     const line = index + 1;
     if (raw.trim() === '' || raw.trimStart().startsWith('#')) return;
     if (!/^\s/.test(raw)) {
-      const match = raw.trim().match(/^([a-z][a-z0-9_]*)(?:\s*->\s*(.*))?$/);
+      const match = raw.trim().match(/^(@?[a-z][a-z0-9_]*)(\.[a-z][a-z0-9_]*)?(?:\s*->\s*(.*))?$/);
       if (!match) fail(line, `not a block header: "${raw.trim()}"`);
       const key = match[1];
+      const id = key + (match[2] ?? '');
+      match[2] = match[3];
       const categories = match[2] === undefined ? [] : match[2].split(',').map((c) => c.trim());
+      if (key.startsWith('@') && match[2] === undefined) fail(line, `block "${key}" has no picture, so it needs categories (-> …)`);
       if (match[2] !== undefined) {
         if (domain !== 'shopping') fail(line, `categories are only allowed in the shopping domain ("${key}")`);
         for (const c of categories) {
@@ -77,9 +85,9 @@ export function parseSource(text, domain, file = `${domain}.txt`) {
         }
         if (categories.length === 0 || categories.some((c) => c === '')) fail(line, `empty category in block "${key}"`);
       }
-      if (seen.has(key)) fail(line, `duplicate block "${key}" (first at line ${seen.get(key)})`);
-      seen.set(key, line);
-      current = { key, categories, tags: {}, line };
+      if (seen.has(id)) fail(line, `duplicate block "${id}" (first at line ${seen.get(id)})`);
+      seen.set(id, line);
+      current = { key, id, categories, tags: {}, line };
       blocks.push(current);
       return;
     }
@@ -110,12 +118,12 @@ export function renderDomain(blocks, domain, file = `${domain}.txt`) {
         const word = normalize(raw);
         if (word === '') throw new Error(`${file}:${block.line}: word "${raw}" in block "${block.key}" normalises to nothing`);
         const other = owner.get(word);
-        if (other !== undefined && other !== block.key) {
-          const message = `${file}: "${word}" (from "${raw}") is in both "${other}" and "${block.key}"`;
+        if (other !== undefined && other !== block.id) {
+          const message = `${file}: "${word}" (from "${raw}") is in both "${other}" and "${block.id}"`;
           if (!conflicts.includes(message)) conflicts.push(message);
           continue;
         }
-        owner.set(word, block.key);
+        owner.set(word, block.id);
         words.add(word);
       }
     }
@@ -131,6 +139,7 @@ export function sourceFiles(dir = sourceDir) {
 
 export function checkPictures(blocks, domain, file, assetsDir = path.join(root, 'app/assets/emoji')) {
   for (const block of blocks) {
+    if (block.key.startsWith('@')) continue;
     if (!fs.existsSync(path.join(assetsDir, domain, `${block.key}.png`))) {
       throw new Error(`${file}:${block.line}: no picture app/assets/emoji/${domain}/${block.key}.png for "${block.key}"`);
     }
@@ -160,12 +169,47 @@ export function renderJson(json) {
   return `${JSON.stringify(json, null, 1)}\n`;
 }
 
-export function sqlRows(domainJson) {
+export const DOMAINS = ['shopping', 'meals', 'events', 'tasks'];
+
+// The migration that (re)fills app.match_word with every word of every domain: the table the
+// server's matcher reads (specs/29). Written whole each time the dictionary changes, as
+// supabase/migrations/<timestamp>_match_words.sql; scripts/dictionary.test.mjs pins the newest
+// such file to the current render, so the app asset and the server never drift apart.
+export function sqlMigration(json) {
   const rows = [];
-  for (const entry of [...domainJson.entries].sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))) {
-    for (const word of entry.words) rows.push([word, entry.key]);
+  for (const domain of DOMAINS) {
+    const entries = [...(json.domains[domain]?.entries ?? [])].sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+    for (const entry of entries) {
+      const cats = `{${entry.categories.join(',')}}`;
+      for (const word of entry.words) rows.push(`  ('${domain}', '${word.replaceAll("'", "''")}', '${entry.key}', '${cats}')`);
+    }
   }
-  return rows.map(([w, k], i) => `('${w.replaceAll("'", "''")}', '${k}')${i < rows.length - 1 ? ',' : ''}`);
+  return [
+    '-- Generated by `node scripts/dictionary.mjs sql` from dictionary/*.txt (specs/29). Do not edit:',
+    '-- change the source, run `build`, and write the next such file.',
+    '--',
+    '-- The words the server matches typed names against (app.match_dictionary): one row per domain',
+    '-- and normalised word, the picture key (a key starting with @ names no picture, only',
+    "-- categories) and, for shopping, the seeded category keys the word belongs to, most likely",
+    '-- first. The table is replaced whole; nothing of a household is in it.',
+    'create table if not exists app.match_word (',
+    "  domain     text   not null check (domain in ('shopping', 'meals', 'events', 'tasks')),",
+    '  word       text   not null,',
+    '  key        text   not null,',
+    "  categories text[] not null default '{}',",
+    '  primary key (domain, word)',
+    ');',
+    'alter table app.match_word enable row level security;',
+    'alter table app.match_word force row level security;',
+    'drop policy if exists owner_all on app.match_word;',
+    'create policy owner_all on app.match_word to postgres using (true) with check (true);',
+    '-- No grants: only the matcher functions (definer) read it.',
+    '',
+    'delete from app.match_word;',
+    'insert into app.match_word (domain, word, key, categories) values',
+    `${rows.join(',\n')};`,
+    '',
+  ].join('\n');
 }
 
 function stats({ parsed, json }) {
@@ -181,7 +225,7 @@ function stats({ parsed, json }) {
 }
 
 function main(argv) {
-  const [command, arg] = argv;
+  const [command] = argv;
   let loaded;
   try {
     loaded = loadDictionary();
@@ -207,20 +251,14 @@ function main(argv) {
       console.log(`dictionary.json is up to date\n${counts()}`);
       return 0;
     }
-    case 'sql': {
-      const domain = loaded.json.domains[arg];
-      if (!domain) {
-        console.error(`usage: node scripts/dictionary.mjs sql <${Object.keys(loaded.json.domains).join('|')}>`);
-        return 1;
-      }
-      console.log(sqlRows(domain).join('\n'));
+    case 'sql':
+      process.stdout.write(sqlMigration(loaded.json));
       return 0;
-    }
     case 'stats':
       console.log(stats(loaded));
       return 0;
     default:
-      console.error('usage: node scripts/dictionary.mjs build | check | sql <domain> | stats');
+      console.error('usage: node scripts/dictionary.mjs build | check | sql | stats');
       return 1;
   }
 }

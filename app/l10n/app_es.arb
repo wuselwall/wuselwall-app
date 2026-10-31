@@ -3110,5 +3110,14 @@
   "shoppingTilePin": "Fijar la ficha",
   "shoppingTileUnpin": "Desfijar",
   "shoppingTilePinHelp": "Las fichas fijadas siempre van primero.",
-  "shoppingTilePinned": "Fijada"
+  "shoppingTilePinned": "Fijada",
+  "settingsGroupShoppingTitle": "Compras",
+  "settingsGroupShoppingSubtitle": "Palabras aprendidas",
+  "settingsSectionLearnedWords": "Palabras aprendidas",
+  "learnedWordsHelp": "La familia aprendió estas palabras: desde ahora el artículo va a esta categoría. Olvidar quita una palabra.",
+  "learnedWordsEmpty": "Todavía no se ha aprendido nada. Cuando alguien cambia la categoría de un artículo, la familia recuerda la palabra aquí.",
+  "learnedWordsMeta": "{category} · {date}",
+  "learnedWordsMetaBy": "{category} · por {name}, {date}",
+  "learnedWordsForget": "Olvidar",
+  "learnedWordsForgetWord": "Olvidar «{word}»"
 }

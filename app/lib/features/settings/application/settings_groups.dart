@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -19,6 +20,7 @@ enum SettingsGroup {
   tasks,
   calendar,
   meals,
+  shopping,
   rituals,
   celebrations,
   kitchen,
@@ -37,6 +39,7 @@ enum SettingsSectionId {
   tableQuestion,
   weekReview,
   countdowns,
+  learnedWords,
   holidays,
   throughTheYear,
   connections,
@@ -61,6 +64,7 @@ enum SettingsTile {
   devices,
   feedTokens,
   externalCalendars,
+  learnedWords,
   signInMethods,
   security,
   leaveFamily,
@@ -74,7 +78,7 @@ enum SettingsTile {
   /// stays whole in Basic: a parent looking for the password or leaving the family should
   /// not need Advanced, and the group's title promises them (specs/21).
   bool get basic => switch (this) {
-    feedTokens || externalCalendars || server => false,
+    feedTokens || externalCalendars || learnedWords || server => false,
     _ => true,
   };
 
@@ -87,6 +91,8 @@ enum SettingsTile {
     leaveFamily ||
     deleteAccount => env.personalPhone,
     server => env.hasServer,
+    // What the family taught the app is for its guardians to read and forget.
+    learnedWords => env.guardian && env.localMatching,
     _ => true,
   };
 }
@@ -178,6 +184,11 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
       SettingKey('meals.care_lunch_cutoff'),
       SettingKey('meals.wishes'),
       SettingKey('meals.wishes_per_week'),
+    ]),
+  ],
+  SettingsGroup.shopping: [
+    SettingsSection(SettingsSectionId.learnedWords, [
+      SettingTileItem(SettingsTile.learnedWords),
     ]),
   ],
   SettingsGroup.rituals: [
@@ -331,6 +342,8 @@ class SettingsEnv {
     this.notificationsAvailable = false,
     this.hasServer = false,
     this.ownOnly = false,
+    this.guardian = false,
+    this.localMatching = true,
   });
 
   final List<SettingEntry> entries;
@@ -340,6 +353,14 @@ class SettingsEnv {
   final String? acting;
   final bool notificationsAvailable;
   final bool hasServer;
+
+  /// The person acting is a guardian (a personal phone's own profile, or whoever tapped
+  /// their avatar at a shared device). Only what a guardian may read or change shows.
+  final bool guardian;
+
+  /// The server keeps the family's learned words (`local-matching`, specs/29). True when
+  /// built by hand, as a server that does not say counts as current.
+  final bool localMatching;
 
   /// A non-guardian at a shared or kiosk device: only the settings the server lets a
   /// member change for themselves (`self_service`, member scope), no tiles.
@@ -356,6 +377,7 @@ class SettingsEnv {
     notificationsAvailable: notificationsAvailable,
     hasServer: hasServer,
     ownOnly: ownOnly,
+    guardian: guardian,
   );
 
   /// The definition of [key] in the catalogue, or null on a server without it.
@@ -460,14 +482,21 @@ final settingsEnvProvider = Provider.autoDispose<SettingsEnv>((ref) {
   final device = ref.watch(deviceProvider).value;
   // A member's own page has no Basic/Advanced switch: it lists everything they may change.
   final ownOnly = ref.watch(settingsAccessProvider) == SettingsAccess.own;
+  final acting = ref.watch(actingProfileProvider);
+  final guardians = {
+    for (final m in ref.watch(membersProvider).value ?? const <Member>[])
+      if (m.isGuardian) m.id,
+  };
   return SettingsEnv(
     entries: ref.watch(householdSettingsProvider).value ?? const [],
     advanced: ownOnly || ref.watch(showAdvancedSettingsProvider),
     ownOnly: ownOnly,
     deviceClass: device?.deviceClass,
     deviceId: device?.deviceId,
-    acting: ref.watch(actingProfileProvider),
+    acting: acting,
     notificationsAvailable: ref.watch(notificationSchedulerProvider).available,
     hasServer: ref.watch(appConfigProvider).server != null,
+    guardian: acting != null && guardians.contains(acting),
+    localMatching: ref.watch(serverSupportsProvider(featureLocalMatching)),
   );
 });
