@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "commandLineTools": {
     "build": "15859902",
-    "revision": "23.0",
+    "revision": "22.0",
     "archive": "commandlinetools-mac_arm64-15859902_latest.zip",
     "sha256": "835b62a26162b229b441d1f6d4680383815a270809eb33522c0d480fa5002c4e"
   },
   "packages": [
     {"path": "platform-tools", "directory": "platform-tools", "revision": "37.0.1"},
-    {"path": "emulator", "directory": "emulator", "revision": "37.2.12"},
+    {"path": "emulator", "directory": "emulator", "revision": "37.2.13"},
     {"path": "platforms;android-36", "directory": "platforms/android-36", "revision": "2"},
     {"path": "build-tools;36.0.0", "directory": "build-tools/36.0.0", "revision": "36.0.0"},
     {"path": "ndk;28.2.13676358", "directory": "ndk/28.2.13676358", "revision": "28.2.13676358"},

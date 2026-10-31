@@ -97,7 +97,9 @@ export PATH="$JAVA_HOME/bin:$tools/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/plat
 python3 - "$tools/source.properties" "$(read_config revision)" <<'PY'
 import pathlib,sys
 props=dict(line.split('=',1) for line in pathlib.Path(sys.argv[1]).read_text().splitlines() if '=' in line)
-assert props.get('Pkg.Revision','').strip()==sys.argv[2], 'Command-tools version differs from pin'
+actual = props.get('Pkg.Revision','').strip()
+if actual != sys.argv[2]:
+ raise SystemExit(f'Command-tools revision mismatch: expected {sys.argv[2]}, found {actual or "<missing>"}. Keep the dedicated tools directory and review the pin before retrying.')
 PY
 sdkmanager="$tools/bin/sdkmanager"
 if [[ "$QUALIFICATION_ACCEPT_ANDROID_LICENSES" == true ]]; then
