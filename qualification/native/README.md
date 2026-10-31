@@ -158,7 +158,11 @@ does not support the selected device, the diagnostic may use the newest already-
 available runtime whose `supportedDeviceTypes` includes it. It records the selected
 device type, runtime identifier, version, build and fallback reason in `diagnostic-runtime.json`.
 It does not install runtimes, system images or accept licenses. The separate
-`diagnostics_only` mode remains read-only runner preflight.
+`diagnostics_only` mode remains read-only runner preflight. Its `device-tools`
+preflight mode records `WORKFLOW_BOOTSTRAP_REQUIRED` and the pinned Flutter version
+when Flutter is absent, because the native workflow bootstraps Flutter before use.
+It still fails when required Android SDK, AVD or acceleration checks fail. The
+default preflight mode remains strict and requires Flutter to be on `PATH`.
 
 ## Sources
 
