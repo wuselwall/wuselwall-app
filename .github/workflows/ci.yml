@@ -36,8 +36,10 @@ jobs:
         with: { node-version: 22 }
       # flutter test (includes the ARB parity test). On the self-hosted runners flutter_tester
       # sometimes segfaults while a file runs, with or without --coverage (upstream
-      # flutter/flutter#124145, #151546). The wrapper prints the runner facts for a diagnosis
-      # and reruns only the crashed files, whole and once; every other failure keeps the job red.
+      # flutter/flutter#124145, #151546); flutter_tools reports it either as the crash or, when
+      # the file's channel is still piping, as "Bad state: Cannot add event while adding stream."
+      # on the file's loading step. The wrapper prints the runner facts for a diagnosis and
+      # reruns only the crashed files, whole and once; every other failure keeps the job red.
       - run: node ../scripts/flutter-test-ci.mjs
       # Exercise real encrypted browser storage across a backend/key migration.
       # Fresh-context tests alone miss a cached browser using a retired API.
