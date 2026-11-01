@@ -306,14 +306,29 @@ function minOf(a: string, b: string): string {
 
 /** The household settings the meal zone reads (specs/21 "Meals (M1.4)"). */
 export type MealSettings = {
-  schoolDaySlot: MealSlotName;
-  freeDaySlot: MealSlotName;
+  schoolDaySlot: WarmMealSetting;
+  freeDaySlot: WarmMealSetting;
   awayMeansNotEating: boolean;
   /** "HH:MM": a child whose care runs past this is out of school-day lunch. */
   careLunchCutoff: string;
 };
 
 export type MealSlotName = "lunch" | "dinner";
+
+/** `meals.warm_meal.*`: which meals of a day are warm. */
+export type WarmMealSetting = MealSlotName | "both" | "none";
+
+/** The warm slots of a setting, in the day's order. */
+export function warmSlots(setting: WarmMealSetting): MealSlotName[] {
+  switch (setting) {
+    case "both":
+      return ["lunch", "dinner"];
+    case "none":
+      return [];
+    default:
+      return [setting];
+  }
+}
 
 /** The columns of `api.meal_plan_entries` the board reads. */
 export type MealEntryRow = {
@@ -342,7 +357,7 @@ export type MealInput = {
   members: MealMember[];
 };
 
-/** `days[i].meal` of the board (the BoardMeal read model). */
+/** `days[i].meals[j]` of the board (the BoardMeal read model). */
 export type MealJson = {
   slot: MealSlotName;
   time: string | null;
@@ -364,11 +379,13 @@ const DEFAULT_MEAL_TIME: Record<MealSlotName, string> = {
 const AWAY_STATES = new Set(["travel", "away"]);
 
 /**
- * Returns a new board whose every day has `meal` filled. The slot is dinner on a school
- * day (Mon–Fri, not a holiday for a child with a timetable) and the free-day slot
- * otherwise. Eating is every member, minus those away at the meal time (when the setting
- * says so) and, at school-day lunch, children in care past the cutoff; then the entry's
- * eating_overrides apply (true adds, false removes). `base` is not mutated.
+ * Returns a new board whose every day has `meals` filled: the warm meals of the day, by
+ * the school-day setting on a school day (Mon–Fri, not a holiday for a child with a
+ * timetable) and the free-day setting otherwise, so none, one, or lunch and dinner.
+ * `meal` is the last of them (dinner when both are warm), or null: what an app before
+ * `meals` shows. Eating is every member, minus those away at the meal time (when the
+ * setting says so) and, at school-day lunch, children in care past the cutoff; then the
+ * entry's eating_overrides apply (true adds, false removes). `base` is not mutated.
  */
 export function fillMeals(base: BoardJson, input: MealInput): BoardJson {
   const { entries, settings, schoolDays, members } = input;
@@ -377,6 +394,7 @@ export function fillMeals(base: BoardJson, input: MealInput): BoardJson {
     o.presence_state !== null &&
     AWAY_STATES.has(o.presence_state)
   );
+  const known = new Set(members.map((m) => m.id));
 
   return {
     ...base,
@@ -384,51 +402,59 @@ export function fillMeals(base: BoardJson, input: MealInput): BoardJson {
       const date = day.date;
       // A public holiday of the household's region is a free day too, for everyone.
       const school = day.holiday == null && isSchoolDay(date, schoolDays);
-      const slot = school ? settings.schoolDaySlot : settings.freeDaySlot;
-      const entry = entries.find((e) => e.on_date === date && e.slot === slot);
-      const time = entry?.at_time ? hhmm(entry.at_time) : null;
-      const mealTime = time ?? DEFAULT_MEAL_TIME[slot];
+      const slots = warmSlots(
+        school ? settings.schoolDaySlot : settings.freeDaySlot,
+      );
+      const meals = slots.map((slot): MealJson => {
+        const entry = entries.find((e) =>
+          e.on_date === date && e.slot === slot
+        );
+        const time = entry?.at_time ? hhmm(entry.at_time) : null;
+        const mealTime = time ?? DEFAULT_MEAL_TIME[slot];
 
-      const eating = new Set<string>();
-      for (const member of members) {
-        if (
-          settings.awayMeansNotEating &&
-          away.some((o) =>
-            o.attendee_ids.includes(member.id) && coversTime(o, date, mealTime)
-          )
-        ) {
-          continue;
+        const eating = new Set<string>();
+        for (const member of members) {
+          if (
+            settings.awayMeansNotEating &&
+            away.some((o) =>
+              o.attendee_ids.includes(member.id) &&
+              coversTime(o, date, mealTime)
+            )
+          ) {
+            continue;
+          }
+          if (
+            school && slot === "lunch" && member.kind === "child" &&
+            schoolDays.some((s) =>
+              s.member_id === member.id && s.date === date &&
+              s.care_until !== null && s.care_until > settings.careLunchCutoff
+            )
+          ) {
+            continue;
+          }
+          eating.add(member.id);
         }
-        if (
-          school && slot === "lunch" && member.kind === "child" &&
-          schoolDays.some((s) =>
-            s.member_id === member.id && s.date === date &&
-            s.care_until !== null && s.care_until > settings.careLunchCutoff
-          )
+        for (
+          const [id, value] of Object.entries(entry?.eating_overrides ?? {})
         ) {
-          continue;
+          if (!known.has(id)) continue;
+          if (value) eating.add(id);
+          else eating.delete(id);
         }
-        eating.add(member.id);
-      }
-      const known = new Set(members.map((m) => m.id));
-      for (const [id, value] of Object.entries(entry?.eating_overrides ?? {})) {
-        if (!known.has(id)) continue;
-        if (value) eating.add(id);
-        else eating.delete(id);
-      }
 
-      const meal: MealJson = {
-        slot,
-        time,
-        title: entry?.title ?? null,
-        cook_id: entry?.cook_profile_id ?? null,
-        eating: members.filter((m) => eating.has(m.id)).map((m) => m.id),
-        guests: entry?.guests ?? 0,
-        ...(entry?.wished_by_profile_id
-          ? { wished_by: entry.wished_by_profile_id }
-          : {}),
-      };
-      return { ...day, meal };
+        return {
+          slot,
+          time,
+          title: entry?.title ?? null,
+          cook_id: entry?.cook_profile_id ?? null,
+          eating: members.filter((m) => eating.has(m.id)).map((m) => m.id),
+          guests: entry?.guests ?? 0,
+          ...(entry?.wished_by_profile_id
+            ? { wished_by: entry.wished_by_profile_id }
+            : {}),
+        };
+      });
+      return { ...day, meals, meal: meals.at(-1) ?? null };
     }),
   };
 }

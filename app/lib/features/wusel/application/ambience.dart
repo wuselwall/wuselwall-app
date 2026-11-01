@@ -29,6 +29,24 @@ enum Occasion {
   easterWestern,
   easterOrthodox,
   newYear,
+  christmas,
+  stNicholas,
+  nationalDay;
+
+  /// The holidays: dated celebrations whose default follows the country, as opposed to
+  /// the seasons, birthdays and the Ferien every family has.
+  bool get isHoliday => switch (this) {
+    season || birthday || ferien => false,
+    _ => true,
+  };
+
+  /// The occasion whose switch is [key], or null for any other key.
+  static Occasion? ofKey(String key) {
+    for (final o in values) {
+      if (occasionKey(o) == key) return o;
+    }
+    return null;
+  }
 }
 
 /// When the evening's sky begins: the second time of `board.day_parts` (specs/26 "Day
@@ -220,26 +238,124 @@ const _westernCountries = {
   'MC',
 };
 
+/// Orthodox churches that keep Christmas by the Julian calendar, on 7 January.
+const _julianChristmasCountries = {'RS', 'ME', 'MK', 'GE', 'BY', 'RU'};
+
+/// Where Saint Nicholas brings his presents on 6 December (5 December in the
+/// Netherlands): Nikolaus, Samichlaus, Sinterklaas, Mikołaj, Mikuláš, Mikulás, Miklavž.
+const _stNicholasCountries = {
+  'DE',
+  'AT',
+  'CH',
+  'LI',
+  'LU',
+  'BE',
+  'NL',
+  'PL',
+  'CZ',
+  'SK',
+  'HU',
+  'SI',
+  'HR',
+};
+
+/// Each country's national day as (month, day): the day its people celebrate the
+/// country, which is not always the founding date.
+const nationalDays = <String, (int, int)>{
+  'AD': (9, 8),
+  'AL': (11, 28),
+  'AT': (10, 26),
+  'BA': (3, 1),
+  'BE': (7, 21),
+  'BG': (3, 3),
+  'BY': (7, 3),
+  'CH': (8, 1),
+  'CY': (10, 1),
+  'CZ': (10, 28),
+  'DE': (10, 3),
+  'DK': (6, 5),
+  'EE': (2, 24),
+  'ES': (10, 12),
+  'FI': (12, 6),
+  'FR': (7, 14),
+  'GE': (5, 26),
+  'GR': (3, 25),
+  'HR': (5, 30),
+  'HU': (8, 20),
+  'IE': (3, 17),
+  'IS': (6, 17),
+  'IT': (6, 2),
+  'LI': (8, 15),
+  'LT': (2, 16),
+  'LU': (6, 23),
+  'LV': (11, 18),
+  'MC': (11, 19),
+  'MD': (8, 27),
+  'ME': (7, 13),
+  'MK': (9, 8),
+  'MT': (9, 21),
+  'NL': (4, 27),
+  'NO': (5, 17),
+  'PL': (5, 3),
+  'PT': (6, 10),
+  'RO': (12, 1),
+  'RS': (2, 15),
+  'RU': (6, 12),
+  'SE': (6, 6),
+  'SI': (6, 25),
+  'SK': (9, 1),
+  'SM': (9, 3),
+  'UA': (8, 24),
+};
+
+/// Whether [occasion] is on in [country] while the household has not decided: the
+/// default the settings show and `auto` stands for.
+bool occasionDefault(Occasion occasion, String? country) => switch (occasion) {
+  Occasion.season || Occasion.birthday || Occasion.ferien => true,
+  Occasion.newYear => false,
+  Occasion.advent ||
+  Occasion.easterWestern => _westernCountries.contains(country),
+  Occasion.easterOrthodox => _orthodoxCountries.contains(country),
+  Occasion.christmas =>
+    _westernCountries.contains(country) || _orthodoxCountries.contains(country),
+  Occasion.stNicholas => _stNicholasCountries.contains(country),
+  Occasion.nationalDay => nationalDays.containsKey(country),
+};
+
 /// Whether [occasion] is on for a household in [country] whose switch says [stored]
 /// (true, false, 'on', 'off' or 'auto').
-@visibleForTesting
-bool occasionOn(Occasion occasion, Object? stored, String? country) {
-  switch (stored) {
-    case true || 'on':
-      return true;
-    case false || 'off':
-      return false;
+bool occasionOn(Occasion occasion, Object? stored, String? country) =>
+    switch (stored) {
+      true || 'on' => true,
+      false || 'off' => false,
+      _ => occasionDefault(occasion, country),
+    };
+
+/// Whether [date] is Christmas in [country]: 24 to 26 December, or 6 to 7 January
+/// where the church keeps the Julian calendar.
+bool isChristmas(DateTime date, String? country) =>
+    _julianChristmasCountries.contains(country)
+    ? date.month == 1 && (date.day == 6 || date.day == 7)
+    : date.month == 12 && date.day >= 24 && date.day <= 26;
+
+/// Whether [date] is Saint Nicholas' day: 6 December, the eve before in the
+/// Netherlands.
+bool isStNicholas(DateTime date, String? country) =>
+    date.month == 12 && date.day == (country == 'NL' ? 5 : 6);
+
+/// Whether [date] is [country]'s national day ([nationalDays]). The Dutch King's Day
+/// moves to the 26th when the 27th is a Sunday.
+bool isNationalDay(DateTime date, String? country) {
+  final (month, day) = nationalDays[country] ?? (0, 0);
+  if (country == 'NL' &&
+      DateTime(date.year, 4, 27).weekday == DateTime.sunday) {
+    return date.month == 4 && date.day == 26;
   }
-  return switch (occasion) {
-    Occasion.season || Occasion.birthday || Occasion.ferien => true,
-    Occasion.newYear => false,
-    Occasion.advent ||
-    Occasion.easterWestern => _westernCountries.contains(country),
-    Occasion.easterOrthodox => _orthodoxCountries.contains(country),
-  };
+  return date.month == month && date.day == day;
 }
 
-String _key(Occasion o) => switch (o) {
+/// The household switch of [o].
+String occasionKey(Occasion o) => switch (o) {
   Occasion.season => 'ambience.season',
   Occasion.birthday => 'ambience.birthdays',
   Occasion.ferien => 'ambience.ferien',
@@ -247,6 +363,9 @@ String _key(Occasion o) => switch (o) {
   Occasion.easterWestern => 'ambience.easter_western',
   Occasion.easterOrthodox => 'ambience.easter_orthodox',
   Occasion.newYear => 'ambience.new_year',
+  Occasion.christmas => 'ambience.christmas',
+  Occasion.stNicholas => 'ambience.st_nicholas',
+  Occasion.nationalDay => 'ambience.national_day',
 };
 
 /// What the sky shows today: the phase, the season and today's occasions.
@@ -258,6 +377,9 @@ class Ambience {
     this.advent = 0,
     this.easter = false,
     this.newYear = false,
+    this.christmas = false,
+    this.stNicholas = false,
+    this.nationalDay,
     this.ferien,
     this.birthdays = const [],
     this.sunset = 0,
@@ -278,6 +400,15 @@ class Ambience {
   final bool easter;
   final bool newYear;
 
+  /// A Christmas tree on the hill.
+  final bool christmas;
+
+  /// Saint Nicholas' boot, filled.
+  final bool stNicholas;
+
+  /// The country whose flag flies today, on its national day.
+  final String? nationalDay;
+
   /// The holidays' first or last day: the ribbon's text comes from the screen.
   final FerienEdge? ferien;
 
@@ -293,6 +424,9 @@ class Ambience {
       other.advent == advent &&
       other.easter == easter &&
       other.newYear == newYear &&
+      other.christmas == christmas &&
+      other.stNicholas == stNicholas &&
+      other.nationalDay == nationalDay &&
       other.ferien == ferien &&
       other.sunset == sunset &&
       listEquals(other.birthdays, birthdays);
@@ -304,6 +438,9 @@ class Ambience {
     advent,
     easter,
     newYear,
+    christmas,
+    stNicholas,
+    nationalDay,
     ferien,
     sunset,
     Object.hashAll(birthdays),
@@ -328,7 +465,7 @@ Ambience ambienceFor(
   double? sunset,
 }) {
   bool on(Occasion o) =>
-      occasionOn(o, day.occasionSwitches[_key(o)], day.country);
+      occasionOn(o, day.occasionSwitches[occasionKey(o)], day.country);
   bool aroundEaster(DateTime easter) =>
       calendarDaysBetween(easter, now).abs() <= 2;
   return Ambience(
@@ -344,6 +481,11 @@ Ambience ambienceFor(
         on(Occasion.newYear) &&
         ((now.month == 12 && now.day == 31) ||
             (now.month == 1 && now.day == 1)),
+    christmas: on(Occasion.christmas) && isChristmas(now, day.country),
+    stNicholas: on(Occasion.stNicholas) && isStNicholas(now, day.country),
+    nationalDay: on(Occasion.nationalDay) && isNationalDay(now, day.country)
+        ? day.country
+        : null,
     ferien: on(Occasion.ferien) ? ferien : null,
     birthdays: on(Occasion.birthday) ? birthdays : const [],
     sunset: sunset ?? sunsetAt(now, hours: hours),

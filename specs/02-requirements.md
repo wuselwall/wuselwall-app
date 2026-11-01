@@ -155,7 +155,7 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | FR-8.3 | The school zone shows each child's school-day span plus notable lessons only (Sport, Schwimmen, FreiDay, excursions) — never individual subjects; the full grid is one tap away | M | late |
 | FR-8.3a | Tapping a child opens the **Stundenplan detail**: numbered Stunden with bell times down the side, weekdays across the top, today marked, Entfall struck, Vertretung labelled, and tomorrow's equipment line | M | late |
 | FR-8.3b | Key appointments are grouped into three fixed day parts — Vormittag, Nachmittag, Abend — rather than placed on a time axis, with one dot per attendee in their member colour | M | late |
-| FR-8.4 | The meal zone is a fixed area per day showing **one warm meal** (Mittag at weekends, Abend on school days), who is cooking, and per member whether they are eating at home | M | late |
+| FR-8.4 | The meal zone is a fixed area per day showing **the warm meal** (Mittag at weekends, Abend on school days; a household may set both or none, `meals.warm_meal.*`), who is cooking, and per member whether they are eating at home | M | late |
 | FR-8.5 | Today's column is visually dominant, with a "jetzt / als Nächstes" line | M | late |
 | FR-8.6 | The board never scrolls: overflow degrades to an aggregate ("+3 weitere"), never to a cut-off column | M | late |
 | FR-8.7 | The displayed week rolls over to the coming week at a configurable point in the weekend | S | late |

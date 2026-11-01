@@ -68,7 +68,7 @@ Ist auf dem Gerät **Bewegung reduzieren** eingeschaltet, steht Wusel still am e
 
 ### Jahreszeiten und Anlässe {#occasions}
 
-Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigenen Schalter unter **Einstellungen → Feste & Jahreszeiten** (Ansicht **Erweitert**):
+Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigenen Schalter unter **Einstellungen → Feste & Jahreszeiten**; in der Ansicht **Einfach** stehen die Jahreszeiten und die Feiertage, die eure Region feiert, alles andere unter **Erweitert**:
 
 | Anlass | Was passiert | Standard |
 |---|---|---|
@@ -76,11 +76,14 @@ Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigen
 | **Geburtstage** | Wimpel in der Farbe der Person und ein Partyhut für Wusel | an |
 | **Ferien** | ein Band „Ferien!“ am ersten freien Tag und „Morgen ist wieder Schule“ am letzten (Wochenenden und Feiertage direkt davor und danach zählen dazu); auf **Heute** steht es neben dem Titel | an |
 | **Advent** | Kerzen in der Kopfzeile, an jedem Adventssonntag eine mehr | nach eurer Region |
+| **Weihnachten** | ein geschmückter Baum auf dem Hügel vom 24. bis 26. Dezember (wo Weihnachten nach dem orthodoxen Kalender gefeiert wird, am 6. und 7. Januar) | nach eurer Region |
 | **Ostern** | Eier in den Hügeln, zwei Tage vor bis zwei Tage nach dem Ostersonntag | nach eurer Region |
 | **Orthodoxes Ostern** | dieselben Eier am orthodoxen Datum | nach eurer Region |
+| **Nationalfeiertag** | die Flagge des Landes auf dem Hügel am Nationalfeiertag, etwa am 1. August in der Schweiz, am 3. Oktober in Deutschland, am 26. Oktober in Österreich und am 15. August in Liechtenstein | nach eurer Region |
+| **Nikolaus** (in der Schweiz **Samichlaus**) | ein gefüllter Stiefel am 6. Dezember (in den Niederlanden am 5. Dezember) | nach eurer Region |
 | **Silvester** | ein kleines Feuerwerk am Nachthimmel am 31. Dezember und 1. Januar | aus |
 
-„Nach eurer Region“ heißt: WuselWall richtet sich nach dem Land eurer Region. In Deutschland, Österreich und der Schweiz sind Advent und Ostern an, das orthodoxe Ostern aus; in Ländern mit orthodoxem Osterfest ist es umgekehrt. Beide Ostertermine werden für jedes Jahr neu berechnet, und eine Familie kann auch beide einschalten.
+Jeder Feiertag ist ein einfacher Schalter und zeigt, ob er an ist. „Nach eurer Region“ heißt: Solange ihr nichts ändert, richtet sich WuselWall nach dem Land eurer Region; die Zeile zeigt dann **Standard**, und der Zurücksetzen-Knopf bringt den Wert der Region zurück. In Deutschland, Österreich und der Schweiz sind Advent, Ostern, Nikolaus, Weihnachten und der Nationalfeiertag an, das orthodoxe Ostern aus; in Ländern mit orthodoxem Osterfest sind Advent und Ostern aus und das orthodoxe Ostern an. Weihnachten ist in allen europäischen Ländern an; wo es nach dem orthodoxen Kalender gefeiert wird (Serbien, Montenegro, Nordmazedonien, Georgien, Belarus, Russland), steht der Baum am 6. und 7. Januar. Nikolaus ist in Deutschland, Österreich, der Schweiz, Liechtenstein, Luxemburg, Belgien, den Niederlanden, Polen, Tschechien, der Slowakei, Ungarn, Slowenien und Kroatien an, und der Nationalfeiertag in rund 45 europäischen Ländern (das Land kommt aus der Region). Silvester ist überall aus. Die Ostertermine werden für jedes Jahr neu berechnet, und eine Familie kann auch beide einschalten.
 
 ## Töne {#sounds}
 

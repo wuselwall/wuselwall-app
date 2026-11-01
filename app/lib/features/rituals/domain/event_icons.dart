@@ -12,7 +12,7 @@ const eventIconKeys = [
   'hiking',
   'beach', //
   'plane', 'zoo', 'tent', 'football', 'music', 'gift', 'balloon', 'backpack', //
-  'swim', 'ferris', 'house', 'star',
+  'swim', 'ferris', 'house', 'broom', 'star',
 ];
 
 /// The picture of [key]; null for none or an icon this app does not know.
@@ -42,5 +42,6 @@ String eventIconName(AppLocalizations l10n, String key) => switch (key) {
   'swim' => l10n.eventIcon_swim,
   'ferris' => l10n.eventIcon_ferris,
   'house' => l10n.eventIcon_house,
+  'broom' => l10n.eventIcon_broom,
   _ => l10n.eventIcon_star,
 };

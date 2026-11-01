@@ -201,6 +201,7 @@ final tableMomentProvider = Provider.autoDispose.family<TableMoment?, String>((
     lunch: day.value('rituals.table_question.lunch'),
     dinner: day.value('rituals.table_question.dinner'),
     warmIsDinner: (d) => ref.watch(warmSlotProvider(d)) == PlanSlot.dinner,
+    bothWarm: (d) => ref.watch(warmSlotsProvider(d)).length == 2,
     deck: deck,
     householdId: ref.watch(deviceProvider).value?.householdId ?? '',
     cycleLength: tableCycleLength(

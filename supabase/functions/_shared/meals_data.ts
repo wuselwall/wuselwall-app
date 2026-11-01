@@ -3,7 +3,7 @@
 // (board.ts `fillMeals`). Settings are read from `api.settings` as household-level rows
 // only; a missing row falls back to the curated default of specs/21.
 import type { userClient } from "./client.ts";
-import type { MealEntryRow, MealSettings, MealSlotName } from "./board.ts";
+import type { MealEntryRow, MealSettings, WarmMealSetting } from "./board.ts";
 
 type Client = ReturnType<typeof userClient>;
 
@@ -63,8 +63,9 @@ export async function loadMeals(
 function slotOf(
   value: unknown,
   which: "schoolDaySlot" | "freeDaySlot",
-): MealSlotName {
-  return value === "lunch" || value === "dinner"
+): WarmMealSetting {
+  return value === "lunch" || value === "dinner" || value === "both" ||
+      value === "none"
     ? value
     : DEFAULT_MEAL_SETTINGS[which];
 }

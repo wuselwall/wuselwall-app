@@ -59,8 +59,7 @@ class _DayRow extends StatelessWidget {
     final bands = board.presenceOn(member.id, index);
     final busy = day.busyUntil[member.id];
     final school = day.school[member.id];
-    final meal = day.meal;
-    final cooked = meal != null && meal.cookId == member.id ? meal : null;
+    final cooked = day.meals.where((m) => m.cookId == member.id).firstOrNull;
     final own = [
       for (final e in day.events)
         if (e.attendeeIds.contains(member.id)) e,

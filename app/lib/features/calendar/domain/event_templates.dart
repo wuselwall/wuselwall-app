@@ -9,25 +9,15 @@ enum StarterPeople { family, children, actor }
 /// The built-in templates of Kalender → *Neuer Termin* (specs/28 "Built-in templates").
 /// Each language names them itself (the ARB keys `eventStarter*`); this is what they
 /// start as. Every value is only a suggestion the editor shows before anything is saved.
+/// The page lists them in this order: what a family enters often first, what comes once
+/// a year last.
 enum EventStarter {
-  birthday(
-    iconKey: 'cake',
-    allDay: true,
-    people: StarterPeople.family,
-    yearly: true,
-    countdown: true,
-  ),
-  guestDinner(
-    iconKey: 'house',
-    startMinute: 18 * 60 + 30,
+  cleaning(
+    iconKey: 'broom',
+    startMinute: 9 * 60,
     minutes: 180,
-    people: StarterPeople.family,
-  ),
-  kidsParty(
-    iconKey: 'gift',
-    startMinute: 14 * 60,
-    minutes: 180,
-    people: StarterPeople.children,
+    people: StarterPeople.actor,
+    weekly: true,
   ),
   sportsEvent(
     iconKey: 'football',
@@ -36,10 +26,10 @@ enum EventStarter {
     people: StarterPeople.actor,
   ),
   doctor(people: StarterPeople.actor),
-  performance(
-    iconKey: 'music',
-    startMinute: 19 * 60,
-    minutes: 120,
+  guestDinner(
+    iconKey: 'house',
+    startMinute: 18 * 60 + 30,
+    minutes: 180,
     people: StarterPeople.family,
   ),
   dayOut(
@@ -48,11 +38,30 @@ enum EventStarter {
     people: StarterPeople.family,
     countdown: true,
   ),
+  kidsParty(
+    iconKey: 'gift',
+    startMinute: 14 * 60,
+    minutes: 180,
+    people: StarterPeople.children,
+  ),
+  performance(
+    iconKey: 'music',
+    startMinute: 19 * 60,
+    minutes: 120,
+    people: StarterPeople.family,
+  ),
   holiday(
     iconKey: 'plane',
     allDay: true,
     days: 7,
     people: StarterPeople.family,
+    countdown: true,
+  ),
+  birthday(
+    iconKey: 'cake',
+    allDay: true,
+    people: StarterPeople.family,
+    yearly: true,
     countdown: true,
   );
 
@@ -63,6 +72,7 @@ enum EventStarter {
     this.startMinute,
     this.minutes = 60,
     this.days = 1,
+    this.weekly = false,
     this.yearly = false,
     this.countdown = false,
   });
@@ -80,6 +90,7 @@ enum EventStarter {
   /// How many days an all-day one covers.
   final int days;
   final StarterPeople people;
+  final bool weekly;
   final bool yearly;
   final bool countdown;
 
@@ -107,6 +118,7 @@ enum EventStarter {
       days: allDay ? days : null,
       attendeeIds: attendees.isEmpty ? {?actor} : attendees,
       countdown: countdown,
+      weekly: weekly,
       yearly: yearly,
     );
   }
@@ -134,6 +146,7 @@ class EventTemplate {
     this.notes = '',
     this.importance,
     this.countdown = false,
+    this.weekly = false,
     this.yearly = false,
     this.createdBy,
   });
@@ -215,6 +228,9 @@ class EventTemplate {
   /// The kitchen-display choice set by hand; null follows `calendar.key_default`.
   final Importance? importance;
   final bool countdown;
+
+  /// Repeats every week on the start's weekday (only the built-in Putzhilfe).
+  final bool weekly;
 
   /// Repeats every year (only the built-in Geburtstag).
   final bool yearly;

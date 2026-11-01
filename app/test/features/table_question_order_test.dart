@@ -214,12 +214,14 @@ void main() {
       Object? lunch,
       Object? dinner,
       bool warmIsDinner = true,
+      bool bothWarm = false,
     }) => tableMomentAt(
       now: DateTime(2026, 10, 26, hour, minute),
       mode: mode,
       lunch: lunch,
       dinner: dinner,
       warmIsDinner: (_) => warmIsDinner,
+      bothWarm: (_) => bothWarm,
       deck: questions,
       householdId: 'h',
     );
@@ -232,6 +234,14 @@ void main() {
       expect(at(18, 0, warmIsDinner: false), isNull);
       expect(at(17, 29), isNull);
       expect(at(19, 30), isNull, reason: 'the end is not in the window');
+    });
+
+    test('asks at both meals when both are warm, two windows a day', () {
+      final lunch = at(12, 0, bothWarm: true);
+      final dinner = at(18, 0, bothWarm: true);
+      expect(lunch!.dinner, isFalse);
+      expect(dinner!.dinner, isTrue);
+      expect(dinner.window, lunch.window + 1);
     });
 
     test('asks at both main meals with main_meals, two windows a day', () {

@@ -58,11 +58,12 @@ void _refreshOnMeals(Ref ref) {
   }
 }
 
-/// Which slot of [day] is the warm meal (specs/21 `meals.warm_meal.*`): on Monday to
-/// Friday the school-day setting, at weekends the free-day one. The household's setting
-/// wins; without it, the curated defaults (dinner, lunch). The server, not the app,
-/// knows about holidays; the wall uses the same settings.
-PlanSlot warmSlotOf(DateTime day, List<SettingEntry> settings) {
+/// Which slots of [day] are warm meals (specs/21 `meals.warm_meal.*`), in the day's
+/// order: lunch, dinner, both or none. On Monday to Friday the school-day setting, at
+/// weekends the free-day one. The household's setting wins; without it, the curated
+/// defaults (dinner, lunch). The server, not the app, knows about holidays; the wall
+/// uses the same settings.
+List<PlanSlot> warmSlotsOf(DateTime day, List<SettingEntry> settings) {
   final schoolDay = day.weekday <= DateTime.friday;
   final entry = resolveSetting(
     settings,
@@ -70,13 +71,28 @@ PlanSlot warmSlotOf(DateTime day, List<SettingEntry> settings) {
   );
   final value = entry?.value ?? entry?.defaultValue;
   return switch (value) {
-    'lunch' => PlanSlot.lunch,
-    'dinner' => PlanSlot.dinner,
-    _ => schoolDay ? PlanSlot.dinner : PlanSlot.lunch,
+    'lunch' => const [PlanSlot.lunch],
+    'dinner' => const [PlanSlot.dinner],
+    'both' => const [PlanSlot.lunch, PlanSlot.dinner],
+    'none' => const [],
+    _ => [if (schoolDay) PlanSlot.dinner else PlanSlot.lunch],
   };
 }
 
-/// The warm slot of [day] under the household's settings.
+/// The one meal of [day] that what needs a single meal goes to (a wish, the
+/// Tischfrage): the warm one, and the dinner when both or neither are warm.
+PlanSlot warmSlotOf(DateTime day, List<SettingEntry> settings) {
+  final slots = warmSlotsOf(day, settings);
+  return slots.length == 1 ? slots.single : PlanSlot.dinner;
+}
+
+/// The warm slots of [day] under the household's settings ([warmSlotsOf]).
+final warmSlotsProvider = Provider.family<List<PlanSlot>, DateTime>((ref, day) {
+  final settings = ref.watch(householdSettingsProvider).value ?? const [];
+  return warmSlotsOf(day, settings);
+});
+
+/// The main meal of [day] under the household's settings ([warmSlotOf]).
 final warmSlotProvider = Provider.family<PlanSlot, DateTime>((ref, day) {
   final settings = ref.watch(householdSettingsProvider).value ?? const [];
   return warmSlotOf(day, settings);

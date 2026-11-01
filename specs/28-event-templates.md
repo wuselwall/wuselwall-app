@@ -49,16 +49,20 @@ Germany and Austria, *Sportanlass*, *Ferien / Reise* and *Gäste zum Znacht* in 
 Every value is only a suggestion
 the editor shows before anything is saved.
 
+The page lists them in this order: what a family enters often first, what comes once a year
+last (*reordered 2026-11-01*, when Putzhilfe was added).
+
 | Template | Picture | When | Length | Who | Also |
 |---|---|---|---|---|---|
-| Geburtstag | cake | all day | 1 day | whole family | yearly, Darauf freuen wir uns |
-| Gäste zum Essen | house | 18:30 | 3 h | whole family | |
-| Kindergeburtstag | gift | 14:00 | 3 h | the children | |
+| Putzhilfe | broom | 09:00 | 3 h | the person creating it | weekly on the day's weekday |
 | Sportveranstaltung | football | 10:00 | 2 h | the person creating it | |
 | Arzttermin | — | next full hour | 1 h | the person creating it | |
-| Aufführung | music | 19:00 | 2 h | whole family | |
+| Gäste zum Essen | house | 18:30 | 3 h | whole family | |
 | Ausflug | hiking | all day | 1 day | whole family | Darauf freuen wir uns |
+| Kindergeburtstag | gift | 14:00 | 3 h | the children | |
+| Aufführung | music | 19:00 | 2 h | whole family | |
 | Urlaub / Reise | plane | all day | 7 days | whole family | Darauf freuen wir uns |
+| Geburtstag | cake | all day | 1 day | whole family | yearly, Darauf freuen wir uns |
 
 "Whole family" selects every active member; "the children" every active child (the person
 creating it when there is none). Members' own birthdays need no template: they come from the

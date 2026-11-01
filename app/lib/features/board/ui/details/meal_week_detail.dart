@@ -39,7 +39,7 @@ class _MealWeekDetailState extends ConsumerState<MealWeekDetailBody> {
   Future<void> _toggle(BoardDay day, BoardMeal meal, BoardMember member) async {
     final acting = ref.read(actingProfileProvider);
     if (acting == null) return;
-    final key = '${day.date}|${member.id}';
+    final key = '${day.date}|${meal.slot.name}|${member.id}';
     if (!_busy.add(key)) return;
     setState(() {});
     final eating = !meal.eating.contains(member.id);
@@ -89,15 +89,32 @@ class _MealWeekDetailState extends ConsumerState<MealWeekDetailBody> {
                       date: day.date,
                       raised: isSameDay(day.date, board.today),
                       past: day.date.isBefore(board.today),
-                      child: _MealFacts(
-                        board: board,
-                        meal: day.meal,
-                        canEdit: acting != null,
-                        busy: {
-                          for (final m in board.members)
-                            if (_busy.contains('${day.date}|${m.id}')) m.id,
-                        },
-                        onToggle: (member, meal) => _toggle(day, meal, member),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: Tokens.space3,
+                        children: [
+                          // Lunch and dinner when both are warm; "nothing
+                          // planned" when none is.
+                          for (final meal in [
+                            ...day.meals,
+                            if (day.meals.isEmpty) null,
+                          ])
+                            _MealFacts(
+                              board: board,
+                              meal: meal,
+                              canEdit: acting != null,
+                              busy: {
+                                for (final m in board.members)
+                                  if (meal != null &&
+                                      _busy.contains(
+                                        '${day.date}|${meal.slot.name}|${m.id}',
+                                      ))
+                                    m.id,
+                              },
+                              onToggle: (member, meal) =>
+                                  _toggle(day, meal, member),
+                            ),
+                        ],
                       ),
                     ),
                 ],

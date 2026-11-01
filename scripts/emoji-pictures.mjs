@@ -95,6 +95,7 @@ const sets = {
     balloon: 'Balloon/Flat/balloon_flat.svg', backpack: 'Backpack/Flat/backpack_flat.svg',
     swim: 'Water wave/Flat/water_wave_flat.svg', ferris: 'Ferris wheel/Flat/ferris_wheel_flat.svg',
     house: 'House/Flat/house_flat.svg', star: 'Star/Flat/star_flat.svg',
+    broom: 'Broom/Flat/broom_flat.svg',
   },
   // Dishes: the pictures of recipes, meal suggestions and meal wishes (specs/27
   // "Wunschessen"); meal_wish.icon_key, and the icon_key app.meal_icon_for() picks from a

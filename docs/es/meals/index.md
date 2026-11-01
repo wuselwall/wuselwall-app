@@ -40,4 +40,4 @@ Guarda ingredientes con cantidades, unidades y notas, pasos (uno por línea), et
 
 ## En la pared {#on-the-kitchen-wall}
 
-Toca la zona de comidas para abrir la semana y después un punto para corregir quién come. Una estrella marca una comida deseada. La pared muestra una comida caliente al día. El grupo [Ajustes → Comidas](/es/settings/household) decide cuál según días escolares o libres.
+Toca la zona de comidas para abrir la semana y después un punto para corregir quién come. Una estrella marca una comida deseada. La pared muestra la comida caliente del día, o el almuerzo y la cena con **Ambas**, o ninguna con **Ninguno**. El grupo [Ajustes → Comidas](/es/settings/household) decide cuál según días escolares o libres.
