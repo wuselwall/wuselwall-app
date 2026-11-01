@@ -122,8 +122,9 @@ cases, subprocess failures, framework errors, detector misses or missing PNGs fa
 the evidence. ATF `NOT_RUN` checks remain visible in the report; Flutter contrast
 checks remain a separate required layer.
 
-iOS findings retain the issue element's label, type, bounds and debug description;
-the semantic snapshot also records bounds. Inspect those before changing a target
+Native findings retain the issue element's label, type and bounds where supplied;
+iOS also retains its debug description. Both semantic snapshots record bounds;
+Android coordinates explicitly use physical pixels. Inspect those before changing a target
 or assigning a label. With the pinned Flutter version, a label around a scroll
 view labels a separate parent, and a label inside `buildViewport` can attach to
 the first row instead of the generated native scroll container. These findings

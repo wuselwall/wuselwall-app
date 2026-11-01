@@ -2,6 +2,7 @@ package ch.goomba.wuselwall
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Intent
+import android.graphics.Rect
 import android.os.ParcelFileDescriptor
 import android.os.Build
 import android.view.accessibility.AccessibilityNodeInfo
@@ -9,6 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckPreset
 import com.google.android.apps.common.testing.accessibility.framework.uielement.AccessibilityHierarchyAndroid
+import com.google.android.apps.common.testing.accessibility.framework.uielement.ViewHierarchyElement
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Locale
@@ -77,12 +79,30 @@ class QualificationAuditTest {
 
     private fun semantics(node: AccessibilityNodeInfo): JSONObject {
         val children = JSONArray()
+        val rect = Rect()
+        node.getBoundsInScreen(rect)
         for (i in 0 until node.childCount) node.getChild(i)?.let { children.put(semantics(it)) }
         return JSONObject().put("class", node.className?.toString() ?: "")
             .put("identifier", node.viewIdResourceName ?: "").put("label", node.contentDescription?.toString() ?: "")
             .put("text", node.text?.toString() ?: "").put("hint", if (Build.VERSION.SDK_INT >= 26) node.hintText?.toString() ?: "" else "")
             .put("enabled", node.isEnabled).put("clickable", node.isClickable).put("checkable", node.isCheckable)
+            .put("visibleToUser", node.isVisibleToUser)
+            .put("boundsInScreen", bounds(rect.left, rect.top, rect.right, rect.bottom))
             .put("checked", node.isChecked).put("selected", node.isSelected).put("children", children)
+    }
+
+    private fun bounds(left: Int, top: Int, right: Int, bottom: Int): JSONObject =
+        JSONObject().put("left", left).put("top", top).put("right", right).put("bottom", bottom)
+            .put("width", right - left).put("height", bottom - top).put("unit", "physicalPixels")
+
+    private fun issueElement(element: ViewHierarchyElement?): Any {
+        if (element == null) return JSONObject.NULL
+        val rect = element.boundsInScreen
+        return JSONObject().put("identifier", element.resourceName ?: "")
+            .put("class", element.className?.toString() ?: "")
+            .put("label", element.contentDescription?.toString() ?: "")
+            .put("text", element.text?.toString() ?: "")
+            .put("boundsInScreen", bounds(rect.left, rect.top, rect.right, rect.bottom))
     }
 
     @Test fun auditFlutterSemantics() {
@@ -147,7 +167,7 @@ class QualificationAuditTest {
                     for (result in check.runCheckOnHierarchy(hierarchy)) {
                         issues.put(JSONObject().put("check", check.javaClass.simpleName).put("type", result.type.toString())
                             .put("message", result.getMessage(Locale.ENGLISH).toString()).put("resultId", result.resultId)
-                            .put("identifier", result.element?.resourceName ?: ""))
+                            .put("identifier", result.element?.resourceName ?: "").put("element", issueElement(result.element)))
                     }
                 }
                 if (id == "detector-bad") {

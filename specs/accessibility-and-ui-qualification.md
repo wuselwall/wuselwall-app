@@ -33,9 +33,10 @@ Native Android ATF and iOS XCTest audit adapters, virtual accessibility-node ins
 known-failure/keyboard controls, phone/tablet and enlarged-text profiles, and native PNG and
 semantic comparisons are implemented. The dedicated native toolchain is provisioned and
 runner preflight passed. Both platforms rendered the initial five phone smoke screens.
-iOS recorded seven audit entries with working detector and keyboard checks; native
-findings remain blocking. Android's first instrumentation run failed its keyboard
-detector and report retrieval; a compiled harness fix is undergoing runtime validation.
+Both platforms recorded seven audit entries with working detector and keyboard
+checks and no framework errors. Android's calendar target and iOS's scroll-container
+and Today hit-area findings remain blocking. The latest inventory adds claim and
+shopping trip to native coverage; the earlier five-screen diagnostic does not cover them.
 These diagnostics do not establish complete native coverage or an approved baseline.
 Native platform interaction uses dedicated adapters and a test-only Flutter checkpoint
 bridge; Patrol is not a current dependency.
@@ -50,10 +51,10 @@ human gates. Real backend authentication, signed-store-binary smoke and the rest
 release checklist remain separate requirements. Operator-run deployment utilities are not
 publishing-workflow qualification gates.
 
-Local validation rendered all 180 direct fixtures in DE/EN/FR/ES and executed the earlier 70-state,
+Current validation rendered 192 direct fixture/locale pairs in DE/EN/FR/ES. Earlier validation executed the 70-state,
 8,760-case Flutter matrix. Large-text layout and touch-target fixes were verified in a
 672-case responsive rerun with no framework, label or target-size findings. Contrast findings
-remain visible and blocking while attribution continues. The ordinary suite passed 1,715
+remain visible and blocking while attribution continues. The ordinary suite passed 1,879
 tests with seven intentionally unconfigured backend integration tests skipped; the separate
 disposable-backend CI job supplies their coverage. No qualified candidate or approved native
 baseline is established by these local checks.
@@ -385,7 +386,7 @@ device evidence remains part of the promotion checklist.
 
 | Slice | Implemented result | Remaining completion evidence |
 |---|---|---|
-| 1 | Shared inventory/clock, real-widget fixtures, Flutter/web detectors, native adapters | Actual native runtime node/detector results and repeatability measurements |
+| 1 | Shared inventory/clock, real-widget fixtures, Flutter/web detectors; Android/iOS smoke node and detector evidence | Full current native inventory and repeatability measurements |
 | 2 | 75 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
 | 3 | Nine native phone/tablet, enlarged-text and Android minimum-API profiles; keyboard checkpoint and native report checks | Successful Android/iOS runtime runs, platform logs and physical-device behavior |
 | 4 | Manual exact-commit workflow, strict evidence aggregation, verified artifact provenance and protected app/server promotion dependencies | Successful full comparison followed by protected reviewer acceptance; implementation rejects missing evidence now |

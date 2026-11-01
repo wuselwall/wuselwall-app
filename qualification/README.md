@@ -45,21 +45,24 @@ qualification for that exact commit and protected human approval before publishi
 Separate backend/recovery checks remain part of the release checklist; operator-run local
 deployment utilities are independent.
 
-Expanded Linux validation rendered all 180 direct fixtures and executed the earlier
-70-state, 8,760-case Flutter matrix. It exposed accessibility findings and large-text layout defects. After
+Current fixture checks render 192 destination/locale pairs. Earlier Linux validation
+executed the 70-state, 8,760-case Flutter matrix. It exposed accessibility findings and large-text layout defects. After
 fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
 label or target-size findings. The exact audit below attributes eligible SDK border
 misattribution; ambiguous findings remain blocking. The ordinary
-suite passed 1,715 tests, with seven backend integration tests intentionally skipped without
+suite passed 1,879 tests, with seven backend integration tests intentionally skipped without
 backend configuration. Those seven require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile. An unsigned iOS diagnostic booted a simulator,
 captured five smoke screens and compiled XCTest. Both the deliberately bad control and
 native keyboard detectors passed, and all seven audit entries were recorded without
-framework errors. Native screen findings remain blocking and retain element diagnostics. Android
-SDK/AVDs are provisioned and the runner preflight passed. Android rendered all five
-initial smoke screens; its first instrumentation run failed the keyboard detector and
-report retrieval. The harness now waits for native focus/input delivery and retrieves
-the instrumentation-owned report. A new combined diagnostic is validating that fix.
+framework errors. The Android SDK/AVDs are provisioned and runner preflight passed.
+The combined diagnostic on `17652a9b` completed both platforms: five screen captures
+and seven audit entries each, with both detectors passing and no framework errors.
+Android's calendar audit reported a 33 dp target; iOS retains unnamed scroll-container
+findings and Today's hit-area finding. These remain blocking. The current inventory
+also adds server claim and shopping trip to native coverage, increasing phone smoke
+to seven captures and nine audit entries; the older five-screen diagnostic does not
+establish that new coverage.
 No native baseline or reviewed framework exception has been approved.
 
 Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)

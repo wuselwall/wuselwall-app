@@ -220,45 +220,63 @@ class _DayHeader extends ConsumerWidget {
     final text = Theme.of(context).textTheme;
     final accent = isToday ? cs.primary : null;
     // A tap on a day's header sets "Termine bis …" for that day (FR-1.19).
+    final busyTitle = context.l10n.busyTitle;
+    void openBusyUntil() => showBusyUntilSheet(context, ref, day);
     return Tooltip(
-      message: context.l10n.busyTitle,
-      child: InkWell(
-        onTap: () => showBusyUntilSheet(context, ref, day),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-          child: single
-              ? Text(
-                  context.fullDate(day),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: text.titleSmall?.copyWith(
-                    color: accent ?? cs.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      context.weekdayShort(day),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.labelMedium?.copyWith(
-                        color: accent ?? ww.ink2,
+      message: busyTitle,
+      excludeFromSemantics: true,
+      child: Semantics(
+        container: true,
+        excludeSemantics: true,
+        button: true,
+        label: context.fullDate(day),
+        hint: busyTitle,
+        onTap: openBusyUntil,
+        child: InkWell(
+          excludeFromSemantics: true,
+          onTap: openBusyUntil,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48),
+            child: Center(
+              heightFactor: 1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: single
+                    ? Text(
+                        context.fullDate(day),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: text.titleSmall?.copyWith(
+                          color: accent ?? cs.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            context.weekdayShort(day),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: text.labelMedium?.copyWith(
+                              color: accent ?? ww.ink2,
+                            ),
+                          ),
+                          Text(
+                            narrow ? '${day.day}' : context.dayMonth(day),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: text.titleSmall?.copyWith(
+                              color: accent ?? cs.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      narrow ? '${day.day}' : context.dayMonth(day),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.titleSmall?.copyWith(
-                        color: accent ?? cs.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
