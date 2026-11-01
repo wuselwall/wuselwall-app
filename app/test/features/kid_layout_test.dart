@@ -204,6 +204,37 @@ void main() {
     },
   );
 
+  testWidgets('on a phone the bar is 72 dp and each tab a 56 dp target', (
+    tester,
+  ) async {
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: _KidIdentity()),
+      tasks: _chores(),
+      size: _phone,
+    );
+    await _pickEmma(tester);
+    // specs/09 "the bottom bar": lower than Material's 80 dp, no system inset
+    // in a test.
+    expect(tester.getSize(find.byType(NavigationBar)).height, 72);
+    for (final d in find.byType(NavigationDestination).evaluate()) {
+      final size = (d.renderObject! as RenderBox).size;
+      expect(size.height, greaterThanOrEqualTo(56));
+      expect(size.width, greaterThanOrEqualTo(56));
+    }
+    // Every destination opens where a child taps it.
+    final destinations = find.byType(NavigationDestination);
+    for (var i = destinations.evaluate().length - 1; i >= 0; i--) {
+      await tester.tap(destinations.at(i));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+        i,
+      );
+    }
+    await unmountApp(tester, container);
+  });
+
   testWidgets('the picker shows the whole family on a 320 × 568 phone', (
     tester,
   ) async {

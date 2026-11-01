@@ -20,6 +20,13 @@ laptop can be the same physical size and still need different interfaces.
 Responsive layout still applies within each register — the adult register must work on a
 phone — but the register itself is a device property.
 
+**The bottom bar** (*added 2026-11-01*): on a phone (narrower than 600 dp) the home's
+navigation bar is lower than Material's 80 dp: 64 dp in the adult register, 72 dp in the
+kid register (its icon and label are larger). Material's height leaves a band of empty
+surface under the labels, and a phone adds its own gesture inset below that; a destination
+centres its icon and label, so nothing is lost, and each destination stays taller than its
+touch target (specs/17). Wider screens keep the 80 dp bar. (`navBarHeight`)
+
 Before a device belongs to a household it shows the **front door**
 ([20](20-onboarding.md#the-front-door)), the same on every device: continue with Apple,
 Google or email, or connect this device as a family tablet or wall display. The register

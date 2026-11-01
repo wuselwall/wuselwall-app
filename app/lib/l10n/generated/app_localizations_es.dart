@@ -6626,6 +6626,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shoppingTilePinned => 'Fijada';
 
   @override
+  String get shoppingTileStarter => 'Sugerencia';
+
+  @override
   String get settingsGroupShoppingTitle => 'Compras';
 
   @override

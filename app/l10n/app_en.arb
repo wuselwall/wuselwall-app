@@ -3978,6 +3978,10 @@
   "@shoppingTilePinned": {
     "description": "Shopping list tile: tooltip and hint of the small pin on a pinned tile"
   },
+  "shoppingTileStarter": "Suggested",
+  "@shoppingTileStarter": {
+    "description": "Shopping list tile: tooltip and hint of a tile the starter catalogue suggests, not yet one of the family's own"
+  },
   "settingsGroupShoppingTitle": "Shopping",
   "settingsGroupShoppingSubtitle": "Learned words",
   "settingsSectionLearnedWords": "Learned words",

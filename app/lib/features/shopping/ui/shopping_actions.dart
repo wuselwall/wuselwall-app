@@ -15,9 +15,11 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
+import 'package:wuselwall/features/shopping/application/starter_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_item_sheet.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_starter.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_widgets.dart';
 import 'package:wuselwall/features/wusel/application/celebration.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
@@ -85,7 +87,24 @@ mixin ShoppingActions<T extends ConsumerStatefulWidget> on ConsumerState<T> {
     final tile = (ref.read(shoppingCatalogProvider).value ?? const [])
         .where((c) => c.listId == list.id && c.foldedName == fold(name))
         .firstOrNull;
-    if (tile == null) return addAndEdit(name, list);
+    if (tile == null) {
+      // A suggestion of the starter catalogue is not the family's tile yet: no renaming,
+      // no forgetting, only adding.
+      final starter = ref
+          .read(starterSetProvider(list.id))
+          .byFolded(fold(name));
+      if (starter == null) return addAndEdit(name, list);
+      final choice = await showStarterTileSheet(context, starter.name);
+      if (!mounted) return;
+      switch (choice) {
+        case StarterChoice.add:
+          return addName(starter.name, list);
+        case StarterChoice.addAndEdit:
+          return addAndEdit(starter.name, list);
+        case null:
+          return;
+      }
+    }
     final choice = await showModalBottomSheet<String>(
       context: context,
       builder: (context) => SafeArea(
