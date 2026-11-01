@@ -156,7 +156,10 @@ whole line as its tooltip.
   Several GB of memory on every family's server, answers that are hard to predict, and it
   touches the paused assistant work ([deferred](deferred/mcp-and-ai-assistants.md)). Counting
   covers "the things we do often". If near-duplicates turn out to matter, `pg_trgm` similarity
-  in the same function is the next step, not a model.
+  in the same function is the next step, not a model. *Amended 2026-10-31 by
+  [ADR-021](adr/ADR-021-local-matching.md): the rule is "no outside service; a bundled dictionary
+  or model only", and [29](29-local-matching.md) adds a title → picture matcher and the `pg_trgm`
+  signatures as its third feature.*
 - **Templates carrying a repeat.** Only the built-in Geburtstag does (yearly). A saved template
   would have to move a weekly rule to the new day; a series is the right tool for that.
 - **Folding Neue Tradition into the page.** Kept apart for now; the tile page may take it in

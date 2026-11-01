@@ -35,6 +35,7 @@ export const MCP_ES: McpMessages = {
     dairy: "Lácteos y quesos",
     meat_fish: "Carne y pescado",
     pantry: "Despensa",
+    snacks: "Snacks",
     frozen: "Congelados",
     drinks: "Bebidas",
     household: "Hogar",

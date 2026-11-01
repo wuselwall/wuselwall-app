@@ -2,7 +2,7 @@
 
 The [qualification design](../specs/accessibility-and-ui-qualification.md) is implemented
 as a manually dispatched evidence suite and an enforced app/server release gate. The shared
-inventory contains 72 states and accounts for every release route. Two exclusions are
+inventory contains 75 states and accounts for every release route. Two exclusions are
 checked against the production router: the legacy settings redirect and the developer-only
 diagnostics page. Route coverage does not mean every dialog, permission state or backend
 journey has been exercised.
@@ -17,7 +17,7 @@ Capture, smoke, canonical-only, partial, skipped and failing runs cannot authori
 - Flutter: bundled fonts, four locales, Android/iOS widget adaptations, light/dark and
   kiosk night, semantics, labels, target sizes and rendered text contrast. The responsive
   tier adds relevant widths, 599/600/601 boundaries and 100/200% text. Every inventory
-  state runs regardless of changed paths. Fixture integrity checks render all 43 direct
+  state runs regardless of changed paths. Fixture integrity checks render all 48 direct
   destination fixtures in four languages before their audit results can count.
 - Browser: the release-compiled synthetic-data entry point, stable screenshots and ARIA
   snapshots, axe-core DOM/ARIA checks, console/page errors and blocked external requests.
@@ -56,8 +56,11 @@ app and instrumentation APKs compile. An unsigned iOS diagnostic booted a simula
 captured five smoke screens and compiled XCTest. Both the deliberately bad control and
 native keyboard detectors passed, and all seven audit entries were recorded without
 framework errors. Native screen findings remain blocking and retain element diagnostics. Android
-runtime execution still needs its dedicated SDK/AVDs. No native baseline has been approved
-by these diagnostics.
+SDK/AVDs are provisioned and the runner preflight passed. Android rendered all five
+initial smoke screens; its first instrumentation run failed the keyboard detector and
+report retrieval. The harness now waits for native focus/input delivery and retrieves
+the instrumentation-owned report. A new combined diagnostic is validating that fix.
+No native baseline or reviewed framework exception has been approved.
 
 Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)
 wherever paint is unambiguous, and by the raw Flutter SDK guideline everywhere else. The SDK
@@ -147,8 +150,8 @@ QUALIFY_MODE=capture QUALIFY_MATRIX=smoke npm run qualify:web
 ```
 
 Profiles are `smoke`, `canonical`, `responsive` and `full`. Workflow choices omit standalone
-`responsive`; `full` includes it. Canonical coverage contains 580 browser cases and 1,160
-Flutter cases before detectors. Full coverage has 2,512 browser and 8,888 Flutter cases. Flutter's responsive
+`responsive`; `full` includes it. Canonical coverage contains 604 browser cases and 1,208
+Flutter cases before detectors. Full coverage has 2,620 browser and 9,272 Flutter cases. Flutter's responsive
 tier additionally crosses 100/200% text and both widget platforms. Native smoke uses
 German/light; full uses all four locales/light/dark. Smoke is diagnostic only.
 

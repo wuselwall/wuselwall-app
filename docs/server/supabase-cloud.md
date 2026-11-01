@@ -40,7 +40,7 @@ Das erledigt ein vorbereiteter Ablauf auf GitHub, in eurer eigenen Kopie von Wus
    | `SUPABASE_ACCESS_TOKEN` | das Access Token aus Schritt 3 |
    | `SUPABASE_PROJECT_ID` | die Projekt-ID |
    | `SUPABASE_DB_PASSWORD` | das Datenbank-Passwort |
-   | `WUSELWALL_SETUP_TOKEN` | ein Satz eurer Wahl aus Buchstaben und Ziffern, z. B. `KuchenAmSonntag2026`. Ihr braucht ihn einmal, um die Familie zu gründen |
+   | `WUSELWALL_SETUP_TOKEN` | ein Satz eurer Wahl aus Buchstaben und Ziffern, z. B. `KuchenAmSonntag2026`. Ihr braucht ihn einmal, als Einrichtungsschlüssel, der die Familie gründet |
    | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | freiwillig: SMTP-Zugang für Anmelde-Codes per Mail, fünf Secrets ([E-Mail-Versand](#e-mail-versand)) |
 
 5. Öffne den Reiter **Actions**. In einer Kopie sind die Abläufe zuerst ausgeschaltet: Tippe auf **I understand my workflows, go ahead and enable them**. Dann **deploy-supabase → Run workflow**. Wähle bei **language** die Sprache der Anmelde-Mails: `de` (Standard), `en`, `fr` oder `es`. Setze den Haken bei **web**, wenn ihr die Web-App wollt (Schritt 4), und tippe auf **Run workflow**.
@@ -63,7 +63,7 @@ Ihr könnt die Secrets später nachtragen oder löschen und den Lauf erneut star
 
 ## 3. Die App verbinden
 
-Öffne WuselWall. Auf die Frage **Mit welchem Server?** gibst du die **Projekt-ID** ein und tippst auf **Verbinden**. Dann **Neue Familie anlegen** mit dem Satz aus `WUSELWALL_SETUP_TOKEN` ([Neue Familie anlegen](/guide/setup#_3-neue-familie-anlegen-nur-einmal)).
+Öffne WuselWall. Auf die Frage **Mit welchem Server?** gibst du die **Projekt-ID** ein und tippst auf **Verbinden**. Dann **Ich habe den Einrichtungsschlüssel** mit dem Satz aus `WUSELWALL_SETUP_TOKEN` ([Der Einrichtungsschlüssel](/guide/setup#einrichtungsschluessel)): Er kündigt deine Adresse an, und nach der Anmeldung folgt die Familie.
 
 <Shot name="setup-server" alt="Die Frage nach dem Server" />
 

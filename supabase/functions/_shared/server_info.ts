@@ -13,6 +13,8 @@ export type ServerInfoRow = {
   api_version: number;
   min_app_version: string;
   household_creation: string;
+  /** Whether a family exists (migration 20261030100000); absent on older servers. */
+  claimed?: boolean;
   features: string[];
 };
 
@@ -25,6 +27,10 @@ export type DiscoveryDocument = {
   api_version: number;
   min_app_version: string;
   household_creation: string;
+  /** Whether a family exists yet. Without one, the app shows the claim step: only the
+   * address announced with the setup key may sign up (specs/20 "Claiming the server").
+   * Absent on servers from before that migration, which the app treats as claimed. */
+  claimed?: boolean;
   /** Passwords on every server; email codes only where the server sends mail
    * (`email_code`, see [emailCode]). Passkeys are decided by the app (only builds that name
    * their own server), never by a server. */
@@ -123,6 +129,7 @@ export function checkRow(row: unknown): ServerInfoRow {
     typeof r.api_version !== "number" || !Number.isInteger(r.api_version) ||
     typeof r.min_app_version !== "string" ||
     typeof r.household_creation !== "string" ||
+    (r.claimed !== undefined && typeof r.claimed !== "boolean") ||
     !Array.isArray(r.features) ||
     !r.features.every((f) => typeof f === "string")
   ) {
@@ -144,6 +151,7 @@ export function discoveryDocument(
     api_version: row.api_version,
     min_app_version: row.min_app_version,
     household_creation: row.household_creation,
+    ...(typeof row.claimed === "boolean" ? { claimed: row.claimed } : {}),
     sign_in: { password: true, email_code: stack.emailCode ?? true },
     features: [...new Set([...row.features, ...(stack.features ?? [])])],
     ...(stack.version ? { server_version: stack.version } : {}),

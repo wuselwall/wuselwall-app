@@ -10,11 +10,26 @@ réapparaissent dès que vous êtes de nouveau en ligne.
 
 En bas, **Politique de confidentialité** ouvre la page dans le navigateur. Le lien est désactivé sans connexion ; le texte n’est pas enregistré dans l’app.
 
+## La clé de configuration : un serveur sans famille {#setup-key}
+
+Un serveur fraîchement installé n’a pas de famille. La personne qui l’a installé détient la
+**clé de configuration** : l’installation l’affiche, et le lien ou le QR code de configuration
+la contient. L’écran d’accueil d’un tel serveur le dit et propose **J’ai la clé de
+configuration** ; le lien de configuration ouvre directement **Configurer ton serveur**.
+
+Vous y saisissez votre adresse e-mail à côté de la clé. WuselWall vérifie la clé auprès du
+serveur et annonce votre adresse avec elle : tant que la famille n’existe pas, le serveur ne
+crée un compte que pour cette adresse, et toute autre personne apprend que le serveur n’a pas
+encore de famille. Viennent ensuite le code reçu par e-mail — ou un mot de passe sur un serveur
+sans e-mails — puis **Nouvelle famille**, qui ne demande plus de clé. Personne ne saisit la clé
+une deuxième fois ; la personne qui gère le serveur en crée une nouvelle avec
+`./wuselwall setup-token` tant qu’aucune famille n’existe.
+
 ## 1. Se connecter {#_1-signing-in}
 
 Sur votre téléphone personnel, touchez **Continuer par e-mail** et saisissez une adresse valide. L’app vérifie le champ avant tout envoi. Vous recevez un **code à six chiffres**, valable **10 minutes**. Gardez le champ ouvert et saisissez-y le code reçu. Consultez les indésirables si le message n’arrive pas ; un nouvel envoi est possible au plus tôt après une minute.
 
-Ce code vérifie votre adresse. Il est différent du **code de configuration du serveur** et ne demande ni lien de connexion ni deuxième connexion.
+Ce code vérifie votre adresse. Il est différent de la **clé de configuration du serveur** et ne demande ni lien de connexion ni deuxième connexion.
 
 <Shot name="setup-sign-in" alt="La connexion par e-mail" />
 
@@ -29,9 +44,9 @@ Si votre compte n’appartient à aucun foyer, la page **Nouvelle famille** s’
 1. Le **nom de la famille**.
 2. **Votre prénom** et **votre couleur**, utilisée pour vos actions.
 3. Si vous le souhaitez, les **exemples** de tâches et récompenses, modifiables ensuite.
-4. Le **code de configuration**, si le serveur en exige un et si vous n’avez pas ouvert son lien de configuration. Il vient de l’installation du serveur ou de son responsable, pas de votre e-mail de connexion.
+4. La **clé de configuration**, si le serveur en exige une et si vous ne l’avez pas saisie avant la connexion ([La clé de configuration](#setup-key)). Elle vient de l’installation du serveur ou de son responsable, pas de votre e-mail de connexion.
 
-Un lien ou code QR de configuration mémorise le code pendant votre connexion au serveur concerné : inutile de le saisir à nouveau. Gardez ce lien comme une clé et transmettez-le seulement à la personne qui crée la famille.
+Si vous avez ouvert le lien ou le QR code de configuration, ou saisi la clé sous **J’ai la clé de configuration**, WuselWall a déjà annoncé votre adresse avec elle : inutile de la saisir à nouveau. Gardez ce lien comme une clé et transmettez-le seulement à la personne qui crée la famille.
 
 <Shot name="new-family" alt="Le formulaire de création d’une famille" />
 

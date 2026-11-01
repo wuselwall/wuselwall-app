@@ -23,6 +23,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
@@ -360,8 +361,9 @@ class DemoShoppingRepository implements ShoppingRepository {
 
   @override
   Future<Result<List<ShoppingList>>> lists() async => Ok([
-    for (final l in _lists)
+    for (final (i, l) in _lists.indexed)
       ShoppingList(
+        sortOrder: i * 10,
         id: l.id,
         name: l.name,
         isDefault: l.isDefault,
@@ -500,7 +502,67 @@ class DemoShoppingRepository implements ShoppingRepository {
       purchaseCount: c.purchaseCount,
       lastPurchasedAt: c.lastPurchasedAt,
       iconKey: c.iconKey,
+      pinned: c.pinned,
+      categoryAuto: false,
     );
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) async {
+    final i = _catalog.indexWhere((c) => c.id == itemId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'catalog_not_found'));
+    final c = _catalog[i];
+    _catalog[i] = CatalogEntry(
+      id: c.id,
+      listId: c.listId,
+      name: c.name,
+      foldedName: c.foldedName,
+      categoryId: c.categoryId,
+      purchaseCount: c.purchaseCount,
+      lastPurchasedAt: c.lastPurchasedAt,
+      iconKey: c.iconKey,
+      pinned: pinned,
+      categoryAuto: c.categoryAuto,
+    );
+    return const Ok(null);
+  }
+
+  final _corrections = <MatchCorrection>[
+    MatchCorrection(
+      id: 'demo-mc-guetzli',
+      domain: 'shopping_category',
+      text: demoText('Guetzli'),
+      foldedText: 'guetzli',
+      key: 'snacks',
+      setBy: DemoData.mama,
+      setAt: DateTime.now().subtract(const Duration(days: 12)),
+    ),
+    MatchCorrection(
+      id: 'demo-mc-znuni',
+      domain: 'shopping_category',
+      text: demoText('Znüni-Riegel'),
+      foldedText: 'znueni-riegel',
+      key: 'pantry',
+      setBy: DemoData.papa,
+      setAt: DateTime.now().subtract(const Duration(days: 40)),
+    ),
+  ];
+
+  @override
+  Future<Result<List<MatchCorrection>>> matchCorrections() async =>
+      Ok(List.of(_corrections));
+
+  @override
+  Future<Result<void>> forgetMatchCorrection({
+    required String? actor,
+    required String id,
+  }) async {
+    _corrections.removeWhere((c) => c.id == id);
     return const Ok(null);
   }
 
@@ -1797,6 +1859,13 @@ class DemoHouseholdOnboardingRepository
   const DemoHouseholdOnboardingRepository({this.hasHousehold = true});
 
   final bool hasHousehold;
+
+  /// The demo server is claimed: any key counts, nothing is announced.
+  @override
+  Future<Result<ClaimOutcome>> claim({
+    required String key,
+    String? email,
+  }) async => Ok(ClaimAccepted(claimed: email != null, serverClaimed: true));
 
   @override
   Future<Result<Account>> account() async => Ok(

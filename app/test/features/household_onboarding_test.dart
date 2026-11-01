@@ -49,7 +49,7 @@ void main() {
         household: FakeHouseholdOnboardingRepository(),
       ),
     );
-    expect(field('Einrichtungscode'), findsOneWidget);
+    expect(field('Einrichtungsschlüssel'), findsOneWidget);
   });
 
   testWidgets('in open mode H1 has no founder code field', (t) async {
@@ -67,7 +67,7 @@ void main() {
       ),
     );
     expect(find.text('Neue Familie'), findsOneWidget);
-    expect(field('Einrichtungscode'), findsNothing);
+    expect(field('Einrichtungsschlüssel'), findsNothing);
   });
 
   testWidgets(
@@ -106,7 +106,7 @@ void main() {
         overrides: baseOverrides(identity: identity, household: household),
       );
 
-      await t.enterText(field('Einrichtungscode'), 'ABCD2345');
+      await t.enterText(field('Einrichtungsschlüssel'), 'ABCD2345');
       await t.tap(find.text('Familie anlegen'));
       await t.pumpAndSettle();
 
@@ -144,12 +144,12 @@ void main() {
         ),
       ),
     );
-    await t.enterText(field('Einrichtungscode'), 'nope');
+    await t.enterText(field('Einrichtungsschlüssel'), 'nope');
     await t.tap(find.text('Familie anlegen'));
     await t.pumpAndSettle();
     expect(
       find.text(
-        'Dieser Einrichtungscode ist ungültig oder wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen Einrichtungslink oder Code.',
+        'Dieser Einrichtungsschlüssel ist ungültig oder wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen Einrichtungslink oder Schlüssel.',
       ),
       findsOneWidget,
     );
@@ -166,7 +166,7 @@ void main() {
         ),
       ),
     );
-    await t.enterText(field('Einrichtungscode'), 'nope');
+    await t.enterText(field('Einrichtungsschlüssel'), 'nope');
     await t.tap(find.text('Familie anlegen'));
     await t.pumpAndSettle();
     expect(find.textContaining('Zu viele Versuche'), findsOneWidget);
@@ -186,12 +186,12 @@ void main() {
           ),
         ),
       );
-      await t.enterText(field('Einrichtungscode'), 'x');
+      await t.enterText(field('Einrichtungsschlüssel'), 'x');
       await t.tap(find.text('Familie anlegen'));
       await t.pumpAndSettle();
       expect(
         find.text(
-          'Dieser Server braucht einen Einrichtungscode, um eine Familie anzulegen. Nimm den Code aus der Serverinstallation, nicht den E-Mail-Code.',
+          'Dieser Server braucht einen Einrichtungsschlüssel, um eine Familie anzulegen. Nimm den Schlüssel aus der Serverinstallation, nicht den E-Mail-Code.',
         ),
         findsOneWidget,
       );
@@ -208,7 +208,7 @@ void main() {
           household: FakeHouseholdOnboardingRepository(),
         ),
       );
-      await t.enterText(field('Einrichtungscode'), 'ABCD2345');
+      await t.enterText(field('Einrichtungsschlüssel'), 'ABCD2345');
       await t.tap(find.text('Familie anlegen'));
       await t.pumpAndSettle();
 
@@ -259,7 +259,7 @@ void main() {
         t,
         overrides: baseOverrides(identity: identity, household: household),
       );
-      await t.enterText(field('Einrichtungscode'), 'ABCD2345');
+      await t.enterText(field('Einrichtungsschlüssel'), 'ABCD2345');
       if (!examples) {
         await t.tap(
           find.text('Mit Beispielen starten — 5 Aufgaben, 3 Belohnungen'),

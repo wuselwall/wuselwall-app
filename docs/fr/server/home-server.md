@@ -23,7 +23,7 @@ cd wuselwall
 ./wuselwall install --api https://api.example.org --web https://web.example.org --language fr --caddy
 ```
 
-`--language` choisit la langue des **e-mails** (`de`, `en`, `fr`, `es`, allemand par défaut), pas celle de l’app. Docker télécharge plusieurs gigaoctets. L’outil crée les clés dans `stack/.env`, lance Caddy et ses certificats Let’s Encrypt, prépare la base et les tâches planifiées, puis affiche un **lien de configuration et son QR**, contenant un code à usage unique. Aucun Node.js ni serveur web supplémentaire n’est requis.
+`--language` choisit la langue des **e-mails** (`de`, `en`, `fr`, `es`, allemand par défaut), pas celle de l’app. Docker télécharge plusieurs gigaoctets. L’outil crée les clés dans `stack/.env`, lance Caddy et ses certificats Let’s Encrypt, prépare la base et les tâches planifiées, puis affiche un **lien de configuration et son QR**, contenant une clé de configuration à usage unique. Aucun Node.js ni serveur web supplémentaire n’est requis.
 
 Le serveur démarre **sans e-mails** : chacun se connecte avec adresse et mot de passe. `./wuselwall mail smtp` ajoute les codes par e-mail à tout moment ([E-mails](/fr/server/email)).
 
@@ -49,9 +49,9 @@ Si vous louez le serveur chez un hébergeur comme Hetzner, un fichier **cloud-in
 
 L’app web lit la configuration de l’installation à chaque chargement, même si une ancienne adresse est mémorisée. Hors ligne, elle utilise la dernière configuration. Un changement d’adresse demande une nouvelle connexion.
 
-Ouvrez le lien de configuration ou scannez son QR. Il contient serveur et code ; l’app conserve ce dernier pendant la connexion par e-mail et ne le redemande pas pour la [nouvelle famille](/fr/guide/setup#_2-creating-a-new-family).
+Ouvrez le lien de configuration ou scannez son QR. Il contient le serveur et la clé de configuration et ouvre **Configurer ton serveur** : vous y saisissez l’adresse e-mail du premier compte, et le serveur ne laisse que cette adresse se connecter ([La clé de configuration](/fr/guide/setup#setup-key)). **Nouvelle famille** ne demande ensuite aucune clé.
 
-Vous pouvez aussi saisir `api.example.org` dans le choix du serveur. Un ancien QR contenant seulement l’adresse ne transporte pas le code de configuration : saisissez-le alors une fois. `./wuselwall setup-token` en génère un nouveau tant qu’aucun foyer n’existe. Ne publiez ni code ni lien.
+Vous pouvez aussi saisir `api.example.org` dans le choix du serveur : l’écran d’accueil indique que le serveur n’a pas encore de famille, touchez **J’ai la clé de configuration** et saisissez la clé à côté de votre adresse. Un ancien QR contenant seulement l’adresse ne transporte pas la clé non plus. `./wuselwall setup-token` en génère une nouvelle tant qu’aucun foyer n’existe. Ne publiez ni clé ni lien : tant que la famille n’existe pas, seule la personne qui la détient peut créer un compte sur le serveur.
 
 ## 3. Sauvegarder {#_3-backups}
 
@@ -96,7 +96,7 @@ N’utilisez pas Watchtower ni les mises à jour automatiques de conteneurs du N
 | `./wuselwall status` | État des services |
 | `./wuselwall logs auth` | Journaux de `auth` ; aussi `db`, `rest`, `realtime`, `functions`, `caddy` |
 | `./wuselwall backup` | Sauvegarde immédiate |
-| `./wuselwall setup-token` | Nouveau code avant création du foyer |
+| `./wuselwall setup-token` | Nouvelle clé de configuration avant création du foyer |
 | `./wuselwall mail` | E-mails activés (`mail smtp`), coupés (`mail off`) ou testés (`mail test`) ([E-mails](/fr/server/email)) |
 | `./wuselwall password <adresse>` | Code à usage unique pour choisir un nouveau mot de passe ([E-mails](/fr/server/email#forgotten-password)) |
 | `./wuselwall compose …` | Commande Docker Compose pour la pile |

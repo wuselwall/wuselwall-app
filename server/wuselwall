@@ -15,13 +15,13 @@
 # Commands:
 #   install --api https://api.example.org --web https://web.example.org [--caddy] [--studio]
 #           [--admin-email you@example.org] [--language de|en|fr|es] [--env old.env]
-#                         a new server: secrets, stack, database, jobs, the setup token.
+#                         a new server: secrets, stack, database, jobs, the setup key.
 #                         --env reuses the .env of an earlier server (a move, a restore).
 #   update [release.tar.gz | version]
 #                         backup, then the new release's stack, migrations and jobs
 #   backup [label]        a dump of the whole database into backups/ (BACKUP_DIR)
 #   restore <db-….dump>   replaces the database with a backup (see docs/server/restore)
-#   setup-token           a fresh single-use token for founding the household
+#   setup-token           a fresh single-use setup key for founding the household
 #   language de|en|fr|es   choose the one language for server emails (default: de)
 #   mail [status]         whether the server sends mail (it is optional)
 #   mail smtp [--gmail] [--host h] [--port 587] [--user u] [--sender a] [--name n]
@@ -234,9 +234,9 @@ cmd_install() {
   echo "  Web app:  $web"
   echo "  Email language: $(env_value MAIL_LANGUAGE)"
   echo "  $(sh "$STACK/mail-settings.sh" "$STACK/.env" status | head -n 1)"
-  [ -n "$token" ] && echo "  Setup token (shown once, for \"Start a new family\"): $token"
+  [ -n "$token" ] && echo "  Setup key (shown once; it founds the family, and only its holder can sign up first): $token"
   echo
-  echo "  Scan to open setup in your browser, or enter $api in the WuselWall app:"
+  echo "  Scan to open setup in your browser, or enter $api in the WuselWall app and tap \"I have the setup key\":"
   [ -n "$token" ] && echo "  Setup link (keep private): $(setup_link "$web" "$api" "$token")"
   show_qr "$(setup_link "$web" "$api" "$token")"
   echo
@@ -450,7 +450,7 @@ case "${1:-}" in
     ;;
   backup) shift; preflight; backup "${1:-manual}" ;;
   restore) shift; cmd_restore "$@" ;;
-  setup-token) preflight; echo "Setup token (shown once): $(setup_token)" ;;
+  setup-token) preflight; echo "Setup key (shown once): $(setup_token)" ;;
   migrate) preflight; migrate ;;
   schedule) preflight; schedule ;;
   status) preflight; compose ps ;;

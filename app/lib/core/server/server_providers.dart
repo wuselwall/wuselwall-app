@@ -25,11 +25,23 @@ const featureEventTemplates = 'event-templates';
 /// (specs/20, Q48). Announced by the migration 20261026100000.
 const featurePasswordReset = 'password-reset';
 
+/// The server matches names with the shared dictionary and remembers the family's category
+/// corrections (specs/29). Announced by the migration 20261031151000.
+const featureLocalMatching = 'local-matching';
+
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
 /// signs in with a password, and a forgotten password is reset with a guardian's code
 /// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.
 final emailCodeSignInProvider = Provider<bool>(
   (ref) => ref.watch(appConfigProvider).server?.emailCode ?? true,
+);
+
+/// Whether the server this app runs on has no family yet (specs/20 "Claiming the
+/// server"): its front door leads to the claim, and only the address announced with the
+/// setup key may sign up. A server that does not say, or a compiled-in one, counts as
+/// claimed.
+final serverUnclaimedProvider = Provider<bool>(
+  (ref) => ref.watch(appConfigProvider).server?.claimed == false,
 );
 
 /// Whether the server this app runs on announces [feature] in its discovery document.

@@ -159,7 +159,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enrolAction => 'Conectar';
 
   @override
-  String get errSetupTokenInvalid => 'El código de configuración no es válido.';
+  String get errSetupTokenInvalid => 'La clave de configuración no es válida.';
 
   @override
   String get errSetupClosed => 'Este sistema ya está conectado.';
@@ -515,6 +515,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shoppingCat_pantry => 'Despensa';
+
+  @override
+  String get shoppingCat_snacks => 'Snacks';
 
   @override
   String get shoppingCat_frozen => 'Congelados';
@@ -3710,15 +3713,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get householdLanguageEs => 'Español';
 
   @override
-  String get householdNewFounderCode => 'Código de configuración';
+  String get householdNewFounderCode => 'Clave de configuración';
 
   @override
   String get householdNewFounderHelp =>
-      'Usa el código de configuración que apareció al instalar el servidor o pídeselo a quien lo administra. No es el código del correo de inicio de sesión.';
+      'Usa la clave de configuración que apareció al instalar el servidor o pídesela a quien lo administra. No es el código del correo de inicio de sesión.';
 
   @override
   String get householdNewCodeSaved =>
-      'Se ha guardado el código de tu enlace de configuración. No necesitas volver a introducirlo.';
+      'Se ha guardado la clave de tu enlace de configuración. No necesitas volver a introducirla.';
 
   @override
   String get householdSeedExamples =>
@@ -3742,11 +3745,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get householdNewErrNoCode =>
-      'Este servidor necesita un código de configuración para crear una familia. Usa el código de la instalación del servidor, no el del correo.';
+      'Este servidor necesita una clave de configuración para crear una familia. Usa la clave de la instalación del servidor, no la del correo.';
 
   @override
   String get householdNewErrCodeWrong =>
-      'El código de configuración no es válido o ya se ha usado. Pide un nuevo enlace o código de configuración a quien administra vuestro servidor.';
+      'La clave de configuración no es válida o ya se ha usado. Pide un nuevo enlace o clave de configuración a quien administra vuestro servidor.';
 
   @override
   String get householdNewErrRateLimited =>
@@ -3755,6 +3758,65 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get householdNewStalled =>
       'Esto está tardando más de lo habitual. Espera o cierra sesión y vuelve a iniciarla. No crees la familia por segunda vez.';
+
+  @override
+  String get claimTitle => 'Configurar tu servidor';
+
+  @override
+  String claimLead(String host) {
+    return '$host aún no tiene familia. Con la clave de configuración de su instalación la fundas tú. Introduce la dirección de correo que será la primera cuenta de la familia.';
+  }
+
+  @override
+  String claimHeader(String host) {
+    return 'Configurando $host';
+  }
+
+  @override
+  String get claimKeyLabel => 'Clave de configuración';
+
+  @override
+  String get claimKeyHelp =>
+      'Viene de la instalación del servidor: el enlace o el código QR de configuración la incluye. Si no, pídesela a quien administra vuestro servidor.';
+
+  @override
+  String get claimChecking => 'Comprobando la clave de configuración…';
+
+  @override
+  String get claimKeyReady =>
+      'Clave de configuración aceptada. El servidor espera a su familia.';
+
+  @override
+  String get claimKeyUsed =>
+      'Esta clave de configuración ya se ha usado. Pide una nueva a quien administra vuestro servidor o inicia sesión si la familia ya existe.';
+
+  @override
+  String get claimKeyInvalid => 'Esta clave de configuración no es válida.';
+
+  @override
+  String get claimNextCode =>
+      'Después: un código de tu correo y luego vuestra familia.';
+
+  @override
+  String get claimNextPassword =>
+      'Después: una contraseña para tu cuenta y luego vuestra familia.';
+
+  @override
+  String get claimHaveAccount => 'Ya tengo una cuenta';
+
+  @override
+  String get doorUnclaimedTitle => 'Este servidor aún no tiene familia';
+
+  @override
+  String get doorUnclaimedBody =>
+      'Quien lo instaló tiene la clave de configuración. Con ella se funda la familia; los demás se unen después por invitación.';
+
+  @override
+  String get doorUnclaimedAction => 'Tengo la clave de configuración';
+
+  @override
+  String get errSetupKeyRequired =>
+      'Este servidor aún no tiene familia. Solo la clave de configuración de su instalación puede crear la primera cuenta.';
 
   @override
   String get setupPrivacy => 'Política de privacidad';
@@ -6483,5 +6545,91 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String accountDeleteReauthPasswordBody(String email) {
     return 'Para eliminar una cuenta hace falta iniciar sesión de nuevo. Introduce la contraseña de $email.';
+  }
+
+  @override
+  String get shoppingModePlan => 'Modo planificar';
+
+  @override
+  String get shoppingStartShopping => 'Ir a comprar';
+
+  @override
+  String get shoppingAddInStore => 'Añadir';
+
+  @override
+  String get shoppingShopEmpty =>
+      'No hay nada en la lista. Toca «Añadir» o vuelve a «Planificar».';
+
+  @override
+  String get shoppingSearchClear => 'Borrar y cerrar';
+
+  @override
+  String shoppingTripTitle(String name, int open) {
+    return '$name · $open';
+  }
+
+  @override
+  String get shoppingItemDone => 'Listo';
+
+  @override
+  String get shoppingAddOne => 'Uno más';
+
+  @override
+  String get shoppingCategoryAuto =>
+      'Categoría asignada automáticamente por el nombre';
+
+  @override
+  String shoppingCountTimes(int count) {
+    return '$count ×';
+  }
+
+  @override
+  String get shoppingTilePin => 'Fijar la ficha';
+
+  @override
+  String get shoppingTileUnpin => 'Desfijar';
+
+  @override
+  String get shoppingTilePinHelp => 'Las fichas fijadas siempre van primero.';
+
+  @override
+  String get shoppingTilePinned => 'Fijada';
+
+  @override
+  String get shoppingTileStarter => 'Sugerencia';
+
+  @override
+  String get settingsGroupShoppingTitle => 'Compras';
+
+  @override
+  String get settingsGroupShoppingSubtitle => 'Palabras aprendidas';
+
+  @override
+  String get settingsSectionLearnedWords => 'Palabras aprendidas';
+
+  @override
+  String get learnedWordsHelp =>
+      'La familia aprendió estas palabras: desde ahora el artículo va a esta categoría. Olvidar quita una palabra.';
+
+  @override
+  String get learnedWordsEmpty =>
+      'Todavía no se ha aprendido nada. Cuando alguien cambia la categoría de un artículo, la familia recuerda la palabra aquí.';
+
+  @override
+  String learnedWordsMeta(String category, String date) {
+    return '$category · $date';
+  }
+
+  @override
+  String learnedWordsMetaBy(String category, String name, String date) {
+    return '$category · por $name, $date';
+  }
+
+  @override
+  String get learnedWordsForget => 'Olvidar';
+
+  @override
+  String learnedWordsForgetWord(String word) {
+    return 'Olvidar «$word»';
   }
 }

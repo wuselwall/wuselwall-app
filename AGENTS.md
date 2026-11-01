@@ -17,7 +17,10 @@ restoring a family, account deletion and the second-factor reset, localised mail
 `scripts/hosted-auth-config.mjs`, the run verifies its result), and mail is optional (2026-10-26, Q48: without SMTP
 Auth autoconfirms, `server-info` says `sign_in.email_code: false`, the app signs up with a password, invitations match
 only `app.proven_email`, a guardian's one-time code or `wuselwall password` resets a password; `wuselwall mail` sets up
-any SMTP server, Gmail included). The onboarding journeys J1–J3 are
+any SMTP server, Gmail included), and the setup key claims the server (2026-10-30, specs/20 "Claiming the
+server": S1 `ClaimPage` checks the key and announces the founder's address with `api.setup_claim`; the Before
+User Created hook `app.before_user_created_hook` refuses every other sign-up while no household exists; H1
+asks for no key after a claim; the key stays on the device). The onboarding journeys J1–J3 are
 integration tests (CI's backend job) and screen-count tests (`app/test/journeys`). Built besides: household settings
 (specs/21), the kiosk week board (specs/09) with "Alle Termine", M1.3a calendar (events,
 presence, recurrence expanded in Edge Functions, the ICS feed with tokens, and since 2026-10-24 a read-only month view), M1.3b Stundenplan
@@ -40,6 +43,24 @@ role, order by dragging, "Nicht mehr dabei"), the family (name, time zone, local
 (rename, last active) on their own pages, and the shopping structure (lists renamed and
 removed, categories added, renamed, ordered and removed, catalogue tiles renamed and
 forgotten), each page with the Basic/Advanced switch of specs/21.
+The shopping list has two modes since 2026-10-31 ([specs/07](specs/07-module-meals-shopping.md)
+"Two modes"): Planen in the tab, Einkaufen as a full-screen trip page without the app bar and the
+navigation, the last mode kept on the device, the item sheet with a count stepper, pinned tiles,
+a seeded `snacks` category, and a category inferred from a new item's name by the server's word
+list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
+grow in issue #197).
+Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
+source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
+into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the
+layered pure-Dart matcher and the shared quantity parser live in `app/lib/core/matching/`, the
+acceptance corpus in `dictionary/corpus.txt`. Feature 1 (shopping) is in: `dictionary.mjs sql` writes
+`supabase/migrations/*_match_words.sql` (table `app.match_word`, the newest file pinned to the render
+by the node test), `app.match_dictionary` runs the same layers in plpgsql and feeds
+`catalog_icon_for`, `meal_icon_for` (triggers now, no generated columns) and
+`catalog_category_keys_for`; `@name` blocks carry categories without a picture; the picker's
+`rankTiles` falls back to the matcher and the "Neu" tile shows the matched picture; a person's
+category choice is remembered per household in `app.match_correction` (Einstellungen > Einkaufen >
+Gelernte Wörter, Advanced, guardians forget).
 MCP and AI assistant work is **on hold** (2026-10-24), removed from the app UI and active
 milestones. The backend, keys and proposal data are retained for compatibility; existing
 MCP clients are not disabled. Siri/automations, structured timetable text import and the

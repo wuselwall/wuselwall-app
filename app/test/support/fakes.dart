@@ -45,8 +45,10 @@ import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
@@ -545,6 +547,30 @@ class FakeHouseholdOnboardingRepository
   Result<void> createResult;
   final FakeIdentityRepository? identity;
 
+  /// What `setup_claim` answers; the key is accepted unless a test says otherwise.
+  Result<ClaimOutcome> claimResult = const Ok(
+    ClaimAccepted(claimed: true, serverClaimed: false),
+  );
+
+  /// Each claim call: the key and the address (null for a check without one).
+  final claims = <({String key, String? email})>[];
+
+  @override
+  Future<Result<ClaimOutcome>> claim({
+    required String key,
+    String? email,
+  }) async {
+    claims.add((key: key, email: email));
+    final result = claimResult;
+    if (email == null) {
+      // A check without an address claims nothing, as the server answers.
+      if (result case Ok(value: ClaimAccepted(:final serverClaimed))) {
+        return Ok(ClaimAccepted(claimed: false, serverClaimed: serverClaimed));
+      }
+    }
+    return result;
+  }
+
   /// The arguments of each create call, in order.
   final created =
       <
@@ -609,6 +635,9 @@ class FakeShoppingRepository implements ShoppingRepository {
   List<ShoppingItem> list;
   final toggles = <({String? actor, String id})>[];
 
+  /// The names of the items added, in order.
+  final adds = <String>[];
+
   /// The meals behind each item id, for the item's sheet.
   final Map<String, List<ShoppingItemMeal>> mealsByItem;
 
@@ -638,6 +667,7 @@ class FakeShoppingRepository implements ShoppingRepository {
     for (final op in ops.whereType<CheckItemOp>()) {
       toggles.add((actor: op.actor, id: op.itemId));
     }
+    adds.addAll(ops.whereType<AddItemOp>().map((op) => op.name));
     final view = projectShopping((await snapshot()).valueOrNull!, ops);
     list = [for (final i in view.items) i.copyWith(pending: false)];
     return Ok(
@@ -661,7 +691,29 @@ class FakeShoppingRepository implements ShoppingRepository {
   final deletedCategories = <String>[];
   final reorderedCategories = <List<String>>[];
   final catalogUpdates = <({String id, String? name})>[];
+  final pins = <({String id, bool pinned})>[];
   final forgottenTiles = <String>[];
+
+  /// The learned words the fake serves, and the ids forgotten (the server removes them).
+  List<MatchCorrection> corrections = [];
+  final forgottenCorrections = <String>[];
+  Result<void> forgetCorrectionResult = const Ok(null);
+
+  @override
+  Future<Result<List<MatchCorrection>>> matchCorrections() async =>
+      Ok(List.of(corrections));
+
+  @override
+  Future<Result<void>> forgetMatchCorrection({
+    required String? actor,
+    required String id,
+  }) async {
+    forgottenCorrections.add(id);
+    if (forgetCorrectionResult is Ok) {
+      corrections.removeWhere((c) => c.id == id);
+    }
+    return forgetCorrectionResult;
+  }
 
   @override
   Future<Result<List<ShoppingList>>> lists() async => Ok(lists_);
@@ -741,6 +793,16 @@ class FakeShoppingRepository implements ShoppingRepository {
     String? categoryId,
   }) async {
     catalogUpdates.add((id: itemId, name: name));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) async {
+    pins.add((id: itemId, pinned: pinned));
     return const Ok(null);
   }
 
@@ -986,6 +1048,9 @@ List<Override> baseOverrides({
   SettingsView settingsView = SettingsView.basic,
   SettingsViewStore? settingsViewStore,
 
+  /// The shopping mode the device was left in; planning, as on a new device.
+  ShoppingModeStore? shoppingModeStore,
+
   /// The app's configuration; a test of a server's discovery document passes one with
   /// [AppConfig.server] set.
   AppConfig? appConfig,
@@ -1034,6 +1099,9 @@ List<Override> baseOverrides({
   ),
   settingsViewStoreProvider.overrideWithValue(
     settingsViewStore ?? MemorySettingsViewStore(settingsView),
+  ),
+  shoppingModeStoreProvider.overrideWithValue(
+    shoppingModeStore ?? MemoryShoppingModeStore(),
   ),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),

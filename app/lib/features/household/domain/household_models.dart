@@ -7,6 +7,7 @@ class Account {
     required this.userId,
     required this.hasHousehold,
     required this.creation,
+    this.setupClaimed = false,
     this.email,
     this.householdId,
     this.profileId,
@@ -27,6 +28,7 @@ class Account {
     creation: json['household_creation'] == 'open'
         ? HouseholdCreation.open
         : HouseholdCreation.code,
+    setupClaimed: json['setup_claimed'] == true,
     fullName: json['full_name'] as String?,
     givenName: json['given_name'] as String?,
     householdName: json['household_name'] as String?,
@@ -51,6 +53,10 @@ class Account {
 
   /// Whether a new family needs a founder code (`code`) or anyone may start one (`open`).
   final HouseholdCreation creation;
+
+  /// This account's address announced itself with the setup key before signing up
+  /// (specs/20 "Claiming the server"): "Neue Familie" asks for no key.
+  final bool setupClaimed;
 
   /// From the account's metadata, when it has a name.
   final String? fullName;
@@ -106,6 +112,25 @@ class DeletedHousehold {
 
 /// `app.instance_setting` `household_creation`.
 enum HouseholdCreation { open, code }
+
+/// What `api.setup_claim` answered (specs/20 "Claiming the server").
+sealed class ClaimOutcome {
+  const ClaimOutcome();
+}
+
+/// The key counts. [claimed] when an address was announced with it; [serverClaimed]
+/// when the server has a family already (the key is then a further founder code).
+class ClaimAccepted extends ClaimOutcome {
+  const ClaimAccepted({required this.claimed, required this.serverClaimed});
+  final bool claimed;
+  final bool serverClaimed;
+}
+
+/// Refused: `key_invalid`, `key_used`, `rate_limited`, `email_invalid` or `key_required`.
+class ClaimRefused extends ClaimOutcome {
+  const ClaimRefused(this.reason);
+  final String reason;
+}
 
 /// A row of H2: a person in the family who has no account yet.
 class NewMember {

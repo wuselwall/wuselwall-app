@@ -52,6 +52,7 @@ Everything in `supabase/` must apply cleanly to a hosted project:
 |---|---|
 | `app`/`api` schemas, RLS, `security_invoker` views, `api` functions | Portable |
 | Access-token hook (`pg-functions://postgres/app/custom_access_token_hook`) | Portable — hosted projects support Postgres hooks |
+| Before User Created hook (`pg-functions://postgres/app/before_user_created_hook`, specs/20 "Claiming the server") | Portable — hosted projects take `hook_before_user_created_*`; GoTrue 2.175 or newer |
 | Realtime private channels and the `realtime.messages` policy | Portable |
 | `app.create_auth_user` writing `auth.users`/`auth.identities` directly | **To verify on a hosted project.** If refused, enrolment moves to an Edge Function using the Admin API, which the architecture rules already allow (service role, no user, a comment at each use) |
 | `grant select on auth.mfa_factors to supabase_auth_admin` | Tolerated when refused (2026-10-14): Auth owns the table anyway |

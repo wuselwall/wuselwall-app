@@ -1,8 +1,8 @@
 # Accessibility and UI qualification for release candidates
 
-*Updated 2026-10-30. The candidate workflow, broad Flutter/web inventory, native audit
+*Updated 2026-11-01. The candidate workflow, broad Flutter/web inventory, native audit
 adapters, reviewed-baseline comparison and release-promotion enforcement are implemented.
-Native runtime execution, successful qualification and human acceptance remain open.*
+Complete native runtime validation, successful qualification and human acceptance remain open.*
 
 The candidate must preserve the usability and appearance of the whole app, including
 screens whose source did not change. Qualification runs on an explicitly selected commit,
@@ -18,20 +18,25 @@ native macOS runner for both mobile platforms, initially one virtual device at a
 No paid device cloud is needed initially. The expanded suite has no pull-request, ordinary
 push or nightly trigger. Existing fast CI checks continue to run as they do today.
 
-The [candidate suite](../qualification/README.md) implements a shared 72-state inventory,
+The [candidate suite](../qualification/README.md) implements a shared 75-state inventory,
 fixed Dart clock, bundled fonts, Flutter matrix/detectors, browser screenshot/semantic
 comparison, axe-core checks and integrity-checked web/native baseline bundles. Every release
 route is represented; the legacy settings redirect and developer-only diagnostics page have
 explicit exclusions checked against production router code. The canonical matrix contains
-580 browser and 1,160 Flutter cases; the full browser matrix contains 2,512 cases. All states
+604 browser and 1,208 Flutter cases; the full matrices contain 2,620 browser and 9,272
+Flutter cases. Claiming the server, the shopping trip and learned words have direct
+fixtures alongside the existing routes. All states
 run regardless of which source paths changed. Route coverage does not imply exhaustive
 coverage of every modal, permission outcome or backend-connected journey.
 
 Native Android ATF and iOS XCTest audit adapters, virtual accessibility-node inspection,
 known-failure/keyboard controls, phone/tablet and enlarged-text profiles, and native PNG and
-semantic comparisons are implemented. Android app/instrumentation APKs compile; the iOS
-project generator has been validated. These are implementation checks, not successful native
-device runs. Real runtime execution and reviewed native baseline acceptance remain open.
+semantic comparisons are implemented. The dedicated native toolchain is provisioned and
+runner preflight passed. Both platforms rendered the initial five phone smoke screens.
+iOS recorded seven audit entries with working detector and keyboard checks; native
+findings remain blocking. Android's first instrumentation run failed its keyboard
+detector and report retrieval; a compiled harness fix is undergoing runtime validation.
+These diagnostics do not establish complete native coverage or an approved baseline.
 Native platform interaction uses dedicated adapters and a test-only Flutter checkpoint
 bridge; Patrol is not a current dependency.
 
@@ -381,7 +386,7 @@ device evidence remains part of the promotion checklist.
 | Slice | Implemented result | Remaining completion evidence |
 |---|---|---|
 | 1 | Shared inventory/clock, real-widget fixtures, Flutter/web detectors, native adapters | Actual native runtime node/detector results and repeatability measurements |
-| 2 | 72 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
+| 2 | 75 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
 | 3 | Nine native phone/tablet, enlarged-text and Android minimum-API profiles; keyboard checkpoint and native report checks | Successful Android/iOS runtime runs, platform logs and physical-device behavior |
 | 4 | Manual exact-commit workflow, strict evidence aggregation, verified artifact provenance and protected app/server promotion dependencies | Successful full comparison followed by protected reviewer acceptance; implementation rejects missing evidence now |
 | 5 | Baseline review/runbook and fail-closed promotion protocol | Initial acceptance, VoiceOver/TalkBack and signed-device checklist; measured duration, resource use and flake rate |

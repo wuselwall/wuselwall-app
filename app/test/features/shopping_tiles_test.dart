@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
+import 'package:flutter_test/flutter_test.dart' hide Matcher;
 import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/matching/dictionary.dart';
+import 'package:wuselwall/core/matching/matcher.dart';
+import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_widgets.dart';
 
 import '../support/fakes.dart';
 
-CatalogEntry entry(String name, int count, {DateTime? last}) => CatalogEntry(
+CatalogEntry entry(
+  String name,
+  int count, {
+  DateTime? last,
+  bool pinned = false,
+  String? iconKey,
+}) => CatalogEntry(
   id: name,
   listId: 'l1',
   name: name,
@@ -24,7 +36,23 @@ CatalogEntry entry(String name, int count, {DateTime? last}) => CatalogEntry(
   categoryId: null,
   purchaseCount: count,
   lastPurchasedAt: last,
+  pinned: pinned,
+  iconKey: iconKey,
 );
+
+/// A small shopping dictionary: two pictures and a category-only entry.
+final matcher = Matcher(
+  MatchDictionaries.parse('''
+{"version": 1, "domains": {"shopping": {"entries": [
+  {"key": "tomato", "categories": ["produce"], "words": ["Tomate", "Tomaten"]},
+  {"key": "carrot", "categories": ["produce"], "words": ["Karotte", "Karotten", "Rüebli"]},
+  {"key": "@tools", "categories": ["tools"], "words": ["Hammer"]}
+]}}}
+''').byDomain['shopping']!,
+);
+
+String? Function(String) get iconKeyFor =>
+    (q) => matcher.match(q)?.iconKey;
 
 /// Pumps the shopping body on the wall (or in [register]), with [catalog] as the
 /// household's catalogue, [items] on the list and [lists] to switch between.
@@ -34,6 +62,8 @@ Future<void> pumpBody(
   UiRegister register = UiRegister.kiosk,
   Size size = const Size(1280, 800),
   List<ShoppingItem>? items,
+  List<ShoppingCategory> categories = const [],
+  List<Override> overrides = const [],
   List<ShoppingList> lists = const [
     ShoppingList(id: 'l1', name: 'Supermarkt', isDefault: true, openCount: 1),
   ],
@@ -47,19 +77,21 @@ Future<void> pumpBody(
   await t.pumpWidget(
     ProviderScope(
       overrides: [
+        ...overrides,
         uiRegisterProvider.overrideWithValue(register),
         shoppingViewProvider.overrideWithValue(
           AsyncData(
             ShoppingView(
               items: shown,
               lists: lists,
-              categories: const [],
+              categories: categories,
               catalog: catalog,
               pendingCount: 0,
             ),
           ),
         ),
         shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
+        shoppingModeStoreProvider.overrideWithValue(MemoryShoppingModeStore()),
         shoppingRepositoryProvider.overrideWithValue(
           FakeShoppingRepository(shown),
         ),
@@ -158,15 +190,16 @@ void main() {
           item('$i', n),
       ],
     );
-    // A row and a half of tiles, not three: the list below keeps its rows.
+    // 30% of the screen (192 of 640), not two and a half rows: the list below keeps
+    // its rows.
     final grid = find
         .ancestor(
           of: find.byType(Wrap),
           matching: find.byType(SingleChildScrollView),
         )
         .first;
-    expect(t.getSize(grid).height, lessThanOrEqualTo(112));
-    final finish = t.getRect(find.text('Einkauf beenden')).top;
+    expect(t.getSize(grid).height, lessThanOrEqualTo(192));
+    final finish = t.getRect(find.text('Einkaufen gehen')).top;
     final whole = [
       for (final n in ['Tomaten', 'Gurke', 'Brot', 'Käse'])
         for (final e in find.text(n).evaluate())
@@ -175,6 +208,44 @@ void main() {
     ].where((r) => r.bottom <= finish);
     expect(whole.length, greaterThanOrEqualTo(2));
   });
+
+  test('the tile grid is 30% of the screen, between 112 and 240', () {
+    expect(tileGridHeight(300), 112);
+    expect(tileGridHeight(400), closeTo(120, 0.01));
+    expect(tileGridHeight(640), closeTo(192, 0.01));
+    expect(tileGridHeight(800), 240);
+    expect(tileGridHeight(1400), 240);
+  });
+
+  test('pinned tiles come first, most bought first, then by name', () {
+    final tiles = rankTiles([
+      entry('Milch', 9),
+      entry('Brot', 7, pinned: true),
+      entry('Zucker', 1, pinned: true),
+      entry('Apfel', 1, pinned: true),
+      entry('Kaffee', 20, last: DateTime(2026, 10, 10)),
+    ], '');
+    expect(tiles.map((t) => t.name), [
+      'Brot',
+      'Apfel',
+      'Zucker',
+      'Kaffee',
+      'Milch',
+    ]);
+  });
+
+  test(
+    'with a query a pinned match beats an unpinned one of the same score',
+    () {
+      final names = rankTiles([
+        entry('Milch', 9),
+        entry('Milchreis', 2, pinned: true),
+        entry('Buttermilch', 30),
+      ], 'milch').map((t) => t.name);
+      // Both prefix matches first (the pinned one ahead), the word-less substring last.
+      expect(names, ['Milchreis', 'Milch', 'Buttermilch']);
+    },
+  );
 
   testWidgets('the tiles fill the width of a wide phone', (t) async {
     await pumpBody(
@@ -282,5 +353,179 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  group('the matcher behind prefix, word start and substring', () {
+    final family = [
+      entry('Tomaten', 5, iconKey: 'tomato'),
+      entry('Karotten', 4, iconKey: 'carrot'),
+      entry('Milch', 9, iconKey: 'milk'),
+    ];
+
+    test('a misspelt name finds the tile with the same picture', () {
+      expect(
+        rankTiles(
+          family,
+          'Tomatten',
+          iconKeyFor: iconKeyFor,
+        ).map((t) => t.name),
+        ['Tomaten'],
+      );
+      expect(
+        rankTiles(family, 'Rüebli', iconKeyFor: iconKeyFor).map((t) => t.name),
+        ['Karotten'],
+      );
+    });
+
+    test('a tile matched by prefix is not listed twice, and comes first', () {
+      final names = rankTiles(
+        [...family, entry('Tomatensauce', 1, iconKey: 'tomato')],
+        'Tomate',
+        iconKeyFor: iconKeyFor,
+      ).map((t) => t.name);
+      // Both are prefix matches; the icon fallback adds neither again.
+      expect(names, ['Tomaten', 'Tomatensauce']);
+    });
+
+    test('the picture match ranks after a substring match', () {
+      final names = rankTiles(
+        [
+          entry('Cherrytomaten', 1, iconKey: 'tomato'),
+          entry('Tomaten', 50, iconKey: 'tomato'),
+          entry('Tomatenmark', 2),
+        ],
+        'omate',
+        iconKeyFor: iconKeyFor,
+      ).map((t) => t.name);
+      expect(names, ['Tomaten', 'Tomatenmark', 'Cherrytomaten']);
+    });
+
+    test('without a matcher nothing changes', () {
+      expect(rankTiles(family, 'Tomatten'), isEmpty);
+      expect(rankTiles(family, 'Rüebli'), isEmpty);
+    });
+
+    test('a query of one or two characters asks the matcher nothing', () {
+      var asked = 0;
+      final tiles = rankTiles(
+        family,
+        'to',
+        iconKeyFor: (q) {
+          asked++;
+          return 'tomato';
+        },
+      );
+      expect(asked, 0);
+      // "to" is a prefix of Tomaten only.
+      expect(tiles.map((t) => t.name), ['Tomaten']);
+      expect(rankTiles(family, 'xy', iconKeyFor: (q) => 'tomato'), isEmpty);
+    });
+
+    test('a category-only match has no picture, so it adds no tile', () {
+      expect(rankTiles(family, 'Hammer', iconKeyFor: iconKeyFor), isEmpty);
+    });
+  });
+
+  group('the create tile', () {
+    Finder pictureOf(String assetName) => find.byWidgetPredicate(
+      (w) =>
+          w is Image &&
+          w.image is AssetImage &&
+          (w.image as AssetImage).assetName == assetName,
+    );
+
+    Future<void> typeName(WidgetTester t, String name) async {
+      await t.enterText(find.byType(TextField).first, name);
+      await t.pump();
+    }
+
+    testWidgets('shows the picture the matcher knows the typed name by', (
+      t,
+    ) async {
+      await pumpBody(
+        t,
+        catalog,
+        register: UiRegister.adult,
+        size: const Size(390, 844),
+        overrides: [shoppingMatcherProvider.overrideWithValue(matcher)],
+      );
+      await typeName(t, 'Tomatten');
+
+      expect(find.text('„Tomatten“ neu anlegen'), findsOneWidget);
+      expect(pictureOf('assets/emoji/shopping/tomato.png'), findsOneWidget);
+      expect(find.byIcon(Icons.add_circle_outline), findsNothing);
+    });
+
+    testWidgets(
+      'a category-only match shows the icon of the list\'s category',
+      (t) async {
+        await pumpBody(
+          t,
+          catalog,
+          register: UiRegister.adult,
+          size: const Size(390, 844),
+          categories: const [
+            ShoppingCategory(
+              id: 'c1',
+              listId: 'l1',
+              key: 'tools',
+              name: null,
+              sortOrder: 0,
+            ),
+          ],
+          overrides: [shoppingMatcherProvider.overrideWithValue(matcher)],
+        );
+        await typeName(t, 'Hammer');
+
+        expect(find.byIcon(Icons.hardware_outlined), findsOneWidget);
+        expect(find.byIcon(Icons.add_circle_outline), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'a category the list lacks, or an unknown name, keeps the plus',
+      (t) async {
+        await pumpBody(
+          t,
+          catalog,
+          register: UiRegister.adult,
+          size: const Size(390, 844),
+          overrides: [shoppingMatcherProvider.overrideWithValue(matcher)],
+        );
+        await typeName(t, 'Hammer');
+        expect(find.byIcon(Icons.add_circle_outline), findsOneWidget);
+
+        await typeName(t, 'Zzyzx');
+        expect(find.text('„Zzyzx“ neu anlegen'), findsOneWidget);
+        expect(find.byIcon(Icons.add_circle_outline), findsOneWidget);
+      },
+    );
+
+    testWidgets('without a matcher it is the plus', (t) async {
+      await pumpBody(
+        t,
+        catalog,
+        register: UiRegister.adult,
+        size: const Size(390, 844),
+        overrides: [shoppingMatcherProvider.overrideWithValue(null)],
+      );
+      await typeName(t, 'Tomatten');
+      expect(find.byIcon(Icons.add_circle_outline), findsOneWidget);
+    });
+
+    testWidgets('a misspelt name offers the family\'s tile', (t) async {
+      await pumpBody(
+        t,
+        [entry('Tomaten', 5, iconKey: 'tomato'), ...catalog],
+        register: UiRegister.adult,
+        size: const Size(390, 844),
+        overrides: [shoppingMatcherProvider.overrideWithValue(matcher)],
+      );
+      await typeName(t, 'Tomatten');
+      expect(
+        find.byKey(const ValueKey('shopping-tile-tomaten')),
+        findsOneWidget,
+      );
+    });
   });
 }

@@ -41,6 +41,10 @@ test('the patch turns sign-up on and mirrors the compose overlay', () => {
   // No mail: addresses are autoconfirmed, so sign-up with a password works.
   assert.equal(patch.mailer_autoconfirm, true);
   assert.equal(patch.hook_custom_access_token_uri, 'pg-functions://postgres/app/custom_access_token_hook');
+  // The claim gate (specs/20): the Before User Created hook, a Postgres function, no secret.
+  assert.equal(patch.hook_before_user_created_enabled, true);
+  assert.equal(patch.hook_before_user_created_uri, 'pg-functions://postgres/app/before_user_created_hook');
+  assert.equal('hook_before_user_created_secrets' in patch, false);
   assert.equal(patch.password_min_length, 10);
   assert.equal(patch.rate_limit_otp, 30);
   assert.equal(patch.smtp_max_frequency, 60);

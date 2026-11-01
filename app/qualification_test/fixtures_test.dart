@@ -52,6 +52,7 @@ void main() {
               scenario: state['scenario'] as String,
               locale: Locale(locale),
               shade: 'light',
+              advanced: state['advanced'] == true,
             ),
           );
           await settleQualification(tester);
@@ -70,6 +71,21 @@ void main() {
           if (state['id'] == 'pair') {
             expect(find.byKey(const ValueKey('pair-code')), findsOneWidget);
             expect(find.byKey(const ValueKey('pair-qr')), findsOneWidget);
+          } else if (state['id'] == 'learned-words') {
+            expect(
+              find.byKey(const ValueKey('learned-words-help')),
+              findsOneWidget,
+            );
+            expect(
+              find.byKey(const ValueKey('learned-word-qualification-guetzli')),
+              findsOneWidget,
+            );
+            expect(
+              find.byKey(
+                const ValueKey('learned-word-qualification-snack-bar'),
+              ),
+              findsOneWidget,
+            );
           } else {
             expect(
               find.byType(CircularProgressIndicator),

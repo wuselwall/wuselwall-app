@@ -31,6 +31,7 @@ import 'package:wuselwall/features/settings/ui/family_page.dart';
 import 'package:wuselwall/features/settings/ui/member_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
+import 'package:wuselwall/features/setup/ui/claim_page.dart';
 import 'package:wuselwall/features/setup/ui/email_code_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
@@ -48,6 +49,7 @@ import 'package:wuselwall/features/setup/ui/wizard_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_body.dart';
 import 'package:wuselwall/features/today/ui/today_page.dart';
@@ -55,6 +57,7 @@ import 'package:wuselwall/features/today/ui/today_page.dart';
 bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'BaselinePage' => widget is BaselinePage,
   'CalendarPage' => widget is CalendarPage,
+  'ClaimPage' => widget is ClaimPage,
   'DeletedFamilyPage' => widget is DeletedFamilyPage,
   'DevicePairPage' => widget is DevicePairPage,
   'EmailCodePage' => widget is EmailCodePage,
@@ -93,6 +96,7 @@ bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'ShoppingBody' => widget is ShoppingBody,
   'ShoppingHistoryPage' => widget is ShoppingHistoryPage,
   'ShoppingListEditPage' => widget is ShoppingListEditPage,
+  'ShoppingTripPage' => widget is ShoppingTripPage,
   'ShortcutsPage' => widget is ShortcutsPage,
   'SignInChoicePage' => widget is SignInChoicePage,
   'SignInPage' => widget is SignInPage,
@@ -152,6 +156,9 @@ const qualificationFixtureRoutes = <String, String>{
   'external-calendars-empty': '/settings/calendars',
   'password-sign-in': '/setup/sign-in',
   'password-reset': '/setup/password-reset',
+  'shopping-trip': '/shopping/trip',
+  'claim': '/setup/claim',
+  'learned-words': '/settings/shopping',
 };
 const qualificationClock = '2026-10-14T14:05:00';
 const nativeStatesJson = r'''[
@@ -262,6 +269,42 @@ const nativeStatesJson = r'''[
       390,
       820
     ],
+    "native": true
+  },
+  {
+    "id": "shopping-trip",
+    "widget": "ShoppingTripPage",
+    "titleKey": "shoppingTitle",
+    "scenario": "adult",
+    "route": "/shopping/trip",
+    "widths": [
+      360,
+      390,
+      599,
+      600,
+      601,
+      820,
+      1280
+    ],
+    "fixture": true,
+    "native": true
+  },
+  {
+    "id": "claim",
+    "widget": "ClaimPage",
+    "titleKey": "claimTitle",
+    "scenario": "setup",
+    "route": "/setup/claim",
+    "widths": [
+      360,
+      390,
+      599,
+      600,
+      601,
+      820,
+      1280
+    ],
+    "fixture": true,
     "native": true
   }
 ]''';

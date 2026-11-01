@@ -57,4 +57,4 @@ WuselWall needs **no** accounts with Google, Apple, Firebase or an analytics ser
 
 ## What comes next
 
-Once the server runs, open the app and enter the server's address; for Supabase, the project ID is enough. Then you found the family with the **setup token** ([Start a new family](/en/guide/setup#_3-start-a-new-family-once)). After that you connect the other devices: the QR code under **Settings → Add device** carries the server too ([Signing in and connecting](/en/guide/setup)).
+Once the server runs, open the app and enter the server's address; for Supabase, the project ID is enough. Then tap **I have the setup key** and found the family with the **setup key** from the installation ([The setup key](/en/guide/setup#setup-key)); until the family exists, the server creates no account for anyone else. After that you connect the other devices: the QR code under **Settings → Add device** carries the server too ([Signing in and connecting](/en/guide/setup)).

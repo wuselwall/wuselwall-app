@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
@@ -34,13 +35,14 @@ class ShoppingRepository {
   Future<Result<List<ShoppingList>>> lists() => _api.select(
     'shopping_lists',
     parse: ShoppingList.fromJson,
-    build: (q) => q.order('sort_order'),
+    // supabase-dart's order() descends by default: the walking order is ascending.
+    build: (q) => q.order('sort_order', ascending: true),
   );
 
   Future<Result<List<ShoppingCategory>>> categories() => _api.select(
     'shopping_categories',
     parse: ShoppingCategory.fromJson,
-    build: (q) => q.order('sort_order'),
+    build: (q) => q.order('sort_order', ascending: true),
   );
 
   Future<Result<List<CatalogEntry>>> catalog() => _api.select(
@@ -251,6 +253,17 @@ class ShoppingRepository {
     parse: (_) {},
   );
 
+  /// Pins a tile so it always comes first in the picker, or lets it go again.
+  Future<Result<void>> pinCatalogItem({
+    required String? actor,
+    required String itemId,
+    required bool pinned,
+  }) => _api.rpc(
+    'shopping_catalog_pin',
+    params: {'p_actor': actor, 'p_item': itemId, 'p_pinned': pinned},
+    parse: (_) {},
+  );
+
   /// "Nicht mehr vorschlagen": the tile goes, the history keeps its text (guardians only).
   Future<Result<void>> deleteCatalogItem({
     required String? actor,
@@ -258,6 +271,24 @@ class ShoppingRepository {
   }) => _api.rpc(
     'catalog_item_delete',
     params: {'p_actor': actor, 'p_item': itemId},
+    parse: (_) {},
+  );
+
+  /// The words the household taught the app, newest first (Einstellungen > Einkaufen).
+  Future<Result<List<MatchCorrection>>> matchCorrections() => _api.select(
+    'match_corrections',
+    parse: MatchCorrection.fromJson,
+    build: (q) =>
+        q.eq('domain', 'shopping_category').order('set_at', ascending: false),
+  );
+
+  /// The household forgets one learned word (guardians only).
+  Future<Result<void>> forgetMatchCorrection({
+    required String? actor,
+    required String id,
+  }) => _api.rpc(
+    'match_correction_forget',
+    params: {'p_actor': actor, 'p_id': id},
     parse: (_) {},
   );
 

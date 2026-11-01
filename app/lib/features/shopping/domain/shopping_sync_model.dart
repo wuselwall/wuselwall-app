@@ -350,6 +350,7 @@ ShoppingView projectShopping(ShoppingSnapshot snapshot, List<ShoppingOp> ops) {
             createdAt: DateTime.now(),
             listId: op.listId,
             categoryId: known?.categoryId,
+            categoryAuto: known?.categoryAuto ?? false,
             addedBy: op.actor,
             pending: true,
           ),
@@ -372,9 +373,10 @@ ShoppingView projectShopping(ShoppingSnapshot snapshot, List<ShoppingOp> ops) {
       case CategoriseItemOp(:final itemId, :final categoryId):
         change(
           itemId,
+          // A person's choice, never "automatic" (specs/07).
           (i) => categoryId == null
-              ? i.copyWith(clearCategory: true)
-              : i.copyWith(categoryId: categoryId),
+              ? i.copyWith(clearCategory: true, categoryAuto: false)
+              : i.copyWith(categoryId: categoryId, categoryAuto: false),
         );
       case FinishTripOp(:final listId):
         items.removeWhere((i) => i.listId == listId && i.checked);

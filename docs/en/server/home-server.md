@@ -32,7 +32,7 @@ cd wuselwall
 - generates every key and password (`stack/.env`),
 - starts the stack, with **Caddy**, which fetches Let's Encrypt certificates for both addresses,
 - sets up the database and schedules the nightly jobs,
-- and finally shows the server address and a **setup link with a QR code**, carrying the one-time setup code.
+- and finally shows the server address and a **setup link with a QR code**, carrying the one-time setup key.
 
 The server starts **without email**: everyone signs in with email address and password. Sign-in codes by email can be added at any time with `./wuselwall mail smtp` ([Email](/en/server/email)).
 
@@ -65,16 +65,19 @@ old server address. Offline, it uses the last saved configuration. If the server
 address has changed, sign in again.
 
 Open the setup link printed by the installation in your browser, or scan its QR
-code. It contains both the server and the setup code. WuselWall remembers the
-code during email sign-in so you do not enter it again on **New family**
-([Creating a new family](/en/guide/setup#_2-creating-a-new-family)).
+code. It contains both the server and the setup key, and opens **Set up your
+server**: there you enter the email address of the first account, and the server
+lets exactly that address sign up ([The setup key](/en/guide/setup#setup-key)).
+**New family** then asks for no key.
 
-You can still type `api.example.org` into **Which server?**. A QR code containing
-only the server address, for example from an older installation, does not carry a
-setup code. In that case, enter the code from the installation once on **New family**.
+You can still type `api.example.org` into **Which server?**. The start screen says
+that the server has no family yet; tap **I have the setup key** and enter the key
+from the installation next to your address. A QR code containing only the server
+address, for example from an older installation, carries no key either.
 
-`./wuselwall setup-token` gives a new setup code as long as no family exists yet.
-Do not publish the code or the setup link.
+`./wuselwall setup-token` gives a new setup key as long as no family exists yet.
+Do not publish the key or the setup link: until the family exists, its holder is the
+only one who can create an account on the server.
 
 ## 3. Backups
 
@@ -123,7 +126,7 @@ Keep every auto-updater (Watchtower, a NAS's automatic container updates) away f
 | `./wuselwall status` | Shows whether every service is running |
 | `./wuselwall logs auth` | One service's logs (`db`, `auth`, `rest`, `realtime`, `functions`, `caddy`) |
 | `./wuselwall backup` | Backs up now |
-| `./wuselwall setup-token` | A new setup token, as long as there is no family |
+| `./wuselwall setup-token` | A new setup key, as long as there is no family |
 | `./wuselwall mail` | Email on (`mail smtp`), off (`mail off`) or tested (`mail test`) ([Email](/en/server/email)) |
 | `./wuselwall password <address>` | A one-time code with which that person chooses a new password ([Email](/en/server/email#forgotten-password)) |
 | `./wuselwall compose …` | Any Docker Compose command for the stack |

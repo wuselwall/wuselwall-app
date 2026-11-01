@@ -7,6 +7,7 @@ class ShoppingItem {
     required this.createdAt,
     this.listId,
     this.categoryId,
+    this.categoryAuto = false,
     this.addedBy,
     this.count = 1,
     this.pending = false,
@@ -21,6 +22,8 @@ class ShoppingItem {
     createdAt: DateTime.parse(json['created_at'] as String),
     listId: json['list_id'] as String?,
     categoryId: json['category_id'] as String?,
+    // Absent in a mirror saved by an older app and from an older server.
+    categoryAuto: json['category_auto'] as bool? ?? false,
     addedBy: json['added_by'] as String?,
     count: json['count'] as int? ?? 1,
     sourceMealEntryIds: ((json['source_meal_entry_ids'] as List?) ?? const [])
@@ -36,6 +39,10 @@ class ShoppingItem {
   final DateTime createdAt;
   final String? listId;
   final String? categoryId;
+
+  /// The category was set by the server from the item's name (the word list), not by a
+  /// person; the item's sheet says so. Any later choice clears it.
+  final bool categoryAuto;
   final String? addedBy;
 
   /// How many times the tile was tapped ("2 ×").
@@ -56,6 +63,7 @@ class ShoppingItem {
     'created_at': createdAt.toIso8601String(),
     'list_id': listId,
     'category_id': categoryId,
+    'category_auto': categoryAuto,
     'added_by': addedBy,
     'count': count,
     'source_meal_entry_ids': sourceMealEntryIds,
@@ -67,6 +75,7 @@ class ShoppingItem {
     bool clearQuantity = false,
     String? categoryId,
     bool clearCategory = false,
+    bool? categoryAuto,
     int? count,
     bool? pending,
   }) => ShoppingItem(
@@ -77,6 +86,7 @@ class ShoppingItem {
     createdAt: createdAt,
     listId: listId,
     categoryId: clearCategory ? null : categoryId ?? this.categoryId,
+    categoryAuto: categoryAuto ?? this.categoryAuto,
     addedBy: addedBy,
     count: count ?? this.count,
     pending: pending ?? this.pending,
@@ -113,6 +123,7 @@ class ShoppingList {
     required this.name,
     required this.isDefault,
     required this.openCount,
+    this.sortOrder = 0,
   });
 
   factory ShoppingList.fromJson(Map<String, dynamic> json) => ShoppingList(
@@ -120,6 +131,8 @@ class ShoppingList {
     name: json['name'] as String,
     isDefault: json['is_default'] as bool,
     openCount: json['open_count'] as int,
+    // Absent in a mirror saved by an older app: those lists keep their stored order.
+    sortOrder: json['sort_order'] as int? ?? 0,
   );
 
   final String id;
@@ -127,15 +140,24 @@ class ShoppingList {
   final bool isDefault;
   final int openCount;
 
+  /// The position of the list among the household's lists, ascending.
+  final int sortOrder;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
     'is_default': isDefault,
     'open_count': openCount,
+    'sort_order': sortOrder,
   };
 
-  ShoppingList withOpenCount(int count) =>
-      ShoppingList(id: id, name: name, isDefault: isDefault, openCount: count);
+  ShoppingList withOpenCount(int count) => ShoppingList(
+    id: id,
+    name: name,
+    isDefault: isDefault,
+    openCount: count,
+    sortOrder: sortOrder,
+  );
 }
 
 /// A category of a list: its order is the walking order of the store. Seeded ones carry
@@ -184,6 +206,8 @@ class CatalogEntry {
     required this.purchaseCount,
     required this.lastPurchasedAt,
     this.iconKey,
+    this.pinned = false,
+    this.categoryAuto = false,
   });
 
   factory CatalogEntry.fromJson(Map<String, dynamic> json) => CatalogEntry(
@@ -197,6 +221,9 @@ class CatalogEntry {
         ? null
         : DateTime.parse(json['last_purchased_at'] as String),
     iconKey: json['icon_key'] as String?,
+    // Absent from an older server and in a mirror saved by an older app.
+    pinned: json['pinned'] as bool? ?? false,
+    categoryAuto: json['category_auto'] as bool? ?? false,
   );
 
   final String id;
@@ -210,6 +237,12 @@ class CatalogEntry {
   /// The picture the server picked from the name (app.catalog_icon_for); null when it knows none.
   final String? iconKey;
 
+  /// A pinned tile always comes first in the picker, whatever was bought last.
+  final bool pinned;
+
+  /// The tile's category was set by the server from its name, not by a person.
+  final bool categoryAuto;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'list_id': listId,
@@ -219,6 +252,8 @@ class CatalogEntry {
     'purchase_count': purchaseCount,
     'last_purchased_at': lastPurchasedAt?.toIso8601String(),
     'icon_key': iconKey,
+    'pinned': pinned,
+    'category_auto': categoryAuto,
   };
 }
 

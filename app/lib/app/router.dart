@@ -47,6 +47,7 @@ import 'package:wuselwall/features/settings/ui/own_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_text.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
+import 'package:wuselwall/features/setup/ui/claim_page.dart';
 import 'package:wuselwall/features/setup/ui/email_code_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
@@ -61,6 +62,7 @@ import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 import 'package:wuselwall/features/system/ui/system_page.dart';
 
@@ -68,6 +70,7 @@ abstract final class Routes {
   static const splash = '/splash';
   static const setup = '/setup';
   static const wizard = '/setup/household';
+  static const claim = '/setup/claim';
   static const signIn = '/setup/sign-in';
   static const emailCode = '/setup/email-code';
   static const signInChoice = '/setup/sign-in-choice';
@@ -96,6 +99,7 @@ abstract final class Routes {
   static const settingsTasks = '/settings/tasks';
   static const settingsCalendar = '/settings/calendar-school';
   static const settingsMeals = '/settings/meals';
+  static const settingsShopping = '/settings/shopping';
   static const settingsRituals = '/settings/rituals';
   static const settingsCelebrations = '/settings/celebrations';
   static const settingsKitchen = '/settings/kitchen-wall';
@@ -111,6 +115,10 @@ abstract final class Routes {
   static const shoppingListEdit = '/shopping/list';
   static const system = '/system';
   static const shoppingHistory = '/shopping/history';
+
+  /// The shopping trip: a full screen, outside the home shell, without the app bar and
+  /// the navigation (specs/09).
+  static const shoppingTrip = '/shopping/trip';
   static const eventNew = '/calendar/new';
   static const eventEdit = '/calendar/edit';
   static const recipes = '/meals/recipes';
@@ -238,10 +246,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final path = state.matchedLocation;
       final session = ref.read(sessionStateProvider);
+      // A setup link brought the key: the claim (S1) replaces the front door until the
+      // person leaves it or the key is used (specs/20 "Claiming the server").
       if (session.value is SignedOut &&
           setup.value &&
           (path == Routes.setup || path == Routes.splash)) {
-        return Routes.signIn;
+        return Routes.claim;
       }
 
       // First evaluation: wait, but never flash the setup screen.
@@ -327,6 +337,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                 );
               },
             ),
+          ),
+          _materialRoute(
+            path: 'claim',
+            builder: (_, state) =>
+                ClaimPage(initialEmail: state.uri.queryParameters['email']),
           ),
           _materialRoute(
             path: 'sign-in',
@@ -477,6 +492,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       _materialRoute(
         path: Routes.shoppingHistory,
         builder: (_, _) => const ShoppingHistoryPage(),
+      ),
+      _materialRoute(
+        path: Routes.shoppingTrip,
+        builder: (_, _) => const ShoppingTripPage(),
       ),
       // Neuer Termin starts on its tiles (specs/28); a tradition or a chosen template
       // goes straight to the editor.

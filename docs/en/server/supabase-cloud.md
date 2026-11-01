@@ -40,7 +40,7 @@ A prepared workflow on GitHub does this, in your own copy of WuselWall. You inst
    | `SUPABASE_ACCESS_TOKEN` | the access token from step 3 |
    | `SUPABASE_PROJECT_ID` | the project ID |
    | `SUPABASE_DB_PASSWORD` | the database password |
-   | `WUSELWALL_SETUP_TOKEN` | a phrase of your choice made of letters and digits, e.g. `CakeOnSunday2026`. You need it once, to found the family |
+   | `WUSELWALL_SETUP_TOKEN` | a phrase of your choice made of letters and digits, e.g. `CakeOnSunday2026`. You need it once, as the setup key that founds the family |
    | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | optional: SMTP access for sign-in codes by email, five secrets ([Email](#mail)) |
 
 5. Open the **Actions** tab. In a copy, workflows start out switched off: tap **I understand my workflows, go ahead and enable them**. Then **deploy-supabase → Run workflow**. Under **language**, choose the language of the sign-in emails: `de` (default), `en`, `fr` or `es`. Tick **web** if you want the web app (step 4), and tap **Run workflow**.
@@ -63,7 +63,7 @@ You can add or remove the secrets later and run the workflow again; the accounts
 
 ## 3. Connecting the app
 
-Open WuselWall. At the question **Which server?**, enter the **project ID** and tap **Connect**. Then **Start a new family** with the phrase from `WUSELWALL_SETUP_TOKEN` ([Start a new family](/en/guide/setup#_3-start-a-new-family-once)).
+Open WuselWall. At the question **Which server?**, enter the **project ID** and tap **Connect**. Then **I have the setup key** with the phrase from `WUSELWALL_SETUP_TOKEN` ([The setup key](/en/guide/setup#setup-key)): it announces your address, and the family follows after sign-in.
 
 <Shot name="setup-server" alt="The question about the server" />
 

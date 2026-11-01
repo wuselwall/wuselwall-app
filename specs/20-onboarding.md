@@ -71,6 +71,10 @@ What every device shows before it belongs to a household:
 ```
 
 - The email button serves sign-up and sign-in alike.
+- **A server without a family** (its discovery document says `claimed: false`) shows a card
+  above the buttons, "Dieser Server hat noch keine Familie", with **Ich habe den
+  Einrichtungsschlüssel**, which opens S1 ([Claiming the server](#claiming-the-server),
+  2026-10-30). A setup link skips the front door and opens S1 directly.
 - *Revised 2026-10-26:* the email button is the one filled button. Below "oder" the other ways
   in are equal rows with an icon and a chevron: connecting a shared device, the invitation code,
   and on the web "Auf dem Handy weitermachen", which opens in place. Datenschutz and Server
@@ -153,7 +157,8 @@ an invitation or pairing link, which carries the server:
   types an invitation code instead of tapping the link types the server too, and the
   inviter's share message and screen name it next to the code.
 - **The founder** scans the QR code that the server's install script printed, or types the
-  address. The app fetches `https://‹host›/.well-known/wuselwall.json`. If the file is
+  address. Since 2026-10-30 that QR code carries the setup key and opens S1, the claim
+  ([below](#claiming-the-server)). The app fetches `https://‹host›/.well-known/wuselwall.json`. If the file is
   missing, if the server is outside the app's `api_version` window, or if the server needs a
   newer app (`min_app_version`), the message says exactly which. The app then remembers the
   server, and the front door shows its host under the logo until someone is signed in.
@@ -186,6 +191,54 @@ an invitation or pairing link, which carries the server:
 
   Passkeys appear only in a build that names its own server; the store app offers them to no chosen server (ADR-018, amended 2026-10-21). The app never shows a button that will fail.
 
+### Claiming the server
+
+*Built 2026-10-30 (migration `20261030100000_claim_server`).* Until then the setup key only
+guarded H1: anyone who knew a server's address could create an account, and the key was
+asked for last, after the code and E3, under a name ("Einrichtungscode") that looked like
+the code from the mail. Now the key comes first, and a server with no family takes no
+stranger's sign-up at all.
+
+```
+ S1  Server einrichten                                  familie.example.org
+     ✓ Einrichtungsschlüssel angenommen. Der Server wartet auf seine Familie.
+     E-Mail-Adresse  [______________]
+     Danach: ein Code aus deiner E-Mail, dann eure Familie.
+     [ Weiter ]                         Ich habe schon ein Konto ›
+```
+
+- **S1 replaces the front door** while a setup link's key is on the device; the front door
+  of a server whose discovery document says `claimed: false` offers it under "Ich habe den
+  Einrichtungsschlüssel", and without a stored key S1 shows a field for it. The key is
+  checked with the server at once (`api.setup_claim(key)`): accepted, used, invalid or
+  rate-limited, before anyone types an address.
+- **Weiter announces the address**: `api.setup_claim(key, email)` records the address
+  against the key. Then E1's call follows (the code, or on a server without mail the
+  password page with the address filled in), and E2 and H1 show "‹host› wird eingerichtet"
+  under their title. From E2, "Andere E-Mail-Adresse" goes back through S1, because the
+  server lets only the announced address sign up.
+- **The gate** is GoTrue's Before User Created hook (`app.before_user_created_hook`,
+  `pg-functions://`, GoTrue 2.175 or newer, hosted projects included): while no household
+  exists and `household_creation` is `code`, it refuses every sign-up unless the address
+  claimed an unconsumed key within the last 15 minutes. The refusal reaches the app as
+  `setup_key_required`, and E1 says the server has no family yet. Once a household exists
+  the hook lets every sign-up through, as J2 and the second parent need. Device users are
+  created by `app.create_auth_user`, never through GoTrue.
+- **H1 asks for no key** when `my_account.setup_claimed` is true: `household_create`
+  accepts the claim of the account's address (within a day) in place of a typed code and
+  consumes the key as before. A typed code still works, for a key from an older QR code or
+  a further founder code.
+- **The key stays on the device** until it is consumed or expires (24 h): going back from
+  S1 or E1 no longer deletes it, so nobody types 24 hex characters by hand.
+- **Names.** The capability is the *setup key* (Einrichtungsschlüssel, clé de
+  configuration, clave de configuración) everywhere: installer, docs, S1, H1. Only the
+  mail's six digits are a *code*. Further founder codes in `code` mode keep their function
+  and are keys in the same sense.
+- **Not done: closing sign-up altogether.** The hook, not `DISABLE_SIGNUP`, is the gate,
+  because invitations need open sign-up once the family exists, and E1 must answer the
+  same for every address. A stray account on a claimed server still costs one row and
+  sees nothing.
+
 ### Several ways into one account
 
 Every account on a server with mail has its email code, and may add a password; on a server
@@ -195,7 +248,7 @@ Passkeys sit in Einstellungen → Sicherheit, only in a build that names its own
 
 ## J1 — Start a family
 
-> **Built 2026-10-15.** For an account without a family, H1 "Neue Familie" comes right after sign-in: family name, own name, colour, the examples checkbox (on H1, not on H2) and, only in `code` mode, the founder code. Then H2 "Wer gehört noch zu euch?" once. This phone becomes the founder's personal device, named automatically. Server: `api.my_account`, `api.household_create`, `api.household_add_members`, `app.founder_attempt`; `scripts/remote-setup-token.sh --founder` issues further founder codes. Sign-up is on (`enable_signup = true`).
+> **Built 2026-10-15.** For an account without a family, H1 "Neue Familie" comes right after sign-in: family name, own name, colour, the examples checkbox (on H1, not on H2) and, only in `code` mode, the founder code. Then H2 "Wer gehört noch zu euch?" once. This phone becomes the founder's personal device, named automatically. Server: `api.my_account`, `api.household_create`, `api.household_add_members`, `app.founder_attempt`; `scripts/remote-setup-token.sh --founder` issues further founder codes. Sign-up is on (`enable_signup = true`). Since 2026-10-30 the founder's address claims the key on S1 before sign-in, and H1 asks for no key ([Claiming the server](#claiming-the-server)).
 
 ```
  Front door ─► [E1 ─► E2 ─► E3] ─┬─► H1 Neue Familie ─► H2 Wer gehört dazu? ─► Today
@@ -218,7 +271,7 @@ creates a second, empty household.
 | Dein Name | The name in the account's metadata, if any | Editable |
 | Deine Farbe | The first palette colour | A row of swatches; the choice is visible at once in the app bar |
 | — | "Zeitzone Europa/Berlin · Sprache Deutsch — von deinem Gerät · Ändern" | One quiet line; changed in Settings later |
-| Gründungscode | — | **Only while household creation is in `code` mode** (see [below](#household-creation-open-or-by-code)) |
+| Einrichtungsschlüssel | — | **Only while household creation is in `code` mode** (see [below](#household-creation-open-or-by-code)), and not when the address claimed the key on S1 |
 
 At the bottom: "Ich wurde eingeladen" for anyone who arrived here by mistake.
 
@@ -264,9 +317,11 @@ One instance setting, `household_creation`:
   `open`.
 
 The instance starts in **`code`** and switches to `open` only when the opening gate in
-[13](13-roadmap.md#opening-to-other-households) is passed. Until then a stranger who
-signs up gets an account that can do nothing but wait for an invitation. That costs one
-row, and nothing in it is reachable through RLS.
+[13](13-roadmap.md#opening-to-other-households) is passed. Until then, on a server that
+has a family, a stranger who signs up gets an account that can do nothing but wait for an
+invitation: that costs one row, and nothing in it is reachable through RLS. On a server
+without a family the Before User Created hook refuses the sign-up altogether
+([Claiming the server](#claiming-the-server)).
 
 ## J2 — Join a family
 
@@ -482,6 +537,9 @@ the source of truth once built, not a two-language limit on these screens.
 <!-- FR/ES reference copy lives in the complete ARB catalogues; this table keeps the original DE/EN wording. -->
 | `doorTagline` | Der Familienplan für die Küchenwand | The family plan for the kitchen wall |
 | `doorEmail` | Mit E-Mail fortfahren | Continue with email |
+| `doorUnclaimedAction` | Ich habe den Einrichtungsschlüssel | I have the setup key |
+| `claimTitle` | Server einrichten | Set up your server |
+| `claimKeyLabel` | Einrichtungsschlüssel | Setup key |
 | `doorPairDevice` | Familien-Tablet oder Wanddisplay verbinden | Connect a family tablet or wall display |
 | `doorInviteCode` | Ich habe einen Einladungscode | I have an invitation code |
 | `emailCodeTitle` | Code aus der E-Mail | Code from the email |
@@ -512,6 +570,10 @@ Indicative. Migrations, functions and policies follow the rules in
 - `enable_signup = true`, `enable_anonymous_sign_ins = false`, `enable_manual_linking = false`.
 - `[auth.email]`: `otp_length = 6`, `otp_expiry = 600`, `max_frequency = "60s"`.
 - No external providers: `[auth.external.*]` stays off everywhere.
+- The Before User Created hook, `[auth.hook.before_user_created]` →
+  `pg-functions://postgres/app/before_user_created_hook` (compose:
+  `GOTRUE_HOOK_BEFORE_USER_CREATED_*`; hosted: `hook_before_user_created_*` through
+  `scripts/hosted-auth-config.mjs`): [Claiming the server](#claiming-the-server).
 - `[auth.rate_limit]` set deliberately: email sends, verifications and sign-ins per IP.
   These come on top of the Cloudflare rules (S9 in [19](19-security-and-architecture-review.md)).
 - `[auth.email.smtp]` pointing at the provider chosen in [Q41](14-open-questions.md).
@@ -532,6 +594,7 @@ the founder codes; `household` gains `created_by_profile_id` and `deleted_at`.
 | `household_create(name, display_name, colour, timezone, locale, founder_code?, seed_examples)` | signed-in, no household | Household, own guardian profile, seeds, and this session as a personal device, in one transaction |
 | `household_add_members(actor, members jsonb)` | guardian | H2's rows |
 | `invitation_create / _revoke` | guardian | Returns link token and code once; stores hashes |
+| ◦ `setup_claim(key, email?)` | anyone, rate-limited like founder codes | Checks the setup key; with an address, announces it as the one that may sign up (S1) |
 | ◦ `invitation_preview(token_or_code)` | anyone, rate-limited | Household name and inviter's first name, or "not valid" |
 | `invitation_accept(token_or_code \| invitation_id)` | signed-in, no household | Links the account to the profile, registers the personal device, notifies guardians |
 | ◦ `pairing_start()` | anyone, rate-limited per IP | Request id, secret, display code, expiry |
@@ -542,7 +605,7 @@ the founder codes; `household` gains `created_by_profile_id` and `deleted_at`.
 | `account-delete` (Edge Function) | signed-in | Deletes the Auth user with the Admin API: outbound HTTP, so not SQL |
 | `guardian_reset_mfa(actor, profile)` | guardian, personal device | Removes another guardian's TOTP factor (Admin API in an Edge Function; see ADR-013's portability note) |
 
-After this step, anon can call `health`, `server_info`, `invitation_preview`,
+After this step, anon can call `health`, `server_info`, `setup_claim`, `invitation_preview`,
 `pairing_start` and `pairing_poll`, plus `enrol_device` for one release. `setup_household` goes. The catalogue
 test (`040_catalogue.test.sql`) is updated to exactly this list.
 

@@ -40,8 +40,11 @@ import 'package:wuselwall/features/school/domain/timetable_import.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/ui/family_members_page.dart';
 import 'package:wuselwall/features/settings/ui/member_page.dart';
+import 'package:wuselwall/features/settings/ui/settings_group_page.dart';
+import 'package:wuselwall/features/setup/ui/claim_page.dart';
 import 'package:wuselwall/features/setup/ui/email_code_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
@@ -56,6 +59,7 @@ import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 
 import 'inventory.g.dart';
@@ -204,6 +208,9 @@ class _Destination extends ConsumerWidget {
     'member-edit' => MemberPage(profileId: DemoData.papa),
     'shopping-list-edit' => const ShoppingListEditPage(listId: 'l-super'),
     'shopping-history' => const ShoppingHistoryPage(),
+    'shopping-trip' => const ShoppingTripPage(),
+    'claim' => const ClaimPage(),
+    'learned-words' => const SettingsGroupPage(group: SettingsGroup.shopping),
     'event-templates' => EventTemplatePage(
       args: EventEditArgs(date: DateTime(2026, 10, 14)),
     ),
@@ -280,5 +287,18 @@ AppConfig qualificationPasswordServerConfig() => AppConfig(
     minAppVersion: '1.0.0',
     features: const [featurePasswordReset],
     emailCode: false,
+  ),
+);
+
+AppConfig qualificationMatchingServerConfig() => AppConfig(
+  environment: 'qualification',
+  supabaseUrl: 'https://example.org',
+  supabasePublishableKey: 'demo',
+  server: ServerInfo(
+    supabaseUrl: Uri.parse('https://example.org'),
+    publishableKey: 'demo',
+    apiVersion: 1,
+    minAppVersion: '1.0.0',
+    features: const ['local-matching'],
   ),
 );

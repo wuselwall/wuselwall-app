@@ -9,7 +9,7 @@ Un serveur WuselWall fonctionne **avec ou sans e-mails**. Sans, chacun crée son
 | **Invitations** | Par lien, QR ou code d’invitation | Idem, et une invitation qui nomme votre adresse vous trouve seule |
 | **Qui voit quoi** | Personne d’autre | Le fournisseur voit adresses et codes |
 
-Sans e-mails, personne ne vérifie l’adresse. Ce n’est pas un problème : un compte seul ne voit rien, seule une invitation ou le code de configuration le fait entrer dans une famille. Pour la même raison, un serveur sans e-mails n’attribue jamais une invitation à un compte parce que les adresses correspondent.
+Sans e-mails, personne ne vérifie l’adresse. Ce n’est pas un problème : un compte seul ne voit rien, seule une invitation ou la clé de configuration le fait entrer dans une famille, et tant que la famille n’existe pas, le serveur ne crée un compte que pour l’adresse annoncée avec la clé. Pour la même raison, un serveur sans e-mails n’attribue jamais une invitation à un compte parce que les adresses correspondent.
 
 Vous pouvez activer ou couper les e-mails à tout moment ; les comptes gardent leur mot de passe. L’app voit le changement à son prochain démarrage.
 

@@ -47,6 +47,7 @@ export const MCP_EN: McpMessages = {
     dairy: "Dairy & cheese",
     meat_fish: "Meat & fish",
     pantry: "Pantry",
+    snacks: "Snacks",
     frozen: "Frozen",
     drinks: "Drinks",
     household: "Household",

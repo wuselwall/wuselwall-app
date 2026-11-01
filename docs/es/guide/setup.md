@@ -10,11 +10,25 @@ a estar disponibles cuando te conectas de nuevo.
 
 Abajo, **Política de privacidad** abre la página en el navegador. Sin conexión, el enlace está desactivado; la política no se almacena en la app.
 
+## La clave de configuración: un servidor sin familia {#setup-key}
+
+Un servidor recién instalado no tiene familia. Quien lo instaló tiene la **clave de
+configuración**: la instalación la muestra, y el enlace o el código QR de configuración la
+incluye. La pantalla de inicio de ese servidor lo dice y ofrece **Tengo la clave de
+configuración**; el enlace de configuración abre directamente **Configurar tu servidor**.
+
+Allí introduces tu dirección de correo junto a la clave. WuselWall comprueba la clave con el
+servidor y anuncia con ella tu dirección: hasta que exista la familia, el servidor solo crea una
+cuenta para esa dirección, y cualquier otra persona ve que el servidor aún no tiene familia.
+Después llega el código de tu correo, o una contraseña en un servidor sin correo, y **Nueva
+familia** ya no pide ninguna clave. Nadie teclea la clave una segunda vez; quien administra el
+servidor genera otra con `./wuselwall setup-token` mientras no exista familia.
+
 ## 1. Iniciar sesión {#_1-signing-in}
 
 En tu móvil personal, toca **Continuar con correo electrónico** e introduce una dirección válida. La app comprueba el campo antes de enviar nada. Recibirás un **código de seis cifras**, válido durante **10 minutos**. Mantén abierto el campo y escribe allí el código del mensaje. Revisa el correo no deseado si no llega; puedes solicitar otro tras un minuto como mínimo.
 
-El código verifica tu dirección. No es el **código de configuración del servidor** y no requiere un enlace ni otro inicio de sesión.
+El código verifica tu dirección. No es la **clave de configuración del servidor** y no requiere un enlace ni otro inicio de sesión.
 
 <Shot name="setup-sign-in" alt="El inicio de sesión por correo electrónico" />
 
@@ -29,9 +43,9 @@ Si tu cuenta aún no pertenece a un hogar, aparece **Nueva familia**. Introduce 
 1. El **nombre de la familia**.
 2. **Tu nombre** y **tu color**, que identifica tus acciones.
 3. Si quieres, los **ejemplos** de tareas y recompensas, editables después.
-4. El **código de configuración**, si el servidor lo pide y no has abierto su enlace. Lo proporciona la instalación o la persona responsable del servidor, no el correo de inicio de sesión.
+4. La **clave de configuración**, si el servidor la pide y no la has introducido antes de iniciar sesión ([La clave de configuración](#setup-key)). La proporciona la instalación o la persona responsable del servidor, no el correo de inicio de sesión.
 
-El enlace o QR de configuración incluye servidor y código. La app conserva el código durante el inicio de sesión y no lo pide otra vez. Guárdalo como una llave y compártelo solo con quien cree el hogar.
+Si abriste el enlace o el QR de configuración, o introdujiste la clave en **Tengo la clave de configuración**, WuselWall ya anunció tu dirección con ella: no la pide otra vez. Guárdala como una llave y compártela solo con quien cree el hogar.
 
 <Shot name="new-family" alt="El formulario de creación de una familia" />
 

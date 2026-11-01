@@ -45,7 +45,7 @@ Die Anleitung zeigt Hetzner, weil die Konsole ein einfaches Feld für cloud-conf
    ssh root@<ip> cat /srv/wuselwall/install.log
    ```
 
-   Dort stehen die Serveradresse, der Einrichtungslink mit QR-Code und der einmalige Einrichtungscode. Kopiere `/srv/wuselwall/stack/.env` sofort in den Passwort-Manager ([warum](/server/home-server#_1-installieren)).
+   Dort stehen die Serveradresse, der Einrichtungslink mit QR-Code und der einmalige Einrichtungsschlüssel. Kopiere `/srv/wuselwall/stack/.env` sofort in den Passwort-Manager ([warum](/server/home-server#_1-installieren)).
 6. **Weiter wie zu Hause:** [App verbinden](/server/home-server#_2-die-app-verbinden) und [Backup](/server/home-server#_3-backups) einrichten, dazu gleich ein [Backup außer Haus](/server/extras#backup-ausser-haus), denn ein gemieteter Server hat nur eine Platte. Hetzners eigene Backups (etwa 20 % Aufpreis) sichern die ganze Festplatte und sind eine gute Ergänzung, ersetzen das WuselWall-Backup aber nicht.
 
 Bei anderen Anbietern heißt das Feld **User data**, **Cloud-init** oder **Startskript**; die Schritte sind dieselben.

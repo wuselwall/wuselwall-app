@@ -19,6 +19,7 @@ import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
+import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_notifications.dart';
 import 'package:wuselwall/demo/demo_overrides.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
@@ -32,7 +33,9 @@ import 'package:wuselwall/features/school/application/school_providers.dart'
     as school;
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
+import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 
 import 'inventory.g.dart';
 import 'route_fixtures.dart';
@@ -125,6 +128,8 @@ Widget qualificationApp({
         locales: [locale],
         config: stateId == 'password-sign-in' || stateId == 'password-reset'
             ? qualificationPasswordServerConfig()
+            : stateId == 'learned-words'
+            ? qualificationMatchingServerConfig()
             : scenario == 'withserver'
             ? AppConfig(
                 environment: 'qualification',
@@ -166,6 +171,34 @@ Widget qualificationApp({
           (ref) async => throw qualificationNetworkFailure,
         ),
       shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
+      if (stateId == 'learned-words')
+        matchCorrectionsProvider.overrideWith(
+          (ref) async => [
+            MatchCorrection(
+              id: 'qualification-guetzli',
+              domain: 'shopping_category',
+              text: DemoData.tr4('Guetzli', 'cookies', 'biscuits', 'galletas'),
+              foldedText: 'guetzli',
+              key: 'snacks',
+              setBy: DemoData.mama,
+              setAt: DateTime(2026, 10, 2),
+            ),
+            MatchCorrection(
+              id: 'qualification-snack-bar',
+              domain: 'shopping_category',
+              text: DemoData.tr4(
+                'Znüni-Riegel',
+                'morning snack bar',
+                'barre goûter',
+                'barrita de merienda',
+              ),
+              foldedText: 'znueni-riegel',
+              key: 'pantry',
+              setBy: DemoData.papa,
+              setAt: DateTime(2026, 9, 4),
+            ),
+          ],
+        ),
       calendarViewProvider.overrideWith(
         () => _Calendar(
           mode: stateId == 'calendar-month'

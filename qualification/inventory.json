@@ -1218,6 +1218,60 @@
         820
       ],
       "fixture": true
+    },
+    {
+      "id": "shopping-trip",
+      "widget": "ShoppingTripPage",
+      "titleKey": "shoppingTitle",
+      "scenario": "adult",
+      "route": "/shopping/trip",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true,
+      "native": true
+    },
+    {
+      "id": "claim",
+      "widget": "ClaimPage",
+      "titleKey": "claimTitle",
+      "scenario": "setup",
+      "route": "/setup/claim",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true,
+      "native": true
+    },
+    {
+      "id": "learned-words",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupShoppingTitle",
+      "scenario": "adult",
+      "route": "/settings/shopping",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true,
+      "fixture": true
     }
   ],
   "pendingRoutes": {},

@@ -58,6 +58,12 @@ services:
       GOTRUE_MFA_MAX_ENROLLED_FACTORS: 10
       GOTRUE_HOOK_CUSTOM_ACCESS_TOKEN_ENABLED: "true"
       GOTRUE_HOOK_CUSTOM_ACCESS_TOKEN_URI: pg-functions://postgres/app/custom_access_token_hook
+      # Claiming the server (specs/20 "Claiming the server", migration 20261030100000): while
+      # no family exists, Auth creates an account only for the address that announced itself
+      # with the setup key (api.setup_claim). Once a family exists the hook lets every
+      # sign-up through. A Postgres hook, so no secret.
+      GOTRUE_HOOK_BEFORE_USER_CREATED_ENABLED: "true"
+      GOTRUE_HOOK_BEFORE_USER_CREATED_URI: pg-functions://postgres/app/before_user_created_hook
       # Passkeys: bound to the public domain (the CLI's "localhost" never worked here).
       GOTRUE_PASSKEY_ENABLED: "true"
       GOTRUE_WEBAUTHN_RP_DISPLAY_NAME: WuselWall

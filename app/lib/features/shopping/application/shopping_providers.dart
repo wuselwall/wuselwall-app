@@ -1,11 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
+import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_mode.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
+
+export 'package:wuselwall/features/shopping/domain/shopping_mode.dart';
 
 /// What the list screen shows: the server's last state with this device's pending
 /// changes replayed on top, so it looks the same online and offline (specs/07#offline).
@@ -47,6 +55,21 @@ final shoppingItemMealsProvider = FutureProvider.autoDispose
       return result.valueOrNull ?? const [];
     });
 
+/// The words this household taught the app (Einstellungen > Einkaufen > Gelernte Wörter),
+/// newest first. Refetched on the `shopping` topic, which the server broadcasts after a
+/// correction is made or forgotten.
+final matchCorrectionsProvider =
+    FutureProvider.autoDispose<List<MatchCorrection>>((ref) async {
+      final household = ref.watch(
+        deviceProvider.select((d) => d.value?.householdId),
+      );
+      if (household != null) {
+        refreshOnInvalidation(ref, householdId: household, topic: 'shopping');
+      }
+      return (await ref.watch(shoppingRepositoryProvider).matchCorrections())
+          .unwrap();
+    });
+
 /// Changes made on this device that the server has not confirmed yet.
 final shoppingPendingProvider = Provider<int>(
   (ref) => ref.watch(shoppingSyncProvider.select((s) => s.outbox.length)),
@@ -83,30 +106,50 @@ final currentListProvider = Provider.autoDispose<AsyncValue<ShoppingList?>>((
   });
 });
 
-/// Tiles for the picker: with no query the household's most bought, then the most
-/// recent; with one, prefix beats word-start beats substring, ties broken by purchases.
+/// Tiles for the picker. Pinned tiles come first, most bought first, then by name. After
+/// them, with no query the household's most recent purchases, then its most bought; with
+/// one, prefix beats word-start beats substring, ties broken by purchases (pinned
+/// matches ahead of the others of the same score).
+///
+/// [iconKeyFor] is the matcher's fallback (specs/29): it answers the picture a typed
+/// name means, and a tile with that picture ranks after the substring matches. So
+/// "Tomatten" or "Rüebli" finds the family's "Tomaten" or "Karotten". It is asked only
+/// for queries of three characters or more.
 List<CatalogEntry> rankTiles(
   List<CatalogEntry> catalog,
   String query, {
   int limit = 24,
+  String? Function(String query)? iconKeyFor,
 }) {
   final q = fold(query.trim());
+  int byBought(CatalogEntry a, CatalogEntry b) =>
+      b.purchaseCount.compareTo(a.purchaseCount);
+  int byPinned(CatalogEntry a, CatalogEntry b) {
+    final byCount = byBought(a, b);
+    return byCount != 0 ? byCount : a.foldedName.compareTo(b.foldedName);
+  }
+
   if (q.isEmpty) {
-    final byFrequency = [...catalog]
-      ..sort((a, b) => b.purchaseCount.compareTo(a.purchaseCount));
-    final recent = catalog.where((c) => c.lastPurchasedAt != null).toList()
+    final pinned = catalog.where((c) => c.pinned).toList()..sort(byPinned);
+    final rest = catalog.where((c) => !c.pinned).toList();
+    final byFrequency = [...rest]..sort(byBought);
+    final recent = rest.where((c) => c.lastPurchasedAt != null).toList()
       ..sort((a, b) => b.lastPurchasedAt!.compareTo(a.lastPurchasedAt!));
     final seen = <String>{};
     return [
-      for (final c in [...recent.take(8), ...byFrequency])
+      for (final c in [...pinned, ...recent.take(8), ...byFrequency])
         if (seen.add(c.id)) c,
     ].take(limit).toList();
   }
+  final iconKey = iconKeyFor != null && q.length >= 3
+      ? iconKeyFor(query.trim())
+      : null;
   int? score(CatalogEntry c) {
     final name = c.foldedName;
     if (name.startsWith(q)) return 0;
     if (name.split(RegExp(r'[\s\-/]+')).any((w) => w.startsWith(q))) return 1;
     if (name.contains(q)) return 2;
+    if (iconKey != null && c.iconKey == iconKey) return 3;
     return null;
   }
 
@@ -116,9 +159,39 @@ List<CatalogEntry> rankTiles(
           if (score(c) case final s?) (s, c),
       ]..sort((a, b) {
         final byScore = a.$1.compareTo(b.$1);
-        return byScore != 0
-            ? byScore
-            : b.$2.purchaseCount.compareTo(a.$2.purchaseCount);
+        if (byScore != 0) return byScore;
+        if (a.$2.pinned != b.$2.pinned) return a.$2.pinned ? -1 : 1;
+        return byBought(a.$2, b.$2);
       });
   return [for (final s in scored.take(limit)) s.$2];
+}
+
+/// The mode of this device, kept across restarts (the last one chosen). It is
+/// [ShoppingMode.plan] until the stored value has been read, and a choice made before
+/// that wins over it.
+final shoppingModeProvider =
+    NotifierProvider<ShoppingModeNotifier, ShoppingMode>(
+      ShoppingModeNotifier.new,
+    );
+
+class ShoppingModeNotifier extends Notifier<ShoppingMode> {
+  bool _chosen = false;
+
+  @override
+  ShoppingMode build() {
+    final store = ref.read(shoppingModeStoreProvider);
+    unawaited(
+      store.read().then((mode) {
+        if (!_chosen && ref.mounted) state = mode;
+      }),
+    );
+    return ShoppingMode.plan;
+  }
+
+  /// Applies [mode] at once and keeps it for the next start.
+  void select(ShoppingMode mode) {
+    _chosen = true;
+    state = mode;
+    unawaited(ref.read(shoppingModeStoreProvider).write(mode));
+  }
 }

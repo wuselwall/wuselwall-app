@@ -54,7 +54,7 @@ test('rendering captures remain counted when the native audit report is missing'
   await fs.rm(path.join(root, 'ios-phone', 'audit.json'));
   const report = await diagnosticReport(root, sha, ['ios-phone']);
   const [profile] = report.selectedProfiles;
-  assert.equal(profile.captures, 5);
+  assert.equal(profile.captures, expectedCases('ios-phone', true).length);
   assert.equal(profile.renderingPassed, true);
   assert.equal(profile.cases, 0);
   assert.equal(profile.nativeAudit, 'incomplete');
@@ -66,11 +66,11 @@ test('rendering captures remain counted when the native audit report is missing'
 test('rendering captures remain counted when the native audit is incomplete', async t => {
   const root = await fixture(t);
   await fs.writeFile(path.join(root, 'ios-phone', 'audit.json'), JSON.stringify({schemaVersion: 1,
-    candidateSha: sha, expected: 7, done: false, ready: false,
+    candidateSha: sha, expected: expectedCases('ios-phone', true).length + 2, done: false, ready: false,
     results: [{id: 'detector-bad', passed: true}]}));
   const report = await diagnosticReport(root, sha, ['ios-phone']);
   const [profile] = report.selectedProfiles;
-  assert.equal(profile.captures, 5);
+  assert.equal(profile.captures, expectedCases('ios-phone', true).length);
   assert.equal(profile.renderingPassed, true);
   assert.equal(profile.cases, 0);
   assert.equal(profile.nativeAudit, 'incomplete');

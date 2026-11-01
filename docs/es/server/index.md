@@ -43,4 +43,4 @@ Las claves de acceso no están disponibles para todas las instalaciones; siguen 
 
 ## Después {#what-comes-next}
 
-Abre la app, introduce la dirección o el identificador del proyecto y crea la familia con el código de configuración. La [guía de conexión](/es/guide/setup) explica invitaciones y otros dispositivos; sus QR también incluyen el servidor.
+Abre la app, introduce la dirección o el identificador del proyecto, toca **Tengo la clave de configuración** y crea la familia con la clave de configuración ([La clave de configuración](/es/guide/setup#setup-key)); hasta que exista la familia, el servidor no crea cuentas para nadie más. La [guía de conexión](/es/guide/setup) explica invitaciones y otros dispositivos; sus QR también incluyen el servidor.

@@ -153,7 +153,7 @@ jobs:
         # retired apple-token function and the Apple secrets deleted, all read back (specs/10).
         run: node scripts/hosted-retire-social.mjs
 
-      - name: Scheduled jobs and the setup token
+      - name: Scheduled jobs and the setup key
         run: |
           query() {
             jq -n --arg q "$1" '{query: $q}' | curl -fsS -X POST \
@@ -166,7 +166,8 @@ jobs:
             -e "s|:'cron_secret'|'$CRON_SECRET'|g" infra/jobs/schedule.sql)
           query "$sql" > /dev/null
           if [ -n "$SETUP_TOKEN" ]; then
-            hash=$(printf '%s' "$SETUP_TOKEN" | sha256sum | cut -d' ' -f1)
+            # The server compares the key in lower case (api.setup_claim, api.household_create).
+            hash=$(printf '%s' "$SETUP_TOKEN" | tr '[:upper:]' '[:lower:]' | sha256sum | cut -d' ' -f1)
             query "do \$\$ begin
               if not exists (select 1 from app.household) then
                 delete from app.setup_token;
@@ -220,7 +221,7 @@ jobs:
             echo "In the WuselWall app, enter your project ID (the value of SUPABASE_PROJECT_ID) at **Which server?**."
             echo
             if [ -n "$SETUP_TOKEN" ]; then
-              echo "Then **Start a new family** with the phrase you saved as \`WUSELWALL_SETUP_TOKEN\`."
+              echo "Then tap **I have the setup key** and enter the phrase you saved as \`WUSELWALL_SETUP_TOKEN\`: only that key can create the first account."
               echo
             fi
             if [ -z "$SMTP_HOST" ] && [ -z "$SCW_SECRET_KEY" ]; then

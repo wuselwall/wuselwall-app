@@ -184,6 +184,7 @@ Future<void> _showCase() async {
           locale: Locale(sample['locale'] as String),
           shade: sample['shade'] as String,
           tab: sample['tab'] as String? ?? 'today',
+          advanced: sample['advanced'] == true,
         ),
       ),
     );

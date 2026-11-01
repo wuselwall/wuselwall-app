@@ -8,12 +8,16 @@ class AuthFormScaffold extends StatelessWidget {
   const AuthFormScaffold({
     required this.title,
     required this.children,
+    this.subtitle,
     this.showBack = true,
     this.onBack,
     super.key,
   });
 
   final String title;
+
+  /// A quiet line under the title: which server is being set up (specs/20 S1).
+  final String? subtitle;
   final List<Widget> children;
 
   /// Off where going back would only bring the person straight back (E3).
@@ -23,7 +27,19 @@ class AuthFormScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: Text(title),
+      title: subtitle == null
+          ? Text(title)
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title),
+                Text(
+                  subtitle!,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
       automaticallyImplyLeading: showBack,
       leading: showBack
           ? BackButton(onPressed: onBack ?? () => context.go(Routes.setup))

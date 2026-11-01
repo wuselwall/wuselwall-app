@@ -10,7 +10,7 @@ Not everything comes from the same shop. WuselWall therefore has several lists, 
 2. Enter a **name** and choose the **layout**: supermarket, drugstore, hardware store or other.
 3. Save.
 
-The layout sets the **categories**, in the order you walk through the shop — so in the store the list reads top to bottom with no backtracking. The hardware list won't suggest bananas.
+The layout sets the **categories**, in the order you walk through the shop — so in the store the list reads top to bottom with no backtracking. The supermarket layout has, for example, Fruit & vegetables, Bread & bakery, Dairy & cheese, Meat & fish, Pantry, **Snacks**, Frozen, Drinks and Household. The hardware list won't suggest bananas.
 
 ## The default list
 

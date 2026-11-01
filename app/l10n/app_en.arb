@@ -55,7 +55,7 @@
   "enrolBody": "Enter the code shown on a device that is already connected.",
   "enrolCodeLabel": "Enrolment code",
   "enrolAction": "Connect",
-  "errSetupTokenInvalid": "The setup token is not valid.",
+  "errSetupTokenInvalid": "The setup key is not valid.",
   "errSetupClosed": "This system is already connected.",
   "errPasswordTooShort": "The password needs at least 10 characters.",
   "errPinFormat": "The PIN must be exactly 6 digits.",
@@ -223,6 +223,10 @@
   "shoppingCat_dairy": "Dairy & cheese",
   "shoppingCat_meat_fish": "Meat & fish",
   "shoppingCat_pantry": "Pantry",
+  "shoppingCat_snacks": "Snacks",
+  "@shoppingCat_snacks": {
+    "description": "Seeded shopping category: crisps, biscuits and the like"
+  },
   "shoppingCat_frozen": "Frozen",
   "shoppingCat_drinks": "Drinks",
   "shoppingCat_household": "Household",
@@ -2068,19 +2072,49 @@
   "householdLanguageEn": "English",
   "householdLanguageFr": "French",
   "householdLanguageEs": "Spanish",
-  "householdNewFounderCode": "Setup code",
-  "householdNewFounderHelp": "Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.",
-  "householdNewCodeSaved": "Setup code saved from your setup link. You do not need to enter it again.",
+  "householdNewFounderCode": "Setup key",
+  "householdNewFounderHelp": "Use the setup key shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.",
+  "householdNewCodeSaved": "Setup key saved from your setup link. You do not need to enter it again.",
   "householdSeedExamples": "Start with examples — 5 tasks, 3 rewards",
   "householdNewCreate": "Create family",
   "householdNewCreating": "Creating your family …",
   "householdNewInvited": "I was invited",
   "householdInvitedNote": "Invitations arrive with the next update.",
   "householdNewSignOut": "Sign out",
-  "householdNewErrNoCode": "This server needs a setup code to create a family. Use the code from the server installation, not your email code.",
-  "householdNewErrCodeWrong": "This setup code is invalid or has already been used. Ask the person who runs your server for a new setup link or code.",
+  "householdNewErrNoCode": "This server needs a setup key to create a family. Use the key from the server installation, not your email code.",
+  "householdNewErrCodeWrong": "This setup key is invalid or has already been used. Ask the person who runs your server for a new setup link or key.",
   "householdNewErrRateLimited": "Too many attempts. Wait a few minutes and try again.",
   "householdNewStalled": "This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.",
+  "claimTitle": "Set up your server",
+  "claimLead": "{host} has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first guardian account.",
+  "@claimLead": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimHeader": "Setting up {host}",
+  "@claimHeader": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimKeyLabel": "Setup key",
+  "claimKeyHelp": "From the server installation: the setup link or QR code carries it. Otherwise ask the person who runs your server.",
+  "claimChecking": "Checking the setup key…",
+  "claimKeyReady": "Setup key accepted. The server is waiting for its family.",
+  "claimKeyUsed": "This setup key has already been used. Ask the person who runs your server for a new one, or sign in if the family already exists.",
+  "claimKeyInvalid": "This setup key is not valid.",
+  "claimNextCode": "Next: a code from your email, then your family.",
+  "claimNextPassword": "Next: a password for your account, then your family.",
+  "claimHaveAccount": "I already have an account",
+  "doorUnclaimedTitle": "This server has no family yet",
+  "doorUnclaimedBody": "Whoever installed it has the setup key. With it you found the family; afterwards, others join by invitation.",
+  "doorUnclaimedAction": "I have the setup key",
+  "errSetupKeyRequired": "This server has no family yet. Only the setup key from its installation can create the first account.",
   "setupPrivacy": "Privacy policy",
   "householdMembersTitle": "Who else is in your family?",
   "householdMembersYou": "{name} (you)",
@@ -3862,6 +3896,118 @@
   "@accountDeleteReauthPasswordBody": {
     "placeholders": {
       "email": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingModePlan": "Plan mode",
+  "@shoppingModePlan": {
+    "description": "Shopping list, mode control: the segment for planning at home (search, tiles, items without ticks)"
+  },
+  "shoppingStartShopping": "Go shopping",
+  "@shoppingStartShopping": {
+    "description": "Shopping list, planning mode: the button that switches to the shopping mode"
+  },
+  "shoppingAddInStore": "Add",
+  "@shoppingAddInStore": {
+    "description": "Shopping list, shopping mode: tooltip of the plus button that opens the picker for a forgotten item"
+  },
+  "shoppingShopEmpty": "Nothing on the list. Tap “Add” or go back to “Plan”.",
+  "@shoppingShopEmpty": {
+    "description": "Shopping list in shopping mode with nothing on it"
+  },
+  "shoppingSearchClear": "Clear and close",
+  "@shoppingSearchClear": {
+    "description": "Tooltip of the button in the shopping search field that clears the text and closes the keyboard"
+  },
+  "shoppingTripTitle": "{name} · {open}",
+  "@shoppingTripTitle": {
+    "description": "Shopping trip page: the slim top row, the list name and how many items are still open",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "open": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemDone": "Done",
+  "@shoppingItemDone": {
+    "description": "Item sheet of the shopping list: the button that saves the note and closes the sheet"
+  },
+  "shoppingAddOne": "One more",
+  "@shoppingAddOne": {
+    "description": "Item sheet of the shopping list: tooltip of the plus button of the count stepper"
+  },
+  "shoppingCategoryAuto": "Category set automatically from the name",
+  "@shoppingCategoryAuto": {
+    "description": "Item sheet of the shopping list: a small line shown while the category was set by the server from the item name"
+  },
+  "shoppingCountTimes": "{count} ×",
+  "@shoppingCountTimes": {
+    "description": "Shopping list row: the count of an item for a screen reader and next to the name",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingTilePin": "Pin tile",
+  "@shoppingTilePin": {
+    "description": "Tile sheet of the shopping list: pins the tile so it always comes first"
+  },
+  "shoppingTileUnpin": "Unpin tile",
+  "@shoppingTileUnpin": {
+    "description": "Tile sheet of the shopping list: removes the pin from a tile"
+  },
+  "shoppingTilePinHelp": "Pinned tiles always come first.",
+  "@shoppingTilePinHelp": {
+    "description": "Tile sheet of the shopping list: explains pinning"
+  },
+  "shoppingTilePinned": "Pinned",
+  "@shoppingTilePinned": {
+    "description": "Shopping list tile: tooltip and hint of the small pin on a pinned tile"
+  },
+  "shoppingTileStarter": "Suggested",
+  "@shoppingTileStarter": {
+    "description": "Shopping list tile: tooltip and hint of a tile the starter catalogue suggests, not yet one of the family's own"
+  },
+  "settingsGroupShoppingTitle": "Shopping",
+  "settingsGroupShoppingSubtitle": "Learned words",
+  "settingsSectionLearnedWords": "Learned words",
+  "learnedWordsHelp": "The family learned these words: from now on the item goes into this category. Forget takes a word away again.",
+  "learnedWordsEmpty": "Nothing learned yet. When someone changes the category of an item, the family remembers the word here.",
+  "learnedWordsMeta": "{category} · {date}",
+  "@learnedWordsMeta": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "learnedWordsMetaBy": "{category} · by {name}, {date}",
+  "@learnedWordsMetaBy": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "learnedWordsForget": "Forget",
+  "learnedWordsForgetWord": "Forget “{word}”",
+  "@learnedWordsForgetWord": {
+    "placeholders": {
+      "word": {
         "type": "String"
       }
     }

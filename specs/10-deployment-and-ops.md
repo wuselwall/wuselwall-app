@@ -137,17 +137,28 @@ may instead call them from the host's cron (`infra/cron/*.sh`) — never both.
 
 ### 3. First household
 
-Households are founded with a single-use **setup token** (`wuselwall setup-token`, or the
-`WUSELWALL_SETUP_TOKEN` secret of the hosted workflow); only its hash is stored. After the
-first household the server is closed: one server, one household
+Households are founded with a single-use **setup key** (`wuselwall setup-token`, or the
+`WUSELWALL_SETUP_TOKEN` secret of the hosted workflow, compared in lower case); only its
+hash is stored. After the first household the server is closed: one server, one household
 ([20, J1](20-onboarding.md#j1--start-a-family)). The development seed's `dev-setup` must
 never exist on a live server; a release never runs the seed.
 
-The token is what the app's H1 ("Neue Familie", after sign-in) asks for as the
-**Gründungscode** while `household_creation` is `code`, the default
+Since 2026-10-30 the key also gates sign-up ([20, Claiming the
+server](20-onboarding.md#claiming-the-server)): while no household exists, Auth's Before
+User Created hook creates an account only for the address that announced itself with the
+key (`api.setup_claim`, anon, rate-limited like founder codes). The compose stack passes
+`GOTRUE_HOOK_BEFORE_USER_CREATED_*` in `docker-compose.wuselwall.yml`, the hosted workflow
+sets `hook_before_user_created_*` through `scripts/hosted-auth-config.mjs`, and the CLI
+stack reads `[auth.hook.before_user_created]` (GoTrue 2.175 or newer). The discovery
+document says `claimed: false` until the family exists, so the app's front door leads to
+the claim.
+
+The key is what the app's S1 ("Server einrichten") asks for, and H1 ("Neue Familie") only
+when the address did not claim it there (a key from an older QR code), while
+`household_creation` is `code`, the default
 ([20, J1](20-onboarding.md#household-creation-open-or-by-code)). An operator who deliberately
 hosts a further family issues one more single-use code with
-`scripts/remote-setup-token.sh --founder`; it never replaces a code. Failed codes are rate-limited
+`scripts/remote-setup-token.sh --founder`; it never replaces a code. Failed keys are rate-limited
 per client and globally (`app.founder_attempt`).
 
 ### 4. Sign-in and mail

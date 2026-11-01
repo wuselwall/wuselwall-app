@@ -163,6 +163,13 @@ template = "Your code is {{ .Code }} ."
 enabled = true
 uri = "pg-functions://postgres/app/custom_access_token_hook"
 
+# Claiming the server (specs/20 "Claiming the server"): while no family exists, Auth creates an
+# account only for an address that was announced with the setup key (api.setup_claim). Once a
+# family exists the hook lets every sign-up through, as invitations need.
+[auth.hook.before_user_created]
+enabled = true
+uri = "pg-functions://postgres/app/before_user_created_hook"
+
 # The Send Email Hook (specs/10 §4, specs/20 "Email"): GoTrue hands every mail to the send-email
 # Edge Function instead of sending it, and that function renders it in the recipient's language
 # and sends it through Scaleway Transactional Email. Off here: CLI and CI stacks catch mail in

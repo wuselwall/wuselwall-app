@@ -63,8 +63,9 @@ ShoppingItem _onList(ShoppingItem i) => ShoppingItem(
 
 Future<_SpyCelebration> _shopping(
   WidgetTester t,
-  FakeShoppingRepository shopping,
-) async {
+  FakeShoppingRepository shopping, {
+  bool trip = true,
+}) async {
   final container = await pumpApp(
     t,
     overrides: [
@@ -77,6 +78,11 @@ Future<_SpyCelebration> _shopping(
   );
   await t.tap(find.text('Einkauf').last);
   await t.pumpAndSettle();
+  // The trip is a page of its own.
+  if (trip) {
+    await t.tap(find.byKey(const ValueKey('shopping-start')));
+    await t.pumpAndSettle();
+  }
   return container.read(celebrationProvider) as _SpyCelebration;
 }
 
@@ -153,7 +159,7 @@ void main() {
   testWidgets('an empty list with tiles says to tap one, and Wusel peeks', (
     t,
   ) async {
-    await _shopping(t, _WithTiles([]));
+    await _shopping(t, _WithTiles([]), trip: false);
     expect(
       find.text('Noch nichts auf der Liste. Tipp auf eine Kachel.'),
       findsOneWidget,
@@ -162,7 +168,7 @@ void main() {
   });
 
   testWidgets('without tiles the empty list keeps its plain line', (t) async {
-    await _shopping(t, FakeShoppingRepository([]));
+    await _shopping(t, FakeShoppingRepository([]), trip: false);
     expect(find.text('Nichts zu kaufen'), findsOneWidget);
   });
 }

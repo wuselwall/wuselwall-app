@@ -33,6 +33,7 @@ void main() {
               locale: Locale(locale),
               shade: shade,
               tab: sample['tab'] as String? ?? 'today',
+              advanced: sample['advanced'] == true,
             ),
           );
           await t.pumpAndSettle();

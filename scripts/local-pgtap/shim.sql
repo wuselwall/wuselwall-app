@@ -9,6 +9,7 @@ end $$;
 create schema extensions;
 create extension pgcrypto with schema extensions;
 create extension "uuid-ossp" with schema extensions;
+create extension fuzzystrmatch with schema extensions;
 grant usage on schema extensions to anon, authenticated, service_role;
 grant usage on schema public to anon, authenticated, service_role;
 

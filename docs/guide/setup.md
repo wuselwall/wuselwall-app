@@ -19,13 +19,29 @@ Der Startbildschirm hat drei Wege:
 - **Ich habe einen Einladungscode**: du wurdest von einer Familie eingeladen.
 - **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Erwachsenen auf seinem Handy freigegeben.
 
+## Der Einrichtungsschlüssel: ein Server ohne Familie {#einrichtungsschluessel}
+
+Ein frisch installierter Server hat noch keine Familie. Wer ihn installiert hat, hat den
+**Einrichtungsschlüssel**: Die Installation zeigt ihn an, und der Einrichtungslink oder
+QR-Code enthält ihn. Der Startbildschirm eines solchen Servers sagt das und bietet
+**Ich habe den Einrichtungsschlüssel** an; der Einrichtungslink öffnet direkt
+**Server einrichten**.
+
+Dort gibst du neben dem Schlüssel deine E-Mail-Adresse ein. WuselWall prüft den Schlüssel
+beim Server und kündigt deine Adresse damit an: Bis die Familie besteht, legt der Server
+nur für diese Adresse ein Konto an, und alle anderen erfahren, dass der Server noch keine
+Familie hat. Dann folgt der Code aus deiner E-Mail — oder ein Passwort auf einem Server ohne
+E-Mail — und **Neue Familie** fragt nach keinem Schlüssel mehr. Niemand tippt den Schlüssel
+ein zweites Mal; wer den Server betreibt, erzeugt mit `./wuselwall setup-token` einen neuen,
+solange es keine Familie gibt.
+
 ## 1. Anmelden
 
 Tippe auf **Mit E-Mail fortfahren** und gib eine gültige E-Mail-Adresse ein. Die App prüft das Feld, bevor sie etwas sendet. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
 
 Lass die Seite mit dem Codefeld geöffnet und übertrage den Code aus der E-Mail dorthin.
 Du brauchst keinen Anmeldelink und keine zweite Anmeldung. Der E-Mail-Code bestätigt
-deine Adresse; er ist etwas anderes als der Einrichtungscode für einen neuen Server.
+deine Adresse; er ist etwas anderes als der Einrichtungsschlüssel für einen neuen Server.
 
 <Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
@@ -46,12 +62,13 @@ Wenn dein Konto noch zu keiner Familie gehört, öffnet WuselWall **Neue Familie
 1. **Familienname**, zum Beispiel „Becker“.
 2. **Dein Name** und **Deine Farbe**. Die Farbe erscheint überall da, wo du etwas angelegt hast.
 3. Optional **Mit Beispielen starten**: ein paar Aufgaben und Belohnungen, die ihr einfach ändern oder löschen könnt.
-4. Den **Einrichtungscode**, falls euer Server einen verlangt und du noch keinen Einrichtungslink geöffnet hast. Er stammt aus der Serverinstallation oder von der Person, die euren Server betreibt — nicht aus der Anmelde-E-Mail.
+4. Den **Einrichtungsschlüssel**, falls euer Server einen verlangt und du ihn nicht schon vor der Anmeldung eingegeben hast ([Der Einrichtungsschlüssel](#einrichtungsschluessel)). Er stammt aus der Serverinstallation oder von der Person, die euren Server betreibt — nicht aus der Anmelde-E-Mail.
 
-Hast du den Einrichtungslink oder QR-Code aus der Serverinstallation geöffnet,
-merkt WuselWall sich den Einrichtungscode für diesen Server während der Anmeldung.
-Du musst ihn unter **Neue Familie** nicht erneut eingeben. Behandle den Einrichtungslink
-wie einen Schlüssel und teile ihn nur mit der Person, die eure Familie anlegt.
+Hast du den Einrichtungslink oder QR-Code aus der Serverinstallation geöffnet oder den
+Schlüssel unter **Ich habe den Einrichtungsschlüssel** eingegeben, hat WuselWall deine
+Adresse damit schon vor der Anmeldung angekündigt. Du musst ihn unter **Neue Familie**
+nicht erneut eingeben. Behandle den Einrichtungslink wie einen Schlüssel und teile ihn nur
+mit der Person, die eure Familie anlegt.
 
 <Shot name="new-family" alt="Formular „Neue Familie“" />
 

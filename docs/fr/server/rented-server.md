@@ -45,7 +45,7 @@ Ce guide prend Hetzner parce que sa console offre un simple champ cloud-config ;
    ssh root@<ip> cat /srv/wuselwall/install.log
    ```
 
-   Vous y trouvez l’adresse du serveur, le lien de configuration avec son QR et le code à usage unique. Copiez tout de suite `/srv/wuselwall/stack/.env` dans votre gestionnaire de mots de passe ([pourquoi](/fr/server/home-server#_1-installing)).
+   Vous y trouvez l’adresse du serveur, le lien de configuration avec son QR et la clé de configuration à usage unique. Copiez tout de suite `/srv/wuselwall/stack/.env` dans votre gestionnaire de mots de passe ([pourquoi](/fr/server/home-server#_1-installing)).
 6. **Poursuivre comme à la maison :** [connecter l’app](/fr/server/home-server#_2-connecting-the-app), configurer la [sauvegarde](/fr/server/home-server#_3-backups) et, dès le début, une [sauvegarde hors site](/fr/server/extras#off-site-backup), car un serveur loué n’a qu’un disque. Les sauvegardes Hetzner (environ 20 % de plus) copient tout le disque : un bon complément, pas un remplacement.
 
 Chez les autres hébergeurs, le champ s’appelle **User data**, **Cloud-init** ou **Script de démarrage** ; les étapes sont les mêmes.
