@@ -17,6 +17,7 @@
 // the crashed files that did not pass, or a crash in the second run keeps the job red. Each
 // rerun leaves a warning annotation; when it declines to rerun, it says why. Where gdb is
 // installed it also lets the tester dump core and prints the crashing thread's backtrace.
+// Keep concurrent test files bounded on the self-hosted runner (default 4; configurable 1–16).
 import { spawn, spawnSync } from 'node:child_process';
 import { arch, availableParallelism, constants, cpus, freemem, release, totalmem } from 'node:os';
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
@@ -25,6 +26,15 @@ import { pathToFileURL } from 'node:url';
 
 export const CRASH = 'TestDeviceException(Shell subprocess crashed with segmentation fault.)';
 const UNHANDLED = /unhandled error during (finalization of )?test:$/;
+export const DEFAULT_CONCURRENCY = 4;
+
+export function flutterTestConcurrency(value) {
+  if (value === undefined) return DEFAULT_CONCURRENCY;
+  if (!/^(?:[1-9]|1[0-6])$/.test(value)) {
+    throw new Error('FLUTTER_TEST_CONCURRENCY must be an integer from 1 to 16');
+  }
+  return Number(value);
+}
 
 /**
  * Decides whether a failed run failed only because flutter_tester crashed. Takes the console
@@ -120,11 +130,11 @@ function diagnostics() {
   console.log('::endgroup::');
 }
 
-function flutterTest(args, report) {
+function flutterTest(args, report, concurrency) {
   return new Promise((resolve, reject) => {
     // With gdb at hand, let a crashing tester leave a core to read a backtrace from.
     const command = `${gdb ? 'ulimit -c unlimited 2>/dev/null; ' : ''}exec flutter test "$@"`;
-    const child = spawn('sh', ['-c', command, 'sh', `--file-reporter=json:${report}`, ...args], { stdio: ['inherit', 'pipe', 'pipe'] });
+    const child = spawn('sh', ['-c', command, 'sh', `--file-reporter=json:${report}`, `--concurrency=${concurrency}`, ...args], { stdio: ['inherit', 'pipe', 'pipe'] });
     let output = '';
     child.stdout.on('data', (chunk) => { process.stdout.write(chunk); output += chunk; });
     child.stderr.on('data', (chunk) => { process.stderr.write(chunk); output += chunk; });
@@ -180,10 +190,18 @@ function backtraces() {
 }
 
 async function main() {
+  let concurrency;
+  try {
+    concurrency = flutterTestConcurrency(process.env.FLUTTER_TEST_CONCURRENCY);
+  } catch (error) {
+    console.error(`flutter-test-ci: ${error.message}`);
+    return 2;
+  }
+  console.log(`flutter-test-ci: Flutter test concurrency is ${concurrency}.`);
   diagnostics();
   mkdirSync('build', { recursive: true });
   const report = 'build/test-results.json';
-  const first = await flutterTest([], report);
+  const first = await flutterTest([], report, concurrency);
   if (gdb) backtraces();
   if (first.status === 0) return 0;
   // The crash makes flutter exit with 1. A signal or any other status is not that crash.
@@ -202,7 +220,7 @@ async function main() {
     const cut = verdict.cut[file] ? `, ${verdict.cut[file]} of its tests cut short` : ', after its tests passed';
     console.log(`::warning title=flutter_tester crashed::${file} (SIGSEGV${cut}). Running this file once more.`);
   }
-  const retry = await flutterTest(verdict.files, 'build/test-results-retry.json');
+  const retry = await flutterTest(verdict.files, 'build/test-results-retry.json', concurrency);
   if (gdb) backtraces();
   return retry.status;
 }

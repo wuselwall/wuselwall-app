@@ -51,13 +51,13 @@ human gates. Real backend authentication, signed-store-binary smoke and the rest
 release checklist remain separate requirements. Operator-run deployment utilities are not
 publishing-workflow qualification gates.
 
-Current validation rendered 192 direct fixture/locale pairs in DE/EN/FR/ES. Earlier validation executed the 70-state,
-8,760-case Flutter matrix. Large-text layout and touch-target fixes were verified in a
-672-case responsive rerun with no framework, label or target-size findings. Contrast findings
-remain visible and blocking while attribution continues. The ordinary suite passed 1,881
-tests with seven intentionally unconfigured backend integration tests skipped; the separate
-disposable-backend CI job supplies their coverage. No qualified candidate or approved native
-baseline is established by these local checks.
+Current validation rendered 192 direct fixture/locale pairs in DE/EN/FR/ES. All
+9,272 Flutter matrix cases executed: 8,836 passed and 436 retained contrast findings,
+with no label, target-size, layout or collection failures. Every failing case has a PNG;
+SDK and exact findings stay visible while attribution continues. Chromium passed all
+605 canonical cases. The ordinary suite passed 1,881 tests with seven intentionally
+unconfigured backend integrations skipped; separate disposable-backend CI supplies them.
+No qualified candidate or approved baseline is established by these local checks.
 
 Existing palette/focused accessibility tests and illustration goldens continue in normal
 CI. The older schedules and tooling examples in specs/18 are historical proposals; the

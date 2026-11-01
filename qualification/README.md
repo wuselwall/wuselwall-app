@@ -47,25 +47,29 @@ qualification for that exact commit and protected human approval before publishi
 Separate backend/recovery checks remain part of the release checklist; operator-run local
 deployment utilities are independent.
 
-Current fixture checks render 192 destination/locale pairs. Earlier Linux validation
-executed the 70-state, 8,760-case Flutter matrix. It exposed accessibility findings and large-text layout defects. After
-fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
-label or target-size findings. The exact audit below attributes eligible SDK border
-misattribution; ambiguous findings remain blocking. The ordinary
-suite passed 1,881 tests, with seven backend integration tests intentionally skipped without
-backend configuration. Those seven require the separate disposable-backend CI job. Android
-app and instrumentation APKs compile. An unsigned iOS diagnostic booted a simulator,
-captured five smoke screens and compiled XCTest. Both the deliberately bad control and
-native keyboard detectors passed, and all seven audit entries were recorded without
-framework errors. The Android SDK/AVDs are provisioned and runner preflight passed.
-The combined diagnostic on `17652a9b` completed both platforms: five screen captures
-and seven audit entries each, with both detectors passing and no framework errors.
-The subsequent diagnostic on `0fc52129` completed seven captures and nine audit
-entries on each platform, including server claim and shopping trip. Android passed
-after the calendar date-header target fix. Both platforms passed detector/input checks
-without framework errors. iOS still reports unnamed scroll containers and clipped
-hit areas in Today and shopping; those findings remain blocking.
-No native baseline or reviewed framework exception has been approved.
+Current fixture checks render 192 destination/locale pairs. The full Flutter matrix
+executed all 9,272 cases: 8,836 passed and 436 retained contrast findings. No label,
+target-size, layout or collection failures remained. All 436 failures have PNGs;
+the grouped report retains 212 SDK and 450 exact findings for attribution/review.
+These are measurement findings, not 436 confirmed product defects. Chromium passed
+all 605 canonical cases, including its detector. Production web discovery, cached
+backend refresh and shopping smoke also passed with intercepted synthetic APIs.
+The ordinary suite passed 1,881 tests, with seven backend integration tests deliberately
+skipped without backend configuration; separate disposable-backend CI supplies them.
+
+Native diagnostic `0fc52129` completed seven captures and nine audit entries per
+platform, including server claim and shopping trip. Android passed after the calendar
+date-header target fix. Both platforms passed detector/input checks without framework
+errors. iOS retains seven unnamed scroll-container findings and four clipped hit-area
+findings in Today/shopping; none is approved or waived. This phone smoke does not
+establish full nine-profile coverage. No native baseline or reviewed exception is approved.
+
+CI bounds ordinary Flutter test-file parallelism to four processes by default;
+`FLUTTER_TEST_CONCURRENCY` accepts 1–16. Candidate commands explicitly use four and
+never automatically retry. Detail contrast tests retain their tall layout and every
+paragraph check while cropping blank capture space; 144 captures allocated about 70%
+fewer image bytes. This reduces resource use without establishing the cause of an engine
+crash. A process crash remains failed evidence.
 
 Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)
 wherever paint is unambiguous, and by the raw Flutter SDK guideline everywhere else. The SDK

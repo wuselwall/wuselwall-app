@@ -4,7 +4,7 @@ import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { CRASH, GDB_SETTINGS, assessCrash, sanitizeBacktrace } from './flutter-test-ci.mjs';
+import { CRASH, DEFAULT_CONCURRENCY, GDB_SETTINGS, assessCrash, flutterTestConcurrency, sanitizeBacktrace } from './flutter-test-ci.mjs';
 
 const script = new URL('./flutter-test-ci.mjs', import.meta.url).pathname;
 const A = '/work/app/test/a_test.dart';
@@ -101,7 +101,7 @@ test('any other error or an unseen file keeps the run failed', () => {
 // End to end with a stand-in `flutter` that plays one scripted run per call: it writes the
 // report and output, optionally leaves a core file, then exits with `status` or is killed by
 // `signal`. With `gdb`, a stand-in gdb prints that text and records its arguments.
-function run(runs, { gdb } = {}) {
+function run(runs, { gdb, concurrency } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'flutter-test-ci-'));
   try {
     const fake = join(dir, 'flutter');
@@ -129,9 +129,13 @@ process.stdout.write(${JSON.stringify(gdb)});
 `);
       chmodSync(join(dir, 'gdb'), 0o755);
     }
-    const result = spawnSync('node', [script], { cwd: dir, encoding: 'utf8', env: { ...process.env, PATH: `${dir}:${process.env.PATH}` } });
+    const env = { ...process.env, PATH: `${dir}:${process.env.PATH}` };
+    if (concurrency === undefined) delete env.FLUTTER_TEST_CONCURRENCY;
+    else env.FLUTTER_TEST_CONCURRENCY = concurrency;
+    const result = spawnSync('node', [script], { cwd: dir, encoding: 'utf8', env });
     const gdbArgs = existsSync(join(dir, 'gdb-args')) ? JSON.parse(readFileSync(join(dir, 'gdb-args'), 'utf8')) : undefined;
-    return { ...result, calls: JSON.parse(readFileSync(join(dir, 'calls'), 'utf8')), gdbArgs, coreLeft: existsSync(join(dir, 'core')) };
+    const calls = existsSync(join(dir, 'calls')) ? JSON.parse(readFileSync(join(dir, 'calls'), 'utf8')) : [];
+    return { ...result, calls, gdbArgs, coreLeft: existsSync(join(dir, 'core')) };
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -140,17 +144,27 @@ process.stdout.write(${JSON.stringify(gdb)});
 const passed = { status: 0, out: 'All tests passed!\n', json: report({ [A]: ['success'] }) };
 const crashed = { status: 1, out: crashText(A), json: report({ [A]: ['success'], [B]: ['success'] }) };
 
+test('Flutter test concurrency defaults to four and accepts the configured range', () => {
+  assert.equal(flutterTestConcurrency(undefined), DEFAULT_CONCURRENCY);
+  assert.equal(flutterTestConcurrency('1'), 1);
+  assert.equal(flutterTestConcurrency('16'), 16);
+  for (const value of ['', '0', '17', '4.5', 'many', ' 4']) {
+    assert.throws(() => flutterTestConcurrency(value), /integer from 1 to 16/);
+  }
+});
+
 test('a clean run runs once and passes', () => {
   const result = run([passed]);
-  assert.equal(result.status, 0);
+  assert.equal(result.status, 0, JSON.stringify(result));
   assert.equal(result.calls.length, 1);
-  assert.match(result.stdout, /Runner facts/);
+  assert.deepEqual(result.calls[0].filter((a) => !a.startsWith('--file-reporter')), ['test', '--concurrency=4']);
+  assert.match(result.stdout, /Runner facts/, JSON.stringify(result));
 });
 
 test('a crash-only failure reruns the crashed file once, with a warning, and takes its result', () => {
   const result = run([crashed, passed]);
   assert.equal(result.status, 0, result.stderr);
-  assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test'], ['test', A]]);
+  assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test', '--concurrency=4'], ['test', '--concurrency=4', A]]);
   assert.match(result.stdout, /::warning title=flutter_tester crashed::\/work\/app\/test\/a_test\.dart \(SIGSEGV, after its tests passed\)/);
 });
 
@@ -158,8 +172,24 @@ test('a crash mid-file reruns that file, with a warning that says how many tests
   const midFile = { status: 1, out: crashText(A), json: report({ [A]: ['success', 'cut', 'cut', 'cut'], [B]: ['success'] }) };
   const result = run([midFile, passed]);
   assert.equal(result.status, 0, result.stderr);
-  assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test'], ['test', A]]);
+  assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test', '--concurrency=4'], ['test', '--concurrency=4', A]]);
   assert.match(result.stdout, /::warning title=flutter_tester crashed::\/work\/app\/test\/a_test\.dart \(SIGSEGV, 3 of its tests cut short\)/);
+});
+
+test('a configured concurrency is used for both initial run and one retry', () => {
+  const result = run([crashed, passed], { concurrency: '7' });
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(
+    result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))),
+    [['test', '--concurrency=7'], ['test', '--concurrency=7', A]],
+  );
+});
+
+test('an invalid concurrency fails before spawning Flutter', () => {
+  const result = run([passed], { concurrency: '17' });
+  assert.equal(result.status, 2);
+  assert.deepEqual(result.calls, []);
+  assert.match(result.stderr, /FLUTTER_TEST_CONCURRENCY must be an integer from 1 to 16/);
 });
 
 test('a second crash fails the job, without a third run', () => {
