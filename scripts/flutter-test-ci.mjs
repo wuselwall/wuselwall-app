@@ -10,6 +10,14 @@
 // JSON reporter calls each of them "error" (the console reporter shows them as passed). So
 // the file's tests did not all run, and the file has to run again as a whole.
 //
+// The same death has a second face. flutter_tools' `finalize` (flutter_platform.dart) finds
+// the tester gone and reports it into the test's channel; when that channel is still piping
+// the tester's events, the report itself throws "Bad state: Cannot add event while adding
+// stream." That StateError replaces the crash message: it lands in the JSON report as an
+// error on the file's loading step ("loading <file> (failed after test completion)"), the
+// file's tests are marked "error" without error events, and the console shows no crash text
+// at all. Such a file is a crashed file too, and runs again as a whole.
+//
 // This wrapper prints the runner facts a native diagnosis needs, runs the suite once and, only
 // when the sole problem is that crash, runs the crashed files once more and returns that run's
 // status. Only a flutter exit status of 1 qualifies: a flutter killed by a signal, any other
@@ -24,23 +32,24 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 export const CRASH = 'TestDeviceException(Shell subprocess crashed with segmentation fault.)';
+// The crash as flutter_tools reports it into a channel that is still piping (see the top).
+export const SINK_ERROR = 'Bad state: Cannot add event while adding stream.';
 const UNHANDLED = /unhandled error during (finalization of )?test:$/;
 
 /**
  * Decides whether a failed run failed only because flutter_tester crashed. Takes the console
- * output and the JSON reporter's lines. Returns { files, cut } to run again (cut: file -> the
- * number of its tests the crash cut short), or { reason, events } when the run's result must
- * stand.
+ * output and the JSON reporter's lines. Returns { files, cut, how } to run again (cut: file ->
+ * the number of its tests the crash cut short; how: file -> which face of the crash the file
+ * showed), or { reason, events } when the run's result must stand.
  */
 export function assessCrash(output, jsonLines) {
-  const crashed = new Set();
+  const crashed = new Map(); // test file -> how the crash showed
   const lines = output.split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
     if (!UNHANDLED.test(lines[i].trim())) continue;
     if (lines[i + 2]?.trim() !== CRASH) return { reason: `another flutter_tools error: ${lines[i + 2]?.trim()}` };
-    crashed.add(lines[i + 1].trim());
+    crashed.set(lines[i + 1].trim(), 'SIGSEGV');
   }
-  if (crashed.size === 0) return { reason: 'no tester crash in the output' };
 
   const suites = new Map(); // suite id -> test file
   const expected = new Map(); // suite id -> number of tests in the file
@@ -65,9 +74,20 @@ export function assessCrash(output, jsonLines) {
     if (event.type === 'error') errors.push(event);
   }
 
+  // The crash's second face: the sink's StateError on a file's loading step marks that file
+  // crashed too, whether or not the console named it.
+  const isLoader = (test) => test?.name.startsWith('loading ') === true;
+  for (const e of errors) {
+    const test = tests.get(e.testID);
+    if (!isLoader(test) || String(e.error).trim() !== SINK_ERROR) continue;
+    const path = suites.get(test.suiteID);
+    if (path !== undefined && !crashed.has(path)) crashed.set(path, 'crash reported as the sink error');
+  }
+  if (crashed.size === 0) return { reason: 'no tester crash in the output' };
+
   const crashedSuites = new Set([...suites].filter(([, path]) => crashed.has(path)).map(([id]) => id));
   if (crashedSuites.size !== crashed.size) return { reason: 'a crashed file is missing from the JSON report' };
-  const isCrashLoader = (test) => test?.name.startsWith('loading ') && crashedSuites.has(test.suiteID);
+  const isCrashLoader = (test) => isLoader(test) && crashedSuites.has(test.suiteID);
   // A test the crash cut short: completed when the channel closed, so "error" with no error event.
   const errored = new Set(errors.map((e) => e.testID));
   const isCutShort = (test) => crashedSuites.has(test.suiteID) && test.result === 'error' && !errored.has(test.id);
@@ -78,8 +98,10 @@ export function assessCrash(output, jsonLines) {
       .map((t) => `${isCutShort(t) ? 'cut short by the crash' : t.result ?? 'unfinished'}: ${describe(t)}`),
   ];
 
-  // The only error allowed is the crash itself, reported on a crashed file's loading step.
-  if (errors.some((e) => !(isCrashLoader(tests.get(e.testID)) && String(e.error).trim() === CRASH))) {
+  // The only error allowed is the crash itself, in either face, reported on a crashed file's
+  // loading step.
+  const isCrashReport = (e) => isCrashLoader(tests.get(e.testID)) && [CRASH, SINK_ERROR].includes(String(e.error).trim());
+  if (errors.some((e) => !isCrashReport(e))) {
     return { reason: 'the report has errors other than the crash', events };
   }
   for (const test of tests.values()) {
@@ -101,7 +123,7 @@ export function assessCrash(output, jsonLines) {
   const cut = Object.fromEntries([...crashedSuites].map((id) => [
     suites.get(id), [...tests.values()].filter((t) => t.suiteID === id && isCutShort(t)).length,
   ]));
-  return { files: [...crashed].sort(), cut };
+  return { files: [...crashed.keys()].sort(), cut, how: Object.fromEntries(crashed) };
 }
 
 const sh = (command) => spawnSync('sh', ['-c', command], { encoding: 'utf8' }).stdout?.trim() || '';
@@ -200,7 +222,7 @@ async function main() {
   }
   for (const file of verdict.files) {
     const cut = verdict.cut[file] ? `, ${verdict.cut[file]} of its tests cut short` : ', after its tests passed';
-    console.log(`::warning title=flutter_tester crashed::${file} (SIGSEGV${cut}). Running this file once more.`);
+    console.log(`::warning title=flutter_tester crashed::${file} (${verdict.how[file]}${cut}). Running this file once more.`);
   }
   const retry = await flutterTest(verdict.files, 'build/test-results-retry.json');
   if (gdb) backtraces();
