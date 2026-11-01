@@ -42,7 +42,7 @@ Tap **New event**. It starts on the day the calendar is showing (today, while to
 
 First you see tiles, so you don't have to type everything from scratch:
 
-- **Templates**: **Birthday** (all day, yearly), **Guests for dinner**, **Children's party**, **Sports event**, **Doctor's appointment**, **Performance**, **Day out** and **Holiday / trip**. Each fills in the title, picture, time, length and people. **Start blank** opens the empty editor at the next full hour.
+- **Templates**: **Cleaner**, **Sports event**, **Doctor's appointment**, **Guests for dinner**, **Day out**, **Children's party**, **Performance**, **Holiday / trip** and **Birthday** (all day, yearly); what you use often comes first and the yearly ones last. **Cleaner** is the only weekly template: it repeats every week on the day you choose, at 09:00 for three hours, with a broom as its picture, for the person who enters it. Each fills in the title, picture, time, length and people. **Start blank** opens the empty editor at the next full hour.
 - **Your templates**: the ones you saved yourselves. In the editor, tap **Save as template** at the top; it keeps the title, picture, time, length, people, location and notes, not the date and not the repeat.
 - **Often in your family**: events you have entered at least three times, such as "Grandma & Grandpa visit". WuselWall only counts your own events on your own server; nothing leaves it. Under **⋮** you choose **Keep as template** or **Don't suggest again**.
 

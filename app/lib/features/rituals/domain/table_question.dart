@@ -227,7 +227,8 @@ int? tableWindowStart(
 
 /// The Tischfrage's moment at [now] (specs/27): null outside the meal windows, when
 /// [mode] is `off`, or with nothing to ask. With `warm_meal` (the default) only the
-/// window of that day's warm meal counts, and [warmIsDinner] says which one it is;
+/// window of that day's warm meal counts, and [warmIsDinner] says which one it is
+/// (dinner when the day has none), or both windows on a day [bothWarm] says has two;
 /// `main_meals` asks at both.
 TableMoment? tableMomentAt({
   required DateTime now,
@@ -235,6 +236,7 @@ TableMoment? tableMomentAt({
   required Object? lunch,
   required Object? dinner,
   required bool Function(DateTime day) warmIsDinner,
+  bool Function(DateTime day)? bothWarm,
   required List<TableQuestion> deck,
   required String householdId,
   int? cycleLength,
@@ -255,9 +257,10 @@ TableMoment? tableMomentAt({
   final day = DateTime(now.year, now.month, now.day - back);
   // `main_meals` asks at lunch and dinner; anything else follows the warm meal.
   final warmOnly = (mode ?? 'warm_meal') == 'warm_meal';
-  if (warmOnly && warmIsDinner(day) != isDinner) return null;
+  final twoADay = !warmOnly || (bothWarm?.call(day) ?? false);
+  if (!twoADay && warmIsDinner(day) != isDinner) return null;
   return (
-    window: mealWindowIndex(day, dinner: isDinner, twoADay: !warmOnly),
+    window: mealWindowIndex(day, dinner: isDinner, twoADay: twoADay),
     dinner: isDinner,
     questions: deck,
     householdId: householdId,

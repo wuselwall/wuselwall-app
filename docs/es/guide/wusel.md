@@ -68,7 +68,7 @@ Si el dispositivo tiene activado **Reducir movimiento**, Wusel se queda quieto e
 
 ### Estaciones y celebraciones {#occasions}
 
-El cielo también se adorna en días especiales. Cada ocasión tiene su propio interruptor en **Ajustes → Celebraciones y estaciones** (vista **Avanzados**):
+El cielo también se adorna en días especiales. Cada ocasión tiene su propio interruptor en **Ajustes → Celebraciones y estaciones**; la vista básica muestra las estaciones y las fiestas que celebra vuestra región, todo lo demás está en **Avanzados**:
 
 | Ocasión | Qué cambia | Predeterminado |
 |---|---|---|
@@ -76,11 +76,14 @@ El cielo también se adorna en días especiales. Cada ocasión tiene su propio i
 | **Cumpleaños** | banderines del color de la persona y un gorro de fiesta para Wusel | activado |
 | **Vacaciones escolares** | una cinta, «¡Vacaciones!» el primer día libre y «Mañana vuelve el cole» el último (los fines de semana y festivos justo antes y después también cuentan); en **Hoy** aparece junto al título | activado |
 | **Adviento** | velas en la cabecera, una más cada domingo de Adviento | según vuestra región |
+| **Navidad** | un árbol decorado en la colina del 24 al 26 de diciembre (el 6 y el 7 de enero donde la Navidad sigue el calendario ortodoxo) | según vuestra región |
 | **Pascua** | huevos en las colinas, desde dos días antes hasta dos días después del Domingo de Pascua | según vuestra región |
 | **Pascua ortodoxa** | los mismos huevos en la fecha ortodoxa | según vuestra región |
+| **Fiesta nacional** | la bandera del país en la colina el día de su fiesta nacional, p. ej. el 1 de agosto en Suiza, el 3 de octubre en Alemania, el 26 de octubre en Austria, el 15 de agosto en Liechtenstein | según vuestra región |
+| **San Nicolás** (en alemán suizo **Samichlaus**) | una bota llena el 6 de diciembre (el 5 de diciembre en los Países Bajos) | según vuestra región |
 | **Nochevieja** | pequeños fuegos artificiales en el cielo nocturno el 31 de diciembre y el 1 de enero | desactivado |
 
-«Según vuestra región» quiere decir que WuselWall sigue el país de vuestra región. En España, Alemania o Suiza, Adviento y Pascua están activados y la Pascua ortodoxa desactivada; en los países que celebran la Pascua ortodoxa es al revés. Las dos fechas de Pascua se calculan de nuevo cada año, y una familia puede activar las dos.
+Cada fiesta es un simple interruptor que indica si está activada. «Según vuestra región» quiere decir que, mientras no lo cambiéis, WuselWall sigue el país de vuestra región; la fila muestra entonces **Predeterminado** y el botón de restablecer devuelve el valor de la región. En España, Alemania o Suiza, Adviento, Pascua, Navidad y la fiesta nacional están activados (y San Nicolás en Alemania y Suiza, pero no en España) y la Pascua ortodoxa desactivada; en los países que celebran la Pascua ortodoxa, Adviento y Pascua están desactivados y la Pascua ortodoxa activada. La Navidad está activada en todos los países europeos; donde sigue el calendario ortodoxo (Serbia, Montenegro, Macedonia del Norte, Georgia, Bielorrusia, Rusia), el árbol está el 6 y el 7 de enero. San Nicolás está activado en Alemania, Austria, Suiza, Liechtenstein, Luxemburgo, Bélgica, los Países Bajos, Polonia, Chequia, Eslovaquia, Hungría, Eslovenia y Croacia, y la fiesta nacional en unos 45 países europeos (el país sale de la región). La Nochevieja está desactivada en todas partes. Las dos fechas de Pascua se calculan de nuevo cada año, y una familia puede activar las dos.
 
 ## Sonidos {#sounds}
 

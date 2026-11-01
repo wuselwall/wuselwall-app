@@ -246,7 +246,16 @@ class _WhoAndMeal extends StatelessWidget {
             color: context.ww.sunken,
             borderRadius: BorderRadius.circular(14),
           ),
-          child: MealFacts(board: board, meal: board.days[dayIndex].meal),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: Tokens.space3,
+            children: [
+              for (final meal in board.days[dayIndex].meals)
+                MealFacts(board: board, meal: meal),
+              if (board.days[dayIndex].meals.isEmpty)
+                MealFacts(board: board, meal: null),
+            ],
+          ),
         ),
       ],
     );

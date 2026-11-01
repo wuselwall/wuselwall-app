@@ -68,7 +68,7 @@ Si **Réduire les animations** est activé sur l’appareil, Wusel reste immobil
 
 ### Saisons et fêtes {#occasions}
 
-Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son interrupteur dans **Paramètres → Fêtes et saisons** (vue **Avancés**) :
+Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son interrupteur dans **Paramètres → Fêtes et saisons** ; la vue de base montre les saisons et les fêtes que célèbre votre région, tout le reste est sous **Avancés** :
 
 | Occasion | Ce qui change | Par défaut |
 |---|---|---|
@@ -76,11 +76,14 @@ Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son inte
 | **Anniversaires** | des fanions à la couleur de la personne et un chapeau de fête pour Wusel | activé |
 | **Vacances scolaires** | un ruban, « Vacances ! » le premier jour libre et « Demain, c’est l’école » le dernier (les week-ends et jours fériés juste avant et après comptent aussi) ; sur **Aujourd’hui** il se place à côté du titre | activé |
 | **Avent** | des bougies dans l’en-tête, une de plus chaque dimanche de l’Avent | selon votre région |
+| **Noël** | un sapin décoré sur la colline du 24 au 26 décembre (les 6 et 7 janvier là où Noël suit le calendrier orthodoxe) | selon votre région |
 | **Pâques** | des œufs dans les collines, deux jours avant et après le dimanche de Pâques | selon votre région |
 | **Pâques orthodoxes** | les mêmes œufs à la date orthodoxe | selon votre région |
+| **Fête nationale** | le drapeau du pays sur la colline le jour de sa fête nationale, par ex. le 1er août en Suisse, le 3 octobre en Allemagne, le 26 octobre en Autriche, le 15 août au Liechtenstein | selon votre région |
+| **Saint-Nicolas** (en suisse allemand **Samichlaus**) | une botte remplie le 6 décembre (le 5 décembre aux Pays-Bas) | selon votre région |
 | **Nouvel An** | un petit feu d’artifice dans le ciel de nuit les 31 décembre et 1er janvier | désactivé |
 
-« Selon votre région » : WuselWall suit le pays de votre région. En France, en Allemagne, en Suisse ou en Espagne, l’Avent et Pâques sont activés et les Pâques orthodoxes désactivées ; dans les pays qui fêtent les Pâques orthodoxes, c’est l’inverse. Les deux dates de Pâques sont recalculées chaque année, et une famille peut activer les deux.
+Chaque fête est un simple interrupteur qui indique si elle est activée. « Selon votre région » : tant que vous n’y touchez pas, WuselWall suit le pays de votre région ; la ligne affiche alors **Par défaut**, et le bouton de réinitialisation remet la valeur de la région. En France, en Allemagne, en Suisse ou en Espagne, l’Avent, Pâques, Noël et la fête nationale sont activés (et Saint-Nicolas en Allemagne et en Suisse, mais pas en France ni en Espagne) et les Pâques orthodoxes désactivées ; dans les pays qui fêtent les Pâques orthodoxes, l’Avent et Pâques sont désactivés et les Pâques orthodoxes activées. Noël est activé dans tous les pays européens ; là où il suit le calendrier orthodoxe (Serbie, Monténégro, Macédoine du Nord, Géorgie, Biélorussie, Russie), le sapin se dresse les 6 et 7 janvier. Saint-Nicolas est activé en Allemagne, en Autriche, en Suisse, au Liechtenstein, au Luxembourg, en Belgique, aux Pays-Bas, en Pologne, en Tchéquie, en Slovaquie, en Hongrie, en Slovénie et en Croatie, et la fête nationale dans environ 45 pays européens (le pays vient de la région). Le Nouvel An est désactivé partout. Les deux dates de Pâques sont recalculées chaque année, et une famille peut activer les deux.
 
 ## Les sons {#sounds}
 

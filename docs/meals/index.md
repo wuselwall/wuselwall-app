@@ -63,4 +63,4 @@ Beim Planen einer Mahlzeit schlägt WuselWall passende Rezepte vor (siehe [Vorsc
 
 Ein Tipp auf den Essensbereich zeigt die Mahlzeiten der Woche. Ein Stern markiert ein Wunschessen. Tippst du danach auf einen Punkt, änderst du, wer mitisst.
 
-Die Wand zeigt eine warme Mahlzeit pro Tag. Welche Mahlzeit das ist und wie Schultage und freie Tage zählen, legt ihr unter [Einstellungen → Essen](/settings/household) fest.
+Die Wand zeigt pro Tag die warme Mahlzeit, bei **Beide** Mittag- und Abendessen untereinander, oder bei **Keine** keine. Welche das ist und wie Schultage und freie Tage zählen, legt ihr unter [Einstellungen → Essen](/settings/household) fest.

@@ -166,6 +166,18 @@ SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
     title: l10n.settingAmbienceNewYearTitle,
     help: l10n.settingAmbienceNewYearHelp,
   ),
+  'ambience.christmas' => (
+    title: l10n.settingAmbienceChristmasTitle,
+    help: l10n.settingAmbienceChristmasHelp,
+  ),
+  'ambience.st_nicholas' => (
+    title: l10n.settingAmbienceStNicholasTitle,
+    help: l10n.settingAmbienceStNicholasHelp,
+  ),
+  'ambience.national_day' => (
+    title: l10n.settingAmbienceNationalDayTitle,
+    help: l10n.settingAmbienceNationalDayHelp,
+  ),
   'rituals.countdown_days' => (
     title: l10n.settingRitualsCountdownDaysTitle,
     help: l10n.settingRitualsCountdownDaysHelp,
@@ -218,6 +230,7 @@ String settingValueLabel(AppLocalizations l10n, String value) =>
       'all' => l10n.settingValueAll,
       'none' => l10n.settingValueNone,
       'lunch' => l10n.settingValueLunch,
+      'both' => l10n.settingValueBoth,
       'dinner' => l10n.settingValueDinner,
       'auto' => l10n.settingValueAuto,
       'lively' => l10n.settingValueLively,

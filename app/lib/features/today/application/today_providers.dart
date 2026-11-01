@@ -75,8 +75,7 @@ class TodayAgenda {
   const TodayAgenda({
     required this.events,
     required this.tasks,
-    required this.warmSlot,
-    this.warmMeal,
+    this.warmMeals = const [],
   });
 
   /// Appointments for the acting profile and the whole family, all day first.
@@ -85,11 +84,11 @@ class TodayAgenda {
   /// Open chores of the acting profile, due or open today.
   final List<TaskInstance> tasks;
 
-  /// The slot that is the warm meal today, and what is planned for it, if anything.
-  final PlanSlot warmSlot;
-  final MealEntry? warmMeal;
+  /// Today's warm meals with a dish planned, in the day's order: none, one, or lunch
+  /// and dinner.
+  final List<({PlanSlot slot, MealEntry entry})> warmMeals;
 
-  bool get isEmpty => events.isEmpty && tasks.isEmpty && warmMeal == null;
+  bool get isEmpty => events.isEmpty && tasks.isEmpty && warmMeals.isEmpty;
 }
 
 final todayAgendaProvider = FutureProvider.autoDispose<TodayAgenda>((
@@ -120,15 +119,16 @@ final todayAgendaProvider = FutureProvider.autoDispose<TodayAgenda>((
   // the household's real answer for the wall display.
   final settings =
       ref.watch(householdSettingsProvider).value ?? const <SettingEntry>[];
-  final warmSlot = warmSlotOf(today, settings);
   final entries = await ref.watch(mealEntriesProvider(mondayOf(today)).future);
-  final entry = entryAt(entries, today, warmSlot);
 
   return TodayAgenda(
     events: events,
     tasks: tasks,
-    warmSlot: warmSlot,
-    warmMeal: entry != null && entry.hasDish ? entry : null,
+    warmMeals: [
+      for (final slot in warmSlotsOf(today, settings))
+        if (entryAt(entries, today, slot) case final entry? when entry.hasDish)
+          (slot: slot, entry: entry),
+    ],
   );
 });
 

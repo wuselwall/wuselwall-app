@@ -103,6 +103,8 @@ class EventDraft {
       key: importance == Importance.key,
       recurrence: t.yearly
           ? const Recurrence(kind: RepeatKind.yearly)
+          : t.weekly
+          ? const Recurrence(kind: RepeatKind.weekly)
           : const Recurrence(),
       iconKey: t.kind == EventKind.presence ? null : t.iconKey,
       countdown: t.kind != EventKind.presence && t.countdown,

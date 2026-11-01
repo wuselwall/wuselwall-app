@@ -94,6 +94,31 @@ void main() {
       expect(draft.keyTouched, isFalse);
     });
 
+    test('the cleaner comes weekly on the day, for whoever enters it', () {
+      final t = EventStarter.cleaning.template(
+        title: 'Putzhilfe',
+        members: _family,
+        actor: 'p-1',
+      );
+      final draft = EventDraft.fromTemplate(
+        t,
+        day: _day,
+        defaultHour: 10,
+        activeMembers: {'p-1', 'p-2', 'p-3'},
+      );
+      expect(draft.start, DateTime(2026, 10, 14, 9));
+      expect(draft.end, DateTime(2026, 10, 14, 12));
+      expect(draft.recurrence.kind, RepeatKind.weekly);
+      expect(draft.recurrence.toRrule(draft.start), 'FREQ=WEEKLY;BYDAY=WE');
+      expect(draft.iconKey, 'broom');
+      expect(draft.attendeeIds, {'p-1'});
+    });
+
+    test('what a family enters often comes first, the yearly last', () {
+      expect(EventStarter.values.first, EventStarter.cleaning);
+      expect(EventStarter.values.last, EventStarter.birthday);
+    });
+
     test('guests for dinner start at 18:30 and last three hours', () {
       final t = EventStarter.guestDinner.template(
         title: 'Gäste',

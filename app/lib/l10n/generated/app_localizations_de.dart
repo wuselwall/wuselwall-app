@@ -1011,6 +1011,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingValueLunch => 'Mittagessen';
 
   @override
+  String get settingValueBoth => 'Beide';
+
+  @override
   String get settingValueDinner => 'Abendessen';
 
   @override
@@ -1098,7 +1101,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingMealsSchoolDayHelp =>
-      'Die eine warme Mahlzeit auf der Küchenwand. An Schultagen essen Kinder mittags in der Schule oder im Hort.';
+      'Die warme Mahlzeit auf der Küchenwand: mittags, abends, beide oder keine. An Schultagen essen Kinder mittags oft in der Schule oder im Hort.';
 
   @override
   String get settingMealsFreeDayTitle => 'Warmes Essen an freien Tagen';
@@ -5231,21 +5234,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingAmbienceAdventHelp =>
-      'Kerzen in der Kopfzeile, an jedem der vier Sonntage vor Weihnachten eine mehr. Automatisch: nach eurer Region.';
+      'Kerzen in der Kopfzeile, an jedem der vier Sonntage vor Weihnachten eine mehr.';
 
   @override
   String get settingAmbienceEasterWesternTitle => 'Ostern';
 
   @override
   String get settingAmbienceEasterWesternHelp =>
-      'Eier in den Hügeln, zwei Tage vor bis zwei Tage nach dem Ostersonntag. Automatisch: nach eurer Region.';
+      'Eier in den Hügeln, zwei Tage vor bis zwei Tage nach dem Ostersonntag.';
 
   @override
   String get settingAmbienceEasterOrthodoxTitle => 'Orthodoxes Ostern';
 
   @override
   String get settingAmbienceEasterOrthodoxHelp =>
-      'Dieselben Eier am orthodoxen Datum, das für jedes Jahr berechnet wird. Automatisch: nach eurer Region.';
+      'Dieselben Eier am orthodoxen Datum, das für jedes Jahr berechnet wird.';
 
   @override
   String get settingAmbienceNewYearTitle => 'Silvester';
@@ -5253,6 +5256,27 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingAmbienceNewYearHelp =>
       'Kleines Feuerwerk am Nachthimmel am 31. Dezember und 1. Januar.';
+
+  @override
+  String get settingAmbienceChristmasTitle => 'Weihnachten';
+
+  @override
+  String get settingAmbienceChristmasHelp =>
+      'Ein geschmückter Baum auf dem Hügel vom 24. bis 26. Dezember (am 6. und 7. Januar, wo Weihnachten nach dem orthodoxen Kalender gefeiert wird).';
+
+  @override
+  String get settingAmbienceStNicholasTitle => 'Nikolaus';
+
+  @override
+  String get settingAmbienceStNicholasHelp =>
+      'Ein gefüllter Stiefel am 6. Dezember (in den Niederlanden am 5.).';
+
+  @override
+  String get settingAmbienceNationalDayTitle => 'Nationalfeiertag';
+
+  @override
+  String get settingAmbienceNationalDayHelp =>
+      'Die Flagge eures Landes auf dem Hügel an seinem Nationalfeiertag, etwa am 1. August in der Schweiz. Das Land kommt aus eurer Region.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Vorfreude beginnt';
@@ -5781,6 +5805,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eventIcon_house => 'Zuhause';
+
+  @override
+  String get eventIcon_broom => 'Putzen';
 
   @override
   String get eventIcon_star => 'Besonderes';
@@ -6381,6 +6408,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eventStarterHoliday => 'Urlaub / Reise';
+
+  @override
+  String get eventStarterCleaning => 'Putzhilfe';
 
   @override
   String get eventTemplateAllDay => 'Ganztägig';
@@ -7018,6 +7048,9 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
   String memberDeactivateBody(String name) {
     return '$name verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Ämtli. Verlauf und Punkte bleiben, und du kannst die Person hier zurückholen.';
   }
+
+  @override
+  String get settingAmbienceStNicholasTitle => 'Samichlaus';
 
   @override
   String get settingValueMainMeals => 'Zmittag und Znacht';

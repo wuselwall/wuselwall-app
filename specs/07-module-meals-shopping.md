@@ -47,7 +47,9 @@ and needs a defaulting rule rather than an empty multi-select nobody fills in.
   seven days at once — **one warm meal per day** (Mittag at the weekend, Abend on school
   days, with the slot named in the cell) plus, per member, whether they are eating at home
   (FR-8.4). The household eats one cooked meal a day; showing four slots on the wall would
-  be three rows of "Hort" and "Schulbrot". Read-only, and the reason `attendee_profile_ids` and `cook_profile_id` are
+  be three rows of "Hort" and "Schulbrot". A family that cooks at lunch and dinner sets
+  `meals.warm_meal.*` to *both* and the cell holds lunch above dinner; one that never cooks
+  sets *none* (2026-11-01). Read-only, and the reason `attendee_profile_ids` and `cook_profile_id` are
   worth filling in: on the wall they answer "wie viele koche ich heute?" without anyone
   asking. See [09](09-clients-and-ux.md#the-week-board).
   **Defaulting rule:** everyone is eating at home unless something says otherwise. A

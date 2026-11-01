@@ -211,8 +211,8 @@ Turning any of these on is one deliberate checkbox on that token
 
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
-| `meals.warm_meal.school_day` | household | dinner | lunch · dinner | The one warm meal on the board. On school days children eat lunch at school or Hort | FR-8.4 |
-| `meals.warm_meal.free_day` | household | lunch | lunch · dinner | Weekends and holidays | FR-8.4 |
+| `meals.warm_meal.school_day` | household | dinner | lunch · dinner · both · none | The warm meal on the board. On school days children often eat lunch at school or Hort. *Both and none added 2026-11-01*: both puts lunch above dinner in the board's cell (`days[i].meals`), none leaves the day's meal row empty; what needs one meal (a wish, the Tischfrage at the warm meal when not both) takes dinner | FR-8.4 |
+| `meals.warm_meal.free_day` | household | lunch | lunch · dinner · both · none | Weekends and holidays | FR-8.4 |
 | `meals.away_means_not_eating` | household | on | on · off | `travel` or `away` presence over the meal's slot marks that member as not eating, so most days need no input | [07](07-module-meals-shopping.md#views) |
 | `meals.care_lunch_cutoff` | household | 14:00 | time | A child whose care row runs past this time is out for lunch | [07](07-module-meals-shopping.md#views) |
 
@@ -275,7 +275,8 @@ Everything else here is under **Erweitert**, including each occasion and the pix
 | `device.sky` | device | on | on · off | The time-of-day sky behind the board's and Today's header | [26](26-colour-and-ambience.md#day-phases) |
 | `device.pixel_shift` | device | `auto`: kiosk on, others off | auto · on · off | Shifts the whole screen by up to 2 px every 10 minutes against OLED burn-in. The OS's own protection does not cover a static full-screen app. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#protecting-the-wall), Q54 |
 | `ambience.season`, `ambience.birthdays`, `ambience.ferien` | household | on | on · off | Seasons, birthday bunting and the holidays' first and last day in the sky | [26](26-colour-and-ambience.md#seasons-and-occasions) |
-| `ambience.advent`, `ambience.easter_western`, `ambience.easter_orthodox` | household | `auto`: by the country of `household.region` | auto · on · off | Easter is computed each year, Western and Orthodox separately. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#defaults-per-country), Q52 |
+| `ambience.advent`, `ambience.easter_western`, `ambience.easter_orthodox` | household | `auto`: by the country of `household.region` | auto · on · off | Easter is computed each year, Western and Orthodox separately. *Decided 2026-10-24.* Since 2026-11-01 the app shows every `auto · on · off` holiday as a switch that shows what `auto` means in the family's country; a change writes `on` or `off`, the row's reset goes back to `auto` | [26](26-colour-and-ambience.md#defaults-per-country), Q52 |
+| `ambience.christmas`, `ambience.st_nicholas`, `ambience.national_day` | household | `auto`: by the country of `household.region` | auto · on · off | A tree from 24 to 26 December (6–7 January by the Julian calendar), Saint Nicholas' boot on 6 December (5th in NL), the country's flag on its national day. *Added 2026-11-01* | [26](26-colour-and-ambience.md#defaults-per-country) |
 | `ambience.new_year` | household | off | on · off | Small fireworks in the night sky on 31 December and 1 January | [26](26-colour-and-ambience.md#seasons-and-occasions) |
 | `rituals.countdown_days` | household | 14 | 7–60 | How far ahead Vorfreude starts counting | [27](27-family-rituals.md#vorfreude) |
 | `rituals.countdown_return` | household | on | on · off | "Papa ist in 2× schlafen zurück" for an adult's travel of two nights or more | [27](27-family-rituals.md#vorfreude) |
@@ -300,15 +301,18 @@ a test checks that every key with a title is placed in exactly one group.
 | Calendar and school | `calendar.members_edit_own_events`, `calendar.key_default`, `school.*` · Connections (Advanced): calendar feeds, subscribed calendars |
 | Meals | `meals.*`, including the wishes |
 | Rituals | table question (`rituals.table_question*`, "Our questions") · `rituals.week_review` · countdowns (`rituals.countdown_*`) |
-| Celebrations and seasons | holiday celebrations (`ambience.advent`, `.easter_*`, `.new_year`) · through the year (`ambience.season`, `.ferien`, `.birthdays`) |
+| Celebrations and seasons | through the year (`ambience.season`, `.ferien`, `.birthdays`) · holidays in the year's order (`ambience.easter_*`, `.national_day`, `.st_nicholas`, `.advent`, `.christmas`, `.new_year`) |
 | Kitchen wall | `board.*` |
 | Devices | this device: language, appearance, `device.*` · all devices: the list, connect, rename, revoke |
 | Account and security (personal phone only) | sign-in methods, password, two-factor, PIN, passkeys, leaving the family, deleting the account |
 | Server (Advanced, builds that chose a server) | address and QR code, switching server |
 | Help and about | getting started, versions, licences |
 
-*Basic* shows the keys of `basicSettingKeys` (unchanged by the regrouping) and the rows a family
-needs; Account and security shows all its rows in Basic on a personal phone (sign-in, password,
+*Basic* shows the keys of `basicSettingKeys` (unchanged by the regrouping; `ambience.season`
+added 2026-11-01, so Basic never shows holidays without the seasons) and the rows a family
+needs. The holidays are not in that list: Basic shows the ones on by default in the family's
+country and any the family changed (a switch never disappears under the finger); the others,
+such as Orthodox Easter in Switzerland or Silvester anywhere, wait under Advanced; Account and security shows all its rows in Basic on a personal phone (sign-in, password,
 two-factor, PIN, leaving, deleting: a parent looking for the password should not need Advanced).
 A group's subtitle on the top page names only what its page shows in the current view. The
 "Erweitert" chip in the app bar is the one switch; a Basic page that hides rows ends with one

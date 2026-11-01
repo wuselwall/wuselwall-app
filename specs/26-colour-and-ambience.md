@@ -136,9 +136,12 @@ never jumps while someone is looking.
 
 ### Seasons and occasions
 
-A catalogue of date rules in the app (`app/lib/core/ambience/occasions.dart`). Every
-occasion has its own switch under *Erweitert*, and its default comes from the household's
-country ([Settings](#settings), [defaults per country](#defaults-per-country)):
+A catalogue of date rules in the app (`app/lib/features/wusel/application/ambience.dart`).
+Every occasion has its own switch under *Feste & Jahreszeiten*, and its default comes from
+the household's country ([Settings](#settings), [defaults per country](#defaults-per-country)).
+The switch shows what applies, the country's default included; *Einfach* shows the seasons
+and the holidays the country celebrates, *Erweitert* the rest
+([21](21-household-settings.md#where-the-settings-live)):
 
 | Occasion | When | What changes |
 |---|---|---|
@@ -148,6 +151,9 @@ country ([Settings](#settings), [defaults per country](#defaults-per-country)):
 | Advent | The four Sundays before 24 December through the 24th | A candle row in the header; one more lit each Advent Sunday |
 | Ostern | Easter Sunday ± 2 days, **computed for each year**: Western Easter with the Gregorian computus, Orthodox Easter with the Julian computus converted to the Gregorian calendar. The two coincide in some years and are up to five weeks apart in others | Eggs in the hill layer |
 | Silvester / Neujahr | 31 Dec – 1 Jan | Small fireworks in the night sky (static under reduce motion) |
+| Weihnachten | 24–26 Dec; 6–7 Jan where the church keeps the Julian calendar (RS, ME, MK, GE, BY, RU) | A decorated tree on the hill, left of the Advent candles. *Added 2026-11-01* |
+| Nikolaus / Samichlaus | 6 Dec; 5 Dec in the Netherlands (Sinterklaas) | A filled boot on the hill. *Added 2026-11-01* |
+| Nationalfeiertag | The country's national day (`nationalDays` in `ambience.dart`: CH 1 Aug, DE 3 Oct, AT 26 Oct, LI 15 Aug, …; King's Day moves to 26 Apr when the 27th is a Sunday) | The country's flag on a pole on the hill, simplified to stripes or a cross (`NationalFlags` in the palette); a pennant where a flag does not simplify (an emblem, a map, a triangle). *Added 2026-11-01* |
 
 #### Defaults per country
 
@@ -158,6 +164,8 @@ the date alone, with no table to download. The country is the first part of
 | Country of the region | On by default | Off by default |
 |---|---|---|
 | Every country | Season, birthday, Ferien | Silvester / Neujahr |
+| The ~45 European countries with a Western or Orthodox default | Weihnachten, Nationalfeiertag | |
+| DE, AT, CH, LI, LU, BE, NL, PL, CZ, SK, HU, SI, HR | Nikolaus | |
 | DE, AT, CH, LI, and the other countries whose public Easter holiday follows the Western date (FR, ES, IT, NL, BE, LU, PL, CZ, …) | Advent, Ostern (Western) | Ostern (Orthodox) |
 | GR, CY, RO, BG, RS, ME, MK, and the other countries whose public Easter holiday follows the Orthodox date | Ostern (Orthodox) | Advent, Ostern (Western) |
 | A region without a country default | Only the "every country" row | Everything else |

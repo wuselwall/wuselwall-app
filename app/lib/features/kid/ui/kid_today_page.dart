@@ -718,7 +718,7 @@ class _SchoolSection extends ConsumerWidget {
   }
 }
 
-/// Tonight's (or lunch's) warm meal from the week board, and whether the child eats it.
+/// Today's warm meals from the week board, and whether the child eats them.
 class _MealSection extends ConsumerWidget {
   const _MealSection({required this.actor});
 
@@ -729,14 +729,11 @@ class _MealSection extends ConsumerWidget {
     final l10n = context.l10n;
     final today = ref.watch(kidTodayProvider);
     final board = ref.watch(boardProvider).board;
-    final meal = board?.days.where((d) => d.date == today).firstOrNull?.meal;
-    if (meal == null) return const SizedBox.shrink();
-    final text = switch ((meal.slot, meal.title)) {
-      (MealSlot.dinner, final String dish) => l10n.kidMealDinner(dish),
-      (MealSlot.lunch, final String dish) => l10n.kidMealLunch(dish),
-      (MealSlot.dinner, null) => l10n.kidMealNoneDinner,
-      (MealSlot.lunch, null) => l10n.kidMealNoneLunch,
-    };
+    final meals =
+        board?.days.where((d) => d.date == today).firstOrNull?.meals ??
+        const <BoardMeal>[];
+    if (meals.isEmpty) return const SizedBox.shrink();
+    final theme = Theme.of(context);
     return KidCard(
       child: Row(
         children: [
@@ -746,16 +743,28 @@ class _MealSection extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  text,
-                  style: Theme.of(context).textTheme.titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                if (meal.eating.contains(actor))
+                // Lunch, then dinner, when both are warm.
+                for (final meal in meals) ...[
                   Text(
-                    l10n.kidMealEatingYou,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    switch ((meal.slot, meal.title)) {
+                      (MealSlot.dinner, final String dish) =>
+                        l10n.kidMealDinner(dish),
+                      (MealSlot.lunch, final String dish) => l10n.kidMealLunch(
+                        dish,
+                      ),
+                      (MealSlot.dinner, null) => l10n.kidMealNoneDinner,
+                      (MealSlot.lunch, null) => l10n.kidMealNoneLunch,
+                    },
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
+                  if (meal.eating.contains(actor))
+                    Text(
+                      l10n.kidMealEatingYou,
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                ],
               ],
             ),
           ),

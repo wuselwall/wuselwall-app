@@ -1838,6 +1838,12 @@ abstract class AppLocalizations {
   /// **'Lunch'**
   String get settingValueLunch;
 
+  /// No description provided for @settingValueBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Both'**
+  String get settingValueBoth;
+
   /// No description provided for @settingValueDinner.
   ///
   /// In en, this message translates to:
@@ -1985,7 +1991,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingMealsSchoolDayHelp.
   ///
   /// In en, this message translates to:
-  /// **'The one warm meal on the kitchen wall. On school days children eat lunch at school or at after-school care.'**
+  /// **'The warm meal on the kitchen wall: lunch, dinner, both or none. On school days children often eat lunch at school or at after-school care.'**
   String get settingMealsSchoolDayHelp;
 
   /// No description provided for @settingMealsFreeDayTitle.
@@ -8854,7 +8860,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingAmbienceAdventHelp.
   ///
   /// In en, this message translates to:
-  /// **'Candles in the header, one more on each of the four Sundays before Christmas. Automatic: by your region.'**
+  /// **'Candles in the header, one more on each of the four Sundays before Christmas.'**
   String get settingAmbienceAdventHelp;
 
   /// No description provided for @settingAmbienceEasterWesternTitle.
@@ -8866,7 +8872,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingAmbienceEasterWesternHelp.
   ///
   /// In en, this message translates to:
-  /// **'Eggs in the hills from two days before to two days after Easter Sunday. Automatic: by your region.'**
+  /// **'Eggs in the hills from two days before to two days after Easter Sunday.'**
   String get settingAmbienceEasterWesternHelp;
 
   /// No description provided for @settingAmbienceEasterOrthodoxTitle.
@@ -8878,7 +8884,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingAmbienceEasterOrthodoxHelp.
   ///
   /// In en, this message translates to:
-  /// **'The same eggs on the Orthodox date, which is calculated for every year. Automatic: by your region.'**
+  /// **'The same eggs on the Orthodox date, which is calculated for every year.'**
   String get settingAmbienceEasterOrthodoxHelp;
 
   /// No description provided for @settingAmbienceNewYearTitle.
@@ -8892,6 +8898,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Small fireworks in the night sky on 31 December and 1 January.'**
   String get settingAmbienceNewYearHelp;
+
+  /// No description provided for @settingAmbienceChristmasTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Christmas'**
+  String get settingAmbienceChristmasTitle;
+
+  /// No description provided for @settingAmbienceChristmasHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A decorated tree on the hill from 24 to 26 December (6 and 7 January where Christmas follows the Orthodox calendar).'**
+  String get settingAmbienceChristmasHelp;
+
+  /// No description provided for @settingAmbienceStNicholasTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saint Nicholas'**
+  String get settingAmbienceStNicholasTitle;
+
+  /// No description provided for @settingAmbienceStNicholasHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A filled boot on 6 December (5 December in the Netherlands).'**
+  String get settingAmbienceStNicholasHelp;
+
+  /// No description provided for @settingAmbienceNationalDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'National day'**
+  String get settingAmbienceNationalDayTitle;
+
+  /// No description provided for @settingAmbienceNationalDayHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your country\'s flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.'**
+  String get settingAmbienceNationalDayHelp;
 
   /// No description provided for @settingRitualsCountdownDaysTitle.
   ///
@@ -9720,6 +9762,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home'**
   String get eventIcon_house;
+
+  /// No description provided for @eventIcon_broom.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get eventIcon_broom;
 
   /// No description provided for @eventIcon_star.
   ///
@@ -10775,6 +10823,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Holiday / trip'**
   String get eventStarterHoliday;
+
+  /// No description provided for @eventStarterCleaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaner'**
+  String get eventStarterCleaning;
 
   /// Part of a template tile's line: an all-day event.
   ///

@@ -846,7 +846,7 @@ const _catalogue = <_Definition>[
     type: SettingType.enumeration,
     defaultValue: 'dinner',
     constraints: {
-      'values': ['lunch', 'dinner'],
+      'values': ['lunch', 'dinner', 'both', 'none'],
     },
     selfService: false,
   ),
@@ -856,7 +856,7 @@ const _catalogue = <_Definition>[
     type: SettingType.enumeration,
     defaultValue: 'lunch',
     constraints: {
-      'values': ['lunch', 'dinner'],
+      'values': ['lunch', 'dinner', 'both', 'none'],
     },
     selfService: false,
   ),
@@ -1077,6 +1077,36 @@ const _catalogue = <_Definition>[
     type: SettingType.boolean,
     defaultValue: false,
     constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'ambience.christmas',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'ambience.st_nicholas',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'ambience.national_day',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
     selfService: false,
   ),
   (

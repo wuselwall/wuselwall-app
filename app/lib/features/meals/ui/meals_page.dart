@@ -291,19 +291,21 @@ class _DayCell extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
     final today = DateTime.now();
     final isToday = _sameDay(date, today);
-    final warm = ref.watch(warmSlotProvider(date));
+    // None, one, or lunch and dinner (`meals.warm_meal.*`).
+    final warm = ref.watch(warmSlotsProvider(date));
     final dayEntries = [
       for (final e in entries)
         if (_sameDay(e.onDate, date)) e,
     ];
-    final warmEntry = dayEntries.where((e) => e.slot == warm).firstOrNull;
     final others = [
       for (final e in dayEntries)
-        if (e.slot != warm && (e.hasDish || e.eatingOverrides.isNotEmpty)) e,
+        if (!warm.contains(e.slot) &&
+            (e.hasDish || e.eatingOverrides.isNotEmpty))
+          e,
     ];
     final freeSlots = [
       for (final s in PlanSlot.values)
-        if (s != warm && !others.any((e) => e.slot == s)) s,
+        if (!warm.contains(s) && !others.any((e) => e.slot == s)) s,
     ];
     // A tradition's meal on its day, while that meal is still open (specs/27).
     final traditionMeals = [
@@ -315,7 +317,7 @@ class _DayCell extends ConsumerWidget {
 
     return DragTarget<_MealRef>(
       onWillAcceptWithDetails: (d) =>
-          !(_sameDay(d.data.date, date) && d.data.slot == warm),
+          !(_sameDay(d.data.date, date) && warm.contains(d.data.slot)),
       onAcceptWithDetails: (d) =>
           _move(context, ref, d.data, toDate: date, toSlot: d.data.slot),
       builder: (context, candidates, _) {
@@ -348,14 +350,18 @@ class _DayCell extends ConsumerWidget {
                   ),
                 ),
               ),
-              _SlotCard(
-                date: date,
-                slot: warm,
-                entry: warmEntry,
-                prominent: true,
-              ),
-              for (final e in others) ...[
-                const SizedBox(height: Tokens.space2),
+              for (final (i, slot) in warm.indexed) ...[
+                if (i > 0) const SizedBox(height: Tokens.space2),
+                _SlotCard(
+                  date: date,
+                  slot: slot,
+                  entry: dayEntries.where((e) => e.slot == slot).firstOrNull,
+                  prominent: true,
+                ),
+              ],
+              for (final (i, e) in others.indexed) ...[
+                if (i > 0 || warm.isNotEmpty)
+                  const SizedBox(height: Tokens.space2),
                 _SlotCard(date: date, slot: e.slot, entry: e),
               ],
               for (final s in traditionMeals)
@@ -365,7 +371,7 @@ class _DayCell extends ConsumerWidget {
                     alignment: AlignmentDirectional.centerStart,
                     child: _TraditionMealChip(
                       suggestion: s,
-                      warm: s.slot == warm,
+                      warm: warm.contains(s.slot),
                       onPressed: () => _planTradition(context, ref, s),
                     ),
                   ),

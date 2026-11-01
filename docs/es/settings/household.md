@@ -4,7 +4,7 @@ En **Ajustes**, adapta WuselWall a tu familia. La página es una lista corta de 
 
 <Shot name="settings-phone" alt="Ajustes: la lista de grupos, de Personal a Ayuda e información" />
 
-La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal, recordatorios y fiestas (Adviento, Pascua, Pascua ortodoxa, Nochevieja). **Avanzados**, que se activa arriba a la derecha, muestra el resto; una línea al final de la página avisa de lo que está oculto. Un grupo en el que la vista no muestra nada no aparece en la lista. Los ajustes ocultos siguen activos.
+La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal, recordatorios, las estaciones y las fiestas que celebra vuestra región (en Suiza, por ejemplo, Pascua, Fiesta nacional, San Nicolás, Adviento y Navidad), más cada fiesta que hayáis cambiado vosotros. Las fiestas desactivadas por defecto en vuestra región (por ejemplo la Pascua ortodoxa en Suiza, o la Nochevieja), además de las vacaciones y los cumpleaños, están en **Avanzados**. **Avanzados**, que se activa arriba a la derecha, muestra el resto; una línea al final de la página avisa de lo que está oculto. Un grupo en el que la vista no muestra nada no aparece en la lista. Los ajustes ocultos siguen activos.
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 
@@ -14,9 +14,9 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 - **Familia**: el **perfil de la familia** (nombre, zona horaria, exportación, eliminar), la **región** de festivos y vacaciones, los **miembros** y la **semana habitual**. Se elige al añadir el primer colegio y se cambia aquí.
 - **Tareas y recompensas**: puntos de obligaciones y bonus, tipo inicial, revisión, comodines mensuales y aprobación de recompensas.
 - **Calendario y colegio**: cambios de niños, eventos nuevos en la pared, avisos de cambios escolares y material. La vista **Avanzados** añade **Compartir y conexiones**: compartir el calendario familiar y calendarios externos.
-- **Comidas**: comida caliente según días de colegio o libres, ausencia como no comer, cuidado extraescolar para el almuerzo y comida deseada.
+- **Comidas**: qué comida es la caliente en días lectivos y en días libres: **Almuerzo**, **Cena**, **Ambas** o **Ninguno** (predeterminado: cena en días lectivos, almuerzo en días libres). Con **Ambas**, el almuerzo y la cena aparecen juntos como comidas principales del día en la pared, en el plan de comidas y en **Hoy**, y la pregunta en la mesa se hace en las dos; con **Ninguno**, la fila de comidas de la pared queda vacía ese día, la pregunta en la mesa va con la cena y una comida deseada se planifica en la cena. Además: ausencia como no comer, cuidado extraescolar para el almuerzo y comida deseada.
 - **Rituales**: pregunta en la mesa, nuestra semana y cuentas atrás, ver [más abajo](#rituals).
-- **Celebraciones y estaciones** (Avanzados): las decoraciones del cielo para las **Fiestas** (Adviento, Pascua, Pascua ortodoxa, Nochevieja) y **A lo largo del año** (estaciones, vacaciones, cumpleaños).
+- **Celebraciones y estaciones**: las decoraciones del cielo, primero **A lo largo del año** (estaciones, vacaciones, cumpleaños) y luego las **Fiestas** (Pascua, Pascua ortodoxa, Fiesta nacional, San Nicolás, Adviento, Navidad, Nochevieja).
 - **Pantalla de la cocina** (Avanzados): nombres completos o iniciales en la pared, paso a la semana siguiente y límites entre mañana/tarde/noche.
 - **Dispositivos**: **Este dispositivo** (idioma, apariencia, horario nocturno y los ajustes de Wusel, los sonidos, el cielo y la protección contra quemaduras, ver [más abajo](#this-device)) y **Todos los dispositivos** (conectar, renombrar, bloquear).
 - **Cuenta y seguridad** (solo en tu propio teléfono, completa en ambas vistas): inicio de sesión, contraseña, doble factor, PIN, clave de acceso, salir de la familia y eliminar la cuenta (ver [Cuenta y familia](/es/settings/account) y [Seguridad](/es/settings/security)).
@@ -50,7 +50,7 @@ Debajo de los rituales, **Nuestras preguntas** lleva a las preguntas propias de 
 
 <Shot name="settings-rituals" alt="El grupo Rituales en la vista Avanzados: la pregunta en la mesa con sus horas" />
 
-En el grupo **Celebraciones y estaciones** (vista **Avanzados**) activas o desactivas uno a uno los adornos del cielo: **Estaciones**, **Cumpleaños**, **Vacaciones escolares**, **Adviento**, **Pascua**, **Pascua ortodoxa** y **Nochevieja**. Qué muestra cada ocasión y cuáles están activadas según vuestra región se explica en [Wusel y los colores](/es/guide/wusel#occasions).
+En el grupo **Celebraciones y estaciones** activas o desactivas uno a uno los adornos del cielo: primero, en **A lo largo del año**, **Estaciones**, **Vacaciones escolares** y **Cumpleaños**; luego, en **Fiestas**, **Pascua**, **Pascua ortodoxa**, **Fiesta nacional**, **San Nicolás**, **Adviento**, **Navidad** y **Nochevieja**. Cada fiesta es un simple interruptor que indica si está activada. Mientras no lo cambies, sigue el país de vuestra región (la fila muestra **Predeterminado** y el botón de restablecer la devuelve al valor de la región). La vista básica muestra **Estaciones** y las fiestas que vuestra región celebra por defecto; las demás fiestas, las **Vacaciones escolares** y los **Cumpleaños** solo están en **Avanzados**. Qué muestra cada ocasión y cuáles están activadas según vuestra región se explica en [Wusel y los colores](/es/guide/wusel#occasions).
 
 ## Este dispositivo {#this-device}
 

@@ -1005,6 +1005,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingValueLunch => 'Lunch';
 
   @override
+  String get settingValueBoth => 'Both';
+
+  @override
   String get settingValueDinner => 'Dinner';
 
   @override
@@ -1089,7 +1092,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingMealsSchoolDayHelp =>
-      'The one warm meal on the kitchen wall. On school days children eat lunch at school or at after-school care.';
+      'The warm meal on the kitchen wall: lunch, dinner, both or none. On school days children often eat lunch at school or at after-school care.';
 
   @override
   String get settingMealsFreeDayTitle => 'Warm meal on free days';
@@ -5189,21 +5192,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingAmbienceAdventHelp =>
-      'Candles in the header, one more on each of the four Sundays before Christmas. Automatic: by your region.';
+      'Candles in the header, one more on each of the four Sundays before Christmas.';
 
   @override
   String get settingAmbienceEasterWesternTitle => 'Easter';
 
   @override
   String get settingAmbienceEasterWesternHelp =>
-      'Eggs in the hills from two days before to two days after Easter Sunday. Automatic: by your region.';
+      'Eggs in the hills from two days before to two days after Easter Sunday.';
 
   @override
   String get settingAmbienceEasterOrthodoxTitle => 'Orthodox Easter';
 
   @override
   String get settingAmbienceEasterOrthodoxHelp =>
-      'The same eggs on the Orthodox date, which is calculated for every year. Automatic: by your region.';
+      'The same eggs on the Orthodox date, which is calculated for every year.';
 
   @override
   String get settingAmbienceNewYearTitle => 'New Year\'s Eve';
@@ -5211,6 +5214,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingAmbienceNewYearHelp =>
       'Small fireworks in the night sky on 31 December and 1 January.';
+
+  @override
+  String get settingAmbienceChristmasTitle => 'Christmas';
+
+  @override
+  String get settingAmbienceChristmasHelp =>
+      'A decorated tree on the hill from 24 to 26 December (6 and 7 January where Christmas follows the Orthodox calendar).';
+
+  @override
+  String get settingAmbienceStNicholasTitle => 'Saint Nicholas';
+
+  @override
+  String get settingAmbienceStNicholasHelp =>
+      'A filled boot on 6 December (5 December in the Netherlands).';
+
+  @override
+  String get settingAmbienceNationalDayTitle => 'National day';
+
+  @override
+  String get settingAmbienceNationalDayHelp =>
+      'Your country\'s flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Start looking forward';
@@ -5737,6 +5761,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventIcon_house => 'Home';
+
+  @override
+  String get eventIcon_broom => 'Cleaning';
 
   @override
   String get eventIcon_star => 'Special';
@@ -6336,6 +6363,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventStarterHoliday => 'Holiday / trip';
+
+  @override
+  String get eventStarterCleaning => 'Cleaner';
 
   @override
   String get eventTemplateAllDay => 'All day';

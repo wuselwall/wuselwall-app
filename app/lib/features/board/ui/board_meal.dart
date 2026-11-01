@@ -25,7 +25,7 @@ class MealRow extends StatelessWidget {
       label: [
         context.l10n.boardZoneMeal,
         for (final day in board.days)
-          if (day.meal case final meal?) ...[
+          for (final meal in day.meals) ...[
             context.fullDate(day.date),
             meal.title ?? context.l10n.boardMealNothingPlanned,
             if (board.member(meal.wishedBy ?? '') case final wisher?)
@@ -83,55 +83,70 @@ class MealRow extends StatelessWidget {
             ),
           ),
           for (var i = 0; i < BoardGeometry.dayCount; i++)
-            if (board.days[i].meal case final meal?)
+            if (board.days[i].meals case final meals when meals.isNotEmpty)
               Positioned(
                 left: g.left(i),
                 width: g.width(i),
                 top: 0,
                 bottom: 0,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
-                  child: LayoutBuilder(
-                    builder: (context, c) {
-                      // Measured at the real scaler: the time and the cook, the
-                      // dish on one line or two, then the dots (and guests).
-                      final line = MediaQuery.textScalerOf(context)
-                          .scale(24 * 1.1);
-                      final oneLine =
-                          line +
-                          2 +
-                          line +
-                          4 +
-                          _metaHeight(context, board, meal, c);
-                      if (c.maxHeight < oneLine) {
-                        return Align(
-                          alignment: Alignment.centerLeft,
-                          child: _Dish(
-                            meal: meal,
-                            twoLines: false,
-                            wishInk: _wishInk(context, board, meal),
-                          ),
-                        );
-                      }
-                      return ClipFit(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          width: c.maxWidth,
-                          child: _MealCell(
-                            board: board,
-                            meal: meal,
-                            twoLines: c.maxHeight >= oneLine + line,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                // Lunch above dinner when both are warm, each in half the row.
+                child: Column(
+                  children: [
+                    for (final meal in meals)
+                      Expanded(
+                        child: _MealSlotCell(board: board, meal: meal),
+                      ),
+                  ],
                 ),
               ),
         ],
       ),
     );
   }
+}
+
+/// One warm meal in its day's column: the full cell where the row is tall enough,
+/// otherwise the dish alone on one line.
+class _MealSlotCell extends StatelessWidget {
+  const _MealSlotCell({required this.board, required this.meal});
+
+  final WeekBoard board;
+  final BoardMeal meal;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
+    child: LayoutBuilder(
+      builder: (context, c) {
+        // Measured at the real scaler: the time and the cook, the dish on one line
+        // or two, then the dots (and guests).
+        final line = MediaQuery.textScalerOf(context).scale(24 * 1.1);
+        final oneLine =
+            line + 2 + line + 4 + _metaHeight(context, board, meal, c);
+        if (c.maxHeight < oneLine) {
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: _Dish(
+              meal: meal,
+              twoLines: false,
+              wishInk: _wishInk(context, board, meal),
+            ),
+          );
+        }
+        return ClipFit(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: c.maxWidth,
+            child: _MealCell(
+              board: board,
+              meal: meal,
+              twoLines: c.maxHeight >= oneLine + line,
+            ),
+          ),
+        );
+      },
+    ),
+  );
 }
 
 /// One day's meal: the slot as a sun or moon with its time (and guests), the dish on up

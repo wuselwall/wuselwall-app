@@ -160,21 +160,22 @@ class _Agenda extends ConsumerWidget {
           _Header(title: l10n.todayTasksTitle),
           _Block(children: [for (final t in agenda.tasks) _TaskRow(task: t)]),
         ],
-        if (agenda.warmMeal case final meal?) ...[
+        if (agenda.warmMeals.isNotEmpty) ...[
           _Header(title: l10n.todayMealTitle),
           _Block(
             children: [
-              ListTile(
-                leading: const Icon(Icons.restaurant_outlined),
-                title: Text(
-                  l10n.todayMealLine(
-                    agenda.warmSlot == PlanSlot.dinner
-                        ? l10n.mealsSlotDinner
-                        : l10n.mealsSlotLunch,
-                    meal.title ?? '',
+              for (final (:slot, :entry) in agenda.warmMeals)
+                ListTile(
+                  leading: const Icon(Icons.restaurant_outlined),
+                  title: Text(
+                    l10n.todayMealLine(
+                      slot == PlanSlot.dinner
+                          ? l10n.mealsSlotDinner
+                          : l10n.mealsSlotLunch,
+                      entry.title ?? '',
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ],
