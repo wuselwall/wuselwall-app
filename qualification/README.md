@@ -64,9 +64,10 @@ errors. iOS retains seven unnamed scroll-container findings and four clipped hit
 findings in Today/shopping; none is approved or waived. This phone smoke does not
 establish full nine-profile coverage. No native baseline or reviewed exception is approved.
 
-CI bounds ordinary Flutter test-file parallelism to four processes by default;
-`FLUTTER_TEST_CONCURRENCY` accepts 1–16. Candidate commands explicitly use four and
-never automatically retry. Detail contrast tests retain their tall layout and every
+The ordinary CI workflow and candidate commands serialize Flutter test files while
+engine finalization failures are investigated. The wrapper defaults to four outside
+that workflow; `FLUTTER_TEST_CONCURRENCY` accepts 1–16. Candidate commands never
+automatically retry. Detail contrast tests retain their tall layout and every
 paragraph check while cropping blank capture space; 144 captures allocated about 70%
 fewer image bytes. This reduces resource use without establishing the cause of an engine
 crash. A process crash remains failed evidence.
