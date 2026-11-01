@@ -3,6 +3,17 @@ import 'package:flutter/widgets.dart';
 /// [label] that never breaks between its words: a navigation label is one line.
 String unbreakable(String label) => label.replaceAll(' ', '\u00A0');
 
+/// A screen narrower than this is a phone to the bottom navigation (specs/09).
+const double navBarPhoneWidth = 600;
+
+/// The height of a bottom navigation bar (specs/09 "the bottom bar"): [phone] on a
+/// phone, Material's 80 dp elsewhere. Material's height leaves a band of empty
+/// surface under the labels, and a phone adds its own gesture inset below that; a
+/// destination centres its icon and label, so a lower bar loses nothing. Each
+/// destination stays taller than its touch target (44 adult, 56 kid, specs/17).
+double? navBarHeight(BuildContext context, {double phone = 64}) =>
+    MediaQuery.sizeOf(context).width < navBarPhoneWidth ? phone : null;
+
 /// The style for a bottom navigation bar's labels (specs/09): [base], or smaller until
 /// the longest of [labels] fits its share of the width, never below [minSize]. The
 /// text scale counts as the bar applies it (capped by the caller, e.g. at 1.3).

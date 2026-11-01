@@ -388,6 +388,101 @@ enum Decor {
   };
 }
 
+/// How a flag's colours are laid out (specs/26 "Seasons and occasions"): stripes from
+/// the top or from the hoist, or a field with a cross.
+enum FlagLayout { horizontal, vertical, nordicCross, centredCross }
+
+/// A national flag, simplified to what reads at 26 px: stripes or a cross, never an
+/// emblem. [colours] are the stripes in order, or for a cross the field, the cross and
+/// a Nordic cross's inner cross; [weights] the stripes' relative sizes.
+class FlagDesign {
+  const FlagDesign(
+    this.layout,
+    this.colours, {
+    this.weights,
+    this.square = false,
+  });
+
+  final FlagLayout layout;
+  final List<Color> colours;
+  final List<int>? weights;
+
+  /// Switzerland's flag is square.
+  final bool square;
+}
+
+/// The flags of the countries with a national day (specs/26), by country code. The
+/// colours are the flags' own, so they do not follow the shade. A country missing here
+/// has a flag that does not survive simplifying (an emblem, a map, a triangle) and flies
+/// a plain pennant.
+abstract final class NationalFlags {
+  static const _red = Color(0xFFD52B1E);
+  static const _white = Color(0xFFFFFFFF);
+  static const _blue = Color(0xFF0039A6);
+  static const _navy = Color(0xFF002395);
+  static const _sky = Color(0xFF4891D9);
+  static const _green = Color(0xFF009246);
+  static const _yellow = Color(0xFFFFCD00);
+  static const _black = Color(0xFF000000);
+  static const _orange = Color(0xFFFF883E);
+  static const _carmine = Color(0xFF9E3039);
+
+  static const _h = FlagLayout.horizontal;
+  static const _v = FlagLayout.vertical;
+  static const _nordic = FlagLayout.nordicCross;
+
+  static const designs = <String, FlagDesign>{
+    'AD': FlagDesign(_v, [_blue, _yellow, _red]),
+    'AT': FlagDesign(_h, [_red, _white, _red]),
+    'BE': FlagDesign(_v, [_black, _yellow, _red]),
+    'BG': FlagDesign(_h, [_white, _green, _red]),
+    'BY': FlagDesign(_h, [_red, _green], weights: [2, 1]),
+    'CH': FlagDesign(FlagLayout.centredCross, [_red, _white], square: true),
+    'DE': FlagDesign(_h, [_black, _red, _yellow]),
+    'DK': FlagDesign(_nordic, [_red, _white]),
+    'EE': FlagDesign(_h, [_sky, _black, _white]),
+    'ES': FlagDesign(_h, [_red, _yellow, _red], weights: [1, 2, 1]),
+    'FI': FlagDesign(_nordic, [_white, _navy]),
+    'FR': FlagDesign(_v, [_navy, _white, _red]),
+    'GE': FlagDesign(FlagLayout.centredCross, [_white, _red]),
+    'GR': FlagDesign(_h, [
+      _sky,
+      _white,
+      _sky,
+      _white,
+      _sky,
+      _white,
+      _sky,
+      _white,
+      _sky,
+    ]),
+    'HR': FlagDesign(_h, [_red, _white, _blue]),
+    'HU': FlagDesign(_h, [_red, _white, _green]),
+    'IE': FlagDesign(_v, [_green, _white, _orange]),
+    'IS': FlagDesign(_nordic, [_blue, _white, _red]),
+    'IT': FlagDesign(_v, [_green, _white, _red]),
+    'LI': FlagDesign(_h, [_navy, _red]),
+    'LT': FlagDesign(_h, [_yellow, _green, _red]),
+    'LU': FlagDesign(_h, [_red, _white, _sky]),
+    'LV': FlagDesign(_h, [_carmine, _white, _carmine], weights: [2, 1, 2]),
+    'MC': FlagDesign(_h, [_red, _white]),
+    'MD': FlagDesign(_v, [_blue, _yellow, _red]),
+    'MT': FlagDesign(_v, [_white, _red]),
+    'NL': FlagDesign(_h, [_red, _white, _navy]),
+    'NO': FlagDesign(_nordic, [_red, _white, _navy]),
+    'PL': FlagDesign(_h, [_white, _red]),
+    'PT': FlagDesign(_v, [_green, _red], weights: [2, 3]),
+    'RO': FlagDesign(_v, [_navy, _yellow, _red]),
+    'RS': FlagDesign(_h, [_red, _blue, _white]),
+    'RU': FlagDesign(_h, [_white, _blue, _red]),
+    'SE': FlagDesign(_nordic, [_blue, _yellow]),
+    'SI': FlagDesign(_h, [_white, _blue, _red]),
+    'SK': FlagDesign(_h, [_white, _blue, _red]),
+    'SM': FlagDesign(_h, [_white, _sky]),
+    'UA': FlagDesign(_h, [_blue, _yellow]),
+  };
+}
+
 /// The wall's sky through the day (specs/26 "Day phases"), top to bottom. Text over a
 /// sky is `ink` or `ink2` of light; member inks never sit on it.
 enum SkyPhase {

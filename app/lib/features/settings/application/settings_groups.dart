@@ -9,6 +9,7 @@ import 'package:wuselwall/features/settings/application/household_settings_provi
 import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
+import 'package:wuselwall/features/wusel/application/ambience.dart';
 
 /// Einstellungen is a short page of groups; each group opens its own page of sections
 /// (specs/21, "Where the settings live"). This file is the map: which group holds which
@@ -208,16 +209,20 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
     ]),
   ],
   SettingsGroup.celebrations: [
-    SettingsSection(SettingsSectionId.holidays, [
-      SettingKey('ambience.advent'),
-      SettingKey('ambience.easter_western'),
-      SettingKey('ambience.easter_orthodox'),
-      SettingKey('ambience.new_year'),
-    ]),
     SettingsSection(SettingsSectionId.throughTheYear, [
       SettingKey('ambience.season'),
       SettingKey('ambience.ferien'),
       SettingKey('ambience.birthdays'),
+    ]),
+    // Through the year's order.
+    SettingsSection(SettingsSectionId.holidays, [
+      SettingKey('ambience.easter_western'),
+      SettingKey('ambience.easter_orthodox'),
+      SettingKey('ambience.national_day'),
+      SettingKey('ambience.st_nicholas'),
+      SettingKey('ambience.advent'),
+      SettingKey('ambience.christmas'),
+      SettingKey('ambience.new_year'),
     ]),
   ],
   SettingsGroup.kitchen: [
@@ -294,11 +299,11 @@ const basicSettingKeys = {
   'rituals.table_question',
   'meals.wishes',
   'rituals.week_review',
-  // The holiday celebrations: a family looks for these by name.
-  'ambience.advent',
-  'ambience.easter_western',
-  'ambience.easter_orthodox',
-  'ambience.new_year',
+  // Without it Basic would show holidays but no seasons.
+  'ambience.season',
+  // The holidays (`ambience.*` of an [Occasion.isHoliday]) are not listed: Basic shows
+  // those the family's country celebrates, and any the family changed
+  // ([SettingsEnv.showsKey]).
 };
 
 /// Every catalogue key the groups place, in page order.
@@ -368,6 +373,24 @@ class SettingsEnv {
 
   bool get personalPhone => deviceClass == DeviceClass.personal;
 
+  /// The country of `household.region` (`CH` of `CH-ZH`), for the holidays' defaults.
+  String? get country => switch (resolve('household.region')?.value) {
+    final String region => region.split('-').first.toUpperCase(),
+    _ => null,
+  };
+
+  /// Whether Basic shows [key]: a holiday the family's country celebrates, or one the
+  /// family switched itself, so a switch never disappears under the finger; otherwise
+  /// [basicSettingKeys].
+  bool _basic(String key) {
+    final occasion = Occasion.ofKey(key);
+    if (occasion == null || !occasion.isHoliday) {
+      return basicSettingKeys.contains(key);
+    }
+    return occasionDefault(occasion, country) ||
+        !(resolve(key)?.isDefault ?? true);
+  }
+
   SettingsEnv copyWith({bool? advanced}) => SettingsEnv(
     entries: entries,
     advanced: advanced ?? this.advanced,
@@ -378,6 +401,7 @@ class SettingsEnv {
     hasServer: hasServer,
     ownOnly: ownOnly,
     guardian: guardian,
+    localMatching: localMatching,
   );
 
   /// The definition of [key] in the catalogue, or null on a server without it.
@@ -390,7 +414,7 @@ class SettingsEnv {
     if (unusedSettingKeys.contains(key)) return false;
     final definition = resolve(key);
     if (definition == null) return false;
-    if (!advanced && !basicSettingKeys.contains(key)) return false;
+    if (!advanced && !_basic(key)) return false;
     if (ownOnly &&
         !(definition.scope == SettingScope.member && definition.selfService)) {
       return false;

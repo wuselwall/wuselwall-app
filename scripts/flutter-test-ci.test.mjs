@@ -4,7 +4,7 @@ import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { CRASH, DEFAULT_CONCURRENCY, GDB_SETTINGS, assessCrash, flutterTestConcurrency, sanitizeBacktrace } from './flutter-test-ci.mjs';
+import { CRASH, DEFAULT_CONCURRENCY, GDB_SETTINGS, SINK_ERROR, assessCrash, flutterTestConcurrency, sanitizeBacktrace } from './flutter-test-ci.mjs';
 
 const script = new URL('./flutter-test-ci.mjs', import.meta.url).pathname;
 const A = '/work/app/test/a_test.dart';
@@ -13,7 +13,11 @@ const B = '/work/app/test/b_test.dart';
 // The JSON reporter's events for files with the given test results ('success' | 'failure' |
 // 'error' | 'unfinished' | 'cut'), in the shape flutter test --file-reporter=json writes them.
 // 'cut' is a test the tester's crash cut short: done as "error", with no error event.
-function report(files, { crashed = [], errors = [] } = {}) {
+// 'crashed' files carry the crash message on their loading step, 'sinkErrored' files the
+// sink's StateError that flutter_tools throws when it reports the crash into a channel that is
+// still piping (copied from a failed self-hosted run: "loading <file> (failed after test
+// completion)").
+function report(files, { crashed = [], sinkErrored = [], errors = [] } = {}) {
   const events = [{ type: 'start', protocolVersion: '0.1.1' }];
   let id = 0;
   const loaders = new Map();
@@ -39,8 +43,12 @@ function report(files, { crashed = [], errors = [] } = {}) {
     }
   }
   for (const path of crashed) events.push({ type: 'error', testID: loaders.get(path), error: CRASH, isFailure: false });
+  for (const path of sinkErrored) {
+    events.push({ type: 'error', testID: loaders.get(path), error: SINK_ERROR, isFailure: false,
+      stackTrace: 'package:stream_channel/src/guarantee_channel.dart 132:7  _GuaranteeSink.addError\npackage:flutter_tools/src/test/flutter_platform.dart 597:37  FlutterPlatform._startTest.finalize\n' });
+  }
   for (const error of errors) events.push({ type: 'error', testID: loaders.get(A), error, isFailure: false });
-  events.push({ type: 'done', success: crashed.length === 0 && errors.length === 0 });
+  events.push({ type: 'done', success: crashed.length === 0 && sinkErrored.length === 0 && errors.length === 0 });
   return events.map((e) => JSON.stringify(e));
 }
 
@@ -65,7 +73,7 @@ test('a failing test anywhere keeps the run failed', () => {
 
 test('a crash mid-file reruns the whole file, counting the tests it cut short', () => {
   const json = report({ [A]: ['success', 'cut', 'cut'], [B]: ['success'] });
-  assert.deepEqual(assessCrash(crashText(A), json), { files: [A], cut: { [A]: 2 } });
+  assert.deepEqual(assessCrash(crashText(A), json), { files: [A], cut: { [A]: 2 }, how: { [A]: 'SIGSEGV' } });
   // The crash may also come before later tests of the file even start.
   const fewer = report({ [A]: ['success', 'cut'] }).map((line) => line.replace('"testCount":2', '"testCount":5'));
   assert.deepEqual(assessCrash(crashText(A), fewer).files, [A]);
@@ -80,6 +88,29 @@ test('a crash mid-file does not excuse a real failure, before it or elsewhere', 
   const short = report({ [A]: ['cut'], [B]: ['success'] })
     .map((line) => (line.includes('"suiteID":2,"parentID":null') ? line.replace('"testCount":1', '"testCount":2') : line));
   assert.equal(assessCrash(crashText(A), short).files, undefined);
+});
+
+test('the crash may show only as the sink error on a file loading step, with no crash text at all', () => {
+  // As on the self-hosted runners: the file's tests passed on the console, the JSON report marks
+  // them "error" without error events, and the loading step carries the StateError.
+  const json = report({ [A]: ['success'], [B]: ['cut', 'cut', 'cut', 'cut'] }, { sinkErrored: [B] });
+  assert.deepEqual(assessCrash('Some tests failed.\n', json),
+    { files: [B], cut: { [B]: 4 }, how: { [B]: 'crash reported as the sink error' } });
+});
+
+test('both faces of the crash in one run rerun every file they touched', () => {
+  const json = report({ [A]: ['success', 'cut'], [B]: ['cut'], ['/work/app/test/c_test.dart']: ['success'] }, { sinkErrored: [B] });
+  assert.deepEqual(assessCrash(crashText(A), json),
+    { files: [A, B], cut: { [A]: 1, [B]: 1 }, how: { [A]: 'SIGSEGV', [B]: 'crash reported as the sink error' } });
+});
+
+test('the sink error excuses no real failure, and counts only on a loading step', () => {
+  assert.equal(assessCrash('', report({ [A]: ['failure', 'cut'] }, { sinkErrored: [A] })).files, undefined);
+  assert.equal(assessCrash('', report({ [A]: ['cut'], [B]: ['failure'] }, { sinkErrored: [A] })).files, undefined);
+  assert.equal(assessCrash('', report({ [A]: ['cut'], [B]: ['cut'] }, { sinkErrored: [A] })).files, undefined);
+  // The same message as a test's own error is another error, not the crash.
+  const onATest = report({ [A]: ['error'] }).map((line) => line.replace('Bad state: boom', SINK_ERROR));
+  assert.equal(assessCrash('', onATest).files, undefined);
 });
 
 test('a test started and never finished keeps the run failed, even in the crashed file', () => {
@@ -190,6 +221,14 @@ test('an invalid concurrency fails before spawning Flutter', () => {
   assert.equal(result.status, 2);
   assert.deepEqual(result.calls, []);
   assert.match(result.stderr, /FLUTTER_TEST_CONCURRENCY must be an integer from 1 to 16/);
+});
+
+test('a crash seen only as the sink error reruns that file once, with a warning that says so', () => {
+  const sinkOnly = { status: 1, out: 'Some tests failed.\n', json: report({ [A]: ['cut', 'cut'], [B]: ['success'] }, { sinkErrored: [A] }) };
+  const result = run([sinkOnly, passed]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test', '--concurrency=4'], ['test', '--concurrency=4', A]]);
+  assert.match(result.stdout, /::warning title=flutter_tester crashed::\/work\/app\/test\/a_test\.dart \(crash reported as the sink error, 2 of its tests cut short\)/);
 });
 
 test('a second crash fails the job, without a third run', () => {

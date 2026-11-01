@@ -98,6 +98,17 @@ SettingsEnv _env(
   hasServer: server,
 );
 
+SettingEntry _withValue(SettingEntry e, Object? value) => SettingEntry(
+  key: e.key,
+  scope: e.scope,
+  type: e.type,
+  constraints: e.constraints,
+  selfService: e.selfService,
+  defaultValue: e.defaultValue,
+  value: value,
+  isDefault: false,
+);
+
 void main() {
   group('the groups place every setting once', () {
     final placed = placedSettingKeys.toList();
@@ -167,6 +178,84 @@ void main() {
         visibleSections(SettingsGroup.tasks, basic).map((s) => s.id),
         isNot(contains(SettingsSectionId.other)),
       );
+    });
+  });
+
+  group('the holidays follow the country', () {
+    /// The demo catalogue in [region], with [changed] keys set by the family.
+    List<SettingEntry> inRegion(
+      String? region, {
+      Map<String, Object?> changed = const {},
+    }) => [
+      for (final e in demoSettingCatalogue())
+        if (e.key == 'household.region')
+          _withValue(e, region)
+        else if (changed.containsKey(e.key))
+          _withValue(e, changed[e.key])
+        else
+          e,
+    ];
+
+    Set<String> basicCelebrations(List<SettingEntry> entries) => {
+      for (final s in visibleSections(
+        SettingsGroup.celebrations,
+        _env(entries, advanced: false),
+      ))
+        for (final i in s.items)
+          if (i is SettingKey) i.key,
+    };
+
+    test('Basic shows the seasons, then what Switzerland celebrates', () {
+      final sections = visibleSections(
+        SettingsGroup.celebrations,
+        _env(inRegion('CH-ZH'), advanced: false),
+      );
+      expect(sections.map((s) => s.id), [
+        SettingsSectionId.throughTheYear,
+        SettingsSectionId.holidays,
+      ]);
+      expect(basicCelebrations(inRegion('CH-ZH')), {
+        'ambience.season',
+        'ambience.easter_western',
+        'ambience.national_day',
+        'ambience.st_nicholas',
+        'ambience.advent',
+        'ambience.christmas',
+      });
+    });
+
+    test('Orthodox Easter is Basic in Greece, Advanced in Switzerland', () {
+      expect(
+        basicCelebrations(inRegion('GR')),
+        containsAll(['ambience.easter_orthodox', 'ambience.national_day']),
+      );
+      expect(
+        basicCelebrations(inRegion('GR')),
+        isNot(contains('ambience.st_nicholas')),
+      );
+      expect(
+        basicCelebrations(inRegion('CH-ZH')),
+        isNot(contains('ambience.easter_orthodox')),
+      );
+    });
+
+    test('a holiday the family switched stays in Basic', () {
+      expect(
+        basicCelebrations(
+          inRegion('CH-ZH', changed: {'ambience.new_year': true}),
+        ),
+        contains('ambience.new_year'),
+      );
+      expect(
+        basicCelebrations(
+          inRegion('CH-ZH', changed: {'ambience.advent': 'off'}),
+        ),
+        contains('ambience.advent'),
+      );
+    });
+
+    test('without a region Basic shows the seasons and no holiday', () {
+      expect(basicCelebrations(inRegion(null)), {'ambience.season'});
     });
   });
 
@@ -362,6 +451,39 @@ void main() {
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
       expect(groupTile(SettingsGroup.tasks), findsOneWidget);
+    });
+
+    testWidgets('a holiday is a switch that shows what the region does', (
+      tester,
+    ) async {
+      final repo = await pumpRoute(
+        tester,
+        Routes.settingsCelebrations,
+        rows: [
+          for (final e in demoSettingCatalogue())
+            e.key == 'household.region' ? _withValue(e, 'CH-ZH') : e,
+        ],
+      );
+      Switch switchOf(String key) => tester.widget<Switch>(
+        find.descendant(
+          of: find.byKey(ValueKey('setting-$key'), skipOffstage: false),
+          matching: find.byType(Switch, skipOffstage: false),
+        ),
+      );
+      expect(switchOf('ambience.advent').value, isTrue);
+      expect(switchOf('ambience.national_day').value, isTrue);
+      expect(switchOf('ambience.easter_orthodox').value, isFalse);
+      expect(find.text(_en.settingValueAuto), findsNothing);
+
+      final advent = find.descendant(
+        of: find.byKey(const ValueKey('setting-ambience.advent')),
+        matching: find.byType(Switch),
+      );
+      await tester.ensureVisible(advent);
+      await tester.tap(advent);
+      await tester.pumpAndSettle();
+      expect(repo.sets.last.key, 'ambience.advent');
+      expect(repo.sets.last.value, 'off');
     });
 
     testWidgets('a group page shows its sections as headings', (tester) async {

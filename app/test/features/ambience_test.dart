@@ -82,6 +82,88 @@ void main() {
     });
   });
 
+  group('Christmas, Saint Nicholas and the national day', () {
+    test('on by default where the country keeps them', () {
+      expect(occasionOn(Occasion.christmas, 'auto', 'CH'), isTrue);
+      expect(occasionOn(Occasion.christmas, 'auto', 'GR'), isTrue);
+      expect(occasionOn(Occasion.christmas, 'auto', 'JP'), isFalse);
+      expect(occasionOn(Occasion.stNicholas, 'auto', 'CH'), isTrue);
+      expect(occasionOn(Occasion.stNicholas, 'auto', 'FR'), isFalse);
+      expect(occasionOn(Occasion.nationalDay, 'auto', 'CH'), isTrue);
+      expect(occasionOn(Occasion.nationalDay, 'auto', 'GB'), isFalse);
+      expect(occasionOn(Occasion.nationalDay, 'auto', null), isFalse);
+      expect(occasionOn(Occasion.nationalDay, 'off', 'CH'), isFalse);
+    });
+
+    test('every holiday is a switch of its own, the seasons are not', () {
+      for (final o in Occasion.values) {
+        expect(Occasion.ofKey(occasionKey(o)), o);
+      }
+      expect(Occasion.season.isHoliday, isFalse);
+      expect(Occasion.christmas.isHoliday, isTrue);
+      expect(Occasion.ofKey('ambience.unknown'), isNull);
+    });
+
+    test('Christmas: 24 to 26 December, 6 and 7 January in Serbia', () {
+      expect(isChristmas(DateTime(2026, 12, 23), 'DE'), isFalse);
+      expect(isChristmas(DateTime(2026, 12, 24), 'DE'), isTrue);
+      expect(isChristmas(DateTime(2026, 12, 26), 'DE'), isTrue);
+      expect(isChristmas(DateTime(2026, 12, 27), 'DE'), isFalse);
+      expect(isChristmas(DateTime(2027, 1, 7), 'RS'), isTrue);
+      expect(isChristmas(DateTime(2026, 12, 25), 'RS'), isFalse);
+    });
+
+    test('Saint Nicholas on the 6th, Sinterklaas on the 5th', () {
+      expect(isStNicholas(DateTime(2026, 12, 6), 'CH'), isTrue);
+      expect(isStNicholas(DateTime(2026, 12, 5), 'CH'), isFalse);
+      expect(isStNicholas(DateTime(2026, 12, 5), 'NL'), isTrue);
+    });
+
+    test('the national day of the household\'s country', () {
+      expect(isNationalDay(DateTime(2026, 8, 1), 'CH'), isTrue);
+      expect(isNationalDay(DateTime(2026, 10, 3), 'CH'), isFalse);
+      expect(isNationalDay(DateTime(2026, 10, 3), 'DE'), isTrue);
+      expect(isNationalDay(DateTime(2026, 10, 26), 'AT'), isTrue);
+      expect(isNationalDay(DateTime(2026, 8, 1), null), isFalse);
+      // King's Day moves to Saturday when 27 April is a Sunday (2025).
+      expect(isNationalDay(DateTime(2025, 4, 26), 'NL'), isTrue);
+      expect(isNationalDay(DateTime(2025, 4, 27), 'NL'), isFalse);
+      expect(isNationalDay(DateTime(2026, 4, 27), 'NL'), isTrue);
+    });
+
+    test('the sky shows them on their day', () {
+      const ch = LighterDay(country: 'CH');
+      Ambience on(DateTime d) => ambienceFor(d, night: false, day: ch);
+      expect(on(DateTime(2026, 8, 1, 9)).nationalDay, 'CH');
+      expect(on(DateTime(2026, 8, 2, 9)).nationalDay, isNull);
+      expect(on(DateTime(2026, 12, 6, 9)).stNicholas, isTrue);
+      expect(on(DateTime(2026, 12, 24, 9)).christmas, isTrue);
+      expect(on(DateTime(2026, 12, 24, 9)).advent, 4);
+      const off = LighterDay(
+        country: 'CH',
+        occasionSwitches: {'ambience.national_day': 'off'},
+      );
+      expect(
+        ambienceFor(
+          DateTime(2026, 8, 1, 9),
+          night: false,
+          day: off,
+        ).nationalDay,
+        isNull,
+      );
+    });
+
+    test('every country with a national day has a flag or a pennant', () {
+      // Not a test of the flags: the ones that simplify badly fly a pennant.
+      expect(
+        NationalFlags.designs.keys.toSet().difference(
+          nationalDays.keys.toSet(),
+        ),
+        isEmpty,
+      );
+    });
+  });
+
   test('a household can keep both Easters', () {
     const day = LighterDay(
       country: 'DE',

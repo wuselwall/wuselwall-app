@@ -39,7 +39,7 @@ Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras 
 
 Primero ves unas fichas, para no escribirlo todo desde cero:
 
-- **Plantillas**: **Cumpleaños** (todo el día, cada año), **Invitados a cenar**, **Cumpleaños infantil**, **Evento deportivo**, **Cita médica**, **Actuación**, **Excursión** y **Vacaciones / viaje**. Cada una rellena el título, la imagen, la hora, la duración y las personas. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
+- **Plantillas**: **Limpieza**, **Evento deportivo**, **Cita médica**, **Invitados a cenar**, **Excursión**, **Cumpleaños infantil**, **Actuación**, **Vacaciones / viaje** y **Cumpleaños** (todo el día, cada año); lo que usáis a menudo va primero y las anuales al final. **Limpieza** es la única plantilla semanal: se repite cada semana el día elegido, a las 09:00 durante tres horas, con una escoba como imagen, para la persona que la crea. Cada una rellena el título, la imagen, la hora, la duración y las personas. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
 - **Vuestras plantillas**: las que habéis guardado. En el editor, toca **Guardar como plantilla** arriba; se guardan el título, la imagen, la hora, la duración, las personas, el lugar y las notas, pero no la fecha ni la repetición.
 - **Lo habitual en casa**: eventos que ya habéis apuntado al menos tres veces, como «Vienen los abuelos». WuselWall solo cuenta vuestros propios eventos en vuestro servidor; nada sale de él. Con **⋮** eliges **Guardar como plantilla** o **No volver a sugerir**.
 

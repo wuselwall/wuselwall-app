@@ -294,6 +294,7 @@ class _SettingRowItem extends ConsumerWidget {
 
     return SettingRow(
       entry: entry,
+      country: env.country,
       onChanged: (value) => _save(
         context,
         ref,

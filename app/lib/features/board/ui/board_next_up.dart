@@ -307,15 +307,16 @@ List<_Upcoming> _upcomingOf(WeekBoard board, int dayIndex) {
       if (e.starts case final start?)
         _Upcoming(start: start, title: e.title, memberIds: e.attendeeIds),
   ];
-  final meal = day.meal;
-  if (meal != null && meal.isPlanned && meal.time != null) {
-    items.add(
-      _Upcoming(
-        start: meal.time!,
-        title: meal.title!,
-        memberIds: [?meal.cookId],
-      ),
-    );
+  for (final meal in day.meals) {
+    if (meal.isPlanned && meal.time != null) {
+      items.add(
+        _Upcoming(
+          start: meal.time!,
+          title: meal.title!,
+          memberIds: [?meal.cookId],
+        ),
+      );
+    }
   }
   items.sort((a, b) => minutesOf(a.start).compareTo(minutesOf(b.start)));
   return items;

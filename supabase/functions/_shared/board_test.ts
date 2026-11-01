@@ -507,6 +507,33 @@ Deno.test("school days take the school-day slot and weekends the free-day slot",
   assertEquals(mealOf(board, "2026-10-18").slot, "lunch");
 });
 
+Deno.test("both warm meals fill lunch and dinner, and meal stays the dinner", () => {
+  const board = meals({
+    settings: { ...MEAL_SETTINGS, schoolDaySlot: "both" },
+    schoolDays: [careUntil("2026-10-13", "c", "15:00")],
+    entries: [
+      entry({ on_date: "2026-10-13", slot: "lunch", title: "Suppe" }),
+      entry({ on_date: "2026-10-13", slot: "dinner", title: "Pasta" }),
+    ],
+  });
+  const day = dayOf(board, "2026-10-13");
+  const both = day.meals as MealJson[];
+  assertEquals(both.map((m) => m.slot), ["lunch", "dinner"]);
+  assertEquals(both.map((m) => m.title), ["Suppe", "Pasta"]);
+  // The care rule still applies to the lunch only.
+  assertEquals(both[0].eating, ["b", "a"]);
+  assertEquals(both[1].eating, ["b", "a", "c"]);
+  assertEquals(mealOf(board, "2026-10-13").title, "Pasta");
+  assertEquals((dayOf(board, "2026-10-17").meals as MealJson[]).length, 1);
+});
+
+Deno.test("no warm meal leaves the day without one", () => {
+  const board = meals({ settings: { ...MEAL_SETTINGS, freeDaySlot: "none" } });
+  assertEquals(dayOf(board, "2026-10-17").meals, []);
+  assertEquals(dayOf(board, "2026-10-17").meal, null);
+  assertEquals(mealOf(board, "2026-10-16").slot, "dinner");
+});
+
 Deno.test("a holiday weekday counts as a free day", () => {
   const board = meals({ schoolDays: [holiday("2026-10-14", "c")] });
   assertEquals(mealOf(board, "2026-10-14").slot, "lunch");

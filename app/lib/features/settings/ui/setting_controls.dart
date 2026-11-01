@@ -7,6 +7,7 @@ import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/region/ui/region_field.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/settings/ui/setting_labels.dart';
+import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/ui/wusel_outfit_picker.dart';
 
 /// One setting: title, the chip for default or customised, the explanation, the control
@@ -17,11 +18,15 @@ class SettingRow extends StatelessWidget {
     required this.entry,
     required this.onChanged,
     this.onReset,
+    this.country,
     super.key,
   });
 
   final SettingEntry entry;
   final ValueChanged<Object?> onChanged;
+
+  /// The household's country, which decides what a holiday's `auto` means.
+  final String? country;
 
   /// Null while the setting is at its default: there is nothing to reset.
   final VoidCallback? onReset;
@@ -66,7 +71,11 @@ class SettingRow extends StatelessWidget {
               Expanded(
                 child: Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: _SettingControl(entry: entry, onChanged: onChanged),
+                  child: _SettingControl(
+                    entry: entry,
+                    country: country,
+                    onChanged: onChanged,
+                  ),
                 ),
               ),
               if (onReset != null)
@@ -84,10 +93,15 @@ class SettingRow extends StatelessWidget {
 }
 
 class _SettingControl extends StatelessWidget {
-  const _SettingControl({required this.entry, required this.onChanged});
+  const _SettingControl({
+    required this.entry,
+    required this.onChanged,
+    this.country,
+  });
 
   final SettingEntry entry;
   final ValueChanged<Object?> onChanged;
+  final String? country;
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +111,15 @@ class _SettingControl extends StatelessWidget {
       return WuselOutfitPicker(
         selected: WuselOutfit.parse(value),
         onChanged: (o) => onChanged(o.name),
+      );
+    }
+    // A holiday stored as auto, on or off is a plain switch: `auto` shows what the
+    // country does, and the row's reset goes back to it.
+    if (Occasion.ofKey(entry.key) case final occasion?
+        when entry.type == SettingType.enumeration) {
+      return Switch(
+        value: occasionOn(occasion, value, country),
+        onChanged: (on) => onChanged(on ? 'on' : 'off'),
       );
     }
     return switch (entry.type) {

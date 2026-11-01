@@ -1215,11 +1215,27 @@ Future<ProviderContainer> pumpApp(
 
 /// Switches the adult home to the tab with [label] (its navigation bar label). Today is
 /// the default tab, so tests about another tab start by tapping it.
+///
+/// Taps the destination, as a person does, not its label: on a phone only the
+/// selected destination shows its label, and Material still lays the hidden one out
+/// below the centred icon, where a low bar (specs/09) puts it at the screen's edge.
 Future<void> openTab(WidgetTester tester, String label) async {
-  await tester.tap(
-    find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
+  final bar = find.byType(NavigationBar);
+  final destinations = find.descendant(
+    of: bar,
+    matching: find.byType(NavigationDestination),
   );
+  final destination = find.ancestor(
+    of: find.descendant(of: bar, matching: find.text(label)),
+    matching: find.byType(NavigationDestination),
+  );
+  final index = destinations.evaluate().toList().indexOf(
+    destination.evaluate().single,
+  );
+  await tester.tap(destination);
   await tester.pumpAndSettle();
+  // A tap that misses only warns; a tab that did not open must fail here.
+  expect(tester.widget<NavigationBar>(bar).selectedIndex, index);
 }
 
 /// On the top page of Einstellungen: opens [group] through its tile.

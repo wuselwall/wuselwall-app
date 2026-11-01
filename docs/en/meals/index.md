@@ -63,4 +63,4 @@ When you plan a meal, WuselWall suggests matching recipes (see [Suggestions](#su
 
 A tap on the meal area shows the week's meals. A star marks a meal wish. Tap a dot afterwards to change who is eating.
 
-The wall shows one warm meal per day. Which meal that is, and how school days and free days count, is set under [Settings → Meals](/en/settings/household).
+The wall shows the day's warm meal, or both lunch and dinner with **Both**, or none with **None**. Which it is, and how school days and free days count, is set under [Settings → Meals](/en/settings/household).

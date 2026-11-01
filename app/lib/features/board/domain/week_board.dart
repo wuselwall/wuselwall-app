@@ -385,6 +385,7 @@ class BoardDay {
     required this.busyUntil,
     required this.school,
     required this.meal,
+    this._meals,
     this.holiday,
     this.usual,
   });
@@ -402,6 +403,9 @@ class BoardDay {
     meal: json['meal'] == null
         ? null
         : BoardMeal.fromJson(json['meal'] as Map<String, dynamic>),
+    meals: json['meals'] == null
+        ? null
+        : _list(json['meals'], BoardMeal.fromJson),
     holiday: json['holiday'] == null
         ? null
         : BoardHoliday.fromJson(json['holiday'] as Map<String, dynamic>),
@@ -420,8 +424,15 @@ class BoardDay {
   /// Per child with a timetable; a child absent here has no school data at all.
   final Map<String, SchoolDay> school;
 
-  /// The one warm meal (FR-8.4). Null only when the meals module is not built.
+  /// The warm meal (FR-8.4): the dinner when both meals are warm, null when none is
+  /// (`meals.warm_meal.*`) or the meals module is not built. For what shows one meal.
   final BoardMeal? meal;
+
+  final List<BoardMeal>? _meals;
+
+  /// Every warm meal of the day in order: none, one, or lunch and dinner. A server
+  /// before `meals` sends only [meal].
+  List<BoardMeal> get meals => _meals ?? [?meal];
 
   /// A public holiday of the day (the household's region or its own row); null on an
   /// ordinary day, and on servers that do not send holidays yet.
@@ -645,7 +656,7 @@ class Lesson {
 
 enum MealSlot { lunch, dinner }
 
-/// The day's one warm meal. Present even when nothing is planned ([title] null), so
+/// One warm meal of the day. Present even when nothing is planned ([title] null), so
 /// the slot and who is eating still show.
 class BoardMeal {
   const BoardMeal({

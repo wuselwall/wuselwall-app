@@ -96,8 +96,7 @@ Future<ProviderContainer> pumpTasks(
     ),
     tasks: api,
   );
-  await t.tap(find.text('Aufgaben'));
-  await t.pumpAndSettle();
+  await openTab(t, 'Aufgaben');
   return container;
 }
 

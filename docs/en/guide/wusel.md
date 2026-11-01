@@ -68,7 +68,7 @@ If **Reduce motion** is on for the device, Wusel stays still in its place and th
 
 ### Seasons and occasions {#occasions}
 
-The sky also dresses up for special days. Each occasion has its own switch under **Settings → Celebrations & seasons** (**Advanced** view):
+The sky also dresses up for special days. Each occasion has its own switch under **Settings → Celebrations & seasons**; the **Basic** view shows the seasons and the holidays your region celebrates, everything else is under **Advanced**:
 
 | Occasion | What happens | Default |
 |---|---|---|
@@ -76,11 +76,14 @@ The sky also dresses up for special days. Each occasion has its own switch under
 | **Birthdays** | bunting in the person's colour and a party hat for Wusel | on |
 | **School holidays** | a ribbon, "Holidays!" on the first free day and "School again tomorrow" on the last (weekends and public holidays right before and after count too); on **Today** it sits beside the title | on |
 | **Advent** | candles in the header, one more on each Advent Sunday | by your region |
+| **Christmas** | a decorated tree on the hill from 24 to 26 December (6 and 7 January where Christmas follows the Orthodox calendar) | by your region |
 | **Easter** | eggs in the hills from two days before to two days after Easter Sunday | by your region |
 | **Orthodox Easter** | the same eggs on the Orthodox date | by your region |
+| **National day** | the country's flag on the hill on its national day, e.g. 1 August in Switzerland, 3 October in Germany, 26 October in Austria, 15 August in Liechtenstein | by your region |
+| **Saint Nicholas** (in Swiss German **Samichlaus**) | a filled boot on 6 December (5 December in the Netherlands) | by your region |
 | **New Year's Eve** | small fireworks in the night sky on 31 December and 1 January | off |
 
-"By your region" means WuselWall follows the country of your region. In Germany, Austria and Switzerland Advent and Easter are on and Orthodox Easter is off; in countries that celebrate Orthodox Easter it is the other way round. Both Easter dates are calculated anew each year, and a family can switch on both.
+Each holiday is a plain on/off switch that shows whether it is on. "By your region" means that until you change it, WuselWall follows the country of your region; the row then shows **Default**, and the reset button brings the region's value back. In Germany, Austria and Switzerland Advent, Easter, Saint Nicholas, Christmas and the national day are on and Orthodox Easter is off; in countries that celebrate Orthodox Easter, Advent and Easter are off and Orthodox Easter is on. Christmas is on in all European countries; where it follows the Orthodox calendar (Serbia, Montenegro, North Macedonia, Georgia, Belarus, Russia) the tree stands on 6 and 7 January. Saint Nicholas is on in Germany, Austria, Switzerland, Liechtenstein, Luxembourg, Belgium, the Netherlands, Poland, Czechia, Slovakia, Hungary, Slovenia and Croatia, and the national day in about 45 European countries (the country comes from the region). New Year's Eve is off everywhere. Both Easter dates are calculated anew each year, and a family can switch on both.
 
 ## Sounds {#sounds}
 

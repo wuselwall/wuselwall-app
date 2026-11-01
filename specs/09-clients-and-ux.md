@@ -20,6 +20,13 @@ laptop can be the same physical size and still need different interfaces.
 Responsive layout still applies within each register — the adult register must work on a
 phone — but the register itself is a device property.
 
+**The bottom bar** (*added 2026-11-01*): on a phone (narrower than 600 dp) the home's
+navigation bar is lower than Material's 80 dp: 64 dp in the adult register, 72 dp in the
+kid register (its icon and label are larger). Material's height leaves a band of empty
+surface under the labels, and a phone adds its own gesture inset below that; a destination
+centres its icon and label, so nothing is lost, and each destination stays taller than its
+touch target (specs/17). Wider screens keep the 80 dp bar. (`navBarHeight`)
+
 Before a device belongs to a household it shows the **front door**
 ([20](20-onboarding.md#the-front-door)), the same on every device: continue with Apple,
 Google or email, or connect this device as a family tablet or wall display. The register
@@ -228,7 +235,7 @@ household settings with these values as defaults.
 | **Header** | 1 line | Full date, clock, calendar week, the next-up line; the freshness marker only once the board is out of date | — |
 | **Wer ist wo** | One row per member, always in the household's member order (`profile.sort_order`) | Children: the school-day span from the Stundenplan, plus the lessons worth knowing about the evening before (Sport, Schwimmen, FreiDay) and the Hort end time — never the individual subjects. Adults: the **deviation** from their baseline, as a filled band; the baseline itself stays a quiet muted chip, and under either a "Termine bis 17:00" line (FR-1.19) saying when that person is out of meetings. Bands span multiple columns where they span multiple days. | [15](15-module-school-timetable.md) |
 | **Termine** | 3 fixed bands — Vormittag (< 12:00), Nachmittag (12–17), Abend (≥ 17:00) — 2 slots each, then "+n weitere" | Key appointments only (`importance='key'`), time above title, and a **dot per attendee** in their member colour at the right edge; four dots means the whole family. Day parts rather than a time axis: a wall display is read for "which afternoon is full", not for "what happens at 14:15". | [05](05-module-calendar.md) |
-| **Warmes Essen** | 1 row | One warm meal a day — Mittag at the weekend, Abend on school days, with the slot named in the cell. Under it, one dot per member, filled when they are eating, hollow when not, plus who is cooking (as a name, not an icon) and a guest count. | [07](07-module-meals-shopping.md) |
+| **Warmes Essen** | 1 row | One warm meal a day — Mittag at the weekend, Abend on school days, with the slot named in the cell; a household that eats warm twice gets lunch above dinner in the cell, one that does not an empty cell (`meals.warm_meal.*`, specs/21). Under it, one dot per member, filled when they are eating, hollow when not, plus who is cooking (as a name, not an icon) and a guest count. | [07](07-module-meals-shopping.md) |
 | **Footer** | 1 line | Open tasks per member, shopping-list count, night-mode indicator | [06](06-module-tasks.md) |
 
 **Why the zones carry no titles.** Narrow sunken bands separate the zones; the gutter

@@ -141,7 +141,204 @@ class SkyPainter extends CustomPainter {
     if (ambience.season case final season?) _season(canvas, size, season);
     if (ambience.easter) _eggs(canvas, size);
     if (ambience.advent > 0) _candles(canvas, size, ambience.advent);
+    if (ambience.christmas) _tree(canvas, size);
+    if (ambience.stNicholas) _boot(canvas, size);
+    if (ambience.nationalDay case final country?) _flag(canvas, size, country);
     if (ambience.birthdays.isNotEmpty) _bunting(canvas, size);
+  }
+
+  /// Where the hill's decorations stand: left of the Advent candles, which hold the
+  /// right edge on Christmas Eve, and never on the clock's side of a narrow phone.
+  double _hillX(Size size) =>
+      math.max(size.width * 0.5, math.min(size.width * 0.76, size.width - 90));
+
+  void _tree(Canvas canvas, Size size) {
+    final x = _hillX(size);
+    final base = size.height * 0.9;
+    final h = math.min(size.height * 0.55, 44.0);
+    final green = Paint()..color = Decor.mint.dark;
+    // Three tiers, each narrower and higher, on a short trunk.
+    canvas.drawRect(
+      Rect.fromLTWH(x - 2.5, base - h * 0.12, 5, h * 0.12),
+      Paint()..color = Decor.apricot.dark,
+    );
+    for (var i = 0; i < 3; i++) {
+      final bottom = base - h * (0.1 + i * 0.25);
+      final half = h * (0.36 - i * 0.09);
+      canvas.drawPath(
+        Path()
+          ..moveTo(x - half, bottom)
+          ..lineTo(x + half, bottom)
+          ..lineTo(x, bottom - h * 0.42)
+          ..close(),
+        green,
+      );
+    }
+    final baubles = [Decor.coral, Decor.sky, Decor.lilac, Decor.sun];
+    for (final (i, (dx, dy)) in const [
+      (-0.2, 0.22),
+      (0.16, 0.3),
+      (-0.08, 0.48),
+      (0.1, 0.62),
+    ].indexed) {
+      canvas.drawCircle(
+        Offset(x + h * dx, base - h * dy),
+        2.2,
+        Paint()..color = baubles[i].light,
+      );
+    }
+    _star(canvas, Offset(x, base - h * 0.97), 4.5, Decor.sun.light);
+  }
+
+  /// A five-pointed star of outer radius [r] around [c].
+  void _star(Canvas canvas, Offset c, double r, Color colour) {
+    final path = Path();
+    for (var k = 0; k < 10; k++) {
+      final radius = k.isEven ? r : r * 0.45;
+      final a = -math.pi / 2 + k * math.pi / 5;
+      final p = c + Offset(math.cos(a), math.sin(a)) * radius;
+      k == 0 ? path.moveTo(p.dx, p.dy) : path.lineTo(p.dx, p.dy);
+    }
+    canvas.drawPath(path..close(), Paint()..color = colour);
+  }
+
+  /// Saint Nicholas' boot with a tangerine and a star sticking out.
+  void _boot(Canvas canvas, Size size) {
+    final x = _hillX(size);
+    final base = size.height * 0.92;
+    final boot = Path()
+      ..moveTo(x - 7, base - 22)
+      ..lineTo(x + 3, base - 22)
+      ..lineTo(x + 3, base - 7)
+      ..quadraticBezierTo(x + 13, base - 7, x + 13, base - 2)
+      ..lineTo(x + 13, base)
+      ..lineTo(x - 7, base)
+      ..close();
+    // Drawn at a third larger than its numbers, standing where it stood.
+    canvas
+      ..save()
+      ..translate(x, base)
+      ..scale(1.35)
+      ..translate(-x, -base)
+      ..drawCircle(
+        Offset(x - 3, base - 25),
+        4.5,
+        Paint()..color = Decor.apricot.of(shade),
+      )
+      ..drawPath(boot, Paint()..color = Decor.coral.of(shade))
+      ..drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(x - 8.5, base - 24, 13, 5),
+          const Radius.circular(2),
+        ),
+        Paint()
+          ..color = shade == Shade.light
+              ? Palette.light.surface
+              : Palette.dark.ink.withValues(alpha: 0.8),
+      );
+    _star(canvas, Offset(x + 2, base - 28), 3.5, Decor.sun.light);
+    canvas.restore();
+  }
+
+  /// The country's flag on a pole on the hill; a pennant where the flag does not
+  /// simplify ([NationalFlags]).
+  void _flag(Canvas canvas, Size size, String country) {
+    final x = _hillX(size);
+    final base = size.height * 0.92;
+    final poleTop = base - math.min(size.height * 0.6, 50.0);
+    canvas.drawLine(
+      Offset(x, base),
+      Offset(x, poleTop),
+      Paint()
+        ..color = shade == Shade.light ? Palette.light.ink2 : Palette.dark.ink2
+        ..strokeWidth = 1.5,
+    );
+    final design = NationalFlags.designs[country];
+    if (design == null) {
+      canvas.drawPath(
+        Path()
+          ..moveTo(x, poleTop)
+          ..lineTo(x + 24, poleTop + 7)
+          ..lineTo(x, poleTop + 14)
+          ..close(),
+        Paint()..color = Decor.coral.of(shade),
+      );
+      return;
+    }
+    final height = 16.0;
+    final rect = Rect.fromLTWH(
+      x + 0.75,
+      poleTop,
+      design.square ? height : height * 1.6,
+      height,
+    );
+    // The flag's own colours, a little softer on the dark band.
+    final alpha = shade == Shade.light ? 1.0 : 0.8;
+    Paint paint(Color c) => Paint()..color = c.withValues(alpha: alpha);
+    final colours = design.colours;
+    switch (design.layout) {
+      case FlagLayout.horizontal || FlagLayout.vertical:
+        final weights = design.weights ?? [for (final _ in colours) 1];
+        final total = weights.fold<int>(0, (a, b) => a + b);
+        final across = design.layout == FlagLayout.horizontal;
+        var from = 0.0;
+        for (var i = 0; i < colours.length; i++) {
+          final part = weights[i] / total;
+          canvas.drawRect(
+            across
+                ? Rect.fromLTWH(
+                    rect.left,
+                    rect.top + rect.height * from,
+                    rect.width,
+                    rect.height * part,
+                  )
+                : Rect.fromLTWH(
+                    rect.left + rect.width * from,
+                    rect.top,
+                    rect.width * part,
+                    rect.height,
+                  ),
+            paint(colours[i]),
+          );
+          from += part;
+        }
+      case FlagLayout.nordicCross:
+        canvas.drawRect(rect, paint(colours[0]));
+        for (final (i, w) in [(1, 0.25), if (colours.length > 2) (2, 0.12)]) {
+          final bar = rect.height * w;
+          final cx = rect.left + rect.width * 0.36;
+          canvas
+            ..drawRect(
+              Rect.fromLTWH(
+                rect.left,
+                rect.center.dy - bar / 2,
+                rect.width,
+                bar,
+              ),
+              paint(colours[i]),
+            )
+            ..drawRect(
+              Rect.fromLTWH(cx - bar / 2, rect.top, bar, rect.height),
+              paint(colours[i]),
+            );
+        }
+      case FlagLayout.centredCross:
+        canvas.drawRect(rect, paint(colours[0]));
+        final c = rect.center;
+        // The Swiss cross: arms a sixth wide and long, clear of the edge.
+        final arm = rect.height * (design.square ? 0.19 : 0.2);
+        final reach = design.square ? rect.height * 0.31 : rect.width / 2;
+        final reachY = design.square ? reach : rect.height / 2;
+        canvas
+          ..drawRect(
+            Rect.fromCenter(center: c, width: reach * 2, height: arm),
+            paint(colours[1]),
+          )
+          ..drawRect(
+            Rect.fromCenter(center: c, width: arm, height: reachY * 2),
+            paint(colours[1]),
+          );
+    }
   }
 
   void _sun(Canvas canvas, Size size, SkyPhase phase) {

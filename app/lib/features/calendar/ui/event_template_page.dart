@@ -26,6 +26,7 @@ import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// A built-in template's name in the household's language.
 String eventStarterName(AppLocalizations l10n, EventStarter s) => switch (s) {
+  EventStarter.cleaning => l10n.eventStarterCleaning,
   EventStarter.birthday => l10n.eventStarterBirthday,
   EventStarter.guestDinner => l10n.eventStarterGuestDinner,
   EventStarter.kidsParty => l10n.eventStarterKidsParty,
@@ -435,7 +436,7 @@ class _TemplateLine extends StatelessWidget {
   );
 }
 
-/// A tile's line: when and how long, a yearly repeat, and how often a suggestion was
+/// A tile's line: when and how long, a weekly or yearly repeat, and how often a suggestion was
 /// entered ("18:30 · 3 Std.", "Ganztägig · Jährlich", "6× benutzt", or with
 /// [shortCount] only "6×").
 String templateLine(
@@ -454,6 +455,7 @@ String templateLine(
         context.time(TimeOfDay(hour: minute ~/ 60, minute: minute % 60)),
       if (t.durationMinutes case final length?) templateLength(l10n, length),
     ],
+    if (t.weekly) l10n.eventRepeatWeekly,
     if (t.yearly) l10n.eventRepeatYearly,
     if (t.count case final count?)
       shortCount
