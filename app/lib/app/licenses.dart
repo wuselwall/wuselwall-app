@@ -2,14 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// Adds the bundled fonts' SIL Open Font Licences to the app's licence page; the OFL
-/// requires the licence to travel with the font files. Also adds the MIT licence of
+/// requires the licence to travel with the font files. Noto covers the shards the web
+/// app serves from its own font-fallback/ (scripts/web-font-fallback.sh). Also adds the MIT licence of
 /// the Fluent Emoji pictures the shopping tiles, chores and rewards show.
 void registerFontLicenses() {
   LicenseRegistry.addLicense(() async* {
     for (final (package, file) in const [
       ('Atkinson Hyperlegible Next', 'OFL-AtkinsonHyperlegibleNext.txt'),
       ('Barlow Semi Condensed', 'OFL-BarlowSemiCondensed.txt'),
-      ('Noto Sans Symbols', 'OFL-NotoSansSymbols.txt'),
+      ('Noto fonts', 'OFL-NotoSansSymbols.txt'),
     ]) {
       yield LicenseEntryWithLineBreaks([
         package,

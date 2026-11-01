@@ -20,6 +20,7 @@ export function environment() {
     playwright: JSON.parse(fs.readFileSync(path.join(root, 'node_modules/playwright/package.json'), 'utf8')).version,
     inventory: sha256(fs.readFileSync(path.join(root, 'qualification/inventory.json'))),
     fonts: fontAssets(),
+    fontFallback: sha256(fs.readFileSync(path.join(root, 'scripts/web-font-fallback.lock'))),
     renderer: 'CanvasKit/SwiftShader; deviceScaleFactor=1', clock: inventory.clock, visualPolicy,
   };
 }

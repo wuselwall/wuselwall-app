@@ -104,9 +104,6 @@ flutter:
           weight: 600
         - asset: assets/fonts/BarlowSemiCondensed-Bold.ttf
           weight: 700
-    - family: NotoSansSymbols
-      fonts:
-        - asset: assets/fonts/NotoSansSymbols-wght.ttf
 
 # App icons from the Wuselpunkte mark (specs/brand, ADR-012). Regenerate with
 # `dart run flutter_launcher_icons` after changing anything in assets/icon/.

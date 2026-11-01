@@ -125,13 +125,14 @@ The Flutter job writes `contrast-report.json` and `contrast-report.md` even when
 fails. They group repeated labels, ratios and reported colours while preserving case IDs,
 unparsed findings and an input checksum. The report grants no waivers.
 
-Bundled Noto Sans Symbols covers the shipped arrow glyphs. Web's automatic fallback font
-base is also restricted to this installation's own origin. This does not supply every
-Unicode script: unbundled characters in names or imported calendar text may remain missing
-until the installation serves the corresponding reviewed local font pack. Baseline
-fingerprints include bundled font-file checksums on both web and native platforms.
-`qualify:font-policy` exercises unsupported CJK input and asserts that fallback requests
-stay on the local origin; it does not certify the rendering of those characters.
+Glyphs the bundled fonts lack (arrows, emoji, other scripts) come from the platform on
+phones. On the web, Flutter's fallback font base points at this installation's own origin,
+and `scripts/web-font-fallback.sh` fills `font-fallback/` with every Noto shard the engine
+can ask for, pinned by SHA-256 in `scripts/web-font-fallback.lock`. Widget tests load
+`assets/fonts/NotoSansSymbols-wght.ttf` from the file under the theme's fallback name.
+Baseline fingerprints include bundled font-file checksums and the fallback lock.
+`qualify:font-policy` types CJK and an emoji and asserts that every fallback shard is
+requested from the local origin and served.
 
 ## Select the candidate
 

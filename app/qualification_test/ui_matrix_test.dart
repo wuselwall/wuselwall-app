@@ -87,7 +87,14 @@ void main() {
       await loader.load();
     }
     final symbols = FontLoader('NotoSansSymbols')
-      ..addFont(rootBundle.load('assets/fonts/NotoSansSymbols-wght.ttf'));
+      // Not an app asset (the app takes symbols from the platform); read the file.
+      ..addFont(
+        Future.value(
+          ByteData.sublistView(
+            File('assets/fonts/NotoSansSymbols-wght.ttf').readAsBytesSync(),
+          ),
+        ),
+      );
     await symbols.load();
   });
   tearDownAll(() {

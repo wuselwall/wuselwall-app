@@ -1,6 +1,6 @@
 import { test, expect } from 'playwright/test';
 
-test('CJK font fallback requests stay on this origin', async ({ page }, info) => {
+test('Emoji and CJK font fallback is served from this origin', async ({ page }, info) => {
   const origin = new URL(info.project.use.baseURL).origin;
   const fallbackRequests = [];
   const fallbackResponses = [];
@@ -39,7 +39,7 @@ test('CJK font fallback requests stay on this origin', async ({ page }, info) =>
   await expect(page.locator('body[data-qualification-ready="password-sign-in"]')).toBeAttached();
   const fields = page.getByRole('textbox');
   await expect(fields.first()).toBeAttached();
-  await fields.first().fill('漢字𠮷𠀋');
+  await fields.first().fill('漢字𠮷𠀋 🍕');
   await page.keyboard.press('Tab');
   await expect.poll(() => fallbackRequests.length, {
     message: 'CJK input should request at least one Flutter font fallback shard',
@@ -51,16 +51,6 @@ test('CJK font fallback requests stay on this origin', async ({ page }, info) =>
   }).toBeGreaterThan(0);
   await page.waitForLoadState('networkidle', { timeout: 15_000 });
 
-  const unexpectedConsoleErrors = consoleErrors.filter(error => {
-    if (!/404/.test(error.text)) return true;
-    try {
-      const url = new URL(error.url);
-      return url.origin !== origin || !url.pathname.startsWith('/font-fallback/');
-    } catch {
-      return true;
-    }
-  });
-
   const evidence = {
     fallbackRequests,
     fallbackResponses,
@@ -68,8 +58,6 @@ test('CJK font fallback requests stay on this origin', async ({ page }, info) =>
     pageErrors,
     consoleErrors,
     badResponses,
-    unexpectedConsoleErrors,
-    coverageNote: 'This verifies request routing only; missing fallback files may still leave unsupported glyphs unavailable.',
   };
   await info.attach('font-policy-evidence', {
     body: JSON.stringify(evidence, null, 2),
@@ -83,9 +71,10 @@ test('CJK font fallback requests stay on this origin', async ({ page }, info) =>
   }), 'Every fallback request must use this origin and the dedicated fallback path').toBe(true);
   expect(externalRequests, 'No request may escape to an external origin').toEqual([]);
   expect(pageErrors, 'Font fallback must not create page errors').toEqual([]);
-  expect(badResponses.every(response => {
-    const url = new URL(response.url);
-    return url.origin === origin && url.pathname.startsWith('/font-fallback/');
-  }), 'Any failed resource must be inside the expected local font-fallback namespace').toBe(true);
-  expect(unexpectedConsoleErrors, 'Only expected local missing-font 404 messages may be present').toEqual([]);
+  expect(fallbackRequests.some(request => request.url.includes('/notocoloremoji/')),
+    'The emoji must request a Noto Color Emoji shard').toBe(true);
+  expect(fallbackResponses.every(response => response.status === 200 && response.contentType === 'font/woff2'),
+    'Every fallback shard must be served (scripts/web-font-fallback.sh fills the build)').toBe(true);
+  expect(badResponses, 'No resource may fail').toEqual([]);
+  expect(consoleErrors, 'Font fallback must not log errors').toEqual([]);
 });

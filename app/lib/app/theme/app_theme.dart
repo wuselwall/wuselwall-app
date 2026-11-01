@@ -10,6 +10,11 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 /// "Küchentisch"). Dark is not cosmetic: the kitchen is bright in the morning and dim
 /// at night (specs/09); night is the kiosk's own third shade.
 abstract final class AppTheme {
+  // Symbols the UI fonts lack. Not bundled: phones have them in their system fonts,
+  // the web app fetches a Noto shard from its own origin only when needed
+  // (scripts/web-font-fallback.sh), and widget tests load the file under this name.
+  static const _symbolFallback = ['NotoSansSymbols'];
+
   static ThemeData build(UiRegister register, Shade shade) {
     final c = Palette.of(shade);
     final brightness = shade == Shade.light
@@ -72,7 +77,7 @@ abstract final class AppTheme {
             .apply(
               fontSizeFactor: base / 14,
               fontFamily: Tokens.fontUi,
-              fontFamilyFallback: const ['NotoSansSymbols'],
+              fontFamilyFallback: _symbolFallback,
               bodyColor: c.ink,
               displayColor: c.ink,
             );
@@ -84,7 +89,7 @@ abstract final class AppTheme {
       canvasColor: c.bg,
       dividerColor: c.line,
       fontFamily: Tokens.fontUi,
-      fontFamilyFallback: const ['NotoSansSymbols'],
+      fontFamilyFallback: _symbolFallback,
       textTheme: textTheme,
       extensions: [WwColors(shade: shade)],
       materialTapTargetSize: MaterialTapTargetSize.padded,
