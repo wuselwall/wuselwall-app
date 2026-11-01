@@ -515,16 +515,45 @@ Future<List<Map<String, Object?>>> _checkContrast(
   WidgetTester t,
   String label,
   List<String> problems,
+  Map<String, int> captureStats,
 ) async {
   final boundary =
       _frame.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+  final paragraphs = _paragraphs(t);
+  expect(paragraphs, isNotEmpty);
+  final paragraphRects = [
+    for (final paragraph in paragraphs)
+      MatrixUtils.transformRect(
+        paragraph.getTransformTo(boundary),
+        Offset.zero & paragraph.size,
+      ),
+  ];
+  final union = paragraphRects.reduce((a, b) => a.expandToInclude(b));
+  final padded = Rect.fromLTRB(
+    union.left.floorToDouble() - 1,
+    union.top.floorToDouble() - 1,
+    union.right.ceilToDouble() + 1,
+    union.bottom.ceilToDouble() + 1,
+  );
+  final captureRect = padded.intersect(Offset.zero & boundary.size);
+  expect(captureRect.isEmpty, isFalse, reason: '$label has no capture area');
+  final layer = boundary.debugLayer! as OffsetLayer;
   final (bytes, width, height) = (await t.runAsync(() async {
-    final image = await boundary.toImage();
-    final data = await image.toByteData();
-    final result = (data!, image.width, image.height);
-    image.dispose();
-    return result;
+    final image = await layer.toImage(captureRect);
+    try {
+      final data = await image.toByteData();
+      if (data == null) throw StateError('Could not read detail pixels');
+      return (data, image.width, image.height);
+    } finally {
+      image.dispose();
+    }
   }))!;
+  captureStats['fullFrameBytes'] =
+      (captureStats['fullFrameBytes'] ?? 0) +
+      (boundary.size.width * boundary.size.height * 4).round();
+  captureStats['capturedBytes'] =
+      (captureStats['capturedBytes'] ?? 0) + bytes.lengthInBytes;
+  captureStats['captures'] = (captureStats['captures'] ?? 0) + 1;
   int pixel(int x, int y) {
     final i = (y * width + x) * 4;
     return 0xff000000 |
@@ -534,20 +563,29 @@ Future<List<Map<String, Object?>>> _checkContrast(
   }
 
   final rows = <Map<String, Object?>>[];
-  for (final p in _paragraphs(t)) {
+  for (var i = 0; i < paragraphs.length; i++) {
+    final p = paragraphs[i];
     final text = p.text.toPlainText();
     final rect = _globalRect(p);
-    final visible = rect.intersect(
-      Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
-    );
-    // Rendered inside the image: the contrast run uses a tall view, so nothing scrolls.
-    if ((visible.height - rect.height).abs() > 0.5) {
+    final localRect = paragraphRects[i];
+    // Every full paragraph must fit in both the test view and the cropped image.
+    // A partial capture is a failure, never a reason to omit a paragraph.
+    if (rect.left < -0.5 ||
+        rect.top < -0.5 ||
+        rect.right > t.view.physicalSize.width + 0.5 ||
+        rect.bottom > t.view.physicalSize.height + 0.5 ||
+        localRect.left < captureRect.left ||
+        localRect.top < captureRect.top ||
+        localRect.right > captureRect.right ||
+        localRect.bottom > captureRect.bottom) {
       problems.add('$label "$text" is outside the rendered image');
       continue;
     }
     final counts = <int, int>{};
-    final left = rect.left.ceil(), right = rect.right.floor();
-    final top = rect.top.ceil(), bottom = rect.bottom.floor();
+    final left = (localRect.left - captureRect.left).ceil();
+    final right = (localRect.right - captureRect.left).floor();
+    final top = (localRect.top - captureRect.top).ceil();
+    final bottom = (localRect.bottom - captureRect.top).floor();
     for (var y = top; y < bottom; y++) {
       for (var x = left; x < right; x++) {
         final c = pixel(x, y);
@@ -663,12 +701,19 @@ void main() {
             );
             final evidence = <String, Object?>{};
             final problems = <String>[];
+            final captureStats = <String, int>{};
             for (final detail in _details.keys) {
               await _open(t, host, board, detail);
-              evidence[detail] = await _checkContrast(t, detail, problems);
+              evidence[detail] = await _checkContrast(
+                t,
+                detail,
+                problems,
+                captureStats,
+              );
               await _close(t);
             }
             if (_evidenceDir case final dir?) {
+              evidence['_capture'] = captureStats;
               Directory(dir).createSync(recursive: true);
               File('$dir/contrast-$key.json')
                   .writeAsStringSync(jsonEncode(evidence));

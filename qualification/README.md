@@ -11,6 +11,8 @@ A successful **full comparison** run produces `READY_FOR_REVIEW`, never an autom
 of accessibility conformance. Its summary retains `qualified: false`: baseline acceptance
 and physical-device review belong to a person approving the protected release environment.
 Capture, smoke, canonical-only, partial, skipped and failing runs cannot authorize release.
+Candidate Flutter tests run without automatic retries. Ordinary CI's bounded recovery
+from a recognized engine crash does not establish a clean release-candidate run.
 
 ## What runs
 
