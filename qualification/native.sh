@@ -208,13 +208,16 @@ PY
   (cd app/android && run_logged_deadline 1200 "gradle-android-audit-$kind" "$output/android-$kind/build-audits.log" ./gradlew app:assembleDebugAndroidTest) || return 1
   run_deadline 120 "adb-install-app-$kind" adb -s emulator-5580 install -r app/build/app/outputs/flutter-apk/app-debug.apk
   run_deadline 120 "adb-install-audit-$kind" adb -s emulator-5580 install -r app/build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+  run_deadline 15 "android-clear-report-$kind" adb -s emulator-5580 shell run-as ch.goomba.wuselwall rm -f files/qualification-native-audit.json
   local audit_timeout=1800
   [[ "${QUALIFY_NATIVE_SMOKE:-false}" == true ]] && audit_timeout=600
   run_logged_deadline "$audit_timeout" "android-instrumentation-$kind" "$output/android-$kind/audits.log" adb -s emulator-5580 shell am instrument -w -r \
     -e class ch.goomba.wuselwall.QualificationAuditTest \
     ch.goomba.wuselwall.test/androidx.test.runner.AndroidJUnitRunner || failed=1
   # Instrumentation may exit zero with failures; the report parser fails closed.
-  run_deadline 60 "android-report-pull-$kind" adb -s emulator-5580 exec-out run-as ch.goomba.wuselwall cat cache/native-audit.json \
+  # The instrumentation writes this complete report before its detector assertions.
+  # Dart's systemTemp location is platform-defined; do not assume app/cache.
+  run_deadline 60 "android-report-pull-$kind" adb -s emulator-5580 exec-out run-as ch.goomba.wuselwall cat files/qualification-native-audit.json \
     > "$output/android-$kind/audit.json" || failed=1
   [[ "$failed" == 0 ]] || return 1
   kill "$emulator_pid"

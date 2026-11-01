@@ -2,6 +2,7 @@ package ch.goomba.wuselwall
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Intent
+import android.os.ParcelFileDescriptor
 import android.os.Build
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -62,6 +63,18 @@ class QualificationAuditTest {
         return count
     }
 
+    private fun editable(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+        if (node.isEditable) return node
+        for (index in 0 until node.childCount) {
+            node.getChild(index)?.let { child -> editable(child)?.let { return it } }
+        }
+        return null
+    }
+
+    private fun shell(command: String): String =
+        ParcelFileDescriptor.AutoCloseInputStream(automation.executeShellCommand(command))
+            .bufferedReader().use { it.readText() }
+
     private fun semantics(node: AccessibilityNodeInfo): JSONObject {
         val children = JSONArray()
         for (i in 0 until node.childCount) node.getChild(i)?.let { children.put(semantics(it)) }
@@ -98,12 +111,29 @@ class QualificationAuditTest {
             val issues = JSONArray()
             if (id == "detector-keyboard") {
                 val field = find(root, "native-keyboard-field") ?: error("Flutter text input is absent from Android semantics")
-                assertTrue(field.performAction(AccessibilityNodeInfo.ACTION_CLICK))
-                Thread.sleep(500)
-                automation.executeShellCommand("input text qualification").close()
-                Thread.sleep(500)
-                keyboard = request("state").getString("input") == "qualification"
-                if (!keyboard) issues.put(JSONObject().put("check", "nativeTextInput").put("type", "ERROR"))
+                // Flutter can attach the identifier to a semantic wrapper. Tap
+                // its editable descendant and wait for native input focus.
+                val target = editable(field) ?: field
+                val clicked = target.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                var focused = false
+                for (attempt in 0 until 50) {
+                    val current = automation.rootInActiveWindow?.let { find(it, "native-keyboard-field") }
+                    focused = current?.let { editable(it)?.isFocused ?: it.isFocused } == true
+                    if (focused) break
+                    Thread.sleep(100)
+                }
+                if (clicked && focused) {
+                    // Drain the command pipe: closing it immediately does not
+                    // wait for Android's input process to deliver its events.
+                    shell("input text qualification")
+                    for (attempt in 0 until 50) {
+                        keyboard = request("state").getString("input") == "qualification"
+                        if (keyboard) break
+                        Thread.sleep(100)
+                    }
+                }
+                if (!keyboard) issues.put(JSONObject().put("check", "nativeTextInput").put("type", "ERROR")
+                    .put("clicked", clicked).put("focused", focused).put("input", request("state").optString("input")))
             } else {
                 val hierarchy = AccessibilityHierarchyAndroid.newBuilder(root, context).build()
                 // A Flutter host with no virtual tree would make a vacuous ATF pass.
