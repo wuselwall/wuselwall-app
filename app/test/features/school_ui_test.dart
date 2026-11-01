@@ -491,6 +491,13 @@ void main() {
     await t.tap(find.text(de.schoolEditSchool));
     await t.pumpAndSettle();
 
+    // A card that rebuilds on its own keeps its number (it once counted on).
+    t.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(t.platformDispatcher.clearPlatformBrightnessTestValue);
+    await t.pumpAndSettle();
+    expect(find.text(de.boardPeriod(1)), findsOneWidget);
+    expect(find.text(de.boardPeriod(4)), findsNothing);
+
     final start = find.byTooltip(de.schoolStart).first;
     final end = find.byTooltip(de.schoolEnd).first;
     expect(

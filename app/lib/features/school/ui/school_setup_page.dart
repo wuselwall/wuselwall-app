@@ -619,7 +619,10 @@ class _BellTimesState extends ConsumerState<_BellTimes>
   Widget build(BuildContext context) {
     super.build(context);
     final l10n = context.l10n;
+    // Numbered once here: a card's builder can run again on its own (a theme
+    // change), and a counter there would keep counting ("10. Stunde").
     var lessonNo = 0;
+    final numbers = [for (final r in _rows) r.isBreak ? 0 : ++lessonNo];
     return _Section(
       title: l10n.schoolBellTimes,
       children: [
@@ -627,7 +630,6 @@ class _BellTimesState extends ConsumerState<_BellTimes>
           Builder(
             builder: (context) {
               final r = _rows[i];
-              if (!r.isBreak) lessonNo++;
               return Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -640,7 +642,7 @@ class _BellTimesState extends ConsumerState<_BellTimes>
                             child: Text(
                               r.isBreak
                                   ? l10n.boardBreak
-                                  : l10n.boardPeriod(lessonNo),
+                                  : l10n.boardPeriod(numbers[i]),
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
