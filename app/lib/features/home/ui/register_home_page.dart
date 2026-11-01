@@ -220,9 +220,11 @@ class _AdultNavBar extends StatelessWidget {
           child: NavigationBar(
             selectedIndex: tab.index,
             onDestinationSelected: (i) => onSelect(HomeTab.values[i]),
+            // A phone's bar is lower than Material's (specs/09 "the bottom bar").
+            height: navBarHeight(context),
             // Six destinations do not fit a phone with their labels: there only
             // the selected one is labelled, the others keep their tooltip.
-            labelBehavior: MediaQuery.sizeOf(context).width < 600
+            labelBehavior: MediaQuery.sizeOf(context).width < navBarPhoneWidth
                 ? NavigationDestinationLabelBehavior.onlyShowSelected
                 : null,
             destinations: [

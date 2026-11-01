@@ -157,6 +157,9 @@ class KidHome extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                     child: NavigationBar(
                       selectedIndex: tab.index,
+                      // A phone's bar is lower than Material's (specs/09 "the
+                      // bottom bar"); the kid's larger icon and label need 72.
+                      height: navBarHeight(context, phone: 72),
                       onDestinationSelected: (i) => ref
                           .read(kidTabProvider.notifier)
                           .select(KidTab.values[i]),
