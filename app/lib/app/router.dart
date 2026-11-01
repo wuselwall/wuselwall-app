@@ -99,6 +99,7 @@ abstract final class Routes {
   static const settingsTasks = '/settings/tasks';
   static const settingsCalendar = '/settings/calendar-school';
   static const settingsMeals = '/settings/meals';
+  static const settingsShopping = '/settings/shopping';
   static const settingsRituals = '/settings/rituals';
   static const settingsCelebrations = '/settings/celebrations';
   static const settingsKitchen = '/settings/kitchen-wall';

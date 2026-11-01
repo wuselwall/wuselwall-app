@@ -59,7 +59,9 @@ confidence and which layer answered. The first layer that hits wins:
 **The head noun.** German and English put it last (*Bio Vollmilch*, *orange juice*); French and
 Spanish put it first and join with a connector (*jus d'orange*, *zumo de naranja*). The matcher
 needs no language tag: when the tokens contain a connector (*de, d, du, des, di, con, au, of,
-mit, with, et, y, und, and*) the earliest hit is the head, otherwise the latest.
+mit, with, et, y, und, and, vom, von, ohne, without, sans, sin*) the earliest hit is the head,
+otherwise the latest (*Bratwurst vom Grill*, *Chili sin Carne*; *im*, *am* and *auf* introduce
+a place that is itself the subject, *Besuch im Zoo*, so they are not connectors).
 
 **Normalisation** is `app.fold` (case, umlauts to `ae oe ue`, `ß` to `ss`, the common accents
 stripped) followed by every run of other characters becoming one space, so *WC-Papier* and
@@ -101,12 +103,23 @@ carrot -> produce
   es: zanahoria, zanahorias
 ```
 
-`node scripts/dictionary.mjs build` validates the files (every key has a picture, every
-category key is a seeded one, no word maps to two keys within a domain) and renders
-`app/assets/matching/dictionary.json`, the asset the app loads; `sql <domain>` renders the same
-words as `values` rows for the migration that replaces `app.catalog_icon_for`,
-`app.meal_icon_for` and the category words of #195 with functions generated from this file.
-CI runs `check`, so the committed asset never drifts from the source. The four domains:
+A key starting with `@` (`@tools -> tools`) names no picture: its words only carry categories,
+and the tile shows the category's icon, as it does for an unknown name; this is how the second
+word list of #196 (flour, nappies, a hammer) lives on. A picture may head a second block with
+other categories (`fries.frozen -> frozen, snacks` for the Pommes beside the crisps).
+
+`node scripts/dictionary.mjs build` validates the files (every key has a picture or starts with
+`@`, every category key is a seeded one, every shopping block has categories, no word maps to
+two blocks within a domain) and renders `app/assets/matching/dictionary.json`, the asset the app
+loads. `sql` renders the migration that fills the server's word table `app.match_word`
+(domain, word, key, categories), written as a new `*_match_words.sql` whenever the dictionary
+changes; the server's `app.match_dictionary(domain, text)` runs the layers of the table above
+over that table, and `app.catalog_icon_for`, `app.meal_icon_for` and
+`app.catalog_category_keys_for` are thin wrappers over it. CI runs `check` (the asset equals the
+render) and the node test pins the newest `*_match_words.sql` to the render, so the app and the
+server never disagree on a word. The server does not strip quantities (feature 2 does that in
+the app before an item is sent), and its typo layer prefilters candidates with `fuzzystrmatch`
+before the exact Damerau-Levenshtein distance. The four domains:
 
 | Domain | Keys | Carries |
 |---|---|---|
@@ -143,14 +156,18 @@ that a family would not say is removed, not argued.
 
 Every manual correction of a picture or category is remembered **for that household**:
 
-- `app.match_correction (household_id, domain, folded_text, key, set_by, set_at)`, unique on
-  household, domain and text; written by the same `api` function that applies the correction
-  (`api.shopping_set_category`, the icon pickers), in the same transaction, with the usual
-  audit row (P4).
+- `app.match_correction (household_id, domain, text, folded_text, key, set_by, set_at)`, unique
+  on household, domain and folded text; written by the same `api` function that applies the
+  correction, in the same transaction, with the usual audit row (P4). The domain says what the
+  key is: `shopping_category` (feature 1: `api.shopping_set_category` and
+  `api.catalog_item_update`; the key is the seeded category key, or the key a family's own
+  category name stands for through `app.shopping_key_for_name`, and a category that stands for
+  nothing teaches nothing) and later the picture domains `meals`, `events`, `tasks`, where the
+  key is a picture.
 - Layer 1 reads it: on the server directly, on the device from a small synced table that is
   part of the household's ordinary pull.
 - **Silent to use, visible to guardians.** Nothing asks "always?". Settings → Einkaufen →
-  Advanced lists the learned words (*Guetzli → Keks, von Mia, 12.11.*) with **Vergessen**, the
+  Advanced lists the learned words (*Guetzli → Snacks, von Mia, 12.11.*) with **Vergessen**, the
   same way the catalogue tiles can be forgotten today. The export contains the table; deleting
   the household deletes it.
 - Nothing leaves the household. There is no upload, no pooled dictionary, no telemetry about

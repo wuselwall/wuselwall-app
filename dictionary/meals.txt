@@ -64,7 +64,7 @@ sandwich
   es: sándwich, sandwich, sándwiches, bocadillo, bocadillos, bocata, tostadas, tostada, montadito, montaditos, panini
 
 taco
-  de: Taco, Tacos, Nachos, Quesadilla, Quesadillas, Fajitas, Fajita, Mexikanisch, Enchiladas, Chili sin Carne
+  de: Taco, Tacos, Nachos, Quesadilla, Quesadillas, Fajitas, Fajita, Mexikanisch, Enchiladas
   en: taco, tacos, nachos, quesadilla, quesadillas, fajitas, fajita, taco night, mexican, enchiladas, tex-mex
   fr: tacos, taco, nachos, quesadillas, quesadilla, fajitas, mexicain, enchiladas
   es: taco, tacos, nachos, quesadilla, quesadillas, fajitas, enchiladas, mexicano
@@ -101,7 +101,7 @@ noodles
   es: noodles, fideos chinos, ramen, sopa de fideos, udon, pho, wok, pad thai, fideos de arroz, fideos salteados, chow mein, yakisoba
 
 soup
-  de: Suppe, Suppen, Eintopf, Eintöpfe, Gulasch, Gulaschsuppe, Chili, Chili con Carne, Linsen, Linsensuppe, Linseneintopf, Kürbissuppe, Tomatensuppe, Gemüsesuppe, Kartoffelsuppe, Erbsensuppe, Hühnersuppe, Brühe, Bouillon, Minestrone, Ragout, Pot-au-feu, Stew, Bohnensuppe, Zwiebelsuppe, Borschtsch
+  de: Suppe, Suppen, Eintopf, Eintöpfe, Gulasch, Gulaschsuppe, Chili, Chili con Carne, Chili sin Carne, Linsen, Linsensuppe, Linseneintopf, Kürbissuppe, Tomatensuppe, Gemüsesuppe, Kartoffelsuppe, Erbsensuppe, Hühnersuppe, Brühe, Bouillon, Minestrone, Ragout, Pot-au-feu, Stew, Bohnensuppe, Zwiebelsuppe, Borschtsch
   de-CH: Gerstensuppe, Bündner Gerstensuppe, Voressen
   de-AT: Frittatensuppe, Grießnockerlsuppe, Rindsuppe, Knödelsuppe, Leberknödelsuppe, Erdäpfelsuppe, Rindsgulasch
   en: soup, soups, stew, stews, chili, chilli, chili con carne, lentils, lentil soup, pumpkin soup, tomato soup, vegetable soup, potato soup, pea soup, chicken soup, broth, minestrone, goulash, ragout, pot-au-feu, casserole, hotpot, chowder, bean soup, onion soup, borscht

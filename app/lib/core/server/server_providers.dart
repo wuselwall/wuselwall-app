@@ -25,6 +25,10 @@ const featureEventTemplates = 'event-templates';
 /// (specs/20, Q48). Announced by the migration 20261026100000.
 const featurePasswordReset = 'password-reset';
 
+/// The server matches names with the shared dictionary and remembers the family's category
+/// corrections (specs/29). Announced by the migration 20261031151000.
+const featureLocalMatching = 'local-matching';
+
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
 /// signs in with a password, and a forgotten password is reset with a guardian's code
 /// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.

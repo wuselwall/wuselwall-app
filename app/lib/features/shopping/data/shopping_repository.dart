@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
@@ -270,6 +271,24 @@ class ShoppingRepository {
   }) => _api.rpc(
     'catalog_item_delete',
     params: {'p_actor': actor, 'p_item': itemId},
+    parse: (_) {},
+  );
+
+  /// The words the household taught the app, newest first (Einstellungen > Einkaufen).
+  Future<Result<List<MatchCorrection>>> matchCorrections() => _api.select(
+    'match_corrections',
+    parse: MatchCorrection.fromJson,
+    build: (q) =>
+        q.eq('domain', 'shopping_category').order('set_at', ascending: false),
+  );
+
+  /// The household forgets one learned word (guardians only).
+  Future<Result<void>> forgetMatchCorrection({
+    required String? actor,
+    required String id,
+  }) => _api.rpc(
+    'match_correction_forget',
+    params: {'p_actor': actor, 'p_id': id},
     parse: (_) {},
   );
 

@@ -22,6 +22,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
@@ -527,6 +528,40 @@ class DemoShoppingRepository implements ShoppingRepository {
       pinned: pinned,
       categoryAuto: c.categoryAuto,
     );
+    return const Ok(null);
+  }
+
+  final _corrections = <MatchCorrection>[
+    MatchCorrection(
+      id: 'demo-mc-guetzli',
+      domain: 'shopping_category',
+      text: demoText('Guetzli'),
+      foldedText: 'guetzli',
+      key: 'snacks',
+      setBy: DemoData.mama,
+      setAt: DateTime.now().subtract(const Duration(days: 12)),
+    ),
+    MatchCorrection(
+      id: 'demo-mc-znuni',
+      domain: 'shopping_category',
+      text: demoText('Znüni-Riegel'),
+      foldedText: 'znueni-riegel',
+      key: 'pantry',
+      setBy: DemoData.papa,
+      setAt: DateTime.now().subtract(const Duration(days: 40)),
+    ),
+  ];
+
+  @override
+  Future<Result<List<MatchCorrection>>> matchCorrections() async =>
+      Ok(List.of(_corrections));
+
+  @override
+  Future<Result<void>> forgetMatchCorrection({
+    required String? actor,
+    required String id,
+  }) async {
+    _corrections.removeWhere((c) => c.id == id);
     return const Ok(null);
   }
 

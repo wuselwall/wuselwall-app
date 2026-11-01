@@ -7,6 +7,8 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/matching/matcher.dart' as matching;
+import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -265,6 +267,30 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
 
   void _changed() => setState(() {});
 
+  /// The picture of the "Neu: ..." tile: what the matcher knows the typed name as, else
+  /// the icon of the first category it names that this list has, else the plus.
+  Widget _createPicture(
+    matching.Match? match,
+    Iterable<ShoppingCategory> listCategories, {
+    required bool kiosk,
+  }) {
+    if (match == null) return const Icon(Icons.add_circle_outline, size: 28);
+    if (shoppingIconAsset(match.iconKey) case final asset?) {
+      return Image.asset(
+        asset,
+        width: kiosk ? 40 : 32,
+        height: kiosk ? 40 : 32,
+        // The tile's label names the item; the picture adds nothing for a screen reader.
+        excludeFromSemantics: true,
+      );
+    }
+    for (final key in match.categories) {
+      final category = listCategories.where((c) => c.key == key).firstOrNull;
+      if (category != null) return Icon(categoryIcon(category), size: 28);
+    }
+    return const Icon(Icons.add_circle_outline, size: 28);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -279,7 +305,12 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
         c.id: c,
     };
     final query = widget.search.text.trim();
-    final tiles = rankTiles(catalog, query);
+    final matcher = ref.watch(shoppingMatcherProvider);
+    final tiles = rankTiles(
+      catalog,
+      query,
+      iconKeyFor: matcher == null ? null : (q) => matcher.match(q)?.iconKey,
+    );
     final folded = fold(query);
     final exact = tiles.any((t) => t.foldedName == folded);
 
@@ -317,7 +348,11 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
           order: NumericFocusOrder(200 + tiles.length.toDouble()),
           child: ShoppingTile(
             width: width,
-            picture: const Icon(Icons.add_circle_outline, size: 28),
+            picture: _createPicture(
+              matcher?.match(query),
+              categories.values.where((c) => c.listId == widget.list.id),
+              kiosk: kiosk,
+            ),
             label: l10n.shoppingCreateTile(query),
             count: 0,
             onTap: widget.busy ? null : () => widget.onAdd(query),

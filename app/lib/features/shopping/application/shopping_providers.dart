@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_mode.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
@@ -53,6 +55,21 @@ final shoppingItemMealsProvider = FutureProvider.autoDispose
       return result.valueOrNull ?? const [];
     });
 
+/// The words this household taught the app (Einstellungen > Einkaufen > Gelernte Wörter),
+/// newest first. Refetched on the `shopping` topic, which the server broadcasts after a
+/// correction is made or forgotten.
+final matchCorrectionsProvider =
+    FutureProvider.autoDispose<List<MatchCorrection>>((ref) async {
+      final household = ref.watch(
+        deviceProvider.select((d) => d.value?.householdId),
+      );
+      if (household != null) {
+        refreshOnInvalidation(ref, householdId: household, topic: 'shopping');
+      }
+      return (await ref.watch(shoppingRepositoryProvider).matchCorrections())
+          .unwrap();
+    });
+
 /// Changes made on this device that the server has not confirmed yet.
 final shoppingPendingProvider = Provider<int>(
   (ref) => ref.watch(shoppingSyncProvider.select((s) => s.outbox.length)),
@@ -93,10 +110,16 @@ final currentListProvider = Provider.autoDispose<AsyncValue<ShoppingList?>>((
 /// them, with no query the household's most recent purchases, then its most bought; with
 /// one, prefix beats word-start beats substring, ties broken by purchases (pinned
 /// matches ahead of the others of the same score).
+///
+/// [iconKeyFor] is the matcher's fallback (specs/29): it answers the picture a typed
+/// name means, and a tile with that picture ranks after the substring matches. So
+/// "Tomatten" or "Rüebli" finds the family's "Tomaten" or "Karotten". It is asked only
+/// for queries of three characters or more.
 List<CatalogEntry> rankTiles(
   List<CatalogEntry> catalog,
   String query, {
   int limit = 24,
+  String? Function(String query)? iconKeyFor,
 }) {
   final q = fold(query.trim());
   int byBought(CatalogEntry a, CatalogEntry b) =>
@@ -118,11 +141,15 @@ List<CatalogEntry> rankTiles(
         if (seen.add(c.id)) c,
     ].take(limit).toList();
   }
+  final iconKey = iconKeyFor != null && q.length >= 3
+      ? iconKeyFor(query.trim())
+      : null;
   int? score(CatalogEntry c) {
     final name = c.foldedName;
     if (name.startsWith(q)) return 0;
     if (name.split(RegExp(r'[\s\-/]+')).any((w) => w.startsWith(q))) return 1;
     if (name.contains(q)) return 2;
+    if (iconKey != null && c.iconKey == iconKey) return 3;
     return null;
   }
 

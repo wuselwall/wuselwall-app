@@ -15,9 +15,13 @@ class Match {
     required this.matchedWord,
   });
 
+  /// The dictionary key: a picture, or `@name` for a category-only entry.
   final String key;
   final List<String> categories;
   final MatchLayer layer;
+
+  /// The picture to show, null when the entry has none.
+  String? get iconKey => key.startsWith('@') ? null : key;
 
   /// The part of the text (normalised) or the dictionary word that matched.
   final String matchedWord;
@@ -45,6 +49,8 @@ const _connectors = <String>{
   // German "X vom/von Y" names the thing first ("Bratwurst vom Grill"); "im", "am" and
   // "auf" introduce the place, which is the subject ("Besuch im Zoo"), so they stay out.
   'vom', 'von',
+  // "X without Y" names X too ("Chili sin Carne").
+  'ohne', 'without', 'sans', 'sin',
 };
 
 /// Plural and case endings tried by the stem and compound layers, longest first.

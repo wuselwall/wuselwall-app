@@ -53,7 +53,14 @@ Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): on
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the
 layered pure-Dart matcher and the shared quantity parser live in `app/lib/core/matching/`, the
-acceptance corpus in `dictionary/corpus.txt`; not yet wired into any screen or migration.
+acceptance corpus in `dictionary/corpus.txt`. Feature 1 (shopping) is in: `dictionary.mjs sql` writes
+`supabase/migrations/*_match_words.sql` (table `app.match_word`, the newest file pinned to the render
+by the node test), `app.match_dictionary` runs the same layers in plpgsql and feeds
+`catalog_icon_for`, `meal_icon_for` (triggers now, no generated columns) and
+`catalog_category_keys_for`; `@name` blocks carry categories without a picture; the picker's
+`rankTiles` falls back to the matcher and the "Neu" tile shows the matched picture; a person's
+category choice is remembered per household in `app.match_correction` (Einstellungen > Einkaufen >
+Gelernte Wörter, Advanced, guardians forget).
 MCP and AI assistant work is **on hold** (2026-10-24), removed from the app UI and active
 milestones. The backend, keys and proposal data are retained for compatibility; existing
 MCP clients are not disabled. Siri/automations, structured timetable text import and the

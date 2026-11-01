@@ -48,6 +48,7 @@ import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
+import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
@@ -692,6 +693,27 @@ class FakeShoppingRepository implements ShoppingRepository {
   final catalogUpdates = <({String id, String? name})>[];
   final pins = <({String id, bool pinned})>[];
   final forgottenTiles = <String>[];
+
+  /// The learned words the fake serves, and the ids forgotten (the server removes them).
+  List<MatchCorrection> corrections = [];
+  final forgottenCorrections = <String>[];
+  Result<void> forgetCorrectionResult = const Ok(null);
+
+  @override
+  Future<Result<List<MatchCorrection>>> matchCorrections() async =>
+      Ok(List.of(corrections));
+
+  @override
+  Future<Result<void>> forgetMatchCorrection({
+    required String? actor,
+    required String id,
+  }) async {
+    forgottenCorrections.add(id);
+    if (forgetCorrectionResult is Ok) {
+      corrections.removeWhere((c) => c.id == id);
+    }
+    return forgetCorrectionResult;
+  }
 
   @override
   Future<Result<List<ShoppingList>>> lists() async => Ok(lists_);
