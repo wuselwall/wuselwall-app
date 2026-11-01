@@ -30,6 +30,33 @@ void main() {
     }
   });
 
+  testWidgets('on a phone every destination opens, its label inside the bar', (
+    t,
+  ) async {
+    await pumpAdult(t, const Size(390, 844));
+    final bar = find.byType(NavigationBar);
+    final destinations = find.byType(NavigationDestination);
+    final count = destinations.evaluate().length;
+    // Backwards, so each tap leaves the tab it starts on.
+    for (var i = count - 1; i >= 0; i--) {
+      // Where a person taps: the destination, whose label is hidden until chosen.
+      await t.tap(destinations.at(i));
+      await t.pumpAndSettle();
+      expect(t.widget<NavigationBar>(bar).selectedIndex, i);
+      final label = find.descendant(
+        of: destinations.at(i),
+        matching: find.byType(RichText),
+      );
+      final box = t.getRect(bar);
+      final rect = t.getRect(label.first);
+      expect(
+        box.top <= rect.top && rect.bottom <= box.bottom,
+        isTrue,
+        reason: 'label of destination $i at $rect, bar at $box',
+      );
+    }
+  });
+
   testWidgets('a wide screen keeps the Material height', (t) async {
     await pumpAdult(t, const Size(1000, 1600));
     expect(navBarHeight(t.element(find.byType(NavigationBar))), isNull);

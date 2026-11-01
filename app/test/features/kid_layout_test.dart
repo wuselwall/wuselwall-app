@@ -222,6 +222,16 @@ void main() {
       expect(size.height, greaterThanOrEqualTo(56));
       expect(size.width, greaterThanOrEqualTo(56));
     }
+    // Every destination opens where a child taps it.
+    final destinations = find.byType(NavigationDestination);
+    for (var i = destinations.evaluate().length - 1; i >= 0; i--) {
+      await tester.tap(destinations.at(i));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+        i,
+      );
+    }
     await unmountApp(tester, container);
   });
 
