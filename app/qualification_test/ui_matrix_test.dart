@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/core/matching/dictionary_loader.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
 
@@ -70,6 +71,9 @@ void main() {
   final evidence = <Map<String, Object?>>[];
   var expected = 0;
   setUpAll(() async {
+    // The picker rebuilds when its bundled matcher becomes available. Finish
+    // that asset load before measuring an otherwise stationary paint scene.
+    await loadMatchDictionaries();
     for (final family in {
       'AtkinsonHyperlegibleNext': ['Regular', 'SemiBold', 'Bold', 'ExtraBold'],
       'BarlowSemiCondensed': ['Medium', 'SemiBold', 'Bold'],
@@ -197,6 +201,26 @@ void main() {
                 container.read(routerProvider).go(state['route'] as String);
                 await settleQualification(tester);
               }
+              // Image decoding uses real asynchronous work, which fake frame
+              // pumping alone does not drain. Finish visible fixture assets
+              // before measuring a stationary paint scene.
+              await tester.binding.runAsync<void>(() async {
+                for (final image
+                    in tester.widgetList<Image>(find.byType(Image)).toList()) {
+                  Object? imageError;
+                  await precacheImage(
+                    image.image,
+                    tester.element(find.byWidget(image).first),
+                    onError: (error, _) => imageError = error,
+                  );
+                  if (imageError != null) {
+                    throw TestFailure(
+                      'Qualification image failed to load: $imageError',
+                    );
+                  }
+                }
+              });
+              await settleQualification(tester);
               expect(
                 find.byWidgetPredicate(
                   (w) =>

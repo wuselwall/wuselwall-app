@@ -32,11 +32,11 @@ coverage of every modal, permission outcome or backend-connected journey.
 Native Android ATF and iOS XCTest audit adapters, virtual accessibility-node inspection,
 known-failure/keyboard controls, phone/tablet and enlarged-text profiles, and native PNG and
 semantic comparisons are implemented. The dedicated native toolchain is provisioned and
-runner preflight passed. Both platforms rendered the initial five phone smoke screens.
-Both platforms recorded seven audit entries with working detector and keyboard
-checks and no framework errors. Android's calendar target and iOS's scroll-container
-and Today hit-area findings remain blocking. The latest inventory adds claim and
-shopping trip to native coverage; the earlier five-screen diagnostic does not cover them.
+runner preflight passed. The current phone diagnostic captures seven screens and
+records nine audit entries per platform, including server claim and shopping trip.
+Both platforms pass detector/keyboard checks with no framework errors. Android passes
+after enlarging the calendar date-header target. iOS's scroll-container and clipped
+Today/shopping hit-area findings remain blocking.
 These diagnostics do not establish complete native coverage or an approved baseline.
 Native platform interaction uses dedicated adapters and a test-only Flutter checkpoint
 bridge; Patrol is not a current dependency.
@@ -54,7 +54,7 @@ publishing-workflow qualification gates.
 Current validation rendered 192 direct fixture/locale pairs in DE/EN/FR/ES. Earlier validation executed the 70-state,
 8,760-case Flutter matrix. Large-text layout and touch-target fixes were verified in a
 672-case responsive rerun with no framework, label or target-size findings. Contrast findings
-remain visible and blocking while attribution continues. The ordinary suite passed 1,879
+remain visible and blocking while attribution continues. The ordinary suite passed 1,881
 tests with seven intentionally unconfigured backend integration tests skipped; the separate
 disposable-backend CI job supplies their coverage. No qualified candidate or approved native
 baseline is established by these local checks.
@@ -141,9 +141,15 @@ semantic text still need additional assertions or review. A screen with no audit
 or controls must not silently appear to have complete coverage.
 
 Pixel colours alone cannot exclude an overlay that happens to use the text's blend
-palette. The audit therefore also rejects foreground custom painters, perspective
-transforms and intersecting later-painted siblings. Negative controls cover those
-cases and a low-contrast background occupying less than half of every glyph box.
+palette. Foreground painters require a paired actual-scene proof: removing their
+paint must leave all paragraph sample pixels unchanged, text/layout must stay
+identical, and restoring the exact painter instances must reproduce the original
+whole frame byte for byte. Otherwise the SDK verdict stands. Failed restoration
+aborts the audit. The [runbook](../qualification/README.md) describes the measurement
+and asset preparation. Perspective transforms and intersecting later-painted siblings
+remain undecided. Negative controls cover harmful overlays, blend modes, unstable
+frames, text mutation during measurement, restoration failures and a low-contrast
+background occupying less than half of every glyph box.
 Unrecognized SDK diagnostic prefixes remain blocking after per-node attribution.
 
 The Flutter evidence artifact includes grouped JSON/Markdown contrast reports even when

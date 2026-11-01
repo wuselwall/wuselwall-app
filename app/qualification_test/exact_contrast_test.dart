@@ -293,7 +293,7 @@ void main() {
     },
   );
 
-  testWidgets('an outlined foreground painter stays unproven without a proof', (
+  testWidgets('a foreground border outside the glyph neighborhood is proven', (
     t,
   ) async {
     await withSemantics(
@@ -309,10 +309,47 @@ void main() {
         ),
       ),
       () async {
-        final row = (await auditExactContrast(t)).rows.single;
+        final report = await auditExactContrast(t);
+        final row = report.rows.single;
         expect(row.text, 'Inside the outline');
-        expect(row.classification, 'UNDECIDED', reason: row.reason);
-        expect(row.reason, 'Foreground painter');
+        expect(row.classification, 'PASS', reason: row.reason);
+        expect(row.foregroundPainterProof, 'pixel-identical');
+        expect(report.toJson()['foregroundPainterProofs'], {
+          'pixelIdentical': 1,
+          'unproven': 0,
+        });
+      },
+    );
+  });
+
+  testWidgets('a Material ShapeBorder is proven by the live-scene comparison', (
+    t,
+  ) async {
+    await withSemantics(
+      t,
+      _page(
+        Material(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(color: _line, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SizedBox(
+            width: 320,
+            height: 80,
+            child: Center(
+              child: Text('Material border', style: _style(size: 16)),
+            ),
+          ),
+        ),
+      ),
+      () async {
+        final report = await auditExactContrast(t);
+        expect(report.rows, hasLength(1));
+        expect(report.rows.single.foregroundPainterProof, 'pixel-identical');
+        // The painter is proven irrelevant in the glyph neighborhood; the
+        // separate background attribution may still remain undecided.
+        expect(report.rows.single.reason, isNot('Foreground painter'));
       },
     );
   });

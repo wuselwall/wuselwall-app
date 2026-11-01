@@ -9,8 +9,9 @@
 // where no guess is needed: the foreground is the resolved TextStyle colour and
 // backgrounds are supported by the glyphs' own anti-aliased pixels. Pixel coverage
 // alone cannot distinguish a neutral overlay that reuses those colours; known
-// foreground painters, overlapping later siblings and perspective transforms are
-// therefore UNDECIDED, as are gradients, opacity, fades, shaders and other mixed
+// foreground painters stay UNDECIDED unless paired captures prove they change no
+// sampled pixel in an otherwise stable scene. Overlapping later siblings and
+// perspective transforms stay UNDECIDED, as do gradients, opacity, fades, shaders and other mixed
 // paint. The SDK verdict stands for every node the exact audit does not prove.
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -63,6 +64,7 @@ class ExactContrastRow {
     this.weight,
     this.coverage,
     this.sampled,
+    this.foregroundPainterProof,
   });
 
   final int semanticsId;
@@ -83,6 +85,11 @@ class ExactContrastRow {
   final double? coverage;
   final int? sampled;
 
+  /// pixel-identical means the live scene and a scene with the text's ancestor
+  /// foreground painters removed match across this paragraph's sampled area.
+  /// unproven keeps the foreground-painter guard in force.
+  final String? foregroundPainterProof;
+
   Map<String, Object?> toJson() => {
     'semanticsId': semanticsId,
     'text': text,
@@ -97,6 +104,8 @@ class ExactContrastRow {
     if (weight != null) 'weight': weight,
     if (coverage != null) 'coverage': coverage,
     if (sampled != null) 'sampled': sampled,
+    if (foregroundPainterProof != null)
+      'foregroundPainterProof': foregroundPainterProof,
   };
 
   String describe() =>
@@ -155,6 +164,14 @@ class ExactContrastReport {
     'pass': rows.where((r) => r.classification == 'PASS').length,
     'fail': rows.where((r) => r.classification == 'FAIL').length,
     'undecided': rows.where((r) => r.classification == 'UNDECIDED').length,
+    'foregroundPainterProofs': {
+      'pixelIdentical': rows
+          .where((r) => r.foregroundPainterProof == 'pixel-identical')
+          .length,
+      'unproven': rows
+          .where((r) => r.foregroundPainterProof == 'unproven')
+          .length,
+    },
     'details': [for (final row in rows) row.toJson()],
   };
 }
@@ -223,6 +240,480 @@ class _Capture {
   }
 }
 
+class _FrameCapture {
+  _FrameCapture(this.views, this.captures);
+
+  final List<RenderView> views;
+  final Map<RenderView, _Capture> captures;
+}
+
+class _ParagraphFingerprint {
+  _ParagraphFingerprint(RenderParagraph paragraph)
+    : paragraph = paragraph,
+      span = paragraph.text,
+      size = paragraph.size,
+      paintBounds = paragraph.paintBounds,
+      transform = paragraph.getTransformTo(null).storage.toList(),
+      textScaler = paragraph.textScaler,
+      textDirection = paragraph.textDirection,
+      textAlign = paragraph.textAlign,
+      softWrap = paragraph.softWrap,
+      maxLines = paragraph.maxLines,
+      overflow = paragraph.overflow,
+      locale = paragraph.locale,
+      strutStyle = paragraph.strutStyle,
+      textWidthBasis = paragraph.textWidthBasis,
+      textHeightBehavior = paragraph.textHeightBehavior,
+      boxes = paragraph
+          .getBoxesForSelection(
+            TextSelection(
+              baseOffset: 0,
+              extentOffset: paragraph.text
+                  .toPlainText(includeSemanticsLabels: false)
+                  .length,
+            ),
+          )
+          .map((box) => box.toRect())
+          .toList();
+
+  final RenderParagraph paragraph;
+  final InlineSpan span;
+  final Size size;
+  final Rect paintBounds;
+  final List<double> transform;
+  final TextScaler textScaler;
+  final TextDirection textDirection;
+  final TextAlign textAlign;
+  final bool softWrap;
+  final int? maxLines;
+  final TextOverflow overflow;
+  final Locale? locale;
+  final StrutStyle? strutStyle;
+  final TextWidthBasis textWidthBasis;
+  final TextHeightBehavior? textHeightBehavior;
+  final List<Rect> boxes;
+
+  bool matches(RenderParagraph current) {
+    if (!identical(paragraph, current) ||
+        !current.attached ||
+        span.compareTo(current.text) != RenderComparison.identical ||
+        size != current.size ||
+        paintBounds != current.paintBounds ||
+        !identical(textScaler, current.textScaler) ||
+        textDirection != current.textDirection ||
+        textAlign != current.textAlign ||
+        softWrap != current.softWrap ||
+        maxLines != current.maxLines ||
+        overflow != current.overflow ||
+        locale != current.locale ||
+        strutStyle != current.strutStyle ||
+        textWidthBasis != current.textWidthBasis ||
+        textHeightBehavior != current.textHeightBehavior) {
+      return false;
+    }
+    final currentTransform = current.getTransformTo(null).storage;
+    if (transform.length != currentTransform.length) return false;
+    for (var i = 0; i < transform.length; i++) {
+      if (transform[i] != currentTransform[i]) return false;
+    }
+    final currentBoxes = current
+        .getBoxesForSelection(
+          TextSelection(
+            baseOffset: 0,
+            extentOffset: current.text
+                .toPlainText(includeSemanticsLabels: false)
+                .length,
+          ),
+        )
+        .map((box) => box.toRect())
+        .toList();
+    if (boxes.length != currentBoxes.length) return false;
+    for (var i = 0; i < boxes.length; i++) {
+      if (boxes[i] != currentBoxes[i]) return false;
+    }
+    return true;
+  }
+}
+
+class _ForegroundPainterProof {
+  _ForegroundPainterProof({
+    required this.before,
+    required this.withoutPainters,
+    required this.afterRestore,
+    required this.originalPainters,
+    required this.originalParagraphs,
+    required this.layoutStable,
+    required this.paintersRemoved,
+  });
+
+  final _FrameCapture? before;
+  final _FrameCapture? withoutPainters;
+  final _FrameCapture? afterRestore;
+  final Map<RenderCustomPaint, CustomPainter> originalPainters;
+  final Map<RenderParagraph, _ParagraphFingerprint> originalParagraphs;
+  final bool layoutStable;
+  final bool paintersRemoved;
+
+  late final bool stable =
+      paintersRemoved &&
+      layoutStable &&
+      _hasComparableCounterfactualFrame() &&
+      _sameFrame(before, afterRestore) &&
+      _samePaintersRestored();
+
+  bool _hasComparableCounterfactualFrame() {
+    if (before == null || withoutPainters == null || afterRestore == null) {
+      return false;
+    }
+    if (before!.views.length != withoutPainters!.views.length ||
+        before!.views.length != afterRestore!.views.length) {
+      return false;
+    }
+    for (var i = 0; i < before!.views.length; i++) {
+      final view = before!.views[i];
+      if (!identical(view, withoutPainters!.views[i]) ||
+          !identical(view, afterRestore!.views[i])) {
+        return false;
+      }
+      if (view.flutterView.devicePixelRatio == 1) {
+        final live = before!.captures[view];
+        final without = withoutPainters!.captures[view];
+        final restored = afterRestore!.captures[view];
+        if (live == null ||
+            without == null ||
+            restored == null ||
+            live.width != without.width ||
+            live.height != without.height ||
+            live.width != restored.width ||
+            live.height != restored.height) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  bool _samePaintersRestored() {
+    if (before == null || afterRestore == null) return false;
+    final current = _foregroundPaintersIn(
+      afterRestore!.views,
+      only: originalPainters.keys.toSet(),
+    );
+    if (current.length != originalPainters.length) return false;
+    for (final entry in originalPainters.entries) {
+      if (!entry.key.attached ||
+          !identical(entry.key.foregroundPainter, entry.value) ||
+          !identical(current[entry.key], entry.value)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Whether removing foreground painters changes any pixel that the exact
+  /// audit reads for this paragraph: selection boxes plus two pixels, which
+  /// includes the audit's one-pixel sample margin and its neighbor probes.
+  bool provesUnchanged(RenderParagraph paragraph, RenderView view) {
+    if (!stable ||
+        !paragraph.attached ||
+        !originalParagraphs.containsKey(paragraph) ||
+        !originalParagraphs[paragraph]!.matches(paragraph)) {
+      return false;
+    }
+    var hasAncestorPainter = false;
+    for (
+      RenderObject? ancestor = paragraph.parent;
+      ancestor != null;
+      ancestor = ancestor.parent
+    ) {
+      if (ancestor is RenderCustomPaint && ancestor.foregroundPainter != null) {
+        hasAncestorPainter = true;
+        if (!originalPainters.containsKey(ancestor) ||
+            !identical(
+              ancestor.foregroundPainter,
+              originalPainters[ancestor],
+            )) {
+          return false;
+        }
+      }
+    }
+    if (!hasAncestorPainter) return false;
+    final live = before!.captures[view];
+    final without = withoutPainters!.captures[view];
+    if (live == null ||
+        without == null ||
+        live.width != without.width ||
+        live.height != without.height) {
+      return false;
+    }
+    final textLength = paragraph.text
+        .toPlainText(includeSemanticsLabels: false)
+        .length;
+    if (textLength == 0) return false;
+    final transform = paragraph.getTransformTo(null);
+    if (_hasUnsupportedProjectiveTransform(transform)) return false;
+    final bounds = Rect.fromLTWH(
+      0,
+      0,
+      live.width.toDouble(),
+      live.height.toDouble(),
+    );
+    final boxes = paragraph
+        .getBoxesForSelection(
+          TextSelection(baseOffset: 0, extentOffset: textLength),
+        )
+        .map((box) => MatrixUtils.transformRect(transform, box.toRect()))
+        .where((box) => !box.isEmpty)
+        .toList();
+    if (boxes.isEmpty) return false;
+    for (final box in boxes) {
+      final region = box.inflate(2);
+      // Offscreen/cropped geometry cannot establish a no-paint proof.
+      if (!bounds.contains(region.topLeft) ||
+          !bounds.contains(region.bottomRight - const Offset(0.001, 0.001))) {
+        return false;
+      }
+      for (var y = region.top.floor(); y < region.bottom.ceil(); y++) {
+        for (var x = region.left.floor(); x < region.right.ceil(); x++) {
+          if (live.argbAt(x, y) != without.argbAt(x, y)) return false;
+        }
+      }
+    }
+    return true;
+  }
+}
+
+bool _sameCapture(_Capture? a, _Capture? b) {
+  if (a == null || b == null || a.width != b.width || a.height != b.height) {
+    return false;
+  }
+  if (a.data.lengthInBytes != b.data.lengthInBytes) return false;
+  for (var i = 0; i < a.data.lengthInBytes; i++) {
+    if (a.data.getUint8(i) != b.data.getUint8(i)) return false;
+  }
+  return true;
+}
+
+bool _sameFrame(_FrameCapture? a, _FrameCapture? b) {
+  if (a == null || b == null || a.views.length != b.views.length) return false;
+  for (var i = 0; i < a.views.length; i++) {
+    final view = a.views[i];
+    if (!identical(view, b.views[i])) return false;
+    if (view.flutterView.devicePixelRatio == 1 &&
+        !_sameCapture(a.captures[view], b.captures[view])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+Future<_Capture?> _captureRenderView(
+  WidgetTester tester,
+  RenderView renderView,
+) async {
+  final layer = renderView.debugLayer;
+  if (layer is! OffsetLayer) return null;
+  late int width;
+  late int height;
+  final data = await tester.binding.runAsync<ByteData?>(() async {
+    final image = await layer.toImage(renderView.paintBounds);
+    try {
+      width = image.width;
+      height = image.height;
+      return await image.toByteData();
+    } finally {
+      image.dispose();
+    }
+  });
+  return data == null ? null : _Capture(data, width, height);
+}
+
+Future<_FrameCapture?> _captureFrame(WidgetTester tester) async {
+  final views = tester.binding.renderViews.toList(growable: false);
+  final captures = <RenderView, _Capture>{};
+  for (final view in views) {
+    if (view.flutterView.devicePixelRatio != 1) continue;
+    final capture = await _captureRenderView(tester, view);
+    if (capture == null) return null;
+    captures[view] = capture;
+  }
+  return _FrameCapture(views, captures);
+}
+
+List<RenderParagraph> _paragraphsIn(Iterable<RenderView> views) {
+  final paragraphs = <RenderParagraph>[];
+  void visit(RenderObject object) {
+    if (object is RenderParagraph) paragraphs.add(object);
+    object.visitChildren(visit);
+  }
+
+  for (final view in views) {
+    visit(view);
+  }
+  return paragraphs;
+}
+
+Map<RenderCustomPaint, CustomPainter> _foregroundPaintersIn(
+  Iterable<RenderView> views, {
+  Set<RenderCustomPaint>? only,
+}) {
+  final painters = <RenderCustomPaint, CustomPainter>{};
+  void visit(RenderObject object) {
+    if (object is RenderCustomPaint &&
+        (only == null || only.contains(object))) {
+      final painter = object.foregroundPainter;
+      if (painter != null) painters[object] = painter;
+    }
+    object.visitChildren(visit);
+  }
+
+  for (final view in views) {
+    visit(view);
+  }
+  return painters;
+}
+
+bool _hasForegroundPainterAncestor(RenderParagraph paragraph) {
+  for (
+    RenderObject? ancestor = paragraph.parent;
+    ancestor != null;
+    ancestor = ancestor.parent
+  ) {
+    if (ancestor is RenderCustomPaint && ancestor.foregroundPainter != null) {
+      return true;
+    }
+  }
+  return false;
+}
+
+Future<_ForegroundPainterProof?> _verifyForegroundPainters(
+  WidgetTester tester,
+  _FrameCapture before,
+) async {
+  final paragraphs = _paragraphsIn(before.views);
+  if (!paragraphs.any(_hasForegroundPainterAncestor)) return null;
+  // Only ancestor painters trigger the guard we are trying to prove harmless.
+  // Keep unrelated foreground paint in the scene, including input borders that
+  // Flutter may rebuild independently during a frame.
+  final ancestors = <RenderCustomPaint>{};
+  for (final paragraph in paragraphs) {
+    for (
+      RenderObject? parent = paragraph.parent;
+      parent != null;
+      parent = parent.parent
+    ) {
+      if (parent is RenderCustomPaint && parent.foregroundPainter != null) {
+        ancestors.add(parent);
+      }
+    }
+  }
+  final painters = _foregroundPaintersIn(before.views, only: ancestors);
+  final originalParagraphs = {
+    for (final paragraph in paragraphs)
+      paragraph: _ParagraphFingerprint(paragraph),
+  };
+  var removed = false;
+  var layoutStable = false;
+  _FrameCapture? without;
+  _FrameCapture? restored;
+  Object? counterfactualError;
+  try {
+    for (final renderObject in painters.keys) {
+      renderObject.foregroundPainter = null;
+    }
+    await tester.pump(Duration.zero);
+    final views = tester.binding.renderViews.toList(growable: false);
+    removed =
+        views.length == before.views.length &&
+        views.asMap().entries.every(
+          (entry) => identical(entry.value, before.views[entry.key]),
+        ) &&
+        _foregroundPaintersIn(views, only: ancestors).isEmpty;
+    layoutStable = _fingerprintsMatch(originalParagraphs, views);
+    without = await _captureFrame(tester);
+  } catch (error) {
+    counterfactualError = error;
+  } finally {
+    Object? restorationError;
+    for (final entry in painters.entries) {
+      try {
+        if (!entry.key.attached) {
+          throw StateError('Foreground painter render object detached');
+        }
+        final current = entry.key.foregroundPainter;
+        if (identical(current, entry.value)) continue;
+        if (current != null) {
+          throw StateError(
+            'Foreground painter ${entry.value.runtimeType} was replaced by '
+            '${current.runtimeType} during proof (${entry.key.debugCreator})',
+          );
+        }
+        entry.key.foregroundPainter = entry.value;
+      } catch (error) {
+        restorationError ??= error;
+      }
+    }
+    try {
+      await tester.pump(Duration.zero);
+      final views = tester.binding.renderViews.toList(growable: false);
+      final currentPainters = _foregroundPaintersIn(views, only: ancestors);
+      if (views.length != before.views.length ||
+          views.asMap().entries.any(
+            (entry) => !identical(entry.value, before.views[entry.key]),
+          ) ||
+          currentPainters.length != painters.length ||
+          painters.entries.any(
+            (entry) =>
+                !entry.key.attached ||
+                !identical(entry.key.foregroundPainter, entry.value) ||
+                !identical(currentPainters[entry.key], entry.value),
+          )) {
+        restorationError ??= StateError(
+          'Foreground painter restoration failed',
+        );
+      }
+      restored = await _captureFrame(tester);
+      if (restored == null) {
+        restorationError ??= StateError('Could not capture restored scene');
+      }
+      layoutStable =
+          layoutStable && _fingerprintsMatch(originalParagraphs, views);
+    } catch (error) {
+      restorationError ??= error;
+    }
+    if (restorationError != null) {
+      Error.throwWithStackTrace(
+        StateError(
+          'Foreground painter proof could not safely restore the scene: $restorationError',
+        ),
+        StackTrace.current,
+      );
+    }
+  }
+  if (counterfactualError != null) without = null;
+  return _ForegroundPainterProof(
+    before: before,
+    withoutPainters: without,
+    afterRestore: restored,
+    originalPainters: painters,
+    originalParagraphs: originalParagraphs,
+    layoutStable: layoutStable,
+    paintersRemoved: removed,
+  );
+}
+
+bool _fingerprintsMatch(
+  Map<RenderParagraph, _ParagraphFingerprint> expected,
+  Iterable<RenderView> views,
+) {
+  final paragraphs = _paragraphsIn(views).toSet();
+  return paragraphs.length == expected.length &&
+      expected.entries.every(
+        (entry) =>
+            paragraphs.contains(entry.key) && entry.value.matches(entry.key),
+      );
+}
+
 SemanticsNode? _owningNode(RenderObject paragraph) {
   SemanticsNode? node;
   for (RenderObject? r = paragraph; r != null && node == null; r = r.parent) {
@@ -248,7 +739,10 @@ bool _exempt(SemanticsNode node) {
 /// Ancestors that change or obscure the glyph paint. Coverage is not sufficient
 /// for overlays that reuse the foreground/background palette, so known foreground
 /// painters and overlapping later-painted siblings fail closed here.
-String? _ancestorProblem(RenderParagraph paragraph) {
+String? _ancestorProblem(
+  RenderParagraph paragraph, {
+  required bool foregroundPainterProvenUnchanged,
+}) {
   for (RenderObject? r = paragraph.parent; r != null; r = r.parent) {
     if (r is RenderOpacity && r.opacity < 1) return 'Opacity below 1';
     if (r is RenderAnimatedOpacity && r.opacity.value < 1) {
@@ -261,7 +755,9 @@ String? _ancestorProblem(RenderParagraph paragraph) {
         return 'Perspective transform';
       }
     }
-    if (r is RenderCustomPaint && r.foregroundPainter != null) {
+    if (r is RenderCustomPaint &&
+        r.foregroundPainter != null &&
+        !foregroundPainterProvenUnchanged) {
       return 'Foreground painter';
     }
     if (r is RenderStack ||
@@ -390,37 +886,41 @@ bool _isBlend(int argb, int fg, int bg) => _blendError(argb, fg, bg) != null;
 /// Audits every painted paragraph the SDK guideline would consider.
 Future<ExactContrastReport> auditExactContrast(WidgetTester tester) async {
   final rows = <ExactContrastRow>[];
-  for (final renderView in tester.binding.renderViews) {
-    if (renderView.flutterView.devicePixelRatio != 1) {
-      // The capture and the paint bounds share a coordinate space only at DPR 1.
-      continue;
-    }
-    final layer = renderView.debugLayer! as OffsetLayer;
-    late int width;
-    late int height;
-    final data = await tester.binding.runAsync<ByteData?>(() async {
-      final image = await layer.toImage(renderView.paintBounds);
-      width = image.width;
-      height = image.height;
-      final bytes = await image.toByteData();
-      image.dispose();
-      return bytes;
-    });
-    if (data == null) continue;
-    final capture = _Capture(data, width, height);
-    final paragraphs = <RenderParagraph>[];
-    void visit(RenderObject object) {
-      if (object is RenderParagraph) paragraphs.add(object);
-      object.visitChildren(visit);
-    }
-
-    visit(renderView);
+  final live = await _captureFrame(tester);
+  if (live == null) return ExactContrastReport(rows);
+  final foregroundProof = await _verifyForegroundPainters(tester, live);
+  // Ownership and geometry are deliberately collected after painter restoration.
+  // No semantics IDs from the counterfactual scene enter the report.
+  for (final renderView in live.views) {
+    if (renderView.flutterView.devicePixelRatio != 1) continue;
+    final capture =
+        foregroundProof?.afterRestore?.captures[renderView] ??
+        live.captures[renderView];
+    if (capture == null) continue;
+    final paragraphs = _paragraphsIn([renderView]);
     for (final paragraph in paragraphs) {
       final text = paragraph.text.toPlainText(includeSemanticsLabels: false);
       if (text.trim().isEmpty) continue;
       final node = _owningNode(paragraph);
       if (node == null || _exempt(node)) continue;
-      rows.addAll(_auditParagraph(paragraph, node.id, text, capture));
+      final painterApplies = _hasForegroundPainterAncestor(paragraph);
+      final painterProven =
+          painterApplies &&
+          foregroundProof?.provesUnchanged(paragraph, renderView) == true;
+      rows.addAll(
+        _auditParagraph(
+          paragraph,
+          node.id,
+          text,
+          capture,
+          foregroundPainterProvenUnchanged: painterProven,
+          foregroundPainterProof: painterApplies
+              ? painterProven
+                    ? 'pixel-identical'
+                    : 'unproven'
+              : null,
+        ),
+      );
     }
   }
   return ExactContrastReport(rows);
@@ -430,13 +930,16 @@ List<ExactContrastRow> _auditParagraph(
   RenderParagraph paragraph,
   int nodeId,
   String text,
-  _Capture capture,
-) {
+  _Capture capture, {
+  required bool foregroundPainterProvenUnchanged,
+  required String? foregroundPainterProof,
+}) {
   ExactContrastRow undecided(String reason) => ExactContrastRow(
     semanticsId: nodeId,
     text: text,
     classification: 'UNDECIDED',
     reason: reason,
+    foregroundPainterProof: foregroundPainterProof,
   );
   if (paragraph.runtimeType != RenderParagraph) {
     return [undecided('Custom paragraph paint')];
@@ -474,7 +977,10 @@ List<ExactContrastRow> _auditParagraph(
       visibleRuns.every((r) => _isIconRun(r.text, r.style))) {
     return []; // graphics do not prove or invalidate a text node
   }
-  final ancestor = _ancestorProblem(paragraph);
+  final ancestor = _ancestorProblem(
+    paragraph,
+    foregroundPainterProvenUnchanged: foregroundPainterProvenUnchanged,
+  );
   if (ancestor != null) return [undecided(ancestor)];
 
   final transform = paragraph.getTransformTo(null);
@@ -733,6 +1239,7 @@ List<ExactContrastRow> _auditParagraph(
         weight: weight.value,
         coverage: coverage,
         sampled: sampled,
+        foregroundPainterProof: foregroundPainterProof,
       ),
     );
   }

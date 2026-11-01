@@ -50,7 +50,7 @@ executed the 70-state, 8,760-case Flutter matrix. It exposed accessibility findi
 fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
 label or target-size findings. The exact audit below attributes eligible SDK border
 misattribution; ambiguous findings remain blocking. The ordinary
-suite passed 1,879 tests, with seven backend integration tests intentionally skipped without
+suite passed 1,881 tests, with seven backend integration tests intentionally skipped without
 backend configuration. Those seven require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile. An unsigned iOS diagnostic booted a simulator,
 captured five smoke screens and compiled XCTest. Both the deliberately bad control and
@@ -58,11 +58,11 @@ native keyboard detectors passed, and all seven audit entries were recorded with
 framework errors. The Android SDK/AVDs are provisioned and runner preflight passed.
 The combined diagnostic on `17652a9b` completed both platforms: five screen captures
 and seven audit entries each, with both detectors passing and no framework errors.
-Android's calendar audit reported a 33 dp target; iOS retains unnamed scroll-container
-findings and Today's hit-area finding. These remain blocking. The current inventory
-also adds server claim and shopping trip to native coverage, increasing phone smoke
-to seven captures and nine audit entries; the older five-screen diagnostic does not
-establish that new coverage.
+The subsequent diagnostic on `0fc52129` completed seven captures and nine audit
+entries on each platform, including server claim and shopping trip. Android passed
+after the calendar date-header target fix. Both platforms passed detector/input checks
+without framework errors. iOS still reports unnamed scroll containers and clipped
+hit areas in Today and shopping; those findings remain blocking.
 No native baseline or reviewed framework exception has been approved.
 
 Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)
@@ -98,8 +98,19 @@ reproduces the SDK misattribution and is proven exact, that two backgrounds and 
 are decided by their worse and composited colours, and that a gradient, an opacity and an
 overflowing fade stay undecided.
 Additional paint controls reproduce neutral overlays that remain on the same colour-blend
-line as the text. Such pixels alone cannot establish a proof: foreground custom painters,
-perspective transforms and intersecting later-painted siblings stay undecided. A second
+line as the text. Such pixels alone cannot establish a proof: perspective transforms
+and intersecting later-painted siblings stay undecided. Foreground painters also stay
+undecided unless a paired rendered-scene measurement proves they change no sampled
+pixel. That measurement captures the live scene, temporarily removes foreground
+painters on text ancestor chains, then restores the exact instances. The original and
+restored full frames must match byte for byte, paragraph text/layout fingerprints must
+stay identical throughout, and every paragraph sample plus its neighbor margin must
+match with and without those painters. A changed/replaced painter or failed restoration
+cannot pass. This checks actual rendering without private Flutter painter-type exemptions.
+Dictionary loading and fixture image decoding finish before measurements. Reports retain
+`foregroundPainterProof` per paragraph and proof counts; unproven paragraphs keep the
+raw SDK finding. Negative controls cover neutral overlays, blend modes, unstable frames,
+counterfactual text mutation and restoration failure. A second
 background cannot be discarded merely because it occupies less than half of each glyph
 box or only one glyph in a long paragraph. Unknown text before parsed SDK findings is
 retained as a blocking finding.
