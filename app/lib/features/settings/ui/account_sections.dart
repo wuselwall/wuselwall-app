@@ -9,6 +9,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/household/application/household_leave_providers.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -60,8 +61,8 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
                 ? l10n.settingsPasswordSet
                 : l10n.settingsPasswordNotSet,
           ),
-          action: _actionTarget(
-            OutlinedButton(
+          action: TouchTarget(
+            child: OutlinedButton(
               onPressed: _setPassword,
               child: Text(
                 hasPassword
@@ -103,8 +104,8 @@ class SecuritySection extends ConsumerWidget {
             leading: const Icon(Icons.security),
             title: Text(l10n.totpTitle),
             subtitle: Text(id == null ? l10n.totpOff : l10n.totpOn),
-            action: _actionTarget(
-              id == null
+            action: TouchTarget(
+              child: id == null
                   ? FilledButton(
                       onPressed: () => _enableTotp(context, ref),
                       child: Text(l10n.totpEnable),
@@ -127,8 +128,8 @@ class SecuritySection extends ConsumerWidget {
           leading: const Icon(Icons.pin_outlined),
           title: Text(l10n.pinChangeTitle),
           subtitle: Text(l10n.pinChangeBody),
-          action: _actionTarget(
-            OutlinedButton(
+          action: TouchTarget(
+            child: OutlinedButton(
               onPressed: () => _changePin(context, repo),
               child: Text(l10n.pinChangeAction),
             ),
@@ -141,8 +142,8 @@ class SecuritySection extends ConsumerWidget {
             leading: const Icon(Icons.fingerprint),
             title: Text(l10n.passkeyTitle),
             subtitle: Text(l10n.passkeyBody),
-            action: _actionTarget(
-              OutlinedButton(
+            action: TouchTarget(
+              child: OutlinedButton(
                 onPressed: () async {
                   final result = await repo.registerPasskey(l10n.appTitle);
                   if (!context.mounted) return;
@@ -213,12 +214,6 @@ class SecuritySection extends ConsumerWidget {
     }
   }
 }
-
-/// Keep each button as its own semantic control with at least a 48dp tap target.
-Widget _actionTarget(Widget action) => ConstrainedBox(
-  constraints: const BoxConstraints(minHeight: 48),
-  child: action,
-);
 
 class _TotpEnrolDialog extends ConsumerStatefulWidget {
   const _TotpEnrolDialog({required this.enrolment});

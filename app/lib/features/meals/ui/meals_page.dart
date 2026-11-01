@@ -12,6 +12,7 @@ import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/swipe_stepper.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -290,7 +291,7 @@ class _DayCell extends ConsumerWidget {
     final l10n = context.l10n;
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final today = ref.watch(nowProvider);
+    final today = ref.watch(todayProvider);
     final isToday = _sameDay(date, today);
     final warm = ref.watch(warmSlotProvider(date));
     final dayEntries = [
@@ -388,8 +389,7 @@ class _DayCell extends ConsumerWidget {
                             child: Text(context.planSlotLabel(s)),
                           ),
                       ],
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(minHeight: 48),
+                      child: TouchTarget(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: Tokens.space2,

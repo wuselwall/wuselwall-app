@@ -501,6 +501,33 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
+  testWidgets('at large text the week arrows stay on screen', (t) async {
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await _openSchedule(t);
+    // Phone width only once the tab is open: the tab bar needs the default size.
+    t.view.physicalSize = const Size(390, 844);
+    t.view.devicePixelRatio = 1;
+    t.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(t.view.reset);
+    addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+    await t.pumpAndSettle();
+
+    for (final tooltip in [de.schoolPrevWeek, de.schoolNextWeek]) {
+      final arrow = find.byTooltip(tooltip);
+      expect(arrow.hitTestable(), findsOneWidget, reason: tooltip);
+      final rect = t.getRect(arrow);
+      expect(rect.left, greaterThanOrEqualTo(0), reason: tooltip);
+      expect(rect.right, lessThanOrEqualTo(390), reason: tooltip);
+    }
+    expect(t.takeException(), isNull);
+  });
+
   testWidgets('without a school the section offers the setup', (t) async {
     await pumpApp(
       t,

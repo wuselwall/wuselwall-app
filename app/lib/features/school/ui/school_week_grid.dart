@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -522,10 +523,7 @@ class _LessonCell extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onLongPress: onTap,
         onTap: tapOnPress ? onTap : null,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 48),
-          child: tile,
-        ),
+        child: TouchTarget(child: tile),
       ),
     );
   }

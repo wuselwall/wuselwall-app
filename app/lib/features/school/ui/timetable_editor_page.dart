@@ -9,7 +9,6 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
-import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -887,18 +886,24 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 4),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 84,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 6, top: 8),
-            child: Text(label, style: Theme.of(context).textTheme.labelMedium),
+    // Cells take the height of the tallest, inside the scrolling list.
+    child: IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 84,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 6, top: 8),
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ),
           ),
-        ),
-        for (final c in cells) Expanded(child: c),
-      ],
+          for (final c in cells) Expanded(child: c),
+        ],
+      ),
     ),
   );
 }
@@ -963,7 +968,8 @@ class _CellTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Keep each subject and room on its own line. The visual label
-                  // scales down as one unit; the tooltip preserves its full name.
+                  // scales down as one unit (FittedBox; plain Text, as IntrinsicHeight
+                  // in _Row needs); the tooltip preserves its full name.
                   for (final d in drafts)
                     Tooltip(
                       message: [
@@ -995,7 +1001,7 @@ class _CellTile extends StatelessWidget {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   alignment: AlignmentDirectional.centerStart,
-                                  child: WholeWordsText(
+                                  child: Text(
                                     subjectOf(d.subjectId)?.shortName ?? '—',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -1013,7 +1019,7 @@ class _CellTile extends StatelessWidget {
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: AlignmentDirectional.centerStart,
-                                child: WholeWordsText(
+                                child: Text(
                                   d.room!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,

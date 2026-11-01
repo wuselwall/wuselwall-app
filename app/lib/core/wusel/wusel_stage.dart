@@ -98,6 +98,18 @@ class WuselStageState extends State<WuselStage>
   WuselTrip? get trip => _trip;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reduced motion switched on mid-trip: the paint surface leaves the tree, so the
+    // traveller is simply home again (after this frame: finishing rebuilds the home).
+    if (_trip != null && !_motion) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!_motion) _trip?._finish();
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _afterglowTimer?.cancel();
     _followTimer?.cancel();

@@ -299,11 +299,15 @@ class _Week extends ConsumerWidget {
           final scale = MediaQuery.textScalerOf(context).scale(1);
           // Five interactive lesson columns retain a 48 px target, including their
           // margins. Header and grid scroll together on narrow or enlarged layouts.
+          final columns = labelWidth + 5 * 51 * scale;
+          // Too wide even so: the week arrows leave the scrolling header for a row
+          // of their own, so the next week stays reachable without panning.
+          final pinned = columns + 48 > constraints.maxWidth;
           final width = math.max(
             constraints.maxWidth,
-            labelWidth + 48 + 5 * 51 * scale,
+            pinned ? columns : columns + 48,
           );
-          return SingleChildScrollView(
+          final grid = SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             physics: width > constraints.maxWidth
                 ? null
@@ -320,8 +324,8 @@ class _Week extends ConsumerWidget {
                       for (final date in dates)
                         week.value?.dayOf(child.id, date),
                     ], dates.indexWhere((date) => _sameDay(date, now))),
-                    onPrevious: navigation.previous,
-                    onNext: navigation.next,
+                    onPrevious: pinned ? null : navigation.previous,
+                    onNext: pinned ? null : navigation.next,
                   ),
                   const SizedBox(height: 4),
                   AsyncValueView(
@@ -358,7 +362,7 @@ class _Week extends ConsumerWidget {
                       final isTodayRaised =
                           raised != null && raised == todayIndex;
                       return Padding(
-                        padding: const EdgeInsets.only(right: 48),
+                        padding: EdgeInsets.only(right: pinned ? 0 : 48),
                         child: SchoolWeekGrid(
                           showHeader: false,
                           labelWidth: labelWidth,
@@ -386,6 +390,28 @@ class _Week extends ConsumerWidget {
                 ],
               ),
             ),
+          );
+          if (!pinned) return grid;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    tooltip: l10n.schoolPrevWeek,
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: navigation.previous,
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: l10n.schoolNextWeek,
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: navigation.next,
+                  ),
+                ],
+              ),
+              grid,
+            ],
           );
         },
       ),

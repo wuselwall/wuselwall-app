@@ -12,6 +12,7 @@ import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/calendar/ui/external_calendar_text.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -342,7 +343,7 @@ class _DeviceTile extends ConsumerWidget {
         ? l10n.deviceRevoked
         : seen == null
         ? l10n.deviceNeverSeen
-        : l10n.deviceLastSeen(agoText(l10n, seen, ref.watch(nowProvider)));
+        : l10n.deviceLastSeen(agoText(l10n, seen, ref.watch(minuteProvider)));
     final kind = d.deviceClass.label(l10n);
     final register = d.register.label(l10n);
     final scheme = Theme.of(context).colorScheme;
@@ -361,8 +362,7 @@ class _DeviceTile extends ConsumerWidget {
       // not a link.
       action: d.revoked
           ? null
-          : ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 48),
+          : TouchTarget(
               child: OutlinedButton(
                 key: ValueKey('revoke-${d.id}'),
                 style: OutlinedButton.styleFrom(

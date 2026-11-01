@@ -9,6 +9,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -345,8 +346,7 @@ class _DayRow extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(Tokens.space2),
       onTap: onTap,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 48),
+      child: TouchTarget(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
           child: Row(
@@ -867,8 +867,7 @@ class _Option extends StatelessWidget {
   Widget build(BuildContext context) => InkWell(
     borderRadius: BorderRadius.circular(Tokens.space2),
     onTap: onTap,
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 48),
+    child: TouchTarget(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
         child: Row(

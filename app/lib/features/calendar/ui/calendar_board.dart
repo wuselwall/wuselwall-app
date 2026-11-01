@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart' show ClipFit;
@@ -18,8 +19,10 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 const _gutterWidth = 44.0;
 const _hourHeight = 52.0;
 const _minimumBlockHeight = 48.0;
-// Reserve the enlarged target when assigning lanes, retaining the actual times.
-const _minimumDisplayMinutes = 58; // ceil((48 px + 2 px margin) / 52 px * 60)
+// Reserve the enlarged target when assigning lanes, retaining the actual times:
+// the minutes a minimum block plus its 2 px margin covers (58).
+final _minimumDisplayMinutes = ((_minimumBlockHeight + 2) * 60 / _hourHeight)
+    .ceil();
 // A late appointment's target must remain reachable below the last hour line.
 const _gridHeight =
     (gridEndHour - gridStartHour) * _hourHeight + _minimumBlockHeight;
@@ -235,8 +238,7 @@ class _DayHeader extends ConsumerWidget {
         child: InkWell(
           excludeFromSemantics: true,
           onTap: openBusyUntil,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
+          child: TouchTarget(
             child: Center(
               heightFactor: 1,
               child: Padding(

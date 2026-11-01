@@ -48,7 +48,7 @@ class _ExternalCalendarsPageState extends ConsumerState<ExternalCalendarsPage> {
     final calendars = ref.watch(externalCalendarsProvider);
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     final canManage = _canManage;
-    final now = ref.watch(nowProvider);
+    final now = ref.watch(minuteProvider);
 
     return Scaffold(
       appBar: AppBar(
