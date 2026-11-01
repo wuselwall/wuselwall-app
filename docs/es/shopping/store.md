@@ -41,3 +41,5 @@ Al marcar el último producto o terminar la compra, el móvil muestra un pequeñ
 Añadir, marcar, cambiar cantidades y terminar la compra funciona sin cobertura. Una nube y un contador indican los cambios pendientes. Cuando vuelve la conexión, la app los envía en el orden correcto.
 
 En iPhone, el envío solo ocurre con la app abierta. Si la cerraste sin red, ábrela de nuevo para sincronizar. Crear una lista y cambiar la predeterminada requiere conexión.
+
+Si compras en Coop con el escáner passabene, puedes enviarle la lista: véase [Lista de la compra de Coop](/es/shopping/coop).

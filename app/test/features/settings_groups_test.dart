@@ -88,6 +88,7 @@ SettingsEnv _env(
   String? acting = 'p1',
   bool notifications = true,
   bool server = false,
+  bool coop = false,
 }) => SettingsEnv(
   entries: entries,
   advanced: advanced,
@@ -96,6 +97,7 @@ SettingsEnv _env(
   acting: acting,
   notificationsAvailable: notifications,
   hasServer: server,
+  coopSupported: coop,
 );
 
 void main() {
@@ -246,6 +248,44 @@ void main() {
       expect(groups, isNot(contains(SettingsGroup.rituals)));
       expect(groups, isNot(contains(SettingsGroup.celebrations)));
       expect(groups, contains(SettingsGroup.meals));
+    });
+
+    group('the Coop list tile', () {
+      bool shown(SettingsEnv env) =>
+          [
+                for (final s in visibleSections(SettingsGroup.devices, env))
+                  ...s.items,
+              ]
+              .whereType<SettingTileItem>()
+              .any((i) => i.tile == SettingsTile.coopList);
+
+      test('sits in This device on a personal phone with a WebView', () {
+        final env = _env(catalogue, coop: true);
+        expect(shown(env), isTrue);
+        final owner = visibleSections(SettingsGroup.devices, env).where(
+          (s) => s.items.whereType<SettingTileItem>().any(
+            (i) => i.tile == SettingsTile.coopList,
+          ),
+        );
+        expect(owner.map((s) => s.id), [SettingsSectionId.thisDevice]);
+        // Basic keeps it too: it is a tile, not a setting.
+        expect(shown(env.copyWith(advanced: false)), isTrue);
+      });
+
+      test('is not there in a build without a WebView', () {
+        expect(shown(_env(catalogue)), isFalse);
+        expect(shown(_env(const [])), isFalse);
+      });
+
+      test('is not there on a shared device or a wall', () {
+        for (final deviceClass in [DeviceClass.shared, DeviceClass.kiosk]) {
+          expect(
+            shown(_env(catalogue, coop: true, deviceClass: deviceClass)),
+            isFalse,
+            reason: deviceClass.name,
+          );
+        }
+      });
     });
 
     test('before the catalogue arrives only the groups of tiles show', () {

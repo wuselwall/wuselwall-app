@@ -41,3 +41,5 @@ Quand le dernier article est coché ou les courses terminées, le téléphone mo
 Ajouter, cocher, modifier les quantités et terminer les achats fonctionne aussi sans réseau. Une petite icône de nuage et un compteur signalent les modifications en attente. Dès que la connexion revient, l’app les envoie dans le bon ordre.
 
 Sur iPhone, l’envoi se fait quand l’app est ouverte. Si vous l’avez fermée sans réseau, rouvrez-la pour synchroniser. La création d’une liste et le changement de liste par défaut nécessitent une connexion.
+
+Si tu fais tes courses chez Coop avec le scanner passabene, tu peux y envoyer la liste : voir [Liste de courses Coop](/fr/shopping/coop).

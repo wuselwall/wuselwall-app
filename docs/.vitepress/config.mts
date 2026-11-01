@@ -29,6 +29,7 @@ const sidebar = (p: string, t: Record<string, string>) => [
       { text: t.lists, link: `${p}/shopping/lists` },
       { text: t.store, link: `${p}/shopping/store` },
       { text: t.history, link: `${p}/shopping/history` },
+      { text: t.coop, link: `${p}/shopping/coop` },
     ],
   },
   {
@@ -111,7 +112,7 @@ export default defineConfig({
         sidebar: sidebar('', {
           start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', install: 'App installieren', setup: 'Anmelden und verbinden', who: 'Wer bist du?',
           modules: 'Bereiche', calendar: 'Kalender', feeds: 'Familienkalender teilen', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', rituals: 'Rituale', wusel: 'Wusel und Farben',
-          shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf',
+          shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf', coop: 'Coop-Einkaufsliste',
           devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', household: 'Alle Einstellungen', members: 'Mitglieder und Geräte', account: 'Konto und Familie', reminders: 'Erinnerungen', shortcuts: 'Apps und Automationen', security: 'Sicherheit', faq: 'Häufige Fragen',
           server: 'Eigener Server', serverOverview: 'Überblick', serverHome: 'Server zu Hause', serverRented: 'Gemieteter Server', serverSupabase: 'Server bei Supabase', serverRestore: 'Backup zurückspielen', serverExtras: 'Extras', serverEmail: 'E-Mail',
         }),
@@ -143,7 +144,7 @@ export default defineConfig({
         sidebar: sidebar('/en', {
           start: 'Getting started', concepts: 'How WuselWall works', install: 'Installing the app', setup: 'Signing in and connecting', who: 'Who are you?',
           modules: 'Areas', calendar: 'Calendar', feeds: 'Sharing the family calendar', school: 'Timetable', tasks: 'Tasks', meals: 'Meals', rituals: 'Rituals', wusel: 'Wusel and colours',
-          shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History',
+          shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History', coop: 'Coop shopping list',
           devices: 'Devices and security', wall: 'Wall display and kids', household: 'All settings', members: 'Members and devices', account: 'Account and family', reminders: 'Reminders', shortcuts: 'Apps and automations', security: 'Security', faq: 'FAQ',
           server: 'Your own server', serverOverview: 'Overview', serverHome: 'Server at home', serverRented: 'Rented server', serverSupabase: 'Server at Supabase', serverRestore: 'Restoring a backup', serverExtras: 'Extras', serverEmail: 'Email',
         }),
@@ -167,7 +168,7 @@ export default defineConfig({
         sidebar: sidebar('/fr', {
           start: 'Premiers pas', concepts: 'Comment fonctionne WuselWall', install: 'Installer l’app', setup: 'Se connecter et rejoindre la famille', who: 'Qui êtes-vous ?',
           modules: 'Les espaces', calendar: 'Calendrier', feeds: 'Partager le calendrier', school: 'Emploi du temps', tasks: 'Tâches', meals: 'Repas', rituals: 'Rituels', wusel: 'Wusel et les couleurs',
-          shopping: 'Courses', add: 'Ajouter des articles', lists: 'Plusieurs listes', store: 'Au magasin', history: 'Historique',
+          shopping: 'Courses', add: 'Ajouter des articles', lists: 'Plusieurs listes', store: 'Au magasin', history: 'Historique', coop: 'Liste de courses Coop',
           devices: 'Appareils et sécurité', wall: 'Écran mural et enfants', household: 'Tous les paramètres', members: 'Membres et appareils', account: 'Compte et famille', reminders: 'Rappels', shortcuts: 'Apps et automatisations', security: 'Sécurité', faq: 'Questions fréquentes',
           server: 'Votre propre serveur', serverOverview: 'Vue d’ensemble', serverHome: 'Serveur à la maison', serverRented: 'Serveur loué', serverSupabase: 'Serveur chez Supabase', serverRestore: 'Restaurer une sauvegarde', serverExtras: 'Options du serveur', serverEmail: 'E-mails',
         }),
@@ -198,7 +199,7 @@ export default defineConfig({
         sidebar: sidebar('/es', {
           start: 'Primeros pasos', concepts: 'Cómo funciona WuselWall', install: 'Instalar la app', setup: 'Iniciar sesión y conectar', who: '¿Quién eres?',
           modules: 'Secciones', calendar: 'Calendario', feeds: 'Compartir el calendario', school: 'Horario escolar', tasks: 'Tareas', meals: 'Comidas', rituals: 'Rituales', wusel: 'Wusel y los colores',
-          shopping: 'Compra', add: 'Añadir productos', lists: 'Varias listas', store: 'En la tienda', history: 'Historial',
+          shopping: 'Compra', add: 'Añadir productos', lists: 'Varias listas', store: 'En la tienda', history: 'Historial', coop: 'Lista de la compra de Coop',
           devices: 'Dispositivos y seguridad', wall: 'Pantalla de pared y niños', household: 'Todos los ajustes', members: 'Miembros y dispositivos', account: 'Cuenta y familia', reminders: 'Recordatorios', shortcuts: 'Apps y automatizaciones', security: 'Seguridad', faq: 'Preguntas frecuentes',
           server: 'Tu propio servidor', serverOverview: 'Resumen', serverHome: 'Servidor en casa', serverRented: 'Servidor alquilado', serverSupabase: 'Servidor en Supabase', serverRestore: 'Restaurar una copia', serverExtras: 'Opciones del servidor', serverEmail: 'Correo',
         }),

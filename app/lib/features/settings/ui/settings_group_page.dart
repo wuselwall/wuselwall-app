@@ -199,6 +199,13 @@ Widget _tileWidget(SettingsTile tile) => switch (tile) {
   SettingsTile.familyQuestions => const FamilyQuestionsTile(),
   SettingsTile.language => const LanguageTile(),
   SettingsTile.appearance => const AppearanceTile(),
+  SettingsTile.coopList => const _NavTile(
+    tileKey: 'settings-coop',
+    icon: Icons.shopping_basket_outlined,
+    route: Routes.coopList,
+    title: _coopTitle,
+    subtitle: _coopSubtitle,
+  ),
   SettingsTile.devices => const DevicesSection(),
   SettingsTile.signInMethods => const SignInMethodsSection(),
   SettingsTile.security => const SecuritySection(),
@@ -227,6 +234,8 @@ String _feedTitle(AppLocalizations l10n) => l10n.feedTitle;
 String _feedSubtitle(AppLocalizations l10n) => l10n.feedSettingsSubtitle;
 String _extCalTitle(AppLocalizations l10n) => l10n.extCalTitle;
 String _extCalSubtitle(AppLocalizations l10n) => l10n.extCalSettingsSubtitle;
+String _coopTitle(AppLocalizations l10n) => l10n.coopTitle;
+String _coopSubtitle(AppLocalizations l10n) => l10n.coopSettingsSubtitle;
 
 /// A row that opens another settings page. [basicSubtitle] names what that page shows in
 /// Basic, where it shows less.

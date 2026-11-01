@@ -50,3 +50,5 @@ Ist der letzte Artikel abgehakt oder der Einkauf beendet, gibt es auf dem Handy 
 Die Liste funktioniert auch ohne Empfang: Hinzufügen, Abhaken, Anzahl ändern und **Einkauf beenden** gehen weiter wie gewohnt. Was noch nicht beim Server angekommen ist, trägt ein kleines Wolken-Symbol, und oben steht zum Beispiel **„2 Änderungen warten aufs Senden“**. Sobald wieder Netz da ist, schickt WuselWall alles von selbst und in der richtigen Reihenfolge.
 
 Auf dem iPhone geht das nur, solange die App offen ist: Hast du sie im Laden ohne Netz geschlossen, wird beim nächsten Öffnen gesendet. Neue Listen anlegen und die Standardliste ändern geht nur mit Verbindung.
+
+Wer bei Coop mit dem passabene-Scanner einkauft, kann die Liste dorthin schicken: siehe [Coop-Einkaufsliste](/shopping/coop).

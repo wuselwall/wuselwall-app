@@ -8,6 +8,7 @@ import 'package:wuselwall/features/settings/application/household_settings_provi
 import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
+import 'package:wuselwall/features/shopping/application/coop_handoff_providers.dart';
 
 /// Einstellungen is a short page of groups; each group opens its own page of sections
 /// (specs/21, "Where the settings live"). This file is the map: which group holds which
@@ -58,6 +59,7 @@ enum SettingsTile {
   familyQuestions,
   language,
   appearance,
+  coopList,
   devices,
   feedTokens,
   externalCalendars,
@@ -87,6 +89,8 @@ enum SettingsTile {
     leaveFamily ||
     deleteAccount => env.personalPhone,
     server => env.hasServer,
+    // A connector on the phone a guardian carries into the shop (specs/30).
+    coopList => env.personalPhone && env.coopSupported,
     _ => true,
   };
 }
@@ -225,6 +229,7 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
       SettingKey('device.sounds'),
       SettingKey('device.wusel'),
       SettingKey('device.pixel_shift'),
+      SettingTileItem(SettingsTile.coopList),
     ]),
     SettingsSection(SettingsSectionId.allDevices, [
       SettingTileItem(SettingsTile.devices),
@@ -331,6 +336,7 @@ class SettingsEnv {
     this.notificationsAvailable = false,
     this.hasServer = false,
     this.ownOnly = false,
+    this.coopSupported = false,
   });
 
   final List<SettingEntry> entries;
@@ -340,6 +346,9 @@ class SettingsEnv {
   final String? acting;
   final bool notificationsAvailable;
   final bool hasServer;
+
+  /// This build can hand a list to Coop: the iOS and Android apps (specs/30).
+  final bool coopSupported;
 
   /// A non-guardian at a shared or kiosk device: only the settings the server lets a
   /// member change for themselves (`self_service`, member scope), no tiles.
@@ -356,6 +365,7 @@ class SettingsEnv {
     notificationsAvailable: notificationsAvailable,
     hasServer: hasServer,
     ownOnly: ownOnly,
+    coopSupported: coopSupported,
   );
 
   /// The definition of [key] in the catalogue, or null on a server without it.
@@ -469,5 +479,6 @@ final settingsEnvProvider = Provider.autoDispose<SettingsEnv>((ref) {
     acting: ref.watch(actingProfileProvider),
     notificationsAvailable: ref.watch(notificationSchedulerProvider).available,
     hasServer: ref.watch(appConfigProvider).server != null,
+    coopSupported: ref.watch(coopHandoffSupportedProvider),
   );
 });

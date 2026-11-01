@@ -60,6 +60,7 @@ import 'package:wuselwall/features/setup/ui/sign_in_choice_page.dart';
 import 'package:wuselwall/features/setup/ui/sign_in_page.dart';
 import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
+import 'package:wuselwall/features/shopping/ui/coop_settings_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
@@ -133,6 +134,9 @@ abstract final class Routes {
   static const baselines = '/settings/baselines';
   static const reminders = '/settings/reminders';
   static const shortcuts = '/settings/shortcuts';
+
+  /// The Coop shopping list connector of this device (specs/30).
+  static const coopList = '/settings/coop';
 
   static bool isSetup(String path) =>
       path == setup || path.startsWith('$setup/');
@@ -487,6 +491,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       _materialRoute(
         path: Routes.shortcuts,
         builder: (_, _) => const ShortcutsPage(),
+      ),
+      _materialRoute(
+        path: Routes.coopList,
+        builder: (_, _) => const CoopSettingsPage(),
       ),
       _materialRoute(
         path: Routes.shoppingHistory,

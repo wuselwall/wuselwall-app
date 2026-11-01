@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/app.dart';
@@ -64,6 +65,7 @@ Future<GoRouter> pumpShoppingFlow(
   FakeShoppingRepository? repo,
   bool spy = true,
   Locale locale = const Locale('de'),
+  List<Override> overrides = const [],
 }) async {
   final shown = items ?? [item('1', 'Milch'), item('2', 'Brot')];
   t.view.physicalSize = size;
@@ -125,6 +127,7 @@ Future<GoRouter> pumpShoppingFlow(
         shoppingRepositoryProvider.overrideWithValue(
           repo ?? FakeShoppingRepository(shown),
         ),
+        ...overrides,
       ],
       child: MaterialApp.router(
         theme: AppTheme.build(register, Shade.light),
