@@ -101,8 +101,8 @@ select is(app.match_key('meals', 'Pizza'), 'pizza', 'the meals domain has its ow
 
 -- ------------------------------------------------------------------ category-only (@) words
 
-select is(app.catalog_icon_for('hammer'), null::text, 'a category-only word has no picture');
-select is((app.catalog_category_keys_for('hammer'))[1], 'tools', 'but it has a category');
+select is(app.catalog_icon_for('silikon'), null::text, 'a category-only word has no picture');
+select is((app.catalog_category_keys_for('silikon'))[1], 'tools', 'but it has a category');
 select is(app.catalog_category_keys_for('tiefkuehlpizza'), array['frozen']::text[], 'the frozen prefix first, without repeating it');
 select is((app.catalog_category_keys_for('tk-spinat'))[1], 'frozen', 'TK- is frozen too');
 select is(app.catalog_category_keys_for('schokolade'), array['snacks', 'pantry']::text[], 'the categories come most likely first');

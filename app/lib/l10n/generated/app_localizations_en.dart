@@ -6533,6 +6533,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shoppingTilePinned => 'Pinned';
 
   @override
+  String get shoppingTileStarter => 'Suggested';
+
+  @override
   String get settingsGroupShoppingTitle => 'Shopping';
 
   @override

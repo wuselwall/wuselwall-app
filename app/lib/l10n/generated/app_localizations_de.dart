@@ -6580,6 +6580,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shoppingTilePinned => 'Angeheftet';
 
   @override
+  String get shoppingTileStarter => 'Vorschlag';
+
+  @override
   String get settingsGroupShoppingTitle => 'Einkaufen';
 
   @override

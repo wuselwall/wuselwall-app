@@ -78,7 +78,8 @@ flutter:
     - assets/table_questions/
     # The four sounds of specs/26, synthesised by scripts/sound-effects.mjs.
     - assets/sounds/
-    # The matching dictionary (specs/29), rendered from dictionary/*.txt by scripts/dictionary.mjs.
+    # The matching dictionary (specs/29), rendered from dictionary/*.txt by scripts/dictionary.mjs,
+    # and the starter catalogue (issue #197), rendered from dictionary/starter/catalogue.txt by scripts/starter.mjs.
     - assets/matching/
   fonts:
     - family: AtkinsonHyperlegibleNext
