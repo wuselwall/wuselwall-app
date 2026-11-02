@@ -124,7 +124,7 @@ select pg_temp.add_dev('kiosk', 'hh_a', null, 'kiosk', 'kiosk', true);
 select pg_temp.add_dev('emma_phone', 'hh_a', 'emma', 'personal', 'kid', true);
 select pg_temp.add_dev('oma_phone', 'hh_a', 'oma', 'personal', 'adult', true);
 -- Their device users are signed in, like a phone that stays in a pocket.
-insert into auth.sessions (user_id) select usr from devs where name in ('emma_phone', 'oma_phone', 'ipad');
+insert into auth.sessions (id, user_id, created_at, updated_at) select gen_random_uuid(), usr, now(), now() from devs where name in ('emma_phone', 'oma_phone', 'ipad');
 
 -- A daily chore for Emma, and one for Oma.
 select pg_temp.act_as_dev('papa');
@@ -300,7 +300,7 @@ select is(api.ics_feed('oma-token'), null, 'the revoked token answers nothing');
 -- Closing (account deletion of the last person) ends every device account's session.
 select pg_temp.act_as_dev('ipad');
 reset role;
-insert into auth.sessions (user_id) select usr from devs where name = 'emma_phone';
+insert into auth.sessions (id, user_id, created_at, updated_at) select gen_random_uuid(), usr, now(), now() from devs where name = 'emma_phone';
 select is((select count(*)::int from auth.sessions where user_id in (select usr from devs where name in ('ipad', 'emma_phone'))), 2,
   'two device sessions before the family closes');
 select isnt(app.household_close(pg_temp.id('hh_a')), null, 'the family is closed');
@@ -329,7 +329,7 @@ with ins as (insert into app.profile (household_id, display_name, role, kind)
 insert into ids select 'ben', id from ins;
 select pg_temp.add_dev('bea', 'hh_b', 'bea', 'personal', 'adult', false);
 select pg_temp.add_dev('ben_phone', 'hh_b', 'ben', 'personal', 'kid', true);
-insert into auth.sessions (user_id) select usr from devs where name = 'ben_phone';
+insert into auth.sessions (id, user_id, created_at, updated_at) select gen_random_uuid(), usr, now(), now() from devs where name = 'ben_phone';
 select pg_temp.act_as_dev('bea');
 select is((api.household_delete(null, 'B') ->> 'ok')::boolean, true, 'Bea deletes family B');
 reset role;
