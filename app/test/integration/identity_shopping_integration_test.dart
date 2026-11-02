@@ -337,9 +337,11 @@ void main() {
       final (_, phone3Repo, phone3Shop) = stack();
       expect((await phone3Repo.signIn(email, password)).isOk, isTrue);
       expect(phone3Repo.mfaState(), MfaState.challengeRequired);
-      // Registering a device is allowed pre-MFA, but household data stays invisible.
-      final phone3 = await ensureDevice(phone3Repo, 'Opas Handy');
-      expect(phone3.label, 'Opas Handy');
+      // Before the second factor the phone cannot register itself (security review
+      // 2026-11-01, F19), and household data stays invisible.
+      final early = await phone3Repo.registerPersonalDevice('Opas Handy');
+      expect(early, isA<Err<DeviceInfo>>());
+      expect((early as Err<DeviceInfo>).failure.code, 'mfa_required');
       expect((await phone3Shop.items()).valueOrNull ?? const [], isEmpty);
       expect((await phone3Shop.add(actor: null, name: 'nope')).isOk, isFalse);
 
@@ -348,6 +350,8 @@ void main() {
         codeFor(DateTime.now().add(const Duration(seconds: 30))),
       )).unwrap();
       expect(phone3Repo.mfaState(), MfaState.satisfied);
+      final phone3 = await ensureDevice(phone3Repo, 'Opas Handy');
+      expect(phone3.label, 'Opas Handy');
       expect((await phone3Shop.items()).isOk, isTrue);
 
       // Leave the database as found, so the test can run again.
