@@ -204,6 +204,12 @@ class _RecipeEditorPageState extends ConsumerState<RecipeEditorPage> {
                 Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: TextButton.icon(
+                    // Flush with the heading's left edge, not inset by the button.
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsetsDirectional.only(
+                        end: Tokens.space3,
+                      ),
+                    ),
                     icon: const Icon(Icons.add),
                     label: Text(l10n.mealsIngredientAdd),
                     onPressed: () =>
@@ -250,7 +256,13 @@ class _RecipeEditorPageState extends ConsumerState<RecipeEditorPage> {
   }
 }
 
-/// One ingredient: a drag handle, the name and amount, the note, a remove button.
+/// The width from which an ingredient's name, amount and unit share one line.
+const _ingredientWide = 560.0;
+
+/// One ingredient: the name with the drag handle and the remove button inside its
+/// field, so every field spans the page's content edge to edge; amount and unit, then
+/// the note. A phone stacks them (the name needs the whole width), a wide page puts
+/// name, amount and unit on one line.
 class _IngredientRow extends StatelessWidget {
   const _IngredientRow({
     required this.index,
@@ -266,79 +278,72 @@ class _IngredientRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: Tokens.space3),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ReorderableDragStartListener(
-            index: index,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16, right: Tokens.space1),
-              child: Tooltip(
-                message: l10n.mealsIngredientMove,
-                child: const Icon(Icons.drag_handle),
-              ),
-            ),
+    final name = TextFormField(
+      initialValue: draft.name,
+      decoration: InputDecoration(
+        labelText: l10n.mealsIngredientName,
+        prefixIcon: ReorderableDragStartListener(
+          index: index,
+          child: Tooltip(
+            message: l10n.mealsIngredientMove,
+            child: const Icon(Icons.drag_handle),
           ),
-          Expanded(
-            child: Column(
-              children: [
+        ),
+        suffixIcon: IconButton(
+          tooltip: l10n.mealsIngredientRemove,
+          icon: const Icon(Icons.delete_outline),
+          onPressed: onRemove,
+        ),
+      ),
+      onChanged: (v) => draft.name = v,
+    );
+    final quantity = TextFormField(
+      initialValue: draft.quantity,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(labelText: l10n.mealsIngredientQuantity),
+      onChanged: (v) => draft.quantity = v,
+    );
+    final unit = TextFormField(
+      initialValue: draft.unit,
+      decoration: InputDecoration(labelText: l10n.mealsIngredientUnit),
+      onChanged: (v) => draft.unit = v,
+    );
+    final note = TextFormField(
+      initialValue: draft.note,
+      decoration: InputDecoration(labelText: l10n.mealsIngredientNote),
+      onChanged: (v) => draft.note = v,
+    );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Tokens.space4),
+      child: LayoutBuilder(
+        builder: (context, box) {
+          final wide = box.maxWidth >= _ingredientWide;
+          return Column(
+            spacing: Tokens.space2,
+            children: [
+              if (wide)
                 Row(
+                  spacing: Tokens.space2,
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextFormField(
-                        initialValue: draft.name,
-                        decoration: InputDecoration(
-                          labelText: l10n.mealsIngredientName,
-                        ),
-                        onChanged: (v) => draft.name = v,
-                      ),
-                    ),
-                    const SizedBox(width: Tokens.space2),
-                    SizedBox(
-                      width: 84,
-                      child: TextFormField(
-                        initialValue: draft.quantity,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        decoration: InputDecoration(
-                          labelText: l10n.mealsIngredientQuantity,
-                        ),
-                        onChanged: (v) => draft.quantity = v,
-                      ),
-                    ),
-                    const SizedBox(width: Tokens.space2),
-                    SizedBox(
-                      width: 92,
-                      child: TextFormField(
-                        initialValue: draft.unit,
-                        decoration: InputDecoration(
-                          labelText: l10n.mealsIngredientUnit,
-                        ),
-                        onChanged: (v) => draft.unit = v,
-                      ),
-                    ),
+                    Expanded(flex: 3, child: name),
+                    Expanded(child: quantity),
+                    Expanded(child: unit),
+                  ],
+                )
+              else ...[
+                name,
+                Row(
+                  spacing: Tokens.space2,
+                  children: [
+                    Expanded(child: quantity),
+                    Expanded(child: unit),
                   ],
                 ),
-                TextFormField(
-                  initialValue: draft.note,
-                  decoration: InputDecoration(
-                    labelText: l10n.mealsIngredientNote,
-                  ),
-                  onChanged: (v) => draft.note = v,
-                ),
               ],
-            ),
-          ),
-          IconButton(
-            tooltip: l10n.mealsIngredientRemove,
-            icon: const Icon(Icons.delete_outline),
-            onPressed: onRemove,
-          ),
-        ],
+              note,
+            ],
+          );
+        },
       ),
     );
   }

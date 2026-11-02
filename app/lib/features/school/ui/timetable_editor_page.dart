@@ -4,10 +4,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -18,6 +20,7 @@ import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/domain/timetable_import.dart';
 import 'package:wuselwall/features/school/ui/school_icons.dart';
+import 'package:wuselwall/features/school/ui/school_week_grid.dart';
 
 /// What the editor opens on: a child and a term (specs/15 "Maintaining it").
 class TimetableEditArgs {
@@ -678,135 +681,145 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
     final days = [1, 2, 3, 4, 5];
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          if (_school case final school?) ...[
+      body: ContentWidth(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            if (_school case final school?) ...[
+              Text(
+                l10n.schoolsUiSchoolOf(school.name),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+            ],
+            if (_term case final term?) ...[
+              Text(
+                '${l10n.schoolTermEdit}: ${term.name} · '
+                '${context.dayMonth(term.startsOn)} ${term.startsOn.year} – '
+                '${context.dayMonth(term.endsOn)} ${term.endsOn.year}',
+              ),
+              const SizedBox(height: 12),
+            ],
+            TextField(
+              controller: _class,
+              decoration: InputDecoration(labelText: l10n.schoolEditorClass),
+            ),
+            const SizedBox(height: 12),
+            SegmentedButton<String>(
+              segments: [
+                ButtonSegment(
+                  value: 'weekly',
+                  label: Text(l10n.schoolCycleWeekly),
+                ),
+                ButtonSegment(value: 'ab', label: Text(l10n.schoolCycleAb)),
+              ],
+              selected: {_cycle},
+              onSelectionChanged: (s) => setState(() => _cycle = s.first),
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: _copy,
+                icon: const Icon(Icons.content_copy_outlined),
+                label: Text(l10n.schoolCopyFrom),
+              ),
+            ),
+            if (widget.data.subjects.isEmpty) Text(l10n.schoolNoSubjects),
+            const SizedBox(height: 8),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                // The label column fits the widest period name and bell time (measured
+                // below the Scaffold, where the default text style is the app's).
+                final labelWidth = schoolLabelWidth(context, compact: false);
+                // Five readable, tappable day columns scroll on narrow screens.
+                final textScale =
+                    MediaQuery.textScalerOf(context).scale(14) / 14;
+                final gridWidth = math.max(
+                  constraints.maxWidth,
+                  labelWidth + days.length * 120 * textScale,
+                );
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: gridWidth,
+                    child: Column(
+                      children: [
+                        _Header(
+                          days: days,
+                          onDayAction: _onDayAction,
+                          labelWidth: labelWidth,
+                        ),
+                        for (final p in periods)
+                          if (p.isBreak)
+                            const SizedBox(height: 6)
+                          else
+                            _Row(
+                              labelWidth: labelWidth,
+                              label: SchoolPeriodLabel(
+                                index: p.index,
+                                starts: p.starts,
+                                ends: p.ends,
+                              ),
+                              cells: [
+                                for (final d in days)
+                                  _CellTile(
+                                    weekday: d,
+                                    period: p.index,
+                                    drafts: [
+                                      for (final parity in const [
+                                        'all',
+                                        'a',
+                                        'b',
+                                      ])
+                                        if (_cells['$d:${p.index}:$parity'] !=
+                                            null)
+                                          _cells['$d:${p.index}:$parity']!,
+                                    ],
+                                    subjectOf: _subjectOf,
+                                    onTap: () => _editCell(d, p.index),
+                                    onClear: () => _clearCell(d, p.index),
+                                  ),
+                              ],
+                            ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 24),
             Text(
-              l10n.schoolsUiSchoolOf(school.name),
+              l10n.schoolCareRows,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-          ],
-          if (_term case final term?) ...[
-            Text(
-              '${l10n.schoolTermEdit}: ${term.name} · '
-              '${context.dayMonth(term.startsOn)} ${term.startsOn.year} – '
-              '${context.dayMonth(term.endsOn)} ${term.endsOn.year}',
-            ),
-            const SizedBox(height: 12),
-          ],
-          TextField(
-            controller: _class,
-            decoration: InputDecoration(labelText: l10n.schoolEditorClass),
-          ),
-          const SizedBox(height: 12),
-          SegmentedButton<String>(
-            segments: [
-              ButtonSegment(
-                value: 'weekly',
-                label: Text(l10n.schoolCycleWeekly),
+            for (var i = 0; i < _care.length; i++)
+              _CareCard(
+                key: ObjectKey(_care[i]),
+                block: _care[i],
+                onChanged: () => setState(() {}),
+                onRemove: () => setState(() => _care.removeAt(i)),
               ),
-              ButtonSegment(value: 'ab', label: Text(l10n.schoolCycleAb)),
-            ],
-            selected: {_cycle},
-            onSelectionChanged: (s) => setState(() => _cycle = s.first),
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: _copy,
-              icon: const Icon(Icons.content_copy_outlined),
-              label: Text(l10n.schoolCopyFrom),
-            ),
-          ),
-          if (widget.data.subjects.isEmpty) Text(l10n.schoolNoSubjects),
-          const SizedBox(height: 8),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              // Five readable, tappable day columns scroll on narrow screens.
-              final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
-              final gridWidth = math.max(
-                constraints.maxWidth,
-                84 + days.length * 120 * textScale,
-              );
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SizedBox(
-                  width: gridWidth,
-                  child: Column(
-                    children: [
-                      _Header(
-                        days: days,
-                        onDayAction: _onDayAction,
-                        labelWidth: 84,
-                      ),
-                      for (final p in periods)
-                        if (p.isBreak)
-                          const SizedBox(height: 6)
-                        else
-                          _Row(
-                            label:
-                                '${p.index}. · ${context.span(p.starts, p.ends)}',
-                            cells: [
-                              for (final d in days)
-                                _CellTile(
-                                  weekday: d,
-                                  period: p.index,
-                                  drafts: [
-                                    for (final parity in const [
-                                      'all',
-                                      'a',
-                                      'b',
-                                    ])
-                                      if (_cells['$d:${p.index}:$parity'] !=
-                                          null)
-                                        _cells['$d:${p.index}:$parity']!,
-                                  ],
-                                  subjectOf: _subjectOf,
-                                  onTap: () => _editCell(d, p.index),
-                                  onClear: () => _clearCell(d, p.index),
-                                ),
-                            ],
-                          ),
-                    ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton.icon(
+                onPressed: () => setState(
+                  () => _care.add(
+                    _CareBlock(
+                      title: '',
+                      starts: const TimeOfDay(hour: 13, minute: 0),
+                      ends: const TimeOfDay(hour: 15, minute: 30),
+                      days: {},
+                    ),
                   ),
                 ),
-              );
-            },
-          ),
-          const SizedBox(height: 24),
-          Text(
-            l10n.schoolCareRows,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          for (var i = 0; i < _care.length; i++)
-            _CareCard(
-              key: ObjectKey(_care[i]),
-              block: _care[i],
-              onChanged: () => setState(() {}),
-              onRemove: () => setState(() => _care.removeAt(i)),
-            ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: OutlinedButton.icon(
-              onPressed: () => setState(
-                () => _care.add(
-                  _CareBlock(
-                    title: '',
-                    starts: const TimeOfDay(hour: 13, minute: 0),
-                    ends: const TimeOfDay(hour: 15, minute: 30),
-                    days: {},
-                  ),
-                ),
+                icon: const Icon(Icons.add),
+                label: Text(l10n.schoolAddCare),
               ),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.schoolAddCare),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         top: false,
@@ -878,9 +891,14 @@ class _Header extends StatelessWidget {
 }
 
 class _Row extends StatelessWidget {
-  const _Row({required this.label, required this.cells});
+  const _Row({
+    required this.label,
+    required this.labelWidth,
+    required this.cells,
+  });
 
-  final String label;
+  final Widget label;
+  final double labelWidth;
   final List<Widget> cells;
 
   @override
@@ -892,13 +910,13 @@ class _Row extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            width: 84,
+            width: labelWidth,
             child: Padding(
-              padding: const EdgeInsets.only(right: 6, top: 8),
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelMedium,
+              padding: const EdgeInsets.only(
+                right: Tokens.space1,
+                top: Tokens.space2,
               ),
+              child: label,
             ),
           ),
           for (final c in cells) Expanded(child: c),
