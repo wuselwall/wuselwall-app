@@ -12,6 +12,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/core/ui/nav_labels.dart';
+import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
@@ -199,46 +200,49 @@ class _AdultNavBar extends StatelessWidget {
             minSize: 9,
           ).style
         : full.style;
-    return MediaQuery.withClampedTextScaling(
-      maxScaleFactor: 1.3,
-      child: Theme(
-        data: theme.copyWith(
-          navigationBarTheme: theme.navigationBarTheme.copyWith(
-            labelTextStyle: WidgetStateProperty.resolveWith(
-              (states) =>
-                  (theme.navigationBarTheme.labelTextStyle?.resolve(states) ??
-                          base)
-                      .copyWith(fontSize: style.fontSize),
+    return SystemBars(
+      navigationColor: theme.colorScheme.surfaceContainer,
+      child: MediaQuery.withClampedTextScaling(
+        maxScaleFactor: 1.3,
+        child: Theme(
+          data: theme.copyWith(
+            navigationBarTheme: theme.navigationBarTheme.copyWith(
+              labelTextStyle: WidgetStateProperty.resolveWith(
+                (states) =>
+                    (theme.navigationBarTheme.labelTextStyle?.resolve(states) ??
+                            base)
+                        .copyWith(fontSize: style.fontSize),
+              ),
             ),
           ),
-        ),
-        // The floor: at a very large text scale a label shortens with "…" rather
-        // than break inside its word.
-        child: DefaultTextStyle.merge(
-          softWrap: false,
-          overflow: TextOverflow.ellipsis,
-          child: NavigationBar(
-            selectedIndex: tab.index,
-            onDestinationSelected: (i) => onSelect(HomeTab.values[i]),
-            // A phone's bar is lower than Material's (specs/09 "the bottom bar").
-            height: navBarHeight(context),
-            // Six destinations do not fit a phone with their labels: there only
-            // the selected one is labelled, the others keep their tooltip.
-            labelBehavior: MediaQuery.sizeOf(context).width < navBarPhoneWidth
-                ? NavigationDestinationLabelBehavior.onlyShowSelected
-                : null,
-            destinations: [
-              for (final t in HomeTab.values)
-                NavigationDestination(
-                  icon: Badge.count(
-                    count: approvals,
-                    isLabelVisible: t == HomeTab.tasks && approvals > 0,
-                    child: Icon(homeSections[t]!.icon),
+          // The floor: at a very large text scale a label shortens with "…" rather
+          // than break inside its word.
+          child: DefaultTextStyle.merge(
+            softWrap: false,
+            overflow: TextOverflow.ellipsis,
+            child: NavigationBar(
+              selectedIndex: tab.index,
+              onDestinationSelected: (i) => onSelect(HomeTab.values[i]),
+              // A phone's bar is lower than Material's (specs/09 "the bottom bar").
+              height: navBarHeight(context),
+              // Six destinations do not fit a phone with their labels: there only
+              // the selected one is labelled, the others keep their tooltip.
+              labelBehavior: MediaQuery.sizeOf(context).width < navBarPhoneWidth
+                  ? NavigationDestinationLabelBehavior.onlyShowSelected
+                  : null,
+              destinations: [
+                for (final t in HomeTab.values)
+                  NavigationDestination(
+                    icon: Badge.count(
+                      count: approvals,
+                      isLabelVisible: t == HomeTab.tasks && approvals > 0,
+                      child: Icon(homeSections[t]!.icon),
+                    ),
+                    label: unbreakable(_label(l10n, t, short: short)),
+                    tooltip: homeSections[t]!.label(l10n),
                   ),
-                  label: unbreakable(_label(l10n, t, short: short)),
-                  tooltip: homeSections[t]!.label(l10n),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
