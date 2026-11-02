@@ -45,7 +45,7 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 Text(l10n.mfaBody),
                 const SizedBox(height: Tokens.space4),

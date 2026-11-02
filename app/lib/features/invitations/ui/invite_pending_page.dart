@@ -29,7 +29,7 @@ class InvitePendingPage extends ConsumerWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 Icon(
                   Icons.mail_outline,

@@ -254,7 +254,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
             child: Form(
               key: _form,
               child: ListView(
-                padding: const EdgeInsets.all(Tokens.space6),
+                padding: const EdgeInsets.all(Tokens.space4),
                 children: [
                   TextFormField(
                     controller: _family,
@@ -356,6 +356,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                     alignment: WrapAlignment.spaceBetween,
                     children: [
                       TextButton(
+                        style: _flushButton,
                         // Locked while creating, open again once the session stalls.
                         onPressed: _busy && !_stalled
                             ? null
@@ -374,6 +375,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                       ),
                       // Never locked: a user must always be able to leave this screen.
                       TextButton(
+                        style: _flushButton,
                         onPressed: _signOut,
                         child: Text(l10n.householdNewSignOut),
                       ),
@@ -398,8 +400,14 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       : null;
 }
 
+/// Text buttons on the edge of the form's fields: no side padding, still 48 high.
+final _flushButton = TextButton.styleFrom(
+  padding: EdgeInsets.zero,
+  minimumSize: const Size.square(48),
+);
+
 /// The swatches in even rows: all in one row where they fit, otherwise half per row
-/// (4 × 2), never seven and one left over.
+/// (4 × 2), never seven and one left over. Several rows spread over the full width.
 class _SwatchGrid extends StatelessWidget {
   const _SwatchGrid({required this.children});
 
@@ -410,15 +418,27 @@ class _SwatchGrid extends StatelessWidget {
     builder: (context, constraints) {
       const gap = Tokens.space2;
       final n = children.length;
-      double width(int perRow) => perRow * _Swatch.size + (perRow - 1) * gap;
-      final perRow = width(n) <= constraints.maxWidth ? n : (n + 1) ~/ 2;
-      // Aligned, so the list around it does not stretch the rows back to full width.
-      return Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: SizedBox(
-          width: width(perRow),
-          child: Wrap(spacing: gap, runSpacing: gap, children: children),
-        ),
+      final oneRow = n * _Swatch.size + (n - 1) * gap;
+      if (oneRow <= constraints.maxWidth) {
+        return Wrap(spacing: gap, runSpacing: gap, children: children);
+      }
+      final perRow = (n + 1) ~/ 2;
+      return Column(
+        children: [
+          for (var start = 0; start < n; start += perRow) ...[
+            if (start > 0) const SizedBox(height: gap),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (var i = start; i < start + perRow; i++)
+                  // A short last row keeps the columns of the rows above.
+                  i < n
+                      ? children[i]
+                      : const SizedBox.square(dimension: _Swatch.size),
+              ],
+            ),
+          ],
+        ],
       );
     },
   );

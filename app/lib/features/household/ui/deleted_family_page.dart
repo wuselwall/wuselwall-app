@@ -47,40 +47,50 @@ class _DeletedFamilyPageState extends ConsumerState<DeletedFamilyPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(Tokens.space4),
-          children: [
-            if (deleted != null) ...[
-              Text(
-                l10n.leaveDeletedTitle(deleted.name, date),
-                style: theme.textTheme.headlineSmall,
-              ),
-              const SizedBox(height: Tokens.space4),
-              Text(
-                deleted.canRestore
-                    ? l10n.leaveDeletedBodyGuardian
-                    : l10n.leaveDeletedBodyMember,
-                style: theme.textTheme.bodyLarge,
-              ),
-              const SizedBox(height: Tokens.space6),
-              if (deleted.canRestore)
-                FilledButton(
-                  key: const ValueKey('deleted-restore'),
-                  onPressed: _busy
-                      ? null
-                      : () => _run((r) => r.restoreFamily()),
-                  child: Text(l10n.leaveRestore),
-                ),
-              const SizedBox(height: Tokens.space3),
-              OutlinedButton(
-                key: const ValueKey('deleted-start-afresh'),
-                onPressed: _busy ? null : () => _run((r) => r.startAfresh()),
-                child: Text(l10n.leaveStartAfresh),
-              ),
-              const SizedBox(height: Tokens.space2),
-              Text(l10n.leaveStartAfreshHint, style: theme.textTheme.bodySmall),
-            ],
-          ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: ListView(
+              padding: const EdgeInsets.all(Tokens.space4),
+              children: [
+                if (deleted != null) ...[
+                  Text(
+                    l10n.leaveDeletedTitle(deleted.name, date),
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: Tokens.space4),
+                  Text(
+                    deleted.canRestore
+                        ? l10n.leaveDeletedBodyGuardian
+                        : l10n.leaveDeletedBodyMember,
+                    style: theme.textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: Tokens.space6),
+                  if (deleted.canRestore)
+                    FilledButton(
+                      key: const ValueKey('deleted-restore'),
+                      onPressed: _busy
+                          ? null
+                          : () => _run((r) => r.restoreFamily()),
+                      child: Text(l10n.leaveRestore),
+                    ),
+                  const SizedBox(height: Tokens.space3),
+                  OutlinedButton(
+                    key: const ValueKey('deleted-start-afresh'),
+                    onPressed: _busy
+                        ? null
+                        : () => _run((r) => r.startAfresh()),
+                    child: Text(l10n.leaveStartAfresh),
+                  ),
+                  const SizedBox(height: Tokens.space3),
+                  Text(
+                    l10n.leaveStartAfreshHint,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );

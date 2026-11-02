@@ -86,7 +86,7 @@ class _WizardPageState extends ConsumerState<WizardPage> {
         Form(
           key: _form,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               field(_token, l10n.fieldSetupToken),
               field(_household, l10n.fieldHouseholdName),

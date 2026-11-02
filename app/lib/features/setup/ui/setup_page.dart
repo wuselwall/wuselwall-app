@@ -51,7 +51,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 Icon(
                   Icons.home_outlined,
@@ -59,9 +59,13 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(height: Tokens.space4),
-                Text(l10n.setupHeadline, style: theme.textTheme.headlineSmall),
+                Text(
+                  l10n.setupHeadline,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineSmall,
+                ),
                 const SizedBox(height: Tokens.space2),
-                Text(l10n.doorTagline),
+                Text(l10n.doorTagline, textAlign: TextAlign.center),
                 if (!online) ...[
                   const SizedBox(height: Tokens.space4),
                   Semantics(
@@ -241,7 +245,8 @@ class _DoorOption extends StatelessWidget {
     super.key,
   });
 
-  static const padding = EdgeInsets.symmetric(horizontal: Tokens.space2);
+  // No side padding: icons start on the page edge, like the button above.
+  static const padding = EdgeInsets.zero;
 
   static TextStyle? labelStyle(BuildContext context) =>
       Theme.of(context).textTheme.bodyLarge;

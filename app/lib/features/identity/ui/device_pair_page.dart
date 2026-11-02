@@ -192,7 +192,7 @@ class _DevicePairPageState extends ConsumerState<DevicePairPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 if (!allowed)
                   Text(l10n.pairOnlyOnPersonal, textAlign: TextAlign.center)
@@ -394,7 +394,7 @@ class _PinSetupPageState extends ConsumerState<PinSetupPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 360),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               shrinkWrap: true,
               children: [
                 Text(

@@ -60,7 +60,7 @@ class _RegisterDevicePageState extends ConsumerState<RegisterDevicePage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 Text(l10n.registerBody(widget.guardianName)),
                 const SizedBox(height: Tokens.space4),

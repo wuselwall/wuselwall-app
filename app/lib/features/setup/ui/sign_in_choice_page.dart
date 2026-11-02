@@ -66,9 +66,13 @@ class _SignInChoicePageState extends ConsumerState<SignInChoicePage> {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     return AuthFormScaffold(
-      title: l10n.signInMethodTitle,
+      // The question is the heading in the body: as an app-bar title it truncates
+      // on a phone.
+      title: l10n.signInMethodsTitle,
       showBack: false,
       children: [
+        Text(l10n.signInMethodTitle, style: theme.textTheme.headlineSmall),
+        const SizedBox(height: Tokens.space2),
         RadioGroup<_Choice>(
           groupValue: _choice,
           onChanged: (value) {

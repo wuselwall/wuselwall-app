@@ -89,7 +89,7 @@ class _PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                 validator: (value) =>
                     (value?.trim().isEmpty ?? true) ? l10n.emailRequired : null,
               ),
-              const SizedBox(height: Tokens.space4),
+              const SizedBox(height: Tokens.space6),
               TextFormField(
                 key: const ValueKey('password-reset-code'),
                 controller: _code,
@@ -105,7 +105,7 @@ class _PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                     ? l10n.errCodeInvalid
                     : null,
               ),
-              const SizedBox(height: Tokens.space4),
+              const SizedBox(height: Tokens.space6),
               PasswordField(
                 controller: _password,
                 onSubmitted: (_) => busy ? null : _save(),

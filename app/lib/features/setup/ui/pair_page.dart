@@ -138,7 +138,7 @@ class _PairPageState extends ConsumerState<PairPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 if (household != null) ...[
                   Icon(Icons.check_circle, size: 64, color: context.ww.success),
@@ -189,24 +189,27 @@ class _PairPageState extends ConsumerState<PairPage> {
                     style: theme.textTheme.bodySmall,
                   ),
                   const SizedBox(height: Tokens.space4),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: Tokens.space2,
+                  // One row, centred as a unit: a Wrap dropped the spinner onto its own
+                  // line when the text filled the width.
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        width: 16,
-                        height: 16,
+                      const SizedBox.square(
+                        dimension: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
-                      Text(l10n.pairWaiting),
+                      const SizedBox(width: Tokens.space2),
+                      Flexible(child: Text(l10n.pairWaiting)),
                     ],
                   ),
                 ],
                 const SizedBox(height: Tokens.space6),
                 TextButton(
                   onPressed: () => context.go(Routes.enrol),
-                  child: Text(l10n.pairOldCodeLink),
+                  child: Text(
+                    l10n.pairOldCodeLink,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
