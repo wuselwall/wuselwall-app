@@ -120,18 +120,19 @@ class _FerienWusel extends ConsumerWidget {
       today.month,
       today.day,
     ).difference(DateTime.utc(today.year)).inDays;
-    return Padding(
-      padding: const EdgeInsets.only(top: Tokens.space2),
-      child: Card(
-        key: const ValueKey('today-ferien-wusel'),
-        child: Padding(
-          padding: const EdgeInsets.all(Tokens.space3),
-          child: WuselSays(
-            line: lines[StillMode.enabled ? 0 : dayOfYear % lines.length],
-            pose: WuselPose.wave,
-            size: 72,
-            quietAllowed: true,
-          ),
+    return Card(
+      key: const ValueKey('today-ferien-wusel'),
+      margin: const EdgeInsets.only(bottom: Tokens.space3),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Tokens.space4,
+          vertical: Tokens.space3,
+        ),
+        child: WuselSays(
+          line: lines[StillMode.enabled ? 0 : dayOfYear % lines.length],
+          pose: WuselPose.wave,
+          size: 72,
+          quietAllowed: true,
         ),
       ),
     );

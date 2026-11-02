@@ -18,19 +18,28 @@ class RitualCards extends StatelessWidget {
   const RitualCards({super.key});
 
   @override
-  Widget build(BuildContext context) => const Padding(
-    padding: EdgeInsets.only(top: Tokens.space2),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _BirthdayCard(),
-        WeekReviewCard(),
-        TableQuestionCard(),
-        TodayCountdown(),
-        TodayWishCard(),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // The same 12 px between these cards as between the notices, approvals and
+    // getting started above them: one rhythm down Today.
+    return Theme(
+      data: theme.copyWith(
+        cardTheme: theme.cardTheme.copyWith(
+          margin: const EdgeInsets.only(bottom: Tokens.space3),
+        ),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _BirthdayCard(),
+          WeekReviewCard(),
+          TableQuestionCard(),
+          TodayCountdown(),
+          TodayWishCard(),
+        ],
+      ),
+    );
+  }
 }
 
 /// A special day on Today: Wusel in the party hat, even when it is quiet for this
@@ -51,7 +60,10 @@ class _BirthdayCard extends ConsumerWidget {
     if (!on) return const SizedBox.shrink();
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(Tokens.space3),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Tokens.space4,
+          vertical: Tokens.space3,
+        ),
         child: WuselSays(
           line: context.l10n.wuselFactBirthday(names.join(' & ')),
           pose: WuselPose.cheer,

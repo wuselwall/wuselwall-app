@@ -334,10 +334,10 @@ class TableQuestionCard extends ConsumerWidget {
       ],
     );
     return Padding(
-      // On Today 16 px to the card below: 12 here and the card's own 4 (round-3
-      // review L-9).
+      // On Today the card above already ends with 12 px, the gap between all of
+      // Today's cards; 12 below keeps that to the next one.
       padding: EdgeInsets.only(
-        top: Tokens.space3,
+        top: kid ? Tokens.space3 : 0,
         bottom: kid ? 0 : Tokens.space3,
       ),
       // On the kid home the question is a slim line until tapped, so the child's

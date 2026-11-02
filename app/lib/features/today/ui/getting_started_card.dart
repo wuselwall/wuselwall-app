@@ -64,7 +64,7 @@ class GettingStartedCard extends ConsumerWidget {
     }
 
     return Card(
-      margin: const EdgeInsets.only(bottom: Tokens.space4),
+      margin: const EdgeInsets.only(bottom: Tokens.space3),
       child: Padding(
         padding: const EdgeInsets.all(Tokens.space4),
         child: Column(
@@ -294,7 +294,7 @@ class _SetupDone extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     return Card(
-      margin: const EdgeInsets.only(bottom: Tokens.space4),
+      margin: const EdgeInsets.only(bottom: Tokens.space3),
       child: Padding(
         padding: const EdgeInsets.all(Tokens.space4),
         child: Column(

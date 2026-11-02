@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/touch_target.dart';
@@ -110,45 +111,50 @@ class _CalendarBoardState extends State<CalendarBoard> {
         final cap = pinned.rowCount > _pinnedRowsBeforeCap && maxHeight.isFinite
             ? maxHeight * _pinnedCapShare
             : double.infinity;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _DayHeaders(days: days, today: today),
-            if (!pinned.isEmpty)
-              _Pinned(
-                plan: pinned,
-                days: days,
-                members: widget.members,
-                now: widget.now,
-                visibleHeight: math.min(pinned.height, cap),
-              ),
-            Expanded(
-              child: SingleChildScrollView(
-                controller: _scroll,
-                padding: EdgeInsets.only(bottom: widget.bottomClearance),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const _HourLabels(),
-                    for (final day in days)
-                      Expanded(
-                        child: _TimeCell(
-                          day: day,
-                          blocks: timedBlocksOn(
-                            day,
-                            occurrences,
-                            minimumDisplayMinutes: _minimumDisplayMinutes,
+        // The page's end margin: a day's events stop short of the screen edge
+        // instead of running into it; the hour gutter is the start margin.
+        return Padding(
+          padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _DayHeaders(days: days, today: today),
+              if (!pinned.isEmpty)
+                _Pinned(
+                  plan: pinned,
+                  days: days,
+                  members: widget.members,
+                  now: widget.now,
+                  visibleHeight: math.min(pinned.height, cap),
+                ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: _scroll,
+                  padding: EdgeInsets.only(bottom: widget.bottomClearance),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const _HourLabels(),
+                      for (final day in days)
+                        Expanded(
+                          child: _TimeCell(
+                            day: day,
+                            blocks: timedBlocksOn(
+                              day,
+                              occurrences,
+                              minimumDisplayMinutes: _minimumDisplayMinutes,
+                            ),
+                            members: widget.members,
+                            now: widget.now,
+                            isToday: dateOnly(day) == today,
                           ),
-                          members: widget.members,
-                          now: widget.now,
-                          isToday: dateOnly(day) == today,
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
