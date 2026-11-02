@@ -48,7 +48,9 @@ abstract final class AppTheme {
       surfaceContainer: c.sunken,
       surfaceContainerHigh: c.sunken,
       surfaceContainerHighest: c.sunken,
-      outline: c.ink3,
+      // The edge of fields, outlined buttons and segments; focus still draws
+      // the brand colour at 2 px.
+      outline: c.outline,
       outlineVariant: c.line,
       inverseSurface: c.ink,
       onInverseSurface: c.bg,
@@ -138,10 +140,20 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderRadius: radius),
       ),
+      // Flat like the cards: a hint of lift instead of Material's soft shadow.
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        elevation: 1,
+        focusElevation: 1,
+        hoverElevation: 2,
+        highlightElevation: 1,
+      ),
       // Borders separate; shadows are for sheets and dialogs only (specs/17).
       cardTheme: CardThemeData(
         color: c.surface,
         elevation: 0,
+        // Flush with the page's content edge, like headers and fields; Material's
+        // 4 px on every side set default cards inside their neighbours.
+        margin: const EdgeInsets.symmetric(vertical: Tokens.space1),
         shape: RoundedRectangleBorder(
           borderRadius: radius,
           side: BorderSide(color: c.line),

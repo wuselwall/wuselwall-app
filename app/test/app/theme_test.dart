@@ -78,6 +78,12 @@ void main() {
           expectAA(c.ink, ground.value, 'ink on ${ground.key}');
           expectAA(c.ink2, ground.value, 'ink2 on ${ground.key}');
           expectAA(c.ink3, ground.value, 'ink3 on ${ground.key}');
+          // A control's edge needs 3 : 1 (WCAG 1.4.11), not text's 4.5.
+          expect(
+            contrast(c.outline, ground.value),
+            greaterThanOrEqualTo(3),
+            reason: 'outline on ${ground.key}',
+          );
         }
         expectAA(c.brand, c.bg, 'brand on bg');
         expectAA(c.onBrand, c.brand, 'onBrand on brand');
