@@ -117,7 +117,7 @@ class _SettingControl extends StatelessWidget {
     // country does, and the row's reset goes back to it.
     if (Occasion.ofKey(entry.key) case final occasion?
         when entry.type == SettingType.enumeration) {
-      return Switch(
+      return _FlushSwitch(
         value: occasionOn(occasion, value, country),
         onChanged: (on) => onChanged(on ? 'on' : 'off'),
       );
@@ -126,7 +126,7 @@ class _SettingControl extends StatelessWidget {
       SettingType.boolean => Semantics(
         container: true,
         label: settingText(context.l10n, entry.key).title,
-        child: Switch(value: value == true, onChanged: onChanged),
+        child: _FlushSwitch(value: value == true, onChanged: onChanged),
       ),
       SettingType.integer => _NullableSwitch(
         entry: entry,
@@ -178,6 +178,23 @@ class _SettingControl extends StatelessWidget {
   }
 }
 
+/// A [Switch] drawn flush with the row's text. Material puts 4 px of padding on each
+/// side of the track, which set it that far right of the text column; moving that
+/// padding to the end keeps the switch's size and tap target.
+class _FlushSwitch extends StatelessWidget {
+  const _FlushSwitch({required this.value, required this.onChanged});
+
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) => Switch(
+    value: value,
+    onChanged: onChanged,
+    padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+  );
+}
+
 /// A nullable setting: a switch for on and off, and the control while it is on. Turning
 /// it on writes the default if there is one, otherwise the control's own first value.
 class _NullableSwitch extends StatelessWidget {
@@ -203,7 +220,7 @@ class _NullableSwitch extends StatelessWidget {
         Semantics(
           container: true,
           label: settingText(l10n, entry.key).title,
-          child: Switch(
+          child: _FlushSwitch(
             value: on,
             onChanged: (wanted) async {
               if (!wanted) {
@@ -378,27 +395,37 @@ class _WeekdayTime extends StatelessWidget {
     final weekday = (value['weekday'] as num).toInt();
     final time = value['time'] as String;
     final locale = Localizations.localeOf(context).toLanguageTag();
+    // 4 January 2026 was a Sunday, so day n + 4 is ISO weekday n.
+    String dayName(int day) =>
+        DateFormat.EEEE(locale).format(DateTime(2026, 1, 4 + day));
     return Wrap(
       spacing: Tokens.space2,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Semantics(
-          container: true,
-          child: DropdownButton<int>(
-            value: weekday,
-            items: [
-              // 4 January 2026 was a Sunday, so day n + 4 is ISO weekday n.
-              for (var day = 1; day <= 7; day++)
-                DropdownMenuItem(
-                  value: day,
-                  child: Text(
-                    DateFormat.EEEE(locale).format(DateTime(2026, 1, 4 + day)),
-                  ),
+        // An outlined button that opens a menu, so the day looks like the time
+        // chip next to it (a plain DropdownButton is underline-style).
+        MenuAnchor(
+          menuChildren: [
+            for (var day = 1; day <= 7; day++)
+              MenuItemButton(
+                onPressed: () => onChanged({'weekday': day, 'time': time}),
+                // The chosen day keeps its mark, as a dropdown's list shows it.
+                leadingIcon: Icon(
+                  Icons.check,
+                  color: day == weekday ? null : Colors.transparent,
                 ),
-            ],
-            onChanged: (day) {
-              if (day != null) onChanged({'weekday': day, 'time': time});
-            },
+                child: Semantics(
+                  selected: day == weekday,
+                  child: Text(dayName(day)),
+                ),
+              ),
+          ],
+          builder: (context, controller, _) => OutlinedButton.icon(
+            onPressed: () =>
+                controller.isOpen ? controller.close() : controller.open(),
+            iconAlignment: IconAlignment.end,
+            icon: const Icon(Icons.arrow_drop_down),
+            label: Text(dayName(weekday)),
           ),
         ),
         _TimeButton(

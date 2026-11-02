@@ -109,8 +109,14 @@ Future<void> _title(WidgetTester t, String text) async {
   await t.pump();
 }
 
-Future<void> _save(WidgetTester t) =>
-    _tap(t, find.widgetWithText(FilledButton, _de.save));
+Future<void> _save(WidgetTester t) async {
+  final save = find.widgetWithText(FilledButton, _de.save);
+  // The form column is narrower than the screen, so the lazily built list may need a
+  // second scroll before the last button is in view.
+  await t.ensureVisible(save);
+  await t.pumpAndSettle();
+  await _tap(t, save);
+}
 
 CalendarEvent _fixture({
   required String id,

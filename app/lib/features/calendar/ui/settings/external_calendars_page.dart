@@ -254,8 +254,10 @@ class _CalendarCard extends StatelessWidget {
       opacity: calendar.active ? 1 : 0.6,
       child: Card(
         child: Padding(
+          // The left edge is Tokens.space2 so the refresh button's 12 px inset puts its
+          // icon on the same centre line as the colour dot above it.
           padding: const EdgeInsets.fromLTRB(
-            Tokens.space4,
+            Tokens.space2,
             Tokens.space3,
             Tokens.space2,
             Tokens.space1,
@@ -265,18 +267,25 @@ class _CalendarCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 14,
-                    height: 14,
-                    margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colour == null
-                          ? cs.primary
-                          : ww.member(colour).ink,
+                  const SizedBox(width: Tokens.space3),
+                  // As wide as the refresh icon below, so the dot and the icon share a
+                  // centre line.
+                  SizedBox(
+                    width: Tokens.space6,
+                    child: Center(
+                      child: Container(
+                        width: 14,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colour == null
+                              ? cs.primary
+                              : ww.member(colour).ink,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: Tokens.space3),
+                  const SizedBox(width: Tokens.space2),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,16 +340,23 @@ class _CalendarCard extends StatelessWidget {
                   child: const LinearProgressIndicator(),
                 ),
               if (canManage)
-                Wrap(
-                  alignment: WrapAlignment.end,
+                // Refresh and delete are icons (named by their tooltips) at the row's
+                // two ends, edit a word between them: the row holds at 360 px, where
+                // three labelled buttons wrapped one onto a line of its own.
+                Row(
                   children: [
-                    TextButton.icon(
+                    IconButton(
                       onPressed: refreshing ? null : onRefresh,
+                      tooltip: l10n.extCalRefreshNow,
                       icon: const Icon(Icons.refresh),
-                      label: Text(l10n.extCalRefreshNow),
                     ),
                     TextButton(onPressed: onEdit, child: Text(l10n.extCalEdit)),
-                    TextButton(onPressed: onDelete, child: Text(l10n.delete)),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: onDelete,
+                      tooltip: l10n.delete,
+                      icon: const Icon(Icons.delete_outline),
+                    ),
                   ],
                 ),
             ],

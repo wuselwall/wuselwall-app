@@ -18,6 +18,9 @@ class WuselOutfitPicker extends ConsumerWidget {
   final WuselOutfit selected;
   final ValueChanged<WuselOutfit> onChanged;
 
+  /// Padding and border together, around Wusel.
+  static const _tileInset = 7.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
@@ -43,7 +46,11 @@ class WuselOutfitPicker extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(14),
                 onTap: () => onChanged(outfit),
                 child: Container(
-                  padding: const EdgeInsets.all(4),
+                  // Padding plus border is the same 7 px chosen or not, so every tile
+                  // is one size and the grid does not shift when one is picked.
+                  padding: EdgeInsets.all(
+                    _tileInset - (outfit == selected ? 3 : 1),
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(

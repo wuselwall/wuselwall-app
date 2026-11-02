@@ -14,7 +14,9 @@ class SettingsViewSwitch extends ConsumerWidget {
     final l10n = context.l10n;
     final advanced = ref.watch(showAdvancedSettingsProvider);
     return Padding(
-      padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+      // The chip draws to its edge (an icon button's glyph sits 12 px inside its
+      // target), so it takes the page's full 16 to end where the content ends.
+      padding: const EdgeInsetsDirectional.only(end: Tokens.space4),
       child: Center(
         child: Tooltip(
           message: l10n.settingsViewLabel,

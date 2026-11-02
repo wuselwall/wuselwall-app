@@ -306,6 +306,13 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
               runSpacing: Tokens.space2,
               children: [
                 TextButton(
+                  // No left inset: the label starts on the card content's edge, like
+                  // the rows above and the Save button.
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsetsDirectional.only(
+                      end: Tokens.space3,
+                    ),
+                  ),
                   onPressed: _week.day(DateTime.monday, week: _shown).isEmpty
                       ? null
                       : _copyMonday,

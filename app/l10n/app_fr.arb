@@ -1740,7 +1740,7 @@
   },
   "regionImportAttribution": "Données : OpenHolidays API · ODbL",
   "regionImported": "importé",
-  "extCalTitle": "Ajouter des calendriers externes",
+  "extCalTitle": "Calendriers externes",
   "extCalSettingsSubtitle": "Matchs du club, collecte des déchets et plus dans le calendrier familial",
   "extCalEmpty": "Aucun abonnement à un calendrier pour le moment. Un abonnement ajoute des rendez-vous externes au calendrier familial, comme les matchs d’un club.",
   "extCalNew": "S’abonner à un calendrier",

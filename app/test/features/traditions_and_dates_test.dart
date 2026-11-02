@@ -73,6 +73,23 @@ Future<void> _tap(WidgetTester t, Finder finder) async {
   await t.pumpAndSettle();
 }
 
+/// The editor's form is a lazily built list in a column narrower than the screen, so
+/// Save at its end may not be built yet: scroll the editor until it is.
+Future<void> _save(WidgetTester t) async {
+  final save = find.widgetWithText(FilledButton, _de.save);
+  await t.scrollUntilVisible(
+    save,
+    200,
+    scrollable: find
+        .descendant(
+          of: find.byType(EventEditorPage),
+          matching: find.byType(Scrollable),
+        )
+        .first,
+  );
+  await _tap(t, save);
+}
+
 Member _member(String id, String name, {DateTime? birthday, int order = 0}) =>
     Member(
       id: id,
@@ -171,7 +188,7 @@ void main() {
         // The meal shows in the editor, so it can be changed before saving.
         expect(find.widgetWithText(TextField, 'Pizza'), findsOneWidget);
 
-        await _tap(t, find.widgetWithText(FilledButton, _de.save));
+        await _save(t);
         final saved = cal.saved.single;
         final friday = _next(_todayMorning(), DateTime.friday);
         expect(saved.title, 'Pizza-Freitag');
@@ -201,7 +218,7 @@ void main() {
       final cal = await _calendarTab(t);
       await _tap(t, find.byTooltip(_de.calendarNewTradition));
       await _tap(t, find.text('Ausflugstag'));
-      await _tap(t, find.widgetWithText(FilledButton, _de.save));
+      await _save(t);
       final saved = cal.saved.single;
       final sunday = _next(_todayMorning(), DateTime.sunday);
       expect(saved.isAllDay, isTrue);
@@ -220,7 +237,7 @@ void main() {
       await _tap(t, find.text(_de.traditionStarterOwn));
       await t.enterText(find.byType(TextField).first, 'Waffelsonntag');
       await t.pump();
-      await _tap(t, find.widgetWithText(FilledButton, _de.save));
+      await _save(t);
       final saved = cal.saved.single;
       expect(saved.title, 'Waffelsonntag');
       expect(saved.tradition, isTrue);

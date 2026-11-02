@@ -155,7 +155,7 @@ class _MembersListState extends ConsumerState<_MembersList> {
                       child: Tooltip(
                         message: l10n.memberReorderHandle,
                         child: const Padding(
-                          padding: EdgeInsets.all(Tokens.space2),
+                          padding: EdgeInsets.all(Tokens.space3),
                           child: Icon(Icons.drag_handle),
                         ),
                       ),
@@ -172,10 +172,15 @@ class _MembersListState extends ConsumerState<_MembersList> {
             // and an invitation for an adult with their own phone.
             ListTile(
               key: const ValueKey('add-member'),
-              leading: const Icon(Icons.person_add_alt_1),
+              contentPadding: _rowPadding,
+              // As wide as a member's circle, so the text starts on the names' line.
+              leading: const SizedBox(
+                width: 40,
+                child: Center(child: Icon(Icons.person_add_alt_1)),
+              ),
               title: Text(l10n.addMember),
               subtitle: Text(l10n.addMemberSubtitle),
-              trailing: const Icon(Icons.chevron_right),
+              trailing: const _RowChevron(),
               onTap: widget.onAdd,
             ),
             const InviteAdultTile(),
@@ -209,6 +214,24 @@ class _MembersListState extends ConsumerState<_MembersList> {
   }
 }
 
+/// The member rows' padding: the default 16, less 8 at the end for [_RowChevron].
+const _rowPadding = EdgeInsetsDirectional.only(
+  start: Tokens.space4,
+  end: Tokens.space2,
+);
+
+/// A row's chevron with the same inset as the drag handle (a 24 px icon in 12 px of
+/// padding, 48 px square), so handles and chevrons sit on one vertical line.
+class _RowChevron extends StatelessWidget {
+  const _RowChevron();
+
+  @override
+  Widget build(BuildContext context) => const Padding(
+    padding: EdgeInsets.all(Tokens.space3),
+    child: Icon(Icons.chevron_right),
+  );
+}
+
 class _MemberTile extends StatelessWidget {
   const _MemberTile({required this.member, this.handle, super.key});
 
@@ -224,6 +247,9 @@ class _MemberTile extends StatelessWidget {
         Semantics(
           container: true,
           child: ListTile(
+            // The trailing handle or chevron brings its own 12 px, so the row gives up
+            // 8 of its end padding: the role keeps its width on a phone.
+            contentPadding: _rowPadding,
             leading: Opacity(
               opacity: member.active ? 1 : 0.5,
               child: MemberCircle(member: member),
@@ -242,7 +268,7 @@ class _MemberTile extends StatelessWidget {
             ),
             // The handle is the affordance when there is one: a chevron beside it would
             // squeeze the role into a sliver at phone width.
-            trailing: handle ?? const Icon(Icons.chevron_right),
+            trailing: handle ?? const _RowChevron(),
             onTap: () => context.go(Routes.member, extra: member.id),
           ),
         ),

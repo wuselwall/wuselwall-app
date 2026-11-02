@@ -50,7 +50,6 @@
   "todayEmpty": "Heute ist noch nichts geplant. Geniess die Ruhe.",
   "todayTasksTitle": "Deine Ämtli heute",
   "todayApprovalsChecks": "{count, plural, one{1 Ämtli zu prüfen} other{{count} Ämtli zu prüfen}}",
-  "extCalTitle": "Kalender von aussen hinzufügen",
   "extCalEmpty": "Noch kein Kalender abonniert. Ein Abo bringt Termine von aussen in den Familienkalender, zum Beispiel den Spielplan deines Vereins.",
   "extCalErrTooLarge": "Der Kalender ist zu gross (mehr als 2 MB).",
   "feedSubTitle": "Kalender von aussen einschliessen",

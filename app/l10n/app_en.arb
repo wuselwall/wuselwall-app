@@ -1771,7 +1771,7 @@
   },
   "regionImportAttribution": "Data: OpenHolidays API · ODbL",
   "regionImported": "imported",
-  "extCalTitle": "Add outside calendars",
+  "extCalTitle": "External calendars",
   "extCalSettingsSubtitle": "Club fixtures, bin collection and more in the family calendar",
   "extCalEmpty": "No calendar subscribed yet. A subscription brings outside appointments into the family calendar, such as a club’s fixture list.",
   "extCalNew": "Subscribe to a calendar",

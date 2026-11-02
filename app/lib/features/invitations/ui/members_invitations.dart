@@ -63,10 +63,21 @@ class InviteAdultTile extends ConsumerWidget {
     final l10n = context.l10n;
     return ListTile(
       key: const ValueKey('invite-adult'),
+      contentPadding: const EdgeInsetsDirectional.only(
+        start: Tokens.space4,
+        end: Tokens.space2,
+      ),
       // Not the "add person" icon of the row above: this one sends an invitation.
-      leading: const Icon(Icons.forward_to_inbox_outlined),
+      leading: const SizedBox(
+        width: 40,
+        child: Center(child: Icon(Icons.forward_to_inbox_outlined)),
+      ),
       title: Text(l10n.inviteAdultTitle),
-      trailing: const Icon(Icons.chevron_right),
+      // The same inset as the drag handles above, so the icons share one line.
+      trailing: const Padding(
+        padding: EdgeInsets.all(Tokens.space3),
+        child: Icon(Icons.chevron_right),
+      ),
       onTap: () => inviteAdultFlow(context, ref),
     );
   }
