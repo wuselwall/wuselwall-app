@@ -3,6 +3,8 @@ import {
   countriesFromRegions,
   endpointUrl,
   fetchCountry,
+  MAX_BODY_BYTES,
+  MAX_REDIRECTS,
   flattenSubdivisions,
   holidayName,
   isCountry,
@@ -526,4 +528,78 @@ Deno.test("holidayName: all four household languages pick their own name", () =>
   // An unsupported language and a missing name both fall back to German, then any name.
   assertEquals(holidayName(names, "it-IT"), "Auffahrt");
   assertEquals(holidayName({ en: "Ascension Day" }, "es-ES"), "Ascension Day");
+});
+
+// ------------------------------------------------------------------ redirects and size (Info)
+
+/** A fake fetch keyed by the full URL, so redirect targets can be told apart from the first request. */
+function fakeByUrl(answers: Record<string, () => Response>): { fetch: typeof fetch; calls: string[] } {
+  const calls: string[] = [];
+  const impl = (input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    calls.push(url);
+    assertEquals(init?.redirect, "manual", "redirects are followed by hand");
+    const answer = answers[url] ?? answers[new URL(url).pathname.slice(1)];
+    return Promise.resolve(answer ? answer() : new Response("missing", { status: 404 }));
+  };
+  return { fetch: impl as typeof fetch, calls };
+}
+
+const redirect = (to: string, status = 302) => new Response(null, { status, headers: { location: to } });
+
+Deno.test("fetchCountry: a redirect on the API's own host is followed, off the host it is refused", async () => {
+  const subs = await fixture("subdivisions_ch.json");
+  const pub = await fixture("public_ch.json");
+  const school = await fixture("school_de.json");
+  const onHost = fakeByUrl({
+    Subdivisions: () => redirect("/v2/Subdivisions?countryIsoCode=CH"),
+    "https://openholidaysapi.org/v2/Subdivisions?countryIsoCode=CH": () => jsonResponse(subs),
+    PublicHolidays: () => jsonResponse(pub),
+    SchoolHolidays: () => jsonResponse(school),
+  });
+  const result = await fetchCountry("CH", WINDOW, onHost.fetch);
+  assertEquals(result.regions.length > 0, true);
+  assertEquals(onHost.calls.filter((u) => u.includes("/v2/")).length, 1);
+
+  const offHost = fakeByUrl({
+    Subdivisions: () => redirect("https://evil.example.org/Subdivisions"),
+    PublicHolidays: () => jsonResponse(pub),
+    SchoolHolidays: () => jsonResponse(school),
+  });
+  const err = await assertRejects(() => fetchCountry("CH", WINDOW, offHost.fetch), OpenHolidaysError);
+  assertEquals(err.reason, "redirect");
+  assertEquals(offHost.calls.some((u) => u.includes("evil")), false, "the other host is never asked");
+
+  const plain = fakeByUrl({
+    Subdivisions: () => redirect("http://openholidaysapi.org/Subdivisions"),
+    PublicHolidays: () => jsonResponse(pub),
+    SchoolHolidays: () => jsonResponse(school),
+  });
+  assertEquals((await assertRejects(() => fetchCountry("CH", WINDOW, plain.fetch), OpenHolidaysError)).reason, "redirect");
+});
+
+Deno.test("fetchCountry: more than MAX_REDIRECTS hops is an error", async () => {
+  const pub = await fixture("public_ch.json");
+  const school = await fixture("school_de.json");
+  const loop = fakeByUrl({
+    Subdivisions: () => redirect("/Subdivisions?countryIsoCode=CH"),
+    PublicHolidays: () => jsonResponse(pub),
+    SchoolHolidays: () => jsonResponse(school),
+  });
+  const err = await assertRejects(() => fetchCountry("CH", WINDOW, loop.fetch), OpenHolidaysError);
+  assertEquals(err.reason, "redirect");
+  assertEquals(loop.calls.filter((u) => u.includes("Subdivisions")).length, MAX_REDIRECTS + 1);
+});
+
+Deno.test("fetchCountry: an answer over MAX_BODY_BYTES is too_large", async () => {
+  const pub = await fixture("public_ch.json");
+  const school = await fixture("school_de.json");
+  const huge = fakeByUrl({
+    Subdivisions: () =>
+      new Response("[]", { status: 200, headers: { "content-length": String(MAX_BODY_BYTES + 1) } }),
+    PublicHolidays: () => jsonResponse(pub),
+    SchoolHolidays: () => jsonResponse(school),
+  });
+  const err = await assertRejects(() => fetchCountry("CH", WINDOW, huge.fetch), OpenHolidaysError);
+  assertEquals(err.reason, "too_large");
 });

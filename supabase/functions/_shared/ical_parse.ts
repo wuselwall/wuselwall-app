@@ -19,6 +19,11 @@
 // - Overrides (RECURRENCE-ID) apply to a series with an RRULE, as the household's events do.
 //   A RECURRENCE-ID child of a single event (no RRULE) replaces that event, and a child with no
 //   master at all is shown as a single occurrence.
+// - A feed is a stranger's input (security review 2026-11-01, F6): VEVENTs per feed, overrides
+//   per series and RDATEs and EXDATEs per event are capped at numbers a family's calendar never
+//   reaches, a rule that can never match or a series that starts before 1900 is dropped like an
+//   unsupported rule (first occurrence kept, counted), and nothing in here is quadratic in the
+//   feed's size. One odd event never fails or stalls the whole feed.
 //
 // Pure: no I/O. The caller passes the text, the household timezone and the clock.
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
@@ -27,7 +32,9 @@ import {
   type EventRow,
   expand,
   type OverrideRow,
+  RRULE_MIN_YEAR,
   validateRrule,
+  type WalkBudget,
 } from "./occurrences.ts";
 
 /** Calendar days kept before today, and after today, in one import. */
@@ -35,6 +42,24 @@ export const IMPORT_PAST_DAYS = 30;
 export const IMPORT_FUTURE_DAYS = 400;
 /** At most this many stored rows per calendar; the earliest are kept. */
 export const MAX_IMPORT_ROWS = 5000;
+/**
+ * The caps of one feed (F6). A family's subscribed calendar (a club, a school, the bin
+ * collection, a shared Google calendar with its history) holds hundreds of VEVENTs, rarely
+ * more than a thousand; a series that is edited every week for years has a few hundred
+ * overrides; RDATE and EXDATE lists are a few dozen entries. Everything beyond a cap is
+ * dropped and counted in `capped`.
+ */
+export const MAX_VEVENTS = 5000;
+export const MAX_OVERRIDES_PER_SERIES = 400;
+export const MAX_RDATES_PER_EVENT = 366;
+export const MAX_EXDATES_PER_EVENT = 1000;
+/**
+ * The days all the recurrence walks of one feed may examine together (F6). Five thousand
+ * daily series over the 430-day window are 2.2 million; a feed of series that each start in
+ * 1900 with a COUNT, the dearest walk there is, would be 230 million. Once the budget is
+ * spent the remaining series keep their first occurrence only and are counted in `capped`.
+ */
+export const MAX_FEED_WALK_DAYS = 20_000_000;
 /** A timed VEVENT without an end lasts this long. */
 const DEFAULT_DURATION_MS = 60 * 60 * 1000;
 const DAY_MS = 86_400_000;
@@ -57,10 +82,12 @@ export type ExpandResult = {
   events: number;
   /** VEVENTs or RECURRENCE-IDs that could not be read. */
   skipped: number;
-  /** Series whose RRULE is outside the supported subset (first occurrence only). */
+  /** Series whose RRULE is outside the supported subset, can never match, or starts before 1900 (first occurrence only). */
   unsupported: number;
-  /** True when more than MAX_IMPORT_ROWS occurrences fell in the window; the earliest are kept. */
+  /** True when more than MAX_IMPORT_ROWS occurrences fell in the window (the earliest are kept) or more than MAX_VEVENTS were in the feed. */
   truncated: boolean;
+  /** VEVENTs, overrides, RDATEs and EXDATEs dropped by the caps, and series cut by the walk budget (0 when the feed is within them). */
+  capped: number;
 };
 
 export class IcsError extends Error {
@@ -260,6 +287,8 @@ export type VEvent = {
   exdates: RawTime[];
   rdates: RawTime[];
   recurrenceId: RawTime | null;
+  /** RDATE or EXDATE values dropped by the per-event caps. */
+  capped: number;
 };
 
 /** The values of a multi-valued property (comma separated, outside quotes). */
@@ -286,17 +315,22 @@ function toVEvent(props: ContentLine[]): VEvent | null {
   const durProp = first("DURATION");
   const exdates: RawTime[] = [];
   const rdates: RawTime[] = [];
+  let capped = 0;
   for (const p of props.filter((x) => x.name === "EXDATE")) {
     for (const v of valuesOf(p)) {
       const t = parseRawTime(v, p.params);
-      if (t) exdates.push(t);
+      if (!t) continue;
+      if (exdates.length >= MAX_EXDATES_PER_EVENT) capped++;
+      else exdates.push(t);
     }
   }
   for (const p of props.filter((x) => x.name === "RDATE")) {
     for (const v of valuesOf(p)) {
       // A PERIOD value (start/end) contributes its start; the length is the event's own.
       const t = parseRawTime(v.split("/")[0], p.params);
-      if (t) rdates.push(t);
+      if (!t) continue;
+      if (rdates.length >= MAX_RDATES_PER_EVENT) capped++;
+      else rdates.push(t);
     }
   }
 
@@ -312,21 +346,23 @@ function toVEvent(props: ContentLine[]): VEvent | null {
     exdates,
     rdates,
     recurrenceId,
+    capped,
   };
 }
 
 /**
  * The VEVENTs of a feed. Properties of nested components (VALARM) are ignored. A VEVENT without
- * UID or a readable DTSTART is counted in `skipped`. Throws IcsError("not_ics") when the text has
- * no BEGIN:VCALENDAR.
+ * UID or a readable DTSTART is counted in `skipped`; VEVENTs beyond MAX_VEVENTS are not read and
+ * counted in `capped`. Throws IcsError("not_ics") when the text has no BEGIN:VCALENDAR.
  */
-export function parseVEvents(text: string): { events: VEvent[]; skipped: number } {
+export function parseVEvents(text: string): { events: VEvent[]; skipped: number; capped: number } {
   const lines = unfoldLines(text);
   if (!lines.some((l) => l.trim().toUpperCase() === "BEGIN:VCALENDAR")) {
     throw new IcsError("not_ics");
   }
   const events: VEvent[] = [];
   let skipped = 0;
+  let capped = 0;
   const stack: string[] = [];
   let props: ContentLine[] | null = null;
   for (const line of lines) {
@@ -335,22 +371,25 @@ export function parseVEvents(text: string): { events: VEvent[]; skipped: number 
     if (parsed.name === "BEGIN") {
       const component = parsed.value.trim().toUpperCase();
       stack.push(component);
-      if (component === "VEVENT") props = [];
+      if (component === "VEVENT") props = events.length < MAX_VEVENTS ? [] : null;
       continue;
     }
     if (parsed.name === "END") {
       const component = stack.pop();
-      if (component === "VEVENT" && props !== null) {
-        const event = toVEvent(props);
-        if (event) events.push(event);
-        else skipped++;
+      if (component === "VEVENT") {
+        if (props === null) capped++;
+        else {
+          const event = toVEvent(props);
+          if (event) events.push(event);
+          else skipped++;
+        }
         props = null;
       }
       continue;
     }
     if (props !== null && stack[stack.length - 1] === "VEVENT") props.push(parsed);
   }
-  return { events, skipped };
+  return { events, skipped, capped };
 }
 
 // ---------------------------------------------------------------- the import window
@@ -464,14 +503,23 @@ export function expandIcs(
   text: string,
   opts: { householdTz: string; from: string; to: string; calendarId?: string },
 ): ExpandResult {
-  const { events: vevents, skipped: parseSkipped } = parseVEvents(text);
+  const { events: vevents, skipped: parseSkipped, capped: parseCapped } = parseVEvents(text);
   let skipped = parseSkipped;
   let unsupported = 0;
+  let capped = parseCapped;
   const calendarId = opts.calendarId ?? "calendar";
   const tz = opts.householdTz;
 
   const masters = vevents.filter((v) => v.recurrenceId === null);
-  const children = vevents.filter((v) => v.recurrenceId !== null);
+  // The RECURRENCE-ID children by series, at most MAX_OVERRIDES_PER_SERIES each.
+  const childrenOf = new Map<string, VEvent[]>();
+  for (const v of vevents) {
+    if (v.recurrenceId === null) continue;
+    const list = childrenOf.get(v.uid);
+    if (!list) childrenOf.set(v.uid, [v]);
+    else if (list.length < MAX_OVERRIDES_PER_SERIES) list.push(v);
+    else capped++;
+  }
   const eventRows: EventRow[] = [];
   const overrideRows: OverrideRow[] = [];
   const uidOf = new Map<string, string>();
@@ -479,23 +527,26 @@ export function expandIcs(
   const cancelledUids = new Set<string>();
 
   masters.forEach((v, index) => {
+    capped += v.capped;
     if (v.status === "CANCELLED") {
       cancelledUids.add(v.uid);
       return;
     }
     // A single event that its organiser moved arrives as a RECURRENCE-ID child and no rule: the
     // children are the event now, so the original is not stored (they are handled below).
-    if (v.rrule === null && children.some((c) => c.uid === v.uid)) return;
+    if (v.rrule === null && childrenOf.has(v.uid)) return;
     const id = `${index}|${v.uid}`;
     const allDay = v.dtstart.kind === "date";
     const zone = allDay ? tz : zoneOf(v.dtstart, tz);
     const span = spanOf(v, allDay, zone, tz);
     let rrule = v.rrule;
-    if (rrule !== null && !validateRrule(rrule)) {
+    // Outside the subset, never matching, or starting before 1900: the first occurrence only.
+    if (rrule !== null && (!validateRrule(rrule) || Number(v.dtstart.date.slice(0, 4)) < RRULE_MIN_YEAR)) {
       unsupported++;
       rrule = null;
     }
     const exdates = v.exdates.map((t) => (t.kind === "date" ? t.date : localDateOf(instantOf(t, zoneOf(t, tz)), zone)));
+    const exdateSet = new Set(exdates);
     eventRows.push(eventRow(id, v, span, zone, calendarId, rrule, exdates));
     uidOf.set(id, v.uid);
     masterOf.set(v.uid, { id, allDay, zone, recurring: rrule !== null });
@@ -504,7 +555,7 @@ export function expandIcs(
     v.rdates.forEach((t, k) => {
       const at = t.kind === "date" ? null : instantOf(t, zoneOf(t, tz));
       const day = t.kind === "date" ? t.date : localDateOf(at as number, zone);
-      if (exdates.includes(day)) return;
+      if (exdateSet.has(day)) return;
       let rspan: Span;
       if (allDay) {
         const date = t.kind === "date" ? t.date : day;
@@ -534,47 +585,51 @@ export function expandIcs(
   });
 
   // Overrides: a RECURRENCE-ID child of a series; a child with no series stands alone.
-  for (const child of children) {
-    // A cancelled series hides its overrides too.
-    if (cancelledUids.has(child.uid)) continue;
-    const master = masterOf.get(child.uid);
-    if (master) {
-      const rid = child.recurrenceId as RawTime;
-      const allDay = master.allDay;
-      if (allDay !== (child.dtstart.kind === "date") || (rid.kind === "date") !== allDay) {
-        skipped++;
-        continue;
+  for (const children of childrenOf.values()) {
+    for (const child of children) {
+      // A cancelled series hides its overrides too.
+      if (cancelledUids.has(child.uid)) continue;
+      const master = masterOf.get(child.uid);
+      if (master) {
+        const rid = child.recurrenceId as RawTime;
+        const allDay = master.allDay;
+        if (allDay !== (child.dtstart.kind === "date") || (rid.kind === "date") !== allDay) {
+          skipped++;
+          continue;
+        }
+        if (!master.recurring) continue; // overrides apply to a series with a rule
+        // A floating RECURRENCE-ID is read in the series' own zone, as its DTSTART is.
+        const originalMs = allDay
+          ? instantOf({ kind: "date", date: rid.date, time: null, tzid: null }, master.zone)
+          : instantOf(rid, rid.kind === "tzid" ? zoneOf(rid, tz) : master.zone);
+        const span = spanOf(child, allDay, master.zone, tz);
+        overrideRows.push({
+          event_id: master.id,
+          recurrence_id: isoOf(originalMs),
+          is_cancelled: child.status === "CANCELLED",
+          title: child.summary.trim() || null,
+          starts_at: span.starts_at,
+          ends_at: span.ends_at,
+          start_date: span.start_date,
+          end_date: span.end_date,
+          location: child.location,
+          status: child.status === "TENTATIVE" ? "tentative" : child.status === "CONFIRMED" ? "confirmed" : null,
+        });
+      } else {
+        // An occurrence moved or added without its series: shown on its own.
+        if (child.status === "CANCELLED") continue;
+        const allDay = child.dtstart.kind === "date";
+        const zone = allDay ? tz : zoneOf(child.dtstart, tz);
+        const id = `orphan|${eventRows.length}|${child.uid}`;
+        eventRows.push(eventRow(id, child, spanOf(child, allDay, zone, tz), zone, calendarId, null, []));
+        uidOf.set(id, child.uid);
       }
-      if (!master.recurring) continue; // overrides apply to a series with a rule
-      // A floating RECURRENCE-ID is read in the series' own zone, as its DTSTART is.
-      const originalMs = allDay
-        ? instantOf({ kind: "date", date: rid.date, time: null, tzid: null }, master.zone)
-        : instantOf(rid, rid.kind === "tzid" ? zoneOf(rid, tz) : master.zone);
-      const span = spanOf(child, allDay, master.zone, tz);
-      overrideRows.push({
-        event_id: master.id,
-        recurrence_id: isoOf(originalMs),
-        is_cancelled: child.status === "CANCELLED",
-        title: child.summary.trim() || null,
-        starts_at: span.starts_at,
-        ends_at: span.ends_at,
-        start_date: span.start_date,
-        end_date: span.end_date,
-        location: child.location,
-        status: child.status === "TENTATIVE" ? "tentative" : child.status === "CONFIRMED" ? "confirmed" : null,
-      });
-    } else {
-      // An occurrence moved or added without its series: shown on its own.
-      if (child.status === "CANCELLED") continue;
-      const allDay = child.dtstart.kind === "date";
-      const zone = allDay ? tz : zoneOf(child.dtstart, tz);
-      const id = `orphan|${eventRows.length}|${child.uid}`;
-      eventRows.push(eventRow(id, child, spanOf(child, allDay, zone, tz), zone, calendarId, null, []));
-      uidOf.set(id, child.uid);
     }
   }
 
-  const occurrences = expand(eventRows, overrideRows, opts.from, opts.to, tz);
+  const budget: WalkBudget = { days: MAX_FEED_WALK_DAYS, events: 0 };
+  const occurrences = expand(eventRows, overrideRows, opts.from, opts.to, tz, budget);
+  capped += budget.events;
 
   const seen = new Set<string>();
   const rows: ExternalRow[] = [];
@@ -612,12 +667,13 @@ export function expandIcs(
     const sb = b.starts_at ?? `${b.start_date}T00:00:00Z`;
     return sa < sb ? -1 : sa > sb ? 1 : a.uid.localeCompare(b.uid);
   });
-  const truncated = rows.length > MAX_IMPORT_ROWS;
+  const truncated = rows.length > MAX_IMPORT_ROWS || parseCapped > 0;
   return {
-    rows: truncated ? rows.slice(0, MAX_IMPORT_ROWS) : rows,
+    rows: rows.length > MAX_IMPORT_ROWS ? rows.slice(0, MAX_IMPORT_ROWS) : rows,
     events: vevents.length,
     skipped,
     unsupported,
     truncated,
+    capped,
   };
 }

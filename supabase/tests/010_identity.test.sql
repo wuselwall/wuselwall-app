@@ -16,9 +16,11 @@ end $$;
 
 -- ---- setup -----------------------------------------------------------------
 set local role anon;
-select throws_ok(
-  $$ select api.setup_household('wrong', 'Haus', 'g@example.org', 'longpassword1', 'Papa', '#112233', '123456') $$,
-  '42501', 'invalid setup token', 'setup refuses a wrong token');
+-- A wrong token is answered, not raised, so the founder bucket keeps the count (security
+-- review 2026-11-01, F20).
+select is(
+  api.setup_household('wrong', 'Haus', 'g@example.org', 'longpassword1', 'Papa', '#112233', '123456'),
+  '{"ok": false, "reason": "setup_token_invalid"}'::jsonb, 'setup refuses a wrong token');
 select throws_ok(
   $$ select api.setup_household('dev-setup', 'Haus', 'g@example.org', 'short', 'Papa', '#112233', '123456') $$,
   '22023', 'password too short', 'setup refuses a short password');

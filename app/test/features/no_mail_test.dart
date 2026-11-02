@@ -169,7 +169,7 @@ void main() {
       final (_, container) = await pumpSignIn(t, identity: identity);
       container
           .read(routerProvider)
-          .push('${Routes.passwordReset}?email=lea%40example.org');
+          .push(Routes.passwordReset, extra: 'lea@example.org');
       await t.pumpAndSettle();
       await t.enterText(
         find.byKey(const ValueKey('password-reset-code')),

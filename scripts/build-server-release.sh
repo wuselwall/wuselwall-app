@@ -4,7 +4,10 @@
 # on a tag server-v<version>, or by hand.
 #
 #   scripts/build-server-release.sh <version> [--skip-web]
-#     → dist/wuselwall-server-<version>.tar.gz
+#     → dist/wuselwall-server-<version>.tar.gz (DIST_DIR=… for another directory)
+#
+# The workflow then writes SHA256SUMS and signs it; server/wuselwall checks both before it
+# unpacks a release.
 #
 # The web app inside is built without a server (no SUPABASE_URL): it finds its server at
 # its own origin's /.well-known/wuselwall.json, so one build serves every server.
@@ -13,7 +16,8 @@ cd "$(dirname "$0")/.."
 version=${1:?usage: build-server-release.sh <version> [--skip-web]}
 [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "version must look like 1.2.3" >&2; exit 2; }
 
-out=dist/wuselwall-server-$version
+dist=${DIST_DIR:-dist}
+out=$dist/wuselwall-server-$version
 rm -rf "$out" && mkdir -p "$out"
 root=$out/wuselwall
 mkdir -p "$root"/{stack,migrations,jobs,backup}
@@ -42,6 +46,6 @@ if [[ ${2:-} != --skip-web ]]; then
   rsync -a app/build/web-release/ "$root/stack/volumes/web/"
 fi
 
-tar -C "$out" -czf "dist/wuselwall-server-$version.tar.gz" wuselwall
+tar -C "$out" -czf "$dist/wuselwall-server-$version.tar.gz" wuselwall
 rm -rf "$out"
-echo "dist/wuselwall-server-$version.tar.gz"
+echo "$dist/wuselwall-server-$version.tar.gz"

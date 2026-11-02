@@ -42,9 +42,19 @@ Store RFC 5545 directly. Do not invent a recurrence format.
 - `event.exdates` holds cancelled dates for simple skips.
 - `event_override` holds a full modified occurrence, keyed by `recurrence_id` — the
   *original* start instant of the occurrence being overridden, exactly as ICS defines it.
-- Expansion at read time via the `rrule` library, bounded to the requested window.
-  Never materialise recurring occurrences into rows: the calendar has no equivalent of
-  the task materialiser, because unlike tasks, occurrences carry no state.
+- Expansion at read time, bounded to the requested window. Never materialise recurring
+  occurrences into rows: the calendar has no equivalent of the task materialiser, because
+  unlike tasks, occurrences carry no state.
+- The walk is the server's own (`supabase/functions/_shared/occurrences.ts`, since 2026-11-02,
+  security review F6): a rule without `COUNT` starts at the first period that reaches the
+  window, every walk ends with the window, and no walk examines more than 100,000 periods.
+  The `rrule` library, which stepped a rule that never matches day by day to the year 9999,
+  is kept as the reference the differential test compares the walk against. The subset is
+  checked the same way in the Edge Functions and in SQL (`app.rrule_valid`, triggers on
+  `app.event` and `app.task_definition`): `INTERVAL` at most 999, `COUNT` at most 9999, no
+  rule that can never match (a `BYMONTHDAY` none of its months has, `BYDAY` mixing plain and
+  n-th weekdays, a `BYSETPOS` beyond what a period holds), no series before 1900, no `UNTIL`
+  before the start.
 
 **Timezone rule:** a weekly 07:00 event is stored with the household's zone (e.g.
 `timezone = 'Europe/Berlin'`) and expanded in that zone, so it stays at 07:00 across the DST boundary. Storing only a UTC
@@ -248,7 +258,18 @@ the calendar's colour with an RSS mark.
 
 - **Who fetches:** the server only. `calendar-import` runs hourly from `infra/cron/calendar-import.sh`
   (at most 20 feeds per run, each one whose last attempt is older than 55 minutes), and a guardian's
-  "Jetzt aktualisieren" fetches one feed at once. The apps never contact the address.
+  "Jetzt aktualisieren" fetches one feed at once. The apps never contact the address. The attempt
+  is recorded before the fetch (`api.external_calendar_begin`, `last_attempt_at`, migration
+  `20261102130000`): a worker the runtime stops leaves a trace, the next attempt counts it as a
+  failure (`last_error` `interrupted`), and a feed that fails three times in a row waits six
+  hours, six times a day (`consecutive_failures`), so one broken feed never holds the others
+  back. The guardian's button waits five minutes after the last attempt, not the last result.
+- **A stranger's feed:** `ical_parse.ts` caps VEVENTs per feed (5000), overrides per series
+  (400), RDATEs (366) and EXDATEs (1000) per event, counts what it dropped (`capped`), and
+  drops a rule that can never match or a series that starts before 1900 like an unsupported
+  one (first occurrence kept, counted in `unsupported`). The functions container gives a
+  person's request two minutes and 10 s of CPU (30 s hard); the jobs keep the generous limits
+  (`infra/supabase/volumes/functions/main/index.ts`).
 - **Who manages:** guardians, on a personal device or with a current step-up on a shared one;
   Einstellungen → Kalender von außen hinzufügen. Add, edit, delete, pause, "Jetzt aktualisieren". A kiosk
   cannot. Members see the imported occurrences. The address is a secret when it carries a token,

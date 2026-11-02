@@ -25,6 +25,20 @@ final _signIn = AppNotice(
   name: 'Daniels iPhone',
   at: DateTime(2026, 10, 15, 10),
 );
+final _mfaResetMine = AppNotice(
+  key: 'mfa_reset:11',
+  kind: NoticeKind.mfaReset,
+  name: 'Mama',
+  profileId: guardianId,
+  at: DateTime(2026, 10, 15, 11),
+);
+final _codeForAnna = AppNotice(
+  key: 'password_reset_issued:12',
+  kind: NoticeKind.passwordResetIssued,
+  name: 'Mama',
+  profileId: kidId,
+  at: DateTime(2026, 10, 15, 12),
+);
 
 void main() {
   group('NoticesRepository', () {
@@ -39,6 +53,12 @@ void main() {
               'name': 'Julia',
             },
             {'key': 'signin:2', 'kind': 'signin', 'name': 'iPhone'},
+            {
+              'key': 'mfa_reset:4',
+              'kind': 'mfa_reset',
+              'name': 'Mama',
+              'profile_id': 'p9',
+            },
             {'key': 'x:3', 'kind': 'from-the-future', 'name': 'Newer'},
           ],
         },
@@ -49,7 +69,9 @@ void main() {
       expect(notices.map((n) => (n.kind, n.name)), [
         (NoticeKind.join, 'Julia'),
         (NoticeKind.signIn, 'iPhone'),
+        (NoticeKind.mfaReset, 'Mama'),
       ]);
+      expect(notices[2].profileId, 'p9');
       expect(notices.first.at.toUtc(), DateTime.utc(2026, 10, 15, 7));
       expect(api.calls.single.name, 'notices');
       expect(api.calls.single.params, {'p_actor': 'p1'});
@@ -89,6 +111,26 @@ void main() {
       expect(find.text(_de.todayNoticeMembers), findsOneWidget);
       expect(find.text(_de.todayNoticeDevices), findsOneWidget);
     });
+
+    testWidgets(
+      'a reset of my second factor and a code for someone else, in German',
+      (t) async {
+        await pumpApp(
+          t,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(current: device()),
+          ),
+          notices: FakeNoticesRepository([_mfaResetMine, _codeForAnna]),
+        );
+
+        expect(find.text(_de.accountNoticeMfaResetYou('Mama')), findsOneWidget);
+        expect(
+          find.text(_de.accountNoticePasswordReset('Mama', 'Anna')),
+          findsOneWidget,
+        );
+        expect(find.text(_de.todayNoticeMembers), findsNWidgets(2));
+      },
+    );
 
     testWidgets('and in English', (t) async {
       await pumpApp(

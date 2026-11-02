@@ -55,7 +55,7 @@ A continuación, añade por nombre a los niños y otros adultos; podrás invitar
 
 ## 3. Unirse a una familia {#_3-joining-a-family}
 
-La invitación puede ser un **enlace**, un **QR** o un **código**. El enlace y el QR incluyen también el servidor. Si la app está instalada, abren directamente la invitación. Si no, instala la app desde la página indicada y vuelve a abrir el enlace.
+La invitación puede ser un **enlace**, un **QR** o un **código**. El enlace y el QR incluyen también el servidor. Si la app está instalada, abren directamente la invitación. Si la app aún no está conectada a ningún servidor, muestra primero la dirección del servidor del enlace y pregunta si debe conectarse ([Primer inicio](/es/guide/install#at-first-start-which-server)). Si no, instala la app desde la página indicada y vuelve a abrir el enlace.
 
 Con un código solo:
 

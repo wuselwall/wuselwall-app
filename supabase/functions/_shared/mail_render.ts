@@ -42,6 +42,15 @@ export const MAIL_KINDS: readonly MailKind[] = [
   "invite",
 ];
 
+/**
+ * The notices WuselWall sends itself, outside GoTrue: no code, nothing to act on. Only
+ * `mfa_reset` so far (a co-guardian removed the recipient's authenticator; security review
+ * 2026-11-01, F3), sent by the mfa-reset Edge Function.
+ */
+export type NoticeKind = "mfa_reset";
+
+export const NOTICE_KINDS: readonly NoticeKind[] = ["mfa_reset"];
+
 /** The wording of one language. Every mail_<locale>.ts satisfies this type. */
 export interface MailMessages {
   /** The subject before ": <code>". */
@@ -61,6 +70,8 @@ export interface MailMessages {
   signoff: string;
   /** The small print under the card: who sent this mail. */
   footer: string;
+  /** The notices (renderNotice): the subject, the heading, what happened, what to do. */
+  notice: Record<NoticeKind, { subject: string; heading: string; lead: string; advice: string }>;
 }
 
 export interface RenderInput {
@@ -68,8 +79,12 @@ export interface RenderInput {
   kind: MailKind;
   /** The code for this recipient. Required for every kind except an invitation. */
   token?: string;
-  /** email_change only: the code for the new address, when GoTrue sends one. */
-  tokenNew?: string;
+  /**
+   * email_change only: which side of the change this recipient is. GoTrue hands the hook
+   * one call with a code for each address; each address gets its own mail, labelled, and
+   * never the other's code (security review 2026-11-01, F1).
+   */
+  codeLabel?: "old" | "new";
 }
 
 export interface RenderedMail {
@@ -119,19 +134,13 @@ export function escapeHtml(value: string): string {
 type CodeLine = { label: string | null; code: string };
 
 function codesFor(input: RenderInput, messages: MailMessages): CodeLine[] {
-  const codes: CodeLine[] = [];
-  if (input.token) {
-    codes.push({
-      label: input.kind === "email_change" && input.tokenNew
-        ? messages.codeLabelOld
-        : null,
-      code: input.token,
-    });
-  }
-  if (input.kind === "email_change" && input.tokenNew) {
-    codes.push({ label: messages.codeLabelNew, code: input.tokenNew });
-  }
-  return codes;
+  if (!input.token) return [];
+  const label = input.kind !== "email_change" || !input.codeLabel
+    ? null
+    : input.codeLabel === "old"
+    ? messages.codeLabelOld
+    : messages.codeLabelNew;
+  return [{ label, code: input.token }];
 }
 
 // The light palette of specs/17 ("Küchentisch", app/lib/app/theme/palette.dart); every
@@ -308,6 +317,52 @@ export function renderMail(input: RenderInput): RenderedMail {
   });
 
   return { subject, text, html };
+}
+
+/** Renders a notice: no code, the heading says what happened, the advice what to do now. */
+export function renderNotice(
+  input: { locale: MailLocale; kind: NoticeKind },
+): RenderedMail {
+  const messages = MESSAGES[input.locale] ?? MAIL_DE;
+  const notice = messages.notice[input.kind];
+  if (!notice) {
+    throw new MailRenderError("unknown notice");
+  }
+  const text = [
+    notice.heading,
+    "",
+    messages.greeting,
+    "",
+    notice.lead,
+    "",
+    notice.advice,
+    "",
+    messages.signoff,
+    "",
+    "-- ",
+    messages.footer,
+  ].join("\n");
+  const body = `font-size:16px;line-height:24px;color:${C.ink};`;
+  const content = [
+    `<h1 style="margin:0 0 20px;${FONT}font-size:22px;line-height:28px;font-weight:bold;color:${C.ink};">${
+      escapeHtml(notice.heading)
+    }</h1>`,
+    `<p style="margin:0 0 16px;${FONT}${body}">${escapeHtml(messages.greeting)}</p>`,
+    `<p style="margin:0 0 16px;${FONT}${body}">${escapeHtml(notice.lead)}</p>`,
+    `<p style="margin:0 0 16px;${FONT}${body}">${escapeHtml(notice.advice)}</p>`,
+    `<table ${TABLE} width="100%"><tr><td style="border-top:1px solid ${C.line};font-size:1px;line-height:1px;height:1px;">&nbsp;</td></tr></table>`,
+    `<p style="margin:16px 0 0;${FONT}font-size:14px;line-height:20px;color:${C.ink2};">${
+      escapeHtml(messages.signoff)
+    }</p>`,
+  ].join("\n");
+  const html = documentShell({
+    lang: input.locale,
+    titleHtml: escapeHtml(notice.subject),
+    preheaderHtml: escapeHtml(notice.lead),
+    cards: [card(content)],
+    footerHtml: escapeHtml(messages.footer),
+  });
+  return { subject: notice.subject, text, html };
 }
 
 /** The GoTrue templates config.toml points at, by the mail kind they stand for. */

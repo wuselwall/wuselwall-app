@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/logging/log.dart';
+import 'package:wuselwall/core/storage/app_secure_storage.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
@@ -165,7 +165,7 @@ abstract class InvitationStore {
 class SecureInvitationStore implements InvitationStore {
   const SecureInvitationStore();
 
-  static const _storage = FlutterSecureStorage();
+  static const _storage = appSecureStorage;
   static const _key = 'wuselwall.invitation.pending';
 
   @override

@@ -338,20 +338,19 @@ final routerProvider = Provider<GoRouter>((ref) {
               },
             ),
           ),
+          // An address travels in the navigation state, never in the location: on the
+          // web a location lands in the browser's history (F25).
           _materialRoute(
             path: 'claim',
-            builder: (_, state) =>
-                ClaimPage(initialEmail: state.uri.queryParameters['email']),
+            builder: (_, state) => ClaimPage(initialEmail: _email(state)),
           ),
           _materialRoute(
             path: 'sign-in',
-            builder: (_, state) =>
-                SignInPage(initialEmail: state.uri.queryParameters['email']),
+            builder: (_, state) => SignInPage(initialEmail: _email(state)),
           ),
           _materialRoute(
             path: 'email-code',
-            builder: (_, state) =>
-                EmailCodePage(email: state.uri.queryParameters['email'] ?? ''),
+            builder: (_, state) => EmailCodePage(email: _email(state) ?? ''),
           ),
           _materialRoute(
             path: 'sign-in-choice',
@@ -359,9 +358,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           _materialRoute(
             path: 'password-reset',
-            builder: (_, state) => PasswordResetPage(
-              initialEmail: state.uri.queryParameters['email'],
-            ),
+            builder: (_, state) =>
+                PasswordResetPage(initialEmail: _email(state)),
           ),
           _materialRoute(
             path: 'deleted-family',
@@ -579,4 +577,11 @@ String? _readyRedirect(Ref ref, String path) {
   return (Routes.isSetup(path) && !greeting) || path == Routes.splash
       ? Routes.home
       : null;
+}
+
+/// The address a setup page was opened with: handed over as the route's `extra`, so it
+/// never appears in a location (and on the web in the browser's history).
+String? _email(GoRouterState state) {
+  final extra = state.extra;
+  return extra is String && extra.isNotEmpty ? extra : null;
 }

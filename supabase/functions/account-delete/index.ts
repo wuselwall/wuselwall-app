@@ -3,7 +3,11 @@
 // Steps, in order:
 //   1. The caller is verified with their own JWT (getUser). Nothing else is trusted from the body.
 //   2. The sign-in must be recent: a sign-in within five minutes (the `amr` claim), else 403
-//      reauth_required. The app then asks for a fresh sign-in and retries once.
+//      reauth_required. The app then asks for a fresh sign-in and retries once. An account
+//      with a verified authenticator must also have proven it in this session (`aal2` and a
+//      second-factor `amr` entry), else 403 mfa_required: a password alone must not delete a
+//      protected account (security review 2026-11-01, F10). A fresh sign-in starts a new
+//      session, so the app passes the challenge again before it retries.
 //   3. api.account_delete_prepare decides (the last guardian with an account is refused, 409)
 //      and unlinks the profile, revokes the account's devices and closes the family if this
 //      was its only person.
@@ -11,6 +15,9 @@
 //
 // The service role is used in steps 3 and 4, and only for the user verified in step 1: both
 // calls pass that user's id, and the database function refuses any other caller.
+//
+// Authentication: the compose stack runs the functions router with FUNCTIONS_VERIFY_JWT=false,
+// so verifiedCaller (getUser) is the check, not the gateway.
 import {
   errorResponse,
   json,
@@ -19,7 +26,7 @@ import {
   requirePost,
   serviceClient,
 } from "../_shared/client.ts";
-import { amrOf, RECENT_SIGN_IN_SECONDS, signedInRecently, verifiedCaller } from "../_shared/caller.ts";
+import { stepUpRefusal, verifiedCaller } from "../_shared/caller.ts";
 
 /** A refusal in the shape the apps read: `hint` carries the stable reason. */
 function refusal(status: number, error: string, message: string): Response {
@@ -32,8 +39,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
     requirePost(req);
     const { user, token } = await verifiedCaller(req);
 
-    if (!signedInRecently(amrOf(token), new Date(), RECENT_SIGN_IN_SECONDS)) {
-      return refusal(403, "reauth_required", "sign in again to delete the account");
+    const stepUp = stepUpRefusal(user, token, new Date());
+    if (stepUp === "reauth_required") {
+      return refusal(403, stepUp, "sign in again to delete the account");
+    }
+    if (stepUp === "mfa_required") {
+      return refusal(403, stepUp, "confirm the second factor to delete the account");
     }
 
     // Service role, for the verified caller only (the database checks the caller's user id).

@@ -65,6 +65,7 @@ class FeedToken {
     required this.fetchCount,
     this.lastFetchedAt,
     this.revokedAt,
+    this.createdByProfileId,
   });
 
   factory FeedToken.fromJson(Map<String, dynamic> json) => FeedToken(
@@ -79,6 +80,7 @@ class FeedToken {
     revokedAt: json['revoked_at'] == null
         ? null
         : DateTime.parse(json['revoked_at'] as String),
+    createdByProfileId: json['created_by_profile_id'] as String?,
   );
 
   final String id;
@@ -88,6 +90,10 @@ class FeedToken {
   final DateTime? lastFetchedAt;
   final int fetchCount;
   final DateTime? revokedAt;
+
+  /// Who made the subscription. A token stops with its maker (revoked when the person
+  /// leaves or is retired), so the list says whose it was. Null on an older server.
+  final String? createdByProfileId;
 
   bool get revoked => revokedAt != null;
 }

@@ -110,7 +110,10 @@ select is((select count(*)::int from app.household), 1, 'one household exists');
 
 -- ---- a claimed server ------------------------------------------------------------
 select is(api.server_info() ->> 'claimed', 'true', 'the server is claimed now');
-select is(pg_temp.hook('anyone@example.org'), '{}'::jsonb, 'once claimed, the hook lets every sign-up through');
+-- Since 20261102140000 (security review F22) a claimed server admits a sign-up only for a live
+-- claim or an open invitation (280_account_security.test.sql covers the cases).
+select is(pg_temp.hook('anyone@example.org') -> 'error' ->> 'message', 'invitation_required',
+  'once claimed, the hook refuses a sign-up that no invitation or claim asks for');
 set local role anon;
 select pg_temp.from_ip('10.0.0.4');
 select is(api.setup_claim('dev-setup', null) ->> 'reason', 'key_used', 'the used key says so');

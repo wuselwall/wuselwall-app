@@ -49,7 +49,7 @@ Under **Birthday**, **Choose a date** sets the birthday. It is shown on the wall
 
 <Shot name="settings-member" alt="A member's page with name, colour, picture and birthday" />
 
-In the **Advanced** view the page also shows the **role** (guardian or member; a child cannot be a guardian, and the last guardian with an account stays one) and **No longer with us**: the person disappears from the wall, the avatar rows and new chores; history and points stay, the birthday is deleted, and you can bring them back here at any time. An adult with an account is not removed this way; they leave the family from their own phone (see [Account and family](/en/settings/account)).
+In the **Advanced** view the page also shows the **role** (guardian or member; a child cannot be a guardian, and the last guardian with an account stays one) and **No longer with us**: the person disappears from the wall, the avatar rows and new chores; history and points stay, the birthday is deleted, and you can bring them back here at any time. A phone of the person's own (connected as "A child's phone") is blocked at the same time and has to be connected again afterwards; the same happens when you make someone a guardian, who then signs in with their account. An adult with an account is not removed this way; they leave the family from their own phone (see [Account and family](/en/settings/account)).
 
 Everyone can change their own name, colour, picture and birthday. Everything else is for guardians, with the PIN on shared devices.
 
@@ -59,7 +59,7 @@ The order of the members in the list is the order on the wall and in every list.
 
 ## Reset two-factor
 
-If another guardian has lost their second factor, tap **Reset two-factor** next to their name. Then they can sign in without the second factor and set it up again (see [Security](/en/settings/security#two-factor-sign-in)).
+If another guardian has lost their second factor, tap **Reset two-factor** next to their name. Then they can sign in without the second factor and set it up again (see [Security](/en/settings/security#two-factor-sign-in)). If your server sends email, the person gets an email about it. WuselWall first asks you for a fresh sign-in (a code by email or your password, and your own second factor if you have one). Whoever reset the second factor cannot also create a password code for the same person in the same week, and the other way round; another guardian can. The person concerned and the other guardians also see it on Today.
 
 ## Reset password {#reset-password}
 

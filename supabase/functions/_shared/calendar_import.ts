@@ -17,6 +17,8 @@ export type Outcome =
     skipped: number;
     unsupported: number;
     truncated: boolean;
+    /** VEVENTs, overrides, RDATEs and EXDATEs dropped by the feed caps (ical_parse.ts). */
+    capped: number;
   }
   | { status: "failed"; code: string };
 
@@ -38,6 +40,11 @@ export async function fail(svc: any, id: string, code: string): Promise<void> {
  * One full fetch and its store: expand the current window and hand the rows to the database,
  * which replaces the stored rows only when they differ (`rows_hash`). Returns the outcome;
  * never throws for a feed's own problem.
+ *
+ * The attempt is recorded (api.external_calendar_begin) before anything is fetched, so a
+ * worker the runtime stops mid-way leaves a trace: the next run sees the attempt, counts it
+ * as a failure, and api.external_calendar_due moves on to the other calendars instead of
+ * starting with this one again every hour (security review 2026-11-01, F6).
  */
 // deno-lint-ignore no-explicit-any
 export async function importCalendar(
@@ -46,6 +53,13 @@ export async function importCalendar(
   now: Date,
   fetch: typeof fetchFeed = fetchFeed,
 ): Promise<Outcome> {
+  const { error: beginError } = await svc.rpc("external_calendar_begin", { p_id: cal.id });
+  if (beginError) {
+    // Without the record nothing is fetched: the database is the thing that is not answering.
+    console.error("calendar-import could not record the attempt:", cal.id, beginError.code ?? "");
+    return { status: "failed", code: "db" };
+  }
+
   let fetched: FetchResult;
   try {
     // Cached occurrences depend on today's window and the household timezone, not
@@ -101,5 +115,6 @@ export async function importCalendar(
     skipped: expanded.skipped,
     unsupported: expanded.unsupported,
     truncated: expanded.truncated,
+    capped: expanded.capped,
   };
 }

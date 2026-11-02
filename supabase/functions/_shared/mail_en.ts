@@ -39,4 +39,14 @@ export const MAIL_EN: MailMessages = {
   greeting: "Hi,",
   signoff: "Best regards from WuselWall",
   footer: "This email comes from the WuselWall server your account is on.",
+  notice: {
+    mfa_reset: {
+      subject: "Your two-factor sign-in was reset",
+      heading: "Two-factor sign-in reset",
+      lead:
+        "Another guardian of your family has just removed the authenticator app from your WuselWall account. Your next sign-in will not ask for a code from the app.",
+      advice:
+        "If you expected this, set up two-factor sign-in again under Settings › Security. If not, change your password right away and talk to your family.",
+    },
+  },
 };

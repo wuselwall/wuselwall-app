@@ -62,3 +62,49 @@ household; the setup call closes for good. These are now asserted by pgTAP
 1. By the operator: the backup job (A2), edge rate limits (S9), the uptime check (A9).
 2. After two weeks on the compose stack: remove the CLI stack's Docker volumes
    (`supabase_db_wuselwall`, `supabase_storage_wuselwall`, `supabase_edge_runtime_wuselwall`).
+
+## Second review — 2026-11-01, fixed 2026-11-02
+
+*A second pass over the server architecture and the authentication flows, against main at
+`5f2e23ab` (app v1.10.0, server 0.11.0), by reading the code only. The perimeter of the first
+review held: RLS on every table, the hooks, the gateway's allow-list and the token material.
+The findings are in the flows around it. The numbers F1–F30 are those of the review; the
+fixes landed together in one change (migrations `20261102140000`–`20261102130000`, pgTAP
+280–295).*
+
+| # | Severity | Finding | Status |
+|---|---|---|---|
+| F1 | **High** | On a server with the Send Email Hook, both codes of an email change went to the *old* address, and `app.proven_email` then treated the new address as proven: a stranger could take an invitee's address and accept that invitation | **Fixed:** the hook mails each code to its own address; the proven address is recorded in `app.proven_address` when a confirmation or the second step of a change completes, and only that address counts |
+| F2 | **High** on shared servers | supabase_flutter's `detectSessionInUri` was on: a link carrying someone else's tokens replaced the signed-in session | **Fixed:** off; the app's own link parser accepts only https links of the links site and refuses any link that carries session parameters |
+| F3 | Medium | A co-guardian could remove another guardian's second factor, issue a reset code for them and redeem it, without a fresh sign-in and without the target noticing | **Fixed:** both need a sign-in of the last five minutes and `aal2` when the caller has a factor; the same guardian cannot do both to one person within a day; redeeming a code ends the target's sessions; the MFA reset sends a notice where the function can mail |
+| F4 | Medium | Any device of the household could materialise task instances for any date and complete them: points for free | **Fixed:** `api.tasks_materialise` is service-role only; the Edge Function derives household and dates from the caller's schedule and the rule; a day the nightly job has closed cannot be ticked |
+| F5 | Medium | The global brute-force buckets counted calls, not failures, so an anonymous script could lock pairing, invitations and resets for everyone; the per-client key was the first `X-Forwarded-For` entry, which a client chooses behind an nginx front | **Fixed:** failures only, per-client first, global caps sized for the code lengths; Envoy sets `X-WuselWall-Client-IP` itself; the docs say what an own front must send |
+| F6 | Medium | A subscribed ICS feed with a never-matching RRULE burned minutes of CPU per event and, because the attempt was never recorded, stalled the hourly import for every household | **Fixed:** the occurrences module walks rules with a bounded engine (rrule.js stays as the test oracle), rules that cannot match are refused in SQL and TypeScript, feeds are capped, the attempt is written before the fetch with a backoff, and workers have CPU limits |
+| F7 | Medium | The discovery document could carry any scheme or host, a changed address was adopted in the background, and links or codes connected without asking | **Fixed:** https only; a moved server is announced and reconnected only on request, after signing out; links and scans show the host and wait for confirmation; the credential screens show the server |
+| F8 | Medium | `make-env.mjs` took keys over from an existing `.env` unchecked, so the CLI's public defaults could become a server's | **Fixed:** published values, placeholders, JWTs and short or uniform keys are refused; kept keys are printed as fingerprints; `.env.example` holds placeholders |
+| F9 | Medium | Server releases had no checksum or signature and the updater ran the downloaded script | **Fixed:** `SHA256SUMS` signed with minisign, verified by `wuselwall update`/`verify` and cloud-init before anything is extracted; provenance attestation. **Your action:** generate the key pair, set the secret, pin the public key (release-checklist G9). Open: a release runner label that never runs PR jobs (G10) |
+| F10 | Medium | Account deletion checked a recent sign-in but not `aal2` | **Fixed:** a TOTP-protected account must present `aal2` and a second-factor `amr` entry |
+| F11 | Medium | ICS feed tokens outlived the guardian who made them | **Fixed:** revoked when the profile is retired or its account unlinked; the creator is shown |
+| F12 | Low–Medium | On a server without mail the claim window was a race on the operator's address | **Fixed:** the no-code founding path needs the proven address or the client that claimed the key |
+| F13 | Low–Medium | The PIN window on a shared device lasted 15 minutes and nothing ended it early | **Fixed:** five minutes on shared and kiosk devices; the app steps down on an avatar switch, the idle revert and when leaving the settings (`api.guardian_step_down`) |
+| F14 | Low–Medium | `timetable-scan` accepted any Auth account | **Fixed:** a live household device, ten scans per ten minutes per account, bounded body, a pixel limit in the OCR container, which now sits on an internal network |
+| F15 | Low | The PIN counter was written from a stale read | **Fixed:** row lock before bcrypt |
+| F16 | Low | A child phone was a personal device whose profile could be made guardian without a password | **Fixed:** `app.guardian_ok` requires the device's Auth user to be the profile's own account; promotion and retirement revoke device-user phones |
+| F17 | Low | Three places tested the role column instead of `require_guardian` | **Fixed** |
+| F18 | Low | Closing a household left child-phone accounts behind | **Fixed:** device accounts are recognised by their marker address |
+| F19 | Low | Account-level functions ignored `aal` | **Fixed:** `aal2` required when a factor exists; `my_account` answers without personal fields at `aal1` |
+| F20 | Low | `setup_household` and `enrol_device` are still anon surface | **Open, mitigated:** both releases still ship the callers; `setup_household` is rate-limited and answers instead of raising. Revoke once the integration test uses the claim flow |
+| F21 | Low | Reward overspend under parallel requests | **No change needed:** the profile row was already locked; pgTAP now asserts the balance logic |
+| F22 | Low | Sign-up stayed open after the claim | **Fixed:** in code mode only an address with an open invitation, any address while a link-only invitation is open, or a live claim may sign up (`invitation_required`) |
+| F23 | Low | A password change needed no fresh sign-in and kept other sessions | **Fixed** in the app (fresh sign-in, other devices signed out); GoTrue's re-authentication setting stays off because it cannot work without mail |
+| F24 | Low | iOS Keychain class `unlocked` moved secrets with backups | **Fixed:** `first_unlock_this_device` |
+| F25 | Low | No CSP on the web host; addresses in route queries | **Fixed:** CSP and headers in Caddy and `index.html`; addresses travel as router state |
+| F26 | Low | Plaintext dumps, directory created before the umask; `restore` could drop on a failed count | **Fixed:** umask first, optional age or passphrase encryption, restore aborts on a failed count and always backs up first |
+| F27 | Low | The hook mailed any `token` text | **Fixed:** digits, six to ten |
+| F28 | Low | The docs suggested exposing the gateway on the LAN | **Fixed:** the docs keep the gateway on the bridge; a LAN bind is the last option with a firewall rule |
+| F29 | Low | Feed tokens and `apikey` in the gateway's access log | **Fixed:** the log prints a sanitised path |
+| F30 | Low | A short example setup key on the hosted path | **Fixed:** 16 characters minimum while no household exists; the docs show a generated key |
+
+Not changed: `server_info.claimed` stays public (the app needs it); hosted projects without
+Envoy fall back to the last public `X-Forwarded-For` entry; GoTrue's own per-IP limits still
+read the first entry (upstream).

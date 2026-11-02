@@ -5,12 +5,16 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/account/application/account_admin_providers.dart';
+import 'package:wuselwall/features/account/ui/reauth_dialogs.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
 import 'package:wuselwall/features/identity/ui/password_field.dart';
 
 /// Settings → Anmeldung: sets or changes the account's password (specs/20). Returns
-/// true once it is saved.
+/// true once it is saved. A password change needs a sign-in of the last five minutes, as
+/// deleting the account does (security review 2026-11-01, F23): a stale one is renewed in
+/// place first. Afterwards every other session of the account is signed out.
 Future<bool> showSetPasswordDialog(BuildContext context) async {
   final saved = await showDialog<bool>(
     context: context,
@@ -43,9 +47,23 @@ class _SetPasswordDialogState extends ConsumerState<_SetPasswordDialog> {
       return;
     }
     setState(() => _busy = true);
+    if (!ref.read(accountAdminRepositoryProvider).hasRecentSignIn()) {
+      final l10n = context.l10n;
+      final renewed = await renewSignIn(
+        context,
+        ref,
+        emailBody: l10n.accountPasswordReauthBody,
+        passwordBody: l10n.accountPasswordReauthPasswordBody,
+      );
+      if (!mounted) return;
+      if (!renewed) {
+        setState(() => _busy = false);
+        return;
+      }
+    }
     final result = await ref
         .read(identityRepositoryProvider)
-        .setPassword(_password.text);
+        .changePassword(_password.text);
     if (!mounted) return;
     switch (result) {
       case Ok():

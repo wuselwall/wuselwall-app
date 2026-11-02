@@ -1,12 +1,17 @@
 import { assert, assertEquals, assertFalse } from "jsr:@std/assert@1.0.13";
+import { Temporal } from "npm:temporal-polyfill@0.3.0";
 import {
   type EventRow,
   expand,
   type ExternalOccurrenceRow,
   importedOccurrence,
+  MAX_WALK_PERIODS,
   type OverrideRow,
+  parseRrule,
   sortOccurrences,
+  untilLocal,
   validateRrule,
+  walkRule,
 } from "./occurrences.ts";
 
 const TZ = "Europe/Berlin";
@@ -634,4 +639,179 @@ Deno.test("sortOccurrences merges events and imported rows by start, all-day fir
     importedOccurrence(imported({ id: "b", title: "Spiel", starts_at: "2026-10-14T10:00:00Z", ends_at: "2026-10-14T11:00:00Z" }), TZ),
   ];
   assertEquals(sortOccurrences([...event, ...rows]).map((o) => o.title), ["Abfall", "Spiel", "Zahnarzt"]);
+});
+
+// ---------------------------------------------------------------------------
+// Bounded walk (security review 2026-11-01, F6)
+// ---------------------------------------------------------------------------
+
+Deno.test("validateRrule refuses rules that can never match", () => {
+  const never = [
+    "FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30", // the poison rule of the review
+    "FREQ=DAILY;BYMONTH=2;BYMONTHDAY=31",
+    "FREQ=MONTHLY;BYMONTH=4,6,9,11;BYMONTHDAY=31",
+    "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=-30",
+    "FREQ=MONTHLY;BYDAY=MO,1TU", // the first Tuesday is never a Monday
+    "FREQ=MONTHLY;BYDAY=MO,TU,1WE",
+    "FREQ=YEARLY;BYMONTH=1,7;BYSETPOS=3", // DTSTART's day in two months: two a year
+    "FREQ=MONTHLY;BYDAY=-MO",
+    "FREQ=MONTHLY;BYDAY=6MO",
+    "FREQ=YEARLY;BYDAY=54MO",
+    "FREQ=WEEKLY;BYDAY=MO;BYSETPOS=2", // one Monday a week
+    "FREQ=DAILY;BYSETPOS=-2",
+    "FREQ=MONTHLY;BYDAY=MO;BYSETPOS=6",
+    "FREQ=MONTHLY;BYSETPOS=2",
+    "FREQ=YEARLY;BYMONTH=1,2;BYDAY=1MO;BYSETPOS=3",
+    "FREQ=DAILY;COUNT=0",
+    "FREQ=DAILY;INTERVAL=1000",
+    "FREQ=DAILY;COUNT=10000",
+  ];
+  for (const rule of never) assertEquals(validateRrule(rule), false, rule);
+  const fine = [
+    "FREQ=DAILY;BYMONTH=2;BYMONTHDAY=29",
+    "FREQ=MONTHLY;BYMONTHDAY=31",
+    "FREQ=MONTHLY;BYMONTH=2,3;BYMONTHDAY=31",
+    "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=-29",
+    "FREQ=MONTHLY;BYDAY=MO;BYSETPOS=5",
+    "FREQ=WEEKLY;BYDAY=MO,TU;BYSETPOS=2",
+    "FREQ=YEARLY;BYMONTH=1,2;BYDAY=1MO;BYSETPOS=2",
+    "FREQ=DAILY;INTERVAL=999;COUNT=9999",
+    "FREQ=YEARLY;BYMONTH=1,7;BYSETPOS=2",
+    "FREQ=MONTHLY;BYDAY=MO,1MO", // the first Monday
+    "FREQ=YEARLY;BYDAY=MO,TU,-1TU",
+    "FREQ=YEARLY;BYDAY=20MO",
+    "FREQ=YEARLY;BYDAY=53MO,-53MO",
+  ];
+  for (const rule of fine) assertEquals(validateRrule(rule), true, rule);
+});
+
+Deno.test("a stored event whose rule the parser refuses keeps its first date", () => {
+  // The rule would be refused at the door today; an older row, or one written by another
+  // path, still shows its DTSTART rather than vanishing.
+  const out = expand(
+    [timed({ rrule: "FREQ=MONTHLY;BYDAY=-MO" }, "2026-10-05T08:00:00Z", "2026-10-05T09:00:00Z")],
+    [],
+    "2026-10-01",
+    "2026-12-31",
+    TZ,
+  );
+  assertEquals(out.map((o) => o.local_start_date), ["2026-10-05"]);
+  assertEquals(out[0].is_recurring, true);
+});
+
+Deno.test("an override far from the window does not use up the window's walk", () => {
+  // A daily series from 1900 with an override on its second day, read in 2180: the window's
+  // walk starts at the window, whatever the override's neighbourhood costs.
+  const ev = timed({ id: "old", rrule: "FREQ=DAILY" }, "1900-01-01T08:00:00Z", "1900-01-01T09:00:00Z");
+  const moved = ov({ event_id: "old", recurrence_id: "1900-01-02T08:00:00Z", title: "Verschoben" });
+  const out = expand([ev], [moved], "2180-06-01", "2180-06-07", TZ);
+  assertEquals(out.length, 7);
+  assertEquals(out.every((o) => o.title === "t" || o.title === ev.title), true);
+});
+
+Deno.test("a walk budget stops the series after it is spent and counts the events", () => {
+  const events = [
+    timed({ id: "a", rrule: "FREQ=DAILY" }, "2026-01-01T08:00:00Z", "2026-01-01T09:00:00Z"),
+    timed({ id: "b", rrule: "FREQ=DAILY" }, "2026-01-01T08:00:00Z", "2026-01-01T09:00:00Z"),
+    timed({ id: "c", rrule: "FREQ=DAILY" }, "2026-01-01T08:00:00Z", "2026-01-01T09:00:00Z"),
+  ];
+  // The window with its padding is 37 days per series: the first series fits, the second is
+  // cut short, the third is not walked at all (its DTSTART is outside the window anyway).
+  const budget = { days: 50, events: 0 };
+  const out = expand(events, [], "2026-10-01", "2026-10-31", TZ, budget);
+  assertEquals(out.filter((o) => o.event_id === "a").length, 31);
+  assert(out.filter((o) => o.event_id === "b").length < 31);
+  assertEquals(out.filter((o) => o.event_id === "c").length, 0);
+  assertEquals(budget.events, 2);
+  assert(budget.days <= 0);
+  const plenty = { days: 1_000_000, events: 0 };
+  assertEquals(expand(events, [], "2026-10-01", "2026-10-31", TZ, plenty).length, 93);
+  assertEquals(plenty.events, 0);
+});
+
+Deno.test("a series whose start falls in the DST fold keeps its instant and its wall-clock time", () => {
+  // 2026-10-25 02:30 happens twice in Berlin: 00:30Z (summer time) and 01:30Z (winter time).
+  for (const start of ["2026-10-25T00:30:00Z", "2026-10-25T01:30:00Z"]) {
+    const out = expand(
+      [timed({ rrule: "FREQ=DAILY;COUNT=3" }, start, start.replace("30:00Z", "45:00Z"))],
+      [],
+      "2026-10-25",
+      "2026-10-27",
+      TZ,
+    );
+    assertEquals(out.map((o) => o.start), [start, "2026-10-26T01:30:00Z", "2026-10-27T01:30:00Z"]);
+    assertEquals(out.map((o) => o.local_starts), ["02:30", "02:30", "02:30"]);
+  }
+});
+
+Deno.test("a rule that passes the check but never matches is walked only over the window", () => {
+  // The first Monday is never the eighth: nothing matches, and rrule.js walked this to the
+  // year 9999 (about 0.3 s). The walk looks at the months of the window only.
+  const p = parseRrule("FREQ=MONTHLY;BYDAY=1MO;BYMONTHDAY=8")!;
+  const t0 = performance.now();
+  for (let i = 0; i < 100; i++) {
+    assertEquals(walkRule(p, Temporal.PlainDateTime.from("2000-01-01T09:00"), null, "2026-10-01", "2026-12-31"), []);
+  }
+  assert(performance.now() - t0 < 500, "100 walks of a never-matching rule take under half a second");
+});
+
+Deno.test("a never-matching rule in an event costs nothing: the series is its DTSTART only", () => {
+  // Through expand(): the rule is refused by the parser, so the event yields no occurrence at
+  // all (as before for an unsupported rule), in microseconds rather than seconds.
+  const t0 = performance.now();
+  const out = expand(
+    [timed({ rrule: "FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30" }, "2026-01-01T08:00:00Z", "2026-01-01T09:00:00Z")],
+    [],
+    "2026-10-01",
+    "2026-12-31",
+    TZ,
+  );
+  assert(performance.now() - t0 < 50);
+  assertEquals(out, []);
+});
+
+Deno.test("a series that starts before 1900 is not walked", () => {
+  const p = parseRrule("FREQ=DAILY")!;
+  assertEquals(walkRule(p, Temporal.PlainDateTime.from("1899-12-31T09:00"), null, "2026-01-01", "2026-01-03"), []);
+  assertEquals(
+    walkRule(p, Temporal.PlainDateTime.from("1900-01-01T09:00"), null, "2026-01-01", "2026-01-03").map(String),
+    ["2026-01-01T09:00:00", "2026-01-02T09:00:00", "2026-01-03T09:00:00"],
+  );
+});
+
+Deno.test("a rule without COUNT starts at the window, whatever its DTSTART", () => {
+  const p = parseRrule("FREQ=DAILY;BYDAY=MO")!;
+  const t0 = performance.now();
+  for (let i = 0; i < 1000; i++) {
+    walkRule(p, Temporal.PlainDateTime.from("1900-01-01T09:00"), null, "2026-10-01", "2026-10-31");
+  }
+  assert(performance.now() - t0 < 1000, "1000 walks from 1900 take under a second");
+  assertEquals(
+    walkRule(p, Temporal.PlainDateTime.from("1900-01-01T09:00"), null, "2026-10-01", "2026-10-31").map(String),
+    ["2026-10-05T09:00:00", "2026-10-12T09:00:00", "2026-10-19T09:00:00", "2026-10-26T09:00:00"],
+  );
+});
+
+Deno.test("a COUNT rule walks from DTSTART so the count is right, bounded by MAX_WALK_PERIODS", () => {
+  const p = parseRrule("FREQ=WEEKLY;COUNT=3")!;
+  const start = Temporal.PlainDateTime.from("2026-01-05T09:00");
+  assertEquals(walkRule(p, start, null, "2026-01-12", "2026-02-28").map(String), ["2026-01-12T09:00:00", "2026-01-19T09:00:00"]);
+  // Daily from 1900 to a window three hundred years later is more periods than the cap: the
+  // walk stops rather than going on, and the window stays empty.
+  const daily = parseRrule("FREQ=DAILY;COUNT=9999")!;
+  assertEquals(walkRule(daily, Temporal.PlainDateTime.from("1900-01-01T09:00"), null, "2200-01-01", "2200-01-02"), []);
+  assert(MAX_WALK_PERIODS >= 73_000, "a daily series from 1900 is readable until 2100");
+});
+
+Deno.test("UNTIL before DTSTART yields nothing beyond DTSTART itself", () => {
+  const p = parseRrule("FREQ=DAILY;UNTIL=20260101")!;
+  assertEquals(walkRule(p, Temporal.PlainDateTime.from("2026-02-01T09:00"), untilLocal(p, TZ), "2026-01-01", "2026-03-01"), []);
+  const out = expand(
+    [timed({ rrule: "FREQ=DAILY;UNTIL=20260101" }, "2026-02-01T08:00:00Z", "2026-02-01T09:00:00Z")],
+    [],
+    "2026-01-01",
+    "2026-03-01",
+    TZ,
+  );
+  assertEquals(out.map((o) => o.local_start_date), ["2026-02-01"]);
 });

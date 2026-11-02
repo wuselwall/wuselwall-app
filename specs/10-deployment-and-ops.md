@@ -89,7 +89,11 @@ layers:
 (`--api`, `--web`), a strong Postgres password, an EC P-256 key pair that signs new
 tokens, the opaque publishable and secret keys, the JWT secret, `CRON_SECRET`, the
 services' own encryption keys and the Studio login. Keys already in a `supabase/.env` are
-kept, so a server can move without stranding its devices. **The operator copies the
+kept, so a server can move without stranding its devices; since 2026-11-02 (security
+review F8) published defaults (the Supabase CLI's, upstream's example), placeholders, JWTs
+and short or uniform values are refused, and each kept key is named on stderr with the first
+8 hex digits of its sha256. `supabase/.env.example` holds placeholders, not the CLI's keys;
+`wuselwall install --env` refuses an `.env` with a published key, `update` warns about one. **The operator copies the
 `.env` into a password manager**: with it, a restored database keeps every device signed
 in (tested 2026-10-14); without the JWT secret and the keys every device must sign in again. Never regenerate it for a running server.
 
@@ -351,7 +355,15 @@ built 2026-10-14.* The project ships a **server release**, not a service.
   [`scripts/build-server-release.sh`](../scripts/build-server-release.sh) and attaches
   `wuselwall-server-<version>.tar.gz`: the stack with its layers, the Edge Functions, the
   migrations, the job schedule, the backup script, a web build without a server, and
-  [`server/wuselwall`](../server/wuselwall).
+  [`server/wuselwall`](../server/wuselwall). Since 2026-11-02 (security review F9) it also
+  attaches `SHA256SUMS` and `SHA256SUMS.minisig` (minisign, trusted comment
+  `wuselwall-server <version> SHA256SUMS`, key in the secret `SERVER_RELEASE_MINISIGN_KEY`,
+  public half pinned as `WW_RELEASE_PUBKEY` in `server/wuselwall`, `cloud-init.yaml` and the
+  docs) and a GitHub provenance attestation; a run without the key fails. `wuselwall
+  update`/`verify` and cloud-init check signature and checksum before anything from the
+  archive runs (minisign, or OpenSSL 3 when minisign is missing; `WW_REQUIRE_SIGNATURE=1`
+  refuses a checksum-only check; only prehashed `ED` signatures count). `update` refuses a
+  release older than the installed `VERSION` without `--allow-downgrade`.
 - **`wuselwall`** runs on the server: `install` (secrets through `make-env.mjs` in a Node
   container when the host has no Node, stack, migrations, jobs, a setup token, the
   server's address and QR code), `update` (backup first, then the new release), `backup`,
@@ -437,7 +449,11 @@ the household's data.
 - [`infra/backup/backup.sh`](../infra/backup/backup.sh), run by `wuselwall backup` (from
   the host's cron, nightly) or `scripts/remote-backup.sh`: `pg_dumpall --roles-only` and a
   custom-format `pg_dump` of the whole database into `BACKUP_DIR`, checked with
-  `pg_restore --list`, 14 days kept.
+  `pg_restore --list`, 14 days kept. Files `0600` in a `0700` directory (an existing one is
+  tightened); with `BACKUP_AGE_RECIPIENT` (age) or `BACKUP_PASSPHRASE` (`openssl enc
+  -aes-256-cbc -pbkdf2`) in `BACKUP_ENV`, every file is encrypted (`.age`/`.enc`) and the
+  plain one removed (security review F26, 2026-11-02). `scripts/remote-backup.sh` passes no
+  `BACKUP_ENV`, so its dumps stay plain (owner-only).
 - With `RESTIC_REPOSITORY` in the `BACKUP_ENV` file, the dumps also go to an encrypted
   off-site repository (restic from its Docker image). With `HEALTHCHECK_URL`, a ping after
   each success: a backup that silently stopped six weeks ago is the normal failure mode.
@@ -447,7 +463,9 @@ the household's data.
 - **Restore:** `wuselwall restore <dump>` on a server installed with the old `.env`
   (`install --env`): it stops everything but Postgres, recreates the database from the
   archive as `supabase_admin`, starts the stack, applies newer migrations and reschedules
-  the jobs ([guide](../docs/server/restore.md)). *Tested end to end 2026-10-14: install,
+  the jobs ([guide](../docs/server/restore.md)). Before dropping anything it always takes a
+  `before-restore` backup and aborts when the household count fails (an error is not
+  "empty"); encrypted dumps are decrypted by hand first. *Tested end to end 2026-10-14: install,
   a household through the API, backup, the whole stack and its volumes deleted, a new
   install with the old `.env`, restore — 0 `pg_restore` errors, the data back, the old
   refresh token still valid, the nightly job answering 200; then `wuselwall update`.*

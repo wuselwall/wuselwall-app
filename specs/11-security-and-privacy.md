@@ -132,6 +132,24 @@ shortcut key is a bearer credential in the Shortcuts app, synced through iCloud.
 - A new sign-in on an account notifies its other devices.
 - Supabase Auth's rate limits on sign-in, plus a rate limit at nginx or Cloudflare; PINs hashed with
   bcrypt, with exponential backoff per profile.
+- The anon-callable functions (pairing, invitation lookups, password-reset codes, the setup
+  key, device enrolment) keep their own attempt buckets: a per-client one as the primary limit,
+  keyed by `X-WuselWall-Client-IP`, which the compose stack's gateway sets itself from the
+  address its front saw and which the database trusts only where the stack's setting
+  `app.client_ip_header` names it (`infra/supabase/volumes/wuselwall/client-ip.sql`; a hosted
+  project falls back to Cloudflare's `cf-connecting-ip`, then the last public
+  `X-Forwarded-For` entry, never the first one, which the client writes; IPv6 keys are the
+  /64), and a global one that counts failures only and is sized so that one family never
+  fills it while a guesser of a 40-bit code still cannot; filling it takes 150 to 200
+  addresses or /64s failing at their own cap within ten minutes, and holds ten minutes
+  (migration `20261102120000`, security review 2026-11-01 F5).
+  An operator's own front must set `X-Forwarded-For` to the address it saw
+  ([docs/server/home-server.md](../docs/server/home-server.md), with an nginx `limit_req` example);
+  the release's stock Caddy image has no rate-limit module, so the front-side brake stays the
+  operator's. The timetable scan needs a live household device and allows ten scans per account
+  in ten minutes (F14); the gateway logs paths without the query string and with the feed
+  token masked, and still only its front's address, never the client's (F29); the OCR
+  container sits on an internal network of its own.
 - PIN lockout after 10 failures, released only by a full guardian login.
 - Generic error messages on login. No "unknown email" hints. The email step behaves the
   same for registered and unregistered addresses (a code is sent either way), so it

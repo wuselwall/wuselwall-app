@@ -77,11 +77,42 @@ String linkFragment(String secret, Uri? server) =>
 bool sameServer(Uri a, Uri b) =>
     a.host.toLowerCase() == b.host.toLowerCase() && a.port == b.port;
 
+/// Keys of a sign-in callback (magic link, OAuth, PKCE). The app signs in with codes and
+/// passwords only, so a link that carries one of them is not one of the app's links,
+/// whatever its path says (security review 2026-11-01, F2).
+const _callbackKeys = {'access_token', 'refresh_token', 'code', 'token_type'};
+
+/// Whether [uri]'s query or fragment carries a sign-in callback's parameters
+/// ([_callbackKeys], or any `error…` key). A part that cannot be read as parameters at
+/// all counts as carrying them.
+bool carriesSessionParameters(Uri uri) {
+  bool carries(String part) {
+    if (!part.contains('=')) return false;
+    try {
+      return Uri.splitQueryString(part).keys
+          .any((key) => _callbackKeys.contains(key) || key.startsWith('error'));
+    } on Object {
+      return true;
+    }
+  }
+
+  return carries(uri.query) || carries(uri.fragment);
+}
+
+/// Whether [uri] is a link of the links site the app may act on: https, the links site's
+/// host, and nothing a sign-in callback would carry.
+bool _isSiteLink(Uri uri) =>
+    uri.scheme == 'https' &&
+    uri.host == linkSiteHost &&
+    uri.userInfo.isEmpty &&
+    !carriesSessionParameters(uri);
+
 /// Reads an opened, scanned or pasted `https://wuselwall.app/i/…` or `/p/…` link (also
-/// under `/en/`, `/fr/` or `/es/`). Returns null for anything else.
+/// under `/en/`, `/fr/` or `/es/`). Returns null for anything else, an `http://` link or
+/// one carrying sign-in parameters included.
 OpenedLink? parseAppLink(String raw) {
   final uri = Uri.tryParse(raw.trim());
-  if (uri == null || !uri.hasScheme || uri.host != linkSiteHost) return null;
+  if (uri == null || !_isSiteLink(uri)) return null;
   // Pairing and invitation codes share one alphabet; the path says which this is.
   if (_invitationPath.hasMatch(uri.path)) {
     final parsed = parseInvitation(raw);
@@ -107,7 +138,7 @@ LinkSecret? parseInvitation(String raw) {
   final uri = Uri.tryParse(text);
   final String body;
   if (uri != null && uri.hasScheme) {
-    if (uri.host != linkSiteHost || !_invitationPath.hasMatch(uri.path)) {
+    if (!_isSiteLink(uri) || !_invitationPath.hasMatch(uri.path)) {
       return null;
     }
     body = uri.fragment;
@@ -136,7 +167,7 @@ LinkSecret? parsePairingCode(String raw) {
   final uri = Uri.tryParse(text);
   final String body;
   if (uri != null && uri.hasScheme) {
-    if (uri.host != linkSiteHost || !_pairingPath.hasMatch(uri.path)) {
+    if (!_isSiteLink(uri) || !_pairingPath.hasMatch(uri.path)) {
       return null;
     }
     body = uri.fragment.isNotEmpty

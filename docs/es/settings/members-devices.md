@@ -43,7 +43,7 @@ En **Cumpleaños**, **Elegir una fecha** guarda el cumpleaños. Aparece en la pa
 
 <Shot name="settings-member" alt="La página de un miembro con nombre, color, imagen y cumpleaños" />
 
-En la vista **Avanzados**, la página muestra además el **rol** (adulto responsable o miembro; un niño no puede ser adulto responsable, y el último adulto responsable con cuenta lo sigue siendo) y **Ya no está en la familia**: la persona desaparece de la pared, de las filas de avatares y de las tareas nuevas; el historial y los puntos se conservan, el cumpleaños se borra, y puedes traerla de vuelta aquí. Un adulto con cuenta sale de la familia desde su propio móvil (ver [Cuenta y familia](/es/settings/account)).
+En la vista **Avanzados**, la página muestra además el **rol** (adulto responsable o miembro; un niño no puede ser adulto responsable, y el último adulto responsable con cuenta lo sigue siendo) y **Ya no está en la familia**: la persona desaparece de la pared, de las filas de avatares y de las tareas nuevas; el historial y los puntos se conservan, el cumpleaños se borra, y puedes traerla de vuelta aquí. Un móvil propio de la persona (conectado como «Teléfono de un niño o niña») se bloquea al mismo tiempo y habrá que conectarlo de nuevo; lo mismo ocurre cuando conviertes a alguien en adulto responsable, que entonces inicia sesión con su cuenta. Un adulto con cuenta sale de la familia desde su propio móvil (ver [Cuenta y familia](/es/settings/account)).
 
 Cada persona cambia su propio nombre, color, imagen y cumpleaños. El resto corresponde a los adultos responsables, con el PIN en los dispositivos compartidos.
 
@@ -53,7 +53,7 @@ El orden de los miembros en la lista es el orden en la pared y en todas las list
 
 ## Restablecer el segundo factor {#reset-two-factor}
 
-Si otro adulto perdió su segundo factor, usa la acción junto a su nombre. Podrá acceder y [configurarlo otra vez](/es/settings/security#two-factor-sign-in).
+Si otro adulto perdió su segundo factor, usa la acción junto a su nombre. Podrá acceder y [configurarlo otra vez](/es/settings/security#two-factor-sign-in). Si tu servidor envía correo, la persona recibe un correo al respecto. WuselWall te pide antes un inicio de sesión reciente (código por correo o contraseña, y tu propio segundo factor si lo tienes). Quien restableció el segundo factor no puede crear la misma semana un código de contraseña para la misma persona, ni al revés; otro adulto responsable sí puede. La persona afectada y los demás adultos responsables también lo ven en Hoy.
 
 ## Restablecer una contraseña {#reset-password}
 

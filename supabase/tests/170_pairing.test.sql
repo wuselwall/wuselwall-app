@@ -287,8 +287,8 @@ grant all on sx to public;
 select is((select count(*) from sx where r ->> 'ok' = 'true'), 10::bigint, 'ten requests per client in ten minutes');
 select is((select count(*) from sx where r ->> 'reason' = 'rate_limited'), 1::bigint, 'the eleventh is refused, not raised');
 insert into app.pairing_attempt (client_key, success)
-  select 'pair:203.0.113.99', true from generate_series(1, 300);
-select is(pg_temp.start_raw('198.51.100.21') ->> 'reason', 'rate_limited', 'overall, two hundred requests in ten minutes stop new ones');
+  select 'pair:203.0.113.' || g, true from generate_series(1, 2000) g;
+select is(pg_temp.start_raw('198.51.100.21') ->> 'reason', 'rate_limited', 'overall, two thousand starts in ten minutes stop new ones');
 
 -- ---- row level security: nothing reads the requests but the owner ---------------------------
 set local role anon;

@@ -19,7 +19,7 @@ When the device goes back to "nobody", for example after a minute without a touc
 
 ## The guardian PIN
 
-Some things are for guardians only — adding or blocking devices, for instance. On a **shared device**, tap your name and enter your **6-digit PIN**. For the next **15 minutes** you can do guardian actions.
+Some things are for guardians only — adding or blocking devices, for instance. On a **shared device**, tap your name and enter your **6-digit PIN**. For the next **5 minutes** you can do guardian actions. The time ends earlier as soon as someone taps another name, the wall goes back to "nobody" or you leave the settings.
 
 - The PIN counts for **you** only: if someone else taps a different name during that time, they gain no rights.
 - A wrong PIN shows how many tries are left. After a few mistakes you have to wait a moment; after ten, the PIN is locked.

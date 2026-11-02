@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wuselwall/core/server/setup_link.dart';
+import 'package:wuselwall/core/storage/app_secure_storage.dart';
 
 /// Short-lived installer capability, independent of the email/auth session. Uses
 /// the same platform secure storage as auth (WebCrypto on HTTPS web origins).
 class SetupStore {
   SetupStore({FlutterSecureStorage? storage, DateTime Function()? now})
-    : _storage = storage ?? const FlutterSecureStorage(),
+    : _storage = storage ?? appSecureStorage,
       _now = now ?? DateTime.now;
   static const _key = 'wuselwall.pending-setup';
   final FlutterSecureStorage _storage;

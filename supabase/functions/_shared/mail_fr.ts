@@ -42,4 +42,14 @@ export const MAIL_FR: MailMessages = {
   greeting: "Bonjour,",
   signoff: "À bientôt sur WuselWall",
   footer: "Cet e-mail provient du serveur WuselWall qui héberge votre compte.",
+  notice: {
+    mfa_reset: {
+      subject: "Votre connexion à deux facteurs a été réinitialisée",
+      heading: "Connexion à deux facteurs réinitialisée",
+      lead:
+        "Un autre parent de votre famille vient de retirer l’application d’authentification de votre compte WuselWall. Votre prochaine connexion ne demandera plus de code de l’application.",
+      advice:
+        "Si vous vous y attendiez, réactivez la connexion à deux facteurs dans Réglages › Sécurité. Sinon, changez immédiatement votre mot de passe et parlez-en à votre famille.",
+    },
+  },
 };

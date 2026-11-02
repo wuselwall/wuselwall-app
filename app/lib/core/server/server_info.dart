@@ -17,7 +17,17 @@ class ServerInfo {
   /// Reads a discovery document fetched from [origin]. The server names its own
   /// address when it knows it; otherwise it is the origin the document came from.
   /// Throws a [FormatException] for anything that is not a WuselWall document.
-  factory ServerInfo.fromDiscovery(Object? json, {required Uri origin}) {
+  ///
+  /// The address must be https: the app sends the device's refresh token there, and
+  /// Dart's HTTP client ignores the platforms' cleartext policies. Plain http only with
+  /// [allowHttp], as for a typed address (debug builds talking to a laptop stack;
+  /// security review 2026-11-01, F7). Whether the address may differ from [origin] is
+  /// the caller's question: the bootstrap asks the person when it does.
+  factory ServerInfo.fromDiscovery(
+    Object? json, {
+    required Uri origin,
+    bool allowHttp = false,
+  }) {
     if (json is! Map<String, Object?> || json['wuselwall'] != 1) {
       throw const FormatException('not a WuselWall discovery document');
     }
@@ -31,8 +41,10 @@ class ServerInfo {
     final signIn = json['sign_in'];
     final claimed = json['claimed'];
     if (supabaseUrl == null ||
-        !supabaseUrl.hasScheme ||
+        !(supabaseUrl.scheme == 'https' ||
+            (allowHttp && supabaseUrl.scheme == 'http')) ||
         supabaseUrl.host.isEmpty ||
+        supabaseUrl.userInfo.isNotEmpty ||
         key is! String ||
         key.isEmpty ||
         api is! int ||

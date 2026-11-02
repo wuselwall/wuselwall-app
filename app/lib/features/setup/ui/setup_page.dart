@@ -13,6 +13,7 @@ import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
+import 'package:wuselwall/features/setup/ui/server_caption.dart';
 
 /// What every un-enrolled device shows (specs/20, "The front door"): sign-in with
 /// email and an invitation, then below "or" the device code and a new household.
@@ -163,6 +164,8 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                 // The web app of a server: the phone joins the same server by scanning.
                 if (kIsWeb) const _ContinueOnPhone(),
                 const SizedBox(height: Tokens.space4),
+                // Where the ways in lead, next to the way to another server (F7).
+                const ServerCaption(textAlign: TextAlign.center),
                 if (session.leave != null)
                   TextButton(
                     onPressed: session.leave,

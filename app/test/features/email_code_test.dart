@@ -306,11 +306,14 @@ void main() {
   group('Settings — the password', () {
     testWidgets('sets a password, then offers to change it', (t) async {
       final identity = FakeIdentityRepository(current: device());
+      // A fresh sign-in: the dialog asks for one before it changes a password.
+      final accountAdmin = FakeAccountAdminRepository()..recent = true;
       await pumpApp(
         t,
         overrides: baseOverrides(
           settingsView: SettingsView.advanced,
           identity: identity,
+          accountAdmin: accountAdmin,
           shopping: FakeShoppingRepository([]),
         ),
       );

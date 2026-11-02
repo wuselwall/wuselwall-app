@@ -42,7 +42,7 @@ To set it up, in the stack's folder:
 
 The app then offers **Scan a photo** under **Read in…**. Without that line the entry is still there, but the app says the server has no text recognition. Recognition uses RapidOCR with PaddleOCR's PP-OCR models (both Apache-2.0, the same stack the photo manager Immich uses for its text recognition).
 
-With the picture, the app sends its language and the names and short names of your subjects. That way the server reads your words as your subjects. The function accepts photos (JPEG, PNG, WebP, HEIC) and PDF files up to 6 MB, keeps nothing and writes no picture to the log. What the server reads from a sheet, and where it stops, is under [Reading in a timetable](/en/school/#reading-in-a-timetable).
+With the picture, the app sends its language and the names and short names of your subjects. That way the server reads your words as your subjects. The function accepts photos (JPEG, PNG, WebP, HEIC) and PDF files up to 6 MB, only from a device of your family and at most ten times in ten minutes per account, keeps nothing and writes no picture to the log. The container reads pictures up to 40 megapixels and sits on an internal Docker network of its own that only the functions reach; it gets neither to the internet nor to your home network. What the server reads from a sheet, and where it stops, is under [Reading in a timetable](/en/school/#reading-in-a-timetable).
 
 ## Off-site backup {#off-site-backup}
 

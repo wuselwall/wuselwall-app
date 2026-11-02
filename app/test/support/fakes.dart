@@ -366,6 +366,9 @@ class FakeIdentityRepository implements IdentityRepository {
   }
 
   @override
+  Future<Result<void>> changePassword(String password) => setPassword(password);
+
+  @override
   Future<Result<void>> setPassword(String password) async {
     passwordsSet.add(password);
     passwordSet = true;

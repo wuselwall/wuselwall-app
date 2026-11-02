@@ -132,6 +132,11 @@ services:
 
   functions:
     image: public.ecr.aws/supabase/edge-runtime:v1.77.4
+    networks:
+      # The stack's network as before (the gateway, the database, the internet for holidays
+      # and calendar imports), plus the OCR container's internal one.
+      - default
+      - ocr
     environment:
       SUPABASE_JWKS: ${JWT_JWKS}
       # The shared secret of the nightly task job (supabase/functions/tasks-nightly): the
@@ -160,12 +165,17 @@ services:
   # once built. docs/server/extras.md "Texterkennung". Start with
   #   docker compose --profile ocr up -d --build
   # and set OCR_URL=http://ocr:9003/ocr in .env.
+  # The service has no authentication, so it lives on an internal network of its own, which
+  # only the functions container shares: nothing else reaches it, and it reaches nothing,
+  # neither the internet nor the home network (security review 2026-11-01).
   ocr:
     build: ./ocr
     image: wuselwall/ocr:local
     profiles: [ocr]
     restart: unless-stopped
     mem_limit: 2g
+    networks:
+      - ocr
     healthcheck:
       test: [CMD-SHELL, "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:9003/health')\""]
       interval: 30s
@@ -178,7 +188,17 @@ services:
     ports:
       # For migrations, pgTAP and Studio through an SSH tunnel; never on the network.
       - 127.0.0.1:${DB_PORT:-54422}:5432/tcp
+    volumes:
+      # The gateway's client-address header, trusted by the rate limits on this stack only
+      # (volumes/wuselwall/client-ip.sql): for a new database here, for an existing one
+      # through the release tool's update.
+      - ./volumes/wuselwall/client-ip.sql:/docker-entrypoint-initdb.d/migrations/99-wuselwall-client-ip.sql:Z
 
   # The pooler is not needed for one household and would publish 5432 and 6543.
   supavisor:
     profiles: [disabled]
+
+networks:
+  # The OCR container's network: internal (no route out of the host), shared with functions only.
+  ocr:
+    internal: true

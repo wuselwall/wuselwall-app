@@ -119,6 +119,7 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
     final signUp = _mode == _Mode.signUp;
 
     return AuthFormScaffold(
+      showServer: true,
       onBack: widget.onBack,
       title: l10n.doorEmail,
       children: [
@@ -225,7 +226,10 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
             onPressed: busy
                 ? null
                 : () => unawaited(
-                    context.push(passwordResetLocation(_email.text.trim())),
+                    context.push(
+                      Routes.passwordReset,
+                      extra: _email.text.trim(),
+                    ),
                   ),
             child: Text(l10n.passwordForgot),
           ),
@@ -233,8 +237,3 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
     );
   }
 }
-
-/// The reset page, with the address the person typed so far.
-String passwordResetLocation(String email) => email.isEmpty
-    ? Routes.passwordReset
-    : '${Routes.passwordReset}?email=${Uri.encodeQueryComponent(email)}';
