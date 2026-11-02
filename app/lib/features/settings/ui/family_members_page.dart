@@ -220,14 +220,15 @@ const _rowPadding = EdgeInsetsDirectional.only(
   end: Tokens.space2,
 );
 
-/// A row's chevron with the same inset as the drag handle (a 24 px icon in 12 px of
-/// padding, 48 px square), so handles and chevrons sit on one vertical line.
+/// A row's chevron on the drag handle's centre line (a 24 px icon in a 48 px target
+/// ends 12 px inside it). Only the end inset: padding on its other side would take
+/// width from the row's title, which then wrapped on a phone.
 class _RowChevron extends StatelessWidget {
   const _RowChevron();
 
   @override
   Widget build(BuildContext context) => const Padding(
-    padding: EdgeInsets.all(Tokens.space3),
+    padding: EdgeInsetsDirectional.only(end: Tokens.space3),
     child: Icon(Icons.chevron_right),
   );
 }

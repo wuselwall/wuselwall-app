@@ -18,6 +18,7 @@ import 'package:wuselwall/core/server/server_info.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_notifications.dart';
@@ -111,6 +112,10 @@ Widget qualificationApp({
       theme: AppTheme.build(UiRegister.adult, Shade.light),
       darkTheme: AppTheme.build(UiRegister.adult, Shade.dark),
       themeMode: shade == 'light' ? ThemeMode.light : ThemeMode.dark,
+      builder: (context, child) => SystemBars(
+        navigationColor: Theme.of(context).scaffoldBackgroundColor,
+        child: child!,
+      ),
       home: ServerChoicePage(
         canScan: true,
         onAddress: (_) async => ServerProblem.unreachable,

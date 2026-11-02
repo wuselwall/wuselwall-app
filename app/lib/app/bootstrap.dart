@@ -30,6 +30,7 @@ import 'package:wuselwall/core/server/setup_link.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/supabase/secure_session_storage.dart';
 import 'package:wuselwall/core/supabase/supabase_bootstrap.dart';
+import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/demo/demo_overrides.dart';
 import 'package:wuselwall/features/identity/domain/enrol_code.dart';
 import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
@@ -573,6 +574,11 @@ class BootstrapShell extends StatelessWidget {
     localizationsDelegates: localizationsDelegates,
     theme: AppTheme.build(UiRegister.adult, Shade.light),
     darkTheme: AppTheme.build(UiRegister.adult, Shade.dark),
+    // The app's own shell gives the system bars its colours; this one runs first.
+    builder: (context, child) => SystemBars(
+      navigationColor: Theme.of(context).scaffoldBackgroundColor,
+      child: child!,
+    ),
     home: child,
   );
 }

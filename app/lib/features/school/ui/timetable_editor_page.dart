@@ -821,15 +821,18 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
           ],
         ),
       ),
+      // Under the same column as the grid, so Save does not span a laptop's width.
       bottomNavigationBar: SafeArea(
         top: false,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: _busy ? null : _save,
-              child: Text(l10n.schoolSaveTimetable),
+        child: ContentWidth(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: _busy ? null : _save,
+                child: Text(l10n.schoolSaveTimetable),
+              ),
             ),
           ),
         ),

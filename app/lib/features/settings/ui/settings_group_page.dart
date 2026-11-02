@@ -256,6 +256,9 @@ class _NavTile extends ConsumerWidget {
     final advanced = ref.watch(settingsEnvProvider).advanced;
     return ListTile(
       key: ValueKey(tileKey),
+      // The page already pads 16 px: flush, the icon and chevron line up with the
+      // headings and the setting rows, as "Unsere Fragen" does.
+      contentPadding: EdgeInsets.zero,
       leading: Icon(icon),
       title: Text(title(l10n)),
       subtitle: Text(basic == null || advanced ? subtitle(l10n) : basic(l10n)),

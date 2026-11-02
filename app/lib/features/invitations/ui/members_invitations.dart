@@ -75,7 +75,7 @@ class InviteAdultTile extends ConsumerWidget {
       title: Text(l10n.inviteAdultTitle),
       // The same inset as the drag handles above, so the icons share one line.
       trailing: const Padding(
-        padding: EdgeInsets.all(Tokens.space3),
+        padding: EdgeInsetsDirectional.only(end: Tokens.space3),
         child: Icon(Icons.chevron_right),
       ),
       onTap: () => inviteAdultFlow(context, ref),

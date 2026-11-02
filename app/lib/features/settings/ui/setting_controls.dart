@@ -178,9 +178,10 @@ class _SettingControl extends StatelessWidget {
   }
 }
 
-/// A [Switch] drawn flush with the row's text. Material puts 4 px of padding on each
-/// side of the track, which set it that far right of the text column; moving that
-/// padding to the end keeps the switch's size and tap target.
+/// A [Switch] drawn flush with the row's text. Material pads the track by 4 px on
+/// each side and centres it in that box, which set it 4 px right of the text column.
+/// Without the padding the box is the 52 px track, still wider than the 48 px target,
+/// and the tap target keeps its padded height.
 class _FlushSwitch extends StatelessWidget {
   const _FlushSwitch({required this.value, required this.onChanged});
 
@@ -188,11 +189,8 @@ class _FlushSwitch extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   @override
-  Widget build(BuildContext context) => Switch(
-    value: value,
-    onChanged: onChanged,
-    padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
-  );
+  Widget build(BuildContext context) =>
+      Switch(value: value, onChanged: onChanged, padding: EdgeInsets.zero);
 }
 
 /// A nullable setting: a switch for on and off, and the control while it is on. Turning

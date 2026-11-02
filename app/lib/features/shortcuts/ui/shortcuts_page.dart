@@ -228,6 +228,8 @@ class _KeyTile extends StatelessWidget {
             ].where((line) => line.isNotEmpty).join('\n'),
           ),
           isThreeLine: true,
+          // Like a calendar feed's tile: icon and revoke centre on the three lines.
+          titleAlignment: ListTileTitleAlignment.center,
           trailing: token.revoked || onRevoke == null
               ? null
               : TextButton(
