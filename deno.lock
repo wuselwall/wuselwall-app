@@ -131,7 +131,7 @@
       "dependencies": [
         "npm:playwright@^1.64.1",
         "npm:sharp@~0.35.5",
-        "npm:supabase@^2.121.0",
+        "npm:supabase@^2.122.0",
         "npm:vitepress@^1.6.4"
       ]
     }

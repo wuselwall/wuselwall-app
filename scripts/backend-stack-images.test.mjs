@@ -15,6 +15,9 @@ const services = [
 ];
 const failure = (stderr) => Object.assign(new Error('Command failed'), { stderr });
 const quiet = { sleep: async () => {}, warn: () => {} };
+// The pinned ref of an image, so a CLI bump does not have to edit these tests.
+const pinned = (name) => stackImages.find(({ ref }) => nameOf(ref) === name).ref;
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 test('every pin names the CLI image under GHCR with a digest and at least one mirror', () => {
   for (const { ref, digest, mirrors } of stackImages) {
@@ -28,14 +31,14 @@ test('every pin names the CLI image under GHCR with a digest and at least one mi
 test('pins that match the CLI are not stale; a changed version is reported', () => {
   assert.deepEqual(stalePins(services), []);
   const bumped = services.map((s) => (s.name === 'supabase/gotrue' ? { ...s, local: 'v2.999.0' } : s));
-  assert.deepEqual(stalePins(bumped), ['ghcr.io/supabase/gotrue:v2.197.0 (CLI runs v2.999.0)']);
+  assert.deepEqual(stalePins(bumped), [`${pinned('gotrue')} (CLI runs v2.999.0)`]);
 });
 
 test('a stale pin fails before anything is pulled', async () => {
   const calls = [];
   const bumped = services.map((s) => (s.name === 'postgrest/postgrest' ? { ...s, local: 'v99' } : s));
   await assert.rejects(prepareStackImages({ env, services: bumped, docker: (...a) => calls.push(a), ...quiet }),
-    /Update the pins .*postgrest:v16\.4 \(CLI runs v99\)/);
+    new RegExp(`Update the pins .*${escape(pinned('postgrest'))} \\(CLI runs v99\\)`));
   assert.deepEqual(calls, []);
 });
 
