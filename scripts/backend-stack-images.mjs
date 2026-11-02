@@ -20,17 +20,17 @@ const hub = (name) => `docker.io/supabase/${name}`;
 const pin = (name, tag, digest, mirrors) => ({ ref: `${registry}/supabase/${name}:${tag}`, digest, mirrors });
 
 export const stackImages = [
-  pin('postgres', '15.19.0.004', 'sha256:1d141ea194ba9c8d14c64cb93e72704887cd4b011732f122ace1576d29635c17',
+  pin('postgres', '15.19.0.007', 'sha256:1a2183252a053a036938196f50dc81442e2e5a75796bd4326729e4ea04cf58ea',
     [ecr('postgres'), hub('postgres')]),
   pin('gotrue', 'v2.197.0', 'sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b',
     [ecr('gotrue'), hub('gotrue')]),
-  pin('postgrest', 'v16.4', 'sha256:d155c6718ed9a9f990d159a2ab7c0a3f16944dbb6d0a0344557421042acfe0df',
+  pin('postgrest', 'v16.5', 'sha256:1347d7552b88f17832912c06afbf7c43209af6eeeb60834b04aae12c9bd9d5cc',
     [ecr('postgrest')]),
-  pin('realtime', 'v2.143.4', 'sha256:35e99d3f1cbba5aa5585e8ac3cf70ecc54909ee4aee0626effed93c60fb41439',
+  pin('realtime', 'v2.147.1', 'sha256:b7b0ef84b69d80b9b9c2280c9e9ae0a901175d3035b6b0c3ae22fa6c48bfb272',
     [ecr('realtime'), hub('realtime')]),
-  pin('storage-api', 'v1.82.1', 'sha256:ec2ad41411eac8fc2b769b4bb00d1af32ae37eca3745c15bdb329db27d218934',
+  pin('storage-api', 'v1.84.19', 'sha256:a0420573837ee08c0afdc9cd01f90b4b8027579da99e0b9a159fe912ef756c99',
     [ecr('storage-api'), hub('storage-api')]),
-  pin('edge-runtime', 'v1.77.4', 'sha256:ad45164b7548bf5820ed7be714789c17ac2865edce79a09cfb4c3756c3d365a8',
+  pin('edge-runtime', 'v1.77.8', 'sha256:178c041398a33ded8219344382d0672a90051d1babbf0af03425cafe20039a75',
     [ecr('edge-runtime'), hub('edge-runtime')]),
   pin('postgres-meta', 'v0.100.0', 'sha256:145325b7e39f8ef4931d6e8cfd3f6f4d655de09d72a2ccc96d9513542c2202bd',
     [ecr('postgres-meta'), hub('postgres-meta')]),
