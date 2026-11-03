@@ -4,6 +4,17 @@ Beim allerersten Start fragt die App, mit welchem Server sie sich verbinden soll
 
 Auf dem Startbildschirm beginnt alles. Du meldest dich mit deinem Konto an, trittst einer Familie per **Einladung** bei oder verbindest ein **geteiltes Gerät**.
 
+## Welcher Weg passt zu dir?
+
+| Du möchtest … | So geht es weiter |
+|---|---|
+| Eure erste Familie auf einem neuen Server anlegen | Zuerst den [Einrichtungsschlüssel](#einrichtungsschluessel) verwenden, dann anmelden und die Familie anlegen |
+| Mit einer Einladung dazukommen | [Einer Familie beitreten](#_3-einer-familie-beitreten); keine zweite Familie anlegen |
+| Dein Konto auf einem weiteren eigenen Handy nutzen | [Anmelden](#_1-anmelden) mit demselben Konto |
+| Ein Tablet für alle oder die Küchenwand verbinden | [Geteiltes Gerät verbinden](#_4-familien-tablet-oder-wanddisplay-verbinden); ein Erziehungsberechtigter bestätigt auf seinem Handy |
+
+Einrichtungsschlüssel, E-Mail-Code und Einladungscode haben verschiedene Aufgaben. Verwende jeweils den Code, nach dem die aktuelle Seite fragt.
+
 Bist du offline, erklärt die Startseite, dass Anmeldung, Einladungen und das Verbinden
 geteilter Geräte eine Internetverbindung brauchen. Diese Wege werden wieder verfügbar,
 sobald du online bist.
@@ -35,7 +46,11 @@ E-Mail — und **Neue Familie** fragt nach keinem Schlüssel mehr. Niemand tippt
 ein zweites Mal; wer den Server betreibt, erzeugt mit `./wuselwall setup-token` einen neuen,
 solange es keine Familie gibt.
 
+<Shot name="setup-claim" alt="Server einrichten mit Einrichtungsschlüssel und E-Mail-Adresse" />
+
 ## 1. Anmelden
+
+### Mit E-Mail vom Server
 
 Tippe auf **Mit E-Mail fortfahren** und gib eine gültige E-Mail-Adresse ein. Die App prüft das Feld, bevor sie etwas sendet. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
 
@@ -45,7 +60,7 @@ deine Adresse; er ist etwas anderes als der Einrichtungsschlüssel für einen ne
 
 <Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
-Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Gib deine E-Mail-Adresse und dein Passwort ein und tippe auf **Anmelden**; beide Felder werden vor der Anmeldung geprüft. Das Passwort legst du unter **Einstellungen → Konto & Sicherheit → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
+Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Gib deine E-Mail-Adresse und dein Passwort ein und tippe auf **Anmelden**; beide Felder werden vor der Anmeldung geprüft. Das Passwort legst du unter **Einstellungen → Konto & Sicherheit → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt möglich, solange euer Server E-Mail verschickt.
 
 Beim allerersten Mal fragt WuselWall einmal, wie du dich künftig anmelden möchtest: mit dem **Code per E-Mail** (nichts zu merken) oder mit einem **Passwort**.
 
@@ -91,7 +106,7 @@ Hast du nur den Code bekommen, gibst du ihn in der App ein:
 2. Den Code oder den ganzen Link einfügen, dann **Einladung prüfen**.
 3. WuselWall zeigt dir, wozu du eingeladen bist: **Du bist ‹Name› in ‹Familie›**. Dein Name und deine Farbe kannst du hier anpassen. Mit **Beitreten** gehörst du dazu.
 
-Hat die Familie deine E-Mail-Adresse eingetragen, brauchst du gar nichts einzugeben: Nach der Anmeldung zeigt WuselWall die Einladung von selbst. Einladungen gelten **7 Tage** und funktionieren **einmal**; wie man sie verschickt, steht unter [Mitglieder und Geräte](/settings/members-devices#erwachsene-person-einladen).
+Hat die Familie deine E-Mail-Adresse eingetragen und hast du sie mit dem Code per E-Mail bestätigt, zeigt WuselWall die Einladung nach der Anmeldung von selbst. Auf einem Server ohne E-Mail verwendest du stattdessen den Einladungslink, den QR-Code oder den Einladungscode. Einladungen gelten **7 Tage** und funktionieren **einmal**; wie man sie verschickt, steht unter [Mitglieder und Geräte](/settings/members-devices#erwachsene-person-einladen).
 
 Ein Konto gehört zu genau **einer** Familie. Öffnest du eine Einladung, während du schon in einer Familie bist, zeigt WuselWall **Du bist schon in ‹Familie›** und, wer dich wohin eingeladen hat. **Familie verlassen** führt dich mit einer Rückfrage durch das Verlassen; danach geht es direkt mit der Einladung weiter. **Abbrechen** lässt alles, wie es ist. Ist die Einladung für die Familie, in der du schon bist, sagt WuselWall nur, dass du schon dabei bist.
 

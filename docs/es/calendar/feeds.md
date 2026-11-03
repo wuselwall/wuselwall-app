@@ -2,7 +2,7 @@
 
 Una **suscripción** muestra el calendario en otra app, **sin poder editarlo**. Los cambios siguen en WuselWall. Para importar en sentido contrario, consulta [Calendarios externos](/es/calendar/#outside-calendars).
 
-En **Ajustes → Avanzados → Compartir el calendario familiar**, crea una suscripción:
+En **Ajustes → Avanzados → Calendario y colegio → Compartir el calendario familiar**, crea una suscripción:
 
 1. Ponle nombre, por ejemplo «Outlook del trabajo».
 2. Elige eventos y opciones: presencia, colegio (días completos, clases individuales o desactivado) y calendarios externos, desactivados por defecto. Cada suscripción decide por separado si los incluye. Evita compartir presencia en equipos laborales o infantiles si no es necesaria.

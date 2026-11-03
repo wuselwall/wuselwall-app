@@ -4,7 +4,9 @@ Dans **Paramètres**, adaptez WuselWall à votre famille. La page est une courte
 
 <Shot name="settings-phone" alt="Paramètres : la liste des groupes, de Personnel à Aide et infos" />
 
-La vue de base montre les réglages essentiels : région, jokers, approbation des récompenses, rendez-vous des enfants, repas chaud les jours d’école et libres, question à table, notre semaine, repas souhaités, heures de nuit, Wusel, son des tâches, résumé du matin, rappels, saisons et fêtes que célèbre votre région (en Suisse, par exemple, Pâques, Fête nationale, Saint-Nicolas, Avent et Noël), plus chaque fête que vous avez réglée vous-mêmes. Les fêtes désactivées par défaut dans votre région (par exemple les Pâques orthodoxes en Suisse, ou le Nouvel An), ainsi que les vacances et les anniversaires, se trouvent sous **Avancés**. La vue **Avancés**, à activer en haut à droite, montre tout ; une ligne en bas de page signale ce qui est masqué. Un groupe où la vue ne montre rien n’apparaît pas dans la liste. Les paramètres masqués restent actifs.
+Les réglages du quotidien s’affichent d’abord. Touchez **Avancés** en haut à droite pour ajouter des options, comme les détails du partage de calendrier et les réglages du mur de la cuisine. Touchez à nouveau pour revenir à la vue de base.
+
+La vue change seulement ce qui est affiché : les paramètres masqués restent actifs. Une note en bas de page signale les options masquées. Les groupes ci-dessous indiquent où trouver chaque réglage.
 
 Chaque réglage propose une valeur par défaut. Une valeur différente est signalée comme personnalisée ; vous pouvez rétablir la valeur par défaut à tout moment.
 

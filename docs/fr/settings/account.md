@@ -1,6 +1,6 @@
 # Compte et famille
 
-Ces actions concernent votre compte ou tout le foyer. Elles se trouvent en bas des paramètres de **votre téléphone personnel**. La suppression du compte est toujours visible ; les autres actions sont dans la vue **Avancés**. Lisez leurs conséquences avant de confirmer.
+Ces actions concernent **votre compte** ou **toute la famille**. Le mot de passe, le départ de la famille et la suppression du compte se trouvent dans **Paramètres → Compte et sécurité**, sur **votre téléphone personnel**. La suppression de la famille se trouve dans le **Profil de la famille**, en vue **Avancés**. Avant de confirmer, vérifiez quelles données restent et lesquelles sont définitivement supprimées.
 
 Sur un écran étroit ou avec un texte agrandi, les boutons d’action passent sous leur description ; faites défiler si nécessaire.
 

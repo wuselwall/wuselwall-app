@@ -30,7 +30,7 @@ Le même nom augmente normalement la quantité à **2×**. Pour deux lignes dist
 
 ## Où sont les tuiles ? {#tiles}
 
-Elles apparaissent quand vous terminez les achats. Les premiers produits se saisissent au clavier ; la première sortie construit les premières tuiles.
+Une nouvelle liste montre déjà des [suggestions de départ](/fr/shopping/add#starter-suggestions). Vos propres tuiles apparaissent quand vous **terminez les courses**. Vérifiez la liste sélectionnée : chacune possède son catalogue.
 
 ## Comment changer la langue ? {#language}
 

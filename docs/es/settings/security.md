@@ -1,6 +1,6 @@
 # Seguridad
 
-Los ajustes de acceso y seguridad están en **Ajustes → Avanzados**, solo en el **móvil personal de un adulto responsable**.
+Los ajustes de acceso y seguridad están en **Ajustes → Cuenta y seguridad**, solo en el **móvil personal de un adulto responsable**.
 
 ## Inicio de sesión {#sign-in}
 
@@ -28,4 +28,4 @@ Una clave de acceso sustituye la contraseña por huella o rostro. No está dispo
 
 ## Conviene recordar {#good-to-know}
 
-La contraseña tiene al menos **10 caracteres**; una frase es mejor. Si pierdes el móvil, [bloquéalo](/es/settings/members-devices#blocking-a-device) desde otro dispositivo. Los datos permanecen en el servidor elegido por tu familia.
+La contraseña tiene al menos **10 caracteres**; una frase es mejor. Si pierdes el móvil, [bloquéalo](/es/settings/members-devices#blocking-a-device) desde otro dispositivo. Los datos permanecen en el servidor elegido por tu familia. Si usas Supabase u otro proveedor de alojamiento, ese proveedor los aloja; WuselWall no gestiona un servicio de datos para tu familia.

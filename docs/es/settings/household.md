@@ -4,7 +4,9 @@ En **Ajustes**, adapta WuselWall a tu familia. La página es una lista corta de 
 
 <Shot name="settings-phone" alt="Ajustes: la lista de grupos, de Personal a Ayuda e información" />
 
-La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal, recordatorios, las estaciones y las fiestas que celebra vuestra región (en Suiza, por ejemplo, Pascua, Fiesta nacional, San Nicolás, Adviento y Navidad), más cada fiesta que hayáis cambiado vosotros. Las fiestas desactivadas por defecto en vuestra región (por ejemplo la Pascua ortodoxa en Suiza, o la Nochevieja), además de las vacaciones y los cumpleaños, están en **Avanzados**. **Avanzados**, que se activa arriba a la derecha, muestra el resto; una línea al final de la página avisa de lo que está oculto. Un grupo en el que la vista no muestra nada no aparece en la lista. Los ajustes ocultos siguen activos.
+Primero aparecen los ajustes cotidianos. Toca **Avanzados** arriba a la derecha para mostrar más opciones, como los detalles para compartir calendarios y los ajustes de la pared de la cocina. Tócalo de nuevo para volver a la vista básica.
+
+La vista solo cambia lo que ves: los ajustes ocultos siguen activos. Una nota al final de la página indica si hay opciones ocultas. Los grupos siguientes explican dónde encontrar cada ajuste.
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 

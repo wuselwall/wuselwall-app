@@ -8,7 +8,7 @@ import path from 'node:path';
 const docs = path.resolve('docs');
 const shots = path.join(docs, 'public/screenshots');
 const pages = fs.readdirSync(docs, { recursive: true })
-  .filter((f) => f.endsWith('.md') && !f.split(path.sep).some((p) => p.startsWith('.') || p === 'node_modules'));
+  .filter((f) => f.endsWith('.md') && !f.split(path.sep).some((p) => p.startsWith('.') || p === 'node_modules' || p === 'tools'));
 
 const defined = new Set([...fs.readFileSync(path.join(docs, 'tools/screenshots.mjs'), 'utf8').matchAll(/name: '([\w-]+)'/g)].map((m) => m[1]));
 const missing = [];

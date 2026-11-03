@@ -4,6 +4,17 @@ At the very first start, the app asks which server to connect to ([Installing th
 
 The start screen is where everything begins. You sign in with your account, join a family by **invitation**, or connect a **shared device**.
 
+## Which way in?
+
+| You want to … | Start here |
+|---|---|
+| Create the first family on a new server | Use the [setup key](#setup-key) first, then sign in and create the family |
+| Join with an invitation | [Join the family](#_3-joining-a-family); you do not create another family |
+| Use your account on another personal phone | [Sign in](#_1-signing-in) with the same account |
+| Connect a shared tablet or kitchen wall | [Connect a shared device](#_4-connecting-a-family-tablet-or-wall-display); a guardian approves it on their phone |
+
+The setup key, email sign-in code and invitation code do different jobs. Use the one the current page asks for.
+
 When you are offline, the start screen explains that signing in, accepting invitations,
 and connecting shared devices need an internet connection. These options return when
 you reconnect.
@@ -33,7 +44,11 @@ Then comes the code from your email, or a password on a server without email, an
 **New family** asks for no key any more. Nobody types the key again; whoever runs the
 server can issue a new one with `./wuselwall setup-token` as long as no family exists.
 
+<Shot name="setup-claim" alt="Set up your server with the setup key and email address" />
+
 ## 1. Signing in
+
+### With email from your server
 
 Tap **Continue with email** and enter a valid email address. The app checks the field before sending anything. WuselWall sends you a **six-digit code**. It is valid for **10 minutes**. Enter it and you are in. If it does not arrive, check your spam folder or tap **No code? Send again**; a new code comes at the earliest after one minute.
 
@@ -43,7 +58,7 @@ address; it is different from the setup key for a new server.
 
 <Shot name="setup-sign-in" alt="Signing in with email" />
 
-Prefer a password? Tap **I have a password**. Enter your email address and password and tap **Sign in**; the app checks both before signing in. You set the password under **Settings → Account & security → Sign-in**, at least 10 characters. The code by email always stays possible.
+Prefer a password? Tap **I have a password**. Enter your email address and password and tap **Sign in**; the app checks both before signing in. You set the password under **Settings → Account & security → Sign-in**, at least 10 characters. The code by email stays possible as long as your server sends email.
 
 The first time you create an account, WuselWall asks once how you want to sign in from now on: with the **code by email** (nothing to remember) or with a **password**.
 
@@ -88,7 +103,7 @@ If you only got the code, you enter it in the app:
 2. Paste the code or the whole link, then tap **Check invitation**.
 3. WuselWall shows what you are invited to: **You are ‹name› in ‹family›**. You can adjust your name and colour here. **Join** adds you.
 
-If the family entered your email address, you need to enter nothing: after signing in, WuselWall shows the invitation by itself. Invitations are valid for **7 days** and work **once**; how to send them is described under [Members and devices](/en/settings/members-devices#invite-an-adult).
+If the family entered your email address and you verified it with an email code, WuselWall shows the invitation after sign-in automatically. On a server without email, use the invitation link, QR code or invitation code instead. Invitations are valid for **7 days** and work **once**; how to send them is described under [Members and devices](/en/settings/members-devices#invite-an-adult).
 
 An account belongs to exactly **one** family. If you open an invitation while you are already in a family, WuselWall shows **You're already in ‹family›** and who invited you where. **Leave family** takes you through leaving, with a confirmation; after that the invitation carries on directly. **Cancel** leaves everything as it is. If the invitation is for the family you are already in, WuselWall just says so.
 

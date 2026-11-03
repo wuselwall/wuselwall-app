@@ -2,6 +2,17 @@
 
 En el primer inicio elige el servidor ([Instalar la app](/es/guide/install)). Después, la pantalla inicial permite iniciar sesión, aceptar una invitación o conectar un dispositivo compartido.
 
+## ¿Qué camino necesitas?
+
+| Quieres… | Empieza aquí |
+|---|---|
+| Crear la primera familia en un servidor nuevo | Usa primero la [clave de configuración](#setup-key), inicia sesión y crea la familia |
+| Aceptar una invitación | [Únete a la familia](#_3-joining-a-family), sin crear otra |
+| Usar tu cuenta en otro móvil personal | [Inicia sesión](#_1-signing-in) con la misma cuenta |
+| Conectar una tableta compartida o la pantalla de la cocina | [Conecta un dispositivo compartido](#_4-connecting-a-family-tablet-or-wall-display); un responsable lo aprueba desde su móvil |
+
+La clave de configuración, el código de acceso por correo y el código de invitación sirven para cosas distintas. Usa el que te pida la página actual.
+
 Si no tienes conexión, la pantalla inicial explica que necesitas Internet para iniciar
 sesión, aceptar invitaciones o conectar dispositivos compartidos. Estas opciones vuelven
 a estar disponibles cuando te conectas de nuevo.
@@ -24,7 +35,11 @@ Después llega el código de tu correo, o una contraseña en un servidor sin cor
 familia** ya no pide ninguna clave. Nadie teclea la clave una segunda vez; quien administra el
 servidor genera otra con `./wuselwall setup-token` mientras no exista familia.
 
+<Shot name="setup-claim" alt="Configurar el servidor con la clave de configuración y el correo" />
+
 ## 1. Iniciar sesión {#_1-signing-in}
+
+### Con correo del servidor
 
 En tu móvil personal, toca **Continuar con correo electrónico** e introduce una dirección válida. La app comprueba el campo antes de enviar nada. Recibirás un **código de seis cifras**, válido durante **10 minutos**. Mantén abierto el campo y escribe allí el código del mensaje. Revisa el correo no deseado si no llega; puedes solicitar otro tras un minuto como mínimo.
 
@@ -32,7 +47,9 @@ El código verifica tu dirección. No es la **clave de configuración del servid
 
 <Shot name="setup-sign-in" alt="El inicio de sesión por correo electrónico" />
 
-Si prefieres contraseña, elige esa opción e introduce tu dirección de correo y la contraseña y toca **Iniciar sesión**. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Cuenta y seguridad → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
+Si prefieres contraseña, elige esa opción e introduce tu dirección de correo y la contraseña y toca **Iniciar sesión**. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Cuenta y seguridad → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible mientras el servidor envíe correo. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
+
+### Sin correo del servidor
 
 **Servidor sin correo** ([Correo](/es/server/email)): **Continuar con correo electrónico** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)).
 
@@ -63,7 +80,7 @@ Con un código solo:
 2. Pega el código o el enlace completo y comprueba la invitación.
 3. La app muestra tu nombre y la familia. Ajusta el nombre y el color si hace falta y únete.
 
-Si te invitaron con tu correo exacto, la invitación aparece al iniciar sesión con él. Dura **7 días** y se usa **una vez**. Consulta [Invitar a un adulto](/es/settings/members-devices#invite-an-adult).
+Si te invitaron con tu dirección y la verificaste con un código por correo, la invitación aparece al iniciar sesión. En un servidor sin correo, usa el enlace, el QR o el código de invitación. Dura **7 días** y se usa **una vez**. Consulta [Invitar a un adulto](/es/settings/members-devices#invite-an-adult).
 
 Una cuenta pertenece a **una sola** familia. Si abres una invitación cuando ya estás en una familia, WuselWall muestra **Ya formas parte de ‹familia›** y quién te invita y a dónde. **Salir de la familia** te guía, con una confirmación; después la invitación sigue directamente. **Cancelar** lo deja todo como está. Si la invitación es para la familia en la que ya estás, WuselWall solo te lo dice.
 

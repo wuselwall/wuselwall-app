@@ -48,6 +48,14 @@ WuselWall works this out automatically. Anyone who is travelling or away at meal
 
 **Fill shopping list** previews what the planned meals still need, which meal each item is for and what is already on the list. Tap **Add item**, and the ingredients go onto the [shopping list](/en/shopping/add). Free-text notes have no ingredients; recipes do. An item that comes from the meal plan carries the label **From the meal plan** and shows which meal it is for, for example "For: Lasagne · Wed".
 
+### Example: pasta on Wednesday
+
+1. Plan a **recipe** for Wednesday with its ingredients saved. A note saying “Pasta” alone has no ingredients to add.
+2. Open **Fill shopping list**. Review the ingredients and what is already on the list; deselect anything you have at home.
+3. Confirm with **Add … items**; the button shows the selected count. The selected ingredients now appear on the shopping list.
+
+<Shot name="meals-shopping-preview" alt="Recipe ingredient preview with quantities and items already on the list" />
+
 ## Recipes
 
 Under **Recipes** you save what you cook often:
@@ -57,7 +65,7 @@ Under **Recipes** you save what you cook often:
 - **Tags**, such as "quick" or "vegetarian"
 - a **Source** link, if you found it online
 
-When you plan a meal, WuselWall suggests matching recipes (see [Suggestions](#suggestions)). Tap one to use it; its ingredients then go on the shopping list.
+When you plan a meal, WuselWall suggests matching recipes (see [Suggestions](#suggestions)). Tap one to use it. When you are ready, use **Fill shopping list** to review and add its ingredients.
 
 ## On the kitchen wall
 

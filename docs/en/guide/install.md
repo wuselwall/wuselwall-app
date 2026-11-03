@@ -9,7 +9,7 @@ The app doesn't know by itself where your data lives. So at its first start it a
 <Shot name="setup-server" alt="The question about the server" />
 
 - **Enter the address** you got from whoever set up your server, e.g. `api.example.org`. For a server at Supabase, the project ID is enough.
-- **Scan the QR code**: on a device that is already connected, it's under **Settings → Advanced → Server**. The code from **Add device** works too and connects the device at the same time ([Connect a device with a code](/en/guide/setup#_2-connect-a-device-with-a-code)).
+- **Scan the QR code**: on a device that is already connected, it's under **Settings → Advanced → Server**. The code from **Add device** works too and connects the device at the same time ([Connect a shared device](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display)).
 - **Try it without a server**: the app shows an example family. None of it is saved, and nothing leaves the device. **Exit** takes you back to the question.
 
 If the server comes from a link or a scanned QR code, or the address you typed leads to another server, the app first shows its address and asks **Connect to this server?** Only connect to an address you know; if in doubt, type it yourself. Wherever you sign in or enter a code or a password, the app shows **Server:** and the address in small print.
@@ -28,7 +28,7 @@ Your server comes with its own web app. Open its address in the browser, on a la
 On iPhone: **Share → Add to Home Screen**. On Android: **⋮ → Add to Home screen**. WuselWall then opens like an app.
 :::
 
-Passkeys aren't available in the browser yet; sign in with email and password.
+Sign in with an email code or your password. On a server without email, use your password. Passkeys aren't available in the browser yet.
 
 ## Android app — tablet and Android phones
 

@@ -2,7 +2,7 @@
 
 Un **abonnement** affiche le calendrier dans une autre app, **en lecture seule**. Les modifications restent dans WuselWall. Pour importer dans l’autre sens, consultez les [calendriers externes](/fr/calendar/#outside-calendars).
 
-Dans **Paramètres → Avancés → Partager le calendrier familial**, créez un abonnement :
+Dans **Paramètres → Avancés → Calendrier et école → Partager le calendrier familial**, créez un abonnement :
 
 1. Donnez-lui un **nom**, par exemple « Outlook au travail ».
 2. Choisissez les événements et les options : **présences**, **école** (journées entières, cours individuels ou désactivée) et **calendriers externes**, désactivés par défaut. Chaque abonnement décide séparément de les inclure. Évitez les présences sur un appareil professionnel ou destiné aux enfants si elles ne sont pas nécessaires.
