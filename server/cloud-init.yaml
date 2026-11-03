@@ -57,7 +57,7 @@ write_files:
       systemctl enable --now docker
       # The release, its SHA256SUMS and the signature of those, checked before unpacking
       # (security review 2026-11-01, F9). The key is server/wuselwall's WW_RELEASE_PUBKEY.
-      key=REPLACE-WITH-THE-RELEASE-PUBLIC-KEY
+      key=RWQkSenBTFOIn4wZCJQTUyXTgTwX8mO+WCK3WOn9W52Yer+3h7Bpmyp/
       archive=wuselwall-server-$WW_VERSION.tar.gz
       base=https://github.com/wuselwall/wuselwall-app/releases/download/server-v$WW_VERSION
       dl=$(mktemp -d) && cd "$dl"

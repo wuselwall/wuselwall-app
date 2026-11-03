@@ -54,7 +54,7 @@ NODE_IMAGE=node:22.12.0-alpine
 # server docs (scripts/cloud-init.test.mjs compares them). The installed script is what
 # decides whether the next release is genuine, so an update can only be signed by this key.
 # While it is the placeholder, only the checksum is checked, with a warning.
-WW_RELEASE_PUBKEY=${WW_RELEASE_PUBKEY:-REPLACE-WITH-THE-RELEASE-PUBLIC-KEY}
+WW_RELEASE_PUBKEY=${WW_RELEASE_PUBKEY:-RWQkSenBTFOIn4wZCJQTUyXTgTwX8mO+WCK3WOn9W52Yer+3h7Bpmyp/}
 FUNCTIONS_URL=http://api-gw:8000/functions/v1
 
 say() { printf '\033[1m%s\033[0m\n' "$*"; }

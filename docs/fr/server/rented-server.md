@@ -73,7 +73,7 @@ v=1.0.0
 for f in wuselwall-server-$v.tar.gz SHA256SUMS SHA256SUMS.minisig; do
   curl -fsSLO "https://github.com/wuselwall/wuselwall-app/releases/download/server-v$v/$f"
 done
-minisign -Vm SHA256SUMS -P REPLACE-WITH-THE-RELEASE-PUBLIC-KEY
+minisign -Vm SHA256SUMS -P RWQkSenBTFOIn4wZCJQTUyXTgTwX8mO+WCK3WOn9W52Yer+3h7Bpmyp/
 sha256sum -c --ignore-missing SHA256SUMS
 tar xzf wuselwall-server-$v.tar.gz
 ```
