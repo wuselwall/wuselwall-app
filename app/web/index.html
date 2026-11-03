@@ -17,6 +17,15 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
+  <!--
+    What the page may load (security review 2026-11-01, F25): its own scripts only, no
+    inline or injected ones; CanvasKit's WebAssembly; the family's server over https and
+    wss. Styles may be inline because Flutter writes its own. A laptop stack on localhost
+    stays reachable for development. The web host sends the same policy as a header
+    (infra/supabase/volumes/caddy/Caddyfile), without localhost and with frame-ancestors,
+    which a meta element cannot carry; a browser applies both. Keep the two in step.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https: wss: http://localhost:* ws://localhost:* http://127.0.0.1:* ws://127.0.0.1:*; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
 
@@ -33,13 +42,7 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <script>
-    // The passkeys plugin initialises a JavaScript SDK at start-up and throws without it,
-    // which blanks the whole web build. Until the SDK is self-hosted (specs/16, step 5.7;
-    // no third-party origin, NFR-9) this no-op keeps the app starting; a passkey call then
-    // fails like any other error.
-    window.PasskeyAuthenticator = window.PasskeyAuthenticator || { init() {} };
-  </script>
+  <script src="passkeys_stub.js"></script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

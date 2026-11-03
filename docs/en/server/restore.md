@@ -31,10 +31,35 @@ On the new server:
 4. Open the app on a phone: it should carry on without signing in again.
 
 ::: warning Onto a server with data
-On a server that already has a family, `restore` refuses. If you really want an earlier state back, put `WW_RESTORE_OVER_DATA=yes` in front; the tool then backs up the current state first.
+On a server that already has a family, `restore` refuses. If you really want an earlier state back, put `WW_RESTORE_OVER_DATA=yes` in front.
 :::
 
+Before it replaces anything, the tool always backs up the current state (`db-…-before-restore.dump`), on an empty server too. If it cannot tell whether a family is there, or that backup fails, it stops without changing anything.
+
 **Without the old `.env`** it works too: install normally with `--api` and `--web` and restore the backup. Your data is back, but every device has to sign in or be connected again.
+
+### Encrypted backups {#encrypted}
+
+A backup holds everything, password hashes and the secrets of two-factor codes included. The tool makes it readable by its owner only, in a directory only the owner can open. If the backups sit on a share others on the network can read, or you want them protected anyway, it encrypts every file when the `backup.env` next to the tool (`chmod 600`) holds one of these lines:
+
+```bash
+# Recommended: with age (apt install age). The server only knows the public key.
+BACKUP_AGE_RECIPIENT=age1…
+# Or with a long passphrase (openssl, already there):
+BACKUP_PASSPHRASE='…'
+```
+
+Make the age key once on your laptop with `age-keygen -o wuselwall-backup.key`; the line `public key: age1…` goes into `backup.env`, the file `wuselwall-backup.key` into the password manager and **not** onto the server. The passphrase belongs in the password manager too. Without the key or the passphrase an encrypted backup is worthless.
+
+The backups are then called `db-….dump.age` or `db-….dump.enc`. To restore one, decrypt it first and give `restore` the decrypted file:
+
+```bash
+age -d -i /path/to/wuselwall-backup.key -o db-2026-10-14-0330-nightly.dump db-2026-10-14-0330-nightly.dump.age
+# or, with the passphrase (openssl asks for it):
+openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -in db-2026-10-14-0330-nightly.dump.enc -out db-2026-10-14-0330-nightly.dump
+```
+
+Delete the decrypted file afterwards. The restore drill (`infra/backup/restore-drill.sh`) reads encrypted backups directly, with `BACKUP_PASSPHRASE` or with `BACKUP_AGE_IDENTITY=/path/to/wuselwall-backup.key`.
 
 ## At Supabase {#at-supabase}
 

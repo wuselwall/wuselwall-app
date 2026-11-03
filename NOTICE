@@ -13,7 +13,8 @@ licence above:
 - infra/supabase/docker-compose.yml and infra/supabase/volumes/ (api/, db/ and
   functions/deno.jsonc): copied from the Supabase project
   (https://github.com/supabase/supabase), Apache License 2.0, Copyright Supabase, Inc.
-  Modified: infra/supabase/volumes/functions/main/index.ts (marked "WuselWall:" in the
+  Modified: infra/supabase/volumes/functions/main/index.ts and
+  infra/supabase/volumes/api/envoy/lds.template.yaml (each marked "WuselWall:" in the
   file). Not from Supabase: infra/supabase/volumes/caddy/ and the other files in
   infra/supabase/, which are part of WuselWall.
 

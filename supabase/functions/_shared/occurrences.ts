@@ -6,13 +6,16 @@
 // events are whole local dates: start is local midnight of the first day, end is
 // local midnight of the day after the last.
 //
+// The recurrence walk is this module's own (see "RRULE walk" below) so that every step it
+// takes is counted: a rule that never matches, such as FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30,
+// made the previous engine step day by day to the year 9999 (about five seconds of CPU per
+// event; security review 2026-11-01, F6). The walk only ever looks at the periods that can
+// reach the requested window, and it stops after a fixed number of them. rrule.js stays the
+// reference the differential test compares against.
+//
 // Pure module: no I/O, no Supabase client. Shared by the `occurrences` and
 // `board-week` Edge Functions.
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
-import rrulePkg from "npm:rrule@2.8.1";
-
-// deno-lint-ignore no-explicit-any
-const { RRule, Weekday } = rrulePkg as any;
 
 export type EventRow = {
   id: string;
@@ -105,7 +108,20 @@ export type ExternalOccurrenceRow = {
 
 /** Hard cap on occurrences emitted for one event in one call. */
 const MAX_PER_EVENT = 1000;
+/** No series starts before this year: an earlier DTSTART is not walked (F6). */
+export const RRULE_MIN_YEAR = 1900;
+/**
+ * Candidate periods (days, weeks, months or years) one walk examines at most. A series that
+ * starts in 1900 and is read in 2100 is 73,000 daily periods; the cap is above that, so it
+ * only ever stops a walk that no real calendar needs (F6).
+ */
+export const MAX_WALK_PERIODS = 100_000;
+/** INTERVAL and COUNT above these are refused; the SQL check allows the same values. */
+export const MAX_INTERVAL = 999;
+export const MAX_COUNT = 9999;
 const DAY_MS = 86_400_000;
+/** The most days a month can have, January first. February counts the leap day. */
+const MONTH_MAX_DAYS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 // ---------------------------------------------------------------------------
 // Date helpers ('YYYY-MM-DD' strings in and out)
@@ -119,6 +135,12 @@ function daysBetween(from: string, to: string): number {
   return Temporal.PlainDate.from(from).until(Temporal.PlainDate.from(to), {
     largestUnit: "days",
   }).days;
+}
+
+/** Days since 1970-01-01 of a 'YYYY-MM-DD' date (the walk's integer form). */
+function ordinalOfDate(date: string): number {
+  const d = Temporal.PlainDate.from(date);
+  return ordinalOf(d.year, d.month, d.day);
 }
 
 /** Epoch ms of local midnight of `date` in `tz` (exclusive end of a day, or start). */
@@ -139,41 +161,6 @@ function hhmm(p: Temporal.PlainDateTime): string {
   return `${String(p.hour).padStart(2, "0")}:${
     String(p.minute).padStart(2, "0")
   }`;
-}
-
-/**
- * rrule runs in "floating" mode: a local wall-clock time is encoded as if it were
- * UTC, and the generated dates are read back the same way.
- */
-function floatOf(p: Temporal.PlainDateTime): Date {
-  return new Date(
-    Date.UTC(
-      p.year,
-      p.month - 1,
-      p.day,
-      p.hour,
-      p.minute,
-      p.second,
-      p.millisecond,
-    ),
-  );
-}
-
-function floatOfDate(date: string, h = 0, m = 0, s = 0): Date {
-  const d = Temporal.PlainDate.from(date);
-  return new Date(Date.UTC(d.year, d.month - 1, d.day, h, m, s));
-}
-
-function fromFloat(d: Date): Temporal.PlainDateTime {
-  return Temporal.PlainDateTime.from({
-    year: d.getUTCFullYear(),
-    month: d.getUTCMonth() + 1,
-    day: d.getUTCDate(),
-    hour: d.getUTCHours(),
-    minute: d.getUTCMinutes(),
-    second: d.getUTCSeconds(),
-    millisecond: d.getUTCMilliseconds(),
-  });
 }
 
 // ---------------------------------------------------------------------------
@@ -252,14 +239,14 @@ export function parseRrule(rrule: string): ParsedRrule | null {
   let interval = 1;
   if (parts.has("INTERVAL")) {
     const n = parseIntStrict(parts.get("INTERVAL")!);
-    if (n === null || n < 1 || n > 9999) return null;
+    if (n === null || n < 1 || n > MAX_INTERVAL) return null;
     interval = n;
   }
 
   let count: number | null = null;
   if (parts.has("COUNT")) {
     const n = parseIntStrict(parts.get("COUNT")!);
-    if (n === null || n < 1 || n > 100000) return null;
+    if (n === null || n < 1 || n > MAX_COUNT) return null;
     count = n;
   }
 
@@ -330,6 +317,30 @@ export function parseRrule(rrule: string): ParsedRrule | null {
     wkst = idx;
   }
 
+  // Rules that can never match are refused here, and by app.rrule_valid in SQL with the same
+  // conditions, rather than walked for nothing (F6). A BYMONTHDAY that none of the listed
+  // months has (Feb 30, Apr 31, -31 in June); BYDAY mixing plain and n-th weekdays whose
+  // weekdays never coincide (MO,1TU: the first Tuesday is never a Monday; MO,1MO is fine);
+  // a BYSETPOS beyond the largest set a period can hold.
+  if (bymonthday) {
+    const months = bymonth ?? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const feasible = months.some((m) =>
+      bymonthday.some((d) => Math.abs(d) <= MONTH_MAX_DAYS[m - 1])
+    );
+    if (!feasible) return null;
+  }
+  if (byday) {
+    const plainDays = new Set(byday.filter((b) => b.n === null).map((b) => b.weekday));
+    const ordinals = byday.filter((b) => b.n !== null);
+    if (plainDays.size > 0 && ordinals.length > 0 && !ordinals.some((b) => plainDays.has(b.weekday))) {
+      return null;
+    }
+  }
+  if (bysetpos) {
+    const largest = maxSetSize(typedFreq, byday, bymonthday, bymonth);
+    if (bysetpos.some((pos) => Math.abs(pos) > largest)) return null;
+  }
+
   return {
     freq: typedFreq,
     interval,
@@ -357,31 +368,346 @@ export function validateRrule(rrule: string): boolean {
   return parseRrule(rrule) !== null;
 }
 
-/** Builds an rrule generator over floating local times. `until` is already local floating. */
-function buildRule(p: ParsedRrule, dtstart: Date, untilFloat: Date | null) {
-  const freq = {
-    YEARLY: RRule.YEARLY,
-    MONTHLY: RRule.MONTHLY,
-    WEEKLY: RRule.WEEKLY,
-    DAILY: RRule.DAILY,
-  }[p.freq];
-  const opts: Record<string, unknown> = {
-    freq,
-    interval: p.interval,
-    wkst: p.wkst,
-    dtstart,
-  };
-  if (p.count !== null) opts.count = p.count;
-  if (untilFloat) opts.until = untilFloat;
-  if (p.byday) {
-    opts.byweekday = p.byday.map((b) =>
-      b.n === null ? new Weekday(b.weekday) : new Weekday(b.weekday, b.n)
-    );
+/**
+ * An upper bound of the number of days one period of the rule can select, before BYSETPOS.
+ * Over-estimating is harmless (the walk is bounded anyway); under-estimating would refuse a
+ * rule that matches, so every bound here is the loosest true one.
+ */
+function maxSetSize(
+  freq: ParsedRrule["freq"],
+  byday: ParsedRrule["byday"],
+  bymonthday: ParsedRrule["bymonthday"],
+  bymonth: ParsedRrule["bymonth"],
+): number {
+  const months = bymonth ? bymonth.length : 12;
+  // With n-th weekdays among the BYDAY entries, each of them selects at most one day per
+  // range, and plain entries only filter those further.
+  const ordinals = byday ? byday.filter((b) => b.n !== null).length : 0;
+  const plain = byday ? byday.length - ordinals : 0;
+  switch (freq) {
+    case "DAILY":
+      return 1;
+    case "WEEKLY":
+      return byday ? byday.length : 1;
+    case "MONTHLY": {
+      if (!byday && !bymonthday) return 1; // the day of DTSTART
+      let n = 31;
+      if (byday) n = Math.min(n, ordinals > 0 ? ordinals : 5 * plain);
+      if (bymonthday) n = Math.min(n, bymonthday.length);
+      return n;
+    }
+    case "YEARLY": {
+      // DTSTART's day in each listed month, or in DTSTART's own month.
+      if (!byday && !bymonthday) return bymonth ? bymonth.length : 1;
+      let n = 366;
+      if (byday) {
+        n = Math.min(
+          n,
+          ordinals > 0
+            ? (bymonth ? ordinals * months : ordinals)
+            : (bymonth ? 5 * plain * months : 53 * plain),
+        );
+      }
+      if (bymonthday) n = Math.min(n, bymonthday.length * months);
+      return n;
+    }
   }
-  if (p.bymonthday) opts.bymonthday = p.bymonthday;
-  if (p.bymonth) opts.bymonth = p.bymonth;
-  if (p.bysetpos) opts.bysetpos = p.bysetpos;
-  return new RRule(opts);
+}
+
+// ---------------------------------------------------------------------------
+// RRULE walk
+// ---------------------------------------------------------------------------
+//
+// The semantics are those of python-dateutil and rrule.js for the supported subset: a series
+// is a sequence of periods (days, weeks, months, years) from DTSTART, every INTERVAL-th one
+// taken; the days of a period are filtered by BYMONTH, BYDAY (plain weekdays, or the n-th
+// weekday of the month or year), BYMONTHDAY (negative counts from the end of the month);
+// BYSETPOS then picks positions in the filtered list; dates before DTSTART are dropped;
+// COUNT and UNTIL end the series. A rule with neither BYDAY nor BYMONTHDAY takes DTSTART's
+// day (MONTHLY), month and day (YEARLY) or weekday (WEEKLY).
+//
+// What differs from rrule.js is the bound: a rule without COUNT starts at the first period
+// that can reach the requested days, every walk ends with the last period that can, and no
+// walk examines more than MAX_WALK_PERIODS periods. Dates are integers (days since
+// 1970-01-01) until they are emitted; Temporal objects only exist for the results.
+
+/** Days since 1970-01-01 of a proleptic Gregorian date (Howard Hinnant's algorithm). */
+function ordinalOf(y: number, m: number, d: number): number {
+  const yy = m <= 2 ? y - 1 : y;
+  const era = Math.floor(yy / 400);
+  const yoe = yy - era * 400;
+  const doy = Math.floor((153 * (m + (m > 2 ? -3 : 9)) + 2) / 5) + d - 1;
+  const doe = yoe * 365 + Math.floor(yoe / 4) - Math.floor(yoe / 100) + doy;
+  return era * 146097 + doe - 719468;
+}
+
+/** The inverse of ordinalOf. */
+function civilOf(z: number): { y: number; m: number; d: number } {
+  const zz = z + 719468;
+  const era = Math.floor(zz / 146097);
+  const doe = zz - era * 146097;
+  const yoe = Math.floor((doe - Math.floor(doe / 1460) + Math.floor(doe / 36524) - Math.floor(doe / 146096)) / 365);
+  const doy = doe - (365 * yoe + Math.floor(yoe / 4) - Math.floor(yoe / 100));
+  const mp = Math.floor((5 * doy + 2) / 153);
+  const d = doy - Math.floor((153 * mp + 2) / 5) + 1;
+  const m = mp < 10 ? mp + 3 : mp - 9;
+  return { y: yoe + era * 400 + (m <= 2 ? 1 : 0), m, d };
+}
+
+/** 0 = Monday … 6 = Sunday (1970-01-01 was a Thursday). */
+function weekdayOf(ordinal: number): number {
+  return (((ordinal + 3) % 7) + 7) % 7;
+}
+
+function daysInMonth(y: number, m: number): number {
+  if (m === 2) return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0 ? 29 : 28;
+  return MONTH_MAX_DAYS[m - 1];
+}
+
+/** The filters of a rule with the DTSTART defaults applied, in integer form. */
+type Filters = {
+  months: Set<number> | null;
+  weekdays: Set<number> | null;
+  /** The n-th weekday entries (n never 0). */
+  nth: { weekday: number; n: number }[] | null;
+  monthdays: Set<number> | null;
+  negMonthdays: Set<number> | null;
+};
+
+function filtersOf(p: ParsedRrule, start: { y: number; m: number; d: number }): Filters {
+  let byday = p.byday;
+  let bymonthday = p.bymonthday;
+  let bymonth = p.bymonth;
+  if (!byday && !bymonthday) {
+    if (p.freq === "YEARLY") {
+      bymonth = bymonth ?? [start.m];
+      bymonthday = [start.d];
+    } else if (p.freq === "MONTHLY") {
+      bymonthday = [start.d];
+    } else if (p.freq === "WEEKLY") {
+      byday = [{ weekday: weekdayOf(ordinalOf(start.y, start.m, start.d)), n: null }];
+    }
+  }
+  const plain = byday?.filter((b) => b.n === null) ?? [];
+  const nth = byday?.filter((b) => b.n !== null) as { weekday: number; n: number }[] | undefined;
+  return {
+    months: bymonth ? new Set(bymonth) : null,
+    weekdays: plain.length > 0 ? new Set(plain.map((b) => b.weekday)) : null,
+    nth: nth && nth.length > 0 ? nth : null,
+    monthdays: bymonthday ? new Set(bymonthday.filter((d) => d > 0)) : null,
+    negMonthdays: bymonthday ? new Set(bymonthday.filter((d) => d < 0)) : null,
+  };
+}
+
+/** The ordinals of the n-th weekdays inside [first, last], as rrule's nwdaymask. */
+function nthWeekdays(
+  nth: { weekday: number; n: number }[],
+  first: number,
+  last: number,
+  into: Set<number>,
+): void {
+  for (const { weekday, n } of nth) {
+    let i: number;
+    if (n > 0) {
+      i = first + ((weekday - weekdayOf(first) + 7) % 7) + (n - 1) * 7;
+    } else {
+      i = last - ((weekdayOf(last) - weekday + 7) % 7) + (n + 1) * 7;
+    }
+    if (i >= first && i <= last) into.add(i);
+  }
+}
+
+type Period = { from: number; to: number };
+
+/** The k-th period of the series whose first day is `s` (an ordinal), both ends inclusive. */
+function periodOf(p: ParsedRrule, s: number, start: { y: number; m: number }, k: number): Period {
+  switch (p.freq) {
+    case "DAILY": {
+      const day = s + k * p.interval;
+      return { from: day, to: day };
+    }
+    case "WEEKLY": {
+      // The first period runs from DTSTART to the end of its week (WKST starts a week); the
+      // later ones are whole weeks, every INTERVAL-th from the start of DTSTART's week.
+      const weekStart = s - ((weekdayOf(s) - p.wkst + 7) % 7);
+      if (k === 0) return { from: s, to: weekStart + 6 };
+      const from = weekStart + 7 * k * p.interval;
+      return { from, to: from + 6 };
+    }
+    case "MONTHLY": {
+      const idx = start.y * 12 + (start.m - 1) + k * p.interval;
+      const y = Math.floor(idx / 12);
+      const m = idx - y * 12 + 1;
+      const from = ordinalOf(y, m, 1);
+      return { from, to: from + daysInMonth(y, m) - 1 };
+    }
+    case "YEARLY": {
+      const y = start.y + k * p.interval;
+      return { from: ordinalOf(y, 1, 1), to: ordinalOf(y, 12, 31) };
+    }
+  }
+}
+
+/** The first period index whose last day can reach `after` (0 when DTSTART is after it). */
+function firstPeriodReaching(
+  p: ParsedRrule,
+  s: number,
+  start: { y: number; m: number },
+  after: number,
+): number {
+  let k: number;
+  switch (p.freq) {
+    case "DAILY":
+      k = Math.ceil((after - s) / p.interval);
+      break;
+    case "WEEKLY": {
+      const weekStart = s - ((weekdayOf(s) - p.wkst + 7) % 7);
+      k = Math.ceil((after - (weekStart + 6)) / (7 * p.interval));
+      break;
+    }
+    case "MONTHLY": {
+      const a = civilOf(after);
+      k = Math.ceil(((a.y * 12 + a.m - 1) - (start.y * 12 + start.m - 1)) / p.interval);
+      break;
+    }
+    case "YEARLY":
+      k = Math.ceil((civilOf(after).y - start.y) / p.interval);
+      break;
+  }
+  return Math.max(0, k);
+}
+
+/** The days of one period that pass the filters and BYSETPOS, ascending. */
+function selectDays(p: ParsedRrule, f: Filters, period: Period): number[] {
+  // The n-th weekday ranges: the month (MONTHLY), each listed month or the year (YEARLY).
+  let nth: Set<number> | null = null;
+  if (f.nth) {
+    nth = new Set();
+    if (p.freq === "YEARLY" && f.months) {
+      const y = civilOf(period.from).y;
+      for (const m of f.months) {
+        const first = ordinalOf(y, m, 1);
+        nthWeekdays(f.nth, first, first + daysInMonth(y, m) - 1, nth);
+      }
+    } else {
+      nthWeekdays(f.nth, period.from, period.to, nth);
+    }
+  }
+  const days: number[] = [];
+  let c = civilOf(period.from);
+  let dim = daysInMonth(c.y, c.m);
+  for (let day = period.from; day <= period.to; day++) {
+    if (c.d > dim) {
+      c = civilOf(day);
+      dim = daysInMonth(c.y, c.m);
+    }
+    const ok = (!f.months || f.months.has(c.m)) &&
+      (!f.weekdays || f.weekdays.has(weekdayOf(day))) &&
+      (!nth || nth.has(day)) &&
+      (!f.monthdays || f.monthdays.has(c.d) || f.negMonthdays!.has(c.d - dim - 1));
+    if (ok) days.push(day);
+    c.d++;
+  }
+  if (!p.bysetpos || days.length === 0) return days;
+  const picked = new Set<number>();
+  for (const pos of p.bysetpos) {
+    // A negative position past the start of the list is the first day, as rrule.js reads it
+    // (its `slice(pos)[0]`); python-dateutil would skip it. The reference's reading is kept,
+    // since it is what the apps have shown so far.
+    const i = pos > 0 ? pos - 1 : Math.max(0, days.length + pos);
+    if (i < days.length) picked.add(days[i]);
+  }
+  return [...picked].sort((a, b) => a - b);
+}
+
+/** A local date-time as the walk compares it: the day's ordinal and the time within it. */
+type Mark = { day: number; time: Temporal.PlainTime };
+
+function markOf(dt: Temporal.PlainDateTime): Mark {
+  return { day: ordinalOf(dt.year, dt.month, dt.day), time: dt.toPlainTime() };
+}
+
+/**
+ * A walk budget shared by every event of one expansion (an imported feed): the days the
+ * walks may still examine, and the number of events whose series were skipped or cut short
+ * once it had run out. Days rather than periods, because a yearly period is 366 of them.
+ */
+export type WalkBudget = { days: number; events: number };
+
+/**
+ * The ordinals of the series' days inside [after, before] (ordinals, inclusive). `until` is
+ * the rule's UNTIL as a local date-time, already converted by the caller. COUNT rules walk
+ * from DTSTART because the count has to be taken; all others start at the first period that
+ * can reach `after`. Never more than MAX_WALK_PERIODS periods, never a DTSTART before
+ * RRULE_MIN_YEAR, and never past the budget when one is given.
+ */
+function walkOrdinals(
+  p: ParsedRrule,
+  dtstart: Temporal.PlainDateTime,
+  until: Temporal.PlainDateTime | null,
+  after: number,
+  before: number,
+  budget?: WalkBudget,
+): number[] {
+  const out: number[] = [];
+  if (dtstart.year < RRULE_MIN_YEAR || before < after) return out;
+  const startMark = markOf(dtstart);
+  const untilMark = until ? markOf(until) : null;
+  // Every candidate carries DTSTART's time, so UNTIL cuts at a day, or within the UNTIL day
+  // when the series' time is later than UNTIL's.
+  const lastDay = untilMark === null
+    ? Infinity
+    : untilMark.day - (Temporal.PlainTime.compare(startMark.time, untilMark.time) > 0 ? 1 : 0);
+  const start = civilOf(startMark.day);
+  const f = filtersOf(p, start);
+  let remaining = p.count;
+  let k = p.count === null ? firstPeriodReaching(p, startMark.day, start, after) : 0;
+  for (let steps = 0; steps < MAX_WALK_PERIODS; steps++, k++) {
+    const period = periodOf(p, startMark.day, start, k);
+    if (period.from > before) break;
+    if (budget) {
+      if (budget.days <= 0) break;
+      budget.days -= period.to - period.from + 1;
+    }
+    for (const day of selectDays(p, f, period)) {
+      if (day < startMark.day) continue;
+      if (day > lastDay) return out;
+      if (day >= after && day <= before) out.push(day);
+      if (remaining !== null && --remaining === 0) return out;
+    }
+  }
+  return out;
+}
+
+/**
+ * The series' dates on the local days `after`..`before` ('YYYY-MM-DD', inclusive), each at
+ * DTSTART's time, ascending. The public face of the walk, for the tests and the callers
+ * that need dates rather than occurrences.
+ */
+export function walkRule(
+  p: ParsedRrule,
+  dtstart: Temporal.PlainDateTime,
+  until: Temporal.PlainDateTime | null,
+  after: string,
+  before: string,
+): Temporal.PlainDateTime[] {
+  const a = Temporal.PlainDate.from(after);
+  const b = Temporal.PlainDate.from(before);
+  const time = dtstart.toPlainTime();
+  return walkOrdinals(p, dtstart, until, ordinalOf(a.year, a.month, a.day), ordinalOf(b.year, b.month, b.day))
+    .map((day) => {
+      const c = civilOf(day);
+      return Temporal.PlainDate.from({ year: c.y, month: c.m, day: c.d }).toPlainDateTime(time);
+    });
+}
+
+/** The rule's UNTIL as a local date-time of the series' zone (null without UNTIL). */
+export function untilLocal(p: ParsedRrule, tz: string): Temporal.PlainDateTime | null {
+  if (p.until?.kind === "date") {
+    return Temporal.PlainDate.from(p.until.date).toPlainDateTime({ hour: 23, minute: 59, second: 59 });
+  }
+  if (p.until?.kind === "utc") return toLocal(p.until.ms, tz);
+  return null;
 }
 
 // ---------------------------------------------------------------------------
@@ -399,6 +725,7 @@ export function expand(
   from: string,
   to: string,
   tz: string,
+  budget?: WalkBudget,
 ): Occurrence[] {
   if (to < from) return [];
   const windowStart = startOfDayMs(from, tz);
@@ -425,6 +752,7 @@ export function expand(
         overridesByEvent.get(ev.id) ?? new Map(),
         windowStart,
         windowEnd,
+        budget,
       ),
     );
   }
@@ -450,6 +778,7 @@ function expandEvent(
   ovs: Map<number, OverrideRow>,
   windowStart: number,
   windowEnd: number,
+  budget?: WalkBudget,
 ): Occurrence[] {
   const tz = ev.timezone;
   const recurring = ev.rrule !== null || (ev.rdates?.length ?? 0) > 0;
@@ -489,16 +818,13 @@ function expandEvent(
     add(Temporal.PlainDate.from(d).toPlainDateTime(seriesTime));
   }
 
-  if (ev.rrule !== null) {
-    const parsed = parseRrule(ev.rrule);
-    if (!parsed) return [];
-    let untilFloat: Date | null = null;
-    if (parsed.until?.kind === "date") {
-      untilFloat = floatOfDate(parsed.until.date, 23, 59, 59);
-    } else if (parsed.until?.kind === "utc") {
-      untilFloat = floatOf(toLocal(parsed.until.ms, tz));
-    }
-    const rule = buildRule(parsed, floatOf(dtLocal), untilFloat);
+  // A rule the parser refuses (outside the subset, or one that can never match) is not
+  // walked: the event keeps its first date, as an imported one does. A rule the walk budget
+  // has no room for is not walked either, and the event is counted on the budget.
+  const parsed = ev.rrule !== null ? parseRrule(ev.rrule) : null;
+  if (parsed) {
+    const until = untilLocal(parsed, tz);
+    const time = dtLocal.toPlainTime();
 
     // Generate a little beyond the window so occurrences that started before it
     // but are still running inside it are found; the overlap check trims the rest.
@@ -506,25 +832,36 @@ function expandEvent(
       (ev.is_all_day ? spanDays : Math.ceil(durationMs / DAY_MS)) + 2;
     const winFrom = toLocal(windowStart, tz).toPlainDate().toString();
     const winTo = toLocal(windowEnd, tz).toPlainDate().toString();
-    const generated: Date[] = rule.between(
-      floatOfDate(addDays(winFrom, -padDays)),
-      floatOfDate(addDays(winTo, 2), 23, 59, 59),
-      true,
-    );
-    for (const d of generated) add(fromFloat(d));
+    const ranges: [number, number][] = [
+      [ordinalOfDate(addDays(winFrom, -padDays)), ordinalOfDate(addDays(winTo, 2))],
+    ];
 
     // An override can move an occurrence from outside the window into it, so also
     // generate the neighbourhood of each overridden original.
     for (const o of ovs.values()) {
-      const originalDate = toLocal(Date.parse(o.recurrence_id), tz)
-        .toPlainDate().toString();
-      const near: Date[] = rule.between(
-        floatOfDate(addDays(originalDate, -1)),
-        floatOfDate(addDays(originalDate, 1), 23, 59, 59),
-        true,
+      const original = ordinalOfDate(
+        toLocal(Date.parse(o.recurrence_id), tz).toPlainDate().toString(),
       );
-      for (const d of near) add(fromFloat(d));
+      ranges.push([original - 1, original + 1]);
     }
+
+    // Each range is a walk of its own, each under the cap, so an override far from the
+    // window cannot use up the window's walk. A COUNT rule has to be walked from DTSTART
+    // whatever the range, so it takes one walk over the whole span and keeps the days
+    // inside one of the ranges.
+    const walks: [number, number][] = parsed.count === null ? ranges : [[
+      Math.min(...ranges.map((r) => r[0])),
+      Math.max(...ranges.map((r) => r[1])),
+    ]];
+    for (const [after, before] of walks) {
+      if (budget && budget.days <= 0) break;
+      for (const day of walkOrdinals(parsed, dtLocal, until, after, before, budget)) {
+        if (!ranges.some(([a, b]) => day >= a && day <= b)) continue;
+        const c = civilOf(day);
+        add(Temporal.PlainDate.from({ year: c.y, month: c.m, day: c.d }).toPlainDateTime(time));
+      }
+    }
+    if (budget && budget.days <= 0) budget.events++;
   }
 
   const exdates = new Set(ev.exdates ?? []);

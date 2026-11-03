@@ -6599,4 +6599,105 @@ class AppLocalizationsEn extends AppLocalizations {
   String learnedWordsForgetWord(String word) {
     return 'Forget “$word”';
   }
+
+  @override
+  String serverCaption(String host) {
+    return 'Server: $host';
+  }
+
+  @override
+  String get serverConfirmTitle => 'Connect to this server?';
+
+  @override
+  String get serverConfirmBody =>
+      'This is where your family\'s data lives and where you sign in. Only connect if you know this address, for example from your family. If in doubt, cancel and type the address yourself.';
+
+  @override
+  String serverConfirmVia(String address) {
+    return '$address points to this server.';
+  }
+
+  @override
+  String serverMovedBody(String host) {
+    return 'The server names a new address: $host. The app stays on the old one until you reconnect.';
+  }
+
+  @override
+  String serverMovedConfirm(String host) {
+    return 'Connect to $host? This device signs out, then you sign in there again. Only if you know the server has moved.';
+  }
+
+  @override
+  String get serverKeyChangedBody =>
+      'The server has new connection details for the app. Reconnect so the app uses them.';
+
+  @override
+  String get serverMovedAction => 'Reconnect';
+
+  @override
+  String get accountMfaRequired =>
+      'Confirm the code from your authenticator app first, then try again.';
+
+  @override
+  String accountPasswordReauthBody(String email) {
+    return 'Changing the password needs a fresh sign-in. We send a code to $email.';
+  }
+
+  @override
+  String accountPasswordReauthPasswordBody(String email) {
+    return 'Changing the password needs a fresh sign-in. Enter the current password of $email.';
+  }
+
+  @override
+  String accountResetReauthBody(String email) {
+    return 'Resetting someone\'s sign-in needs a fresh sign-in of your own. We send a code to $email.';
+  }
+
+  @override
+  String accountResetReauthPasswordBody(String email) {
+    return 'Resetting someone\'s sign-in needs a fresh sign-in of your own. Enter the password of $email.';
+  }
+
+  @override
+  String accountMfaResetRecent(String name) {
+    return 'You reset the two-factor sign-in of $name less than a day ago. Another guardian can create the code, or wait a day.';
+  }
+
+  @override
+  String accountPasswordResetRecent(String name) {
+    return 'You created a password code for $name less than a day ago. Another guardian can reset the two-factor sign-in, or wait a day.';
+  }
+
+  @override
+  String get accountPasswordSavedOthersOut =>
+      'Password saved. Your other devices have been signed out.';
+
+  @override
+  String trustFeedCreatedBy(String name) {
+    return 'Created by $name';
+  }
+
+  @override
+  String get errInvitationRequired =>
+      'This server takes only invited people. Ask a guardian of the family for an invitation.';
+
+  @override
+  String accountNoticeMfaResetYou(String name) {
+    return '$name reset your two-factor sign-in';
+  }
+
+  @override
+  String accountNoticeMfaReset(String name, String target) {
+    return '$name reset the two-factor sign-in of $target';
+  }
+
+  @override
+  String accountNoticePasswordResetYou(String name) {
+    return '$name created a password code for you';
+  }
+
+  @override
+  String accountNoticePasswordReset(String name, String target) {
+    return '$name created a password code for $target';
+  }
 }

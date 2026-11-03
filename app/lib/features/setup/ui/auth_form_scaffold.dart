@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/features/setup/ui/server_caption.dart';
 
 /// Shared frame for the pre-enrolment forms: back to setup, centred, scrollable.
 class AuthFormScaffold extends StatelessWidget {
@@ -11,6 +13,7 @@ class AuthFormScaffold extends StatelessWidget {
     this.subtitle,
     this.showBack = true,
     this.onBack,
+    this.showServer = false,
     super.key,
   });
 
@@ -24,20 +27,27 @@ class AuthFormScaffold extends StatelessWidget {
   final bool showBack;
   final VoidCallback? onBack;
 
+  /// For a page that takes a code, a password or the setup key: without a [subtitle],
+  /// the quiet line names the server instead ([ServerCaption]).
+  final bool showServer;
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: subtitle == null
+      title: subtitle == null && !(showServer && !kIsWeb)
           ? Text(title)
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title),
-                Text(
-                  subtitle!,
-                  style: Theme.of(context).textTheme.bodySmall,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                if (subtitle != null)
+                  Text(
+                    subtitle!,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                else
+                  const ServerCaption(),
               ],
             ),
       automaticallyImplyLeading: showBack,

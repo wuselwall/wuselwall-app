@@ -191,6 +191,23 @@ an invitation or pairing link, which carries the server:
 
   Passkeys appear only in a build that names its own server; the store app offers them to no chosen server (ADR-018, amended 2026-10-21). The app never shows a button that will fail.
 
+> **Trust in the chosen server (2026-11-02, security review F2/F7).** The app connects to a
+> server it did not get from a typed address only after a confirmation that shows the host
+> it is about to use (`ServerConfirmPage`, "Mit diesem Server verbinden?"): a server named by
+> an opened, pasted or scanned link (invitation, pairing, setup link), any scanned code, and
+> a typed address whose discovery document names another host (the web host naming the API
+> host, for example). So an invited person on a fresh install sees one screen before the
+> front door. The discovery document's `supabase_url` must be https (plain http only in debug
+> builds, as for a typed address). A configured install never takes over a changed
+> `supabase_url` or publishable key in the background: it keeps the stored values and shows a
+> notice above every screen; **Neu verbinden** adopts them, and with a new address signs the
+> device out first, so the old session never reaches it. The front door and every page that
+> takes a code, a password or the setup key show "Server: ‹host›" in the apps. The client
+> never reads a session from a link (`detectSessionInUri: false`), and the app's link parser
+> accepts only `https` links of the links site without sign-in callback parameters
+> (`access_token`, `refresh_token`, `code`, `token_type`, `error…`). Addresses travel between
+> the setup pages in the router's state, never in the location.
+
 ### Claiming the server
 
 *Built 2026-10-30 (migration `20261030100000_claim_server`).* Until then the setup key only
@@ -222,12 +239,21 @@ stranger's sign-up at all.
   exists and `household_creation` is `code`, it refuses every sign-up unless the address
   claimed an unconsumed key within the last 15 minutes. The refusal reaches the app as
   `setup_key_required`, and E1 says the server has no family yet. Once a household exists
-  the hook lets every sign-up through, as J2 and the second parent need. Device users are
-  created by `app.create_auth_user`, never through GoTrue.
+  the hook admits, in code mode, a sign-up only while an open, unexpired, unrevoked
+  invitation exists in a live family (whether or not it names an address: the invited
+  person may sign up with another one), or for an address that holds a live claim with a
+  further unconsumed key; with nothing pending it refuses with `invitation_required`
+  (migration `20261102140000`, security review 2026-11-01 F22). Addresses under the
+  device-account marker domain are always refused. Open mode admits everyone. Device users
+  are created by `app.create_auth_user`, never through GoTrue.
 - **H1 asks for no key** when `my_account.setup_claimed` is true: `household_create`
   accepts the claim of the account's address (within a day) in place of a typed code and
-  consumes the key as before. A typed code still works, for a key from an older QR code or
-  a further founder code.
+  consumes the key as before, provided the address is proven (the founder redeemed a mailed
+  code) or the call comes from the network of the client that made the claim (/24 or /64; a
+  server without mail proves no address; `20261102140000`, F12). The app sends the key the
+  setup link left on the device whenever it has one, and opens the key field when the server
+  asks for a code after all. A typed code still works, for a key from an older QR code or a
+  further founder code.
 - **The key stays on the device** until it is consumed or expires (24 h): going back from
   S1 or E1 no longer deletes it, so nobody types 24 hex characters by hand.
 - **Names.** The capability is the *setup key* (Einrichtungsschlüssel, clé de
@@ -590,7 +616,7 @@ the founder codes; `household` gains `created_by_profile_id` and `deleted_at`.
 
 | Function | Who | Does |
 |---|---|---|
-| `my_account` (view) | signed-in | Has a household? Pending invitations for the verified email(s)? Household-creation mode |
+| `my_account` (view) | signed-in | Has a household? Pending invitations for the verified email(s)? Household-creation mode. At `aal1` with an authenticator it says `mfa_required` and withholds the address, names, family name and invitations |
 | `household_create(name, display_name, colour, timezone, locale, founder_code?, seed_examples)` | signed-in, no household | Household, own guardian profile, seeds, and this session as a personal device, in one transaction |
 | `household_add_members(actor, members jsonb)` | guardian | H2's rows |
 | `invitation_create / _revoke` | guardian | Returns link token and code once; stores hashes |

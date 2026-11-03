@@ -145,14 +145,14 @@ select is((select count(*) from app.enrol_attempt), 0::bigint,
 select is((api.enrol_device('NOTACODE') ->> 'reason'), 'code_invalid',
   'device enrolment is not rate limited by founder failures');
 
--- ---- the overall limit: 50 failures per 10 minutes, from any client -------------
+-- ---- the overall limit: 1000 failures per 10 minutes, from any client (20261102120000) -----
 delete from app.founder_attempt;
 insert into app.founder_attempt (client_key, success)
-  select 'other-' || g, false from generate_series(1, 50) g;
+  select 'other-' || g, false from generate_series(1, 1000) g;
 select pg_temp.new_account('fuenf', 'fuenf@example.org', '{}'::jsonb);
 select pg_temp.claims_of('fuenf');
 select is((api.household_create('Fuenf', 'Lea', '#08737F', 'Europe/Berlin', 'de-DE', 'founder-three', false, 'x') ->> 'reason'),
-  'rate_limited', 'the overall limit refuses a valid code while fifty failures are recent');
+  'rate_limited', 'the overall limit refuses a valid code while a thousand failures are recent');
 select is((select consumed_at is null from app.setup_token
             where token_hash = encode(extensions.digest('founder-three', 'sha256'), 'hex')),
   true, 'a code refused by the overall limit is not consumed');

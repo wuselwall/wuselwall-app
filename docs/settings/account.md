@@ -6,6 +6,8 @@ Diese Schritte betreffen **dein Konto** oder die **ganze Familie**. Sie stehen u
 
 Unter **Einstellungen → Konto & Sicherheit → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen, wenn dein Server Mails verschickt; auf einem Server ohne E-Mail ist das Passwort der Weg hinein ([E-Mail](/server/email)).
 
+Ist deine Anmeldung schon etwas älter (mehr als 5 Minuten), fragt WuselWall vor dem Ändern noch einmal nach einem **Code per E-Mail**, auf einem Server ohne E-Mail nach dem bisherigen **Passwort**. Nach dem Ändern werden deine **anderen Geräte abgemeldet**; dieses Gerät bleibt angemeldet.
+
 ## Familie verlassen
 
 Willst du nicht mehr zu einer Familie gehören, tippe auf **Familie verlassen** und bestätige mit **Verlassen**.

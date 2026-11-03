@@ -25,7 +25,7 @@ Dans le [tableau de bord](https://supabase.com/dashboard), créez un projet, cho
    | `SUPABASE_ACCESS_TOKEN` | Jeton du compte Supabase |
    | `SUPABASE_PROJECT_ID` | Identifiant du projet |
    | `SUPABASE_DB_PASSWORD` | Mot de passe de la base |
-   | `WUSELWALL_SETUP_TOKEN` | Phrase alphanumérique choisie : la clé de configuration qui crée une fois la famille |
+   | `WUSELWALL_SETUP_TOKEN` | La clé de configuration qui crée une fois la famille : au moins 16 caractères aléatoires, par exemple `9f3c1a7e5b20d8c4e61f0a93`. Créez-la avec `openssl rand -hex 12` ou dans votre gestionnaire de mots de passe, et gardez-la là. Le workflow refuse une clé plus courte tant qu’aucune famille n’existe. Jusque-là, n’importe qui voit que le serveur est libre et peut deviner des clés : d’où une clé aléatoire plutôt qu’une phrase |
    | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | Facultatif : accès SMTP pour les codes par e-mail (cinq secrets). Voir [E-mails](#mail) |
 
 4. Activez les workflows dans **Actions**, puis lancez **deploy-supabase → Run workflow**. Choisissez `fr` dans **language** pour les e-mails, et cochez **web** si vous souhaitez publier l’app web.
@@ -40,7 +40,7 @@ Les e-mails sont facultatifs. **Sans les secrets `SMTP_`**, chacun se connecte a
 
 ## 3. Connecter l’app {#_3-connecting-the-app}
 
-Dans **Quel serveur ?**, saisissez l’identifiant du projet, puis **J’ai la clé de configuration** avec la phrase `WUSELWALL_SETUP_TOKEN` ([La clé de configuration](/fr/guide/setup#setup-key)) : elle annonce votre adresse, et la famille suit après la connexion.
+Dans **Quel serveur ?**, saisissez l’identifiant du projet, puis **J’ai la clé de configuration** avec la clé `WUSELWALL_SETUP_TOKEN` ([La clé de configuration](/fr/guide/setup#setup-key)) : elle annonce votre adresse, et la famille suit après la connexion.
 
 <Shot name="setup-server" alt="Le choix du serveur dans l’app" />
 

@@ -6,6 +6,8 @@ Estas acciones afectan a tu cuenta o a todo el hogar. Están al final de los aju
 
 En **Ajustes → Cuenta y seguridad → Inicio de sesión**, define o cambia una contraseña de al menos **10 caracteres**. El código por correo sigue disponible si tu servidor envía correo; si no, la contraseña es el único acceso ([Correo](/es/server/email)).
 
+Si la sesión tiene más de cinco minutos, WuselWall pide antes un **código por correo** (sin correo: tu **contraseña** actual). Tras el cambio se **cierra la sesión en tus otros dispositivos**; este sigue conectado.
+
 ## Salir de la familia {#leave-the-family}
 
 Confirma la salida: tu cuenta abandona el hogar y tus dispositivos cierran sesión. Tus aportaciones permanecen. Después puedes crear otra familia o unirte a una.

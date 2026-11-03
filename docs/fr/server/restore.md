@@ -24,10 +24,35 @@ L’outil restaure une sauvegarde `db-….dump` sur un serveur **fraîchement in
 L’outil arrête les autres services, remplace la base, redémarre, applique les migrations nécessaires et reprogramme les tâches. Il compte ensuite foyers, membres, appareils et comptes.
 
 ::: warning Serveur contenant déjà des données
-La restauration est refusée par défaut. Pour revenir volontairement à un état antérieur, préfixez la commande par `WW_RESTORE_OVER_DATA=yes`. L’outil sauvegarde d’abord l’état actuel.
+La restauration est refusée par défaut. Pour revenir volontairement à un état antérieur, préfixez la commande par `WW_RESTORE_OVER_DATA=yes`.
 :::
 
+Avant de remplacer quoi que ce soit, l’outil sauvegarde toujours l’état actuel (`db-…-before-restore.dump`), même sur un serveur vide. S’il ne peut pas savoir si une famille existe, ou si cette sauvegarde échoue, il s’arrête sans rien changer.
+
 Sans ancien `.env`, installez normalement avec `--api` et `--web`, puis restaurez. Les données reviennent, mais il faut reconnecter les appareils.
+
+### Sauvegardes chiffrées {#encrypted}
+
+Une sauvegarde contient tout, y compris les empreintes des mots de passe et les secrets des codes à deux facteurs. L’outil la rend lisible par son seul propriétaire, dans un répertoire que lui seul peut ouvrir. Si les sauvegardes se trouvent sur un partage lisible par d’autres sur le réseau, ou si vous voulez les protéger de toute façon, il chiffre chaque fichier quand le `backup.env` à côté de l’outil (`chmod 600`) contient l’une de ces lignes :
+
+```bash
+# Recommandé : avec age (apt install age). Le serveur ne connaît que la clé publique.
+BACKUP_AGE_RECIPIENT=age1…
+# Ou avec une longue phrase secrète (openssl, déjà présent) :
+BACKUP_PASSPHRASE='…'
+```
+
+Créez la clé age une fois sur votre ordinateur avec `age-keygen -o wuselwall-backup.key` ; la ligne `public key: age1…` va dans `backup.env`, le fichier `wuselwall-backup.key` dans le gestionnaire de mots de passe et **pas** sur le serveur. La phrase secrète va elle aussi dans le gestionnaire de mots de passe. Sans la clé ou la phrase, une sauvegarde chiffrée ne vaut rien.
+
+Les sauvegardes s’appellent alors `db-….dump.age` ou `db-….dump.enc`. Pour en restaurer une, déchiffrez-la d’abord et donnez à `restore` le fichier déchiffré :
+
+```bash
+age -d -i /path/to/wuselwall-backup.key -o db-2026-10-14-0330-nightly.dump db-2026-10-14-0330-nightly.dump.age
+# ou, avec la phrase secrète (openssl la demande) :
+openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -in db-2026-10-14-0330-nightly.dump.enc -out db-2026-10-14-0330-nightly.dump
+```
+
+Supprimez ensuite le fichier déchiffré. L’exercice de restauration (`infra/backup/restore-drill.sh`) lit directement les sauvegardes chiffrées, avec `BACKUP_PASSPHRASE` ou avec `BACKUP_AGE_IDENTITY=/path/to/wuselwall-backup.key`.
 
 ## Chez Supabase {#at-supabase}
 

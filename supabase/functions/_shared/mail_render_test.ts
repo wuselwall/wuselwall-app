@@ -15,8 +15,10 @@ import {
   MAIL_LOCALES,
   type MailKind,
   MailRenderError,
+  NOTICE_KINDS,
   renderFallbackTemplate,
   renderMail,
+  renderNotice,
   resolveLocale,
 } from "./mail_render.ts";
 import { MAIL_DE } from "./mail_de.ts";
@@ -72,6 +74,10 @@ Deno.test("all message files define every kind and key", () => {
     assert(messages.instruction && messages.footer);
     assert(messages.codeLabelOld && messages.codeLabelNew && messages.validity);
     assert(messages.ignore && messages.greeting && messages.signoff);
+    for (const kind of NOTICE_KINDS) {
+      const notice = messages.notice[kind];
+      assert(notice.subject && notice.heading && notice.lead && notice.advice, `notice ${kind}`);
+    }
     assertEquals(Object.keys(messages).sort(), Object.keys(MAIL_DE).sort());
     for (const field of ["subject", "heading", "lead"] as const) {
       assertEquals(Object.keys(messages[field]).sort(), [...MAIL_KINDS].sort());
@@ -267,28 +273,41 @@ Deno.test("recovery, reauthentication: a code, the right subject and wording", (
   assertStringIncludes(reauth.text, MAIL_EN.lead.reauthentication);
 });
 
-Deno.test("email_change with both codes: each labelled, the new one too", () => {
+Deno.test("email_change: one code per mail, labelled for the side it is for", () => {
   for (const locale of MAIL_LOCALES) {
     const messages = MESSAGES[locale];
-    const mail = renderMail({
-      locale,
-      kind: "email_change",
-      token: "111111",
-      tokenNew: "222222",
-    });
-    assertEquals(mail.subject, `${messages.subject.email_change}: 111111`);
-    assertStringIncludes(mail.text, `${messages.codeLabelOld}: 111111`);
-    assertStringIncludes(mail.text, `${messages.codeLabelNew}: 222222`);
-    assertStringIncludes(mail.html, "222222");
-    assertStringIncludes(mail.html, escapeHtml(messages.codeLabelNew));
+    const old = renderMail({ locale, kind: "email_change", token: "111111", codeLabel: "old" });
+    assertEquals(old.subject, `${messages.subject.email_change}: 111111`);
+    assertStringIncludes(old.text, `${messages.codeLabelOld}: 111111`);
+    assert(!old.text.includes(messages.codeLabelNew));
+    const fresh = renderMail({ locale, kind: "email_change", token: "222222", codeLabel: "new" });
+    assertEquals(fresh.subject, `${messages.subject.email_change}: 222222`);
+    assertStringIncludes(fresh.text, `${messages.codeLabelNew}: 222222`);
+    assertStringIncludes(fresh.html, escapeHtml(messages.codeLabelNew));
+    assert(!fresh.text.includes("111111"));
   }
 });
 
-Deno.test("email_change with one code: no labels", () => {
+Deno.test("email_change without a side: no label", () => {
   const mail = renderMail({ locale: "en", kind: "email_change", token: CODE });
   assert(!mail.text.includes(MAIL_EN.codeLabelOld));
   assert(!mail.text.includes(MAIL_EN.codeLabelNew));
   assertStringIncludes(mail.text, `\n${CODE}\n`);
+});
+
+Deno.test("the second-factor reset notice: no code, the advice, in every language", () => {
+  for (const locale of MAIL_LOCALES) {
+    const messages = MESSAGES[locale];
+    const mail = renderNotice({ locale, kind: "mfa_reset" });
+    assertEquals(mail.subject, messages.notice.mfa_reset.subject);
+    assertStringIncludes(mail.text, messages.notice.mfa_reset.lead);
+    assertStringIncludes(mail.text, messages.notice.mfa_reset.advice);
+    assertStringIncludes(mail.html, escapeHtml(messages.notice.mfa_reset.heading));
+    assertStringIncludes(mail.html, `<html lang="${locale}">`);
+    assert(!mail.text.includes(messages.instruction), "no code instruction");
+    assert(!mail.text.includes(messages.validity));
+    assert(!/src=|href=/.test(mail.html), "no links");
+  }
 });
 
 Deno.test("invite: with a code it shows the code, without one it still renders", () => {
@@ -336,7 +355,6 @@ Deno.test("user-provided values are HTML-escaped", () => {
     locale: "en",
     kind: "magiclink",
     token: hostile,
-    tokenNew: undefined,
   });
   assert(!mail.html.includes("<script>"));
   assertStringIncludes(mail.html, "&lt;script&gt;alert(1)&lt;/script&gt;");

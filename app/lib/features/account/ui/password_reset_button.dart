@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/application/account_admin_providers.dart';
+import 'package:wuselwall/features/account/ui/reauth_dialogs.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -15,7 +17,8 @@ import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 /// "Passwort zurücksetzen" next to another adult in Mitglieder (specs/20, Q48). Only on a
 /// server without mail, where no code by mail can replace a forgotten password: a guardian
 /// on their own phone creates a one-time code and hands it over in person. The server
-/// checks the same and audits it.
+/// checks the same and audits it, and asks for a sign-in of the last five minutes first
+/// (security review 2026-11-01, F3): a stale one is renewed and the call retried once.
 class PasswordResetButton extends ConsumerWidget {
   const PasswordResetButton({required this.member, super.key});
 
@@ -70,11 +73,30 @@ class PasswordResetButton extends ConsumerWidget {
     final actor = ref.read(actingProfileProvider);
     if (actor == null) return;
 
-    final result = await ref
-        .read(accountAdminRepositoryProvider)
-        .createPasswordResetCode(actorProfileId: actor, profileId: member.id);
+    final repo = ref.read(accountAdminRepositoryProvider);
+    var result = await repo.createPasswordResetCode(
+      actorProfileId: actor,
+      profileId: member.id,
+    );
     if (!context.mounted) return;
+    if (result case Err(:final failure) when isStepUpFailure(failure)) {
+      final renewed = await renewSignIn(
+        context,
+        ref,
+        emailBody: l10n.accountResetReauthBody,
+        passwordBody: l10n.accountResetReauthPasswordBody,
+      );
+      if (!renewed || !context.mounted) return;
+      result = await repo.createPasswordResetCode(
+        actorProfileId: actor,
+        profileId: member.id,
+      );
+      if (!context.mounted) return;
+    }
     switch (result) {
+      // This guardian reset the person's second factor within a day: another guardian may.
+      case Err(failure: PermissionFailure(code: 'mfa_reset_recent')):
+        context.showMessage(l10n.accountMfaResetRecent(member.displayName));
       case Err(:final failure):
         context.showFailure(failure);
       case Ok(value: final code):

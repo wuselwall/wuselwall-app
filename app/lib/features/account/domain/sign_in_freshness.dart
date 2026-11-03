@@ -1,10 +1,26 @@
 import 'dart:convert';
 
+/// The `amr` methods that are a sign-in of their own (GoTrue's first factors). A second
+/// factor (`totp`, `mfa/*`) is not one: the server checks it separately.
+const firstFactorMethods = {
+  'password',
+  'otp',
+  'magiclink',
+  'recovery',
+  'invite',
+  'email/signup',
+  'oauth',
+  'sso/saml',
+  'anonymous',
+  'passkey',
+  'web3',
+};
+
 /// Whether the session of [accessToken] signed in within [within] of [now] (specs/20 J6:
 /// deleting the account needs a recent sign-in). Reads the token's `amr` claim, the methods
 /// the session was signed in with and when. A refreshed session keeps its original entries,
-/// so only a fresh sign-in counts. The server checks the same claim; this only avoids a call
-/// that is certain to be refused.
+/// so only a fresh first-factor sign-in counts. The server checks the same claim; this only
+/// avoids a call that is certain to be refused.
 bool signedInRecently(
   String accessToken, {
   required DateTime now,
@@ -27,7 +43,9 @@ List<int> _amrTimes(String token) {
     if (amr is! List) return const [];
     return [
       for (final entry in amr)
-        if (entry is Map && entry['timestamp'] is int)
+        if (entry is Map &&
+            entry['timestamp'] is int &&
+            firstFactorMethods.contains(entry['method']))
           entry['timestamp'] as int,
     ];
   } on FormatException {

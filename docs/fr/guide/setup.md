@@ -56,7 +56,7 @@ La page suivante demande qui fait encore partie de la famille. Ajoutez les enfan
 
 ## 3. Rejoindre une famille {#_3-joining-a-family}
 
-L’invitation contient un **lien**, un **code QR** ou un **code**. Le lien et le code QR indiquent aussi le serveur familial. Avec l’app installée, ils ouvrent directement l’invitation. Sinon, installez l’app depuis la page indiquée, puis ouvrez à nouveau le lien.
+L’invitation contient un **lien**, un **code QR** ou un **code**. Le lien et le code QR indiquent aussi le serveur familial. Avec l’app installée, ils ouvrent directement l’invitation. Si l’app n’est encore connectée à aucun serveur, elle affiche d’abord l’adresse du serveur du lien et demande s’il faut s’y connecter ([Premier lancement](/fr/guide/install#at-first-start-which-server)). Sinon, installez l’app depuis la page indiquée, puis ouvrez à nouveau le lien.
 
 Avec un code seul :
 

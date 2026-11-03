@@ -1,5 +1,5 @@
 begin;
-select plan(161);
+select plan(163);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -43,6 +43,27 @@ end $$;
 create function pg_temp.id(p_name text) returns uuid language sql stable as $$
   select i.id from ids i where i.name = p_name
 $$;
+
+-- The job materialises [{definition_id, due_on}] with the service role, as tasks-nightly and
+-- tasks-materialise do (a device cannot, security review 2026-11-01 F4), and the test goes on
+-- as whoever it was. Returns how many instances were new.
+create function pg_temp.materialise(p_hh uuid, p_items jsonb) returns int language plpgsql as $$
+declare
+  v_claims text := current_setting('request.jwt.claims', true);
+  v_role   text := current_setting('role', true);
+  v_n      int;
+begin
+  perform set_config('role', 'none', true);
+  perform set_config('request.jwt.claims', '{"role":"service_role"}', true);
+  perform set_config('role', 'service_role', true);
+  v_n := (api.tasks_materialise(p_hh, p_items) ->> 'created')::int;
+  perform set_config('role', 'none', true);
+  perform set_config('request.jwt.claims', coalesce(v_claims, ''), true);
+  if coalesce(v_role, 'none') <> 'none' then
+    perform set_config('role', v_role, true);
+  end if;
+  return v_n;
+end $$;
 
 -- ---- household A: Papa (guardian, personal phone), Emma and Paul; B by hand ----------------
 create temp table sa as
@@ -154,14 +175,23 @@ select throws_ok($$ select api.task_definition_save(null, jsonb_build_object('ti
 select throws_ok($$ select api.task_definition_save(null, '{"title":"Wer","assignment":"random"}'::jsonb) $$,
   '22023', 'WW-TSK-001 task invalid', 'an unknown assignment is refused');
 
--- ---- materialise as the household, idempotent, rotation ----------------------------------------
-select is((select (api.tasks_materialise(pg_temp.id('hh_a'), jsonb_build_array(
+-- ---- materialise as the job, idempotent, rotation --------------------------------------------
+-- The due days come from the Edge Function's expander and are written with the service role
+-- (security review 2026-11-01, F4); a device of the household cannot call this any more.
+reset role;
+select throws_ok($$ select api.tasks_materialise(pg_temp.id('hh_a'), '[]'::jsonb) $$,
+  '42501', 'service role required', 'without the service role the body refuses, whatever the grants');
+select pg_temp.act_as_dev('papa');
+select throws_ok($$ select api.tasks_materialise(pg_temp.id('hh_a'), '[]'::jsonb) $$,
+  '42501', 'permission denied for function tasks_materialise',
+  'a household device cannot materialise, not even its own household');
+select is(pg_temp.materialise(pg_temp.id('hh_a'), jsonb_build_array(
   jsonb_build_object('definition_id', pg_temp.id('d_tisch'), 'due_on', (select d from dt where k = 'today')),
   jsonb_build_object('definition_id', pg_temp.id('d_rot'), 'due_on', (select d from dt where k = 'today')),
   jsonb_build_object('definition_id', pg_temp.id('d_rot'), 'due_on', (select d from dt where k = 'tomorrow')),
   jsonb_build_object('definition_id', pg_temp.id('d_zimmer'), 'due_on', (select d from dt where k = 'today')),
   jsonb_build_object('definition_id', pg_temp.id('d_muell'), 'due_on', (select d from dt where k = 'today'))
-  )) ->> 'created')::int), 6, 'materialising a fixed, a rotating (two days), an each and an open task creates six instances');
+  )), 6, 'materialising a fixed, a rotating (two days), an each and an open task creates six instances');
 select is((select rotation_cursor from api.task_definitions where id = pg_temp.id('d_rot')), 2,
   'the rotation moves one member per new due day');
 select is((select assigned_profile_id from api.task_instances where definition_id = pg_temp.id('d_rot')
@@ -170,18 +200,18 @@ select is((select assigned_profile_id from api.task_instances where definition_i
 select is((select assigned_profile_id from api.task_instances where definition_id = pg_temp.id('d_rot')
              and due_on = (select d from dt where k = 'tomorrow')), pg_temp.id('paul'),
   'the second day goes to the second member');
-select is((select (api.tasks_materialise(pg_temp.id('hh_a'), jsonb_build_array(
+select is(pg_temp.materialise(pg_temp.id('hh_a'), jsonb_build_array(
   jsonb_build_object('definition_id', pg_temp.id('d_rot'), 'due_on', (select d from dt where k = 'today')),
   jsonb_build_object('definition_id', pg_temp.id('d_rot'), 'due_on', (select d from dt where k = 'tomorrow')),
   jsonb_build_object('definition_id', pg_temp.id('d_tisch'), 'due_on', (select d from dt where k = 'today'))
-  )) ->> 'created')::int), 0, 'a re-run creates nothing');
+  )), 0, 'a re-run creates nothing');
 select is((select rotation_cursor from api.task_definitions where id = pg_temp.id('d_rot')), 2,
   'a re-run does not move the rotation on');
-select is((select (api.tasks_materialise(pg_temp.id('hh_a'), jsonb_build_array(
+select is(pg_temp.materialise(pg_temp.id('hh_a'), jsonb_build_array(
   jsonb_build_object('definition_id', pg_temp.id('d_tisch'), 'due_on', (select d from dt where k = 'today20'))
-  )) ->> 'created')::int), 0, 'due days beyond today plus fourteen are ignored');
+  )), 0, 'due days beyond today plus fourteen are ignored');
 select throws_ok($$ select api.tasks_materialise(pg_temp.id('hh_b'), '[]'::jsonb) $$,
-  '42501', 'WW-TSK-002 task not yours', 'a member cannot materialise another household');
+  '42501', 'permission denied for function tasks_materialise', 'nor another household');
 
 -- ---- the instances, by name -----------------------------------------------------------------------
 insert into ids select 'i_tisch', id from app.task_instance where definition_id = pg_temp.id('d_tisch')
@@ -204,10 +234,10 @@ select is(jsonb_array_length(api.tasks_schedule_all()), 2, 'the service role get
 select is((select count(*)::int from jsonb_array_elements(api.tasks_schedule_all()) x,
              jsonb_array_elements(x -> 'definitions') dd where x ->> 'household_id' = pg_temp.id('hh_a')::text), 4,
   'the schedule lists the four active recurring definitions and not the one-off');
-select is((select (api.tasks_materialise(pg_temp.id('hh_a'), jsonb_build_array(
+select is(pg_temp.materialise(pg_temp.id('hh_a'), jsonb_build_array(
   jsonb_build_object('definition_id', pg_temp.id('d_rot'), 'due_on', (select d from dt where k = 'today2'))
-  )) ->> 'created')::int), 1, 'the service role materialises for any household');
-select is((select (api.tasks_materialise(pg_temp.id('hh_b'), '[]'::jsonb) ->> 'created')::int), 0,
+  )), 1, 'the service role materialises for any household');
+select is(pg_temp.materialise(pg_temp.id('hh_b'), '[]'::jsonb), 0,
   'the service role may materialise an empty list for another household');
 reset role;
 select is((select rotation_cursor from app.task_definition where id = pg_temp.id('d_rot')), 3,
@@ -406,7 +436,7 @@ insert into ids select 'd_hund', (api.task_definition_save(null, jsonb_build_obj
 insert into ids select 'd_vf', (api.task_definition_save(null, jsonb_build_object('title', 'Abtrocknen',
   'points', 2, 'requires_verification', true, 'rrule', 'FREQ=DAILY', 'assignment', 'fixed',
   'assignee_profile_ids', jsonb_build_array(pg_temp.id('emma')))) ->> 'id')::uuid;
-select is((select (api.tasks_materialise(pg_temp.id('hh_a'), jsonb_build_array(
+select is(pg_temp.materialise(pg_temp.id('hh_a'), jsonb_build_array(
   jsonb_build_object('definition_id', pg_temp.id('d_brot'), 'due_on', '2026-09-01'),
   jsonb_build_object('definition_id', pg_temp.id('d_brot'), 'due_on', '2026-09-02'),
   jsonb_build_object('definition_id', pg_temp.id('d_brot'), 'due_on', '2026-09-03'),
@@ -418,7 +448,7 @@ select is((select (api.tasks_materialise(pg_temp.id('hh_a'), jsonb_build_array(
   jsonb_build_object('definition_id', pg_temp.id('d_hund'), 'due_on', '2026-09-03'),
   jsonb_build_object('definition_id', pg_temp.id('d_hund'), 'due_on', '2026-09-04'),
   jsonb_build_object('definition_id', pg_temp.id('d_vf'), 'due_on', '2026-09-01')
-  )) ->> 'created')::int), 11, 'the September days are materialised for the streak scenario');
+  )), 11, 'the September days are materialised for the streak scenario');
 reset role;
 insert into ids select 'b_01', id from app.task_instance where definition_id = pg_temp.id('d_brot') and due_on = '2026-09-01';
 insert into ids select 'b_02', id from app.task_instance where definition_id = pg_temp.id('d_brot') and due_on = '2026-09-02';
@@ -585,7 +615,7 @@ select throws_ok($$ select api.task_definition_save(null, jsonb_build_object('id
   'title', 'Fremd', 'assignment', 'open')) $$, 'P0002', 'task not found',
   'another household cannot change a definition of A');
 select throws_ok($$ select api.tasks_materialise(pg_temp.id('hh_a'), '[]'::jsonb) $$, '42501',
-  'WW-TSK-002 task not yours', 'another household cannot materialise for A');
+  'permission denied for function tasks_materialise', 'another household cannot materialise for A');
 
 -- ---- a kiosk never writes what the wall does not do ---------------------------------------------------
 reset role;

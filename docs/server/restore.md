@@ -31,10 +31,35 @@ So geht es, auf dem neuen Server:
 4. Öffne die App auf einem Handy: Sie sollte ohne neue Anmeldung weiterlaufen.
 
 ::: warning Auf einen Server mit Daten
-Auf einem Server, auf dem schon eine Familie angelegt ist, weigert sich `restore`. Willst du wirklich einen älteren Stand zurückholen, setzt du `WW_RESTORE_OVER_DATA=yes` davor. Das Werkzeug sichert den jetzigen Stand dann zuerst.
+Auf einem Server, auf dem schon eine Familie angelegt ist, weigert sich `restore`. Willst du wirklich einen älteren Stand zurückholen, setzt du `WW_RESTORE_OVER_DATA=yes` davor.
 :::
 
+Bevor es etwas ersetzt, sichert das Werkzeug immer den jetzigen Stand (`db-…-before-restore.dump`), auch auf einem leeren Server. Kann es nicht feststellen, ob eine Familie da ist, oder scheitert diese Sicherung, bricht es ab, ohne etwas zu ändern.
+
 **Ohne die alte `.env`** geht es auch: Installiere ganz normal mit `--api` und `--web` und spiele die Sicherung zurück. Eure Daten sind dann wieder da, aber jedes Gerät muss sich neu anmelden oder neu verbunden werden.
+
+### Verschlüsselte Sicherungen {#verschluesselt}
+
+Eine Sicherung enthält alles, auch Passwort-Hashes und die Geheimnisse der Zwei-Faktor-Codes. Das Werkzeug legt sie nur für den Besitzer lesbar in ein Verzeichnis, das nur er öffnen kann. Liegen die Sicherungen auf einer Freigabe, die andere im Netz lesen, oder willst du sie zusätzlich schützen, verschlüsselt es jede Datei, wenn in der `backup.env` neben dem Werkzeug (`chmod 600`) eine dieser Zeilen steht:
+
+```bash
+# Empfohlen: mit age (apt install age). Der Server kennt nur den öffentlichen Schlüssel.
+BACKUP_AGE_RECIPIENT=age1…
+# Oder mit einer langen Passphrase (openssl, ist schon da):
+BACKUP_PASSPHRASE='…'
+```
+
+Den Schlüssel für age erzeugst du einmal auf deinem Laptop mit `age-keygen -o wuselwall-backup.key`; die Zeile `public key: age1…` gehört in die `backup.env`, die Datei `wuselwall-backup.key` in den Passwort-Manager und **nicht** auf den Server. Die Passphrase gehört ebenfalls in den Passwort-Manager. Ohne Schlüssel oder Passphrase ist eine verschlüsselte Sicherung wertlos.
+
+Die Sicherungen heißen dann `db-….dump.age` oder `db-….dump.enc`. Zum Zurückspielen entschlüsselst du sie zuerst und gibst `restore` die entschlüsselte Datei:
+
+```bash
+age -d -i /pfad/zu/wuselwall-backup.key -o db-2026-10-14-0330-nightly.dump db-2026-10-14-0330-nightly.dump.age
+# oder, mit der Passphrase (openssl fragt danach):
+openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -in db-2026-10-14-0330-nightly.dump.enc -out db-2026-10-14-0330-nightly.dump
+```
+
+Lösche die entschlüsselte Datei danach wieder. Die Probe-Wiederherstellung (`infra/backup/restore-drill.sh`) liest verschlüsselte Sicherungen direkt, mit `BACKUP_PASSPHRASE` oder mit `BACKUP_AGE_IDENTITY=/pfad/zu/wuselwall-backup.key`.
 
 ## Bei Supabase {#bei-supabase}
 

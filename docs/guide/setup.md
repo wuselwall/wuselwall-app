@@ -83,7 +83,7 @@ Dieses Handy wird dabei das **persönliche Handy** von dir. Es bekommt automatis
 
 ## 3. Einer Familie beitreten
 
-Wurdest du von einer Familie eingeladen, bekommst du einen **Link**, einen **QR-Code** oder einen **Code**. Der Link und der QR-Code enthalten auch den **Server** eurer Familie. Ist WuselWall schon auf deinem Handy, öffnet der Link direkt die App: Du musst weder einen Server auswählen noch etwas eingeben. Ist die App noch nicht installiert, zeigt der Link eine Seite mit den Stores; installiere die App und öffne den Link danach noch einmal.
+Wurdest du von einer Familie eingeladen, bekommst du einen **Link**, einen **QR-Code** oder einen **Code**. Der Link und der QR-Code enthalten auch den **Server** eurer Familie. Ist WuselWall schon auf deinem Handy, öffnet der Link direkt die App: Du musst weder einen Server auswählen noch etwas eingeben. Ist die App noch mit keinem Server verbunden, zeigt sie zuerst die Adresse des Servers aus dem Link und fragt, ob sie sich damit verbinden soll ([Beim ersten Start](/guide/install#beim-ersten-start-welcher-server)). Ist die App noch nicht installiert, zeigt der Link eine Seite mit den Stores; installiere die App und öffne den Link danach noch einmal.
 
 Hast du nur den Code bekommen, gibst du ihn in der App ein:
 

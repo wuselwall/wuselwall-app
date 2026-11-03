@@ -61,6 +61,14 @@ Reasons this beats computing occurrences on the fly:
 The job also expires instances whose window has passed (`opens_on + window_days`), so
 the list does not accumulate three-week-old guilt.
 
+The due days are the server's, never a device's (security review 2026-11-01, F4):
+`api.tasks_materialise` accepts the service role only; the `tasks-materialise` Edge
+Function the app calls after saving a definition reads the schedule as the caller, expands
+the rules with the shared code and writes with the service role, as the nightly job does.
+A day the nightly close has closed takes no tick any more (`app.tasks_do_complete`, hint
+`task_window_closed`), and ticking or unticking someone else's task is a guardian action
+with the PIN window on a shared device (`app.guardian_ok`, F17).
+
 ## Assignment policies
 
 | Policy | Behaviour | Good for |

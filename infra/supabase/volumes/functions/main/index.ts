@@ -8,6 +8,10 @@ const LOCAL_JWKS = SUPABASE_JWKS ? jose.createLocalJWKSet(SUPABASE_JWKS) : null
 const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 
 // WuselWall: functions called without a user, which authenticate the request themselves.
+// In the compose stack FUNCTIONS_VERIFY_JWT (VERIFY_JWT here) is false, so this list and the
+// JWT check below are not what protects anything: every function verifies its own caller
+// (the forwarded JWT through PostgREST or getUser, its own token or key, or the cron secret
+// compared in constant time). The list documents which functions have no user at all.
 // The ICS feed is fetched by Outlook and Apple Calendar with nothing but the token in
 // its URL; `api.ics_feed` checks that token (specs/05 "The ICS feed"). The nightly task
 // job is called by the host's cron with a shared secret it checks in constant time.
@@ -25,6 +29,16 @@ const NO_USER_FUNCTIONS = new Set([
   'ics', 'tasks-nightly', 'holidays-sync', 'calendar-import', 'server-info', 'send-email',
   'household-purge', 'shortcuts', 'mcp',
 ])
+
+// WuselWall: the scheduled jobs work through every household (or up to twenty calendars) in
+// one request and get the generous limits; everything else answers one person and gets a
+// shorter wall clock and less CPU time, so one request cannot hold a CPU for minutes
+// (security review 2026-11-01, F6). The CPU limits are edge-runtime's cpuTimeSoftLimitMs
+// (the worker takes no further requests) and cpuTimeHardLimitMs (the worker is stopped);
+// both count the worker's whole life, so a request has at least the difference to itself.
+const JOB_FUNCTIONS = new Set(['tasks-nightly', 'holidays-sync', 'calendar-import', 'household-purge'])
+const JOB_LIMITS = { workerTimeoutMs: 400_000, cpuTimeSoftLimitMs: 60_000, cpuTimeHardLimitMs: 180_000 }
+const USER_LIMITS = { workerTimeoutMs: 120_000, cpuTimeSoftLimitMs: 10_000, cpuTimeHardLimitMs: 30_000 }
 
 type AuthFailure = {
   code: RequestErrors
@@ -361,8 +375,11 @@ Deno.serve(async (req: Request) => {
   }
 
   const memoryLimitMb = 150
-  // Keep the wall clock above the 150s request idle timeout configured in Compose.
-  const workerTimeoutMs = 400_000
+  // The jobs keep the wall clock above the 150s request idle timeout configured in Compose;
+  // a person's request is answered, or stopped, within two minutes.
+  const { workerTimeoutMs, cpuTimeSoftLimitMs, cpuTimeHardLimitMs } = JOB_FUNCTIONS.has(service_name)
+    ? JOB_LIMITS
+    : USER_LIMITS
   const requestAbsentTimeoutMs = 60_000
   const noModuleCache = false
   // Using a common Import Map for all functions 
@@ -379,6 +396,8 @@ Deno.serve(async (req: Request) => {
       servicePath,
       memoryLimitMb,
       workerTimeoutMs,
+      cpuTimeSoftLimitMs,
+      cpuTimeHardLimitMs,
       context: { supervisor: { requestAbsentTimeoutMs } },
       noModuleCache,
       importMapPath,

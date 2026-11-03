@@ -42,4 +42,14 @@ export const MAIL_DE: MailMessages = {
   greeting: "Hallo,",
   signoff: "Viele Grüße von WuselWall",
   footer: "Diese E-Mail kommt vom WuselWall-Server deines Kontos.",
+  notice: {
+    mfa_reset: {
+      subject: "Deine Zwei-Faktor-Anmeldung wurde zurückgesetzt",
+      heading: "Zwei-Faktor-Anmeldung zurückgesetzt",
+      lead:
+        "Eine andere erziehungsberechtigte Person eurer Familie hat soeben die Authenticator-App deines WuselWall-Kontos entfernt. Bei der nächsten Anmeldung wird kein Code aus der App mehr verlangt.",
+      advice:
+        "Wenn du das erwartet hast, richte die Zwei-Faktor-Anmeldung unter Einstellungen › Sicherheit neu ein. Wenn nicht, ändere sofort dein Passwort und sprich mit eurer Familie.",
+    },
+  },
 };

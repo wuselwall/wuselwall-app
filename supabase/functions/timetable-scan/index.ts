@@ -5,23 +5,29 @@
 // back to the caller, who reviews it on the import preview and applies it with their own
 // writes. No third party is contacted (NFR-9); without OCR_URL the answer says so.
 //
-// The caller is a signed-in member: the JWT is verified with Auth. Reading a sheet changes
-// nothing, so no guardian check here; applying it needs a guardian, in the app's own writes.
+// The caller is a signed-in member: the JWT is verified with Auth, and the database confirms
+// that it belongs to a live device of a household and allows at most ten scans per account
+// in ten minutes (api.timetable_scan_claim, called as the caller; security review
+// 2026-11-01, F14). Reading a sheet changes nothing, so no guardian check here; applying it
+// needs a guardian, in the app's own writes.
 //
 // Body: {image: <base64>, mime: "image/jpeg" | "image/png" | "image/webp" | "image/heic" | "application/pdf"}.
-// At most 6 MB.
+// At most 6 MB of picture; the request is refused as soon as it exceeds 9 MB, before it is
+// read whole (guard.ts).
 // Answer: {payload, placed, unplaced, columns, rows, lines}.
-// Errors (code, HTTP): ocr_not_configured 503, image_invalid 400, image_too_large 413,
+// Errors (code, HTTP): unauthorized 401 (no valid token) or 403 (no household device),
+// scan_rate_limited 429, ocr_not_configured 503, image_invalid 400, image_too_large 413,
 // ocr_failed 502, scan_nothing_found 422.
 import { verifiedCaller } from "../_shared/caller.ts";
 import {
   errorResponse,
   json,
   preflight,
-  readBody,
   RequestError,
   requirePost,
+  userClient,
 } from "../_shared/client.ts";
+import { claimRefusal, readBoundedBody } from "./guard.ts";
 import {
   type OcrLine,
   parseTimetableScan,
@@ -200,7 +206,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
         "ocr_not_configured",
       );
     }
-    const body = await readBody(req);
+    // A live household device, and one of its ten scans in ten minutes; a PostgREST error
+    // (42501 for any other account) is mapped by errorResponse.
+    const { data: claim, error } = await userClient(req).rpc(
+      "timetable_scan_claim",
+    );
+    if (error) throw error;
+    const refusal = claimRefusal(claim);
+    if (refusal) throw refusal;
+    const body = await readBoundedBody(req);
     const { image, mime } = decodeImage(body);
     const lines = await recognise(url, image, mime);
     const result = parseTimetableScan(lines, hintsOf(body));

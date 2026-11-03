@@ -4,7 +4,12 @@ import {
   type ExternalRow,
   IcsError,
   importWindow,
+  MAX_EXDATES_PER_EVENT,
+  MAX_FEED_WALK_DAYS,
   MAX_IMPORT_ROWS,
+  MAX_OVERRIDES_PER_SERIES,
+  MAX_RDATES_PER_EVENT,
+  MAX_VEVENTS,
   parseContentLine,
   parseDuration,
   parseVEvents,
@@ -508,4 +513,140 @@ Deno.test("all-day series: a weekly all-day rule keeps its dates", () => {
   const { rows } = expandIcs(feed, { householdTz: TZ, from: "2026-10-01", to: "2026-10-31" });
   assertEquals(rows.map((r) => r.start_date), ["2026-10-05", "2026-10-19", "2026-10-26"]);
   assertEquals(rows.every((r) => r.all_day && r.end_date === r.start_date), true);
+});
+
+// ---------------------------------------------------------------- a stranger's feed (F6)
+
+Deno.test("rules: a rule that can never match keeps the first occurrence and is counted, in no time", () => {
+  const lines = ["BEGIN:VCALENDAR"];
+  for (let i = 0; i < 200; i++) {
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:poison-${i}@x`,
+      "DTSTART;TZID=Europe/Berlin:20261005T170000",
+      "DTEND;TZID=Europe/Berlin:20261005T180000",
+      "RRULE:FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30",
+      "SUMMARY:Gift",
+      "END:VEVENT",
+    );
+  }
+  lines.push("END:VCALENDAR");
+  const t0 = performance.now();
+  const result = expandIcs(crlf(lines), WIDE);
+  assert(performance.now() - t0 < 1000, "two hundred poison rules expand in under a second");
+  assertEquals(result.rows.length, 200);
+  assertEquals(result.unsupported, 200);
+  assertEquals(result.capped, 0);
+});
+
+Deno.test("rules: a series that starts before 1900 keeps its first occurrence only", () => {
+  const feed = crlf([
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:old@x",
+    "DTSTART;VALUE=DATE:18991231",
+    "RRULE:FREQ=YEARLY",
+    "SUMMARY:Alt",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ]);
+  const result = expandIcs(feed, WIDE);
+  assertEquals(result.rows, []);
+  assertEquals(result.unsupported, 1);
+});
+
+Deno.test("caps: VEVENTs beyond MAX_VEVENTS are not read; the feed counts as truncated", () => {
+  const lines = ["BEGIN:VCALENDAR"];
+  for (let i = 0; i < MAX_VEVENTS + 3; i++) {
+    lines.push("BEGIN:VEVENT", `UID:e-${i}@x`, "DTSTART;VALUE=DATE:20261010", "SUMMARY:Tag", "END:VEVENT");
+  }
+  lines.push("END:VCALENDAR");
+  const parsed = parseVEvents(crlf(lines));
+  assertEquals(parsed.events.length, MAX_VEVENTS);
+  assertEquals(parsed.capped, 3);
+  const result = expandIcs(crlf(lines), WIDE);
+  assertEquals(result.rows.length, MAX_VEVENTS);
+  assertEquals(result.capped, 3);
+  assertEquals(result.truncated, true);
+});
+
+Deno.test("caps: RDATEs and EXDATEs beyond their caps are dropped and counted", () => {
+  const rdates = Array.from({ length: MAX_RDATES_PER_EVENT + 2 }, (_, i) => `RDATE;VALUE=DATE:${2026}${String(1 + i % 12).padStart(2, "0")}${String(1 + i % 28).padStart(2, "0")}`);
+  const exdates = Array.from({ length: MAX_EXDATES_PER_EVENT + 5 }, () => "EXDATE;VALUE=DATE:20301231");
+  const feed = crlf([
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:many@x",
+    "DTSTART;VALUE=DATE:20261001",
+    ...rdates,
+    ...exdates,
+    "SUMMARY:Viele",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ]);
+  const { events } = parseVEvents(feed);
+  assertEquals(events[0].rdates.length, MAX_RDATES_PER_EVENT);
+  assertEquals(events[0].exdates.length, MAX_EXDATES_PER_EVENT);
+  assertEquals(events[0].capped, 7);
+  assertEquals(expandIcs(feed, WIDE).capped, 7);
+});
+
+Deno.test("caps: overrides beyond MAX_OVERRIDES_PER_SERIES are dropped and counted", () => {
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:serie@x",
+    "DTSTART;TZID=Europe/Berlin:20261001T170000",
+    "DTEND;TZID=Europe/Berlin:20261001T180000",
+    "RRULE:FREQ=DAILY",
+    "SUMMARY:Serie",
+    "END:VEVENT",
+  ];
+  for (let i = 0; i < MAX_OVERRIDES_PER_SERIES + 1; i++) {
+    // Every override moves a different day of October and November to 06:00.
+    const day = new Date(Date.UTC(2026, 9, 1 + i));
+    const ymd = day.toISOString().slice(0, 10).replaceAll("-", "");
+    lines.push(
+      "BEGIN:VEVENT",
+      "UID:serie@x",
+      `RECURRENCE-ID;TZID=Europe/Berlin:${ymd}T170000`,
+      `DTSTART;TZID=Europe/Berlin:${ymd}T060000`,
+      `DTEND;TZID=Europe/Berlin:${ymd}T070000`,
+      "SUMMARY:Verschoben",
+      "END:VEVENT",
+    );
+  }
+  lines.push("END:VCALENDAR");
+  const result = expandIcs(crlf(lines), { householdTz: TZ, from: "2026-10-01", to: "2027-12-31" });
+  assertEquals(result.capped, 1);
+  assertEquals(result.rows.filter((r) => r.title === "Verschoben").length, MAX_OVERRIDES_PER_SERIES);
+});
+
+Deno.test("caps: a real feed is far below every cap", () => {
+  const result = expandIcs(crlf([...CLUB, ...BINS.slice(1), ...TRAINING.slice(1)]), WIDE);
+  assertEquals(result.capped, 0);
+  assertEquals(result.truncated, false);
+});
+
+Deno.test("caps: the walk budget of a feed is spent by series that walk from 1900, the rest keep their first occurrence", () => {
+  // A COUNT series from 1900 walks from its start: about 46,000 days each. Six hundred of
+  // them are more than the budget; the ones after it keep their first date only.
+  const lines = ["BEGIN:VCALENDAR"];
+  const n = Math.ceil(MAX_FEED_WALK_DAYS / 46_000) + 100;
+  for (let i = 0; i < n; i++) {
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:old-${i}@x`,
+      "DTSTART;VALUE=DATE:19000101",
+      "RRULE:FREQ=DAILY;COUNT=9999;BYMONTH=2;BYMONTHDAY=29",
+      "SUMMARY:Alt",
+      "END:VEVENT",
+    );
+  }
+  lines.push("END:VCALENDAR");
+  const t0 = performance.now();
+  const result = expandIcs(crlf(lines), { householdTz: TZ, from: "2026-10-01", to: "2027-11-05" });
+  assert(performance.now() - t0 < 5000, "the budget bounds the whole feed");
+  assert(result.capped > 0 && result.capped < n, `${result.capped} of ${n} series were cut`);
+  assertEquals(result.rows, []);
 });

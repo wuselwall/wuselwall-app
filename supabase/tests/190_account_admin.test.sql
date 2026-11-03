@@ -55,8 +55,11 @@ create function pg_temp.as_phone(p_label text) returns void language plpgsql as 
 declare d dd;
 begin
   select * into d from dd where name = p_label;
+  -- Signed in a minute ago (amr): the reset functions need a sign-in of the last five minutes.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', d.uid, 'role', 'authenticated',
-    'session_id', d.sid, 'household_id', d.hh, 'device_id', d.id, 'device_class', d.cls)::text, true);
+    'session_id', d.sid, 'household_id', d.hh, 'device_id', d.id, 'device_class', d.cls,
+    'amr', jsonb_build_array(jsonb_build_object('method', 'password',
+                                                'timestamp', extract(epoch from now() - interval '1 minute')::bigint)))::text, true);
   perform set_config('role', 'authenticated', true);
 end $$;
 

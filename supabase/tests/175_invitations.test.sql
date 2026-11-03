@@ -34,7 +34,10 @@ insert into users_made values
 update auth.users set email_confirmed_at = null where email = 'inv-test-hans@example.org';
 create function pg_temp.uid(p text) returns uuid language sql as $$ select uid from users_made where name = p $$;
 -- The other account signed up with a mailed code: its address is proven, just not Hans's.
-update auth.users set confirmation_sent_at = now() where id = pg_temp.uid('other');
+-- As GoTrue does it (20261102140000 records the address at this moment): the code was
+-- mailed, then redeemed.
+update auth.users set confirmation_sent_at = now(), email_confirmed_at = null where id = pg_temp.uid('other');
+update auth.users set email_confirmed_at = now() where id = pg_temp.uid('other');
 
 insert into auth.sessions (id, user_id, created_at, updated_at) values
   (pg_temp.fid('sess_papa'), pg_temp.uid('papa'), now(), now()),
@@ -319,8 +322,9 @@ select throws_ok(format($$ select api.invitation_accept(null, %L, null, null, 'H
 reset role;
 
 -- Hans confirms his address with the mailed code: the waiting invitation shows on his account (H0).
-update auth.users set email_confirmed_at = now(), confirmation_sent_at = now() - interval '1 minute'
+update auth.users set email_confirmed_at = null, confirmation_sent_at = now() - interval '1 minute'
  where id = pg_temp.uid('hans');
+update auth.users set email_confirmed_at = now() where id = pg_temp.uid('hans');
 select pg_temp.account('hans', 'sess_hans');
 set local role authenticated;
 select is((api.my_account() -> 'pending_invitations' -> 0 ->> 'household_name'), 'Familie Huser',
@@ -423,11 +427,12 @@ select is((select count(*)::int from api.household where id = pg_temp.fid('hh'))
   'another household does not see the name');
 reset role;
 
--- ---- overall limit: three hundred calls in ten minutes stop the lookups for everyone -------------
+-- ---- overall limit: three thousand failures in ten minutes stop the lookups for everyone --------
+-- (20261102120000: successes never count, and the cap is 3000 failures, not 300 calls.)
 insert into app.invitation_attempt (client_key, success)
-  select 'invite:203.0.113.99', true from generate_series(1, 300);
+  select 'invite:203.0.113.' || g, false from generate_series(1, 3000) g;
 select is(pg_temp.preview('198.51.100.90', (select code from inv where name = 'julia2')) ->> 'reason', 'rate_limited',
-  'overall, three hundred calls in ten minutes stop the invitation lookups for everyone');
+  'overall, three thousand failures in ten minutes stop the invitation lookups for everyone');
 
 select * from finish();
 rollback;

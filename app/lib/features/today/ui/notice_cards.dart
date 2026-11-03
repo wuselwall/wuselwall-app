@@ -9,14 +9,17 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
 import 'package:wuselwall/features/today/domain/notice.dart';
 
 /// The notices at the top of the adult Today tab (specs/20 J2, J4): "Julia ist
 /// beigetreten" for guardians, "Neu angemeldet: ‹Gerät›" on the account's other
-/// phones. Each is dismissed with "Gesehen" and links to where the household can act:
-/// Einstellungen lists the members and, with the revoke action, the devices.
+/// phones, and a guardian's reset of someone's second factor or password (to that person
+/// and the other guardians). Each is dismissed with "Gesehen" and links to where the
+/// household can act: Einstellungen lists the members and, with the revoke action, the
+/// devices.
 class NoticeCards extends ConsumerWidget {
   const NoticeCards({super.key});
 
@@ -39,6 +42,16 @@ class _NoticeCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    // A reset names the person it was done for: "you" when that is the viewer.
+    final forMe =
+        notice.profileId != null &&
+        notice.profileId == ref.watch(actingProfileProvider);
+    final target =
+        (ref.watch(membersProvider).value ?? const [])
+            .where((m) => m.id == notice.profileId)
+            .map((m) => m.displayName)
+            .firstOrNull ??
+        '';
     final (icon, text, linkLabel) = switch (notice.kind) {
       NoticeKind.join => (
         Icons.person_add_alt_1,
@@ -49,6 +62,20 @@ class _NoticeCard extends ConsumerWidget {
         Icons.phone_iphone,
         l10n.todayNoticeSignIn(notice.name),
         l10n.todayNoticeDevices,
+      ),
+      NoticeKind.mfaReset => (
+        Icons.lock_reset,
+        forMe
+            ? l10n.accountNoticeMfaResetYou(notice.name)
+            : l10n.accountNoticeMfaReset(notice.name, target),
+        l10n.todayNoticeMembers,
+      ),
+      NoticeKind.passwordResetIssued => (
+        Icons.password,
+        forMe
+            ? l10n.accountNoticePasswordResetYou(notice.name)
+            : l10n.accountNoticePasswordReset(notice.name, target),
+        l10n.todayNoticeMembers,
       ),
     };
     return Card(

@@ -19,6 +19,11 @@ resources:
               merge_slashes: true
               path_with_escaped_slashes_action: REJECT_REQUEST
               use_remote_address: true
+              # WuselWall: one proxy stands in front of this gateway (the release's Caddy, or an
+              # operator's reverse proxy), so the client is the address that proxy put last into
+              # X-Forwarded-For, and the connection's own address only when there is no such entry.
+              # That client address goes into X-WuselWall-Client-IP below, not into the log.
+              xff_num_trusted_hops: 1
               common_http_protocol_options:
                 headers_with_underscores_action: REJECT_REQUEST
               upgrade_configs:
@@ -30,7 +35,12 @@ resources:
                       type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
                     log_format:
                       text_format_source:
-                        inline_string: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT% - - [%START_TIME(%d/%b/%Y:%H:%M:%S %z)%] \"%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%\" %RESPONSE_CODE% %BYTES_SENT% \"%REQ(REFERER)%\" \"%REQ(USER-AGENT)%\"\n"
+                        # WuselWall: the address logged is the connection's own peer (the front:
+                        # Caddy or the operator's proxy), as it was before the trusted hop above, so
+                        # the stack keeps writing no client addresses to its logs; the path is logged
+                        # as the first Lua filter below sanitised it (no query string, the feed token
+                        # masked), never the raw one.
+                        inline_string: "%DOWNSTREAM_DIRECT_REMOTE_ADDRESS_WITHOUT_PORT% - - [%START_TIME(%d/%b/%Y:%H:%M:%S %z)%] \"%REQ(:METHOD)% %REQ(X-WUSELWALL-LOG-PATH)% %PROTOCOL%\" %RESPONSE_CODE% %BYTES_SENT% \"%REQ(REFERER)%\" \"%REQ(USER-AGENT)%\"\n"
 
               route_config:
                 name: supabase_route
@@ -47,6 +57,14 @@ resources:
                       expose_headers: "*"
                       max_age: "3600"
                     request_headers_to_add:
+                      # WuselWall: the client as this gateway determined it (xff_num_trusted_hops
+                      # above), for the per-client rate limits in the database
+                      # (app.request_client_key). Replaced in every request, so no client can
+                      # choose it.
+                      - header:
+                          key: X-WuselWall-Client-IP
+                          value: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+                        append_action: OVERWRITE_IF_EXISTS_OR_ADD
                       - header:
                           key: X-Forwarded-Host
                           value: "%REQ(:AUTHORITY)%"
@@ -641,6 +659,31 @@ resources:
                                       - any: true
 
               http_filters:
+                # WuselWall: the path as the access log may show it, in a header no client can
+                # set (it is replaced in every request): without the query string, which may
+                # carry apikey=, and with the feed token of /functions/v1/ics/<token>.ics masked
+                # (security review 2026-11-01, F29). First in the chain, so a request a later
+                # filter answers itself is logged the same way.
+                - name: envoy.filters.http.lua
+                  typed_config:
+                    '@type': >-
+                      type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+                    inline_code: |
+                      local ICS_PREFIX = "/functions/v1/ics/"
+
+                      function envoy_on_request(request_handle)
+                        local headers = request_handle:headers()
+                        local path = headers:get(":path") or ""
+                        local query_start = string.find(path, "?", 1, true)
+                        if query_start ~= nil then
+                          path = string.sub(path, 1, query_start - 1)
+                        end
+                        if string.sub(path, 1, string.len(ICS_PREFIX)) == ICS_PREFIX then
+                          path = ICS_PREFIX .. "<token>"
+                        end
+                        headers:replace("x-wuselwall-log-path", path)
+                      end
+
                 - name: envoy.filters.http.cors
                   typed_config:
                     '@type': >-

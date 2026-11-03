@@ -11195,6 +11195,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Forget “{word}”'**
   String learnedWordsForgetWord(String word);
+
+  /// No description provided for @serverCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Server: {host}'**
+  String serverCaption(String host);
+
+  /// No description provided for @serverConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to this server?'**
+  String get serverConfirmTitle;
+
+  /// No description provided for @serverConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is where your family\'s data lives and where you sign in. Only connect if you know this address, for example from your family. If in doubt, cancel and type the address yourself.'**
+  String get serverConfirmBody;
+
+  /// No description provided for @serverConfirmVia.
+  ///
+  /// In en, this message translates to:
+  /// **'{address} points to this server.'**
+  String serverConfirmVia(String address);
+
+  /// No description provided for @serverMovedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The server names a new address: {host}. The app stays on the old one until you reconnect.'**
+  String serverMovedBody(String host);
+
+  /// No description provided for @serverMovedConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to {host}? This device signs out, then you sign in there again. Only if you know the server has moved.'**
+  String serverMovedConfirm(String host);
+
+  /// No description provided for @serverKeyChangedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The server has new connection details for the app. Reconnect so the app uses them.'**
+  String get serverKeyChangedBody;
+
+  /// No description provided for @serverMovedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get serverMovedAction;
+
+  /// No description provided for @accountMfaRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the code from your authenticator app first, then try again.'**
+  String get accountMfaRequired;
+
+  /// No description provided for @accountPasswordReauthBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing the password needs a fresh sign-in. We send a code to {email}.'**
+  String accountPasswordReauthBody(String email);
+
+  /// No description provided for @accountPasswordReauthPasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing the password needs a fresh sign-in. Enter the current password of {email}.'**
+  String accountPasswordReauthPasswordBody(String email);
+
+  /// No description provided for @accountResetReauthBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Resetting someone\'s sign-in needs a fresh sign-in of your own. We send a code to {email}.'**
+  String accountResetReauthBody(String email);
+
+  /// No description provided for @accountResetReauthPasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Resetting someone\'s sign-in needs a fresh sign-in of your own. Enter the password of {email}.'**
+  String accountResetReauthPasswordBody(String email);
+
+  /// No description provided for @accountMfaResetRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'You reset the two-factor sign-in of {name} less than a day ago. Another guardian can create the code, or wait a day.'**
+  String accountMfaResetRecent(String name);
+
+  /// No description provided for @accountPasswordResetRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'You created a password code for {name} less than a day ago. Another guardian can reset the two-factor sign-in, or wait a day.'**
+  String accountPasswordResetRecent(String name);
+
+  /// No description provided for @accountPasswordSavedOthersOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Password saved. Your other devices have been signed out.'**
+  String get accountPasswordSavedOthersOut;
+
+  /// No description provided for @trustFeedCreatedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Created by {name}'**
+  String trustFeedCreatedBy(String name);
+
+  /// No description provided for @errInvitationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This server takes only invited people. Ask a guardian of the family for an invitation.'**
+  String get errInvitationRequired;
+
+  /// No description provided for @accountNoticeMfaResetYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} reset your two-factor sign-in'**
+  String accountNoticeMfaResetYou(String name);
+
+  /// No description provided for @accountNoticeMfaReset.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} reset the two-factor sign-in of {target}'**
+  String accountNoticeMfaReset(String name, String target);
+
+  /// No description provided for @accountNoticePasswordResetYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} created a password code for you'**
+  String accountNoticePasswordResetYou(String name);
+
+  /// No description provided for @accountNoticePasswordReset.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} created a password code for {target}'**
+  String accountNoticePasswordReset(String name, String target);
 }
 
 class _AppLocalizationsDelegate

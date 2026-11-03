@@ -6,6 +6,8 @@ These steps concern **your account** or the **whole family**. They are at the bo
 
 Under **Settings → Account & security → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too, if your server sends email; on a server without email, the password is the way in ([Email](/en/server/email)).
 
+If your sign-in is older than 5 minutes, WuselWall asks for a **code by email** before the change, or on a server without email for your current **password**. After the change your **other devices are signed out**; this one stays signed in.
+
 ## Leave the family
 
 If you no longer want to belong to a family, tap **Leave family** and confirm with **Leave**.

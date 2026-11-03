@@ -7,7 +7,7 @@
 //
 // Pure module: no I/O. The input is the JSON of api.tasks_schedule(); the output is what
 // api.tasks_materialise() takes as p_due.
-import { addDays, type EventRow, expand } from "./occurrences.ts";
+import { addDays, type EventRow, expand, validateRrule } from "./occurrences.ts";
 
 /** The horizon: today plus this many days after today, both ends inclusive. */
 export const HORIZON_DAYS = 13;
@@ -38,6 +38,9 @@ export function dueDates(schedule: TaskSchedule): DueDate[] {
   const out: DueDate[] = [];
 
   for (const def of schedule.definitions) {
+    // A rule the calendar's parser refuses yields no due date at all (the calendar keeps
+    // such an event's first date; a chore has no such day).
+    if (def.rrule !== null && !validateRrule(def.rrule)) continue;
     const series: EventRow = {
       id: def.id,
       calendar_id: "",

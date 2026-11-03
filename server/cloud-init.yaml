@@ -9,10 +9,14 @@
 # keeps retrying until they resolve.
 #
 # What happens at the first boot: Docker from Docker's own repository, a firewall that lets
-# in only SSH, 80 and 443, the WuselWall server release from GitHub, and
-# `wuselwall install --caddy`. After 5–10 minutes, read the result over SSH:
+# in only SSH, 80 and 443, the WuselWall server release from GitHub, checked against its
+# signed SHA256SUMS before anything in it runs, and `wuselwall install --caddy`. After 5–10
+# minutes, read the result over SSH:
 #
 #   ssh root@<ip> cat /srv/wuselwall/install.log
+#
+# No install.log means the release did not pass the check or could not be downloaded; the
+# reason is in /var/log/cloud-init-output.log.
 #
 # It shows the server address, the setup link with its QR code and the one-time setup key.
 # Then copy /srv/wuselwall/stack/.env into your password manager (docs/server/home-server).
@@ -33,6 +37,7 @@ packages:
   - docker-ce-cli
   - containerd.io
   - docker-compose-plugin
+  - minisign
   - qrencode
   - ufw
 
@@ -50,12 +55,29 @@ write_files:
       ufw allow 443/tcp > /dev/null
       ufw --force enable > /dev/null
       systemctl enable --now docker
-      mkdir -p /srv && cd /srv
-      curl -fsSL "https://github.com/wuselwall/wuselwall-app/releases/download/server-v$WW_VERSION/wuselwall-server-$WW_VERSION.tar.gz" | tar xz
-      cd /srv/wuselwall
+      # The release, its SHA256SUMS and the signature of those, checked before unpacking
+      # (security review 2026-11-01, F9). The key is server/wuselwall's WW_RELEASE_PUBKEY.
+      key=REPLACE-WITH-THE-RELEASE-PUBLIC-KEY
+      archive=wuselwall-server-$WW_VERSION.tar.gz
+      base=https://github.com/wuselwall/wuselwall-app/releases/download/server-v$WW_VERSION
+      dl=$(mktemp -d) && cd "$dl"
+      for f in "$archive" SHA256SUMS SHA256SUMS.minisig; do curl -fsSLO "$base/$f"; done
+      case $key in
+        RW*)
+          # Only the prehashed signatures the release workflow makes (minisign also takes legacy ones).
+          [ "$(sed -n 2p SHA256SUMS.minisig | base64 -d | head -c 2)" = ED ] || { echo "not a prehashed (ED) signature" >&2; exit 1; }
+          # The signed comment names the release, so an older signed one cannot stand in.
+          comment=$(minisign -V -Q -m SHA256SUMS -P "$key")
+          [ "$comment" = "wuselwall-server $WW_VERSION SHA256SUMS" ] || { echo "signed for another release: $comment" >&2; exit 1; }
+          checked="Release $WW_VERSION: the signature and the checksum match." ;;
+        *) checked="WARNING: this cloud-init file has no release key; only the checksum of release $WW_VERSION was checked." ;;
+      esac
+      grep " $archive\$" SHA256SUMS | sha256sum -c -
+      mkdir -p /srv && tar -xzf "$archive" -C /srv
+      cd /srv/wuselwall && rm -rf "$dl"
       # The log holds the setup key: readable by root only.
       umask 077
-      ./wuselwall install --api "$WW_API" --web "$WW_WEB" --language "$WW_LANGUAGE" --caddy > install.log 2>&1
+      { echo "$checked"; ./wuselwall install --api "$WW_API" --web "$WW_WEB" --language "$WW_LANGUAGE" --caddy; } > install.log 2>&1
 
 runcmd:
   # CHANGE the four values on the next line (release, the two addresses, the email language de|en|fr|es); nothing else.

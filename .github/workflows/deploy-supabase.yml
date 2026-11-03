@@ -8,8 +8,9 @@
 #   SUPABASE_ACCESS_TOKEN   an access token of the family's Supabase account
 #   SUPABASE_PROJECT_ID     the project's reference ID (https://<id>.supabase.co)
 #   SUPABASE_DB_PASSWORD    the database password chosen when the project was created
-#   WUSELWALL_SETUP_TOKEN   optional: a phrase of the family's choice, used once to found
-#                           the household. Ignored once a household exists.
+#   WUSELWALL_SETUP_TOKEN   the setup key, used once to found the household: at least 16
+#                           characters, e.g. from `openssl rand -hex 12` or a password
+#                           manager. Ignored once a household exists (and only then optional).
 #
 # Mail is optional (specs/20, Q48). Without it, everyone signs up and signs in with email and
 # password, and a guardian resets a forgotten password in the app. With one of these, sign-in
@@ -88,10 +89,15 @@ jobs:
           if [ -z "$SMTP_HOST" ] && [ -z "$SCW_SECRET_KEY" ]; then
             echo "::notice::No mail configured: sign-in with email and password (docs/server/extras)."
           fi
+          if [ -n "$SETUP_TOKEN" ] && [ "${#SETUP_TOKEN}" -lt 16 ]; then
+            # Refused below while no household exists; a founded family's key is unused anyway.
+            echo "::warning::WUSELWALL_SETUP_TOKEN is shorter than 16 characters: a project without a household refuses it (openssl rand -hex 12 makes a good one)."
+          fi
 
       - name: Database
         run: |
-          # config.toml's env() values are for local stacks; the defaults satisfy the parser.
+          # config.toml's env() values are for local stacks; the example's placeholders satisfy
+          # the parser and are never used by the hosted project.
           cp supabase/.env.example supabase/.env
           npx supabase link --project-ref "$PROJECT" --password "$SUPABASE_DB_PASSWORD"
           # Never --include-seed: the seed is development data.
@@ -165,7 +171,18 @@ jobs:
             -e "s|:'functions_url'|'https://$PROJECT.supabase.co/functions/v1'|g" \
             -e "s|:'cron_secret'|'$CRON_SECRET'|g" infra/jobs/schedule.sql)
           query "$sql" > /dev/null
-          if [ -n "$SETUP_TOKEN" ]; then
+          founded=$(query 'select exists (select 1 from app.household) as founded' | jq -r '.[0].founded')
+          if [ "$founded" != true ] && [ -z "$SETUP_TOKEN" ]; then
+            echo "::warning::No WUSELWALL_SETUP_TOKEN: nobody can claim this server and found the family until it is set and the workflow runs again."
+          fi
+          if [ -n "$SETUP_TOKEN" ] && [ "$founded" != true ]; then
+            # While the project has no household, its claim state is public and the key is the
+            # only thing between a stranger and the server (security review 2026-11-01, F30):
+            # a short phrase can be guessed within days under the sign-in rate limits.
+            if [ "${#SETUP_TOKEN}" -lt 16 ]; then
+              echo "::error::WUSELWALL_SETUP_TOKEN must be at least 16 characters; make one with: openssl rand -hex 12"
+              exit 1
+            fi
             # The server compares the key in lower case (api.setup_claim, api.household_create).
             hash=$(printf '%s' "$SETUP_TOKEN" | tr '[:upper:]' '[:lower:]' | sha256sum | cut -d' ' -f1)
             query "do \$\$ begin
@@ -221,7 +238,7 @@ jobs:
             echo "In the WuselWall app, enter your project ID (the value of SUPABASE_PROJECT_ID) at **Which server?**."
             echo
             if [ -n "$SETUP_TOKEN" ]; then
-              echo "Then tap **I have the setup key** and enter the phrase you saved as \`WUSELWALL_SETUP_TOKEN\`: only that key can create the first account."
+              echo "Then tap **I have the setup key** and enter the key you saved as \`WUSELWALL_SETUP_TOKEN\`: only that key can create the first account."
               echo
             fi
             if [ -z "$SMTP_HOST" ] && [ -z "$SCW_SECRET_KEY" ]; then

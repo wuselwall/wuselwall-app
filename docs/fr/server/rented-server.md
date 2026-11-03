@@ -27,7 +27,7 @@ WuselWall n’est lié à aucune des sociétés citées sur cette page, n’est 
 
 **Coût :** environ **6 à 25 € par mois** pour un serveur adapté, selon l’hébergeur, la taille et la TVA, plus le domaine (état octobre 2026). Les plus petites tailles sont parfois en rupture (chez Hetzner, toute la gamme la moins chère le 25 octobre 2026) ; la taille suivante coûte environ trois fois plus. Seule la grille de l’hébergeur fait foi.
 
-**Sans champ cloud-init :** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) et [Infomaniak](https://www.infomaniak.com/) (Suisse, Genève ; droit suisse de la protection des données) louent aussi des serveurs adaptés en Europe, mais ne documentent pas un tel champ. Créez-y un serveur Ubuntu et installez par SSH comme [à la maison](/fr/server/home-server).
+**Sans champ cloud-init :** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) et [Infomaniak](https://www.infomaniak.com/) (Suisse, Genève ; droit suisse de la protection des données) louent aussi des serveurs adaptés en Europe, mais ne documentent pas un tel champ. Créez-y un serveur Ubuntu et installez par SSH comme [à la maison](/fr/server/home-server), après avoir vérifié le téléchargement comme dans [Vérifier un téléchargement](#checking-a-download).
 
 **Où sont les données ?** Sur votre propre serveur chez l’hébergeur. Il fournit matériel, électricité et réseau ; comme tout hébergeur, il pourrait techniquement accéder à la machine, et son accord de traitement lui interdit d’utiliser vos données. Les connexions avec vos appareils sont chiffrées, et seul WuselWall lit votre base. Contrairement à Supabase Inc. (États-Unis), l’hébergeur est une société européenne soumise au droit européen, au droit suisse pour Infomaniak.
 
@@ -45,7 +45,7 @@ Ce guide prend Hetzner parce que sa console offre un simple champ cloud-config ;
    ssh root@<ip> cat /srv/wuselwall/install.log
    ```
 
-   Vous y trouvez l’adresse du serveur, le lien de configuration avec son QR et la clé de configuration à usage unique. Copiez tout de suite `/srv/wuselwall/stack/.env` dans votre gestionnaire de mots de passe ([pourquoi](/fr/server/home-server#_1-installing)).
+   Vous y trouvez l’adresse du serveur, le lien de configuration avec son QR et la clé de configuration à usage unique. Copiez tout de suite `/srv/wuselwall/stack/.env` dans votre gestionnaire de mots de passe ([pourquoi](/fr/server/home-server#_1-installing)). La première ligne indique si la signature et la somme de contrôle de la version correspondaient. Si le fichier n’existe pas, le serveur n’a pas pu télécharger la version ou l’a refusée comme modifiée ; `ssh root@<ip> tail -n 30 /var/log/cloud-init-output.log` en donne la raison.
 6. **Poursuivre comme à la maison :** [connecter l’app](/fr/server/home-server#_2-connecting-the-app), configurer la [sauvegarde](/fr/server/home-server#_3-backups) et, dès le début, une [sauvegarde hors site](/fr/server/extras#off-site-backup), car un serveur loué n’a qu’un disque. Les sauvegardes Hetzner (environ 20 % de plus) copient tout le disque : un bon complément, pas un remplacement.
 
 Chez les autres hébergeurs, le champ s’appelle **User data**, **Cloud-init** ou **Script de démarrage** ; les étapes sont les mêmes.
@@ -60,7 +60,27 @@ Les commandes s’exécutent en SSH dans `/srv/wuselwall`, comme [à la maison](
 | Sauvegarder maintenant | `./wuselwall backup` |
 | Tout fonctionne ? | `./wuselwall status` |
 
+Avant une mise à jour, `wuselwall` vérifie la signature et la somme de contrôle de la nouvelle version, et seulement ensuite en exécute quoi que ce soit. Pour vérifier sans installer : `./wuselwall verify 1.1.0`.
+
 Ubuntu installe seul les mises à jour de sécurité. Après une mise à jour du noyau, redémarrez une fois (`reboot`) ; la pile repart d’elle-même.
+
+## Vérifier un téléchargement {#checking-a-download}
+
+Chaque version serveur est signée. À côté de l’archive se trouvent `SHA256SUMS`, la somme de contrôle de l’archive, et `SHA256SUMS.minisig`, la signature de cette liste avec la clé de WuselWall. Le fichier cloud-init et `./wuselwall update` vérifient les deux d’eux-mêmes. Si vous téléchargez une version à la main, pour un serveur sans champ cloud-init ou à la maison, vérifiez-la avant de la décompresser (adaptez la version) :
+
+```bash
+v=1.0.0
+for f in wuselwall-server-$v.tar.gz SHA256SUMS SHA256SUMS.minisig; do
+  curl -fsSLO "https://github.com/wuselwall/wuselwall-app/releases/download/server-v$v/$f"
+done
+minisign -Vm SHA256SUMS -P REPLACE-WITH-THE-RELEASE-PUBLIC-KEY
+sha256sum -c --ignore-missing SHA256SUMS
+tar xzf wuselwall-server-$v.tar.gz
+```
+
+`minisign` doit afficher « Signature and comment signature verified » et, comme « Trusted comment », exactement `wuselwall-server 1.0.0 SHA256SUMS` avec votre version ; `sha256sum` affiche `OK` pour l’archive. Sinon, ne décompressez rien et signalez-le sur [GitHub](https://github.com/wuselwall/wuselwall-app/issues). `minisign` s’installe avec `apt install minisign` (Debian, Ubuntu), `apk add minisign` (Alpine) ou `brew install minisign` (Mac). La clé après `-P` est la même que dans `server/wuselwall` et `server/cloud-init.yaml`.
+
+Avec la CLI GitHub, vous pouvez aussi vérifier que GitHub a construit l’archive à partir de ce dépôt : `gh attestation verify wuselwall-server-$v.tar.gz --repo wuselwall/wuselwall-app`.
 
 ## Déménager {#moving}
 

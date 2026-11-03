@@ -21,20 +21,23 @@ create table auth.users (
   raw_app_meta_data jsonb,
   raw_user_meta_data jsonb, created_at timestamptz, updated_at timestamptz,
   confirmation_token text, recovery_token text, email_change_token_new text,
-  email_change text, is_anonymous boolean default false, last_sign_in_at timestamptz,
+  email_change text, email_change_token_current text, email_change_confirm_status smallint default 0,
+  email_change_sent_at timestamptz, is_anonymous boolean default false, last_sign_in_at timestamptz,
   phone text, banned_until timestamptz, deleted_at timestamptz);
 create table auth.identities (
   id uuid primary key, user_id uuid references auth.users on delete cascade,
   provider_id text, provider text, identity_data jsonb, created_at timestamptz,
   updated_at timestamptz, last_sign_in_at timestamptz, email text);
+-- Like GoTrue's tables, sessions and factors have no id default and the same not-null
+-- columns: a fixture that leans on a default here would fail on a real stack.
 create table auth.sessions (
-  id uuid primary key default gen_random_uuid(), user_id uuid references auth.users on delete cascade,
-  aal text default 'aal1', created_at timestamptz default now(), updated_at timestamptz,
+  id uuid primary key, user_id uuid not null references auth.users on delete cascade,
+  aal text default 'aal1', created_at timestamptz, updated_at timestamptz,
   not_after timestamptz);
 create table auth.mfa_factors (
-  id uuid primary key default gen_random_uuid(), user_id uuid references auth.users on delete cascade,
-  friendly_name text, factor_type text, status text, created_at timestamptz default now(),
-  updated_at timestamptz);
+  id uuid primary key, user_id uuid not null references auth.users on delete cascade,
+  friendly_name text, factor_type text not null, status text not null,
+  created_at timestamptz not null, updated_at timestamptz not null);
 create function auth.jwt() returns jsonb language sql stable as $$
   select coalesce(nullif(current_setting('request.jwt.claim', true), ''),
                   nullif(current_setting('request.jwt.claims', true), ''))::jsonb $$;

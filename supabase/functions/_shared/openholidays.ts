@@ -6,6 +6,12 @@
 //
 // Everything here is pure except fetchCountry, which takes the fetch implementation as a
 // parameter so the tests can replace the network.
+//
+// The API is one third party, trusted for its data but not for where it sends us or how much
+// it answers (security review 2026-11-01, Info): redirects are followed by hand, at most
+// MAX_REDIRECTS hops, only to https on the API's own host, and the body is read through the
+// same capped reader as a family's calendar feed, MAX_BODY_BYTES at most.
+import { FetchError, readCapped } from "./safe_fetch.ts";
 
 export type HolidayKind = "public" | "school";
 
@@ -43,8 +49,9 @@ export type FetchedCountry = {
 
 /**
  * A failed request or an unusable answer. `reason` is a stable word for the cache's
- * last_error column ("http", "timeout", "network", "invalid_json", "invalid_shape");
- * `status` is the HTTP status when there was one. The URL is never part of it.
+ * last_error column ("http", "timeout", "network", "invalid_json", "invalid_shape",
+ * "redirect", "too_large"); `status` is the HTTP status when there was one. The URL is never
+ * part of it.
  */
 export class OpenHolidaysError extends Error {
   constructor(
@@ -66,7 +73,16 @@ export class OpenHolidaysError extends Error {
 }
 
 const BASE_URL = "https://openholidaysapi.org";
+const API_HOST = new URL(BASE_URL).hostname;
 const TIMEOUT_MS = 15000;
+/** A redirect may only lead to the API's own host, and only this often. */
+export const MAX_REDIRECTS = 3;
+/**
+ * The largest answer read. A country's subdivisions down to the municipalities and three
+ * years of its holidays are well under a megabyte each.
+ */
+export const MAX_BODY_BYTES = 8 * 1024 * 1024;
+const REDIRECT_STATUS = new Set([301, 302, 303, 307, 308]);
 const USER_AGENT = "WuselWall holidays-sync (+https://wuselwall.app)";
 const COUNTRY = /^[A-Z]{2}$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -236,28 +252,60 @@ async function getJson(
   fetchImpl: typeof fetch,
   url: string,
 ): Promise<unknown> {
+  const signal = AbortSignal.timeout(TIMEOUT_MS);
+  let target = url;
   let response: Response;
-  try {
-    response = await fetchImpl(url, {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": USER_AGENT,
-      },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-  } catch (err) {
-    const name = (err as { name?: unknown })?.name;
-    throw new OpenHolidaysError(
-      name === "TimeoutError" || name === "AbortError" ? "timeout" : "network",
-    );
+  for (let hop = 0;; hop++) {
+    try {
+      response = await fetchImpl(target, {
+        headers: {
+          Accept: "application/json",
+          "User-Agent": USER_AGENT,
+        },
+        redirect: "manual",
+        signal,
+      });
+    } catch (err) {
+      const name = (err as { name?: unknown })?.name;
+      throw new OpenHolidaysError(
+        name === "TimeoutError" || name === "AbortError" ? "timeout" : "network",
+      );
+    }
+    if (!REDIRECT_STATUS.has(response.status)) break;
+    // A redirect: only to the API's own host over https, and only a few times.
+    await response.body?.cancel();
+    const location = response.headers.get("location");
+    if (location === null || hop >= MAX_REDIRECTS) throw new OpenHolidaysError("redirect");
+    let next: URL;
+    try {
+      next = new URL(location, target);
+    } catch {
+      throw new OpenHolidaysError("redirect");
+    }
+    if (next.protocol !== "https:" || next.hostname !== API_HOST) {
+      throw new OpenHolidaysError("redirect");
+    }
+    target = next.href;
   }
   if (!response.ok) {
     // Drain the body so the connection can be reused; its content is not needed.
     await response.body?.cancel();
     throw new OpenHolidaysError("http", response.status);
   }
+  let text: string;
   try {
-    return await response.json();
+    text = await readCapped(response, MAX_BODY_BYTES);
+  } catch (err) {
+    if (err instanceof FetchError && err.code === "too_large") {
+      throw new OpenHolidaysError("too_large");
+    }
+    const name = (err as { name?: unknown })?.name;
+    throw new OpenHolidaysError(
+      name === "TimeoutError" || name === "AbortError" ? "timeout" : "network",
+    );
+  }
+  try {
+    return JSON.parse(text);
   } catch {
     throw new OpenHolidaysError("invalid_json");
   }

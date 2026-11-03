@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/app.dart' show localizationsDelegates;
 import 'package:wuselwall/app/bootstrap.dart';
 import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/server/server_discovery.dart';
 import 'package:wuselwall/core/server/server_info.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
@@ -79,6 +81,8 @@ class _App extends ConsumerWidget {
     final session = ref.watch(serverSessionProvider);
     final leave = session.leave;
     return MaterialApp(
+      supportedLocales: appLocales,
+      localizationsDelegates: localizationsDelegates,
       home: Scaffold(
         body: Column(
           children: [
@@ -98,6 +102,7 @@ class _App extends ConsumerWidget {
             ),
             if (leave != null)
               TextButton(onPressed: leave, child: const Text('leave')),
+            ?ref.watch(appBannerProvider)?.call(context),
           ],
         ),
       ),
@@ -108,12 +113,31 @@ class _App extends ConsumerWidget {
 void main() {
   late List<AppConfig> connected;
   late _Store store;
+  late int signedOut;
 
   setUp(() {
     FlutterSecureStorage.setMockInitialValues({});
     connected = [];
     store = _Store();
+    signedOut = 0;
   });
+
+  /// Agrees to the server on the confirmation page (F7).
+  Future<void> confirm(WidgetTester t, {String? host}) async {
+    expect(find.text('Mit diesem Server verbinden?'), findsOneWidget);
+    if (host != null) {
+      expect(
+        t
+            .widget<SelectableText>(
+              find.byKey(const ValueKey('server-confirm-host')),
+            )
+            .data,
+        host,
+      );
+    }
+    await t.tap(find.byKey(const ValueKey('server-confirm')));
+    await t.pumpAndSettle();
+  }
 
   Future<_Discovery> pump(
     WidgetTester t, {
@@ -142,7 +166,7 @@ void main() {
         connect: (c) async => connected.add(c),
         disconnect: () async {},
         hasSession: () async => hasSession,
-        signOutLocally: () async {},
+        signOutLocally: () async => signedOut++,
         links: links,
         app: const _App(),
       ),
@@ -289,6 +313,7 @@ void main() {
       );
       await t.tap(find.byKey(const ValueKey('server-connect')));
       await t.pumpAndSettle();
+      await confirm(t, host: 'api.example.org');
       expect(find.text('setup true'), findsOneWidget);
       expect(find.text('no link'), findsOneWidget);
       expect(
@@ -371,6 +396,7 @@ void main() {
       'https://web.example.org/#setup=$token&server=https://api.example.org',
     );
     await t.pumpAndSettle();
+    await confirm(t, host: 'api.example.org');
     expect(find.text('setup true'), findsOneWidget);
     expect(
       await SetupStore().read(Uri.parse('https://api.example.org')),
@@ -427,21 +453,95 @@ void main() {
     });
   }
 
-  testWidgets('native key rotation waits for the next connection', (t) async {
-    store.kept = _server();
-    final fresh = ServerInfo(
-      supabaseUrl: store.kept!.supabaseUrl,
-      publishableKey: 'rotated-public-key',
-      apiVersion: 1,
-      minAppVersion: '1.0.0',
-      features: [featureTimetableScan],
-    );
-    await pump(t, answers: {'api.example.org': Ok(fresh)});
+  testWidgets(
+    'a rotated key is never taken over in the background; reconnecting does',
+    (t) async {
+      final kept = store.kept = _server();
+      final sessions = SecureSessionStorage();
+      await sessions.persistSession('same-server-session');
+      final fresh = ServerInfo(
+        supabaseUrl: kept.supabaseUrl,
+        publishableKey: 'rotated-public-key',
+        apiVersion: 1,
+        minAppVersion: '1.0.0',
+        features: [featureTimetableScan],
+      );
+      await pump(t, answers: {'api.example.org': Ok(fresh)});
 
-    expect(store.kept, same(fresh));
+      // The stored server stays, and the app says what changed.
+      expect(store.kept, same(kept));
+      expect(connected, hasLength(1));
+      expect(connected.single.supabasePublishableKey, kept.publishableKey);
+      expect(find.text('photo scan false'), findsOneWidget);
+      expect(find.textContaining('neue Verbindungsdaten'), findsOneWidget);
+
+      // Same address: reconnecting keeps the session and asks nothing more.
+      await t.tap(find.byKey(const ValueKey('server-change-reconnect')));
+      await t.pumpAndSettle();
+      expect(connected, hasLength(2));
+      expect(connected.last.supabasePublishableKey, 'rotated-public-key');
+      expect(store.kept, same(fresh));
+      expect(signedOut, 0);
+      expect(await sessions.accessToken(), 'same-server-session');
+      expect(find.byKey(const ValueKey('server-change-banner')), findsNothing);
+    },
+  );
+
+  testWidgets('a moved address keeps the stored server and session until the person '
+      'reconnects, which signs out first (F7)', (t) async {
+    final kept = store.kept = _server();
+    final sessions = SecureSessionStorage();
+    await sessions.persistSession('old-server-session');
+    final moved = _server(host: 'moved.example.org');
+    final discovery = await pump(t, answers: {'api.example.org': Ok(moved)});
+
+    expect(discovery.asked, [Uri.parse('https://api.example.org')]);
+    expect(store.kept, same(kept));
+    expect(connected.single.supabaseUrl, 'https://api.example.org');
+    expect(await sessions.accessToken(), 'old-server-session');
+    expect(find.textContaining('moved.example.org'), findsOneWidget);
+
+    // A restart still runs on the stored server: nothing was written.
+    await t.pumpWidget(const SizedBox());
+    connected.clear();
+    await pump(t, answers: {'api.example.org': Ok(moved)});
+    expect(connected.single.supabaseUrl, 'https://api.example.org');
+    expect(await sessions.accessToken(), 'old-server-session');
+
+    // Reconnecting asks once more, with the address, then signs out and moves.
+    await t.tap(find.byKey(const ValueKey('server-change-reconnect')));
+    await t.pumpAndSettle();
     expect(connected, hasLength(1));
-    expect(connected.single.supabasePublishableKey, _server().publishableKey);
-    expect(find.text('photo scan false'), findsOneWidget);
+    expect(find.textContaining('meldet sich dabei ab'), findsOneWidget);
+    await t.tap(find.byKey(const ValueKey('server-change-reconnect')));
+    await t.pumpAndSettle();
+    expect(signedOut, 1);
+    expect(await sessions.hasAccessToken(), isFalse);
+    expect(connected.last.supabaseUrl, 'https://moved.example.org');
+    expect(store.kept, same(moved));
+  });
+
+  testWidgets('a discovery document naming another host is confirmed (F7)', (
+    t,
+  ) async {
+    await pump(
+      t,
+      answers: {'web.example.org': Ok(_server(host: 'api.example.org'))},
+    );
+    await t.enterText(
+      find.byKey(const ValueKey('server-address')),
+      'web.example.org',
+    );
+    await t.tap(find.byKey(const ValueKey('server-connect')));
+    await t.pumpAndSettle();
+    expect(connected, isEmpty);
+    expect(store.kept, isNull);
+    expect(
+      find.text('web.example.org verweist auf diesen Server.'),
+      findsOneWidget,
+    );
+    await confirm(t, host: 'api.example.org');
+    expect(connected.single.supabaseUrl, 'https://api.example.org');
   });
 
   testWidgets('native discovery retries after an offline start on recovery', (
@@ -596,6 +696,9 @@ void main() {
       await t.pumpAndSettle();
 
       expect(find.text('Mit welchem Server?'), findsNothing);
+      // A link's server is shown before the app connects to it (F7).
+      expect(connected, isEmpty);
+      await confirm(t, host: 'api.example.org');
       expect(find.text('running on https://api.example.org'), findsOneWidget);
       expect(find.text('link invitation $code proceed'), findsOneWidget);
       expect(store.kept?.supabaseUrl.host, 'api.example.org');
@@ -704,7 +807,27 @@ void main() {
       );
       await t.tap(find.byKey(const ValueKey('server-connect')));
       await t.pumpAndSettle();
+      await confirm(t, host: 'api.example.org');
       expect(find.text('link invitation $code proceed'), findsOneWidget);
+    });
+
+    testWidgets('a link\'s server that is declined is not kept (F7)', (
+      t,
+    ) async {
+      final links = StreamController<String>();
+      addTearDown(links.close);
+      await pump(
+        t,
+        answers: {'evil.example': Ok(_server(host: 'evil.example'))},
+        links: links.stream,
+      );
+      links.add(invite('evil.example'));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('server-confirm-cancel')));
+      await t.pumpAndSettle();
+      expect(find.text('Mit welchem Server?'), findsOneWidget);
+      expect(connected, isEmpty);
+      expect(store.kept, isNull);
     });
   });
 

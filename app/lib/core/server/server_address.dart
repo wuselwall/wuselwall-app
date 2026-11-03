@@ -9,7 +9,7 @@
 /// - the app's own QR payloads: `wuselwall://server?url=…` and the enrolment code
 ///   `wuselwall://enrol?code=…&server=…`;
 /// - a pairing or invitation link that carries its server in the fragment:
-///   `https://wuselwall.app/p/#CODE@api.example.org`.
+///   `https://wuselwall.app/p/#CODE@api.example.org` (https only).
 ///
 /// Plain http only with [allowHttp] (debug builds talking to a laptop stack).
 Uri? parseServerAddress(String raw, {bool allowHttp = false}) {
@@ -29,7 +29,7 @@ Uri? parseServerAddress(String raw, {bool allowHttp = false}) {
         : parseServerAddress(server, allowHttp: allowHttp);
   }
   if (link != null &&
-      link.hasScheme &&
+      link.scheme == 'https' &&
       link.fragment.contains('@') &&
       RegExp(r'^(/en)?/[ip]/?$').hasMatch(link.path)) {
     final host = link.fragment.substring(link.fragment.lastIndexOf('@') + 1);

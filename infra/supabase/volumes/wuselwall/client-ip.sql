@@ -1,0 +1,13 @@
+-- Tells the database which request header carries the client's address (security review
+-- 2026-11-01, F5). The compose stack's gateway (Envoy, volumes/api/envoy/lds.template.yaml)
+-- sets X-WuselWall-Client-IP in every request from the address its front saw and overwrites
+-- anything a client sent, so on this stack the header is trustworthy, and the per-client
+-- rate limits (app.request_client_key, migration 20261102120000) key on it. On a stack
+-- without that gateway, a hosted project for one, a client could send the header itself, so
+-- this setting is made by the stack and never by a migration.
+--
+-- Runs once for a new database (mounted into /docker-entrypoint-initdb.d by
+-- docker-compose.wuselwall.yml) and again, harmlessly, whenever the release tool applies the
+-- stack's database changes, so a database made before this file gets it too. Takes effect
+-- for new connections; PostgREST reconnects on its own.
+alter database postgres set app.client_ip_header = 'x-wuselwall-client-ip';

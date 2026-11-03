@@ -28,13 +28,18 @@ case "${1:-}" in
       echo "$DIR/.env exists already; refusing to replace the stack's secrets" >&2
       exit 1
     fi
-    ssh "$HOST" "mkdir -p '$DIR' && chmod 700 '$DIR'"
     # The server's addresses come from the environment (WW_API_URL, WW_WEB_URL, optional
     # WW_RP_ID), never from this file; a release installs with server/wuselwall instead.
     : "${WW_API_URL:?set WW_API_URL=https://api.<your domain>}" "${WW_WEB_URL:?set WW_WEB_URL=https://web.<your domain>}"
-    node infra/supabase/make-env.mjs "${2:-supabase/.env}" \
-      --api "$WW_API_URL" --web "$WW_WEB_URL" --language "${WW_MAIL_LANGUAGE:-de}" ${WW_RP_ID:+--rp-id "$WW_RP_ID"} --studio \
-      | ssh "$HOST" "umask 077 && cat > '$DIR/.env'"
+    # Generated before anything reaches the server: make-env.mjs refuses public or placeholder
+    # keys in the source file (security review 2026-11-01, F8), and a refusal must not leave an
+    # empty .env behind that the next attempt would refuse to replace. Its stderr names every
+    # key it kept, with a fingerprint to compare against the password manager's copy.
+    env_file=$(node infra/supabase/make-env.mjs "${2:-supabase/.env}" \
+      --api "$WW_API_URL" --web "$WW_WEB_URL" --language "${WW_MAIL_LANGUAGE:-de}" ${WW_RP_ID:+--rp-id "$WW_RP_ID"} --studio) \
+      || { echo "make-env.mjs refused; nothing was written to $HOST" >&2; exit 1; }
+    ssh "$HOST" "mkdir -p '$DIR' && chmod 700 '$DIR'"
+    printf '%s\n' "$env_file" | ssh "$HOST" "umask 077 && cat > '$DIR/.env'"
     echo "wrote $HOST:$DIR/.env"
     ;;
   set-env)
