@@ -4,7 +4,7 @@
 
 La vista infantil es más grande y sencilla. Cada niño toca su nombre y añade o marca productos. Las tarjetas permiten participar sin saber escribir. Los niños no administran miembros ni dispositivos.
 
-En **Mi día**, [Wusel](/es/guide/wusel) saluda al niño. Debajo están sus tareas, **Lo que me hace ilusión**, el colegio, la comida, la tarjeta **Tu comida favorita** y las citas; durante la comida, la [pregunta en la mesa](/es/guide/rituals#table-question), y el domingo por la tarde **Nuestra semana** (ver [Rituales](/es/guide/rituals)).
+En **Mi día**, [Wusel](/es/guide/wusel) saluda al niño. Debajo están sus tareas, **Lo que me hace ilusión**, el colegio de hoy en una sola tarjeta (un toque abre el horario), la comida, la tarjeta **Tu comida favorita** y, los días que las hay, las citas; durante la comida, la [pregunta en la mesa](/es/guide/rituals#table-question), y el domingo por la tarde **Nuestra semana** (ver [Rituales](/es/guide/rituals)).
 
 <Shot name="kid-shopping" alt="La compra en la vista infantil" wide />
 

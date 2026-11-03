@@ -33,6 +33,35 @@ bool kidLessonIsNow(Lesson lesson, int minutesNow) =>
     minutesOf(lesson.starts) <= minutesNow &&
     minutesNow < minutesOf(lesson.ends);
 
+/// Today's school as one card on *Mein Tag*: from the first lesson to the last, the
+/// lesson running now and how many lessons are changed (cancelled, a substitute, another
+/// room, an extra one). The lessons themselves are one tap away on the timetable tab.
+/// Null without a lesson.
+({TimeOfDay starts, TimeOfDay ends, String? now, int changes})?
+kidSchoolSummary(SchoolDay? day, int minutesNow) {
+  final lessons = [
+    for (final l in day?.lessons ?? const <Lesson>[])
+      if (l.kind == LessonKind.lesson) l,
+  ]..sort((a, b) => minutesOf(a.starts).compareTo(minutesOf(b.starts)));
+  if (day == null || !day.hasSchool || lessons.isEmpty) return null;
+  final ends = lessons
+      .map((l) => l.ends)
+      .reduce((a, b) => minutesOf(a) >= minutesOf(b) ? a : b);
+  return (
+    starts: lessons.first.starts,
+    ends: ends,
+    now: lessons
+        .where(
+          (l) =>
+              l.status != LessonStatus.cancelled &&
+              kidLessonIsNow(l, minutesNow),
+        )
+        .firstOrNull
+        ?.subject,
+    changes: lessons.where((l) => l.status != LessonStatus.normal).length,
+  );
+}
+
 /// The appointments a child attends on [day]: never presence bands, always in the
 /// order all-day first, then by start time.
 List<Occurrence> kidEventsFor(
@@ -134,6 +163,14 @@ class KidBirthdayFact extends KidFact {
   const KidBirthdayFact();
 }
 
+/// The child earned a badge in the last two days: Wusel names it, holding up the star,
+/// instead of a banner of its own under the greeting.
+class KidBadgeFact extends KidFact {
+  const KidBadgeFact(this.title);
+
+  final String title;
+}
+
 /// Today is one of the family's traditions ("Pizza-Freitag").
 class KidTraditionFact extends KidFact {
   const KidTraditionFact(this.title);
@@ -167,17 +204,19 @@ class KidCountdownFact extends KidFact {
 const _lunchOver = 14 * 60;
 
 /// The first useful fact of a child's day, in the order of specs/25: their own
-/// birthday, today's tradition, the first lesson (until it starts), today's warm meal
+/// birthday, a new badge, today's tradition, the first lesson (until it starts), today's warm meal
 /// (lunch until two), then the nearest countdown. Null when there is nothing to say.
 KidFact? kidFirstFact({
   required bool ownBirthday,
   required int minutesNow,
+  String? newBadge,
   String? tradition,
   SchoolDay? school,
   BoardMeal? meal,
   Countdown? countdown,
 }) {
   if (ownBirthday) return const KidBirthdayFact();
+  if (newBadge != null) return KidBadgeFact(newBadge);
   if (tradition != null && tradition.trim().isNotEmpty) {
     return KidTraditionFact(tradition);
   }

@@ -12,6 +12,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
+import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/ui/kid_new_badge.dart';
 import 'package:wuselwall/features/kid/ui/kid_today_page.dart';
 import 'package:wuselwall/features/rituals/domain/countdown.dart';
@@ -274,9 +275,97 @@ void main() {
   });
 
   group('the greeting’s first useful fact (specs/25)', () {
-    test('in order: birthday, tradition, first lesson, meal, countdown', () {
-      final now = DateTime(2026, 10, 23);
-      final school = SchoolDay(
+    test(
+      'in order: birthday, badge, tradition, first lesson, meal, countdown',
+      () {
+        final now = DateTime(2026, 10, 23);
+        final school = SchoolDay(
+          memberId: _emma,
+          starts: const TimeOfDay(hour: 8, minute: 0),
+          ends: const TimeOfDay(hour: 13, minute: 0),
+          lessons: const [
+            Lesson(
+              starts: TimeOfDay(hour: 9, minute: 0),
+              ends: TimeOfDay(hour: 9, minute: 45),
+              subject: 'Sport',
+            ),
+            Lesson(
+              starts: TimeOfDay(hour: 8, minute: 0),
+              ends: TimeOfDay(hour: 8, minute: 45),
+              subject: 'Mathe',
+              status: LessonStatus.cancelled,
+            ),
+          ],
+        );
+        const meal = BoardMeal(
+          slot: MealSlot.lunch,
+          title: 'Nudeln',
+          eating: {},
+          guests: 0,
+        );
+        final countdown = Countdown(
+          kind: CountdownKind.ferien,
+          date: now.add(const Duration(days: 3)),
+          title: 'Herbstferien',
+        );
+        KidFact? at(
+          int minutes, {
+          bool birthday = false,
+          String? badge,
+          String? tradition,
+          SchoolDay? day,
+          BoardMeal? lunch,
+          Countdown? next,
+        }) => kidFirstFact(
+          ownBirthday: birthday,
+          newBadge: badge,
+          minutesNow: minutes,
+          tradition: tradition,
+          school: day,
+          meal: lunch,
+          countdown: next,
+        );
+
+        expect(
+          at(
+            7 * 60,
+            birthday: true,
+            badge: 'Tischprofi',
+            tradition: 'Pizza-Freitag',
+            day: school,
+            lunch: meal,
+            next: countdown,
+          ),
+          isA<KidBirthdayFact>(),
+        );
+        // A new badge is named before the rest of the day.
+        expect(
+          (at(7 * 60, badge: 'Tischprofi', tradition: 'Pizza-Freitag')!
+                  as KidBadgeFact)
+              .title,
+          'Tischprofi',
+        );
+        expect(
+          at(7 * 60, tradition: 'Pizza-Freitag', day: school, lunch: meal),
+          isA<KidTraditionFact>(),
+        );
+        // The cancelled first lesson is skipped: school starts with Sport.
+        expect(
+          (at(7 * 60, day: school, lunch: meal)! as KidFirstLessonFact).subject,
+          'Sport',
+        );
+        // Once school has begun, the meal; lunch only until two.
+        expect(at(10 * 60, day: school, lunch: meal), isA<KidMealFact>());
+        expect(
+          at(15 * 60, day: school, lunch: meal, next: countdown),
+          isA<KidCountdownFact>(),
+        );
+        expect(at(15 * 60, day: school, lunch: meal), isNull);
+      },
+    );
+
+    test('school on Mein Tag is one line: hours, the lesson now, changes', () {
+      final day = SchoolDay(
         memberId: _emma,
         starts: const TimeOfDay(hour: 8, minute: 0),
         ends: const TimeOfDay(hour: 13, minute: 0),
@@ -285,6 +374,7 @@ void main() {
             starts: TimeOfDay(hour: 9, minute: 0),
             ends: TimeOfDay(hour: 9, minute: 45),
             subject: 'Sport',
+            status: LessonStatus.roomChange,
           ),
           Lesson(
             starts: TimeOfDay(hour: 8, minute: 0),
@@ -292,62 +382,24 @@ void main() {
             subject: 'Mathe',
             status: LessonStatus.cancelled,
           ),
+          Lesson(
+            starts: TimeOfDay(hour: 12, minute: 0),
+            ends: TimeOfDay(hour: 15, minute: 0),
+            subject: 'Hort',
+            kind: LessonKind.care,
+          ),
         ],
       );
-      const meal = BoardMeal(
-        slot: MealSlot.lunch,
-        title: 'Nudeln',
-        eating: {},
-        guests: 0,
-      );
-      final countdown = Countdown(
-        kind: CountdownKind.ferien,
-        date: now.add(const Duration(days: 3)),
-        title: 'Herbstferien',
-      );
-      KidFact? at(
-        int minutes, {
-        bool birthday = false,
-        String? tradition,
-        SchoolDay? day,
-        BoardMeal? lunch,
-        Countdown? next,
-      }) => kidFirstFact(
-        ownBirthday: birthday,
-        minutesNow: minutes,
-        tradition: tradition,
-        school: day,
-        meal: lunch,
-        countdown: next,
-      );
-
-      expect(
-        at(
-          7 * 60,
-          birthday: true,
-          tradition: 'Pizza-Freitag',
-          day: school,
-          lunch: meal,
-          next: countdown,
-        ),
-        isA<KidBirthdayFact>(),
-      );
-      expect(
-        at(7 * 60, tradition: 'Pizza-Freitag', day: school, lunch: meal),
-        isA<KidTraditionFact>(),
-      );
-      // The cancelled first lesson is skipped: school starts with Sport.
-      expect(
-        (at(7 * 60, day: school, lunch: meal)! as KidFirstLessonFact).subject,
-        'Sport',
-      );
-      // Once school has begun, the meal; lunch only until two.
-      expect(at(10 * 60, day: school, lunch: meal), isA<KidMealFact>());
-      expect(
-        at(15 * 60, day: school, lunch: meal, next: countdown),
-        isA<KidCountdownFact>(),
-      );
-      expect(at(15 * 60, day: school, lunch: meal), isNull);
+      final before = kidSchoolSummary(day, 7 * 60)!;
+      // From the first lesson to the last; care is not a lesson.
+      expect(before.starts, const TimeOfDay(hour: 8, minute: 0));
+      expect(before.ends, const TimeOfDay(hour: 9, minute: 45));
+      expect(before.now, isNull);
+      expect(before.changes, 2);
+      // A cancelled lesson is never "now".
+      expect(kidSchoolSummary(day, 8 * 60 + 10)!.now, isNull);
+      expect(kidSchoolSummary(day, 9 * 60 + 10)!.now, 'Sport');
+      expect(kidSchoolSummary(null, 9 * 60), isNull);
     });
 
     testWidgets('tonight’s meal follows the hello', (tester) async {
@@ -487,6 +539,8 @@ void main() {
       // Motion allowed for this test.
       tester.platformDispatcher.accessibilityFeaturesTestValue =
           const FakeAccessibilityFeatures();
+      // The card is on Punkte; Mein Tag names the badge in Wusel's greeting.
+      container.read(kidTabProvider.notifier).select(KidTab.points);
       await tester.tap(find.byKey(const ValueKey('kid-pick-$_emma')));
       for (
         var i = 0;
@@ -505,7 +559,7 @@ void main() {
       await unmountApp(tester, container);
     });
 
-    testWidgets('on Mein Tag the greeting holds up the star: one Wusel', (
+    testWidgets('on Mein Tag the greeting holds up the star and names it', (
       tester,
     ) async {
       final container = await pumpApp(
@@ -514,15 +568,9 @@ void main() {
         tasks: badgeApi(),
       );
       await _pickEmma(tester);
-      expect(find.byType(KidGrowIn), findsOneWidget);
-      // The card names the badge beside a star, without a Wusel of its own.
-      expect(
-        find.descendant(
-          of: find.byType(KidGrowIn),
-          matching: find.byType(Wusel),
-        ),
-        findsNothing,
-      );
+      // No banner of its own: Wusel's line says it, so it is not said twice.
+      expect(find.byType(KidGrowIn), findsNothing);
+      expect(_inGreeting(find.textContaining('Tischprofi')), findsOneWidget);
       expect(find.byType(Wusel), findsOneWidget);
       expect(
         tester.widget<Wusel>(_inGreeting(find.byType(Wusel))).pose,
@@ -537,6 +585,8 @@ void main() {
         overrides: baseOverrides(identity: _KidIdentity()),
         tasks: badgeApi(),
       );
+      // The card is on Punkte; Mein Tag names the badge in Wusel's greeting.
+      container.read(kidTabProvider.notifier).select(KidTab.points);
       await tester.tap(find.byKey(const ValueKey('kid-pick-$_emma')));
       for (
         var i = 0;

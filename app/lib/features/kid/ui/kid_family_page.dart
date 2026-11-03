@@ -11,7 +11,8 @@ import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 
 /// "Familie": who is doing what today. One row per member, their presence and how many
-/// chores are open. No points, no comparison: that is deliberate (specs/06).
+/// chores are open, each only when there is one: "nothing planned" and "no chores open"
+/// are left out. No points, no comparison: that is deliberate (specs/06).
 class KidFamilyPage extends ConsumerWidget {
   const KidFamilyPage({super.key});
 
@@ -34,8 +35,8 @@ class KidFamilyPage extends ConsumerWidget {
     final index = board.todayIndex;
     return ListView(
       padding: const EdgeInsets.all(Tokens.space4),
+      // No title: the tab and its band already say where the child is.
       children: [
-        KidSectionTitle(l10n.kidFamilyTitle),
         for (final m in board.members)
           Padding(
             padding: const EdgeInsets.only(bottom: Tokens.space2),
@@ -83,13 +84,16 @@ class _FamilyRow extends ConsumerWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                Text(
-                  presence == null
-                      ? l10n.kidNoPlanToday
-                      : context.presenceLabel(presence.state, presence.label),
-                  style: theme.textTheme.bodyLarge,
-                ),
-                Text(l10n.kidOpenTasks(open), style: theme.textTheme.bodyLarge),
+                if (presence != null)
+                  Text(
+                    context.presenceLabel(presence.state, presence.label),
+                    style: theme.textTheme.bodyLarge,
+                  ),
+                if (open > 0)
+                  Text(
+                    l10n.kidOpenTasks(open),
+                    style: theme.textTheme.bodyLarge,
+                  ),
               ],
             ),
           ),

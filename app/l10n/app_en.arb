@@ -1444,6 +1444,22 @@
       }
     }
   },
+  "kidSchoolNowSubject": "Now: {subject}",
+  "@kidSchoolNowSubject": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSchoolChanges": "{count, plural, =1{1 change today} other{{count} changes today}}",
+  "@kidSchoolChanges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "kidTomorrowNeeds": "Tomorrow you need: {items}",
   "@kidTomorrowNeeds": {
     "placeholders": {
@@ -1470,11 +1486,8 @@
   },
   "kidMealNoneDinner": "Nothing is planned for tonight yet.",
   "kidMealNoneLunch": "Nothing is planned for lunch yet.",
-  "kidMealEatingYou": "You are eating too.",
   "kidEventsTitle": "My appointments today",
-  "kidNoEvents": "No appointments today.",
   "kidAllDay": "all day",
-  "kidTimetableTitle": "My timetable",
   "kidTodayMarker": "Today",
   "kidYourPoints": "Your points",
   "kidRewardsTitle": "Rewards",
@@ -1506,7 +1519,6 @@
       }
     }
   },
-  "kidFamilyTitle": "Family today",
   "kidOpenTasks": "{count, plural, =0{No chores open} =1{1 chore open} other{{count} chores open}}",
   "@kidOpenTasks": {
     "placeholders": {
@@ -1515,7 +1527,6 @@
       }
     }
   },
-  "kidNoPlanToday": "Nothing planned today",
   "schoolsUiAddSchool": "Another school",
   "schoolsUiNewSchool": "New school",
   "schoolsUiPickSchool": "Choose school",

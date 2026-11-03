@@ -79,7 +79,11 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
+    final register = ref.watch(uiRegisterProvider);
+    final kiosk = register == UiRegister.kiosk;
+    // The children add and tick (specs/09): making, editing and the history of lists
+    // are for the grown-ups' registers.
+    final kid = register == UiRegister.kid;
     final current = ref.watch(currentListProvider);
     // Capture while mounted: pending ticks flush even when this page leaves.
     final sync = this.sync;
@@ -104,7 +108,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
           return EmptyView(
             message: l10n.shoppingEmpty,
             actions: [
-              if (!kiosk)
+              if (!kiosk && !kid)
                 FilledButton.icon(
                   onPressed: _newList,
                   icon: const Icon(Icons.add),
@@ -137,9 +141,13 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
                 if (!kiosk)
                   _ListSwitcher(
                     selected: list.id,
-                    onNew: _newList,
-                    onEdit: () =>
-                        context.push(Routes.shoppingListEdit, extra: list.id),
+                    onNew: kid ? null : _newList,
+                    onEdit: kid
+                        ? null
+                        : () => context.push(
+                            Routes.shoppingListEdit,
+                            extra: list.id,
+                          ),
                   ),
                 if (pending > 0) ShoppingPendingBanner(count: pending),
                 // A5: the picker and the item list share one scrollable instead of the
@@ -216,7 +224,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
                     padding: const EdgeInsets.all(Tokens.space4),
                     child: Row(
                       children: [
-                        if (!kiosk)
+                        if (!kiosk && !kid)
                           FocusTraversalOrder(
                             order: const NumericFocusOrder(900),
                             child: IconButton(
@@ -270,10 +278,13 @@ class _ListSwitcher extends ConsumerWidget {
   });
 
   final String selected;
-  final VoidCallback onNew;
+
+  /// "Neue Liste"; null hides the chip (the kid register).
+  final VoidCallback? onNew;
 
   /// "Liste bearbeiten" for the selected list: the pencil, or a long press on its chip.
-  final VoidCallback onEdit;
+  /// Null hides the pencil (the kid register).
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -325,31 +336,33 @@ class _ListSwitcher extends ConsumerWidget {
                         ),
                       ),
                     ),
-                  FocusTraversalOrder(
-                    order: NumericFocusOrder(lists.length.toDouble()),
-                    child: _NewListChip(
-                      minHeight: touch,
-                      label: l10n.shoppingNewList,
-                      onPressed: onNew,
+                  if (onNew case final onNew?)
+                    FocusTraversalOrder(
+                      order: NumericFocusOrder(lists.length.toDouble()),
+                      child: _NewListChip(
+                        minHeight: touch,
+                        label: l10n.shoppingNewList,
+                        onPressed: onNew,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
           ),
           // Outside the scrolling row, so it is always in reach on a phone.
-          FocusTraversalOrder(
-            order: NumericFocusOrder(lists.length + 1),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
-              child: IconButton(
-                key: const ValueKey('edit-list'),
-                tooltip: l10n.shoppingEditList,
-                onPressed: onEdit,
-                icon: const Icon(Icons.edit_outlined),
+          if (onEdit case final onEdit?)
+            FocusTraversalOrder(
+              order: NumericFocusOrder(lists.length + 1),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+                child: IconButton(
+                  key: const ValueKey('edit-list'),
+                  tooltip: l10n.shoppingEditList,
+                  onPressed: onEdit,
+                  icon: const Icon(Icons.edit_outlined),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
