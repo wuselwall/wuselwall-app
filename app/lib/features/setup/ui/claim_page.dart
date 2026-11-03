@@ -165,7 +165,6 @@ class _ClaimPageState extends ConsumerState<ClaimPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final ww = context.ww;
     final online = ref.watch(connectivityProvider).value ?? true;
     final server = ref.watch(currentServerProvider);
@@ -233,6 +232,11 @@ class _ClaimPageState extends ConsumerState<ClaimPage> {
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   labelText: l10n.fieldEmail,
+                  // Like the setup key's: both helpers sit in the field's decoration.
+                  helperText: ref.watch(emailCodeSignInProvider)
+                      ? l10n.claimNextCode
+                      : l10n.claimNextPassword,
+                  helperMaxLines: 3,
                   errorText: _emailError,
                 ),
                 validator: (value) {
@@ -247,13 +251,6 @@ class _ClaimPageState extends ConsumerState<ClaimPage> {
               ),
             ],
           ),
-        ),
-        const SizedBox(height: Tokens.space3),
-        Text(
-          ref.watch(emailCodeSignInProvider)
-              ? l10n.claimNextCode
-              : l10n.claimNextPassword,
-          style: theme.textTheme.bodySmall?.copyWith(color: ww.ink2),
         ),
         const SizedBox(height: Tokens.space6),
         FilledButton(

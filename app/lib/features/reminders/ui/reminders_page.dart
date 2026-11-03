@@ -8,6 +8,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -41,38 +42,40 @@ class RemindersPage extends ConsumerWidget {
           onPressed: () => context.go(Routes.settingsPersonal),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(Tokens.space4),
-        children: [
-          if (!personal)
-            Text(l10n.reminderOnlyPersonal)
-          else ...[
-            _PermissionCard(),
-            const SizedBox(height: Tokens.space2),
-            Text(
-              l10n.reminderLocalNote,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: Tokens.space4,
-                bottom: Tokens.space2,
+      body: ContentWidth(
+        child: ListView(
+          padding: const EdgeInsets.all(Tokens.space4),
+          children: [
+            if (!personal)
+              Text(l10n.reminderOnlyPersonal)
+            else ...[
+              _PermissionCard(),
+              const SizedBox(height: Tokens.space2),
+              Text(
+                l10n.reminderLocalNote,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l10n.reminderSettingsSection,
-                  style: Theme.of(context).textTheme.titleMedium,
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: Tokens.space4,
+                  bottom: Tokens.space2,
+                ),
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    l10n.reminderSettingsSection,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ),
               ),
-            ),
-            AsyncValueView<List<SettingEntry>>(
-              value: ref.watch(householdSettingsProvider),
-              onRetry: () => ref.invalidate(householdSettingsProvider),
-              data: (entries) => _Rows(entries: entries),
-            ),
+              AsyncValueView<List<SettingEntry>>(
+                value: ref.watch(householdSettingsProvider),
+                onRetry: () => ref.invalidate(householdSettingsProvider),
+                data: (entries) => _Rows(entries: entries),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

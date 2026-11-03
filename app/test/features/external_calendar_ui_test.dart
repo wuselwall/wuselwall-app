@@ -156,7 +156,7 @@ void main() {
     testWidgets('the list shows the status and the friendly error', (
       tester,
     ) async {
-      final now = DateTime.now();
+      final now = testNow();
       final calendars = FakeExternalCalendarsRepository(
         calendars: [
           _calendar(lastFetchedAt: now.subtract(const Duration(minutes: 12))),
@@ -199,7 +199,7 @@ void main() {
         calendars: calendars,
       );
 
-      await tester.tap(find.text('Jetzt aktualisieren'));
+      await tester.tap(find.byTooltip('Jetzt aktualisieren'));
       await tester.pumpAndSettle();
 
       expect(calendars.refreshed, [(actor: guardianId, calendarId: _binId)]);
@@ -224,9 +224,9 @@ void main() {
       );
       expect(find.byType(FloatingActionButton), findsNothing);
       expect(find.byType(Switch), findsNothing);
-      expect(find.text('Jetzt aktualisieren'), findsNothing);
+      expect(find.byTooltip('Jetzt aktualisieren'), findsNothing);
       expect(find.text('Bearbeiten'), findsNothing);
-      expect(find.text('Löschen'), findsNothing);
+      expect(find.byTooltip('Löschen'), findsNothing);
     });
 
     testWidgets('delete asks first, then removes that calendar', (
@@ -241,7 +241,8 @@ void main() {
         calendars: calendars,
       );
 
-      await tester.tap(find.widgetWithText(TextButton, 'Löschen'));
+      // Delete is an icon button under the switch, named by its tooltip.
+      await tester.tap(find.byTooltip('Löschen'));
       await tester.pumpAndSettle();
       expect(calendars.deleted, isEmpty, reason: 'confirmation comes first');
 

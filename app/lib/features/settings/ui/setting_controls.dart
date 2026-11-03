@@ -117,13 +117,17 @@ class _SettingControl extends StatelessWidget {
     // country does, and the row's reset goes back to it.
     if (Occasion.ofKey(entry.key) case final occasion?
         when entry.type == SettingType.enumeration) {
-      return Switch(
+      return _FlushSwitch(
         value: occasionOn(occasion, value, country),
         onChanged: (on) => onChanged(on ? 'on' : 'off'),
       );
     }
     return switch (entry.type) {
-      SettingType.boolean => Switch(value: value == true, onChanged: onChanged),
+      SettingType.boolean => Semantics(
+        container: true,
+        label: settingText(context.l10n, entry.key).title,
+        child: _FlushSwitch(value: value == true, onChanged: onChanged),
+      ),
       SettingType.integer => _NullableSwitch(
         entry: entry,
         onChanged: onChanged,
@@ -174,6 +178,21 @@ class _SettingControl extends StatelessWidget {
   }
 }
 
+/// A [Switch] drawn flush with the row's text. Material pads the track by 4 px on
+/// each side and centres it in that box, which set it 4 px right of the text column.
+/// Without the padding the box is the 52 px track, still wider than the 48 px target,
+/// and the tap target keeps its padded height.
+class _FlushSwitch extends StatelessWidget {
+  const _FlushSwitch({required this.value, required this.onChanged});
+
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) =>
+      Switch(value: value, onChanged: onChanged, padding: EdgeInsets.zero);
+}
+
 /// A nullable setting: a switch for on and off, and the control while it is on. Turning
 /// it on writes the default if there is one, otherwise the control's own first value.
 class _NullableSwitch extends StatelessWidget {
@@ -196,24 +215,28 @@ class _NullableSwitch extends StatelessWidget {
       spacing: Tokens.space2,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Switch(
-          value: on,
-          onChanged: (wanted) async {
-            if (!wanted) {
-              onChanged(null);
-              return;
-            }
-            if (entry.defaultValue != null) {
-              onChanged(entry.defaultValue);
-              return;
-            }
-            if (entry.type == SettingType.integer) {
-              onChanged(entry.min);
-              return;
-            }
-            final picked = await pickSettingTime(context, '09:00');
-            if (picked != null) onChanged(picked);
-          },
+        Semantics(
+          container: true,
+          label: settingText(l10n, entry.key).title,
+          child: _FlushSwitch(
+            value: on,
+            onChanged: (wanted) async {
+              if (!wanted) {
+                onChanged(null);
+                return;
+              }
+              if (entry.defaultValue != null) {
+                onChanged(entry.defaultValue);
+                return;
+              }
+              if (entry.type == SettingType.integer) {
+                onChanged(entry.min);
+                return;
+              }
+              final picked = await pickSettingTime(context, '09:00');
+              if (picked != null) onChanged(picked);
+            },
+          ),
         ),
         Text(on ? l10n.settingOn : l10n.settingOff),
         if (on) child,
@@ -370,25 +393,38 @@ class _WeekdayTime extends StatelessWidget {
     final weekday = (value['weekday'] as num).toInt();
     final time = value['time'] as String;
     final locale = Localizations.localeOf(context).toLanguageTag();
+    // 4 January 2026 was a Sunday, so day n + 4 is ISO weekday n.
+    String dayName(int day) =>
+        DateFormat.EEEE(locale).format(DateTime(2026, 1, 4 + day));
     return Wrap(
       spacing: Tokens.space2,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        DropdownButton<int>(
-          value: weekday,
-          items: [
-            // 4 January 2026 was a Sunday, so day n + 4 is ISO weekday n.
+        // An outlined button that opens a menu, so the day looks like the time
+        // chip next to it (a plain DropdownButton is underline-style).
+        MenuAnchor(
+          menuChildren: [
             for (var day = 1; day <= 7; day++)
-              DropdownMenuItem(
-                value: day,
-                child: Text(
-                  DateFormat.EEEE(locale).format(DateTime(2026, 1, 4 + day)),
+              MenuItemButton(
+                onPressed: () => onChanged({'weekday': day, 'time': time}),
+                // The chosen day keeps its mark, as a dropdown's list shows it.
+                leadingIcon: Icon(
+                  Icons.check,
+                  color: day == weekday ? null : Colors.transparent,
+                ),
+                child: Semantics(
+                  selected: day == weekday,
+                  child: Text(dayName(day)),
                 ),
               ),
           ],
-          onChanged: (day) {
-            if (day != null) onChanged({'weekday': day, 'time': time});
-          },
+          builder: (context, controller, _) => OutlinedButton.icon(
+            onPressed: () =>
+                controller.isOpen ? controller.close() : controller.open(),
+            iconAlignment: IconAlignment.end,
+            icon: const Icon(Icons.arrow_drop_down),
+            label: Text(dayName(weekday)),
+          ),
         ),
         _TimeButton(
           time: time,

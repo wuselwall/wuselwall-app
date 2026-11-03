@@ -138,6 +138,12 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: TextButton.icon(
+                        // Flush with the headings' left edge, not inset by the button.
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsetsDirectional.only(
+                            end: Tokens.space3,
+                          ),
+                        ),
                         onPressed: () => setState(() {
                           _resetDraft();
                           _adding = true;
@@ -192,6 +198,9 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
   }
 }
 
+/// Cards sit on the page's 16 px edge (the default margin insets them) with a small gap.
+const _cardMargin = EdgeInsets.only(bottom: Tokens.space2);
+
 /// What comes after the school exists (specs/24 "Fewer required facts"): the children
 /// without a timetable in the current term, each one tap from the editor or the import.
 /// Nothing is shown when every child has one.
@@ -223,22 +232,36 @@ class _NextSteps extends ConsumerWidget {
       children: [
         for (final k in kids)
           Card(
-            child: ListTile(
-              key: ValueKey('next-step-${k.id}'),
-              leading: const Icon(Icons.edit_calendar_outlined),
-              title: Text(l10n.schoolNextStepEnter(k.displayName)),
-              trailing: TextButton(
-                onPressed: () =>
-                    showTimetableImportMenu(context, ref, profileId: k.id),
-                child: Text(l10n.schoolImportAction),
-              ),
-              onTap: () => openTimetableEditor(
-                context,
-                ref,
-                data: data,
-                profileId: k.id,
-                monday: today,
-              ),
+            margin: _cardMargin,
+            // The title and the import share one row, so the card is one tile tall.
+            child: Row(
+              children: [
+                Expanded(
+                  child: Semantics(
+                    container: true,
+                    child: ListTile(
+                      key: ValueKey('next-step-${k.id}'),
+                      leading: const Icon(Icons.edit_calendar_outlined),
+                      title: Text(l10n.schoolNextStepEnter(k.displayName)),
+                      onTap: () => openTimetableEditor(
+                        context,
+                        ref,
+                        data: data,
+                        profileId: k.id,
+                        monday: today,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+                  child: TextButton(
+                    onPressed: () =>
+                        showTimetableImportMenu(context, ref, profileId: k.id),
+                    child: Text(l10n.schoolImportAction),
+                  ),
+                ),
+              ],
             ),
           ),
       ],
@@ -265,7 +288,10 @@ class _SchoolSwitcher extends StatelessWidget {
         ? SegmentedButton<String>(
             segments: [
               for (final s in schools)
-                ButtonSegment(value: s.id, label: Text(s.name)),
+                ButtonSegment(
+                  value: s.id,
+                  label: Text(s.name, textAlign: TextAlign.center),
+                ),
             ],
             selected: {?selected?.id},
             emptySelectionAllowed: true,
@@ -464,13 +490,17 @@ class _SchoolFormState extends ConsumerState<_SchoolForm>
           ),
         ),
         const SizedBox(height: 12),
-        RegionField(
-          code: _regionOn(settings),
-          onChanged: (code) => setState(() {
-            _touched = true;
-            _picked = code;
-            widget.onChanged();
-          }),
+        // The field's value is set in the body size the name field above types in.
+        DefaultTextStyle.merge(
+          style: Theme.of(context).textTheme.bodyLarge,
+          child: RegionField(
+            code: _regionOn(settings),
+            onChanged: (code) => setState(() {
+              _touched = true;
+              _picked = code;
+              widget.onChanged();
+            }),
+          ),
         ),
       ],
     );
@@ -607,7 +637,10 @@ class _BellTimesState extends ConsumerState<_BellTimes>
   Widget build(BuildContext context) {
     super.build(context);
     final l10n = context.l10n;
+    // Numbered once here: a card's builder can run again on its own (a theme
+    // change), and a counter there would keep counting ("10. Stunde").
     var lessonNo = 0;
+    final numbers = [for (final r in _rows) r.isBreak ? 0 : ++lessonNo];
     return _Section(
       title: l10n.schoolBellTimes,
       children: [
@@ -615,38 +648,72 @@ class _BellTimesState extends ConsumerState<_BellTimes>
           Builder(
             builder: (context) {
               final r = _rows[i];
-              if (!r.isBreak) lessonNo++;
               return Card(
-                child: ListTile(
-                  title: Text(
-                    r.isBreak ? l10n.boardBreak : l10n.boardPeriod(lessonNo),
+                margin: _cardMargin,
+                // One row: the name, the two times, the remove button centred on them.
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    start: Tokens.space4,
+                    end: Tokens.space2,
                   ),
-                  subtitle: Row(
+                  child: Row(
                     children: [
-                      Tooltip(
-                        message: l10n.schoolStart,
-                        child: TextButton(
-                          onPressed: () => _pick(r, start: true),
-                          child: Text(context.time(r.starts)),
+                      // The times follow the name on one line, and drop under it at
+                      // enlarged text sizes instead of overflowing.
+                      Expanded(
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minWidth: MediaQuery.textScalerOf(context)
+                                    .scale(104),
+                              ),
+                              child: Text(
+                                r.isBreak
+                                    ? l10n.boardBreak
+                                    : l10n.boardPeriod(numbers[i]),
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Tooltip(
+                                  message: l10n.schoolStart,
+                                  child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: const Size(48, 48),
+                                    ),
+                                    onPressed: () => _pick(r, start: true),
+                                    child: Text(context.time(r.starts)),
+                                  ),
+                                ),
+                                const Text('–'),
+                                Tooltip(
+                                  message: l10n.schoolEnd,
+                                  child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: const Size(48, 48),
+                                    ),
+                                    onPressed: () => _pick(r, start: false),
+                                    child: Text(context.time(r.ends)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      const Text('–'),
-                      Tooltip(
-                        message: l10n.schoolEnd,
-                        child: TextButton(
-                          onPressed: () => _pick(r, start: false),
-                          child: Text(context.time(r.ends)),
-                        ),
+                      IconButton(
+                        tooltip: l10n.schoolRemove,
+                        icon: const Icon(Icons.delete_outline),
+                        onPressed: () => setState(() {
+                          _rows.removeAt(i);
+                          widget.onChanged();
+                        }),
                       ),
                     ],
-                  ),
-                  trailing: IconButton(
-                    tooltip: l10n.schoolRemove,
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () => setState(() {
-                      _rows.removeAt(i);
-                      widget.onChanged();
-                    }),
                   ),
                 ),
               );
@@ -703,6 +770,7 @@ class _Terms extends ConsumerWidget {
       children: [
         for (final t in terms)
           Card(
+            margin: _cardMargin,
             child: ListTile(
               title: Text(t.name),
               subtitle: Text(
@@ -1047,6 +1115,7 @@ class _Subjects extends ConsumerWidget {
       children: [
         for (final s in data.subjects)
           Card(
+            margin: _cardMargin,
             child: ListTile(
               leading: Container(
                 width: 36,
@@ -1267,6 +1336,7 @@ class _Holidays extends ConsumerWidget {
         const SizedBox(height: 8),
         for (final h in holidays)
           Card(
+            margin: _cardMargin,
             child: ListTile(
               title: Text(h.name),
               subtitle: Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
@@ -12,7 +13,7 @@ import 'package:wuselwall/features/calendar/domain/usual_week.dart';
 /// the week of [clock]; the demo has no other weeks.
 class DemoBoardRepository implements BoardRepository {
   DemoBoardRepository({DateTime Function()? clock})
-    : _clock = clock ?? DateTime.now;
+    : _clock = clock ?? DemoClock.now;
 
   final DateTime Function() _clock;
 

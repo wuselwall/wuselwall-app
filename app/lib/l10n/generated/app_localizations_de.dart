@@ -3164,7 +3164,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get regionImported => 'importiert';
 
   @override
-  String get extCalTitle => 'Kalender von außen hinzufügen';
+  String get extCalTitle => 'Externe Kalender';
 
   @override
   String get extCalSettingsSubtitle =>
@@ -6993,9 +6993,6 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
     );
     return '$_temp0';
   }
-
-  @override
-  String get extCalTitle => 'Kalender von aussen hinzufügen';
 
   @override
   String get extCalEmpty =>

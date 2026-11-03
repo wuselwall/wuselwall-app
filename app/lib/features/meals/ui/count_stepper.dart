@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 
 /// A label with a − value + stepper, for servings and guests. Both ends are clamped to
 /// [min] and [max].
@@ -25,6 +26,7 @@ class CountStepper extends StatelessWidget {
         child: Text(label, style: Theme.of(context).textTheme.titleSmall),
       ),
       IconButton(
+        tooltip: '$label: ${context.l10n.settingDecrease}',
         icon: const Icon(Icons.remove),
         onPressed: value > min ? () => onChanged(value - 1) : null,
       ),
@@ -40,6 +42,7 @@ class CountStepper extends StatelessWidget {
         ),
       ),
       IconButton(
+        tooltip: '$label: ${context.l10n.settingIncrease}',
         icon: const Icon(Icons.add),
         onPressed: value < max ? () => onChanged(value + 1) : null,
       ),

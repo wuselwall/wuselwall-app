@@ -246,7 +246,13 @@ As implemented:
   member's ink. This happens in one `Theme` wrapper in `MaterialApp.builder`, not in
   widgets.
 - Fonts are bundled under `app/assets/fonts/` with their OFL licences, which
-  `registerFontLicenses()` adds to the licence page.
+  `registerFontLicenses()` adds to the licence page. Glyphs they lack (arrows, emoji,
+  other scripts) come from the system fonts on phones. The web app fetches a Noto
+  fallback shard only when text needs one, and only from its own origin:
+  `scripts/web-font-fallback.sh` copies every shard Flutter can ask for into the build,
+  pinned in `scripts/web-font-fallback.lock` (NFR-9: never from Google's CDN). Noto Sans
+  Symbols stays under `app/assets/fonts/`, not bundled, as the widget tests' fallback; its
+  pinned upstream source and checksums travel beside it.
 - Fluent Emoji is in use for shopping tiles, chores, rewards and badges; subjects still
   use Material icons. Not yet done: Phosphor (it arrives with the first screen that
   needs it), presence painters (M1.3), and the member colour picker (M0.1).

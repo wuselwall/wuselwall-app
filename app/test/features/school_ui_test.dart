@@ -491,6 +491,13 @@ void main() {
     await t.tap(find.text(de.schoolEditSchool));
     await t.pumpAndSettle();
 
+    // A card that rebuilds on its own keeps its number (it once counted on).
+    t.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(t.platformDispatcher.clearPlatformBrightnessTestValue);
+    await t.pumpAndSettle();
+    expect(find.text(de.boardPeriod(1)), findsOneWidget);
+    expect(find.text(de.boardPeriod(4)), findsNothing);
+
     final start = find.byTooltip(de.schoolStart).first;
     final end = find.byTooltip(de.schoolEnd).first;
     expect(
@@ -498,6 +505,33 @@ void main() {
       closeTo(t.getCenter(end).dy, 1),
       reason: 'the start and end times sit on the same line',
     );
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('at large text the week arrows stay on screen', (t) async {
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await _openSchedule(t);
+    // Phone width only once the tab is open: the tab bar needs the default size.
+    t.view.physicalSize = const Size(390, 844);
+    t.view.devicePixelRatio = 1;
+    t.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(t.view.reset);
+    addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+    await t.pumpAndSettle();
+
+    for (final tooltip in [de.schoolPrevWeek, de.schoolNextWeek]) {
+      final arrow = find.byTooltip(tooltip);
+      expect(arrow.hitTestable(), findsOneWidget, reason: tooltip);
+      final rect = t.getRect(arrow);
+      expect(rect.left, greaterThanOrEqualTo(0), reason: tooltip);
+      expect(rect.right, lessThanOrEqualTo(390), reason: tooltip);
+    }
     expect(t.takeException(), isNull);
   });
 

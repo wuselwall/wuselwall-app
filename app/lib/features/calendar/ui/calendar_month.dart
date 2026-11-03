@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -121,86 +122,91 @@ class MonthGrid extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final scaler = MediaQuery.textScalerOf(context);
     final metrics = _Metrics.of(context);
-    return LayoutBuilder(
-      builder: (context, box) {
-        // Week numbers only where seven days keep their full tap width beside them.
-        final weekColumn = metrics.weekColumn;
-        final showWeeks = (box.maxWidth - weekColumn) / 7 >= _minTap;
-        final gutter = showWeeks ? weekColumn : 0.0;
-        final header = Row(
-          children: [
-            if (showWeeks)
-              SizedBox(
-                width: gutter,
-                child: Text(
-                  context.l10n.calendarWeekNumberShort,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  style: text.labelSmall?.copyWith(color: ww.ink2),
-                ),
-              ),
-            for (final d in plan.weeks.first)
-              Expanded(
-                child: ExcludeSemantics(
+    // The page's end margin, as on the day and week board: a holiday bar or Sunday's
+    // events stop short of the screen edge instead of running into it.
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+      child: LayoutBuilder(
+        builder: (context, box) {
+          // Week numbers only where seven days keep their full tap width beside them.
+          final weekColumn = metrics.weekColumn;
+          final showWeeks = (box.maxWidth - weekColumn) / 7 >= _minTap;
+          final gutter = showWeeks ? weekColumn : 0.0;
+          final header = Row(
+            children: [
+              if (showWeeks)
+                SizedBox(
+                  width: gutter,
                   child: Text(
-                    context.weekdayShort(d.date),
+                    context.l10n.calendarWeekNumberShort,
                     textAlign: TextAlign.center,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: text.labelMedium?.copyWith(color: ww.ink2),
+                    overflow: TextOverflow.clip,
+                    style: text.labelSmall?.copyWith(color: ww.ink2),
                   ),
                 ),
-              ),
-          ],
-        );
-        final headerHeight =
-            scaler.scale(text.labelMedium?.fontSize ?? 12) * 1.4 + 12;
-        final available = math.max(0.0, box.maxHeight - headerHeight);
-        final rowHeight = math.max(
-          (available - bottomClearance) / 6,
-          metrics.minRow,
-        );
-        final rows = Column(
-          children: [
-            for (var w = 0; w < plan.weeks.length; w++)
+              for (final d in plan.weeks.first)
+                Expanded(
+                  child: ExcludeSemantics(
+                    child: Text(
+                      context.weekdayShort(d.date),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: text.labelMedium?.copyWith(color: ww.ink2),
+                    ),
+                  ),
+                ),
+            ],
+          );
+          final headerHeight =
+              scaler.scale(text.labelMedium?.fontSize ?? 12) * 1.4 + 12;
+          final available = math.max(0.0, box.maxHeight - headerHeight);
+          final rowHeight = math.max(
+            (available - bottomClearance) / 6,
+            metrics.minRow,
+          );
+          final rows = Column(
+            children: [
+              for (var w = 0; w < plan.weeks.length; w++)
+                SizedBox(
+                  height: rowHeight,
+                  child: _WeekRow(
+                    days: plan.weeks[w],
+                    ferien: plan.ferien[w],
+                    gutter: gutter,
+                    metrics: metrics,
+                    members: members,
+                    today: today,
+                    onOpenDay: onOpenDay,
+                  ),
+                ),
+            ],
+          );
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
               SizedBox(
-                height: rowHeight,
-                child: _WeekRow(
-                  days: plan.weeks[w],
-                  ferien: plan.ferien[w],
-                  gutter: gutter,
-                  metrics: metrics,
-                  members: members,
-                  today: today,
-                  onOpenDay: onOpenDay,
+                height: headerHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: ww.line)),
+                  ),
+                  child: Align(alignment: Alignment.center, child: header),
                 ),
               ),
-          ],
-        );
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: headerHeight,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: ww.line)),
-                ),
-                child: Align(alignment: Alignment.center, child: header),
+              Expanded(
+                child: rowHeight * 6 + bottomClearance > available + 0.5
+                    ? SingleChildScrollView(
+                        padding: EdgeInsets.only(bottom: bottomClearance),
+                        child: rows,
+                      )
+                    : Align(alignment: Alignment.topCenter, child: rows),
               ),
-            ),
-            Expanded(
-              child: rowHeight * 6 + bottomClearance > available + 0.5
-                  ? SingleChildScrollView(
-                      padding: EdgeInsets.only(bottom: bottomClearance),
-                      child: rows,
-                    )
-                  : Align(alignment: Alignment.topCenter, child: rows),
-            ),
-          ],
-        );
-      },
+            ],
+          );
+        },
+      ),
     );
   }
 }

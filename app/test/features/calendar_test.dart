@@ -1,7 +1,10 @@
+import 'dart:ui' show SemanticsAction;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
@@ -262,6 +265,28 @@ void main() {
   });
 
   group('day blocks', () {
+    test('short appointment touch targets reserve separate lanes', () {
+      final day = dayOfThisWeek(0);
+      final blocks = timedBlocksOn(day, [
+        occ(
+          title: 'Short',
+          day: day,
+          from: const TimeOfDay(hour: 10, minute: 0),
+          to: const TimeOfDay(hour: 10, minute: 15),
+        ),
+        occ(
+          title: 'Next',
+          day: day,
+          from: const TimeOfDay(hour: 10, minute: 15),
+          to: const TimeOfDay(hour: 10, minute: 30),
+        ),
+      ], minimumDisplayMinutes: 58);
+      expect(blocks.map((b) => b.lanes), everyElement(2));
+      expect(blocks.first.lane, isNot(blocks.last.lane));
+      // Accessibility layout must not change the appointment's actual time.
+      expect(blocks.first.end, 10 * 60 + 15);
+    });
+
     test('overlapping appointments share the column side by side', () {
       final day = dayOfThisWeek(0);
       final blocks = timedBlocksOn(day, [
@@ -406,6 +431,41 @@ void main() {
           expect(t.takeException(), isNull);
         });
       }
+    }
+
+    for (final (width, textScale) in [(390.0, 1.0), (820.0, 2.0)]) {
+      testWidgets(
+        'date header exposes its action and 48 dp hit area at $width with ${textScale}x text',
+        (t) async {
+          t.platformDispatcher.textScaleFactorTestValue = textScale;
+          addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+          final l10n = lookupAppLocalizations(const Locale('de'));
+          final container = await pumpApp(
+            t,
+            locale: const Locale('de'),
+            size: Size(width, 844),
+            overrides: baseOverrides(
+              identity: FakeIdentityRepository(current: device()),
+            ),
+          );
+          await openTab(t, l10n.calendarTitle);
+
+          final day = container.read(calendarViewProvider).days.first;
+          final header = find.byTooltip(l10n.busyTitle).first;
+          final fullDate = t.element(header).fullDate(day);
+          expect(t.getSize(header).height, greaterThanOrEqualTo(48));
+          expect(t.getSize(header).width, greaterThanOrEqualTo(48));
+
+          final semanticHeader = find.bySemanticsLabel(fullDate);
+          expect(semanticHeader, findsOneWidget);
+          final semantics = t.getSemantics(semanticHeader).getSemanticsData();
+          expect(semantics.label, fullDate);
+          expect(semantics.hint, l10n.busyTitle);
+          expect(semantics.flagsCollection.isButton, isTrue);
+          expect(semantics.hasAction(SemanticsAction.tap), isTrue);
+          expect(t.takeException(), isNull);
+        },
+      );
     }
 
     testWidgets(

@@ -7,10 +7,12 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/swipe_stepper.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -96,30 +98,33 @@ class _MealsWeekBodyState extends ConsumerState<MealsWeekBody> {
     final stale = entries.value == null && entries.isLoading ? _shown : null;
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            Tokens.space4,
-            Tokens.space2,
-            Tokens.space4,
-            Tokens.space2,
-          ),
-          child: Wrap(
-            spacing: Tokens.space2,
-            runSpacing: Tokens.space2,
-            children: [
-              FilledButton.icon(
-                icon: const Icon(Icons.shopping_basket),
-                label: Text(l10n.mealsFillShopping),
-                onPressed: entries.hasValue
-                    ? () => _openPreview(context, ref, weekStart)
-                    : null,
-              ),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.menu_book),
-                label: Text(l10n.mealsRecipes),
-                onPressed: () => context.push(Routes.recipes),
-              ),
-            ],
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Tokens.space4,
+              Tokens.space2,
+              Tokens.space4,
+              Tokens.space2,
+            ),
+            child: Wrap(
+              spacing: Tokens.space2,
+              runSpacing: Tokens.space2,
+              children: [
+                FilledButton.icon(
+                  icon: const Icon(Icons.shopping_basket),
+                  label: Text(l10n.mealsFillShopping),
+                  onPressed: entries.hasValue
+                      ? () => _openPreview(context, ref, weekStart)
+                      : null,
+                ),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.menu_book),
+                  label: Text(l10n.mealsRecipes),
+                  onPressed: () => context.push(Routes.recipes),
+                ),
+              ],
+            ),
           ),
         ),
         // The children's wishes, waiting for a day (specs/27).
@@ -168,8 +173,9 @@ class _MealsWeekBodyState extends ConsumerState<MealsWeekBody> {
 }
 
 /// The narrowest a day's column gets: room for a dish of one long word in the warm
-/// meal's bold type ("Fischstäbchen", "Rinderbraten") without breaking it.
-const mealsMinColumn = 176.0;
+/// meal's bold type ("Fischstäbchen", "Rinderbraten") without breaking it. Seven of them
+/// and the gaps between fit a 1280 px window.
+const mealsMinColumn = 168.0;
 
 /// Seven days: seven columns where each keeps [mealsMinColumn], else four columns over
 /// two rows (Monday to Thursday, Friday to Sunday) on a tablet, else rows on a phone.
@@ -204,13 +210,14 @@ class _WeekGrid extends ConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final inner = constraints.maxWidth - 2 * Tokens.space4;
-        final columns = inner >= 7 * mealsMinColumn
+        double needed(int n) => n * mealsMinColumn + (n - 1) * Tokens.space2;
+        final columns = inner >= needed(7)
             ? 7
-            : inner >= 4 * mealsMinColumn
+            : inner >= needed(4)
             ? 4
             : 1;
         if (columns > 1) {
-          final column = inner / columns;
+          final column = (inner - (columns - 1) * Tokens.space2) / columns;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(Tokens.space4),
             child: Column(
@@ -221,19 +228,25 @@ class _WeekGrid extends ConsumerWidget {
                     padding: EdgeInsets.only(
                       top: from == 0 ? 0 : Tokens.space2,
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (final day in days.skip(from).take(columns))
-                          SizedBox(
-                            width: column,
-                            child: _DayCell(
-                              date: day,
-                              entries: entries,
-                              weekStart: weekStart,
+                    // Stretched, so the cards of a row end on one line.
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (final (i, day)
+                              in days.skip(from).take(columns).indexed) ...[
+                            if (i > 0) const SizedBox(width: Tokens.space2),
+                            SizedBox(
+                              width: column,
+                              child: _DayCell(
+                                date: day,
+                                entries: entries,
+                                weekStart: weekStart,
+                              ),
                             ),
-                          ),
-                      ],
+                          ],
+                        ],
+                      ),
                     ),
                   ),
               ],
@@ -289,7 +302,7 @@ class _DayCell extends ConsumerWidget {
     final l10n = context.l10n;
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final today = DateTime.now();
+    final today = ref.watch(todayProvider);
     final isToday = _sameDay(date, today);
     // None, one, or lunch and dinner (`meals.warm_meal.*`).
     final warm = ref.watch(warmSlotsProvider(date));
@@ -379,35 +392,42 @@ class _DayCell extends ConsumerWidget {
               if (freeSlots.isNotEmpty)
                 Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: PopupMenuButton<PlanSlot>(
-                    tooltip: l10n.mealsAddOther,
-                    onSelected: (slot) =>
-                        showMealEditor(context, date: date, slot: slot),
-                    itemBuilder: (_) => [
-                      for (final s in freeSlots)
-                        PopupMenuItem(
-                          value: s,
-                          child: Text(context.planSlotLabel(s)),
-                        ),
-                    ],
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Tokens.space2,
-                        vertical: Tokens.space1,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.add, size: 18),
-                          const SizedBox(width: Tokens.space1),
-                          Flexible(
-                            child: Text(
-                              l10n.mealsAddOther,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                  child: Semantics(
+                    button: true,
+                    container: true,
+                    child: PopupMenuButton<PlanSlot>(
+                      tooltip: l10n.mealsAddOther,
+                      onSelected: (slot) =>
+                          showMealEditor(context, date: date, slot: slot),
+                      itemBuilder: (_) => [
+                        for (final s in freeSlots)
+                          PopupMenuItem(
+                            value: s,
+                            child: Text(context.planSlotLabel(s)),
                           ),
-                        ],
+                      ],
+                      child: TouchTarget(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Tokens.space2,
+                            vertical: Tokens.space1,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.add, size: 18),
+                              const SizedBox(width: Tokens.space1),
+                              Flexible(
+                                // Two lines in a narrow day column, never a cut word.
+                                child: Text(
+                                  l10n.mealsAddOther,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),

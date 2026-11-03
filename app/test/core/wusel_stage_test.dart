@@ -19,8 +19,12 @@ Widget _screen({
   bool afterglow = false,
   bool enter = false,
   double cardTop = 400,
+  bool disableAnimations = false,
 }) => MaterialApp(
-  builder: (context, child) => WuselStage(child: child!),
+  builder: (context, child) => MediaQuery(
+    data: MediaQuery.of(context).copyWith(disableAnimations: disableAnimations),
+    child: WuselStage(child: child!),
+  ),
   home: Scaffold(
     body: Stack(
       children: [
@@ -79,6 +83,26 @@ extension on WuselTrip {
 
 void main() {
   tearDown(() => StillMode.enabled = false);
+
+  testWidgets('reduced motion mid-visit brings Wusel home at once', (
+    tester,
+  ) async {
+    final card = GlobalKey();
+    await tester.pumpWidget(_screen(card: card));
+    await tester.pump(const Duration(seconds: 9));
+
+    final trip = _stage(tester).visit(card);
+    expect(trip, isNotNull);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(_homeOpacity(tester), 0);
+
+    // The traveller's paint surface leaves the tree; the home must not stay empty.
+    await tester.pumpWidget(_screen(card: card, disableAnimations: true));
+    await tester.pump();
+    expect(_stage(tester).trip, isNull);
+    expect(_homeOpacity(tester), 1);
+    await tester.pumpWidget(const SizedBox());
+  });
 
   testWidgets(
     'a visit leaves the home empty, reaches the card and comes back',

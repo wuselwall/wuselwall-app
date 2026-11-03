@@ -229,6 +229,9 @@ class _FeedTile extends StatelessWidget {
             ].join('\n'),
           ),
           isThreeLine: true,
+          // The icon and the revoke button centre on the three lines instead of
+          // hanging from the top edge.
+          titleAlignment: ListTileTitleAlignment.center,
           trailing: token.revoked
               ? null
               : TextButton(

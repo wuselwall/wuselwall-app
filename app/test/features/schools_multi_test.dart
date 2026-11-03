@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/school/domain/school_models.dart';
 
 import '../support/fake_school.dart';
 import '../support/fakes.dart';
@@ -110,6 +111,52 @@ void main() {
       find.text(de.schoolsUiSchoolOf('Gymnasium Lindenhof')),
       findsOneWidget,
     );
+  });
+
+  testWidgets('a period row keeps one height when a day has A and B lessons', (
+    t,
+  ) async {
+    final reference = referenceSchoolData();
+    // Monday's first period becomes an A-week and a B-week lesson.
+    LessonRecord parity(LessonRecord l, String week, String subject) =>
+        LessonRecord.fromJson({
+          ...l.toJson(),
+          'id': '${l.id}-$week',
+          'timetable_id': l.timetableId,
+          'subject_id': subject,
+          'week_parity': week,
+        });
+    final monday = reference.lessons.firstWhere(
+      (l) => l.weekday == 1 && l.periodIndex == 1,
+    );
+    final school = FakeSchoolRepository(
+      data: SchoolData(
+        schools: reference.schools,
+        periods: reference.periods,
+        terms: reference.terms,
+        subjects: reference.subjects,
+        timetables: reference.timetables,
+        lessons: [
+          for (final l in reference.lessons)
+            if (l != monday) l,
+          parity(monday, 'a', 'sub-ma'),
+          parity(monday, 'b', 'sub-d'),
+        ],
+        exceptions: reference.exceptions,
+        holidays: reference.holidays,
+      ),
+    );
+    await _pump(t, school);
+    await _openSchedule(t);
+    await t.tap(find.byTooltip(de.schoolEditTimetable));
+    await t.pumpAndSettle();
+
+    double height(int weekday) =>
+        t.getSize(find.byKey(ValueKey('cell-$weekday-1'))).height;
+    expect(height(1), greaterThan(52), reason: 'two lessons, taller cell');
+    for (var weekday = 2; weekday <= 5; weekday++) {
+      expect(height(weekday), height(1), reason: 'day $weekday');
+    }
   });
 
   group('day operations in the editor', () {

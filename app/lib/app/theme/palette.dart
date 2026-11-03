@@ -19,6 +19,7 @@ class ShadeColors {
     required this.surface,
     required this.sunken,
     required this.line,
+    required this.outline,
     required this.ink,
     required this.ink2,
     required this.ink3,
@@ -37,6 +38,12 @@ class ShadeColors {
   final Color surface;
   final Color sunken;
   final Color line;
+
+  /// A control's resting edge (fields, outlined buttons, segments): lighter than
+  /// [ink3], so a form does not read as a grid of dark boxes, yet 3.2 : 1 or more on
+  /// bg, surface and sunken, the non-text contrast a control needs (WCAG 1.4.11).
+  /// [line] is far below that, which is why it only separates.
+  final Color outline;
   final Color ink;
   final Color ink2;
   final Color ink3;
@@ -63,6 +70,7 @@ abstract final class Palette {
     surface: Color(0xFFFFFFFF),
     sunken: Color(0xFFEFEBE3),
     line: Color(0xFFDDD8CF),
+    outline: Color(0xFF7E828A),
     ink: Color(0xFF1C1F23),
     ink2: Color(0xFF4A5058),
     ink3: Color(0xFF656B75),
@@ -82,6 +90,7 @@ abstract final class Palette {
     surface: Color(0xFF1C2024),
     sunken: Color(0xFF101315),
     line: Color(0xFF2E343A),
+    outline: Color(0xFF706E6A),
     ink: Color(0xFFECE8E1),
     ink2: Color(0xFFB5B2AB),
     ink3: Color(0xFF8E8B85),
@@ -101,6 +110,7 @@ abstract final class Palette {
     surface: Color(0xFF15130F),
     sunken: Color(0xFF080706),
     line: Color(0xFF2B261F),
+    outline: Color(0xFF71654F),
     ink: Color(0xFFCDB994),
     ink2: Color(0xFFA8977A),
     ink3: Color(0xFF938366),

@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -11,6 +14,82 @@ import 'package:wuselwall/features/school/ui/school_icons.dart';
 
 const _days = 5;
 const _labelWidth = 84.0;
+
+/// The label column's width for the period names and bell times, measured with the real
+/// text styles and the user's text scaler, so a word never breaks. [compact] measures the
+/// short form (number over start and end) for phones; the column stays wide enough for
+/// the week arrow's 48 px target.
+double schoolLabelWidth(BuildContext context, {required bool compact}) {
+  final base = DefaultTextStyle.of(context).style;
+  final scaler = MediaQuery.textScalerOf(context);
+  double width(String text, TextStyle style) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: base.merge(style)),
+      textDirection: Directionality.of(context),
+      textScaler: scaler,
+      maxLines: 1,
+    )..layout();
+    final w = painter.width;
+    painter.dispose();
+    return w;
+  }
+
+  final number = _periodStyle(context);
+  final time = SchoolWeekGrid._numeric(context.ww.ink2);
+  const morning = TimeOfDay(hour: 10, minute: 45);
+  const evening = TimeOfDay(hour: 22, minute: 55);
+  final widest = compact
+      ? [
+          width('10.', number),
+          width(context.cellTime(morning), time),
+          width(context.cellTime(evening), time),
+        ]
+      : [
+          width(context.l10n.boardPeriod(10), number),
+          width(context.span(morning, evening), time),
+          width(
+            context.span(morning, const TimeOfDay(hour: 11, minute: 30)),
+            time,
+          ),
+        ];
+  final w = widest.reduce(math.max).ceilToDouble() + _labelGap;
+  return compact ? math.max(w, kMinInteractiveDimension) : w;
+}
+
+/// A period's name over its bell times; [schoolLabelWidth] measures the column for it.
+class SchoolPeriodLabel extends StatelessWidget {
+  const SchoolPeriodLabel({
+    required this.index,
+    required this.starts,
+    required this.ends,
+    super.key,
+  });
+
+  final int index;
+  final TimeOfDay starts;
+  final TimeOfDay ends;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(context.l10n.boardPeriod(index), style: _periodStyle(context)),
+      Text(
+        context.span(starts, ends),
+        style: SchoolWeekGrid._numeric(context.ww.ink2),
+      ),
+    ],
+  );
+}
+
+/// Space between a period label and the first lesson column.
+const _labelGap = Tokens.space1;
+
+TextStyle _periodStyle(BuildContext context) => TextStyle(
+  fontFamily: Tokens.fontUi,
+  fontWeight: FontWeight.w700,
+  color: Theme.of(context).colorScheme.onSurface,
+);
 
 /// Below this width a lesson cell shows its icon and short code only; the full name,
 /// room and change live in the tooltip and the lesson sheet (round-3 review C-6).
@@ -22,6 +101,7 @@ const _compactCell = 72.0;
 class SchoolWeekHeader extends StatelessWidget {
   const SchoolWeekHeader({
     required this.dates,
+    this.labelWidth = _labelWidth,
     this.raisedIndex,
     this.onPrevious,
     this.onNext,
@@ -29,6 +109,7 @@ class SchoolWeekHeader extends StatelessWidget {
   });
 
   final List<DateTime> dates;
+  final double labelWidth;
   final int? raisedIndex;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
@@ -40,7 +121,7 @@ class SchoolWeekHeader extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: _labelWidth,
+          width: labelWidth,
           child: onPrevious == null
               ? null
               : Align(
@@ -101,11 +182,20 @@ class SchoolWeekGrid extends StatelessWidget {
     this.nowMinutes,
     this.iconKeyOf,
     this.onLesson,
+    this.labelWidth = _labelWidth,
+    this.compactLabels = false,
     this.showHeader = true,
     super.key,
   });
 
   final BoardTimetable timetable;
+
+  /// Width shared with [SchoolWeekHeader]; compact adult layouts need less gutter.
+  final double labelWidth;
+
+  /// Shows each period as its number over the start and end time ([schoolLabelWidth]
+  /// measures that form); the full name stays in the semantics label.
+  final bool compactLabels;
 
   /// False when the parent supplies a shared header with week navigation.
   final bool showHeader;
@@ -137,7 +227,7 @@ class SchoolWeekGrid extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) => _grid(
       context,
-      compact: (constraints.maxWidth - _labelWidth) / _days < _compactCell,
+      compact: (constraints.maxWidth - labelWidth) / _days < _compactCell,
     ),
   );
 
@@ -167,9 +257,9 @@ class SchoolWeekGrid extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(
-                width: _labelWidth,
+                width: labelWidth,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 4, 6, 4),
+                  padding: const EdgeInsets.fromLTRB(0, 4, _labelGap, 4),
                   child: label,
                 ),
               ),
@@ -211,7 +301,11 @@ class SchoolWeekGrid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (showHeader) ...[
-          SchoolWeekHeader(dates: dates, raisedIndex: raisedIndex),
+          SchoolWeekHeader(
+            dates: dates,
+            raisedIndex: raisedIndex,
+            labelWidth: labelWidth,
+          ),
           const SizedBox(height: 4),
         ],
         for (final p in timetable.periods)
@@ -221,7 +315,7 @@ class SchoolWeekGrid extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: _labelWidth,
+                    width: labelWidth,
                     child: Text(
                       l10n.boardBreak,
                       maxLines: 1,
@@ -241,23 +335,33 @@ class SchoolWeekGrid extends StatelessWidget {
             )
           else
             row(
-              label: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.boardPeriod(p.index),
-                    style: TextStyle(
-                      fontFamily: Tokens.fontUi,
-                      fontWeight: FontWeight.w700,
-                      color: scheme.onSurface,
+              label: compactLabels
+                  ? Semantics(
+                      label:
+                          '${l10n.boardPeriod(p.index)} ${context.span(p.starts, p.ends)}',
+                      excludeSemantics: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${p.index}.', style: _periodStyle(context)),
+                          // Stacked, a full hour keeps its ":00": a lone "8"
+                          // over "8:45" reads as a count, not a time.
+                          Text(
+                            context.cellTime(p.starts),
+                            style: _numeric(ww.ink2, size: 12),
+                          ),
+                          Text(
+                            context.cellTime(p.ends),
+                            style: _numeric(ww.ink2, size: 12),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SchoolPeriodLabel(
+                      index: p.index,
+                      starts: p.starts,
+                      ends: p.ends,
                     ),
-                  ),
-                  Text(
-                    context.span(p.starts, p.ends),
-                    style: _numeric(ww.ink2, size: 12),
-                  ),
-                ],
-              ),
               cells: [
                 for (final d in days)
                   d?.lessons.where((l) => l.period == p.index).firstOrNull,
@@ -278,10 +382,20 @@ class SchoolWeekGrid extends StatelessWidget {
                     color: scheme.onSurface,
                   ),
                 ),
-                Text(
-                  context.span(extra.starts, extra.ends),
-                  style: _numeric(ww.ink2, size: 12),
-                ),
+                if (compactLabels) ...[
+                  Text(
+                    context.cellTime(extra.starts),
+                    style: _numeric(ww.ink2, size: 12),
+                  ),
+                  Text(
+                    context.cellTime(extra.ends),
+                    style: _numeric(ww.ink2, size: 12),
+                  ),
+                ] else
+                  Text(
+                    context.span(extra.starts, extra.ends),
+                    style: _numeric(ww.ink2, size: 12),
+                  ),
               ],
             ),
             cells: [
@@ -512,7 +626,7 @@ class _LessonCell extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onLongPress: onTap,
         onTap: tapOnPress ? onTap : null,
-        child: tile,
+        child: TouchTarget(child: tile),
       ),
     );
   }

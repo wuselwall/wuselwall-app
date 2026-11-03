@@ -3,8 +3,8 @@
 # (specs/10#the-web-app). Like a server release, it discovers the setup-configured server
 # and publishable key at its own origin's /.well-known/wuselwall.json. Developer env files
 # must never become deployment inputs.
-# Self-contained: CanvasKit and fonts are served from our own origin, not Google's CDN
-# (NFR-9). The swap is a rename, so a visitor never sees a half-copied build.
+# Self-contained: CanvasKit, fonts and the font fallback shards are served from our own
+# origin, not Google's CDN (NFR-9). The swap is a rename, so a visitor never sees a half-copied build.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 # The target server comes from scripts/remote.env (git-ignored; see remote.env.example).
@@ -15,6 +15,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 
 (cd app && flutter build web --release --no-web-resources-cdn --base-href / \
   --dart-define=ENV=release -o build/web-live)
+scripts/web-font-fallback.sh app/build/web-live
 
 stamp=$(date +%Y%m%d%H%M%S)
 tar -C app/build/web-live -czf - . | ssh "$HOST" "mkdir -p $WEB.new-$stamp && tar -C $WEB.new-$stamp -xzf - \

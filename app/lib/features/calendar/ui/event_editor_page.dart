@@ -30,6 +30,9 @@ import 'package:wuselwall/features/settings/application/household_settings_provi
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
+/// How wide the event form gets on a laptop or a wall display.
+const _formMaxWidth = 640.0;
+
 /// The adult event editor (specs/05, specs/15, specs/21): a new event or an existing
 /// one, loaded by id. A change to one occurrence of a series asks whether it applies to
 /// that occurrence or to the whole series.
@@ -452,6 +455,9 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
         ],
       ),
       body: ContentWidth(
+        // A form column: wider than this and the date buttons and the kind control
+        // stretch far past their labels.
+        maxWidth: _formMaxWidth,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
           children: [
@@ -597,7 +603,10 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
               controller: _notesText,
               minLines: 3,
               maxLines: 6,
-              decoration: InputDecoration(labelText: l10n.eventNotes),
+              decoration: InputDecoration(
+                labelText: l10n.eventNotes,
+                alignLabelWithHint: true,
+              ),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,

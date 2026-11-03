@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
@@ -10,7 +11,7 @@ import 'package:wuselwall/features/meals/domain/meal_models.dart';
 /// agree. Two of them are recipes with ingredients; the rest are free text.
 class DemoMealsRepository implements MealsRepository {
   DemoMealsRepository({DateTime Function()? clock})
-    : _clock = clock ?? DateTime.now {
+    : _clock = clock ?? DemoClock.now {
     _seed();
   }
 

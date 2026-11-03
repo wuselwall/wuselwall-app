@@ -5507,7 +5507,7 @@ abstract class AppLocalizations {
   /// No description provided for @extCalTitle.
   ///
   /// In en, this message translates to:
-  /// **'Add outside calendars'**
+  /// **'External calendars'**
   String get extCalTitle;
 
   /// No description provided for @extCalSettingsSubtitle.

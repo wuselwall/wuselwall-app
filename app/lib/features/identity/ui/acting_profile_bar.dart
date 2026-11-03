@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -32,72 +33,84 @@ class ActingProfileBar extends ConsumerWidget {
     final target = ref.watch(uiRegisterProvider).touchTarget;
     final size = narrow ? target : target + 8;
 
+    final color = Theme.of(context).colorScheme.surfaceContainer;
     // The bar is on every home of a shared device and the wall, and stays mounted while
     // the settings are open above it: it ends a guardian's PIN window when they are left.
-    return GuardianStepDownOnLeave(
-      child: Material(
-        color: Theme.of(context).colorScheme.surfaceContainer,
-        child: SafeArea(
-          top: false,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: Tokens.space2,
-              horizontal: narrow ? Tokens.space2 : Tokens.space4,
-            ),
-            child: Row(
-              children: [
-                if (!narrow && acting == null) ...[
-                  Text(l10n.actingWho),
-                  const SizedBox(width: Tokens.space3),
-                ],
-                Expanded(
-                  child: members.when(
-                    // One row, centred when it fits; a large family scrolls
-                    // sideways instead of wrapping to a second row.
-                    data: (list) => LayoutBuilder(
-                      builder: (context, constraints) => SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minWidth: constraints.maxWidth,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              for (final m in list.where((m) => m.active))
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: narrow ? 0 : Tokens.space2,
-                                  ),
-                                  child: _Avatar(
-                                    member: m,
-                                    size: size,
-                                    nameWidth: narrow
-                                        ? size + Tokens.space2
-                                        : size + Tokens.space6,
-                                    selected: m.id == acting,
-                                    onTap: () {
-                                      // Another person: a guardian's PIN window ends
-                                      // with the switch (specs/08, step-up on a shared
-                                      // device), on the server too.
-                                      if (m.id != acting) guardianStepDown(ref);
-                                      ref
-                                          .read(actingProfileProvider.notifier)
-                                          .select(m.id);
-                                    },
-                                  ),
+    return SystemBars(
+      navigationColor: color,
+      child: GuardianStepDownOnLeave(
+        child: Material(
+          color: color,
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: Tokens.space2,
+                horizontal: narrow ? Tokens.space2 : Tokens.space4,
+              ),
+              child: Row(
+                children: [
+                  if (!narrow && acting == null) ...[
+                    Text(l10n.actingWho),
+                    const SizedBox(width: Tokens.space3),
+                  ],
+                  Expanded(
+                    child: members.when(
+                      // One row, centred when it fits; a large family scrolls
+                      // sideways instead of wrapping to a second row.
+                      data: (list) => LayoutBuilder(
+                        builder: (context, constraints) =>
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minWidth: constraints.maxWidth,
                                 ),
-                            ],
-                          ),
-                        ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    for (final m in list.where((m) => m.active))
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: narrow
+                                              ? 0
+                                              : Tokens.space2,
+                                        ),
+                                        child: _Avatar(
+                                          member: m,
+                                          size: size,
+                                          nameWidth: narrow
+                                              ? size + Tokens.space2
+                                              : size + Tokens.space6,
+                                          selected: m.id == acting,
+                                          onTap: () {
+                                            // Another person: a guardian's PIN window ends
+                                            // with the switch (specs/08, step-up on a shared
+                                            // device), on the server too.
+                                            if (m.id != acting) {
+                                              guardianStepDown(ref);
+                                            }
+                                            ref
+                                                .read(
+                                                  actingProfileProvider
+                                                      .notifier,
+                                                )
+                                                .select(m.id);
+                                          },
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
                       ),
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, _) => const SizedBox.shrink(),
                     ),
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, _) => const SizedBox.shrink(),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

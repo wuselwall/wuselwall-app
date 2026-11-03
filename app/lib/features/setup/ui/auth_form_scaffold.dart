@@ -60,7 +60,7 @@ class AuthFormScaffold extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 560),
           child: ListView(
-            padding: const EdgeInsets.all(Tokens.space6),
+            padding: const EdgeInsets.all(Tokens.space4),
             children: children,
           ),
         ),

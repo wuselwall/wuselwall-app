@@ -1,4 +1,7 @@
+import 'dart:ui' show CheckedState;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +9,7 @@ import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -13,6 +17,7 @@ import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_widgets.dart';
 
 import '../support/fakes.dart';
 
@@ -36,6 +41,7 @@ Future<void> _pumpAdultBody(
   WidgetTester t, {
   Size size = const Size(1280, 800),
   double textScale = 1,
+  bool includeOnListTile = false,
 }) async {
   t.view.physicalSize = size;
   t.view.devicePixelRatio = 1;
@@ -76,7 +82,11 @@ Future<void> _pumpAdultBody(
                 ),
               ],
               categories: const <ShoppingCategory>[],
-              catalog: [_entry('Kartoffeln'), _entry('Milch')],
+              catalog: [
+                _entry('Kartoffeln'),
+                _entry('Milch'),
+                if (includeOnListTile) _entry('Nudeln'),
+              ],
               pendingCount: 0,
             ),
           ),
@@ -121,6 +131,20 @@ Future<List<String>> _tabOrder(WidgetTester t, {int maxTabs = 20}) async {
   return seen;
 }
 
+List<SemanticsNode> _exposedNodes(WidgetTester t) {
+  final nodes = <SemanticsNode>[];
+  void visit(SemanticsNode node) {
+    if (!node.isMergedIntoParent) nodes.add(node);
+    node.visitChildren((child) {
+      visit(child);
+      return true;
+    });
+  }
+
+  visit(t.binding.renderViews.first.owner!.semanticsOwner!.rootSemanticsNode!);
+  return nodes;
+}
+
 void main() {
   testWidgets(
     'A4: tab order is lists, then search, then catalogue, then items',
@@ -149,6 +173,123 @@ void main() {
     },
   );
 
+  testWidgets('A5: planning items are named actions, not checked controls', (
+    t,
+  ) async {
+    final semantics = t.ensureSemantics();
+    try {
+      await _pumpAdultBody(t);
+      final itemNodes = _exposedNodes(t).where((node) {
+        final data = node.getSemanticsData();
+        return ['Nudeln', 'Käse'].contains(data.label) &&
+            data.hasAction(SemanticsAction.tap);
+      }).toList();
+      expect(itemNodes.map((node) => node.getSemanticsData().label), [
+        'Nudeln',
+        'Käse',
+      ]);
+      for (final node in itemNodes) {
+        expect(
+          node.getSemanticsData().flagsCollection.isChecked,
+          CheckedState.none,
+        );
+      }
+    } finally {
+      semantics.dispose();
+    }
+  });
+
+  testWidgets('A5: trip rows expose one named checked control each', (t) async {
+    final semantics = t.ensureSemantics();
+    try {
+      final items = [
+        ShoppingItem(
+          id: 'i1',
+          name: 'Nudeln',
+          quantity: null,
+          checked: false,
+          createdAt: DateTime(2026, 10, 11),
+        ),
+        ShoppingItem(
+          id: 'i2',
+          name: 'Käse',
+          quantity: null,
+          checked: false,
+          createdAt: DateTime(2026, 10, 11),
+        ),
+      ];
+      await t.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.build(UiRegister.adult, Shade.light),
+          localizationsDelegates: localizationsDelegates,
+          supportedLocales: supportedLocales,
+          locale: const Locale('de'),
+          home: Scaffold(
+            body: ListView(
+              children: [
+                for (final item in items)
+                  ShoppingItemTile(
+                    item: item,
+                    checked: item.checked,
+                    adder: null,
+                    onToggle: () {},
+                    onLess: () {},
+                    onEdit: () {},
+                    showLess: false,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      );
+      final checkedNodes = _exposedNodes(t).where((node) {
+        return node.getSemanticsData().flagsCollection.isChecked !=
+            CheckedState.none;
+      }).toList();
+      expect(checkedNodes.map((node) => node.getSemanticsData().label), [
+        'Nudeln',
+        'Käse',
+      ]);
+      for (final node in checkedNodes) {
+        expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+      }
+    } finally {
+      semantics.dispose();
+    }
+  });
+
+  testWidgets('A5: an on-list tile keeps its hint on its named action', (
+    t,
+  ) async {
+    final semantics = t.ensureSemantics();
+    try {
+      await _pumpAdultBody(t, includeOnListTile: true);
+      final hint = t.element(find.byType(ShoppingBody)).l10n.shoppingTileOnList;
+      final hintedNodes = <SemanticsNode>[];
+      void visit(SemanticsNode node) {
+        if (!node.isMergedIntoParent && node.getSemanticsData().hint == hint) {
+          hintedNodes.add(node);
+        }
+        node.visitChildren((child) {
+          visit(child);
+          return true;
+        });
+      }
+
+      visit(
+        t.binding.renderViews.first.owner!.semanticsOwner!.rootSemanticsNode!,
+      );
+      expect(hintedNodes, hasLength(1));
+      expect(hintedNodes.single.getSemanticsData().label, contains('Nudeln'));
+      expect(
+        hintedNodes.single.getSemanticsData().hasAction(SemanticsAction.tap),
+        isTrue,
+      );
+    } finally {
+      semantics.dispose();
+    }
+  });
+
   testWidgets('A4: adding from search keeps keyboard focus in the field', (
     t,
   ) async {
@@ -168,8 +309,8 @@ void main() {
     await _pumpAdultBody(t);
     final chip = t.getSize(find.byType(ChoiceChip).first);
     final action = t.getSize(find.byType(ActionChip).first);
-    expect(chip.height, greaterThanOrEqualTo(UiRegister.adult.touchTarget));
-    expect(action.height, greaterThanOrEqualTo(UiRegister.adult.touchTarget));
+    expect(chip.height, greaterThanOrEqualTo(48));
+    expect(action.height, greaterThanOrEqualTo(48));
   });
 
   testWidgets('A5: the item list stays reachable at 320x640 with 200% text', (

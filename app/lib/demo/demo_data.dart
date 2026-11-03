@@ -1,6 +1,7 @@
 import 'package:flutter/painting.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/l10n/app_locale.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 
@@ -95,7 +96,7 @@ abstract final class DemoData {
 
   /// A birthday [days] from today, [yearsAgo] years back.
   static DateTime _inDays(int days, {required int yearsAgo}) {
-    final now = DateTime.now();
+    final now = DemoClock.now();
     final d = DateTime(now.year, now.month, now.day + days);
     return DateTime(d.year - yearsAgo, d.month, d.day);
   }

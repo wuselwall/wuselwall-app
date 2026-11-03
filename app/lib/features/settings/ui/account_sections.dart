@@ -9,6 +9,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/household/application/household_leave_providers.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -60,10 +61,14 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
                 ? l10n.settingsPasswordSet
                 : l10n.settingsPasswordNotSet,
           ),
-          action: OutlinedButton(
-            onPressed: _setPassword,
-            child: Text(
-              hasPassword ? l10n.passwordChangeAction : l10n.passwordSetAction,
+          action: TouchTarget(
+            child: OutlinedButton(
+              onPressed: _setPassword,
+              child: Text(
+                hasPassword
+                    ? l10n.passwordChangeAction
+                    : l10n.passwordSetAction,
+              ),
             ),
           ),
         ),
@@ -100,31 +105,35 @@ class SecuritySection extends ConsumerWidget {
             leading: const Icon(Icons.security),
             title: Text(l10n.totpTitle),
             subtitle: Text(id == null ? l10n.totpOff : l10n.totpOn),
-            action: id == null
-                ? FilledButton(
-                    onPressed: () => _enableTotp(context, ref),
-                    child: Text(l10n.totpEnable),
-                  )
-                : TextButton(
-                    onPressed: () async {
-                      final result = await repo.totpDisable(id);
-                      if (!context.mounted) return;
-                      result.when(
-                        ok: (_) => ref.invalidate(totpFactorProvider),
-                        err: context.showFailure,
-                      );
-                    },
-                    child: Text(l10n.totpDisable),
-                  ),
+            action: TouchTarget(
+              child: id == null
+                  ? FilledButton(
+                      onPressed: () => _enableTotp(context, ref),
+                      child: Text(l10n.totpEnable),
+                    )
+                  : TextButton(
+                      onPressed: () async {
+                        final result = await repo.totpDisable(id);
+                        if (!context.mounted) return;
+                        result.when(
+                          ok: (_) => ref.invalidate(totpFactorProvider),
+                          err: context.showFailure,
+                        );
+                      },
+                      child: Text(l10n.totpDisable),
+                    ),
+            ),
           ),
         ),
         SettingsActionTile(
           leading: const Icon(Icons.pin_outlined),
           title: Text(l10n.pinChangeTitle),
           subtitle: Text(l10n.pinChangeBody),
-          action: OutlinedButton(
-            onPressed: () => _changePin(context, repo),
-            child: Text(l10n.pinChangeAction),
+          action: TouchTarget(
+            child: OutlinedButton(
+              onPressed: () => _changePin(context, repo),
+              child: Text(l10n.pinChangeAction),
+            ),
           ),
         ),
         // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
@@ -134,16 +143,18 @@ class SecuritySection extends ConsumerWidget {
             leading: const Icon(Icons.fingerprint),
             title: Text(l10n.passkeyTitle),
             subtitle: Text(l10n.passkeyBody),
-            action: OutlinedButton(
-              onPressed: () async {
-                final result = await repo.registerPasskey(l10n.appTitle);
-                if (!context.mounted) return;
-                result.when(
-                  ok: (_) => context.showMessage(l10n.passkeyAdded),
-                  err: context.showFailure,
-                );
-              },
-              child: Text(l10n.passkeyAdd),
+            action: TouchTarget(
+              child: OutlinedButton(
+                onPressed: () async {
+                  final result = await repo.registerPasskey(l10n.appTitle);
+                  if (!context.mounted) return;
+                  result.when(
+                    ok: (_) => context.showMessage(l10n.passkeyAdded),
+                    err: context.showFailure,
+                  );
+                },
+                child: Text(l10n.passkeyAdd),
+              ),
             ),
           ),
       ],

@@ -10,6 +10,11 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 /// "Küchentisch"). Dark is not cosmetic: the kitchen is bright in the morning and dim
 /// at night (specs/09); night is the kiosk's own third shade.
 abstract final class AppTheme {
+  // Symbols the UI fonts lack. Not bundled: phones have them in their system fonts,
+  // the web app fetches a Noto shard from its own origin only when needed
+  // (scripts/web-font-fallback.sh), and widget tests load the file under this name.
+  static const _symbolFallback = ['NotoSansSymbols'];
+
   static ThemeData build(UiRegister register, Shade shade) {
     final c = Palette.of(shade);
     final brightness = shade == Shade.light
@@ -43,7 +48,9 @@ abstract final class AppTheme {
       surfaceContainer: c.sunken,
       surfaceContainerHigh: c.sunken,
       surfaceContainerHighest: c.sunken,
-      outline: c.ink3,
+      // The edge of fields, outlined buttons and segments; focus still draws
+      // the brand colour at 2 px.
+      outline: c.outline,
       outlineVariant: c.line,
       inverseSurface: c.ink,
       onInverseSurface: c.bg,
@@ -72,6 +79,7 @@ abstract final class AppTheme {
             .apply(
               fontSizeFactor: base / 14,
               fontFamily: Tokens.fontUi,
+              fontFamilyFallback: _symbolFallback,
               bodyColor: c.ink,
               displayColor: c.ink,
             );
@@ -83,6 +91,7 @@ abstract final class AppTheme {
       canvasColor: c.bg,
       dividerColor: c.line,
       fontFamily: Tokens.fontUi,
+      fontFamilyFallback: _symbolFallback,
       textTheme: textTheme,
       extensions: [WwColors(shade: shade)],
       materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -131,10 +140,20 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderRadius: radius),
       ),
+      // Flat like the cards: a hint of lift instead of Material's soft shadow.
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        elevation: 1,
+        focusElevation: 1,
+        hoverElevation: 2,
+        highlightElevation: 1,
+      ),
       // Borders separate; shadows are for sheets and dialogs only (specs/17).
       cardTheme: CardThemeData(
         color: c.surface,
         elevation: 0,
+        // Flush with the page's content edge, like headers and fields; Material's
+        // 4 px on every side set default cards inside their neighbours.
+        margin: const EdgeInsets.symmetric(vertical: Tokens.space1),
         shape: RoundedRectangleBorder(
           borderRadius: radius,
           side: BorderSide(color: c.line),

@@ -127,6 +127,9 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
           // A tap on empty space drops the search field's focus (and its keyboard);
           // taps on tiles and rows win the gesture arena and are not taken.
           child: GestureDetector(
+            // Empty-space dismissal is a pointer convenience; exposing the
+            // whole page as an unnamed action hides its purpose from readers.
+            excludeFromSemantics: true,
             behavior: HitTestBehavior.translucent,
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Column(
@@ -279,7 +282,10 @@ class _ListSwitcher extends ConsumerWidget {
       ref.watch(shoppingListsProvider).value ?? const <ShoppingList>[],
       (l) => l.sortOrder,
     );
-    final touch = ref.watch(uiRegisterProvider).touchTarget;
+    final touch = ref
+        .watch(uiRegisterProvider)
+        .touchTarget
+        .clamp(48.0, double.infinity);
     return SizedBox(
       // A6: tall enough for the touch target plus the row's own padding — the chips
       // used to be capped at 40 px by this box regardless of their own minimum.
@@ -388,18 +394,24 @@ class _ListChipState extends State<_ListChip> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onLongPress: widget.onLongPress,
-      child: ShoppingFocusRing(
-        focusNode: _focusNode,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: widget.minHeight),
-          child: ChoiceChip(
+    return MergeSemantics(
+      child: Semantics(
+        onLongPress: widget.onLongPress,
+        child: GestureDetector(
+          excludeFromSemantics: true,
+          onLongPress: widget.onLongPress,
+          child: ShoppingFocusRing(
             focusNode: _focusNode,
-            selected: widget.selected,
-            avatar: widget.avatar,
-            label: Text(widget.label),
-            onSelected: (_) => widget.onSelected(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: widget.minHeight),
+              child: ChoiceChip(
+                focusNode: _focusNode,
+                selected: widget.selected,
+                avatar: widget.avatar,
+                label: Text(widget.label),
+                onSelected: (_) => widget.onSelected(),
+              ),
+            ),
           ),
         ),
       ),

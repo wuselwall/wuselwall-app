@@ -30,7 +30,11 @@ class DayBlock {
 
 /// The timed, non-presence occurrences that touch [day], placed and laid out side by
 /// side where they overlap. Presence is drawn as bands, all-day ones as chips.
-List<DayBlock> timedBlocksOn(DateTime day, Iterable<Occurrence> occurrences) {
+List<DayBlock> timedBlocksOn(
+  DateTime day,
+  Iterable<Occurrence> occurrences, {
+  int minimumDisplayMinutes = 0,
+}) {
   final d = dateOnly(day);
   final blocks = <DayBlock>[];
   for (final o in occurrences) {
@@ -46,13 +50,13 @@ List<DayBlock> timedBlocksOn(DateTime day, Iterable<Occurrence> occurrences) {
     if (to <= _gridStart || from >= _gridEnd) continue;
     blocks.add(DayBlock(o, _within(from), _within(to)));
   }
-  _layOut(blocks);
+  _layOut(blocks, minimumDisplayMinutes);
   return blocks;
 }
 
 /// Groups blocks that overlap (directly or through a chain) and gives each a lane, so
 /// a cluster of n overlapping blocks shares the column n ways.
-void _layOut(List<DayBlock> blocks) {
+void _layOut(List<DayBlock> blocks, int minimumDisplayMinutes) {
   blocks.sort(
     (a, b) => a.start != b.start
         ? a.start.compareTo(b.start)
@@ -74,17 +78,22 @@ void _layOut(List<DayBlock> blocks) {
   }
 
   for (final b in blocks) {
+    // Short appointments have a larger touch target. Reserve its footprint too,
+    // so the next appointment cannot cover it even when their times do not overlap.
+    final displayEnd = b.end > b.start + minimumDisplayMinutes
+        ? b.end
+        : b.start + minimumDisplayMinutes;
     if (b.start >= clusterEnd) closeCluster();
     var lane = laneEnds.indexWhere((end) => end <= b.start);
     if (lane == -1) {
       lane = laneEnds.length;
-      laneEnds.add(b.end);
+      laneEnds.add(displayEnd);
     } else {
-      laneEnds[lane] = b.end;
+      laneEnds[lane] = displayEnd;
     }
     b.lane = lane;
     cluster.add(b);
-    if (b.end > clusterEnd) clusterEnd = b.end;
+    if (displayEnd > clusterEnd) clusterEnd = displayEnd;
   }
   closeCluster();
 }

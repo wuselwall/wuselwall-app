@@ -179,7 +179,7 @@ void main() {
           deviceClass: DeviceClass.shared,
           register: UiRegister.kid,
           revoked: false,
-          lastSeenAt: DateTime.now().subtract(const Duration(days: 3)),
+          lastSeenAt: testNow().subtract(const Duration(days: 3)),
         ),
       ];
     final container = await pumpApp(

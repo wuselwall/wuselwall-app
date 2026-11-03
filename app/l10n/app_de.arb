@@ -1115,7 +1115,7 @@
   },
   "regionImportAttribution": "Daten: OpenHolidays API · ODbL",
   "regionImported": "importiert",
-  "extCalTitle": "Kalender von außen hinzufügen",
+  "extCalTitle": "Externe Kalender",
   "extCalSettingsSubtitle": "Spielplan, Abfuhrtermine und mehr im Familienkalender",
   "extCalEmpty": "Noch kein Kalender abonniert. Ein Abo bringt Termine von außen in den Familienkalender, zum Beispiel den Spielplan deines Vereins.",
   "extCalNew": "Kalender abonnieren",

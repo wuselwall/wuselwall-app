@@ -3167,7 +3167,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get regionImported => 'importado';
 
   @override
-  String get extCalTitle => 'Añadir calendarios externos';
+  String get extCalTitle => 'Calendarios externos';
 
   @override
   String get extCalSettingsSubtitle =>

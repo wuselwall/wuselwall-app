@@ -2,6 +2,8 @@
 
 Ces actions concernent votre compte ou tout le foyer. Elles se trouvent en bas des paramètres de **votre téléphone personnel**. La suppression du compte est toujours visible ; les autres actions sont dans la vue **Avancés**. Lisez leurs conséquences avant de confirmer.
 
+Sur un écran étroit ou avec un texte agrandi, les boutons d’action passent sous leur description ; faites défiler si nécessaire.
+
 ## Mot de passe {#password}
 
 Dans **Paramètres → Compte et sécurité → Connexion**, définissez ou changez un mot de passe d’au moins **10 caractères**. Le code par e-mail reste disponible si votre serveur envoie des e-mails ; sinon, le mot de passe est le seul accès ([E-mails](/fr/server/email)).

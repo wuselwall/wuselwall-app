@@ -224,7 +224,7 @@ class _Fallback extends StatelessWidget {
     final l10n = context.l10n;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(Tokens.space6),
+        padding: const EdgeInsets.all(Tokens.space4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

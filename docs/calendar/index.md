@@ -17,6 +17,8 @@ Oben wählst du **Tag**, **3 Tage**, **Woche** oder **Monat**. Mit **Zurück**, 
 
 Darunter stehen die Termine nach Uhrzeit.
 
+Kurze Termine behalten ihre Beschriftung an der tatsächlichen Uhrzeit; die höheren, gut antippbaren Terminblöcke können deshalb nebeneinander stehen. Die Vorlagenkacheln passen sich der Textgröße deines Geräts an.
+
 ## Monat {#month}
 
 Der **Monat** zeigt sechs Wochen auf einen Blick, von Montag bis Sonntag und links mit der Kalenderwoche. Er ist zum Planen da, nicht zum Bearbeiten. Jeder Tag zeigt:

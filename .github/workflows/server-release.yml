@@ -17,12 +17,36 @@ on:
   push:
     tags: ['server-v*']
 permissions:
-  contents: write
-  id-token: write
-  attestations: write
+  contents: read
+  actions: read
+cache-mode: none
 
 jobs:
+  qualification:
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node qualification/promotion.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }
+
+  # The protected acceptance (required reviewers) before anything is signed. Its own job:
+  # the release job below needs the server-release environment for the signing key, and a
+  # job has one environment.
+  approval:
+    needs: qualification
+    environment: release-promotion
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 5
+    steps:
+      - run: echo "Release ${GITHUB_REF_NAME} approved for ${GITHUB_SHA}"
+
   release:
+    needs: approval
+    permissions: { contents: write, id-token: write, attestations: write }
     runs-on: [self-hosted, Linux, build]
     # Where the signing key should live: a secret of this environment, limited to the tags
     # server-v* (Settings → Environments → server-release → Deployment branches and tags),
@@ -37,6 +61,7 @@ jobs:
       MINISIGN_SHA256: 9a599b48ba6eb7b1e80f12f36b94ceca7c00b7a5173c95c3efc88d9822957e73
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       - name: Check the signing key
         env:
           SERVER_RELEASE_MINISIGN_KEY: ${{ secrets.SERVER_RELEASE_MINISIGN_KEY }}
@@ -63,7 +88,9 @@ jobs:
           chmod 755 bin/minisign
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+        with: { flutter-version-file: app/pubspec.yaml, cache: false }
+      - run: flutter pub get --enforce-lockfile
+        working-directory: app
       - name: Build
         run: scripts/build-server-release.sh "${GITHUB_REF_NAME#server-v}"
       - name: Sign

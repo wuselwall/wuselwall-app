@@ -9,6 +9,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -305,6 +306,13 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
               runSpacing: Tokens.space2,
               children: [
                 TextButton(
+                  // No left inset: the label starts on the card content's edge, like
+                  // the rows above and the Save button.
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsetsDirectional.only(
+                      end: Tokens.space3,
+                    ),
+                  ),
                   onPressed: _week.day(DateTime.monday, week: _shown).isEmpty
                       ? null
                       : _copyMonday,
@@ -345,41 +353,43 @@ class _DayRow extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(Tokens.space2),
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 40,
-              child: Text(
-                context.weekdayShort(day),
-                semanticsLabel: context.weekdayLong(day),
-                style: theme.textTheme.titleSmall,
+      child: TouchTarget(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 40,
+                child: Text(
+                  context.weekdayShort(day),
+                  semanticsLabel: context.weekdayLong(day),
+                  style: theme.textTheme.titleSmall,
+                ),
               ),
-            ),
-            Expanded(
-              child: places.isEmpty
-                  ? Text(
-                      context.l10n.baselineNone,
-                      style: TextStyle(color: context.ww.ink3),
-                    )
-                  : Wrap(
-                      spacing: Tokens.space1,
-                      runSpacing: Tokens.space1,
-                      children: [
-                        for (final p in places)
-                          PresenceBandView(
-                            state: p.state,
-                            memberColor: member.color,
-                            label: context.usualLabel(p),
-                            fontSize: fontSize,
-                            dense: true,
-                          ),
-                      ],
-                    ),
-            ),
-            const Icon(Icons.chevron_right),
-          ],
+              Expanded(
+                child: places.isEmpty
+                    ? Text(
+                        context.l10n.baselineNone,
+                        style: TextStyle(color: context.ww.ink3),
+                      )
+                    : Wrap(
+                        spacing: Tokens.space1,
+                        runSpacing: Tokens.space1,
+                        children: [
+                          for (final p in places)
+                            PresenceBandView(
+                              state: p.state,
+                              memberColor: member.color,
+                              label: context.usualLabel(p),
+                              fontSize: fontSize,
+                              dense: true,
+                            ),
+                        ],
+                      ),
+              ),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
         ),
       ),
     );
@@ -864,19 +874,21 @@ class _Option extends StatelessWidget {
   Widget build(BuildContext context) => InkWell(
     borderRadius: BorderRadius.circular(Tokens.space2),
     onTap: onTap,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
-      child: Row(
-        children: [
-          Icon(
-            selected
-                ? Icons.radio_button_checked
-                : Icons.radio_button_unchecked,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          const SizedBox(width: Tokens.space2),
-          Expanded(child: child),
-        ],
+    child: TouchTarget(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
+        child: Row(
+          children: [
+            Icon(
+              selected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: Tokens.space2),
+            Expanded(child: child),
+          ],
+        ),
       ),
     ),
   );

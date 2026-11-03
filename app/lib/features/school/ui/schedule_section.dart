@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -12,6 +14,7 @@ import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -149,32 +152,36 @@ class _Children extends ConsumerWidget {
             LayoutBuilder(
               builder: (context, constraints) {
                 final selection = Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: Tokens.space2,
+                  runSpacing: Tokens.space2,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: choices,
-                );
-                final editing = Wrap(
-                  alignment: WrapAlignment.end,
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: actions,
                 );
                 final wide =
                     constraints.maxWidth /
                         MediaQuery.textScalerOf(context).scale(1) >=
                     800;
-                final toolbar = Row(
-                  children: [
-                    Expanded(child: selection),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: thisWeek,
-                    ),
-                    Expanded(child: wide ? editing : const SizedBox.shrink()),
-                  ],
-                );
-                if (wide) return toolbar;
+                // Wide: the children and "Diese Woche" on one row, the editing under
+                // them on the left edge, so nothing floats in the middle.
+                if (wide) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(child: selection),
+                          thisWeek,
+                        ],
+                      ),
+                      const SizedBox(height: Tokens.space2),
+                      Wrap(
+                        spacing: Tokens.space2,
+                        runSpacing: Tokens.space2,
+                        children: actions,
+                      ),
+                    ],
+                  );
+                }
                 // A phone keeps one row: the children, "Diese Woche" as an icon and
                 // the editing in one menu, so the timetable starts high on the first
                 // screen (round-3 review N-9).
@@ -253,6 +260,9 @@ class _Children extends ConsumerWidget {
   }
 }
 
+/// The next-week arrow's column beside the grid: one 48 px target.
+const _arrowGutter = kMinInteractiveDimension;
+
 /// What the phone's menu on the Stundenplan offers.
 enum _SchoolAction { school, timetable, importText, importPhoto }
 
@@ -285,70 +295,153 @@ class _Week extends ConsumerWidget {
     final tomorrowItems =
         pack.value?.dayOf(child.id, tomorrow)?.equipment ?? const <String>[];
 
-    // A swipe is the header's week before and after (specs/09 "Gestures").
+    // The label column is measured per layout (real fonts, text scale): the full period
+    // name over its bell times, which the week arrows give way to on a phone; only
+    // when even that leaves no room does it shrink to the number over the times. The
+    // five lesson columns keep 48 px targets; narrower or enlarged layouts retain
+    // horizontal panning. The inner horizontal viewport owns pans while the grid needs
+    // extra room; the outer stepper handles week gestures where the content fits.
     return SwipeStepper(
       onPrevious: navigation.previous,
       onNext: navigation.next,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SchoolWeekHeader(
-            dates: dates,
-            raisedIndex: _raisedIndex([
-              for (final date in dates) week.value?.dayOf(child.id, date),
-            ], dates.indexWhere((date) => _sameDay(date, now))),
-            onPrevious: navigation.previous,
-            onNext: navigation.next,
-          ),
-          const SizedBox(height: 4),
-          AsyncValueView(
-            value: week,
-            onRetry: () => ref.invalidate(schoolWeekProvider),
-            data: (w) {
-              final timetable = w.timetableOf(child.id);
-              if (timetable == null) {
-                return _EnterCard(data: data, child: child, monday: monday);
-              }
-              final days = [for (final d in dates) w.dayOf(child.id, d)];
-              final allHoliday = days.every(
-                (d) => d?.free == FreeReason.holiday,
-              );
-              if (allHoliday) {
-                final first = days.first!;
-                return _HolidayBand(
-                  data: data,
-                  name: first.holidayName ?? '',
-                  monday: monday,
-                  sunday: sunday,
-                );
-              }
-              final todayIndex = dates.indexWhere((d) => _sameDay(d, now));
-              final raised = _raisedIndex(days, todayIndex);
-              final isTodayRaised = raised != null && raised == todayIndex;
-              return Padding(
-                padding: const EdgeInsets.only(right: 48),
-                child: SchoolWeekGrid(
-                  showHeader: false,
-                  timetable: timetable,
-                  dates: dates,
-                  days: days,
-                  raisedIndex: raised,
-                  nowMinutes: isTodayRaised ? now.hour * 60 + now.minute : null,
-                  iconKeyOf: data.iconKeyFor,
-                  onLesson: (i, lesson) =>
-                      _openSheet(context, ref, dates[i], lesson),
-                ),
-              );
-            },
-          ),
-          if (tomorrowItems.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Text(
-              l10n.boardPackTomorrow(tomorrowItems.join(', ')),
-              style: Theme.of(context).textTheme.bodyLarge,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final scale = MediaQuery.textScalerOf(context).scale(1);
+          final lessons = 5 * 51 * scale;
+          final fullLabel = schoolLabelWidth(context, compact: false);
+          final compact = fullLabel + lessons > constraints.maxWidth;
+          final labelWidth = compact
+              ? schoolLabelWidth(context, compact: true)
+              : fullLabel;
+          // Five interactive lesson columns retain a 48 px target, including their
+          // margins. Header and grid scroll together on narrow or enlarged layouts.
+          final columns = labelWidth + lessons;
+          // No room for the arrows beside the days: they leave the scrolling header
+          // for a row of their own around the month, so the lessons take the full
+          // width and the next week stays reachable without panning.
+          final pinned = columns + _arrowGutter > constraints.maxWidth;
+          final width = math.max(
+            constraints.maxWidth,
+            pinned ? columns : columns + _arrowGutter,
+          );
+          final grid = SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: width > constraints.maxWidth
+                ? null
+                : const NeverScrollableScrollPhysics(),
+            child: SizedBox(
+              width: width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SchoolWeekHeader(
+                    dates: dates,
+                    labelWidth: labelWidth,
+                    raisedIndex: _raisedIndex([
+                      for (final date in dates)
+                        week.value?.dayOf(child.id, date),
+                    ], dates.indexWhere((date) => _sameDay(date, now))),
+                    onPrevious: pinned ? null : navigation.previous,
+                    onNext: pinned ? null : navigation.next,
+                  ),
+                  const SizedBox(height: 4),
+                  AsyncValueView(
+                    value: week,
+                    onRetry: () => ref.invalidate(schoolWeekProvider),
+                    data: (w) {
+                      final timetable = w.timetableOf(child.id);
+                      if (timetable == null) {
+                        return _EnterCard(
+                          data: data,
+                          child: child,
+                          monday: monday,
+                        );
+                      }
+                      final days = [
+                        for (final d in dates) w.dayOf(child.id, d),
+                      ];
+                      final allHoliday = days.every(
+                        (d) => d?.free == FreeReason.holiday,
+                      );
+                      if (allHoliday) {
+                        final first = days.first!;
+                        return _HolidayBand(
+                          data: data,
+                          name: first.holidayName ?? '',
+                          monday: monday,
+                          sunday: sunday,
+                        );
+                      }
+                      final todayIndex = dates.indexWhere(
+                        (d) => _sameDay(d, now),
+                      );
+                      final raised = _raisedIndex(days, todayIndex);
+                      final isTodayRaised =
+                          raised != null && raised == todayIndex;
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          right: pinned ? 0 : _arrowGutter,
+                        ),
+                        child: SchoolWeekGrid(
+                          showHeader: false,
+                          labelWidth: labelWidth,
+                          compactLabels: compact,
+                          timetable: timetable,
+                          dates: dates,
+                          days: days,
+                          raisedIndex: raised,
+                          nowMinutes: isTodayRaised
+                              ? now.hour * 60 + now.minute
+                              : null,
+                          iconKeyOf: data.iconKeyFor,
+                          onLesson: (i, lesson) =>
+                              _openSheet(context, ref, dates[i], lesson),
+                        ),
+                      );
+                    },
+                  ),
+                  if (tomorrowItems.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    Text(
+                      l10n.boardPackTomorrow(tomorrowItems.join(', ')),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ],
-        ],
+          );
+          if (!pinned) return grid;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    tooltip: l10n.schoolPrevWeek,
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: navigation.previous,
+                  ),
+                  Expanded(
+                    child: Text(
+                      context.monthYear(monday),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: l10n.schoolNextWeek,
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: navigation.next,
+                  ),
+                ],
+              ),
+              grid,
+            ],
+          );
+        },
       ),
     );
   }

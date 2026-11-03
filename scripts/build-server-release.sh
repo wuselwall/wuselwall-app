@@ -43,6 +43,7 @@ cp infra/backup/backup.sh "$root/backup/"
 if [[ ${2:-} != --skip-web ]]; then
   (cd app && flutter build web --release --no-web-resources-cdn --base-href / \
     --dart-define=ENV=release -o build/web-release)
+  scripts/web-font-fallback.sh app/build/web-release
   rsync -a app/build/web-release/ "$root/stack/volumes/web/"
 fi
 

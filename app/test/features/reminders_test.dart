@@ -716,6 +716,20 @@ void main() {
 
         expect(find.text(_de.reminderStatusOff), findsOneWidget);
         expect(find.text(_de.reminderLocalNote), findsOneWidget);
+        // Nullable reminder controls must name what they enable, independently
+        // of the adjacent time/interval control.
+        final semantics = t.ensureSemantics();
+        try {
+          await t.pump();
+          for (final toggle in find.byType(Switch).evaluate()) {
+            expect(
+              t.getSemantics(find.byWidget(toggle.widget)).label,
+              isNotEmpty,
+            );
+          }
+        } finally {
+          semantics.dispose();
+        }
         expect(
           find.byKey(const ValueKey('setting-notify.morning_summary')),
           findsOneWidget,

@@ -1,5 +1,6 @@
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
@@ -11,7 +12,7 @@ import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 /// Writes change the same state, so the screens behave as on a real device.
 class DemoTasksRepository implements TasksRepository {
   DemoTasksRepository({DateTime Function()? clock})
-    : _today = _startOfDay((clock ?? DateTime.now)()) {
+    : _today = _startOfDay((clock ?? DemoClock.now)()) {
     _seed();
   }
 
@@ -133,7 +134,7 @@ class DemoTasksRepository implements TasksRepository {
       requiresVerification: d.requiresVerification,
     );
 
-    final now = DateTime.now();
+    final now = DemoClock.now();
     _instances.addAll([
       instance(
         'i-table',
@@ -258,7 +259,7 @@ class DemoTasksRepository implements TasksRepository {
     PointTransaction(
       id: 'pt-${_ledger.length + 1}',
       profileId: profileId,
-      occurredAt: DateTime.now(),
+      occurredAt: DemoClock.now(),
       amount: amount,
       reason: reason,
       note: note,
@@ -374,7 +375,7 @@ class DemoTasksRepository implements TasksRepository {
       count: count,
       assignee: t.assignedProfileId ?? actor,
       by: actor,
-      at: DateTime.now(),
+      at: DemoClock.now(),
     );
     final credit = t.requiresVerification ? 0 : t.points;
     if (credit > 0) {
@@ -474,7 +475,7 @@ class DemoTasksRepository implements TasksRepository {
         rewardId: rewardId,
         profileId: actor!,
         cost: reward.costPoints,
-        at: DateTime.now(),
+        at: DemoClock.now(),
       ),
     );
     return const Ok(RedemptionStatus.requested);
@@ -498,7 +499,7 @@ class DemoTasksRepository implements TasksRepository {
       costPoints: r.costPoints,
       status: approve ? RedemptionStatus.approved : RedemptionStatus.declined,
       requestedAt: r.requestedAt,
-      decidedAt: DateTime.now(),
+      decidedAt: DemoClock.now(),
       note: note,
     );
     if (approve) _credit(r.profileId, -r.costPoints, LedgerReason.redemption);

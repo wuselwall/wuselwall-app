@@ -155,7 +155,7 @@ class _MembersListState extends ConsumerState<_MembersList> {
                       child: Tooltip(
                         message: l10n.memberReorderHandle,
                         child: const Padding(
-                          padding: EdgeInsets.all(Tokens.space2),
+                          padding: EdgeInsets.all(Tokens.space3),
                           child: Icon(Icons.drag_handle),
                         ),
                       ),
@@ -172,10 +172,15 @@ class _MembersListState extends ConsumerState<_MembersList> {
             // and an invitation for an adult with their own phone.
             ListTile(
               key: const ValueKey('add-member'),
-              leading: const Icon(Icons.person_add_alt_1),
+              contentPadding: _rowPadding,
+              // As wide as a member's circle, so the text starts on the names' line.
+              leading: const SizedBox(
+                width: 40,
+                child: Center(child: Icon(Icons.person_add_alt_1)),
+              ),
               title: Text(l10n.addMember),
               subtitle: Text(l10n.addMemberSubtitle),
-              trailing: const Icon(Icons.chevron_right),
+              trailing: const _RowChevron(),
               onTap: widget.onAdd,
             ),
             const InviteAdultTile(),
@@ -209,6 +214,25 @@ class _MembersListState extends ConsumerState<_MembersList> {
   }
 }
 
+/// The member rows' padding: the default 16, less 8 at the end for [_RowChevron].
+const _rowPadding = EdgeInsetsDirectional.only(
+  start: Tokens.space4,
+  end: Tokens.space2,
+);
+
+/// A row's chevron on the drag handle's centre line (a 24 px icon in a 48 px target
+/// ends 12 px inside it). Only the end inset: padding on its other side would take
+/// width from the row's title, which then wrapped on a phone.
+class _RowChevron extends StatelessWidget {
+  const _RowChevron();
+
+  @override
+  Widget build(BuildContext context) => const Padding(
+    padding: EdgeInsetsDirectional.only(end: Tokens.space3),
+    child: Icon(Icons.chevron_right),
+  );
+}
+
 class _MemberTile extends StatelessWidget {
   const _MemberTile({required this.member, this.handle, super.key});
 
@@ -219,37 +243,55 @@ class _MemberTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final role = member.isGuardian ? l10n.roleGuardian : l10n.roleMember;
-    return ListTile(
-      leading: Opacity(
-        opacity: member.active ? 1 : 0.5,
-        child: MemberCircle(member: member),
-      ),
-      title: Text(member.displayName),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            member.active
-                ? (member.isChild ? l10n.householdKindChild : role)
-                : l10n.memberInactive,
+    return Column(
+      children: [
+        Semantics(
+          container: true,
+          child: ListTile(
+            // The trailing handle or chevron brings its own 12 px, so the row gives up
+            // 8 of its end padding: the role keeps its width on a phone.
+            contentPadding: _rowPadding,
+            leading: Opacity(
+              opacity: member.active ? 1 : 0.5,
+              child: MemberCircle(member: member),
+            ),
+            title: Text(member.displayName),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  member.active
+                      ? (member.isChild ? l10n.householdKindChild : role)
+                      : l10n.memberInactive,
+                ),
+                MemberInvitationDetails(member: member),
+              ],
+            ),
+            // The handle is the affordance when there is one: a chevron beside it would
+            // squeeze the role into a sliver at phone width.
+            trailing: handle ?? const _RowChevron(),
+            onTap: () => context.go(Routes.member, extra: member.id),
           ),
-          MemberInvitationDetails(member: member),
-          // Below the role, not beside it: at phone width a trailing action
-          // squeezes the role into a sliver (as #29 did).
-          Wrap(
-            spacing: Tokens.space1,
-            children: [
-              MfaResetButton(member: member),
-              PasswordResetButton(member: member),
-              InviteMemberButton(member: member),
-            ],
+        ),
+        // Separate actions below the member link avoid nesting interactive nodes.
+        Padding(
+          padding: const EdgeInsetsDirectional.only(
+            start: 72,
+            end: Tokens.space4,
           ),
-        ],
-      ),
-      // The handle is the affordance when there is one: a chevron beside it would
-      // squeeze the role into a sliver at phone width.
-      trailing: handle ?? const Icon(Icons.chevron_right),
-      onTap: () => context.go(Routes.member, extra: member.id),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Wrap(
+              spacing: Tokens.space1,
+              children: [
+                MfaResetButton(member: member),
+                PasswordResetButton(member: member),
+                InviteMemberButton(member: member),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

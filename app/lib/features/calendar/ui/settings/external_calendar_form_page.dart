@@ -223,7 +223,10 @@ class _ExternalCalendarFormPageState
             const SizedBox(height: Tokens.space2),
             Wrap(
               spacing: Tokens.space2,
-              runSpacing: Tokens.space2,
+              // The chips already sit in 48 px tap targets taller than their drawn
+              // height, so no extra run gap: the rows then look as far apart as the
+              // chips do sideways.
+              runSpacing: 0,
               children: [
                 for (final m in members)
                   FilterChip(
@@ -305,8 +308,8 @@ class _ColourChoice extends StatelessWidget {
         customBorder: const CircleBorder(),
         onTap: onTap,
         child: Container(
-          width: 44,
-          height: 44,
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: member.ink,

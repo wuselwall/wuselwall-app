@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/nav_labels.dart';
+import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -78,16 +79,17 @@ class KidHome extends ConsumerWidget {
           );
     return _KidChrome(
       child: Scaffold(
-        body: SafeArea(
-          bottom: false,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Quiet, for the grown-ups: settings, where guardian actions ask for the PIN.
-              // Its own row, so it never sits on top of a page's content. The row is the
-              // tab's band (specs/26), so each destination has its colour.
-              ColoredBox(
-                color: band,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Quiet, for the grown-ups: settings, where guardian actions ask for the PIN.
+            // Its own row, so it never sits on top of a page's content. The row is the
+            // tab's band (specs/26), so each destination has its colour; the band runs
+            // up under the status bar, as the adult home's app bar does.
+            ColoredBox(
+              color: band,
+              child: SafeArea(
+                bottom: false,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
@@ -112,7 +114,11 @@ class KidHome extends ConsumerWidget {
                   ),
                 ),
               ),
-              Expanded(
+            ),
+            Expanded(
+              child: SafeArea(
+                top: false,
+                bottom: false,
                 child: KidDecorScope(
                   decor: _decor(tab),
                   // A wide tablet or screen keeps the cards at a readable width:
@@ -127,15 +133,17 @@ class KidHome extends ConsumerWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         // The bars are the frame of every page: their text grows with the system
         // setting only so far, so a large font cannot push them over the page.
-        bottomNavigationBar: MediaQuery.withClampedTextScaling(
-          maxScaleFactor: 1.3,
-          child: SafeArea(
-            top: false,
+        // Each bar keeps its own colour under the gesture area: the last one takes the
+        // bottom inset itself instead of leaving a strip of page colour below it.
+        bottomNavigationBar: SystemBars(
+          navigationColor: Theme.of(context).colorScheme.surfaceContainer,
+          child: MediaQuery.withClampedTextScaling(
+            maxScaleFactor: 1.3,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -155,24 +163,28 @@ class KidHome extends ConsumerWidget {
                   child: DefaultTextStyle.merge(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
-                    child: NavigationBar(
-                      selectedIndex: tab.index,
-                      // A phone's bar is lower than Material's (specs/09 "the
-                      // bottom bar"); the kid's larger icon and label need 72.
-                      height: navBarHeight(context, phone: 72),
-                      onDestinationSelected: (i) => ref
-                          .read(kidTabProvider.notifier)
-                          .select(KidTab.values[i]),
-                      destinations: [
-                        for (final t in KidTab.values)
-                          NavigationDestination(
-                            icon: Icon(_icon(t)),
-                            label: unbreakable(
-                              _label(l10n, t, short: !labels.fits),
+                    child: MediaQuery.removePadding(
+                      context: context,
+                      removeBottom: !picking,
+                      child: NavigationBar(
+                        selectedIndex: tab.index,
+                        // A phone's bar is lower than Material's (specs/09 "the
+                        // bottom bar"); the kid's larger icon and label need 72.
+                        height: navBarHeight(context, phone: 72),
+                        onDestinationSelected: (i) => ref
+                            .read(kidTabProvider.notifier)
+                            .select(KidTab.values[i]),
+                        destinations: [
+                          for (final t in KidTab.values)
+                            NavigationDestination(
+                              icon: Icon(_icon(t)),
+                              label: unbreakable(
+                                _label(l10n, t, short: !labels.fits),
+                              ),
+                              tooltip: _label(l10n, t),
                             ),
-                            tooltip: _label(l10n, t),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

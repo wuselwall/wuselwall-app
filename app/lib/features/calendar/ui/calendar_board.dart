@@ -2,8 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/touch_target.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart' show ClipFit;
@@ -17,13 +19,20 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 
 const _gutterWidth = 44.0;
 const _hourHeight = 52.0;
-const _gridHeight = (gridEndHour - gridStartHour) * _hourHeight;
+const _minimumBlockHeight = 48.0;
+// Reserve the enlarged target when assigning lanes, retaining the actual times:
+// the minutes a minimum block plus its 2 px margin covers (58).
+final _minimumDisplayMinutes = ((_minimumBlockHeight + 2) * 60 / _hourHeight)
+    .ceil();
+// A late appointment's target must remain reachable below the last hour line.
+const _gridHeight =
+    (gridEndHour - gridStartHour) * _hourHeight + _minimumBlockHeight;
 
 /// One presence band row: a member's bands, one lane per member (specs/05 "Week").
 const _presenceRowHeight = 30.0;
 
-/// One all-day chip row.
-const _allDayRowHeight = 26.0;
+/// One all-day action row: 48 px target plus its vertical margins.
+const _allDayRowHeight = 52.0;
 
 /// More rows than this and the pinned area scrolls on its own, within a share of the
 /// board's height, so the time grid keeps room.
@@ -102,41 +111,50 @@ class _CalendarBoardState extends State<CalendarBoard> {
         final cap = pinned.rowCount > _pinnedRowsBeforeCap && maxHeight.isFinite
             ? maxHeight * _pinnedCapShare
             : double.infinity;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _DayHeaders(days: days, today: today),
-            if (!pinned.isEmpty)
-              _Pinned(
-                plan: pinned,
-                days: days,
-                members: widget.members,
-                now: widget.now,
-                visibleHeight: math.min(pinned.height, cap),
-              ),
-            Expanded(
-              child: SingleChildScrollView(
-                controller: _scroll,
-                padding: EdgeInsets.only(bottom: widget.bottomClearance),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const _HourLabels(),
-                    for (final day in days)
-                      Expanded(
-                        child: _TimeCell(
-                          day: day,
-                          blocks: timedBlocksOn(day, occurrences),
-                          members: widget.members,
-                          now: widget.now,
-                          isToday: dateOnly(day) == today,
+        // The page's end margin: a day's events stop short of the screen edge
+        // instead of running into it; the hour gutter is the start margin.
+        return Padding(
+          padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _DayHeaders(days: days, today: today),
+              if (!pinned.isEmpty)
+                _Pinned(
+                  plan: pinned,
+                  days: days,
+                  members: widget.members,
+                  now: widget.now,
+                  visibleHeight: math.min(pinned.height, cap),
+                ),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: _scroll,
+                  padding: EdgeInsets.only(bottom: widget.bottomClearance),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const _HourLabels(),
+                      for (final day in days)
+                        Expanded(
+                          child: _TimeCell(
+                            day: day,
+                            blocks: timedBlocksOn(
+                              day,
+                              occurrences,
+                              minimumDisplayMinutes: _minimumDisplayMinutes,
+                            ),
+                            members: widget.members,
+                            now: widget.now,
+                            isToday: dateOnly(day) == today,
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -211,45 +229,62 @@ class _DayHeader extends ConsumerWidget {
     final text = Theme.of(context).textTheme;
     final accent = isToday ? cs.primary : null;
     // A tap on a day's header sets "Termine bis …" for that day (FR-1.19).
+    final busyTitle = context.l10n.busyTitle;
+    void openBusyUntil() => showBusyUntilSheet(context, ref, day);
     return Tooltip(
-      message: context.l10n.busyTitle,
-      child: InkWell(
-        onTap: () => showBusyUntilSheet(context, ref, day),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-          child: single
-              ? Text(
-                  context.fullDate(day),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: text.titleSmall?.copyWith(
-                    color: accent ?? cs.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      context.weekdayShort(day),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.labelMedium?.copyWith(
-                        color: accent ?? ww.ink2,
+      message: busyTitle,
+      excludeFromSemantics: true,
+      child: Semantics(
+        container: true,
+        excludeSemantics: true,
+        button: true,
+        label: context.fullDate(day),
+        hint: busyTitle,
+        onTap: openBusyUntil,
+        child: InkWell(
+          excludeFromSemantics: true,
+          onTap: openBusyUntil,
+          child: TouchTarget(
+            child: Center(
+              heightFactor: 1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: single
+                    ? Text(
+                        context.fullDate(day),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: text.titleSmall?.copyWith(
+                          color: accent ?? cs.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            context.weekdayShort(day),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: text.labelMedium?.copyWith(
+                              color: accent ?? ww.ink2,
+                            ),
+                          ),
+                          Text(
+                            narrow ? '${day.day}' : context.dayMonth(day),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: text.titleSmall?.copyWith(
+                              color: accent ?? cs.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      narrow ? '${day.day}' : context.dayMonth(day),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.titleSmall?.copyWith(
-                        color: accent ?? cs.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -657,10 +692,10 @@ class _TimeCell extends StatelessWidget {
   }
 }
 
-/// A block's height: its span, but never less than a line of text.
+/// A block's height: its span, with at least a 48 px touch target.
 double _blockHeight(DayBlock b) {
   final span = _y(b.end) - _y(b.start) - 2;
-  return span < 20 ? 20 : span;
+  return math.max(span, _minimumBlockHeight);
 }
 
 /// Minutes from midnight to a y offset on the grid.

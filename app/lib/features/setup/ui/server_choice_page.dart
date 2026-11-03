@@ -160,7 +160,7 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 Icon(
                   Icons.dns_outlined,
@@ -168,9 +168,13 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(height: Tokens.space4),
-                Text(l10n.serverTitle, style: theme.textTheme.headlineSmall),
+                Text(
+                  l10n.serverTitle,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineSmall,
+                ),
                 const SizedBox(height: Tokens.space2),
-                Text(l10n.serverLead),
+                Text(l10n.serverLead, textAlign: TextAlign.center),
                 const SizedBox(height: Tokens.space6),
                 Semantics(
                   validationResult: problem == null
@@ -389,7 +393,7 @@ class ServerIncompatiblePage extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 480),
             child: Padding(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

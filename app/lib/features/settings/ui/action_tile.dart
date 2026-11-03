@@ -31,6 +31,11 @@ class SettingsActionTile extends StatelessWidget {
       final stacked = action != null && constraints.maxWidth < stackBelow;
       if (!stacked) {
         return ListTile(
+          // The button ends on the row's edge, where the reset buttons of the other
+          // settings rows end, not 16 px inside it.
+          contentPadding: action == null
+              ? null
+              : const EdgeInsetsDirectional.only(start: Tokens.space4),
           leading: leading,
           title: title,
           subtitle: subtitle,

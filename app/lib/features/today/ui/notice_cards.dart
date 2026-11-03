@@ -81,7 +81,10 @@ class _NoticeCard extends ConsumerWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: Tokens.space3),
       child: Padding(
-        padding: const EdgeInsets.all(Tokens.space3),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Tokens.space4,
+          vertical: Tokens.space3,
+        ),
         child: LayoutBuilder(
           builder: (context, constraints) {
             final effectiveWidth =

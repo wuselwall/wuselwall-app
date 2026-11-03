@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
@@ -25,6 +26,20 @@ Finder get searchField => find.byType(TextField);
 Finder get homeNav => find.byKey(homeNavKey);
 
 Finder get tripTitle => find.byKey(const ValueKey('shopping-trip-title'));
+
+List<SemanticsNode> _exposedSemanticsNodes(WidgetTester t) {
+  final nodes = <SemanticsNode>[];
+  void visit(SemanticsNode node) {
+    if (!node.isMergedIntoParent) nodes.add(node);
+    node.visitChildren((child) {
+      visit(child);
+      return true;
+    });
+  }
+
+  visit(t.binding.renderViews.first.owner!.semanticsOwner!.rootSemanticsNode!);
+  return nodes;
+}
 
 ShoppingItem counted(String id, String name, int count, {bool auto = false}) =>
     ShoppingItem(
@@ -379,9 +394,14 @@ void main() {
         ),
         findsOneWidget,
       );
+      final itemNode = _exposedSemanticsNodes(t).singleWhere((node) {
+        final data = node.getSemanticsData();
+        return data.label == 'Milch' && data.value == '2 ×';
+      });
+      expect(itemNode.getSemanticsData().value, '2 ×');
       expect(
-        t.getSemantics(find.byKey(const ValueKey('shopping-item-1'))).value,
-        '2 ×',
+        itemNode.getSemanticsData().hasAction(SemanticsAction.tap),
+        isTrue,
       );
       handle.dispose();
     });

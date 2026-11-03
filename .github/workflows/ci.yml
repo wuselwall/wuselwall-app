@@ -23,6 +23,10 @@ permissions:
 jobs:
   app:
     runs-on: [self-hosted, Linux, build]
+    # Flutter's test-platform finalization has crashed across unrelated files.
+    # Serialize processes while retaining every test and the existing failure policy.
+    env:
+      FLUTTER_TEST_CONCURRENCY: '1'
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

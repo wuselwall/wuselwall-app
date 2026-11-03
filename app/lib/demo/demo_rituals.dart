@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
@@ -10,7 +11,7 @@ import 'package:wuselwall/features/rituals/domain/ritual_models.dart';
 /// week has a look-back with one line for everyone, made of this week's meals.
 class DemoRitualsRepository implements RitualsRepository {
   DemoRitualsRepository({DateTime Function()? clock})
-    : _clock = clock ?? DateTime.now;
+    : _clock = clock ?? DemoClock.now;
 
   final DateTime Function() _clock;
 

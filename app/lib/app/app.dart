@@ -14,6 +14,7 @@ import 'package:wuselwall/core/l10n/austrian_dates.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -72,18 +73,22 @@ class WuselWallApp extends ConsumerWidget {
           ),
         );
         final banner = ref.watch(appBannerProvider);
-        if (banner == null) return app;
-        return Column(
-          children: [
-            banner(context),
-            Expanded(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: app,
-              ),
-            ),
-          ],
+        return SystemBars(
+          navigationColor: Theme.of(context).scaffoldBackgroundColor,
+          child: banner == null
+              ? app
+              : Column(
+                  children: [
+                    banner(context),
+                    Expanded(
+                      child: MediaQuery.removePadding(
+                        context: context,
+                        removeTop: true,
+                        child: app,
+                      ),
+                    ),
+                  ],
+                ),
         );
       },
     );

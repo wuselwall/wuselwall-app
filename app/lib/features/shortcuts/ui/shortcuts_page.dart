@@ -8,6 +8,7 @@ import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
@@ -47,54 +48,56 @@ class ShortcutsPage extends ConsumerWidget {
               icon: const Icon(Icons.add),
               label: Text(l10n.shortcutNew),
             ),
-      body: AsyncValueView<List<ShortcutToken>>(
-        value: tokens,
-        onRetry: () => ref.invalidate(shortcutTokensProvider),
-        data: (list) {
-          final visible = list
-              .where((t) => t.kind == KeyKind.shortcut)
-              .where((t) => guardian || t.profileId == acting)
-              .toList();
-          Widget tile(ShortcutToken t) => _KeyTile(
-            token: t,
-            owner: members
-                .where((m) => m.id == t.profileId)
-                .firstOrNull
-                ?.displayName,
-            onRevoke: guardian || t.profileId == acting
-                ? () => _revoke(context, ref, t)
-                : null,
-          );
-          if (visible.isEmpty && !kiosk) {
-            return EmptyView(
-              // A settings page: no Wusel (specs/25 "Where Wusel never appears").
-              illustrated: false,
-              title: l10n.shortcutEmpty,
-              message: l10n.shortcutIntro,
-              actions: [
-                FilledButton.icon(
-                  onPressed: () => _create(context, ref),
-                  icon: const Icon(Icons.add),
-                  label: Text(l10n.shortcutNew),
-                ),
+      body: ContentWidth(
+        child: AsyncValueView<List<ShortcutToken>>(
+          value: tokens,
+          onRetry: () => ref.invalidate(shortcutTokensProvider),
+          data: (list) {
+            final visible = list
+                .where((t) => t.kind == KeyKind.shortcut)
+                .where((t) => guardian || t.profileId == acting)
+                .toList();
+            Widget tile(ShortcutToken t) => _KeyTile(
+              token: t,
+              owner: members
+                  .where((m) => m.id == t.profileId)
+                  .firstOrNull
+                  ?.displayName,
+              onRevoke: guardian || t.profileId == acting
+                  ? () => _revoke(context, ref, t)
+                  : null,
+            );
+            if (visible.isEmpty && !kiosk) {
+              return EmptyView(
+                // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+                illustrated: false,
+                title: l10n.shortcutEmpty,
+                message: l10n.shortcutIntro,
+                actions: [
+                  FilledButton.icon(
+                    onPressed: () => _create(context, ref),
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.shortcutNew),
+                  ),
+                ],
+              );
+            }
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(
+                Tokens.space4,
+                Tokens.space4,
+                Tokens.space4,
+                96,
+              ),
+              children: [
+                Text(l10n.shortcutIntro),
+                const SizedBox(height: Tokens.space4),
+                if (kiosk) Text(l10n.shortcutKioskNote),
+                for (final t in visible) tile(t),
               ],
             );
-          }
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(
-              Tokens.space4,
-              Tokens.space4,
-              Tokens.space4,
-              96,
-            ),
-            children: [
-              Text(l10n.shortcutIntro),
-              const SizedBox(height: Tokens.space4),
-              if (kiosk) Text(l10n.shortcutKioskNote),
-              for (final t in visible) tile(t),
-            ],
-          );
-        },
+          },
+        ),
       ),
     );
   }
@@ -225,6 +228,8 @@ class _KeyTile extends StatelessWidget {
             ].where((line) => line.isNotEmpty).join('\n'),
           ),
           isThreeLine: true,
+          // Like a calendar feed's tile: icon and revoke centre on the three lines.
+          titleAlignment: ListTileTitleAlignment.center,
           trailing: token.revoked || onRevoke == null
               ? null
               : TextButton(

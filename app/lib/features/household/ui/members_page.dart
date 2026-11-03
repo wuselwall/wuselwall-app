@@ -109,7 +109,7 @@ class _MembersPageState extends ConsumerState<MembersPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
-              padding: const EdgeInsets.all(Tokens.space6),
+              padding: const EdgeInsets.all(Tokens.space4),
               children: [
                 if (founder != null) ...[
                   Row(
@@ -143,10 +143,14 @@ class _MembersPageState extends ConsumerState<MembersPage> {
                   ),
                   const SizedBox(height: Tokens.space4),
                 ],
-                TextButton.icon(
-                  onPressed: _busy ? null : _add,
-                  icon: const Icon(Icons.add),
-                  label: Text(l10n.householdMembersAdd),
+                // Aligned like the other text buttons, not centred across the list.
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton.icon(
+                    onPressed: _busy ? null : _add,
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.householdMembersAdd),
+                  ),
                 ),
                 const SizedBox(height: Tokens.space2),
                 Text(l10n.householdMembersHelp),
