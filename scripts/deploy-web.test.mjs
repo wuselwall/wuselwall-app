@@ -22,16 +22,20 @@ test('checkout web deployment discovers its backend, without developer backend s
     executable('home/flutter/bin/flutter', `printf '%s\\n' "$@" > "$BUILD_ARGS"
 mkdir -p build/web-live
 printf 'backend-neutral web build' > build/web-live/index.html`);
+    // The symbol-font shards are their own script's business; here only that they are added.
+    executable('scripts/web-font-fallback.sh', 'printf "%s\\n" "$@" > "$FONT_ARGS"');
     executable('bin/ssh', 'printf "%s\\n" "$@" > "$SSH_ARGS"; cat > "$UPLOAD"');
     const result = spawnSync('bash', ['scripts/deploy-web.sh'], {
       cwd: dir, encoding: 'utf8', env: { ...process.env, HOME: join(dir, 'home'), PATH: `${join(dir, 'bin')}:${process.env.PATH}`,
-        BUILD_ARGS: join(dir, 'build-args'), SSH_ARGS: join(dir, 'ssh-args'), UPLOAD: join(dir, 'upload.tar.gz') },
+        BUILD_ARGS: join(dir, 'build-args'), SSH_ARGS: join(dir, 'ssh-args'), UPLOAD: join(dir, 'upload.tar.gz'),
+        FONT_ARGS: join(dir, 'font-args') },
     });
     assert.equal(result.status, 0, result.stderr);
     const args = readFileSync(join(dir, 'build-args'), 'utf8');
     assert.doesNotMatch(args, /dart-define-from-file|SUPABASE_URL|SUPABASE_PUBLISHABLE_KEY|env\/dev/);
     assert.match(args, /--dart-define=ENV=release/);
     assert.match(args, /--no-web-resources-cdn/);
+    assert.equal(readFileSync(join(dir, 'font-args'), 'utf8'), 'app/build/web-live\n');
     const archive = spawnSync('tar', ['-xOzf', join(dir, 'upload.tar.gz'), './index.html'], { encoding: 'utf8' });
     assert.equal(archive.status, 0, archive.stderr);
     assert.equal(archive.stdout, 'backend-neutral web build');
