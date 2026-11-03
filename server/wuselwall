@@ -148,8 +148,11 @@ schedule() {
   # The stack's own database settings (not migrations, which also run on hosted projects):
   # which header carries the client's address for the rate limits (security review
   # 2026-11-01, F5). Idempotent; a new database gets it from the init scripts as well.
+  # ALTER DATABASE ... SET needs the superuser, which is supabase_admin here (Supabase's
+  # postgres role is not one); the init script runs as that role on a new database too.
   if [ -f "$STACK/volumes/wuselwall/client-ip.sql" ]; then
-    psql_db < "$STACK/volumes/wuselwall/client-ip.sql"
+    docker exec -i "$DB" psql -U supabase_admin -X -q -t -A -v ON_ERROR_STOP=1 \
+      < "$STACK/volumes/wuselwall/client-ip.sql"
   fi
 }
 
