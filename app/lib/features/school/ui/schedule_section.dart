@@ -14,6 +14,7 @@ import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -295,10 +296,11 @@ class _Week extends ConsumerWidget {
         pack.value?.dayOf(child.id, tomorrow)?.equipment ?? const <String>[];
 
     // The label column is measured per layout (real fonts, text scale): the full period
-    // name when it fits, else its number over the bell times. The five lesson columns
-    // keep 48 px targets; narrower or enlarged layouts retain horizontal panning.
-    // The inner horizontal viewport owns pans while the grid needs extra room;
-    // the outer stepper handles week gestures where the content fits.
+    // name over its bell times, which the week arrows give way to on a phone; only
+    // when even that leaves no room does it shrink to the number over the times. The
+    // five lesson columns keep 48 px targets; narrower or enlarged layouts retain
+    // horizontal panning. The inner horizontal viewport owns pans while the grid needs
+    // extra room; the outer stepper handles week gestures where the content fits.
     return SwipeStepper(
       onPrevious: navigation.previous,
       onNext: navigation.next,
@@ -307,16 +309,16 @@ class _Week extends ConsumerWidget {
           final scale = MediaQuery.textScalerOf(context).scale(1);
           final lessons = 5 * 51 * scale;
           final fullLabel = schoolLabelWidth(context, compact: false);
-          final compact =
-              fullLabel + lessons + _arrowGutter > constraints.maxWidth;
+          final compact = fullLabel + lessons > constraints.maxWidth;
           final labelWidth = compact
               ? schoolLabelWidth(context, compact: true)
               : fullLabel;
           // Five interactive lesson columns retain a 48 px target, including their
           // margins. Header and grid scroll together on narrow or enlarged layouts.
           final columns = labelWidth + lessons;
-          // Too wide even so: the week arrows leave the scrolling header for a row
-          // of their own, so the next week stays reachable without panning.
+          // No room for the arrows beside the days: they leave the scrolling header
+          // for a row of their own around the month, so the lessons take the full
+          // width and the next week stays reachable without panning.
           final pinned = columns + _arrowGutter > constraints.maxWidth;
           final width = math.max(
             constraints.maxWidth,
@@ -420,7 +422,15 @@ class _Week extends ConsumerWidget {
                     icon: const Icon(Icons.chevron_left),
                     onPressed: navigation.previous,
                   ),
-                  const Spacer(),
+                  Expanded(
+                    child: Text(
+                      context.monthYear(monday),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ),
                   IconButton(
                     tooltip: l10n.schoolNextWeek,
                     icon: const Icon(Icons.chevron_right),
