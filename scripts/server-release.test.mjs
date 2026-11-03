@@ -57,6 +57,9 @@ const verify = (file, env = {}) => spawnSync('bash', [script, 'verify', file],
   { encoding: 'utf8', env: { PATH: process.env.PATH, HOME: process.env.HOME, ...env } });
 
 // The script's functions with a command after them, as server/test_setup_link.py loads them.
+// The shipped script pins the real release key; the checksum-only tests ask for the
+// placeholder explicitly, as a checkout before the key was generated behaved.
+const PLACEHOLDER = 'REPLACE-WITH-THE-RELEASE-PUBLIC-KEY';
 const functions = readFileSync(script, 'utf8').split('case "${1:-}" in')[0];
 // ROOT is the working directory then (the script reads its VERSION there).
 const run = (command, env = {}, cwd = undefined) => spawnSync('bash', [], {
@@ -79,12 +82,12 @@ test('the build writes the archive into DIST_DIR', () => {
 
 test('while the release key is the placeholder, the checksum is checked with a warning', () => {
   const file = release('placeholder');
-  const result = verify(file);
+  const result = verify(file, { WW_RELEASE_PUBKEY: PLACEHOLDER });
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stderr, /WARNING: this wuselwall has no release key pinned/);
   assert.match(result.stderr, /checksum matches \(signature not checked\)/);
   assert.match(result.stdout, new RegExp(`${archiveName}: sha256 [0-9a-f]{64}`));
-  const strict = verify(file, { WW_REQUIRE_SIGNATURE: '1' });
+  const strict = verify(file, { WW_RELEASE_PUBKEY: PLACEHOLDER, WW_REQUIRE_SIGNATURE: '1' });
   assert.equal(strict.status, 1);
   assert.match(strict.stderr, /WW_REQUIRE_SIGNATURE=1/);
 });
@@ -93,7 +96,7 @@ test('an altered archive fails the checksum', () => {
   const altered = join(dir, 'altered.tar.gz');
   writeFileSync(altered, Buffer.concat([readFileSync(archive), Buffer.from('x')]));
   const good = `${createHash('sha256').update(readFileSync(archive)).digest('hex')}  ${archiveName}\n`;
-  const result = verify(release('altered', { sums: good, file: altered }));
+  const result = verify(release('altered', { sums: good, file: altered }), { WW_RELEASE_PUBKEY: PLACEHOLDER });
   assert.equal(result.status, 1);
   assert.match(result.stderr, /does not match SHA256SUMS/);
 });
@@ -260,12 +263,12 @@ test('unpack refuses an older archive after checking it, before extracting anyth
   mkdirSync(join(installed, 'stack', 'volumes', 'functions'), { recursive: true });
   writeFileSync(join(installed, 'VERSION'), '10.0.0\n');
   const file = release('older-file');
-  let result = run(`STACK='${installed}/stack'; unpack '${file}'`, {}, installed);
+  let result = run(`STACK='${installed}/stack'; unpack '${file}'`, { WW_RELEASE_PUBKEY: PLACEHOLDER }, installed);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /release 9\.8\.7 is older than the installed 10\.0\.0/);
   assert.equal(readFileSync(join(installed, 'VERSION'), 'utf8'), '10.0.0\n', 'nothing was unpacked');
   assert.ok(spawnSync('test', ['-d', join(installed, 'stack', 'volumes', 'functions')]).status === 0, 'the functions stay');
-  result = run(`STACK='${installed}/stack'; unpack '${file}' --allow-downgrade`, {}, installed);
+  result = run(`STACK='${installed}/stack'; unpack '${file}' --allow-downgrade`, { WW_RELEASE_PUBKEY: PLACEHOLDER }, installed);
   assert.equal(result.status, 0, result.stderr);
   assert.equal(readFileSync(join(installed, 'VERSION'), 'utf8'), `${version}\n`);
 });
