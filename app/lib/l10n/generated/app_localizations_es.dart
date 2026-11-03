@@ -6662,4 +6662,105 @@ class AppLocalizationsEs extends AppLocalizations {
   String learnedWordsForgetWord(String word) {
     return 'Olvidar «$word»';
   }
+
+  @override
+  String serverCaption(String host) {
+    return 'Servidor: $host';
+  }
+
+  @override
+  String get serverConfirmTitle => '¿Conectar con este servidor?';
+
+  @override
+  String get serverConfirmBody =>
+      'Aquí están los datos de tu familia y aquí inicias sesión. Conéctate solo si conoces esta dirección, por ejemplo por tu familia. Si tienes dudas, cancela y escribe tú la dirección.';
+
+  @override
+  String serverConfirmVia(String address) {
+    return '$address remite a este servidor.';
+  }
+
+  @override
+  String serverMovedBody(String host) {
+    return 'El servidor indica una nueva dirección: $host. La aplicación sigue con la anterior hasta que vuelvas a conectar.';
+  }
+
+  @override
+  String serverMovedConfirm(String host) {
+    return '¿Conectar con $host? Este dispositivo cerrará la sesión y luego volverás a iniciarla allí. Solo si sabes que el servidor se ha mudado.';
+  }
+
+  @override
+  String get serverKeyChangedBody =>
+      'El servidor tiene nuevos datos de conexión para la aplicación. Vuelve a conectar para que la aplicación los use.';
+
+  @override
+  String get serverMovedAction => 'Volver a conectar';
+
+  @override
+  String get accountMfaRequired =>
+      'Confirma primero el código de tu aplicación de autenticación y vuelve a intentarlo.';
+
+  @override
+  String accountPasswordReauthBody(String email) {
+    return 'Para cambiar la contraseña hace falta un inicio de sesión reciente. Enviamos un código a $email.';
+  }
+
+  @override
+  String accountPasswordReauthPasswordBody(String email) {
+    return 'Para cambiar la contraseña hace falta un inicio de sesión reciente. Introduce la contraseña actual de $email.';
+  }
+
+  @override
+  String accountResetReauthBody(String email) {
+    return 'Para restablecer el acceso de otra persona hace falta tu propio inicio de sesión reciente. Enviamos un código a $email.';
+  }
+
+  @override
+  String accountResetReauthPasswordBody(String email) {
+    return 'Para restablecer el acceso de otra persona hace falta tu propio inicio de sesión reciente. Introduce la contraseña de $email.';
+  }
+
+  @override
+  String accountMfaResetRecent(String name) {
+    return 'Restableciste el inicio de sesión en dos pasos de $name hace menos de un día. Otro adulto responsable puede crear el código, o espera un día.';
+  }
+
+  @override
+  String accountPasswordResetRecent(String name) {
+    return 'Creaste un código de contraseña para $name hace menos de un día. Otro adulto responsable puede restablecer el inicio de sesión en dos pasos, o espera un día.';
+  }
+
+  @override
+  String get accountPasswordSavedOthersOut =>
+      'Contraseña guardada. Se ha cerrado la sesión en tus otros dispositivos.';
+
+  @override
+  String trustFeedCreatedBy(String name) {
+    return 'Creado por $name';
+  }
+
+  @override
+  String get errInvitationRequired =>
+      'Este servidor solo acepta personas invitadas. Pide una invitación a un adulto responsable de la familia.';
+
+  @override
+  String accountNoticeMfaResetYou(String name) {
+    return '$name ha restablecido tu inicio de sesión en dos pasos';
+  }
+
+  @override
+  String accountNoticeMfaReset(String name, String target) {
+    return '$name ha restablecido el inicio de sesión en dos pasos de $target';
+  }
+
+  @override
+  String accountNoticePasswordResetYou(String name) {
+    return '$name ha creado un código de contraseña para ti';
+  }
+
+  @override
+  String accountNoticePasswordReset(String name, String target) {
+    return '$name ha creado un código de contraseña para $target';
+  }
 }

@@ -77,6 +77,7 @@ class _EnrolPageState extends ConsumerState<EnrolPage> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return AuthFormScaffold(
+      showServer: true,
       title: l10n.enrolTitle,
       children: [
         Text(l10n.enrolBody),

@@ -4,7 +4,9 @@ One endpoint: POST /ocr with a multipart field ``image`` (JPEG, PNG, WebP or HEI
 at most 6 MB) answers ``{"width", "height", "lines": [{"text", "box", "score"}], "source"}``.
 ``box`` is the text's quadrilateral as eight pixel coordinates (x1 y1 x2 y2 x3 y3 x4 y4). The
 Edge Function ``timetable-scan`` turns the lines into the grid; this process only reads the
-file.
+file. At most 40 megapixels are decoded, one sheet is read at a time, and nothing but the
+Edge Function reaches this process: the container sits on an internal network it shares with
+the functions container alone (docker-compose.wuselwall.yml).
 
 A PDF a school made on a computer carries its text: that text layer is read with its
 positions and no OCR at all (``source: "text"``), which is exact. A PDF that is only a scan
@@ -31,6 +33,14 @@ register_heif_opener()
 
 MAX_BYTES = 6 * 1024 * 1024
 MAX_SIDE = 2400
+# A picture that decodes to more pixels than this is refused before it is decoded (a 6 MB
+# file can describe an image of hundreds of megapixels; a phone photo has 12 to 50). Pillow's
+# own bomb check is set to the same bound, so a format it checks itself answers the same.
+MAX_PIXELS = 40_000_000
+Image.MAX_IMAGE_PIXELS = MAX_PIXELS
+# At most this many text rectangles of a PDF's text layer are read; a timetable has a few
+# hundred, and a crafted file is not read for minutes.
+MAX_PDF_PIECES = 20_000
 # A PDF page is rendered at this scale (1 = 72 dpi): A4 landscape becomes about 1300 px wide.
 PDF_SCALE = 110 / 72
 # Fewer text pieces than this on a PDF page means a scan without a text layer.
@@ -80,10 +90,20 @@ def warm_up() -> int:
 
 def _load(data: bytes) -> np.ndarray:
     try:
-        image = Image.open(io.BytesIO(data))
+        image = Image.open(io.BytesIO(data))  # reads the header only; the pixels come later
+    except Image.DecompressionBombError as err:
+        raise HTTPException(status_code=413, detail="image_too_large") from err
+    except Exception as err:  # noqa: BLE001 - any decoding problem is the same answer
+        raise HTTPException(status_code=400, detail="image_invalid") from err
+    width, height = image.size
+    if width * height > MAX_PIXELS:
+        raise HTTPException(status_code=413, detail="image_too_large")
+    try:
         image = ImageOps.exif_transpose(image)  # phones store the rotation as a tag
         image = image.convert("RGB")
-    except Exception as err:  # noqa: BLE001 - any decoding problem is the same answer
+    except Image.DecompressionBombError as err:
+        raise HTTPException(status_code=413, detail="image_too_large") from err
+    except Exception as err:  # noqa: BLE001
         raise HTTPException(status_code=400, detail="image_invalid") from err
     if max(image.size) > MAX_SIDE:
         image.thumbnail((MAX_SIDE, MAX_SIDE))
@@ -118,7 +138,7 @@ def _pdf_text(page: Any, scale: float) -> list[dict[str, Any]]:
     width, height = page.get_size()
     textpage = page.get_textpage()
     pieces: list[tuple[float, float, float, float, str]] = []
-    for i in range(textpage.count_rects()):
+    for i in range(min(textpage.count_rects(), MAX_PDF_PIECES)):
         left, bottom, right, top = textpage.get_rect(i)
         text = textpage.get_text_bounded(left=left, bottom=bottom, right=right, top=top)
         if not text or not text.strip() or right <= left or top <= bottom:
@@ -189,15 +209,27 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+# One sheet at a time: decoding and recognition are CPU-bound and take the memory of a few
+# large images, and the engine is used from one thread. Other requests wait here.
+_work = threading.Lock()
+
+
+def _read(data: bytes, content_type: str) -> dict[str, Any]:
+    with _work:
+        if data[:5] == b"%PDF-" or content_type == "application/pdf":
+            return _read_pdf(data)
+        pixels = _load(data)
+        height, width = pixels.shape[:2]
+        return {"width": int(width), "height": int(height), "lines": _recognise(pixels), "source": "ocr"}
+
+
+# A plain (not async) handler: FastAPI runs it on a worker thread, so the event loop keeps
+# answering /health and accepting uploads while a sheet is being read.
 @app.post("/ocr")
-async def ocr(image: UploadFile = File(...)) -> dict[str, Any]:
-    data = await image.read()
+def ocr(image: UploadFile = File(...)) -> dict[str, Any]:
+    data = image.file.read(MAX_BYTES + 1)  # never more than the limit plus one byte
     if len(data) == 0:
         raise HTTPException(status_code=400, detail="image_invalid")
     if len(data) > MAX_BYTES:
         raise HTTPException(status_code=413, detail="image_too_large")
-    if data[:5] == b"%PDF-" or (image.content_type or "") == "application/pdf":
-        return _read_pdf(data)
-    pixels = _load(data)
-    height, width = pixels.shape[:2]
-    return {"width": int(width), "height": int(height), "lines": _recognise(pixels), "source": "ocr"}
+    return _read(data, image.content_type or "")

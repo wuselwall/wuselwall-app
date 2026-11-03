@@ -73,6 +73,12 @@ class FeedTokensPage extends ConsumerWidget {
                       _FeedTile(
                         token: t,
                         summary: _summary(l10n, t.filter, members),
+                        // Whose subscription it is: a token stops with its maker,
+                        // so the others can tell which one was theirs.
+                        createdBy: members
+                            .where((m) => m.id == t.createdByProfileId)
+                            .firstOrNull
+                            ?.displayName,
                         onRevoke: () => _revoke(context, ref, t),
                       ),
                   ],
@@ -196,11 +202,15 @@ class _FeedTile extends StatelessWidget {
     required this.token,
     required this.summary,
     required this.onRevoke,
+    this.createdBy,
   });
 
   final FeedToken token;
   final String summary;
   final VoidCallback onRevoke;
+
+  /// The maker's name, when the server tells it and the person is still listed.
+  final String? createdBy;
 
   @override
   Widget build(BuildContext context) {
@@ -213,6 +223,7 @@ class _FeedTile extends StatelessWidget {
           title: Text(token.label),
           subtitle: Text(
             [
+              if (createdBy != null) l10n.trustFeedCreatedBy(createdBy!),
               summary,
               if (token.revoked) l10n.feedRevoked else _fetched(l10n, token),
             ].join('\n'),

@@ -22,11 +22,16 @@ const SOURCE = [
 ].join("\r\n");
 
 type Row = { starts_at: string; start_date: string };
-function fixture() {
+function fixture(opts: { beginFails?: boolean } = {}) {
   const stores: Array<{ p_rows: Row[] }> = [];
   const failures: string[] = [];
+  const calls: string[] = [];
   const svc = {
     rpc(name: string, args: Record<string, unknown>) {
+      calls.push(name);
+      if (name === "external_calendar_begin" && opts.beginFails) {
+        return Promise.resolve({ error: { code: "08006" } });
+      }
       if (name === "external_calendar_store") {
         stores.push(args as { p_rows: Row[] });
       }
@@ -47,7 +52,7 @@ function fixture() {
     );
     return Promise.resolve({ kind: "ok", body: SOURCE, etag: CAL.etag });
   };
-  return { svc, fetch, stores, failures };
+  return { svc, fetch, stores, failures, calls };
 }
 
 Deno.test("calendar import: an unchanged feed extends the rolling horizon", async () => {
@@ -94,4 +99,34 @@ Deno.test("calendar import: an unsolicited 304 preserves rows and records a fail
   assertEquals(result, { status: "failed", code: "http_304" });
   assertEquals(f.stores.length, 0);
   assertEquals(f.failures, ["http_304"]);
+});
+
+Deno.test("calendar import: the attempt is recorded before the feed is fetched", async () => {
+  const f = fixture();
+  const order: string[] = [];
+  const fetch = (url: string, opts: FetchOptions = {}) => {
+    order.push("fetch");
+    return f.fetch(url, opts);
+  };
+  const svc = {
+    rpc(name: string, args: Record<string, unknown>) {
+      order.push(name);
+      return f.svc.rpc(name, args);
+    },
+  };
+  const result = await importCalendar(svc, CAL, new Date("2026-10-25T12:00:00Z"), fetch);
+  assertEquals(result.status, "refreshed");
+  assertEquals(order, ["external_calendar_begin", "fetch", "external_calendar_store"]);
+});
+
+Deno.test("calendar import: when the attempt cannot be recorded nothing is fetched", async () => {
+  const f = fixture({ beginFails: true });
+  let fetched = 0;
+  const result = await importCalendar(f.svc, CAL, new Date(), (url, opts) => {
+    fetched++;
+    return f.fetch(url, opts);
+  });
+  assertEquals(result, { status: "failed", code: "db" });
+  assertEquals(fetched, 0);
+  assertEquals(f.calls, ["external_calendar_begin"]);
 });

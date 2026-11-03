@@ -80,7 +80,7 @@ This phone becomes your **personal phone**. It gets a name automatically, such a
 
 ## 3. Joining a family
 
-If a family has invited you, you get a **link**, a **QR code** or a **code**. The link and the QR code also contain your family's **server**. If WuselWall is already on your phone, the link opens the app directly: you do not choose a server or type anything. If the app is not installed yet, the link shows a page with the stores; install the app, then open the link again.
+If a family has invited you, you get a **link**, a **QR code** or a **code**. The link and the QR code also contain your family's **server**. If WuselWall is already on your phone, the link opens the app directly: you do not choose a server or type anything. If the app is not connected to a server yet, it first shows the address of the link's server and asks whether to connect to it ([At first start](/en/guide/install#at-first-start-which-server)). If the app is not installed yet, the link shows a page with the stores; install the app, then open the link again.
 
 If you only got the code, you enter it in the app:
 

@@ -34,3 +34,8 @@ for f in supabase/migrations/*.sql; do
   } | psql > /dev/null
 done
 [ "$pending" = 1 ] || echo "no pending migrations"
+# The compose stack's own setting, never a migration (hosted projects have no gateway that
+# sets the header): the rate limits key on the address the gateway writes (specs/19 F5).
+# ALTER DATABASE ... SET needs the superuser, supabase_admin on the compose stack.
+ssh "$HOST" "docker exec -i $DB psql -U supabase_admin -X -q -t -A -v ON_ERROR_STOP=1" \
+  < infra/supabase/volumes/wuselwall/client-ip.sql

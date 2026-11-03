@@ -17,7 +17,6 @@ import 'package:wuselwall/features/identity/application/sign_in_choice.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
-import 'package:wuselwall/features/setup/ui/claim_page.dart';
 
 /// E2 (specs/20, "With email"): six digit boxes over one hidden field. Paste and the
 /// platform's one-time-code autofill fill the field; the sixth digit submits.
@@ -138,6 +137,7 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
     final server = ref.watch(currentServerProvider);
 
     return AuthFormScaffold(
+      showServer: true,
       title: l10n.emailCodeTitle,
       subtitle: settingUp && server != null
           ? l10n.claimHeader(displayServerAddress(server))
@@ -224,9 +224,8 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
         ],
         TextButton(
           onPressed: () => context.go(
-            settingUp
-                ? claimLocation(widget.email)
-                : emailSignInLocation(widget.email),
+            settingUp ? Routes.claim : Routes.signIn,
+            extra: widget.email,
           ),
           child: Text(l10n.emailCodeOtherAddress),
         ),
@@ -239,10 +238,6 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
     );
   }
 }
-
-/// E1 again, with the address filled in.
-String emailSignInLocation(String email) =>
-    '${Routes.signIn}?email=${Uri.encodeQueryComponent(email)}';
 
 class _DigitBox extends StatelessWidget {
   const _DigitBox({required this.digit, required this.focused});

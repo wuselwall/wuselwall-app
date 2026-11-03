@@ -19,8 +19,6 @@ import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
 import 'package:wuselwall/features/setup/ui/busy_button_label.dart';
-import 'package:wuselwall/features/setup/ui/email_code_page.dart';
-import 'package:wuselwall/features/setup/ui/sign_in_page.dart';
 
 /// S1 "Server einrichten" (specs/20, "Claiming the server"): the first screen after a
 /// setup link, and the way in on a server that has no family yet. The setup key is
@@ -139,7 +137,7 @@ class _ClaimPageState extends ConsumerState<ClaimPage> {
     // code goes out at once; without mail the password page opens on "Neues Konto".
     if (!ref.read(emailCodeSignInProvider)) {
       setState(() => _busy = false);
-      context.go(emailSignInLocation(email));
+      context.go(Routes.signIn, extra: email);
       return;
     }
     final sent = await ref
@@ -152,7 +150,7 @@ class _ClaimPageState extends ConsumerState<ClaimPage> {
     setState(() => _busy = false);
     switch (sent) {
       case Ok():
-        unawaited(context.push(emailCodeLocation(email)));
+        unawaited(context.push(Routes.emailCode, extra: email));
       case Err(:final failure):
         context.showFailure(failure);
     }
@@ -180,6 +178,7 @@ class _ClaimPageState extends ConsumerState<ClaimPage> {
         _keyState == _KeyState.unreachable;
 
     return AuthFormScaffold(
+      showServer: true,
       title: l10n.claimTitle,
       onBack: () => _leave(Routes.setup),
       children: [
@@ -323,7 +322,3 @@ class _KeyStatus extends StatelessWidget {
     );
   }
 }
-
-/// Where E2 sends the person to change the address while the server is being set up.
-String claimLocation(String email) =>
-    '${Routes.claim}?email=${Uri.encodeQueryComponent(email)}';

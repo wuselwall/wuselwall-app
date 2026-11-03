@@ -416,6 +416,17 @@ These still constrain the design:
 The app badge (open-task count) is available natively on both platforms and replaces the
 Badging API plan.
 
+**Secrets on the device and on the web (2026-11-02, security review F24/F25).** On iOS the
+session, the chosen server and the setup key are Keychain items of the class
+`first_unlock_this_device`: they never travel in a backup to another phone, which signs in
+again (`app/lib/core/storage/app_secure_storage.dart`). The web build loads only its own
+scripts and CanvasKit from its own origin (a custom `web/flutter_bootstrap.js` pins
+`canvasKitBaseUrl`, also in builds without `--no-web-resources-cdn`), and carries a
+Content-Security-Policy as a meta element; the compose stack's web host sends the same policy
+as a header with `frame-ancestors 'none'`, `Referrer-Policy: no-referrer` and a
+`Permissions-Policy` that allows the camera only to the page itself. No route puts an email
+address or a code in its location, so none lands in the browser's history.
+
 ## The wall display
 
 > **Built 2026-10-15.** The wall shows only the appointments marked for the kitchen unless "Alle Termine" is ticked (FR-8.11): every day column then shows all its appointments. The kiosk reverts the switch to key-only when it goes idle. A newly paired wall display shows a one-time checklist (keep the app pinned, keep the screen on, leave it plugged in), and a kids' tablet a welcome screen.

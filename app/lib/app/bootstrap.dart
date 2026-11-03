@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wuselwall/app/app.dart';
+import 'package:wuselwall/app/server_change_banner.dart';
 import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
@@ -47,6 +48,12 @@ import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 /// - The web app refreshes its own origin before using a cached server/key; it uses
 ///   the cache only when discovery is unreachable, so an offline start still works.
 /// - Otherwise it asks ([ServerChoicePage]), or shows the demo household.
+///
+/// A server the person did not type is shown before the app connects to it
+/// ([ServerConfirmPage]): one from a link or a scanned code, and one whose discovery
+/// document names another host than the address typed. A configured install never takes
+/// over a changed address or key in the background; it says so and the person
+/// reconnects (security review 2026-11-01, F7).
 class Bootstrap extends StatefulWidget {
   Bootstrap({
     required this.build,
@@ -57,6 +64,7 @@ class Bootstrap extends StatefulWidget {
     Future<void> Function()? disconnect,
     Future<bool> Function()? hasSession,
     Future<void> Function()? signOutLocally,
+    Future<void> Function()? removeSession,
     this.webOrigin,
     this.initialSetup,
     SetupStore? setupStore,
@@ -71,7 +79,9 @@ class Bootstrap extends StatefulWidget {
        connect = connect ?? initSupabase,
        disconnect = disconnect ?? _disposeSupabase,
        hasSession = hasSession ?? SecureSessionStorage().hasAccessToken,
-       signOutLocally = signOutLocally ?? _signOutLocally;
+       signOutLocally = signOutLocally ?? _signOutLocally,
+       removeSession =
+           removeSession ?? SecureSessionStorage().removePersistedSession;
 
   /// The build's configuration (`AppConfig.fromEnvironment`).
   final AppConfig build;
@@ -87,6 +97,10 @@ class Bootstrap extends StatefulWidget {
   /// Ends this device's session on its server, here only: the device record is the
   /// running app's business (Settings → Change server signs out first).
   final Future<void> Function() signOutLocally;
+
+  /// Forgets the session kept on the device without asking any server (the secure
+  /// storage's entry). Used when the app is about to talk to another address.
+  final Future<void> Function() removeSession;
 
   /// The web app's own origin; null on the native apps.
   final Uri? webOrigin;
@@ -138,11 +152,25 @@ final class _Choosing extends _Phase {
   final ServerProblem? problem;
 }
 
+final class _Confirming extends _Phase {
+  const _Confirming(this.server, {required this.address, this.setup});
+
+  /// The server as its discovery document describes it.
+  final ServerInfo server;
+
+  /// The address the document was read from: typed, scanned or named by a link.
+  final Uri address;
+  final SetupLink? setup;
+}
+
 final class _Running extends _Phase {
-  const _Running(this.config, this.session, this.generation);
+  const _Running(this.config, this.session, this.generation, {this.change});
   final AppConfig config;
   final ServerSession session;
   final int generation;
+
+  /// The discovery document names another address or key (null: it does not).
+  final ServerChange? change;
 }
 
 final class _Demo extends _Phase {
@@ -238,7 +266,7 @@ class _BootstrapState extends State<Bootstrap> {
     // Never silently switch an existing installation to an untrusted link's server.
     if (_server != null && _server != link.server) return;
     if (_server == null) {
-      await _connect(link.server, setup: link);
+      await _connect(link.server, setup: link, confirm: true);
     } else {
       await widget.setupStore.save(link);
       _session?.setupPending.value = true;
@@ -265,14 +293,18 @@ class _BootstrapState extends State<Bootstrap> {
     }
   }
 
-  /// Leaves the current server for the one [link] names. Nobody is signed in on it.
-  Future<void> _switchToLinkServer(OpenedLink link) => _connectForLink(link);
+  /// Leaves the current server for the one [link] names. Nobody is signed in on it, and
+  /// the person has just agreed to the switch with the link's server in front of them.
+  Future<void> _switchToLinkServer(OpenedLink link) =>
+      _connectForLink(link, confirm: false);
 
-  Future<void> _connectForLink(OpenedLink link) async {
+  /// A fresh install opened with a link: the link's server is shown before the app
+  /// connects to it (F7).
+  Future<void> _connectForLink(OpenedLink link, {bool confirm = true}) async {
     final server = link.server!;
     _show(const _Starting());
     _pendingLink = link;
-    final problem = await _connect(server);
+    final problem = await _connect(server, confirm: confirm);
     if (problem != null) {
       _pendingLink = null;
       _show(_Choosing(prefill: displayServerAddress(server), problem: problem));
@@ -299,7 +331,7 @@ class _BootstrapState extends State<Bootstrap> {
           if (stored != null && stored.supabaseUrl != server.supabaseUrl) {
             // Never restore another backend's session into this client. Keep
             // offline data untouched; the member signs in on this server again.
-            await SecureSessionStorage().removePersistedSession();
+            await widget.removeSession();
             await widget.setupStore.clear();
           }
           if (setup != null && setup.server == server.supabaseUrl) {
@@ -353,7 +385,15 @@ class _BootstrapState extends State<Bootstrap> {
 
   /// Discovers [address], checks it against this app, keeps it and starts the app on it.
   /// Returns why it could not, or null.
-  Future<ServerProblem?> _connect(Uri address, {SetupLink? setup}) async {
+  ///
+  /// With [confirm] (a link or a scanned code), or when the document names another host
+  /// than [address], the app first shows the server it would use and waits for the
+  /// person ([_Confirming]); null is returned then too.
+  Future<ServerProblem?> _connect(
+    Uri address, {
+    SetupLink? setup,
+    bool confirm = false,
+  }) async {
     final result = await widget.discovery.discover(address);
     switch (result) {
       case Err(:final failure):
@@ -367,11 +407,59 @@ class _BootstrapState extends State<Bootstrap> {
         if (setup != null && setup.server != server.supabaseUrl) {
           return ServerProblem.invalid;
         }
-        if (setup != null) await widget.setupStore.save(setup);
-        await widget.store.write(server);
-        await _run(AppConfig.forServer(widget.build, server));
+        if (confirm || !sameServer(server.supabaseUrl, address)) {
+          _show(_Confirming(server, address: address, setup: setup));
+          return null;
+        }
+        await _adopt(server, setup: setup);
         return null;
     }
+  }
+
+  /// Keeps [server] and starts the app on it. A session kept for another address is
+  /// removed first: a refresh token only ever goes back to the server that issued it.
+  Future<void> _adopt(ServerInfo server, {SetupLink? setup}) async {
+    final previous = await widget.store.read();
+    if (previous != null && previous.supabaseUrl != server.supabaseUrl) {
+      await widget.removeSession();
+      await widget.setupStore.clear();
+    }
+    if (setup != null) await widget.setupStore.save(setup);
+    await widget.store.write(server);
+    await _run(AppConfig.forServer(widget.build, server));
+  }
+
+  /// The person agreed to the server on the confirmation page.
+  Future<void> _confirmed(_Confirming confirming) async {
+    if (!identical(_phase, confirming)) return;
+    _show(const _Starting());
+    await _adopt(confirming.server, setup: confirming.setup);
+  }
+
+  /// The person did not want the server: back to the question, or to the server the app
+  /// was running on (a switch offered for a link).
+  Future<void> _declined(_Confirming confirming) async {
+    if (!identical(_phase, confirming)) return;
+    _pendingLink = null;
+    _pendingEnrolCode = null;
+    final stored = _server == null ? null : await widget.store.read();
+    if (stored != null) {
+      await _run(AppConfig.forServer(widget.build, stored));
+      return;
+    }
+    _show(_Choosing(prefill: displayServerAddress(confirming.address)));
+  }
+
+  /// The person reconnects after the server's document changed ([ServerChange]): with a
+  /// new address this device signs out first, so its session never reaches it.
+  Future<void> _reconnect(ServerChange change) async {
+    if (change.addressChanged) {
+      if (_connected) await widget.signOutLocally();
+      await widget.removeSession();
+      await widget.setupStore.clear();
+    }
+    _show(const _Starting());
+    await _adopt(change.server);
   }
 
   Future<ServerProblem?> _fit(ServerInfo server) async =>
@@ -382,8 +470,9 @@ class _BootstrapState extends State<Bootstrap> {
       };
 
   /// The stored server again, as it describes itself today. Offline: nothing changes.
-  /// Refresh metadata in the running app without reconnecting. Changed connection
-  /// credentials are kept for the next start; an incompatible server stops the app.
+  /// Refresh metadata in the running app without reconnecting. A changed address or key
+  /// is not taken over: the app shows a notice ([ServerChange]) and the person decides;
+  /// an incompatible server stops the app.
   Future<void> _recheck(ServerInfo stored) async {
     final running = _phase;
     if (running is! _Running) return;
@@ -406,18 +495,29 @@ class _BootstrapState extends State<Bootstrap> {
           _show(_Incompatible(problem));
           return;
         }
-        await widget.store.write(server);
-        if (!mounted || !identical(_phase, running)) return;
-        if (server.supabaseUrl == stored.supabaseUrl &&
-            server.publishableKey == stored.publishableKey) {
+        if (server.supabaseUrl != stored.supabaseUrl ||
+            server.publishableKey != stored.publishableKey) {
+          // Never in the background: the stored address and key stay, and the app says
+          // what the document now names. The person reconnects, or not (F7).
           _show(
             _Running(
-              AppConfig.forServer(widget.build, server),
+              running.config,
               running.session,
               running.generation,
+              change: ServerChange(server, current: stored),
             ),
           );
+          return;
         }
+        await widget.store.write(server);
+        if (!mounted || !identical(_phase, running)) return;
+        _show(
+          _Running(
+            AppConfig.forServer(widget.build, server),
+            running.session,
+            running.generation,
+          ),
+        );
       }
     } finally {
       _rechecking = false;
@@ -432,7 +532,9 @@ class _BootstrapState extends State<Bootstrap> {
     }
   }
 
-  Future<ServerProblem?> _choose(String raw) async {
+  /// What was typed or pasted ([scanned]: read from a QR code) on the server question.
+  /// A link, a setup link or a scanned code is confirmed before the app connects.
+  Future<ServerProblem?> _choose(String raw, {bool scanned = false}) async {
     // An invitation or pairing link (or `CODE@host`) names its server and carries on.
     final link = parseAppLink(raw);
     final typed = link == null ? parseInvitation(raw) : null;
@@ -448,19 +550,23 @@ class _BootstrapState extends State<Bootstrap> {
     if (named != null) {
       if (named.server == null) return ServerProblem.linkWithoutServer;
       _pendingLink = named;
-      final problem = await _connect(named.server!);
+      final problem = await _connect(named.server!, confirm: true);
       if (problem != null) _pendingLink = null;
       return problem;
     }
     final setup = parseSetupLink(raw);
-    if (setup != null) return _connect(setup.server, setup: setup);
+    if (setup != null) {
+      return _connect(setup.server, setup: setup, confirm: true);
+    }
     final address = parseServerAddress(raw, allowHttp: kDebugMode);
     if (address == null) return ServerProblem.invalid;
     // A device code's QR carries its server: one scan for both (ADR-018).
     _pendingEnrolCode = raw.trim().startsWith('wuselwall://enrol')
         ? parseEnrolmentCode(raw)
         : null;
-    return _connect(address);
+    final problem = await _connect(address, confirm: scanned);
+    if (problem != null) _pendingEnrolCode = null;
+    return problem;
   }
 
   Future<void> _run(AppConfig config) async {
@@ -521,7 +627,19 @@ class _BootstrapState extends State<Bootstrap> {
         prefill: prefill,
         problem: problem,
         onAddress: _choose,
+        onScanned: (raw) => _choose(raw, scanned: true),
         onDemo: () => _show(const _Demo()),
+      ),
+    ),
+    final _Confirming confirming => BootstrapShell(
+      child: ServerConfirmPage(
+        key: ValueKey(confirming),
+        server: confirming.server.supabaseUrl,
+        via: sameServer(confirming.server.supabaseUrl, confirming.address)
+            ? null
+            : confirming.address,
+        onConfirm: () => _confirmed(confirming),
+        onCancel: () => unawaited(_declined(confirming)),
       ),
     ),
     _Incompatible(:final problem) => BootstrapShell(
@@ -540,23 +658,35 @@ class _BootstrapState extends State<Bootstrap> {
       ],
       child: const WuselWallApp(),
     ),
-    _Running(:final config, :final session, :final generation) => ProviderScope(
-      key: ValueKey('server-$generation'),
-      overrides: [
-        appConfigProvider.overrideWithValue(config),
-        serverSessionProvider.overrideWithValue(session),
-        setupStoreProvider.overrideWithValue(widget.setupStore),
-        // Local reminders exist on Android and iOS only (specs/09, Q47).
-        notificationSchedulerProvider.overrideWithValue(
-          !kIsWeb &&
-                  (defaultTargetPlatform == TargetPlatform.android ||
-                      defaultTargetPlatform == TargetPlatform.iOS)
-              ? PluginNotificationScheduler()
-              : const NoopNotificationScheduler(),
-        ),
-      ],
-      child: widget.app,
-    ),
+    _Running(:final config, :final session, :final generation, :final change) =>
+      ProviderScope(
+        key: ValueKey('server-$generation'),
+        overrides: [
+          appConfigProvider.overrideWithValue(config),
+          serverSessionProvider.overrideWithValue(session),
+          // Always overridden, so the list of overrides keeps its shape when a change
+          // appears or goes.
+          appBannerProvider.overrideWithValue(
+            change == null
+                ? null
+                : (context) => ServerChangeBanner(
+                    key: ValueKey(change),
+                    change: change,
+                    onReconnect: () => _reconnect(change),
+                  ),
+          ),
+          setupStoreProvider.overrideWithValue(widget.setupStore),
+          // Local reminders exist on Android and iOS only (specs/09, Q47).
+          notificationSchedulerProvider.overrideWithValue(
+            !kIsWeb &&
+                    (defaultTargetPlatform == TargetPlatform.android ||
+                        defaultTargetPlatform == TargetPlatform.iOS)
+                ? PluginNotificationScheduler()
+                : const NoopNotificationScheduler(),
+          ),
+        ],
+        child: widget.app,
+      ),
   };
 }
 

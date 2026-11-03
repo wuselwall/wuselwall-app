@@ -49,7 +49,7 @@ Unter **Geburtstag** wählst du mit **Datum wählen** den Geburtstag. Er steht a
 
 <Shot name="settings-member" alt="Seite eines Mitglieds mit Name, Farbe, Bild und Geburtstag" />
 
-In der Ansicht **Erweitert** steht darunter die **Rolle** (Erziehungsberechtigt oder Mitglied; ein Kind kann nicht erziehungsberechtigt sein, und die letzte erziehungsberechtigte Person mit Konto bleibt es) und **Nicht mehr dabei**: Die Person verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Aufgaben; Verlauf und Punkte bleiben, der Geburtstag wird gelöscht, und du kannst sie hier jederzeit zurückholen. Eine erwachsene Person mit Konto nimmst du so nicht heraus; sie verlässt die Familie vom eigenen Handy aus (siehe [Konto und Familie](/settings/account)).
+In der Ansicht **Erweitert** steht darunter die **Rolle** (Erziehungsberechtigt oder Mitglied; ein Kind kann nicht erziehungsberechtigt sein, und die letzte erziehungsberechtigte Person mit Konto bleibt es) und **Nicht mehr dabei**: Die Person verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Aufgaben; Verlauf und Punkte bleiben, der Geburtstag wird gelöscht, und du kannst sie hier jederzeit zurückholen. Ein eigenes Handy der Person (als „Handy eines Kindes“ verbunden) wird dabei gesperrt und muss danach neu verbunden werden; dasselbe gilt, wenn du eine Person zur erziehungsberechtigten machst – sie meldet sich dann mit ihrem Konto an. Eine erwachsene Person mit Konto nimmst du so nicht heraus; sie verlässt die Familie vom eigenen Handy aus (siehe [Konto und Familie](/settings/account)).
 
 Jede Person kann ihren eigenen Namen, ihre Farbe, ihr Bild und ihren Geburtstag selbst ändern. Alles andere ist Sache der Erziehungsberechtigten, auf geteilten Geräten mit PIN.
 
@@ -59,7 +59,7 @@ Die Reihenfolge der Mitglieder in der Liste ist die Reihenfolge auf der Wand und
 
 ## Zwei-Faktor zurücksetzen
 
-Hat eine andere Erziehungsberechtigte Person ihren zweiten Faktor verloren, tippst du bei ihrem Namen auf **Zwei-Faktor zurücksetzen**. Danach kann sie sich ohne den zweiten Faktor anmelden und ihn neu einrichten (siehe [Sicherheit](/settings/security#zwei-faktor-anmeldung)).
+Hat eine andere Erziehungsberechtigte Person ihren zweiten Faktor verloren, tippst du bei ihrem Namen auf **Zwei-Faktor zurücksetzen**. Danach kann sie sich ohne den zweiten Faktor anmelden und ihn neu einrichten (siehe [Sicherheit](/settings/security#zwei-faktor-anmeldung)). Verschickt dein Server E-Mails, bekommt die Person eine E-Mail darüber. WuselWall fragt dich vorher nach einer frischen Anmeldung (Code per E-Mail oder Passwort, und dein eigener zweiter Faktor, wenn du einen hast). Wer den zweiten Faktor zurückgesetzt hat, kann für dieselbe Person in derselben Woche keinen Passwort-Code erstellen, und umgekehrt; eine andere erziehungsberechtigte Person kann es. Die betroffene Person und die anderen Erziehungsberechtigten sehen den Vorgang auch auf Heute.
 
 ## Passwort zurücksetzen {#passwort-zuruecksetzen}
 

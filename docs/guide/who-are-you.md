@@ -19,7 +19,7 @@ Springt das Gerät auf „niemand“ zurück, zum Beispiel nach einer Minute ohn
 
 ## Die PIN für Erziehungsberechtigte
 
-Manche Dinge dürfen nur Erziehungsberechtigte – zum Beispiel Geräte hinzufügen oder sperren. Auf einem **geteilten Gerät** tippst du dazu auf deinen Namen und gibst deine **6-stellige PIN** ein. Danach kannst du **15 Minuten** lang Erziehungsberechtigten-Aktionen ausführen.
+Manche Dinge dürfen nur Erziehungsberechtigte – zum Beispiel Geräte hinzufügen oder sperren. Auf einem **geteilten Gerät** tippst du dazu auf deinen Namen und gibst deine **6-stellige PIN** ein. Danach kannst du **5 Minuten** lang Erziehungsberechtigten-Aktionen ausführen. Die Zeit endet früher, sobald jemand einen anderen Namen tippt, die Wand auf „niemand“ zurückspringt oder du die Einstellungen verlässt.
 
 - Die PIN gilt nur für **dich**: Tippt jemand anderes in dieser Zeit auf einen anderen Namen, bekommt er dadurch keine Rechte.
 - Bei einer falschen PIN siehst du, wie viele Versuche übrig sind. Nach einigen Fehlversuchen musst du kurz warten, nach zehn ist die PIN gesperrt.

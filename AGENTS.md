@@ -85,6 +85,13 @@ is still open. The former M2/R1–R4 lists are no longer separate schedules; lat
 live in [specs/23](specs/23-roadmap-after-alpha.md). Merged migrations and functions reach a live server after a backup
 (`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`, one without sets it
 `true` (`wuselwall mail` checks which).
+The second security review ([specs/19](specs/19-security-and-architecture-review.md) "Second
+review", fixed 2026-11-02) hardened the flows around the perimeter: the Send Email Hook mails each
+email-change code to its own address and `app.proven_address` records what was proven; links never
+plant a session and a server is confirmed before the app connects; guardian resets and account
+deletion need a fresh sign-in and `aal2`; task instances are materialised by the server only; rate
+buckets count failures with a client key Envoy sets; recurrence rules are walked by a bounded
+engine; server releases are signed (minisign) and verified by `wuselwall update`.
 
 **Never describe a particular operator's server in a committed file** — not a host, path,
 SSH alias, machine or the fact that someone runs one. Placeholders (`example.org`) in

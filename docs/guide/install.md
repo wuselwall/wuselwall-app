@@ -12,6 +12,10 @@ Die App weiß nicht von selbst, wo eure Daten liegen. Beim ersten Start fragt si
 - **QR-Code scannen**: Auf einem Gerät, das schon verbunden ist, steht er unter **Einstellungen → Erweitert → Server**. Der Code von **Gerät hinzufügen** geht auch und verbindet das Gerät gleich mit ([Gerät mit Code verbinden](/guide/setup#_2-gerat-mit-code-verbinden)).
 - **Ohne Server ausprobieren**: Die App zeigt eine Beispielfamilie. Nichts davon wird gespeichert, und nichts verlässt das Gerät. Mit **Beenden** kommst du zurück zur Frage.
 
+Kommt der Server aus einem Link oder einem gescannten QR-Code, oder führt die eingegebene Adresse zu einem anderen Server, zeigt die App zuerst dessen Adresse und fragt **Mit diesem Server verbinden?** Verbinde dich nur mit einer Adresse, die du kennst; im Zweifel tippst du sie selbst ein. Wo du dich anmeldest oder einen Code oder ein Passwort eingibst, steht in der App klein **Server:** mit der Adresse.
+
+Meldet euer Server später eine neue Adresse, bleibt die App bei der bisherigen und zeigt oben einen Hinweis. Erst **Neu verbinden** wechselt; bei einer neuen Adresse meldet sich das Gerät dabei ab, und du meldest dich dort neu an.
+
 Die App merkt sich den Server. Einen anderen wählst du unter **Einstellungen → Erweitert → Server → Server wechseln** ([Mitglieder und Geräte](/settings/members-devices#server)).
 
 Noch keinen Server? Die Anleitung [Eigener Server](/server/) zeigt, wie ihr einen einrichtet.

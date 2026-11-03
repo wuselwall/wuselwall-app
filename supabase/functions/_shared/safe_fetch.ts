@@ -8,8 +8,12 @@
 //
 // Known limit: the address is checked before the connection, not pinned to it, so a host whose
 // DNS answer changes between the check and the connection (DNS rebinding) is not caught here.
-// The redirect re-check and the public-only answer make that hard to abuse; the family's
-// network is the second line (the stack has no route to the home LAN from the public side).
+// A container of the stack does reach the operator's own network (the bridge network is
+// NAT-ed through the host), so the public-only check is not a wall. What holds is TLS: every
+// hop is https and the certificate is verified, so a rebind to an internal plain-HTTP service
+// fails the handshake and nothing is read. What remains is a yes/no reachability oracle in
+// last_error (the fetch failed one way or another), nothing of the service's content
+// (security review 2026-11-01, Info).
 
 export const FETCH_TIMEOUT_MS = 15_000;
 export const MAX_BODY_BYTES = 2 * 1024 * 1024;
@@ -219,8 +223,11 @@ export async function assertPublicHost(url: URL, resolve: Resolver = denoResolve
 
 const REDIRECT_STATUS = new Set([301, 302, 303, 307, 308]);
 
-/** Reads the body as text, refusing more than maxBytes (the stream is cancelled at the cap). */
-async function readCapped(res: Response, maxBytes: number): Promise<string> {
+/**
+ * Reads the body as text, refusing more than maxBytes (the stream is cancelled at the cap).
+ * Shared with the OpenHolidays client, which caps its answers the same way.
+ */
+export async function readCapped(res: Response, maxBytes: number): Promise<string> {
   const declared = res.headers.get("content-length");
   if (declared !== null && Number(declared) > maxBytes) {
     await res.body?.cancel();

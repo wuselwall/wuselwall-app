@@ -18,10 +18,18 @@ Sans ports ouverts, un tunnel Cloudflare peut transporter le trafic, mais Cloudf
 Choisissez une version dans les [publications](https://github.com/wuselwall/wuselwall-app/releases). `1.0.0` est un exemple de numéro, pas une promesse de disponibilité. Sur le serveur :
 
 ```bash
-curl -fsSL https://github.com/wuselwall/wuselwall-app/releases/download/server-v1.0.0/wuselwall-server-1.0.0.tar.gz | tar xz
+v=1.0.0
+for f in wuselwall-server-$v.tar.gz SHA256SUMS SHA256SUMS.minisig; do
+  curl -fsSLO "https://github.com/wuselwall/wuselwall-app/releases/download/server-v$v/$f"
+done
+minisign -Vm SHA256SUMS -P RWQkSenBTFOIn4wZCJQTUyXTgTwX8mO+WCK3WOn9W52Yer+3h7Bpmyp/
+sha256sum -c --ignore-missing SHA256SUMS
+tar xzf wuselwall-server-$v.tar.gz
 cd wuselwall
 ./wuselwall install --api https://api.example.org --web https://web.example.org --language fr --caddy
 ```
+
+Les deux vérifications (signature et somme de contrôle) doivent réussir avant de décompresser ; ce qu'elles doivent afficher et d'où vient `minisign` est expliqué sous [Vérifier un téléchargement](/fr/server/rented-server#checking-a-download).
 
 `--language` choisit la langue des **e-mails** (`de`, `en`, `fr`, `es`, allemand par défaut), pas celle de l’app. Docker télécharge plusieurs gigaoctets. L’outil crée les clés dans `stack/.env`, lance Caddy et ses certificats Let’s Encrypt, prépare la base et les tâches planifiées, puis affiche un **lien de configuration et son QR**, contenant une clé de configuration à usage unique. Aucun Node.js ni serveur web supplémentaire n’est requis.
 
@@ -105,9 +113,47 @@ Studio est désactivé. Avec `--studio`, accédez-y par tunnel SSH : `ssh -L 544
 
 ## Votre proxy à la place de Caddy {#your-own-web-server-instead-of-caddy}
 
-Installez sans `--caddy` si vous possédez déjà nginx, Traefik ou un autre proxy. La pile écoute alors sur `172.17.0.1:54421`.
+Installez sans `--caddy` si vous possédez déjà nginx, Traefik ou un autre proxy. La pile écoute alors seulement sur `172.17.0.1:54421`, l’adresse de Docker, que seul le serveur lui-même atteint.
 
 - Pour l’API, transmettez `/auth/v1/`, `/rest/v1/`, `/realtime/v1/` avec WebSockets et `/functions/v1/` vers `http://172.17.0.1:54421`. Transmettez `/.well-known/wuselwall.json` vers `/functions/v1/server-info` de cette destination. Les autres chemins, y compris `/rest/v1/` sans suite, renvoient 404.
 - Pour le web, servez `stack/volumes/web`, renvoyez les chemins inconnus vers `index.html` et transmettez le même fichier de découverte.
+- **`X-Forwarded-For` avec l’adresse que votre proxy a vue lui-même** — avec nginx `proxy_set_header X-Forwarded-For $remote_addr;`. Le serveur compte les tentatives échouées par adresse (clé de configuration, codes, invitations). Si votre proxy transmet l’en-tête tel quel, un attaquant choisit son adresse. Derrière un tunnel Cloudflare, utilisez `$http_cf_connecting_ip`.
 
-`stack/volumes/caddy/Caddyfile` sert de modèle. Si le proxy est sur une autre machine, réglez `GATEWAY_BIND` sur une adresse accessible puis lancez `./wuselwall compose up -d`.
+`stack/volumes/caddy/Caddyfile` sert de modèle. Pour nginx, l’essentiel ressemble à ceci, avec un frein sur les chemins que chacun peut appeler sans se connecter (l’image standard de Caddy n’en a pas ; le serveur freine aussi lui-même par adresse) :
+
+```nginx
+# One bucket per address for the paths anyone may call without signing in: the pairing,
+# invitation, password-reset and setup-key endpoints. 30 requests a minute is far more
+# than a family needs and far less than a guesser wants.
+limit_req_zone $binary_remote_addr zone=wuselwall_anon:1m rate=30r/m;
+map $http_upgrade $connection_upgrade { default upgrade; '' close; }
+
+server {
+    server_name api.example.org;
+    # TLS as usual (certbot, acme.sh, ...)
+
+    location ~ ^/rest/v1/rpc/(pairing_start|pairing_poll|invitation_preview|password_reset_redeem|setup_claim|enrol_device)$ {
+        limit_req zone=wuselwall_anon burst=20 nodelay;
+        proxy_pass http://172.17.0.1:54421;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    location ~ ^/(auth|rest|realtime|functions)/v1/ {
+        proxy_pass http://172.17.0.1:54421;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;        # Realtime (WebSockets)
+        proxy_set_header Connection $connection_upgrade;
+    }
+    location = /rest/v1/ { return 404; }
+    location = /.well-known/wuselwall.json {
+        proxy_pass http://172.17.0.1:54421/functions/v1/server-info;
+    }
+    location / { return 404; }
+}
+```
+
+Si le proxy est sur une autre machine, laissez quand même la pile sur `172.17.0.1`. Le plus simple : installez finalement avec `--caddy` et redirigez 80 et 443 du routeur vers le serveur ; Caddy chiffre, et votre autre proxy n’est plus nécessaire pour WuselWall. Sinon, ouvrez un tunnel SSH depuis la machine du proxy vers le serveur (`ssh -N -L 54421:172.17.0.1:54421 server`) et transmettez là vers `http://127.0.0.1:54421`. Régler `GATEWAY_BIND` dans `stack/.env` sur une adresse du réseau domestique fonctionne aussi, mais alors **toute la passerelle est en clair sur le réseau domestique** : connexion, API de la base, Realtime et fonctions, et avec `--studio` aussi Studio et `/pg/`. Ne le faites qu’avec une règle de pare-feu sur le serveur qui n’ouvre ce port qu’à l’adresse de votre proxy, puis relancez `./wuselwall compose up -d`.

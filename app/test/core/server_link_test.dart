@@ -170,4 +170,65 @@ void main() {
       );
     });
   });
+
+  group('links that are not the app\'s (F2)', () {
+    test('only https links of the links site are read', () {
+      const pairing = 'wuselwall.app/p/#K7QM3XRP@api.example.org';
+      expect(parseAppLink('https://$pairing'), isNotNull);
+      for (final scheme in ['http', 'wuselwall', 'ftp']) {
+        expect(parseAppLink('$scheme://$pairing'), isNull, reason: scheme);
+        expect(parsePairingCode('$scheme://$pairing'), isNull, reason: scheme);
+        expect(
+          parseInvitation('$scheme://wuselwall.app/i/#$token@api.example.org'),
+          isNull,
+          reason: scheme,
+        );
+      }
+      expect(parseAppLink('https://someone@wuselwall.app/p/#K7QM3XRP'), isNull);
+    });
+
+    test('a link carrying a session or a sign-in callback is refused', () {
+      for (final extra in [
+        '#access_token=a&refresh_token=b&expires_in=3600&token_type=bearer',
+        '#refresh_token=b',
+        '?code=0f1e2d',
+        '?token_type=bearer',
+        '#error=access_denied&error_description=x',
+        '?error_code=otp_expired',
+      ]) {
+        expect(
+          parseAppLink('https://wuselwall.app/i/$extra'),
+          isNull,
+          reason: extra,
+        );
+        expect(
+          parseInvitation('https://wuselwall.app/i/$extra'),
+          isNull,
+          reason: extra,
+        );
+        expect(
+          parsePairingCode('https://wuselwall.app/p/K7QM3XRP$extra'),
+          isNull,
+          reason: extra,
+        );
+        expect(
+          carriesSessionParameters(Uri.parse('https://wuselwall.app/i/$extra')),
+          isTrue,
+          reason: extra,
+        );
+      }
+      // The app's own fragments are not parameters.
+      expect(
+        carriesSessionParameters(
+          Uri.parse('https://wuselwall.app/i/#$token@api.example.org'),
+        ),
+        isFalse,
+      );
+      // An unrelated query does not hide a valid invitation.
+      expect(
+        parseInvitation('https://wuselwall.app/i/?lang=de#$token')?.secret,
+        token,
+      );
+    });
+  });
 }

@@ -46,7 +46,10 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   final _family = TextEditingController();
   final _name = TextEditingController();
   final _founderCode = TextEditingController();
-  late final bool _needsCode;
+
+  /// Whether the key field shows. Off after a claim, until the server asks for a code after
+  /// all (`founder_code_required`: the claim no longer stands in, see the server's F12 note).
+  late bool _needsCode;
   String? _setupCode;
   var _loadingSetup = true;
   var _seeded = false;
@@ -157,7 +160,10 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       colorHex: toHex(MemberPalette.swatches[_swatch].light),
       timezone: _timezone,
       locale: householdLocaleTag(locale),
-      founderCode: _needsCode ? (_setupCode ?? _founderCode.text) : null,
+      // The key the setup link left on this device is always sent when there is one: the
+      // claim alone founds a family only from a proven address or the claiming network
+      // (security review 2026-11-01, F12), the key founds it from anywhere.
+      founderCode: _setupCode ?? (_needsCode ? _founderCode.text : null),
       seedExamples: _examples,
       deviceLabel: deviceLabel(
         l10n: l10n,
@@ -176,6 +182,8 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       await setupStore.clear();
       setupSignal.value = false;
       _setupCode = null;
+      // The server wants a code even though the address claimed: show the field.
+      _needsCode = true;
     }
     if (!mounted) return;
     switch (result) {

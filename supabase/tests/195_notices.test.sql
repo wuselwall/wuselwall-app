@@ -134,7 +134,9 @@ select pg_temp.add_dev('kiosk', 'kiosk', 'hh_a', null, 'kiosk', 'kiosk');
 select pg_temp.act_as_dev('ipad');
 select is(pg_temp.keys(pg_temp.id('papa')), '', 'on a shared device a guardian without the PIN step-up gets nothing');
 reset role;
-update app.device set guardian_verified_until = now() + interval '5 minutes' where label = 'ipad';
+-- The window is the verified guardian's own (app.guardian_ok), as api.guardian_verify_pin records it.
+update app.device set guardian_verified_until = now() + interval '5 minutes',
+                      guardian_verified_profile = pg_temp.id('papa') where label = 'ipad';
 select pg_temp.act_as_dev('ipad');
 select is(pg_temp.keys(pg_temp.id('papa')), 'join:Opa,join:Mama', 'with the step-up valid the guardian sees the join notices');
 select is(pg_temp.keys(pg_temp.id('opa')), '', 'a member acting on a shared device gets nothing');
@@ -172,6 +174,11 @@ select pg_temp.add_dev('mama2', 'mama2', 'hh_a', 'mama', 'personal', 'adult');
 select pg_temp.add_dev('mama3', 'mama3', 'hh_a', 'mama', 'personal', 'adult', true);
 select pg_temp.add_dev('mama4', 'mama4', 'hh_a', 'mama', 'personal', 'adult');
 update app.device set created_at = now() - interval '15 days' where label = 'mama4';
+-- Mama's other phones are her own account on other sessions, as api.register_personal_device
+-- makes them: a personal device of another Auth user would not be hers (app.guardian_ok).
+update app.device set auth_user_id = (select usr from users where name = 'mama'), auth_session_id = gen_random_uuid()
+ where label in ('mama2', 'mama3', 'mama4');
+update devs set usr = (select usr from users where name = 'mama') where name in ('mama2', 'mama3', 'mama4');
 
 select pg_temp.act_as_dev('mama');
 select is(pg_temp.keys(pg_temp.id('mama')), 'signin:mama2,join:Opa',

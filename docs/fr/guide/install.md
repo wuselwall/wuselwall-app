@@ -12,6 +12,10 @@ L’app demande **Quel serveur ?**, car elle n’a pas de serveur prédéfini.
 - **Scannez le code QR** d’un appareil déjà connecté, dans **Paramètres → Avancés → Serveur**. Le code d’ajout d’appareil connecte aussi l’appareil à la famille.
 - **Essayez sans serveur** : une famille d’exemple fonctionne entièrement sur l’appareil. Rien n’est conservé ni envoyé. Quittez la démonstration pour revenir au choix du serveur.
 
+Si le serveur vient d’un lien ou d’un code QR scanné, ou si l’adresse saisie mène à un autre serveur, l’app affiche d’abord son adresse et demande **Se connecter à ce serveur ?** Ne vous connectez qu’à une adresse que vous connaissez ; en cas de doute, saisissez-la vous-même. Partout où vous vous connectez ou saisissez un code ou un mot de passe, l’app indique en petit **Serveur :** et l’adresse.
+
+Si votre serveur annonce plus tard une nouvelle adresse, l’app reste sur l’ancienne et affiche un avis en haut. Seul **Se reconnecter** change de serveur ; avec une nouvelle adresse, l’appareil se déconnecte et vous vous y reconnectez.
+
 L’app mémorise le serveur. Pour en changer : **Paramètres → Avancés → Serveur → Changer de serveur** ([Appareils](/fr/settings/members-devices#server)). Vous n’en avez pas encore ? Consultez [Votre propre serveur](/fr/server/).
 
 ## Dans le navigateur {#in-the-browser-on-any-device}

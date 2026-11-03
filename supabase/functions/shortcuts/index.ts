@@ -270,7 +270,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // Refusals come before the household is known, or instead of it: the request's language.
   const m = messagesFor(lang(null));
 
-  const handler = HANDLERS[actionOf(url.pathname)];
+  // A name from the URL: only the handlers' own keys, so that "constructor" or
+  // "__proto__" reach no inherited property (security review 2026-11-01).
+  const action = actionOf(url.pathname);
+  const handler = Object.hasOwn(HANDLERS, action) ? HANDLERS[action] : undefined;
   if (!handler) return reply({ text: m.unknownAction, data: {} }, 404, json);
   if (!handler.methods.includes(req.method)) {
     return reply({ text: m.unknownAction, data: {} }, 405, json);

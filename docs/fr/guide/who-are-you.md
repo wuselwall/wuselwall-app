@@ -18,7 +18,7 @@ Quand l’appareil revient à « personne », par exemple après une minute sans
 
 ## Le PIN parental {#the-guardian-pin}
 
-L’ajout et le blocage d’appareils, entre autres, sont réservés aux parents. Sur un appareil **partagé**, touchez votre prénom et saisissez votre **PIN à six chiffres**. L’autorisation dure **15 minutes** et reste liée à vous : une autre personne qui touche son prénom n’obtient pas vos droits.
+L’ajout et le blocage d’appareils, entre autres, sont réservés aux parents. Sur un appareil **partagé**, touchez votre prénom et saisissez votre **PIN à six chiffres**. L’autorisation dure **5 minutes** – moins dès que quelqu’un touche un autre prénom, que le mur revient à « personne » ou que vous quittez les paramètres – et reste liée à vous : une autre personne qui touche son prénom n’obtient pas vos droits.
 
 Un PIN erroné affiche le nombre d’essais restants. Après plusieurs erreurs, il faut patienter ; après dix, le PIN est bloqué.
 

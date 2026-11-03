@@ -69,6 +69,7 @@ class _PasswordResetPageState extends ConsumerState<PasswordResetPage> {
     final busy = _busy || !online;
 
     return AuthFormScaffold(
+      showServer: true,
       onBack: () => Navigator.of(context).maybePop(),
       title: l10n.passwordResetTitle,
       children: [

@@ -40,7 +40,7 @@ A prepared workflow on GitHub does this, in your own copy of WuselWall. You inst
    | `SUPABASE_ACCESS_TOKEN` | the access token from step 3 |
    | `SUPABASE_PROJECT_ID` | the project ID |
    | `SUPABASE_DB_PASSWORD` | the database password |
-   | `WUSELWALL_SETUP_TOKEN` | a phrase of your choice made of letters and digits, e.g. `CakeOnSunday2026`. You need it once, as the setup key that founds the family |
+   | `WUSELWALL_SETUP_TOKEN` | the setup key that founds the family once: at least 16 random characters, e.g. `9f3c1a7e5b20d8c4e61f0a93`. Make it with `openssl rand -hex 12` or in your password manager and keep it there. The workflow refuses a shorter one while there is no family |
    | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | optional: SMTP access for sign-in codes by email, five secrets ([Email](#mail)) |
 
 5. Open the **Actions** tab. In a copy, workflows start out switched off: tap **I understand my workflows, go ahead and enable them**. Then **deploy-supabase → Run workflow**. Under **language**, choose the language of the sign-in emails: `de` (default), `en`, `fr` or `es`. Tick **web** if you want the web app (step 4), and tap **Run workflow**.
@@ -48,7 +48,7 @@ A prepared workflow on GitHub does this, in your own copy of WuselWall. You inst
 After a few minutes the run turns green. Its summary shows your server's address. The workflow sets up the database, configures sign-in and data access, uploads the server functions, applies the mail templates and subjects in the chosen email language and schedules the nightly jobs. Finally it checks the server: does it answer the app, do the four jobs reach their functions, does sign-in match the mail you configured? If a check fails, the run turns red and names the reason.
 
 ::: tip Secrets stay secret
-Anyone can see your copy's logs, but not the secrets: GitHub hides them everywhere. The server keeps only a fingerprint of the phrase for founding the family.
+Anyone can see your copy's logs, but not the secrets: GitHub hides them everywhere. The server keeps only a fingerprint of the setup key. Until the family is founded, anyone can see that your server is still unclaimed and guess keys; that is why it is a random key, not a phrase.
 
 The access token can do anything in your Supabase account. If you want to be careful, delete it at Supabase after the run and create a new one for the next update.
 :::
@@ -63,7 +63,7 @@ You can add or remove the secrets later and run the workflow again; the accounts
 
 ## 3. Connecting the app
 
-Open WuselWall. At the question **Which server?**, enter the **project ID** and tap **Connect**. Then **I have the setup key** with the phrase from `WUSELWALL_SETUP_TOKEN` ([The setup key](/en/guide/setup#setup-key)): it announces your address, and the family follows after sign-in.
+Open WuselWall. At the question **Which server?**, enter the **project ID** and tap **Connect**. Then **I have the setup key** with the key from `WUSELWALL_SETUP_TOKEN` ([The setup key](/en/guide/setup#setup-key)): it announces your address, and the family follows after sign-in.
 
 <Shot name="setup-server" alt="The question about the server" />
 

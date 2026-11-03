@@ -10,10 +10,12 @@
 //
 //   supabase/.env  optional. WW_JWT_SECRET, WW_PUBLISHABLE_KEY and WW_SECRET_KEY are kept
 //                  from it, so the apps and every device session of an existing server keep
-//                  working; WW_CRON_SECRET is taken over when present. Whatever is missing
-//                  is generated. Mail settings in it (SMTP_HOST, SMTP_PORT, SMTP_USER,
-//                  SMTP_PASS, SMTP_SENDER, or the Scaleway hook's SCW_* and MAIL_FROM) are
-//                  taken over too; without them the server sends no mail (see below).
+//                  working; WW_CRON_SECRET is taken over when present. Published defaults,
+//                  placeholders and short values are refused, and each key kept is named on
+//                  stderr with a fingerprint. Whatever is missing is generated. Mail settings
+//                  in it (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SENDER, or the
+//                  Scaleway hook's SCW_* and MAIL_FROM) are taken over too; without them the
+//                  server sends no mail (see below).
 //   --api          the server's public address (the gateway behind HTTPS)
 //   --web          where the web app is served; Auth sends its redirects there
 //   --rp-id        the passkey relying party (default: the web app's host)
@@ -73,6 +75,55 @@ const vars = src
 const hex = (n) => crypto.randomBytes(n).toString('hex');
 const b64 = (n) => crypto.randomBytes(n).toString('base64');
 const b64url = (x) => Buffer.from(x).toString('base64url');
+
+// Keys taken over from the source file must be this server's own (security review
+// 2026-11-01, F8). The Supabase CLI's defaults are printed in its source and in every
+// tutorial: a stack that signs with the public JWT secret, or that accepts the public
+// sb_secret_ key (the gateway swaps it for the service role), belongs to whoever reads them.
+// The list holds the CLI's JWT secret, publishable and secret keys and its demo anon and
+// service-role tokens, upstream docker/.env.example's JWT secret, and this repository's
+// placeholders (supabase/.env.example). A value is also refused when it is too short or too
+// uniform to be random, when it is a JWT (no kept variable holds one), or when it contains
+// a placeholder word.
+const PUBLIC_VALUES = new Set([
+  'super-secret-jwt-token-with-at-least-32-characters-long',
+  'your-super-secret-jwt-token-with-at-least-32-characters-long',
+  'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
+  'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz',
+  'sb_publishable_wLdx7w89KWFq-39s4emmnA__9XR9r-_',
+  'sb_publishable__4DBgvrDe7ec234wnvCAog_LPzBtkQe',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU',
+]);
+const PLACEHOLDER = /replace-?me|change-?me|placeholder|example|your-|secret-jwt|xxxxxxxx/i;
+// Each kept variable: its prefix and the shortest random part make-env.mjs would accept. 32
+// characters for the secrets (make-env.mjs generates 64 hex digits), 22 for the opaque keys
+// (16 random bytes in base64url, as generated below and by Supabase).
+const KEPT = {
+  WW_JWT_SECRET: { prefix: '', min: 32 },
+  WW_PUBLISHABLE_KEY: { prefix: 'sb_publishable_', min: 22 },
+  WW_SECRET_KEY: { prefix: 'sb_secret_', min: 22 },
+  WW_CRON_SECRET: { prefix: '', min: 32 },
+};
+const fingerprint = (value) => crypto.createHash('sha256').update(value).digest('hex').slice(0, 8);
+for (const [name, { prefix, min }] of Object.entries(KEPT)) {
+  const value = vars[name];
+  if (!value) continue;
+  const refuse = (why) => fail(`${name} in ${src} ${why}. Delete the line to have a fresh value generated ` +
+    '(a running server then needs its devices connected again), or put in the value of the server that already uses it.');
+  if (PUBLIC_VALUES.has(value)) refuse('is a published default (Supabase CLI or upstream example), not a secret');
+  if (/^eyJ[\w-]*\.[\w-]*\.[\w-]*$/.test(value)) refuse('is a JWT; it must be the key itself');
+  if (!value.startsWith(prefix)) refuse(`must start with ${prefix}`);
+  const body = value.slice(prefix.length);
+  if (PLACEHOLDER.test(body)) refuse('is a placeholder');
+  if (Buffer.byteLength(body) < min) refuse(`is shorter than ${min} characters`);
+  // Random text of that length uses many different characters: 64 random hex digits show all
+  // 16 almost always, and fewer than 10 would be a pattern ("aaaa…", "abab…"), not a key.
+  if (new Set(body).size < 10) refuse('repeats too few characters to be random');
+  // The fingerprint lets an operator compare the key without printing it: the same command on
+  // the old server's file, `printf %s "$value" | sha256sum | cut -c1-8`, shows the same 8 digits.
+  console.error(`make-env: kept ${name} from ${src} (sha256 ${fingerprint(value)})`);
+}
 
 // A new server gets fresh keys. They land in the .env printed below (JWT_SECRET,
 // SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, CRON_SECRET): that file is the copy to keep.

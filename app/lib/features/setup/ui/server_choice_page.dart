@@ -42,12 +42,17 @@ class ServerChoicePage extends StatefulWidget {
     this.prefill,
     this.problem,
     this.canScan = !kIsWeb,
+    this.onScanned,
     super.key,
   });
 
   /// Connects to what was typed or scanned; returns the problem, or null when the app
   /// moves on to that server.
   final Future<ServerProblem?> Function(String raw) onAddress;
+
+  /// Like [onAddress] for a scanned code, which the app confirms before it connects (a
+  /// printed code can name any server). Null: [onAddress].
+  final Future<ServerProblem?> Function(String raw)? onScanned;
   final VoidCallback onDemo;
   final String? prefill;
   final ServerProblem? problem;
@@ -87,7 +92,7 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
     );
   }
 
-  Future<void> _connect(String raw) async {
+  Future<void> _connect(String raw, {bool scanned = false}) async {
     if (_busy) return;
     if (raw.trim().isEmpty) {
       _fail(ServerProblem.empty);
@@ -103,7 +108,9 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
       _busy = true;
       _problem = null;
     });
-    final problem = await widget.onAddress(raw);
+    final problem = await (scanned
+        ? widget.onScanned ?? widget.onAddress
+        : widget.onAddress)(raw);
     if (!mounted) return;
     if (problem != null) {
       _fail(problem);
@@ -138,7 +145,7 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
     }
     final server = parseAppLink(raw)?.server ?? parseServerAddress(raw);
     if (server != null) _address.text = displayServerAddress(server);
-    await _connect(raw);
+    await _connect(raw, scanned: true);
   }
 
   @override
@@ -252,6 +259,108 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
                   l10n.serverHelp,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Before the app connects to a server it did not get from a typed address: a link, a
+/// scanned code, or a document that names another address than the one typed (security
+/// review 2026-11-01, F7). A crafted "join our family" link or a printed code could lead a
+/// fresh install to someone else's server, where the person would type the password of
+/// their own; so the app shows the address it is about to use and connects only when the
+/// person says so.
+class ServerConfirmPage extends StatefulWidget {
+  const ServerConfirmPage({
+    required this.server,
+    required this.onConfirm,
+    required this.onCancel,
+    this.via,
+    super.key,
+  });
+
+  /// The address the app would talk to.
+  final Uri server;
+
+  /// The address that was typed, scanned or linked, when it is not [server].
+  final Uri? via;
+
+  final Future<void> Function() onConfirm;
+  final VoidCallback onCancel;
+
+  @override
+  State<ServerConfirmPage> createState() => _ServerConfirmPageState();
+}
+
+class _ServerConfirmPageState extends State<ServerConfirmPage> {
+  bool _busy = false;
+
+  Future<void> _confirm() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    await widget.onConfirm();
+    if (mounted) setState(() => _busy = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final via = widget.via;
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: ListView(
+              padding: const EdgeInsets.all(Tokens.space6),
+              children: [
+                Icon(
+                  Icons.dns_outlined,
+                  size: 64,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(height: Tokens.space4),
+                Text(
+                  l10n.serverConfirmTitle,
+                  style: theme.textTheme.headlineSmall,
+                ),
+                const SizedBox(height: Tokens.space4),
+                SelectableText(
+                  displayServerAddress(widget.server),
+                  key: const ValueKey('server-confirm-host'),
+                  style: theme.textTheme.titleLarge,
+                ),
+                if (via != null) ...[
+                  const SizedBox(height: Tokens.space2),
+                  Text(
+                    l10n.serverConfirmVia(displayServerAddress(via)),
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+                const SizedBox(height: Tokens.space4),
+                Text(l10n.serverConfirmBody),
+                const SizedBox(height: Tokens.space6),
+                FilledButton(
+                  key: const ValueKey('server-confirm'),
+                  onPressed: _busy ? null : _confirm,
+                  child: _busy
+                      ? const SizedBox.square(
+                          dimension: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(l10n.serverConnect),
+                ),
+                const SizedBox(height: Tokens.space3),
+                TextButton(
+                  key: const ValueKey('server-confirm-cancel'),
+                  onPressed: _busy ? null : widget.onCancel,
+                  child: Text(l10n.cancel),
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -11,6 +12,7 @@ import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/server/server_compat.dart';
 import 'package:wuselwall/core/server/server_discovery.dart';
 import 'package:wuselwall/core/server/server_info.dart';
+import 'package:wuselwall/core/server/server_store.dart';
 
 Map<String, Object?> doc({
   String? url = 'https://api.example.org',
@@ -164,6 +166,43 @@ void main() {
       );
     });
 
+    test('the address is https outside debug builds (F7)', () {
+      final origin = Uri.parse('https://api.example.org');
+      for (final url in [
+        'http://evil.example',
+        'ftp://api.example.org',
+        'https://user@api.example.org',
+        'api.example.org',
+      ]) {
+        expect(
+          () => ServerInfo.fromDiscovery(doc(url: url), origin: origin),
+          throwsFormatException,
+          reason: url,
+        );
+      }
+      // A debug build talking to a laptop stack, like a typed address.
+      expect(
+        ServerInfo.fromDiscovery(
+          doc(url: 'http://localhost:54321'),
+          origin: Uri.parse('http://localhost:54321'),
+          allowHttp: true,
+        ).supabaseUrl,
+        Uri.parse('http://localhost:54321'),
+      );
+    });
+
+    test('a stored plain-http server is not read back in release', () async {
+      FlutterSecureStorage.setMockInitialValues({});
+      final dev = ServerInfo.fromDiscovery(
+        doc(url: 'http://localhost:54321'),
+        origin: Uri.parse('http://localhost:54321'),
+        allowHttp: true,
+      );
+      await ServerStore(allowHttp: true).write(dev);
+      expect(await ServerStore(allowHttp: true).read(), isNotNull);
+      expect(await ServerStore(allowHttp: false).read(), isNull);
+    });
+
     test('survives being kept on the device', () {
       final s = info();
       final back = ServerInfo.fromDiscovery(
@@ -276,6 +315,18 @@ void main() {
       );
       final result = await d.discover(origin);
       expect((result as Ok<ServerInfo>).value.supabaseUrl, origin);
+    });
+
+    test('a document naming a plain-http address is not WuselWall', () async {
+      final d = ServerDiscovery(
+        allowHttp: false,
+        client: MockClient(
+          (_) async =>
+              http.Response(jsonEncode(doc(url: 'http://evil.example')), 200),
+        ),
+      );
+      final result = await d.discover(origin);
+      expect((result as Err).failure, isA<NotFoundFailure>());
     });
 
     test('something that answers but is not WuselWall', () async {

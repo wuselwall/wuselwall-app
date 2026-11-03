@@ -28,10 +28,15 @@
 	import discovery
 	handle {
 		root * /srv/web
+		# The same policy as the meta element in app/web/index.html, plus frame-ancestors
+		# (security review 2026-11-01, F25): only the web app's own scripts and CanvasKit's
+		# WebAssembly, the server over https and wss. The camera only for the page itself.
 		header {
 			Cache-Control "no-cache"
+			Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https: wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
 			X-Content-Type-Options "nosniff"
-			Referrer-Policy "strict-origin-when-cross-origin"
+			Referrer-Policy "no-referrer"
+			Permissions-Policy "camera=(self), microphone=(), geolocation=(), payment=(), usb=()"
 			X-Frame-Options "DENY"
 		}
 		try_files {path} /index.html

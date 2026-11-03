@@ -18,13 +18,13 @@ dependencies:
   crypto: ^3.0.7
   # cupertino_ui (pulled in by Flutter) refers to this font; without it the build warns.
   cupertino_icons: ^2.0.0
-  drift: ^2.35.2
+  drift: ^2.35.3
   drift_flutter: ^0.3.1
   file_picker: ^13.1.0
   flutter:
     sdk: flutter
   # Pinned: 22.3.2 was two days old when reminders were added; move up after a review.
-  flutter_local_notifications: 22.3.1
+  flutter_local_notifications: 22.3.3
   flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^3.0.0
@@ -43,7 +43,7 @@ dependencies:
   timezone: ^0.11.2
   url_launcher: ^6.3.3
   uuid: ^4.6.0
-  web: ^1.1.1
+  web: ^1.1.2
   zxing2: ^0.2.4
 
 dev_dependencies:

@@ -4020,5 +4020,138 @@
         "type": "String"
       }
     }
+  },
+  "serverCaption": "Server: {host}",
+  "@serverCaption": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "serverConfirmTitle": "Connect to this server?",
+  "serverConfirmBody": "This is where your family's data lives and where you sign in. Only connect if you know this address, for example from your family. If in doubt, cancel and type the address yourself.",
+  "serverConfirmVia": "{address} points to this server.",
+  "@serverConfirmVia": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "serverMovedBody": "The server names a new address: {host}. The app stays on the old one until you reconnect.",
+  "@serverMovedBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "serverMovedConfirm": "Connect to {host}? This device signs out, then you sign in there again. Only if you know the server has moved.",
+  "@serverMovedConfirm": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "serverKeyChangedBody": "The server has new connection details for the app. Reconnect so the app uses them.",
+  "serverMovedAction": "Reconnect",
+  "accountMfaRequired": "Confirm the code from your authenticator app first, then try again.",
+  "accountPasswordReauthBody": "Changing the password needs a fresh sign-in. We send a code to {email}.",
+  "@accountPasswordReauthBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountPasswordReauthPasswordBody": "Changing the password needs a fresh sign-in. Enter the current password of {email}.",
+  "@accountPasswordReauthPasswordBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountResetReauthBody": "Resetting someone's sign-in needs a fresh sign-in of your own. We send a code to {email}.",
+  "@accountResetReauthBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountResetReauthPasswordBody": "Resetting someone's sign-in needs a fresh sign-in of your own. Enter the password of {email}.",
+  "@accountResetReauthPasswordBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountMfaResetRecent": "You reset the two-factor sign-in of {name} less than a day ago. Another guardian can create the code, or wait a day.",
+  "@accountMfaResetRecent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountPasswordResetRecent": "You created a password code for {name} less than a day ago. Another guardian can reset the two-factor sign-in, or wait a day.",
+  "@accountPasswordResetRecent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountPasswordSavedOthersOut": "Password saved. Your other devices have been signed out.",
+  "trustFeedCreatedBy": "Created by {name}",
+  "@trustFeedCreatedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "errInvitationRequired": "This server takes only invited people. Ask a guardian of the family for an invitation.",
+  "accountNoticeMfaResetYou": "{name} reset your two-factor sign-in",
+  "@accountNoticeMfaResetYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountNoticeMfaReset": "{name} reset the two-factor sign-in of {target}",
+  "@accountNoticeMfaReset": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "accountNoticePasswordResetYou": "{name} created a password code for you",
+  "@accountNoticePasswordResetYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountNoticePasswordReset": "{name} created a password code for {target}",
+  "@accountNoticePasswordReset": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -40,7 +40,7 @@ Das erledigt ein vorbereiteter Ablauf auf GitHub, in eurer eigenen Kopie von Wus
    | `SUPABASE_ACCESS_TOKEN` | das Access Token aus Schritt 3 |
    | `SUPABASE_PROJECT_ID` | die Projekt-ID |
    | `SUPABASE_DB_PASSWORD` | das Datenbank-Passwort |
-   | `WUSELWALL_SETUP_TOKEN` | ein Satz eurer Wahl aus Buchstaben und Ziffern, z. B. `KuchenAmSonntag2026`. Ihr braucht ihn einmal, als Einrichtungsschlüssel, der die Familie gründet |
+   | `WUSELWALL_SETUP_TOKEN` | der Einrichtungsschlüssel, der einmal die Familie gründet: mindestens 16 zufällige Zeichen, z. B. `9f3c1a7e5b20d8c4e61f0a93`. Erzeuge ihn mit `openssl rand -hex 12` oder im Passwort-Manager und leg ihn dort ab. Kürzere lehnt der Ablauf ab, solange es keine Familie gibt |
    | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | freiwillig: SMTP-Zugang für Anmelde-Codes per Mail, fünf Secrets ([E-Mail-Versand](#e-mail-versand)) |
 
 5. Öffne den Reiter **Actions**. In einer Kopie sind die Abläufe zuerst ausgeschaltet: Tippe auf **I understand my workflows, go ahead and enable them**. Dann **deploy-supabase → Run workflow**. Wähle bei **language** die Sprache der Anmelde-Mails: `de` (Standard), `en`, `fr` oder `es`. Setze den Haken bei **web**, wenn ihr die Web-App wollt (Schritt 4), und tippe auf **Run workflow**.
@@ -48,7 +48,7 @@ Das erledigt ein vorbereiteter Ablauf auf GitHub, in eurer eigenen Kopie von Wus
 Nach ein paar Minuten ist der Lauf grün. In seiner Zusammenfassung steht die Adresse eures Servers. Der Ablauf richtet die Datenbank ein, stellt Anmeldung und Datenzugriff ein, lädt die Server-Funktionen hoch, wählt die Mail-Templates und Betreffzeilen in der gewählten E-Mail-Sprache und plant die nächtlichen Aufträge. Zum Schluss prüft er den Server: Antwortet er der App, erreichen die vier Aufträge ihre Funktionen, passt die Anmeldung zum eingetragenen Mail-Versand? Scheitert eine Prüfung, wird der Lauf rot und nennt den Grund.
 
 ::: tip Geheimnisse bleiben geheim
-Die Protokolle eurer Kopie kann jeder sehen, die Secrets nicht: GitHub blendet sie überall aus. Den Satz für die Familiengründung speichert der Server nur als Fingerabdruck.
+Die Protokolle eurer Kopie kann jeder sehen, die Secrets nicht: GitHub blendet sie überall aus. Den Einrichtungsschlüssel speichert der Server nur als Fingerabdruck. Bis die Familie gegründet ist, kann jeder sehen, dass euer Server noch frei ist, und Schlüssel raten; deshalb ein zufälliger statt eines Satzes.
 
 Das Access Token darf alles in eurem Supabase-Konto. Wer vorsichtig ist, löscht es nach dem Lauf bei Supabase und legt für das nächste Update ein neues an.
 :::
@@ -63,7 +63,7 @@ Ihr könnt die Secrets später nachtragen oder löschen und den Lauf erneut star
 
 ## 3. Die App verbinden
 
-Öffne WuselWall. Auf die Frage **Mit welchem Server?** gibst du die **Projekt-ID** ein und tippst auf **Verbinden**. Dann **Ich habe den Einrichtungsschlüssel** mit dem Satz aus `WUSELWALL_SETUP_TOKEN` ([Der Einrichtungsschlüssel](/guide/setup#einrichtungsschluessel)): Er kündigt deine Adresse an, und nach der Anmeldung folgt die Familie.
+Öffne WuselWall. Auf die Frage **Mit welchem Server?** gibst du die **Projekt-ID** ein und tippst auf **Verbinden**. Dann **Ich habe den Einrichtungsschlüssel** mit dem Schlüssel aus `WUSELWALL_SETUP_TOKEN` ([Der Einrichtungsschlüssel](/guide/setup#einrichtungsschluessel)): Er kündigt deine Adresse an, und nach der Anmeldung folgt die Familie.
 
 <Shot name="setup-server" alt="Die Frage nach dem Server" />
 

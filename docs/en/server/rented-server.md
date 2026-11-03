@@ -27,7 +27,7 @@ WuselWall is not affiliated with, sponsored or endorsed by any of the companies 
 
 **Cost:** roughly **€6–25 a month** for a fitting server, depending on provider, size and VAT, plus the domain (as of October 2026). The cheapest sizes are sold out at times (at Hetzner, the whole cheapest line on 25 October 2026); the next size up costs about three times as much. The provider's price list counts.
 
-**Without a cloud-init field:** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) and [Infomaniak](https://www.infomaniak.com/) (Switzerland, Geneva; Swiss data-protection law) also rent fitting servers in Europe but document no such field. There you create a server with Ubuntu and install over SSH exactly as [at home](/en/server/home-server).
+**Without a cloud-init field:** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) and [Infomaniak](https://www.infomaniak.com/) (Switzerland, Geneva; Swiss data-protection law) also rent fitting servers in Europe but document no such field. There you create a server with Ubuntu and install over SSH exactly as [at home](/en/server/home-server), after checking the download as in [Checking a download](#checking-a-download).
 
 **Where does the data live?** On your own server at the provider. The provider supplies hardware, power and network; like any host it could technically reach the machine, and its data-processing agreement forbids it to use your data. The connections to your devices are encrypted, and only WuselWall reads your database. Unlike Supabase Inc. (USA), the provider is a European company subject to European law, Swiss law for Infomaniak.
 
@@ -45,7 +45,7 @@ This guide shows Hetzner because its console has a plain field for cloud-config;
    ssh root@<ip> cat /srv/wuselwall/install.log
    ```
 
-   It shows the server address, the setup link with its QR code and the one-time setup key. Copy `/srv/wuselwall/stack/.env` into your password manager right away ([why](/en/server/home-server#_1-installing)).
+   It shows the server address, the setup link with its QR code and the one-time setup key. Copy `/srv/wuselwall/stack/.env` into your password manager right away ([why](/en/server/home-server#_1-installing)). The first line says whether the release's signature and checksum matched. If the file does not exist, the server could not download the release or refused it as altered; `ssh root@<ip> tail -n 30 /var/log/cloud-init-output.log` shows why.
 6. **Continue as at home:** [connect the app](/en/server/home-server#_2-connecting-the-app) and set up the [backup](/en/server/home-server#_3-backups), plus an [off-site backup](/en/server/extras#off-site-backup) from the start, because a rented server has one disk. Hetzner's own backups (about 20 % extra) snapshot the whole disk and are a good addition, but they do not replace WuselWall's backup.
 
 At other providers the field is called **User data**, **Cloud-init** or **Startup script**; the steps are the same.
@@ -60,7 +60,27 @@ The commands run over SSH in `/srv/wuselwall`, as [at home](/en/server/home-serv
 | Back up now | `./wuselwall backup` |
 | Is everything running? | `./wuselwall status` |
 
+Before an update, `wuselwall` checks the new release's signature and checksum and only then runs anything from it. To check without installing: `./wuselwall verify 1.1.0`.
+
 Ubuntu installs security updates by itself. After a kernel update, reboot the server once (`reboot`); the stack comes back up on its own.
+
+## Checking a download {#checking-a-download}
+
+Every server release is signed. Next to the archive are `SHA256SUMS`, the archive's checksum, and `SHA256SUMS.minisig`, the signature of that list with WuselWall's key. The cloud-init file and `./wuselwall update` check both by themselves. If you download a release by hand, for a server without a cloud-init field or at home, check it before unpacking (adjust the version):
+
+```bash
+v=1.0.0
+for f in wuselwall-server-$v.tar.gz SHA256SUMS SHA256SUMS.minisig; do
+  curl -fsSLO "https://github.com/wuselwall/wuselwall-app/releases/download/server-v$v/$f"
+done
+minisign -Vm SHA256SUMS -P RWQkSenBTFOIn4wZCJQTUyXTgTwX8mO+WCK3WOn9W52Yer+3h7Bpmyp/
+sha256sum -c --ignore-missing SHA256SUMS
+tar xzf wuselwall-server-$v.tar.gz
+```
+
+`minisign` must report "Signature and comment signature verified" and, as the "Trusted comment", exactly `wuselwall-server 1.0.0 SHA256SUMS` with your version; `sha256sum` reports `OK` for the archive. Otherwise unpack nothing and report it on [GitHub](https://github.com/wuselwall/wuselwall-app/issues). Get `minisign` with `apt install minisign` (Debian, Ubuntu), `apk add minisign` (Alpine) or `brew install minisign` (Mac). The key after `-P` is the same one that is in `server/wuselwall` and `server/cloud-init.yaml`.
+
+With the GitHub CLI you can also check that GitHub built the archive from this repository: `gh attestation verify wuselwall-server-$v.tar.gz --repo wuselwall/wuselwall-app`.
 
 ## Moving
 

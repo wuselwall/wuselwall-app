@@ -6675,4 +6675,105 @@ class AppLocalizationsFr extends AppLocalizations {
   String learnedWordsForgetWord(String word) {
     return 'Oublier « $word »';
   }
+
+  @override
+  String serverCaption(String host) {
+    return 'Serveur : $host';
+  }
+
+  @override
+  String get serverConfirmTitle => 'Se connecter à ce serveur ?';
+
+  @override
+  String get serverConfirmBody =>
+      'C’est là que se trouvent les données de ta famille et que tu te connectes. Ne te connecte que si tu connais cette adresse, par exemple par ta famille. En cas de doute, annule et saisis l’adresse toi-même.';
+
+  @override
+  String serverConfirmVia(String address) {
+    return '$address renvoie vers ce serveur.';
+  }
+
+  @override
+  String serverMovedBody(String host) {
+    return 'Le serveur indique une nouvelle adresse : $host. L’application reste sur l’ancienne jusqu’à ce que tu te reconnectes.';
+  }
+
+  @override
+  String serverMovedConfirm(String host) {
+    return 'Se connecter à $host ? Cet appareil se déconnecte, puis tu t’y reconnectes. Seulement si tu sais que le serveur a déménagé.';
+  }
+
+  @override
+  String get serverKeyChangedBody =>
+      'Le serveur a de nouvelles informations de connexion pour l’application. Reconnecte-toi pour que l’application les utilise.';
+
+  @override
+  String get serverMovedAction => 'Se reconnecter';
+
+  @override
+  String get accountMfaRequired =>
+      'Confirme d’abord le code de ton application d’authentification, puis réessaie.';
+
+  @override
+  String accountPasswordReauthBody(String email) {
+    return 'Changer le mot de passe demande une connexion récente. Nous envoyons un code à $email.';
+  }
+
+  @override
+  String accountPasswordReauthPasswordBody(String email) {
+    return 'Changer le mot de passe demande une connexion récente. Saisis le mot de passe actuel de $email.';
+  }
+
+  @override
+  String accountResetReauthBody(String email) {
+    return 'Réinitialiser l’accès d’une autre personne demande ta propre connexion récente. Nous envoyons un code à $email.';
+  }
+
+  @override
+  String accountResetReauthPasswordBody(String email) {
+    return 'Réinitialiser l’accès d’une autre personne demande ta propre connexion récente. Saisis le mot de passe de $email.';
+  }
+
+  @override
+  String accountMfaResetRecent(String name) {
+    return 'Tu as réinitialisé la double authentification de $name il y a moins d’un jour. Un autre parent peut créer le code, ou attends un jour.';
+  }
+
+  @override
+  String accountPasswordResetRecent(String name) {
+    return 'Tu as créé un code de mot de passe pour $name il y a moins d’un jour. Un autre parent peut réinitialiser la double authentification, ou attends un jour.';
+  }
+
+  @override
+  String get accountPasswordSavedOthersOut =>
+      'Mot de passe enregistré. Tes autres appareils ont été déconnectés.';
+
+  @override
+  String trustFeedCreatedBy(String name) {
+    return 'Créé par $name';
+  }
+
+  @override
+  String get errInvitationRequired =>
+      'Ce serveur n’accepte que les personnes invitées. Demande une invitation à un parent de la famille.';
+
+  @override
+  String accountNoticeMfaResetYou(String name) {
+    return '$name a réinitialisé ta double authentification';
+  }
+
+  @override
+  String accountNoticeMfaReset(String name, String target) {
+    return '$name a réinitialisé la double authentification de $target';
+  }
+
+  @override
+  String accountNoticePasswordResetYou(String name) {
+    return '$name a créé un code de mot de passe pour toi';
+  }
+
+  @override
+  String accountNoticePasswordReset(String name, String target) {
+    return '$name a créé un code de mot de passe pour $target';
+  }
 }

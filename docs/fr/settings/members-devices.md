@@ -43,7 +43,7 @@ Sous **Anniversaire**, **Choisir une date** enregistre la date de naissance. L�
 
 <Shot name="settings-member" alt="La page d’un membre avec nom, couleur, image et anniversaire" />
 
-En vue **Avancés**, la page montre aussi le **rôle** (parent ou membre ; un enfant ne peut pas être parent, et le dernier parent avec un compte le reste) et **Ne fait plus partie du foyer** : la personne disparaît du mur, des rangées d’avatars et des nouvelles tâches ; l’historique et les points restent, l’anniversaire est effacé, et vous pouvez la ramener ici. Un adulte avec un compte quitte la famille depuis son propre téléphone (voir [Compte et famille](/fr/settings/account)).
+En vue **Avancés**, la page montre aussi le **rôle** (parent ou membre ; un enfant ne peut pas être parent, et le dernier parent avec un compte le reste) et **Ne fait plus partie du foyer** : la personne disparaît du mur, des rangées d’avatars et des nouvelles tâches ; l’historique et les points restent, l’anniversaire est effacé, et vous pouvez la ramener ici. Un téléphone personnel de la personne (connecté comme « téléphone d’un enfant ») est bloqué en même temps et devra être reconnecté ; il en va de même quand vous faites de quelqu’un un parent, qui se connecte alors avec son compte. Un adulte avec un compte quitte la famille depuis son propre téléphone (voir [Compte et famille](/fr/settings/account)).
 
 Chacun change lui-même son nom, sa couleur, son image et son anniversaire. Le reste revient aux parents, avec le PIN sur les appareils partagés.
 
@@ -53,7 +53,7 @@ L’ordre des membres dans la liste est l’ordre sur le mur et dans toutes les 
 
 ## Réinitialiser la double authentification {#reset-two-factor}
 
-Si un autre parent a perdu son deuxième facteur, utilisez l’action près de son nom. Il pourra se connecter et la [configurer à nouveau](/fr/settings/security#two-factor-sign-in).
+Si un autre parent a perdu son deuxième facteur, utilisez l’action près de son nom. Il pourra se connecter et la [configurer à nouveau](/fr/settings/security#two-factor-sign-in). Si votre serveur envoie des e-mails, la personne en est informée par e-mail. WuselWall vous demande d’abord une connexion récente (code par e-mail ou mot de passe, et votre propre deuxième facteur si vous en avez un). Le parent qui a réinitialisé le deuxième facteur ne peut pas créer la même semaine un code de mot de passe pour la même personne, et inversement ; un autre parent le peut. La personne concernée et les autres parents le voient aussi sur Aujourd’hui.
 
 ## Réinitialiser un mot de passe {#reset-password}
 

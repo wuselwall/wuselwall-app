@@ -8,6 +8,8 @@ Sur un écran étroit ou avec un texte agrandi, les boutons d’action passent s
 
 Dans **Paramètres → Compte et sécurité → Connexion**, définissez ou changez un mot de passe d’au moins **10 caractères**. Le code par e-mail reste disponible si votre serveur envoie des e-mails ; sinon, le mot de passe est le seul accès ([E-mails](/fr/server/email)).
 
+Si votre connexion date de plus de cinq minutes, WuselWall demande d’abord un **code par e-mail** (sans e-mails : votre **mot de passe** actuel). Après le changement, vos **autres appareils sont déconnectés** ; celui-ci reste connecté.
+
 ## Quitter la famille {#leave-the-family}
 
 Confirmez votre départ : votre compte quitte le foyer et vos appareils sont déconnectés. Vos contributions restent dans la famille. Vous pourrez ensuite créer ou rejoindre une autre famille.

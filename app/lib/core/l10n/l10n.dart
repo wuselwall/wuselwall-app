@@ -16,6 +16,7 @@ extension FailureL10n on Failure {
     final byCode = switch (code) {
       'setup_token_invalid' => l10n.errSetupTokenInvalid,
       'setup_key_required' => l10n.errSetupKeyRequired,
+      'invitation_required' => l10n.errInvitationRequired,
       'setup_closed' => l10n.errSetupClosed,
       'password_too_short' => l10n.errPasswordTooShort,
       'pin_format' => l10n.errPinFormat,

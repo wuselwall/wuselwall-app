@@ -163,12 +163,26 @@ class IdentityRepository {
             );
       });
 
-  /// Sets (or changes) the account's password and records that it has one.
+  /// Sets (or changes) the account's password and records that it has one. Onboarding's
+  /// E3 uses this right after the first code; Settings uses [changePassword].
   Future<Result<void>> setPassword(String password) => Result.guard(() async {
     await _auth.updateUser(
       UserAttributes(password: password, data: {hasPasswordKey: true}),
     );
   });
+
+  /// Settings → Anmeldung: the new password, then every other session of the account
+  /// ends (security review 2026-11-01, F23), so a stolen session does not outlive the
+  /// change. This device keeps its session. The caller has checked that the sign-in is
+  /// recent (signedInRecently); GoTrue itself asks for no re-authentication, which would
+  /// break E3 and servers without mail.
+  Future<Result<void>> changePassword(String password) =>
+      Result.guard(() async {
+        await _auth.updateUser(
+          UserAttributes(password: password, data: {hasPasswordKey: true}),
+        );
+        await _auth.signOut(scope: SignOutScope.others);
+      });
 
   /// Whether this account has a password set in the app (see [hasPasswordKey]).
   bool hasPassword() =>
@@ -182,7 +196,9 @@ class IdentityRepository {
 
   Future<void> signOut() => _auth.signOut();
 
-  /// Creates the household and its first guardian, then signs that guardian in.
+  /// Creates the household and its first guardian, then signs that guardian in. A wrong
+  /// key answers `{ok:false, reason}` rather than raising, so the server's attempt log
+  /// survives; it is turned into a [Failure] here (`setup_token_invalid`).
   Future<Result<void>> setupHousehold({
     required String token,
     required String householdName,
@@ -203,7 +219,14 @@ class IdentityRepository {
         'p_color': colorHex,
         'p_pin': pin,
       },
-      parse: (_) {},
+      parse: (json) {
+        if (json is Map<String, dynamic> && json['ok'] == false) {
+          throw switch (json['reason']) {
+            'rate_limited' => const PermissionFailure(code: 'rate_limited'),
+            _ => const ValidationFailure(code: 'setup_token_invalid'),
+          };
+        }
+      },
     );
     if (created is Err<void>) return created;
     return signIn(email, password);

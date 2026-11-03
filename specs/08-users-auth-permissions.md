@@ -85,14 +85,26 @@ grant or revoke MCP/assistant access     view the full audit log
   across the kitchen), hashed with bcrypt via `pgcrypto`, per-profile. (Argon2id was the
   plan on Node; inside Postgres bcrypt is what is available, and for a million-value
   space the lockout below, not the hash, is what protects the PIN.)
-- On success, `device.guardian_verified_until = now() + 15 min`, stored server-side on
-  the device row — never in a claim or anywhere the client could set it.
+- On success, `device.guardian_verified_until` is set server-side on the device row (never
+  in a claim or anywhere the client could set it): **5 minutes** on a shared or kiosk device,
+  15 on a personal one, where the PIN is not asked. The window belongs to the verified
+  profile (`guardian_verified_profile`), and it ends early through `api.guardian_step_down`,
+  which the app calls when another avatar is tapped, when the wall reverts to nobody and
+  when the person leaves the settings (security review 2026-11-01, F13).
+- `app.guardian_ok(actor)` is the one predicate behind every guardian check, the role
+  checks of task ticks and the join notices included (F17): on a shared or kiosk device the
+  window above for the acting profile; on a personal device the device's Auth user must be
+  the profile's own account, so a child's phone (pairing kind `child_phone`, a device user)
+  is never a guardian, whatever role the profile is given later (F16). Promoting such a
+  person to guardian and "Nicht mehr dabei" revoke those phones; a personal device acts for
+  its profile only while it is active.
 - Rate limiting: exponential backoff after 3 failures, hard lock after 10, unlockable
   only by a full guardian login. Failures are logged with the device.
 - The PIN is entered on a dedicated numeric pad with no on-screen echo of the digits.
 
-The 15-minute window means a parent setting up next month's chores does not re-enter the
-PIN forty times, while a wall display left unattended returns to a safe state quickly.
+The window means a parent setting up next month's chores does not re-enter the PIN forty
+times, while a tablet or wall display left behind returns to a safe state quickly: five
+minutes at most, and at once when the settings are left or someone else taps their name.
 
 ## Adult accounts
 
@@ -111,7 +123,13 @@ profile (`profile.auth_user_id`, one household per account). Children never have
   accept an invitation.
 - **A second factor (TOTP, Supabase MFA, `aal2`) is optional** per account and never part
   of sign-up. When it is on, the access-token hook withholds the household claims until
-  the session is `aal2`, as built in M0.1. Another guardian can reset it.
+  the session is `aal2`, as built in M0.1. Another guardian can reset it; since
+  2026-11-02 (security review F3) that reset and a guardian's password code need a sign-in
+  of the last five minutes at `aal2` where the caller has TOTP, the person is told by mail
+  where the server has mail and on Today in the app (to the person and the other
+  guardians), the same guardian cannot do both for one person within a week, and redeeming
+  a code ends the account's sessions. An address counts as verified only
+  while it is the one a mailed code was redeemed for (`app.proven_address`, F1).
 - **Roles come from the profile, not the account.** An invitation says whether the adult
   joins as `guardian` or `member`; an au pair can have an account and still not approve
   rewards.
@@ -167,7 +185,7 @@ shared household secret.
 | Email one-time code | 10 minutes, single use | The person's mailbox | Superseded by the next code |
 | Invitation (link token and code) | 7 days, single use | Hash in DB | Withdrawn from Members |
 | Pairing request | 10 minutes; its secret only on the requesting device | Hashes in DB | Expires |
-| Guardian PIN elevation | 15 minutes | Server-side, on the device row | Automatic |
+| Guardian PIN elevation | 5 minutes on shared and kiosk devices (15 on personal) | Server-side, on the device row | Automatic; earlier on avatar switch, idle revert and leaving the settings (`api.guardian_step_down`) |
 | Calendar feed token | Until revoked | URL (bearer); hash in DB | Per token |
 | MCP OAuth access token | 1 hour | Client-held | Per grant |
 | MCP refresh token | 30 days | Client-held | Per grant |

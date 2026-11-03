@@ -1,6 +1,17 @@
 # A server release (ADR-018, decision 9): on a tag server-v<version>, the archive that
 # server/wuselwall installs and updates from, attached to a GitHub release. Families
 # download it; the project runs nothing for them.
+#
+# Every release is signed (security review 2026-11-01, F9): SHA256SUMS lists the archive's
+# checksum, SHA256SUMS.minisig is its minisign signature with the trusted comment
+# "wuselwall-server <version> SHA256SUMS", and server/wuselwall, server/cloud-init.yaml and
+# the docs check both before anything from the archive runs. The signing key is the
+# repository secret SERVER_RELEASE_MINISIGN_KEY: the whole secret-key file of a key pair made
+# with `minisign -G -W` (unencrypted, so that no password has to live next to it). Its public
+# key is WW_RELEASE_PUBKEY in server/wuselwall. Without the secret, or while that line is
+# still the placeholder, the run fails: no release goes out unsigned. A provenance
+# attestation (GitHub's, through Sigstore) is added for anyone who checks with `gh`; the
+# servers rely on the minisign signature, since they have no `gh`.
 name: server-release
 on:
   push:
@@ -22,25 +33,102 @@ jobs:
       - run: node qualification/promotion.mjs
         env: { GH_TOKEN: '${{ github.token }}' }
 
-  release:
+  # The protected acceptance (required reviewers) before anything is signed. Its own job:
+  # the release job below needs the server-release environment for the signing key, and a
+  # job has one environment.
+  approval:
     needs: qualification
     environment: release-promotion
-    permissions: { contents: write }
     runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 5
+    steps:
+      - run: echo "Release ${GITHUB_REF_NAME} approved for ${GITHUB_SHA}"
+
+  release:
+    needs: approval
+    permissions: { contents: write, id-token: write, attestations: write }
+    runs-on: [self-hosted, Linux, build]
+    # Where the signing key should live: a secret of this environment, limited to the tags
+    # server-v* (Settings → Environments → server-release → Deployment branches and tags),
+    # rather than a repository secret every workflow can read. GitHub creates the environment
+    # on the first run if it does not exist, and a repository secret of the same name still
+    # works, so this line breaks nothing before the move.
+    environment: server-release
+    env:
+      MINISIGN_VERSION: '0.12'
+      # sha256 of minisign-0.12-linux.tar.gz, whose minisign signature by its author was
+      # checked when the pin was set (key RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3).
+      MINISIGN_SHA256: 9a599b48ba6eb7b1e80f12f36b94ceca7c00b7a5173c95c3efc88d9822957e73
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - name: Check the signing key
+        env:
+          SERVER_RELEASE_MINISIGN_KEY: ${{ secrets.SERVER_RELEASE_MINISIGN_KEY }}
+        run: |
+          [ -n "$SERVER_RELEASE_MINISIGN_KEY" ] || {
+            echo "::error::secret SERVER_RELEASE_MINISIGN_KEY is missing: a server release is never published unsigned (see the comment at the top of server-release.yml)"
+            exit 1
+          }
+          pubkey=$(sed -n 's/^WW_RELEASE_PUBKEY=\${WW_RELEASE_PUBKEY:-\(.*\)}$/\1/p' server/wuselwall)
+          [[ $pubkey =~ ^RW[A-Za-z0-9+/]{54}$ ]] || {
+            echo "::error::WW_RELEASE_PUBKEY in server/wuselwall is not a minisign public key yet; installed servers could not check this release"
+            exit 1
+          }
+          echo "RELEASE_PUBKEY=$pubkey" >> "$GITHUB_ENV"
+      - name: Install minisign
+        # The runners have no root: a pinned release binary in the job's temporary directory.
+        run: |
+          arch=$(uname -m)
+          cd "$RUNNER_TEMP"
+          curl -fsSLo minisign.tar.gz "https://github.com/jedisct1/minisign/releases/download/$MINISIGN_VERSION/minisign-$MINISIGN_VERSION-linux.tar.gz"
+          echo "$MINISIGN_SHA256  minisign.tar.gz" | sha256sum -c
+          mkdir -p bin
+          tar -xzf minisign.tar.gz -O "minisign-linux/$arch/minisign" > bin/minisign
+          chmod 755 bin/minisign
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: false }
       - run: flutter pub get --enforce-lockfile
         working-directory: app
       - name: Build
         run: scripts/build-server-release.sh "${GITHUB_REF_NAME#server-v}"
+      - name: Sign
+        env:
+          SERVER_RELEASE_MINISIGN_KEY: ${{ secrets.SERVER_RELEASE_MINISIGN_KEY }}
+        run: |
+          version=${GITHUB_REF_NAME#server-v}
+          key=$RUNNER_TEMP/release.key
+          trap 'rm -f "$key"' EXIT
+          (umask 077 && printf '%s\n' "$SERVER_RELEASE_MINISIGN_KEY" > "$key")
+          cd dist
+          sha256sum "wuselwall-server-$version.tar.gz" > SHA256SUMS
+          minisign -S -s "$key" -m SHA256SUMS -t "wuselwall-server $version SHA256SUMS"
+          # The key in the secret must be the one installed servers trust.
+          comment=$(minisign -V -Q -m SHA256SUMS -P "$RELEASE_PUBKEY") || {
+            echo "::error::SERVER_RELEASE_MINISIGN_KEY does not belong to WW_RELEASE_PUBKEY in server/wuselwall"
+            exit 1
+          }
+          [ "$comment" = "wuselwall-server $version SHA256SUMS" ]
+          cat SHA256SUMS
+      - name: Check the release as a server would
+        # server/wuselwall's own check, with minisign and with OpenSSL alone.
+        run: |
+          version=${GITHUB_REF_NAME#server-v}
+          WW_REQUIRE_SIGNATURE=1 bash server/wuselwall verify "dist/wuselwall-server-$version.tar.gz"
+          PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vx "$RUNNER_TEMP/bin" | paste -sd:) \
+            WW_REQUIRE_SIGNATURE=1 bash server/wuselwall verify "dist/wuselwall-server-$version.tar.gz"
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            dist/wuselwall-server-*.tar.gz
+            dist/SHA256SUMS
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           version=${GITHUB_REF_NAME#server-v}
           gh release create "$GITHUB_REF_NAME" "dist/wuselwall-server-$version.tar.gz" \
+            dist/SHA256SUMS dist/SHA256SUMS.minisig \
             --title "WuselWall server $version" \
-            --notes "Install or update: see https://wuselwall.app/docs/en/server/ (German: https://wuselwall.app/docs/server/)."
+            --notes "Install or update: see https://wuselwall.app/docs/en/server/ (German: https://wuselwall.app/docs/server/). SHA256SUMS is signed with minisign; how to check a download by hand: https://wuselwall.app/docs/en/server/rented-server#checking-a-download"

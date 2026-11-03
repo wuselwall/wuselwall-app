@@ -4,7 +4,10 @@ import {
   assertStringIncludes,
 } from "jsr:@std/assert@1.0.13";
 import {
+  deliveriesFor,
   type HookSettings,
+  MAIL_ENV,
+  mailSettingsFromEnv,
   REQUIRED_ENV,
   sendEmailHook,
   settingsFromEnv,
@@ -27,6 +30,7 @@ const settings: HookSettings = {
 /** A GoTrue-shaped payload with the fields the hook reads. */
 function payload(opts: {
   email?: string;
+  newEmail?: string;
   locale?: string | null;
   kind?: string;
   token?: string;
@@ -38,6 +42,7 @@ function payload(opts: {
     user: {
       id: "5f1c0e8a-0000-4000-8000-000000000001",
       email: opts.email ?? "anna@example.com",
+      ...(opts.newEmail ? { new_email: opts.newEmail } : {}),
       user_metadata: meta,
     },
     email_data: {
@@ -170,9 +175,14 @@ Deno.test("every configured server language overrides contrary recipient metadat
     for (const kind of MAIL_KINDS) {
       const { fn, sent } = provider();
       const recipientLocale = locale === "en" ? "de" : "en";
+      // An email change's single code is the new address's, labelled as such, and goes there.
       const res = await sendEmailHook(
         await signed(
-          JSON.stringify(payload({ kind, locale: recipientLocale })),
+          JSON.stringify(payload({
+            kind,
+            locale: recipientLocale,
+            newEmail: kind === "email_change" ? "anna-new@example.com" : undefined,
+          })),
         ),
         loaded.settings,
         fn,
@@ -180,7 +190,13 @@ Deno.test("every configured server language overrides contrary recipient metadat
       assertEquals(res.status, 200);
       assertEquals(await res.json(), {});
       assertEquals(sent.length, 1);
-      const expected = renderMail({ locale, kind, token: "123456" });
+      assertEquals(sent[0].json.to, [{ email: kind === "email_change" ? "anna-new@example.com" : "anna@example.com" }]);
+      const expected = renderMail({
+        locale,
+        kind,
+        token: "123456",
+        codeLabel: kind === "email_change" ? "new" : undefined,
+      });
       assertEquals(sent[0].json.subject, expected.subject);
       assertEquals(sent[0].json.text, expected.text);
       assertEquals(sent[0].json.html, expected.html);
@@ -188,17 +204,123 @@ Deno.test("every configured server language overrides contrary recipient metadat
   }
 });
 
-Deno.test("an email change with both codes sends both", async () => {
+Deno.test("an email change: each address gets its own code, never the other's", async () => {
   const { fn, sent } = provider();
   const body = payload({
     kind: "email_change",
+    newEmail: "anna-new@example.com",
     token: "111111",
     tokenNew: "222222",
     locale: "de",
   });
-  await sendEmailHook(await signed(JSON.stringify(body)), settings, fn);
+  const res = await sendEmailHook(await signed(JSON.stringify(body)), settings, fn);
+  assertEquals(res.status, 200);
+  assertEquals(sent.length, 2);
+  assertEquals(sent[0].json.to, [{ email: "anna@example.com" }]);
   assertStringIncludes(sent[0].json.text, "111111");
-  assertStringIncludes(sent[0].json.text, "222222");
+  assert(!sent[0].json.text.includes("222222"), "the current address never sees the new one's code");
+  assert(!sent[0].json.html.includes("222222"));
+  assertEquals(sent[1].json.to, [{ email: "anna-new@example.com" }]);
+  assertStringIncludes(sent[1].json.text, "222222");
+  assert(!sent[1].json.text.includes("111111"), "the new address never sees the current one's code");
+  assertEquals(sent[1].json.subject, "Dein WuselWall-Code zur Adressänderung: 222222");
+});
+
+Deno.test("an email change with one code but no new address is refused, nothing sent", async () => {
+  const { fn, sent } = provider();
+  const res = await sendEmailHook(
+    await signed(JSON.stringify(payload({ kind: "email_change", token: "333333" }))),
+    settings,
+    fn,
+  );
+  assertEquals(res.status, 400);
+  assertEquals(sent.length, 0);
+  assertEquals(deliveriesFor({ userEmail: "a@x.org", newEmail: undefined, kind: "email_change", token: "333333", tokenNew: undefined }), []);
+});
+
+Deno.test("an email change with one code (secure change off) goes to the new address", async () => {
+  const { fn, sent } = provider();
+  const body = payload({
+    kind: "email_change",
+    newEmail: "anna-new@example.com",
+    token: "333333",
+    locale: "en",
+  });
+  await sendEmailHook(await signed(JSON.stringify(body)), settings, fn);
+  assertEquals(sent.length, 1);
+  assertEquals(sent[0].json.to, [{ email: "anna-new@example.com" }]);
+  assertStringIncludes(sent[0].json.text, "333333");
+});
+
+Deno.test("an email change with both codes but no new address mails only the current one", async () => {
+  const { fn, sent } = provider();
+  const body = payload({ kind: "email_change", token: "111111", tokenNew: "222222" });
+  await sendEmailHook(await signed(JSON.stringify(body)), settings, fn);
+  assertEquals(sent.length, 1);
+  assertEquals(sent[0].json.to, [{ email: "anna@example.com" }]);
+  assert(!sent[0].json.text.includes("222222"));
+});
+
+Deno.test("deliveriesFor: the recipient logic on its own", () => {
+  const base = { userEmail: "a@x.org", newEmail: "b@x.org", kind: "email_change" as const };
+  assertEquals(
+    deliveriesFor({ ...base, token: "111111", tokenNew: "222222" }),
+    [{ to: "a@x.org", token: "111111", codeLabel: "old" }, { to: "b@x.org", token: "222222", codeLabel: "new" }],
+  );
+  assertEquals(
+    deliveriesFor({ ...base, token: "333333", tokenNew: undefined }),
+    [{ to: "b@x.org", token: "333333", codeLabel: "new" }],
+  );
+  assertEquals(
+    deliveriesFor({ ...base, kind: "magiclink", token: "444444", tokenNew: undefined }),
+    [{ to: "a@x.org", token: "444444" }],
+  );
+});
+
+Deno.test("a code that is not a one-time password is refused with a 400 and nothing is sent", async () => {
+  for (const token of ["12345", "12345678901", "abcdef", "123 456", "<b>hi</b>", "Please wire money to 123456"]) {
+    const { fn, sent } = provider();
+    const res = await sendEmailHook(
+      await signed(JSON.stringify(payload({ token }))),
+      settings,
+      fn,
+    );
+    assertEquals(res.status, 400, token);
+    assertEquals(sent.length, 0, token);
+    const text = JSON.stringify(await res.json());
+    assert(!text.includes(token), "the refusal never echoes the value");
+  }
+  for (const tokenNew of ["abc", "1".repeat(11)]) {
+    const { fn, sent } = provider();
+    const res = await sendEmailHook(
+      await signed(JSON.stringify(payload({ kind: "email_change", newEmail: "b@x.org", token: "123456", tokenNew }))),
+      settings,
+      fn,
+    );
+    assertEquals(res.status, 400, tokenNew);
+    assertEquals(sent.length, 0, tokenNew);
+  }
+  // Six to ten digits pass.
+  for (const token of ["123456", "0000000000"]) {
+    const { fn, sent } = provider();
+    const res = await sendEmailHook(await signed(JSON.stringify(payload({ token }))), settings, fn);
+    assertEquals(res.status, 200, token);
+    assertEquals(sent.length, 1, token);
+  }
+});
+
+Deno.test("mailSettingsFromEnv: the sender without the hook secret, for a function's own notice", () => {
+  const env: Record<string, string> = {
+    SCW_SECRET_KEY: "k",
+    SCW_PROJECT_ID: "p",
+    MAIL_FROM: "codes@example.org",
+    MAIL_LANGUAGE: "fr",
+  };
+  const loaded = mailSettingsFromEnv((name) => env[name]);
+  assert(loaded.ok);
+  assertEquals(loaded.settings.locale, "fr");
+  assertEquals(loaded.settings.scaleway.fromEmail, "codes@example.org");
+  assertEquals(mailSettingsFromEnv(() => undefined), { ok: false, missing: [...MAIL_ENV] });
 });
 
 Deno.test("a bad signature is a 401 and nothing is sent", async () => {

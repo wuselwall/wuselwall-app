@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/server/setup_link.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/features/household/application/household_providers.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -197,6 +200,69 @@ void main() {
       );
     },
   );
+
+  group('after a claim (security review 2026-11-01, F12)', () {
+    const storedKey = '0123456789abcdef01234567';
+    final server = Uri.parse('http://localhost');
+    const claimed = Account(
+      userId: 'user-1',
+      email: 'daniel@example.org',
+      hasHousehold: false,
+      creation: HouseholdCreation.code,
+      setupClaimed: true,
+      fullName: 'Daniel Huser',
+      givenName: 'Daniel',
+    );
+    setUp(() => FlutterSecureStorage.setMockInitialValues({}));
+
+    testWidgets(
+      'the key the setup link left on the device is sent, no field shown',
+      (t) async {
+        final store = SetupStore();
+        await store.save(SetupLink(server, storedKey));
+        final household = FakeHouseholdOnboardingRepository(
+          accountValue: claimed,
+        );
+        await pumpApp(
+          t,
+          overrides: baseOverrides(
+            setupStore: store,
+            identity: FakeIdentityRepository(),
+            household: household,
+          ),
+        );
+        expect(field('Einrichtungsschlüssel'), findsNothing);
+        await t.tap(find.text('Familie anlegen'));
+        await t.pumpAndSettle();
+        expect(household.created.single.founderCode, storedKey);
+      },
+    );
+
+    testWidgets('when the server still asks for a code, the field opens', (
+      t,
+    ) async {
+      await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(),
+          household: FakeHouseholdOnboardingRepository(
+            accountValue: claimed,
+            createResult: const Err(
+              ValidationFailure(code: 'founder_code_required'),
+            ),
+          ),
+        ),
+      );
+      expect(field('Einrichtungsschlüssel'), findsNothing);
+      await t.tap(find.text('Familie anlegen'));
+      await t.pumpAndSettle();
+      expect(field('Einrichtungsschlüssel'), findsOneWidget);
+      expect(
+        find.textContaining('braucht einen Einrichtungsschlüssel'),
+        findsOneWidget,
+      );
+    });
+  });
 
   testWidgets(
     'a creation that never turns Ready opens the escapes after a while',

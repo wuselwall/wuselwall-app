@@ -80,7 +80,8 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
     final saved = await showSetPasswordDialog(context);
     if (!saved || !mounted) return;
     setState(() {});
-    context.showMessage(context.l10n.passwordSaved);
+    // Other sessions of the account were signed out with the change.
+    context.showMessage(context.l10n.accountPasswordSavedOthersOut);
   }
 }
 

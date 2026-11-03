@@ -6646,6 +6646,107 @@ class AppLocalizationsDe extends AppLocalizations {
   String learnedWordsForgetWord(String word) {
     return '„$word“ vergessen';
   }
+
+  @override
+  String serverCaption(String host) {
+    return 'Server: $host';
+  }
+
+  @override
+  String get serverConfirmTitle => 'Mit diesem Server verbinden?';
+
+  @override
+  String get serverConfirmBody =>
+      'Hier liegen die Daten deiner Familie, und hier meldest du dich an. Verbinde dich nur, wenn du diese Adresse kennst, etwa von deiner Familie. Im Zweifel abbrechen und die Adresse selbst eintippen.';
+
+  @override
+  String serverConfirmVia(String address) {
+    return '$address verweist auf diesen Server.';
+  }
+
+  @override
+  String serverMovedBody(String host) {
+    return 'Der Server nennt eine neue Adresse: $host. Die App bleibt bei der bisherigen, bis du neu verbindest.';
+  }
+
+  @override
+  String serverMovedConfirm(String host) {
+    return 'Mit $host verbinden? Dieses Gerät meldet sich dabei ab, danach meldest du dich dort neu an. Nur wenn du sicher bist, dass der Server umgezogen ist.';
+  }
+
+  @override
+  String get serverKeyChangedBody =>
+      'Der Server hat neue Verbindungsdaten für die App. Verbinde neu, damit die App sie verwendet.';
+
+  @override
+  String get serverMovedAction => 'Neu verbinden';
+
+  @override
+  String get accountMfaRequired =>
+      'Bestätige zuerst den Code aus deiner Authenticator-App und versuche es dann noch einmal.';
+
+  @override
+  String accountPasswordReauthBody(String email) {
+    return 'Zum Ändern des Passworts brauchen wir eine frische Anmeldung. Wir schicken einen Code an $email.';
+  }
+
+  @override
+  String accountPasswordReauthPasswordBody(String email) {
+    return 'Zum Ändern des Passworts brauchen wir eine frische Anmeldung. Gib das bisherige Passwort von $email ein.';
+  }
+
+  @override
+  String accountResetReauthBody(String email) {
+    return 'Zum Zurücksetzen bei einer anderen Person brauchen wir deine frische Anmeldung. Wir schicken einen Code an $email.';
+  }
+
+  @override
+  String accountResetReauthPasswordBody(String email) {
+    return 'Zum Zurücksetzen bei einer anderen Person brauchen wir deine frische Anmeldung. Gib das Passwort von $email ein.';
+  }
+
+  @override
+  String accountMfaResetRecent(String name) {
+    return 'Du hast die Zwei-Faktor-Anmeldung von $name vor weniger als einem Tag zurückgesetzt. Eine andere erziehungsberechtigte Person kann den Code erstellen, oder du wartest einen Tag.';
+  }
+
+  @override
+  String accountPasswordResetRecent(String name) {
+    return 'Du hast für $name vor weniger als einem Tag einen Passwort-Code erstellt. Eine andere erziehungsberechtigte Person kann die Zwei-Faktor-Anmeldung zurücksetzen, oder du wartest einen Tag.';
+  }
+
+  @override
+  String get accountPasswordSavedOthersOut =>
+      'Passwort gespeichert. Deine anderen Geräte wurden abgemeldet.';
+
+  @override
+  String trustFeedCreatedBy(String name) {
+    return 'Erstellt von $name';
+  }
+
+  @override
+  String get errInvitationRequired =>
+      'Dieser Server nimmt nur eingeladene Personen auf. Lass dich von einem Elternteil der Familie einladen.';
+
+  @override
+  String accountNoticeMfaResetYou(String name) {
+    return '$name hat deine Zwei-Faktor-Anmeldung zurückgesetzt';
+  }
+
+  @override
+  String accountNoticeMfaReset(String name, String target) {
+    return '$name hat die Zwei-Faktor-Anmeldung von $target zurückgesetzt';
+  }
+
+  @override
+  String accountNoticePasswordResetYou(String name) {
+    return '$name hat einen Passwort-Code für dich erstellt';
+  }
+
+  @override
+  String accountNoticePasswordReset(String name, String target) {
+    return '$name hat einen Passwort-Code für $target erstellt';
+  }
 }
 
 /// The translations for German, as used in Austria (`de_AT`).

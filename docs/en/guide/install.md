@@ -12,6 +12,10 @@ The app doesn't know by itself where your data lives. So at its first start it a
 - **Scan the QR code**: on a device that is already connected, it's under **Settings → Advanced → Server**. The code from **Add device** works too and connects the device at the same time ([Connect a device with a code](/en/guide/setup#_2-connect-a-device-with-a-code)).
 - **Try it without a server**: the app shows an example family. None of it is saved, and nothing leaves the device. **Exit** takes you back to the question.
 
+If the server comes from a link or a scanned QR code, or the address you typed leads to another server, the app first shows its address and asks **Connect to this server?** Only connect to an address you know; if in doubt, type it yourself. Wherever you sign in or enter a code or a password, the app shows **Server:** and the address in small print.
+
+If your server later reports a new address, the app stays on the old one and shows a notice at the top. Only **Reconnect** switches; with a new address the device signs out, and you sign in there again.
+
 The app remembers the server. To choose another one, go to **Settings → Advanced → Server → Change server** ([Members and devices](/en/settings/members-devices#server)).
 
 No server yet? [Your own server](/en/server/) shows how to set one up.

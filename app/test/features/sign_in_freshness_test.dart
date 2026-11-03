@@ -33,6 +33,22 @@ void main() {
       expect(signedInRecently(token, now: now), isFalse);
     });
 
+    test('a fresh second factor alone is not a sign-in', () {
+      final token = tokenWith({
+        'amr': [
+          {'method': 'password', 'timestamp': unix - 3600},
+          {'method': 'totp', 'timestamp': unix - 30},
+        ],
+      });
+      expect(signedInRecently(token, now: now), isFalse);
+      final refresh = tokenWith({
+        'amr': [
+          {'method': 'token_refresh', 'timestamp': unix - 30},
+        ],
+      });
+      expect(signedInRecently(refresh, now: now), isFalse);
+    });
+
     test('one fresh method among older ones is enough', () {
       final token = tokenWith({
         'amr': [

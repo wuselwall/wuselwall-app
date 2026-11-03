@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
@@ -20,10 +21,15 @@ class ServerDiscovery {
   ServerDiscovery({
     http.Client? client,
     this.timeout = const Duration(seconds: 8),
+    this.allowHttp = kDebugMode,
   }) : _client = client ?? http.Client();
 
   final http.Client _client;
   final Duration timeout;
+
+  /// Whether a document may name a plain-http address: debug builds only, like a typed
+  /// address ([ServerInfo.fromDiscovery]).
+  final bool allowHttp;
 
   static const paths = [
     '/.well-known/wuselwall.json',
@@ -44,7 +50,11 @@ class ServerDiscovery {
         reached = true;
         if (response.statusCode != 200) continue;
         return Ok(
-          ServerInfo.fromDiscovery(jsonDecode(response.body), origin: origin),
+          ServerInfo.fromDiscovery(
+            jsonDecode(response.body),
+            origin: origin,
+            allowHttp: allowHttp,
+          ),
         );
       } on FormatException catch (e) {
         reached = true;

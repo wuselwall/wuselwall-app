@@ -17,8 +17,12 @@
 #           [--admin-email you@example.org] [--language de|en|fr|es] [--env old.env]
 #                         a new server: secrets, stack, database, jobs, the setup key.
 #                         --env reuses the .env of an earlier server (a move, a restore).
-#   update [release.tar.gz | version]
-#                         backup, then the new release's stack, migrations and jobs
+#   update [release.tar.gz | version] [--allow-downgrade]
+#                         backup, then the new release's stack, migrations and jobs; a
+#                         release is checked (signature, checksum) before it is unpacked,
+#                         and one older than the installed release needs --allow-downgrade
+#   verify <release.tar.gz | version>
+#                         only the check: downloads a version into a temporary directory
 #   backup [label]        a dump of the whole database into backups/ (BACKUP_DIR)
 #   restore <db-….dump>   replaces the database with a backup (see docs/server/restore)
 #   setup-token           a fresh single-use setup key for founding the household
@@ -32,7 +36,10 @@
 #   status | logs [service] | compose <args>
 #
 # Needs: Docker with Compose v2, openssl, tar, curl. Node.js is not needed: make-env.mjs runs
-# in a Node container when node is missing.
+# in a Node container when node is missing. minisign is used when installed; without it,
+# OpenSSL 3 checks the release signature.
+#
+# Environment: WW_REQUIRE_SIGNATURE=1 refuses a release whose signature cannot be checked.
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -40,10 +47,19 @@ STACK=$ROOT/stack
 DB=${DB_CONTAINER:-supabase-db}
 REPO=${WW_REPO:-wuselwall/wuselwall-app}
 NODE_IMAGE=node:22.12.0-alpine
+# The minisign public key that signs every server release's SHA256SUMS (security review
+# 2026-11-01, F9). The maintainer fills it in once, from the key pair whose secret half is the
+# repository secret SERVER_RELEASE_MINISIGN_KEY (`minisign -G -W`; the public key is the
+# second line of minisign.pub), and puts the same line into server/cloud-init.yaml and the
+# server docs (scripts/cloud-init.test.mjs compares them). The installed script is what
+# decides whether the next release is genuine, so an update can only be signed by this key.
+# While it is the placeholder, only the checksum is checked, with a warning.
+WW_RELEASE_PUBKEY=${WW_RELEASE_PUBKEY:-RWQkSenBTFOIn4wZCJQTUyXTgTwX8mO+WCK3WOn9W52Yer+3h7Bpmyp/}
 FUNCTIONS_URL=http://api-gw:8000/functions/v1
 
 say() { printf '\033[1m%s\033[0m\n' "$*"; }
 die() { printf 'wuselwall: %s\n' "$*" >&2; exit 1; }
+warn() { printf '\033[1;33mwuselwall: WARNING: %s\033[0m\n' "$*" >&2; }
 compose() { (cd "$STACK" && docker compose "$@"); }
 psql_db() { docker exec -i "$DB" psql -U postgres -X -q -t -A -v ON_ERROR_STOP=1 "$@"; }
 env_value() { sed -n "s/^$1='\(.*\)'$/\1/p" "$STACK/.env"; }
@@ -129,6 +145,15 @@ schedule() {
   [ -n "$secret" ] || die "CRON_SECRET is empty in stack/.env"
   psql_db -v functions_url="$FUNCTIONS_URL" -v cron_secret="$secret" < "$ROOT/jobs/schedule.sql" \
     | sed 's/^/  /'
+  # The stack's own database settings (not migrations, which also run on hosted projects):
+  # which header carries the client's address for the rate limits (security review
+  # 2026-11-01, F5). Idempotent; a new database gets it from the init scripts as well.
+  # ALTER DATABASE ... SET needs the superuser, which is supabase_admin here (Supabase's
+  # postgres role is not one); the init script runs as that role on a new database too.
+  if [ -f "$STACK/volumes/wuselwall/client-ip.sql" ]; then
+    docker exec -i "$DB" psql -U supabase_admin -X -q -t -A -v ON_ERROR_STOP=1 \
+      < "$STACK/volumes/wuselwall/client-ip.sql"
+  fi
 }
 
 # Prints a token once and stores only its hash. Refuses once a household exists: the
@@ -149,6 +174,27 @@ SQL
 )
   [ "$out" = ok ] || die "$out"
   echo "$token"
+}
+
+# The Supabase CLI's published JWT secret and keys (and upstream's example JWT secret): an
+# .env holding one of them signs or accepts tokens anyone can make (security review
+# 2026-11-01, F8; infra/supabase/make-env.mjs refuses them when it writes an .env).
+PUBLIC_KEYS=(
+  super-secret-jwt-token-with-at-least-32-characters-long
+  your-super-secret-jwt-token-with-at-least-32-characters-long
+  sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
+  sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
+)
+# Prints the variables of <env file> whose value is a public default; fails when there are none.
+public_keys_in() {
+  local key found=1
+  for key in "${PUBLIC_KEYS[@]}"; do
+    if grep -F -- "$key" "$1" > /dev/null; then
+      grep -F -- "$key" "$1" | cut -d= -f1
+      found=0
+    fi
+  done
+  return "$found"
 }
 
 backup() {
@@ -192,6 +238,9 @@ cmd_install() {
 
   umask 077
   if [ -n "$env_from" ]; then
+    if public_keys_in "$env_from" > /dev/null; then
+      die "$env_from holds a published default key ($(public_keys_in "$env_from" | tr '\n' ' ')); install without --env for fresh keys"
+    fi
     say "Taking over the secrets of $env_from"
     cp "$env_from" "$STACK/.env"
     # An .env from before social sign-in was removed: its Apple and Google values go (specs/10).
@@ -245,42 +294,262 @@ cmd_install() {
   if ! grep -q 'docker-compose.caddy.yml' "$STACK/.env"; then
     echo
     echo "  Your web server must forward $api to $(env_value GATEWAY_BIND):$(env_value GATEWAY_PORT)"
-    echo "  and serve $STACK/volumes/web for $web (docs/server)."
+    echo "  with X-Forwarded-For set to the address it saw (proxy_set_header X-Forwarded-For \$remote_addr;),"
+    echo "  and serve $STACK/volumes/web for $web (docs/server/home-server)."
   fi
 }
 
-# Unpacks [release] (a file or a version) over this directory: everything but stack/.env,
-# the database and backups/. Functions and the web app are replaced as a whole.
-unpack() {
-  local release=$1 file
+# ---------------------------------------------------------------- release integrity
+# A release is three files on GitHub: the archive, SHA256SUMS and SHA256SUMS.minisig, the
+# minisign signature of SHA256SUMS whose trusted comment is "wuselwall-server <version>
+# SHA256SUMS". Nothing from a release runs before both the signature and the checksum match
+# (security review 2026-11-01, F9): `update` runs the new release's own script as root.
+
+release_key_pinned() { [[ $WW_RELEASE_PUBKEY =~ ^RW[A-Za-z0-9+/]{54}$ ]]; }
+
+sha256_of() {
+  if command -v sha256sum > /dev/null; then
+    sha256sum "$1" | cut -d' ' -f1
+  else
+    openssl dgst -sha256 -r "$1" | cut -d' ' -f1
+  fi
+}
+
+# Whether this OpenSSL can check a minisign signature itself: Ed25519 over raw input and
+# BLAKE2b-512 (OpenSSL 3). grep without -q: an early exit would kill openssl with SIGPIPE.
+openssl_can_verify() {
+  openssl list -digest-algorithms 2> /dev/null | grep -i blake2b512 > /dev/null \
+    && openssl pkeyutl -help 2>&1 | grep -e -rawin > /dev/null
+}
+
+# minisign's verification with openssl alone, for servers without minisign: the key ID must
+# match, the signature must cover the BLAKE2b-512 hash of the file (minisign's "ED"; the
+# legacy "Ed" over the file itself is refused, see minisig_prehashed), and the global
+# signature must cover that signature and the trusted comment, which it prints.
+# Formats: https://jedisct1.github.io/minisign/
+minisign_openssl() {
+  local t rc=0
+  t=$(mktemp -d)
+  minisign_openssl_in "$t" "$1" "$2" || rc=1
+  rm -rf "$t"
+  return "$rc"
+}
+
+# Every step ends in `|| return 1`: callers run this inside `$(…)` and `||`, where bash
+# ignores `set -e`.
+minisign_openssl_in() {
+  local t=$1 file=$2 sig=$3 alg comment
+  printf '%s' "$WW_RELEASE_PUBKEY" | base64 -d > "$t/pub" 2> /dev/null || return 1
+  [ "$(wc -c < "$t/pub")" -eq 42 ] && [ "$(head -c 2 "$t/pub")" = Ed ] || return 1
+  sed -n 2p "$sig" | base64 -d > "$t/sig" 2> /dev/null || return 1
+  [ "$(wc -c < "$t/sig")" -eq 74 ] || return 1
+  alg=$(head -c 2 "$t/sig")
+  [ "$(tail -c +3 "$t/pub" | head -c 8 | od -An -tx1)" = "$(tail -c +3 "$t/sig" | head -c 8 | od -An -tx1)" ] \
+    || return 1
+  # The public key as DER (the fixed SubjectPublicKeyInfo prefix of Ed25519, then the key).
+  { printf '\060\052\060\005\006\003\053\145\160\003\041\000'; tail -c 32 "$t/pub"; } > "$t/pub.der" || return 1
+  tail -c 64 "$t/sig" > "$t/sig.raw" || return 1
+  [ "$alg" = ED ] || return 1
+  openssl dgst -blake2b512 -binary "$file" > "$t/msg" || return 1
+  openssl pkeyutl -verify -pubin -keyform DER -inkey "$t/pub.der" -rawin \
+    -in "$t/msg" -sigfile "$t/sig.raw" > /dev/null 2>&1 || return 1
+  comment=$(sed -n 3p "$sig")
+  [[ $comment == 'trusted comment: '* ]] || return 1
+  comment=${comment#trusted comment: }
+  { cat "$t/sig.raw" && printf '%s' "$comment"; } > "$t/global" || return 1
+  sed -n 4p "$sig" | base64 -d > "$t/global.sig" 2> /dev/null || return 1
+  openssl pkeyutl -verify -pubin -keyform DER -inkey "$t/pub.der" -rawin \
+    -in "$t/global" -sigfile "$t/global.sig" > /dev/null 2>&1 || return 1
+  printf '%s\n' "$comment"
+}
+
+# Whether <file.minisig> uses the prehashed algorithm "ED", the only one server-release.yml
+# produces. minisign itself still accepts the legacy "Ed", so this is checked first, for both
+# verifiers: a signature of another kind was not made by the release workflow.
+minisig_prehashed() {
+  [ "$(sed -n 2p "$1" | base64 -d 2> /dev/null | head -c 2)" = ED ]
+}
+
+# version_lt <a> <b>: whether release a (x.y.z) is older than release b.
+version_lt() {
+  local IFS=. i
+  local -a a=($1) b=($2)
+  for i in 0 1 2; do
+    [ "${a[i]:-0}" -lt "${b[i]:-0}" ] && return 0
+    [ "${a[i]:-0}" -gt "${b[i]:-0}" ] && return 1
+  done
+  return 1
+}
+
+# refuse_downgrade <version> [--allow-downgrade]: an older release would run its migrations'
+# expectations against a newer database, and a signed old release with a known flaw must not
+# be installable by passing its version (security review 2026-11-01, F9).
+refuse_downgrade() {
+  local new=$1 allow=${2:-} installed
+  installed=$(cat "$ROOT/VERSION" 2> /dev/null || true)
+  [[ $new =~ ^[0-9]+\.[0-9]+\.[0-9]+$ && $installed =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || return 0
+  if version_lt "$new" "$installed"; then
+    [ "$allow" = --allow-downgrade ] \
+      || die "release $new is older than the installed $installed: the database may already need $installed. To go back anyway (after a restore of an older backup, say), add --allow-downgrade"
+    warn "going back from $installed to $new (--allow-downgrade)"
+  fi
+}
+
+minisign_hint() {
+  cat >&2 <<'EOF'
+  Install minisign to check release signatures:
+    Debian, Ubuntu:  apt install minisign
+    Alpine:          apk add minisign
+    Fedora:          dnf install minisign
+    Unraid, others:  the static binary from https://github.com/jedisct1/minisign/releases
+                     (check its own signature first), copied to /usr/local/bin
+EOF
+}
+
+# verify_release <archive> <SHA256SUMS> <SHA256SUMS.minisig> [version]
+# Checks the signature of SHA256SUMS, then the archive's line in it. With a version (a
+# download), the signed comment and the file name must name exactly that version, so an old
+# signed release cannot be passed off as a newer one. Prints the version it verified and
+# "signed" or "unsigned" (only the checksum was checked).
+verify_release() {
+  local file=$1 sums=$2 sig=$3 version=${4:-} comment='' rc hash line name signed=unsigned
+  [ -f "$sums" ] || die "no SHA256SUMS next to $file: the release cannot be checked"
+  if ! release_key_pinned; then
+    [ "${WW_REQUIRE_SIGNATURE:-}" = 1 ] && die "this wuselwall has no release key (WW_RELEASE_PUBKEY), and WW_REQUIRE_SIGNATURE=1"
+    warn "this wuselwall has no release key pinned: only the checksum is checked, which shows the download is complete but not who built it"
+  elif [ ! -f "$sig" ]; then
+    die "no SHA256SUMS.minisig next to $file: the release is not signed"
+  elif ! minisig_prehashed "$sig"; then
+    die "SHA256SUMS.minisig is not a prehashed (ED) minisign signature: the release workflow did not make it"
+  else
+    rc=0
+    if command -v minisign > /dev/null; then
+      comment=$(minisign -V -Q -m "$sums" -x "$sig" -P "$WW_RELEASE_PUBKEY") || rc=1
+    elif openssl_can_verify; then
+      comment=$(minisign_openssl "$sums" "$sig") || rc=1
+    else
+      rc=2
+    fi
+    case $rc in
+      0) ;;
+      1) die "the signature of SHA256SUMS does not match the release key: do not use this release" ;;
+      *)
+        minisign_hint
+        [ "${WW_REQUIRE_SIGNATURE:-}" = 1 ] && die "neither minisign nor OpenSSL 3 can check the signature, and WW_REQUIRE_SIGNATURE=1"
+        warn "neither minisign nor OpenSSL 3 is here to check the signature: only the checksum is checked, which shows the download is complete but not who built it"
+        ;;
+    esac
+    if [ -n "$comment" ]; then
+      [[ $comment =~ ^wuselwall-server\ ([0-9]+\.[0-9]+\.[0-9]+)\ SHA256SUMS$ ]] \
+        || die "the signed comment is not a WuselWall server release: $comment"
+      [ -z "$version" ] || [ "${BASH_REMATCH[1]}" = "$version" ] \
+        || die "the signature is for release ${BASH_REMATCH[1]}, not $version"
+      version=${BASH_REMATCH[1]}
+      signed=signed
+    fi
+  fi
+  hash=$(sha256_of "$file")
+  line=$(grep -m 1 -E "^$hash [ *]wuselwall-server-[0-9]+\.[0-9]+\.[0-9]+\.tar\.gz$" "$sums" || true)
+  [ -n "$line" ] || die "$(basename "$file") does not match SHA256SUMS: a damaged or altered download"
+  name=${line##*[ *]}
+  [ -z "$version" ] || [ "$name" = "wuselwall-server-$version.tar.gz" ] \
+    || die "SHA256SUMS lists this file as $name, not as release $version"
+  version=${name#wuselwall-server-}
+  echo "${version%.tar.gz} $signed"
+}
+
+# fetch_release <version> <directory>: the archive, SHA256SUMS and its signature.
+fetch_release() {
+  local version=$1 dir=$2 base f
+  [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || die "not a release version (like 1.2.3) or a file: $version"
+  base="https://github.com/$REPO/releases/download/server-v$version"
+  say "Downloading WuselWall server $version"
+  for f in "wuselwall-server-$version.tar.gz" SHA256SUMS SHA256SUMS.minisig; do
+    curl -fsSL -o "$dir/$f" "$base/$f" || die "could not download $base/$f"
+  done
+}
+
+# check_release <release> <directory>: a version is downloaded into the directory; a file is
+# checked against SHA256SUMS and SHA256SUMS.minisig beside it. Prints the archive's path.
+# Runs inside `$(…) ||`, where bash ignores `set -e`: every failure exits explicitly.
+check_release() {
+  local release=$1 dir=$2 file result
   if [ -f "$release" ]; then
     file=$release
+    local here
+    here=$(dirname "$release")
+    if [ ! -f "$here/SHA256SUMS" ]; then
+      [ "${WW_REQUIRE_SIGNATURE:-}" = 1 ] && die "no SHA256SUMS next to $release, and WW_REQUIRE_SIGNATURE=1"
+      warn "no SHA256SUMS next to $release: the file is not checked. Use only an archive you built or checked yourself."
+      echo "$file"
+      return 0
+    fi
+    result=$(verify_release "$file" "$here/SHA256SUMS" "$here/SHA256SUMS.minisig") || exit 1
   else
-    file=$(mktemp)
-    say "Downloading WuselWall server $release"
-    curl -fsSL -o "$file" \
-      "https://github.com/$REPO/releases/download/server-v$release/wuselwall-server-$release.tar.gz"
+    fetch_release "$release" "$dir" >&2 || exit 1
+    file=$dir/wuselwall-server-$release.tar.gz
+    result=$(verify_release "$file" "$dir/SHA256SUMS" "$dir/SHA256SUMS.minisig" "$release") || exit 1
   fi
+  case $result in
+    *' signed') say "Release ${result% *}: the signature and the checksum match" >&2 ;;
+    *) say "Release ${result% *}: the checksum matches (signature not checked)" >&2 ;;
+  esac
+  echo "$file"
+}
+
+# Unpacks [release] (a file or a version) over this directory, once it is checked:
+# everything but stack/.env, the database and backups/. Functions and the web app are
+# replaced as a whole.
+unpack() {
+  local release=$1 allow=${2:-} dir file
+  dir=$(mktemp -d)
+  file=$(check_release "$release" "$dir") || { rm -rf "$dir"; exit 1; }
   # grep without -q reads to the end: an early exit would kill tar with SIGPIPE (pipefail).
   tar -tzf "$file" | grep -x 'wuselwall/wuselwall' > /dev/null \
-    || die "$release is not a WuselWall server release"
+    || { rm -rf "$dir"; die "$release is not a WuselWall server release"; }
+  # The archive's own VERSION, now that it is checked (a file's name proves nothing).
+  (refuse_downgrade "$(tar -xzOf "$file" wuselwall/VERSION)" "$allow") || { rm -rf "$dir"; exit 1; }
   rm -rf "$STACK/volumes/functions" "$STACK/volumes/web"
   tar -xzf "$file" -C "$ROOT" --strip-components=1
+  rm -rf "$dir"
+}
+
+cmd_verify() {
+  local release=${1:?usage: verify <release.tar.gz | version>} dir file
+  dir=$(mktemp -d)
+  file=$(check_release "$release" "$dir") || { rm -rf "$dir"; exit 1; }
+  echo "  $(basename "$file"): sha256 $(sha256_of "$file")"
+  rm -rf "$dir"
 }
 
 cmd_update() {
+  local release='' allow='' arg
+  for arg in "$@"; do
+    case $arg in
+      --allow-downgrade) allow=$arg ;;
+      --unpacked) release=$arg ;;
+      -*) die "update: unknown option $arg" ;;
+      *) release=$arg ;;
+    esac
+  done
+  set -- ${release:+"$release"}
   preflight
   [ -e "$STACK/.env" ] || die "not installed yet (use install)"
   if [ "${1:-}" != --unpacked ]; then
+    # A version is refused before the backup and the download; a file once it is checked.
+    [ -f "${1:-}" ] || refuse_downgrade "${1:-}" "$allow"
     say "Backing up first"
     backup update
     if [ -n "${1:-}" ]; then
-      unpack "$1"
+      unpack "$1" "$allow"
       # The new release's script finishes the update.
       exec "$ROOT/wuselwall" update --unpacked
     fi
   fi
   say "Updating the stack to $(cat "$ROOT/VERSION")"
+  if public_keys_in "$STACK/.env" > /dev/null; then
+    warn "stack/.env holds a published default key ($(public_keys_in "$STACK/.env" | tr '\n' ' ')): anyone can sign in as the server itself. Move to fresh keys (docs/server/restore: install without --env, then restore)."
+  fi
   # Social sign-in is gone: its Apple and Google values and the native OAuth callback leave
   # the .env before Auth restarts (specs/10).
   sh "$STACK/retire-social-sign-in.sh" "$STACK/.env"
@@ -307,17 +576,23 @@ cmd_restore() {
   local dump=${1:?usage: wuselwall restore <db-….dump>}
   [ -f "$dump" ] || die "no such file: $dump"
   [ -e "$STACK/.env" ] || die "not installed yet: install first (with --env <old .env>)"
+  case $dump in
+    *.age | *.enc) die "$dump is encrypted: decrypt it into a .dump first (docs/server/restore)" ;;
+  esac
   docker exec -i "$DB" pg_restore --list < "$dump" > /dev/null || die "$dump is not a readable backup"
 
+  # A failed count is not "no family" (security review 2026-11-01, F26): only a number lets
+  # restore go on, and only 0 without WW_RESTORE_OVER_DATA=yes.
   local households
-  households=$(psql_db -c "select count(*) from app.household" < /dev/null 2> /dev/null || echo 0)
+  households=$(psql_db -c "select count(*) from app.household" < /dev/null) \
+    || die "could not count the families on this server (is the database up? $0 status); nothing was changed"
+  [[ $households =~ ^[0-9]+$ ]] || die "unexpected answer counting the families: $households; nothing was changed"
   if [ "$households" != 0 ] && [ "${WW_RESTORE_OVER_DATA:-}" != yes ]; then
     die "this server holds a household already; set WW_RESTORE_OVER_DATA=yes to replace it"
   fi
-  if [ "$households" != 0 ]; then
-    say "Backing up the current database first"
-    backup before-restore
-  fi
+  # Always, also on an empty server: nothing is dropped without a backup of what was there.
+  say "Backing up the current database first"
+  backup before-restore || die "the backup before the restore failed; nothing was changed"
 
   say "Stopping everything but the database"
   local services
@@ -331,7 +606,8 @@ cmd_restore() {
   docker exec "$DB" psql -U supabase_admin -X -q -d template1 -v ON_ERROR_STOP=1 \
     -c 'drop database if exists postgres with (force)' < /dev/null
   local log=$ROOT/backups/restore-$(date +%F-%H%M).log
-  mkdir -p "$ROOT/backups"
+  # pg_restore's messages may quote data: readable by the owner only.
+  (umask 077 && mkdir -p "$ROOT/backups" && : > "$log")
   docker exec -i "$DB" pg_restore -U supabase_admin --create --dbname=template1 < "$dump" 2> "$log" || true
   local errors
   errors=$(grep -c '^pg_restore: error' "$log" || true)
@@ -440,6 +716,7 @@ SQL
 case "${1:-}" in
   install) shift; cmd_install "$@" ;;
   update) shift; cmd_update "$@" ;;
+  verify) shift; cmd_verify "$@" ;;
   language)
     shift; preflight
     [ $# -eq 1 ] || die 'usage: language de|en|fr|es'
@@ -458,5 +735,5 @@ case "${1:-}" in
   compose) shift; preflight; compose "$@" ;;
   mail) shift; preflight; cmd_mail "$@" ;;
   password) shift; preflight; cmd_password "$@" ;;
-  *) sed -n '2,35p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) sed -n '2,/^set -euo pipefail$/p' "$0" | sed '$d' | sed 's/^# \{0,1\}//' ;;
 esac

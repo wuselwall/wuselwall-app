@@ -71,7 +71,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     setState(() => _busyAction = null);
     switch (result) {
       case Ok():
-        unawaited(context.push(emailCodeLocation(email)));
+        unawaited(context.push(Routes.emailCode, extra: email));
       case Err(:final failure):
         context.showFailure(failure);
     }
@@ -130,6 +130,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     final busy = _busy || !online;
 
     return AuthFormScaffold(
+      showServer: true,
       onBack: () => unawaited(_cancelSetup()),
       title: l10n.doorEmail,
       children: [
@@ -249,10 +250,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 }
 
 enum _SignInAction { emailCode, password, passkey }
-
-/// Where E1 sends the person: E2 with the address it mailed.
-String emailCodeLocation(String email) =>
-    '${Routes.emailCode}?email=${Uri.encodeQueryComponent(email)}';
 
 extension NullableLet<T extends Object> on T? {
   void let(void Function(T value) action) {

@@ -6,7 +6,8 @@
 // - Scheduled (header `x-cron-secret`, no body): the hourly job of infra/jobs/schedule.sql
 //   (or infra/cron/calendar-import.sh from the host's cron).
 //   Fetches up to 20 calendars that are active and were last attempted more than 55 minutes ago
-//   (api.external_calendar_due), oldest attempt first. Authenticated like holidays-sync: the
+//   (api.external_calendar_due), oldest attempt first; a calendar that failed several times in a
+//   row waits longer (the backoff is the database's). Authenticated like holidays-sync: the
 //   secret, compared in constant time, and nothing else.
 //
 // - On demand (user JWT, body `{calendar_id, actor_profile_id?}`): a guardian asks for one
@@ -14,8 +15,8 @@
 //   api.external_calendar_refresh_request runs as the caller (app.actor, the guardian check, the
 //   household's RLS), so a member, a child, a kiosk or another household gets its refusal from
 //   there. Only then does the service role read the calendar's URL and write the result, through
-//   the service-only api.external_calendar_* functions. A calendar fetched less than five minutes
-//   ago is not fetched again; the answer says so.
+//   the service-only api.external_calendar_* functions. A calendar whose fetch was attempted less
+//   than five minutes ago is not fetched again; the answer says so.
 //
 // Every fetch goes through _shared/safe_fetch.ts (https only, public addresses only, redirects
 // re-checked, 15 s, 2 MB). Full reads re-expand the current window and timezone.
@@ -40,7 +41,11 @@ import {
 
 /** The scheduled job takes this many calendars per run at most. */
 const MAX_PER_RUN = 20;
-/** An on-demand fetch is refused (answered from the stored state) this soon after the last attempt. */
+/**
+ * An on-demand fetch is refused (answered from the stored state) this soon after the last
+ * attempt. The attempt, not the result: an attempt the runtime stopped counts too, so the
+ * button cannot start the same fetch again and again (security review 2026-11-01, F6).
+ */
 const RECENT_MS = 5 * 60 * 1000;
 
 /**
@@ -137,6 +142,8 @@ async function onDemand(req: Request, now: Date): Promise<Response> {
     id: string;
     active: boolean;
     last_fetched_at: string | null;
+    /** Servers before 20261102130000 do not send it; then the last result stands in. */
+    last_attempt_at?: string | null;
     last_error: string | null;
   };
   if (!state.active) {
@@ -147,10 +154,8 @@ async function onDemand(req: Request, now: Date): Promise<Response> {
       "external_calendar_inactive",
     );
   }
-  if (
-    state.last_fetched_at &&
-    now.getTime() - Date.parse(state.last_fetched_at) < RECENT_MS
-  ) {
+  const lastAttempt = state.last_attempt_at ?? state.last_fetched_at;
+  if (lastAttempt && now.getTime() - Date.parse(lastAttempt) < RECENT_MS) {
     return json({
       calendar_id: calendarId,
       status: "recent",
