@@ -129,12 +129,13 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                 ],
                 // One primary action, then the other ways in as equal rows (specs/20,
                 // "The front door").
-                // E1: the address, then a code by e-mail (E2, E3).
+                // E1: the address, then a code by e-mail (E2, E3). It creates accounts
+                // too, except on a server that still waits for its setup key.
                 FilledButton.icon(
                   key: const ValueKey('door-email'),
                   onPressed: !online ? null : () => context.go(Routes.signIn),
                   icon: const Icon(Icons.mail_outline),
-                  label: Text(l10n.doorEmail),
+                  label: Text(unclaimed ? l10n.signInAction : l10n.doorEmail),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: Tokens.space4),

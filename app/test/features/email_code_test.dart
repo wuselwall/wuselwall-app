@@ -27,11 +27,11 @@ Future<ProviderContainer> _toCodeScreen(
     t,
     overrides: baseOverrides(identity: identity, signedIn: false),
   );
-  await t.tap(find.text('Mit E-Mail fortfahren'));
+  await t.tap(find.text('Anmelden oder Konto erstellen'));
   await t.pump();
   await t.pump();
   await t.enterText(find.byType(TextField), address);
-  await t.tap(find.text('Weiter'));
+  await t.tap(find.text('Code senden'));
   await t.pump();
   await t.pump();
   return container;
@@ -96,11 +96,11 @@ void main() {
           t,
           overrides: baseOverrides(identity: identity, signedIn: false),
         );
-        await t.tap(find.text('Mit E-Mail fortfahren'));
+        await t.tap(find.text('Anmelden oder Konto erstellen'));
         await t.pump();
         await t.pump();
         await t.enterText(find.byType(TextField), 'thomas@example.org');
-        await t.tap(find.text('Ich habe ein Passwort'));
+        await t.tap(find.text('Mit Passwort anmelden'));
         await t.pump();
         await t.enterText(find.byType(TextField).at(1), 'falsch');
         await t.tap(find.text('Anmelden'));
@@ -138,7 +138,7 @@ void main() {
         findsOneWidget,
       );
       final button = t.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Weiter'),
+        find.widgetWithText(FilledButton, 'Code senden'),
       );
       expect(button.onPressed, isNull);
     });
@@ -264,6 +264,7 @@ void main() {
         final container = await pumpNewAccount(t, identity);
 
         expect(find.text(_choiceTitle), findsOneWidget);
+        expect(find.text('Dein Konto ist bereit.'), findsOneWidget);
         expect(find.text('Neue Familie'), findsNothing);
         expect(find.text('Zurück'), findsNothing);
 

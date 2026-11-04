@@ -68,7 +68,7 @@ A Gmail account is the quickest way to send the codes: no domain, no DNS records
    ```
 
    At the prompt, paste the 16 letters (the spaces don't matter). At Supabase, they go into `SMTP_PASS`.
-5. **Try it.** In the app, **Continue with email** now asks for a code by email.
+5. **Try it.** In the app, **Sign in or create an account** now asks for a code by email.
 
 Good to know:
 
@@ -94,7 +94,7 @@ Port `587` is the usual one; `465` works too. Names are examples, not recommenda
 
 1. A **guardian** opens **Settings → Family → Members** on their own phone, taps **Reset password** next to the person's name and confirms with **Create code**.
 2. The app shows an **8-character code**. It works **once**, for **10 minutes**. Hand it over in person, not by message.
-3. On the device of the person who forgot: **Continue with email** → **Sign in** → **Forgot your password?** Then the email address, the code and a new password of at least 10 characters.
+3. On the device of the person who forgot: **Sign in or create an account** → **Sign in** → **Forgot your password?** Then the email address, the code and a new password of at least 10 characters.
 
 If two-factor sign-in is on for the account, it still asks for the authenticator's code: the reset code replaces only the password.
 

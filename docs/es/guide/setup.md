@@ -26,7 +26,8 @@ Abajo, **Política de privacidad** abre la página en el navegador. Sin conexió
 Un servidor recién instalado no tiene familia. Quien lo instaló tiene la **clave de
 configuración**: la instalación la muestra, y el enlace o el código QR de configuración la
 incluye. La pantalla de inicio de ese servidor lo dice y ofrece **Tengo la clave de
-configuración**; el enlace de configuración abre directamente **Configurar tu servidor**.
+configuración**; el enlace de configuración abre directamente **Configurar tu servidor**. El
+botón de abajo dice entonces solo **Iniciar sesión**, para las cuentas que ya existen.
 
 Allí introduces tu dirección de correo junto a la clave. WuselWall comprueba la clave con el
 servidor y anuncia con ella tu dirección: hasta que exista la familia, el servidor solo crea una
@@ -41,17 +42,17 @@ servidor genera otra con `./wuselwall setup-token` mientras no exista familia.
 
 ### Con correo del servidor
 
-En tu móvil personal, toca **Continuar con correo electrónico** e introduce una dirección válida. La app comprueba el campo antes de enviar nada. Recibirás un **código de seis cifras**, válido durante **10 minutos**. Mantén abierto el campo y escribe allí el código del mensaje. Revisa el correo no deseado si no llega; puedes solicitar otro tras un minuto como mínimo.
+En tu móvil personal, toca **Iniciar sesión o crear una cuenta**, introduce una dirección válida y toca **Enviar código**. **No necesitas una cuenta antes:** los pasos son los mismos en ambos casos. Si la dirección es nueva, el código crea tu cuenta; si ya tiene una, el código inicia tu sesión. La app comprueba el campo antes de enviar nada. Recibirás un **código de seis cifras**, válido durante **10 minutos**. Mantén abierto el campo y escribe allí el código del mensaje. Revisa el correo no deseado si no llega; puedes solicitar otro tras un minuto como mínimo.
 
 El código verifica tu dirección. No es la **clave de configuración del servidor** y no requiere un enlace ni otro inicio de sesión.
 
 <Shot name="setup-sign-in" alt="El inicio de sesión por correo electrónico" />
 
-Si prefieres contraseña, elige esa opción e introduce tu dirección de correo y la contraseña y toca **Iniciar sesión**. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Cuenta y seguridad → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible mientras el servidor envíe correo. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
+Si prefieres contraseña, toca **Iniciar sesión con contraseña**. Es para una cuenta que ya la tiene; si la tuya aún no tiene o la olvidaste, usa el código. Introduce tu dirección de correo y la contraseña y toca **Iniciar sesión**. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Cuenta y seguridad → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible mientras el servidor envíe correo. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
 
 ### Sin correo del servidor
 
-**Servidor sin correo** ([Correo](/es/server/email)): **Continuar con correo electrónico** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)).
+**Servidor sin correo** ([Correo](/es/server/email)): **Iniciar sesión o crear una cuenta** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)).
 
 ## 2. Crear una familia {#_2-creating-a-new-family}
 

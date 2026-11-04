@@ -121,7 +121,7 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
     return AuthFormScaffold(
       showServer: true,
       onBack: widget.onBack,
-      title: l10n.doorEmail,
+      title: l10n.signInAccountTitle,
       children: [
         if (!online) ...[
           Container(

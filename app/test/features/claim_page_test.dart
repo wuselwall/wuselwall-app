@@ -165,5 +165,30 @@ void main() {
     );
     expect(find.text('Dieser Server hat noch keine Familie'), findsNothing);
     expect(find.byKey(const ValueKey('door-claim')), findsNothing);
+    expect(find.text('Anmelden oder Konto erstellen'), findsOneWidget);
   });
+
+  testWidgets(
+    'on a server without a family, email promises sign-in, not a new account',
+    (t) async {
+      await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(),
+          signedIn: false,
+          appConfig: serverConfig(claimed: false),
+        ),
+      );
+      expect(find.text('Anmelden oder Konto erstellen'), findsNothing);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      expect(find.textContaining('Neu hier?'), findsNothing);
+      expect(
+        find.textContaining(
+          'Ein neues Konto braucht zuerst den Einrichtungsschlüssel.',
+        ),
+        findsOneWidget,
+      );
+    },
+  );
 }

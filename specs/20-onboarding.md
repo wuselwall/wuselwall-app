@@ -58,7 +58,7 @@ What every device shows before it belongs to a household:
 │   Der Familienplan für die Küchenwand│
 │                                      │
 │  ┌────────────────────────────────┐  │
-│  │ ✉ Mit E-Mail fortfahren        │  │
+│  │ ✉ Anmelden oder Konto erstellen│  │
 │  └────────────────────────────────┘  │
 │                                      │
 │  ───────────────── oder ──────────── │
@@ -70,11 +70,13 @@ What every device shows before it belongs to a household:
 └──────────────────────────────────────┘
 ```
 
-- The email button serves sign-up and sign-in alike.
+- The email button serves sign-up and sign-in alike, and since 2026-11-04 says so: "Mit
+  E-Mail fortfahren" left people unsure whether they needed an account first.
 - **A server without a family** (its discovery document says `claimed: false`) shows a card
   above the buttons, "Dieser Server hat noch keine Familie", with **Ich habe den
   Einrichtungsschlüssel**, which opens S1 ([Claiming the server](#claiming-the-server),
-  2026-10-30). A setup link skips the front door and opens S1 directly.
+  2026-10-30). A setup link skips the front door and opens S1 directly. The email button
+  then says only "Anmelden", because no new account can start there.
 - *Revised 2026-10-26:* the email button is the one filled button. Below "oder" the other ways
   in are equal rows with an icon and a chevron: connecting a shared device, the invitation code,
   and on the web "Auf dem Handy weitermachen", which opens in place. Datenschutz and Server
@@ -96,33 +98,38 @@ What every device shows before it belongs to a household:
 
 ### With email
 
-> **Built 2026-10-15.** E1 takes the address, with "Ich habe ein Passwort" for the password path. E2 is the six-digit code: it submits itself when complete, and "Erneut senden" comes back after 60 s. E3 runs once for a new account, before it starts or joins a family: the code or a password of at least 10 characters. Email addresses are never autoconfirmed (`ENABLE_EMAIL_AUTOCONFIRM=false`, `enable_confirmations = true`), because invitations match confirmed addresses only. Einstellungen → Anmeldung sets or changes the password. The code mail uses the server installation's one selected email language, through either the hook or SMTP (see Email below).
+> **Built 2026-10-15.** E1 takes the address, with "Mit Passwort anmelden" for the password path. E2 is the six-digit code: it submits itself when complete, and "Erneut senden" comes back after 60 s. E3 runs once for a new account, before it starts or joins a family: the code or a password of at least 10 characters. Email addresses are never autoconfirmed (`ENABLE_EMAIL_AUTOCONFIRM=false`, `enable_confirmations = true`), because invitations match confirmed addresses only. Einstellungen → Anmeldung sets or changes the password. The code mail uses the server installation's one selected email language, through either the hook or SMTP (see Email below).
 
 ```
- E1  E-Mail-Adresse  [______________]           E2  Code aus der E-Mail
-     [ Weiter ]                                     [_][_][_][_][_][_]
-     Ich habe ein Passwort ›                        Kein Code? Erneut senden (in 60 s)
-                                                    Andere E-Mail-Adresse
+ E1  Dein Konto                                E2  Code aus der E-Mail
+     Wir schicken einen 6-stelligen Code …          [_][_][_][_][_][_]
+     E-Mail-Adresse  [______________]               Kein Code? Erneut senden (in 60 s)
+     [ Code senden ]                                Andere E-Mail-Adresse
+     Mit Passwort anmelden ›
 ```
 
 - **E1 → E2 is the default and covers sign-up, sign-in and the forgotten password.**
+  E1 says so above the field (2026-11-04): "Neu hier? Der Code erstellt dein Konto. Schon
+  ein Konto? Der Code meldet dich an." On a server without a family it says instead that a
+  new account needs the setup key first.
   `signInWithOtp(email, shouldCreateUser: true, data: {locale})` sends a **6-digit
   code**, valid 10 minutes. The `locale` metadata does not choose email language. E2 accepts paste and the platform's one-time-code autofill,
   and submits itself on the sixth digit.
 - **A code, not a magic link.** Links open in whatever browser the mail app chooses,
   often on a different device from the one being set up, and they do not work on a
   laptop where the mail is read on the phone. A code works everywhere.
-- **"Ich habe ein Passwort"** reveals a password field on E1 for accounts that have one.
-  A wrong combination says "E-Mail oder Passwort stimmt nicht", never which of the two,
+- **"Mit Passwort anmelden"** reveals a password field on E1 for accounts that have one,
+  and the line above the field says that, and to use a code without a password. A wrong combination says "E-Mail oder Passwort stimmt nicht", never which of the two,
   and offers "Stattdessen Code per E-Mail". That is the whole password-reset flow:
   sign in with a code, then set a new password in Settings. With the password field open, "Anmelden" is
-  the one filled button and "Stattdessen Code per E-Mail" the quiet alternative; "Weiter"
-  (which mails a code) shows only while the field is closed.
+  the one filled button and "Stattdessen Code per E-Mail" the quiet alternative; "Code senden"
+  shows only while the field is closed.
 - **New accounts choose how to sign in next time (E3)**, once, directly after their first
-  code:
+  code. "Dein Konto ist bereit." above the question tells them the code created the account:
 
   ```
-  E3  Wie möchtest du dich künftig anmelden?
+  E3  Dein Konto ist bereit.
+      Wie möchtest du dich künftig anmelden?
       (•) Mit Code per E-Mail — nichts zu merken
       ( ) Mit Passwort          [______________]  (min. 10 Zeichen, Stärke-Anzeige)
       ( ) Mit Face ID / Fingerabdruck (Passkey)   ← only once passkeys are verified
@@ -562,14 +569,16 @@ the source of truth once built, not a two-language limit on these screens.
 |---|---|---|
 <!-- FR/ES reference copy lives in the complete ARB catalogues; this table keeps the original DE/EN wording. -->
 | `doorTagline` | Der Familienplan für die Küchenwand | The family plan for the kitchen wall |
-| `doorEmail` | Mit E-Mail fortfahren | Continue with email |
+| `doorEmail` | Anmelden oder Konto erstellen | Sign in or create an account |
+| `signInCodeLead` | Wir schicken einen 6-stelligen Code an deine E-Mail-Adresse. Neu hier? Der Code erstellt dein Konto. Schon ein Konto? Der Code meldet dich an. | We’ll send a 6-digit code to your email address. New here? The code creates your account. Already have one? The code signs you in. |
+| `emailSendCode` | Code senden | Send code |
 | `doorUnclaimedAction` | Ich habe den Einrichtungsschlüssel | I have the setup key |
 | `claimTitle` | Server einrichten | Set up your server |
 | `claimKeyLabel` | Einrichtungsschlüssel | Setup key |
 | `doorPairDevice` | Familien-Tablet oder Wanddisplay verbinden | Connect a family tablet or wall display |
 | `doorInviteCode` | Ich habe einen Einladungscode | I have an invitation code |
 | `emailCodeTitle` | Code aus der E-Mail | Code from the email |
-| `emailHavePassword` | Ich habe ein Passwort | I have a password |
+| `emailHavePassword` | Mit Passwort anmelden | Sign in with a password |
 | `emailWrongCredentials` | E-Mail oder Passwort stimmt nicht. | Email or password is incorrect. |
 | `signInMethodTitle` | Wie möchtest du dich künftig anmelden? | How would you like to sign in next time? |
 | `signInMethodCode` | Mit Code per E-Mail — nichts zu merken | With a code by email — nothing to remember |

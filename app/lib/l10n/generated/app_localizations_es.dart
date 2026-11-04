@@ -621,7 +621,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esta persona ya no forma parte del hogar. No se ha guardado el cambio.';
 
   @override
-  String get doorEmail => 'Continuar con correo electrónico';
+  String get doorEmail => 'Iniciar sesión o crear una cuenta';
 
   @override
   String get doorOr => 'o';
@@ -3878,7 +3878,28 @@ class AppLocalizationsEs extends AppLocalizations {
   String get emailContinue => 'Continuar';
 
   @override
-  String get emailHavePassword => 'Tengo una contraseña';
+  String get emailSendCode => 'Enviar código';
+
+  @override
+  String get signInAccountTitle => 'Tu cuenta';
+
+  @override
+  String get signInCodeLead =>
+      'Enviaremos un código de 6 dígitos a tu correo. ¿Es tu primera vez? El código crea tu cuenta. ¿Ya tienes una? El código inicia tu sesión.';
+
+  @override
+  String get signInCodeLeadUnclaimed =>
+      'Enviaremos un código de 6 dígitos a tu correo para iniciar sesión. Una cuenta nueva necesita primero la clave de configuración.';
+
+  @override
+  String get signInPasswordLead =>
+      'Para cuentas que ya tienen contraseña. ¿Aún no tienes contraseña o la olvidaste? Usa un código por correo.';
+
+  @override
+  String get signInMethodReady => 'Tu cuenta está lista.';
+
+  @override
+  String get emailHavePassword => 'Iniciar sesión con contraseña';
 
   @override
   String get emailWrongCredentials =>
@@ -3912,7 +3933,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String emailCodeSent(String email) {
-    return 'Hemos enviado un código de 6 dígitos a $email. Es válido durante 10 minutos.';
+    return 'Hemos enviado un código de 6 dígitos a $email. Introdúcelo aquí en un plazo de 10 minutos.';
   }
 
   @override
@@ -6557,7 +6578,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String passwordResetCodeHint(String name, String time) {
-    return 'En el dispositivo de $name: Continuar con correo electrónico → ¿Olvidaste tu contraseña? Luego la dirección de correo, este código y una contraseña nueva. Válido hasta las $time.';
+    return 'En el dispositivo de $name: Iniciar sesión o crear una cuenta → Iniciar sesión → ¿Olvidaste tu contraseña? Luego la dirección de correo, este código y una contraseña nueva. Válido hasta las $time.';
   }
 
   @override

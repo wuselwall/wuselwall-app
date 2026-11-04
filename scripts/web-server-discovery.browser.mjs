@@ -50,7 +50,7 @@ try {
       await page.goto(base);
       await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
       await page.locator('flt-semantics-placeholder').evaluate((element) => element.click()).catch(() => {});
-      await page.getByRole('button', { name: 'Continue with email', exact: true }).click({ timeout: 30000 });
+      await page.getByRole('button', { name: 'Sign in or create an account', exact: true }).click({ timeout: 30000 });
       await page.locator('input').first().fill('browser-probe@example.org', { force: true });
       const sent = page.waitForResponse((response) => response.request().method() === 'POST' &&
         new URL(response.url()).pathname === '/auth/v1/otp');
@@ -71,7 +71,7 @@ try {
       await page.goto(`${base}/?cached-browser=1`);
       await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
       await page.locator('flt-semantics-placeholder').evaluate((element) => element.click()).catch(() => {});
-      await page.getByRole('button', { name: 'Continue with email', exact: true }).click({ timeout: 30000 });
+      await page.getByRole('button', { name: 'Sign in or create an account', exact: true }).click({ timeout: 30000 });
       await page.locator('input').first().fill('browser-probe@example.org', { force: true });
       const resent = page.waitForResponse((response) => response.request().method() === 'POST' &&
         new URL(response.url()).pathname === '/auth/v1/otp');

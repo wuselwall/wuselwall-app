@@ -26,7 +26,7 @@ the link is disabled; the policy is not stored in the app.
 
 The start screen has three ways in:
 
-- **Continue with email**: for you as an adult, on your own phone.
+- **Sign in or create an account**: for you as an adult, on your own phone, whether you already have an account or not.
 - **I have an invitation code**: a family has invited you.
 - **Connect a family tablet or wall display**: for a device that belongs to everyone. An adult approves it on their phone.
 
@@ -35,7 +35,8 @@ The start screen has three ways in:
 A freshly installed server has no family. Whoever installed it holds the **setup key**:
 the installation prints it, and the setup link or QR code carries it. The start screen of
 such a server says so and offers **I have the setup key**; the setup link opens **Set up
-your server** directly.
+your server** directly. The button below it then reads just **Sign in**, for accounts that
+already exist.
 
 There you enter your email address next to the key. WuselWall checks the key with the
 server and announces your address with it: until the family exists, the server creates an
@@ -50,7 +51,7 @@ server can issue a new one with `./wuselwall setup-token` as long as no family e
 
 ### With email from your server
 
-Tap **Continue with email** and enter a valid email address. The app checks the field before sending anything. WuselWall sends you a **six-digit code**. It is valid for **10 minutes**. Enter it and you are in. If it does not arrive, check your spam folder or tap **No code? Send again**; a new code comes at the earliest after one minute.
+Tap **Sign in or create an account**, enter a valid email address and tap **Send code**. **You do not need an account first:** the steps are the same either way. If the address is new, the code creates your account; if it already has one, the code signs you in. The app checks the field before sending anything. WuselWall sends you a **six-digit code**. It is valid for **10 minutes**. Enter it and you are in. If it does not arrive, check your spam folder or tap **No code? Send again**; a new code comes at the earliest after one minute.
 
 Keep the page with the code field open and enter the code from the email there.
 You do not need a sign-in link or a second sign-in. The email code verifies your
@@ -58,7 +59,7 @@ address; it is different from the setup key for a new server.
 
 <Shot name="setup-sign-in" alt="Signing in with email" />
 
-Prefer a password? Tap **I have a password**. Enter your email address and password and tap **Sign in**; the app checks both before signing in. You set the password under **Settings → Account & security → Sign-in**, at least 10 characters. The code by email stays possible as long as your server sends email.
+Prefer a password? Tap **Sign in with a password**. This is for an account that already has one; if yours has none yet, or you forgot it, use the code. Enter your email address and password and tap **Sign in**; the app checks both before signing in. You set the password under **Settings → Account & security → Sign-in**, at least 10 characters. The code by email stays possible as long as your server sends email.
 
 The first time you create an account, WuselWall asks once how you want to sign in from now on: with the **code by email** (nothing to remember) or with a **password**.
 
@@ -66,7 +67,7 @@ If two-factor sign-in is on, the six-digit code from your authenticator app foll
 
 ### On a server without email {#without-email}
 
-Some family servers send no email ([Email](/en/server/email)). Then **Continue with email** opens on **New account**: enter your address and a password of at least 10 characters, and tap **Create account**. There is no code and no confirmation email. Already have an account? Tap **Sign in**. If you forget your password, tap **Forgot your password?** and ask a guardian of your family for a code ([Reset password](/en/settings/members-devices#reset-password)).
+Some family servers send no email ([Email](/en/server/email)). Then **Sign in or create an account** opens on **New account**: enter your address and a password of at least 10 characters, and tap **Create account**. There is no code and no confirmation email. Already have an account? Tap **Sign in**. If you forget your password, tap **Forgot your password?** and ask a guardian of your family for a code ([Reset password](/en/settings/members-devices#reset-password)).
 
 ## 2. Creating a new family
 

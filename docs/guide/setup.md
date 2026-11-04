@@ -26,7 +26,7 @@ ist der Link deaktiviert; die Erklärung ist nicht in der App gespeichert.
 
 Der Startbildschirm hat drei Wege:
 
-- **Mit E-Mail fortfahren**: für dich als Erwachsene:r, auf deinem eigenen Handy.
+- **Anmelden oder Konto erstellen**: für dich als Erwachsene:r, auf deinem eigenen Handy, egal ob du schon ein Konto hast oder nicht.
 - **Ich habe einen Einladungscode**: du wurdest von einer Familie eingeladen.
 - **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Erwachsenen auf seinem Handy freigegeben.
 
@@ -36,7 +36,8 @@ Ein frisch installierter Server hat noch keine Familie. Wer ihn installiert hat,
 **Einrichtungsschlüssel**: Die Installation zeigt ihn an, und der Einrichtungslink oder
 QR-Code enthält ihn. Der Startbildschirm eines solchen Servers sagt das und bietet
 **Ich habe den Einrichtungsschlüssel** an; der Einrichtungslink öffnet direkt
-**Server einrichten**.
+**Server einrichten**. Die Schaltfläche darunter heißt dann nur **Anmelden**, für Konten,
+die es schon gibt.
 
 Dort gibst du neben dem Schlüssel deine E-Mail-Adresse ein. WuselWall prüft den Schlüssel
 beim Server und kündigt deine Adresse damit an: Bis die Familie besteht, legt der Server
@@ -52,7 +53,7 @@ solange es keine Familie gibt.
 
 ### Mit E-Mail vom Server
 
-Tippe auf **Mit E-Mail fortfahren** und gib eine gültige E-Mail-Adresse ein. Die App prüft das Feld, bevor sie etwas sendet. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
+Tippe auf **Anmelden oder Konto erstellen**, gib eine gültige E-Mail-Adresse ein und tippe auf **Code senden**. **Du brauchst vorher kein Konto:** Die Schritte sind in beiden Fällen gleich. Ist die Adresse neu, erstellt der Code dein Konto; gibt es schon ein Konto, meldet dich der Code an. Die App prüft das Feld, bevor sie etwas sendet. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
 
 Lass die Seite mit dem Codefeld geöffnet und übertrage den Code aus der E-Mail dorthin.
 Du brauchst keinen Anmeldelink und keine zweite Anmeldung. Der E-Mail-Code bestätigt
@@ -60,7 +61,7 @@ deine Adresse; er ist etwas anderes als der Einrichtungsschlüssel für einen ne
 
 <Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
-Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Gib deine E-Mail-Adresse und dein Passwort ein und tippe auf **Anmelden**; beide Felder werden vor der Anmeldung geprüft. Das Passwort legst du unter **Einstellungen → Konto & Sicherheit → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt möglich, solange euer Server E-Mail verschickt.
+Lieber mit Passwort? Tippe auf **Mit Passwort anmelden**. Das ist für ein Konto, das schon ein Passwort hat; hat deins noch keins oder hast du es vergessen, nimm den Code. Gib deine E-Mail-Adresse und dein Passwort ein und tippe auf **Anmelden**; beide Felder werden vor der Anmeldung geprüft. Das Passwort legst du unter **Einstellungen → Konto & Sicherheit → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt möglich, solange euer Server E-Mail verschickt.
 
 Beim allerersten Mal fragt WuselWall einmal, wie du dich künftig anmelden möchtest: mit dem **Code per E-Mail** (nichts zu merken) oder mit einem **Passwort**.
 
@@ -68,7 +69,7 @@ Ist die **Zwei-Faktor-Anmeldung** eingeschaltet, kommt danach noch der 6-stellig
 
 ### Auf einem Server ohne E-Mail {#ohne-e-mail}
 
-Manche Familienserver verschicken keine Mails ([E-Mail](/server/email)). Dann öffnet **Mit E-Mail fortfahren** mit **Neues Konto**: Gib deine Adresse und ein Passwort mit mindestens 10 Zeichen ein und tippe auf **Konto erstellen**. Es gibt keinen Code und keine Bestätigungsmail. Du hast schon ein Konto? Tippe auf **Anmelden**. Hast du dein Passwort vergessen, tippst du auf **Passwort vergessen?** und bittest einen Erziehungsberechtigten deiner Familie um einen Code ([Passwort zurücksetzen](/settings/members-devices#passwort-zuruecksetzen)).
+Manche Familienserver verschicken keine Mails ([E-Mail](/server/email)). Dann öffnet **Anmelden oder Konto erstellen** mit **Neues Konto**: Gib deine Adresse und ein Passwort mit mindestens 10 Zeichen ein und tippe auf **Konto erstellen**. Es gibt keinen Code und keine Bestätigungsmail. Du hast schon ein Konto? Tippe auf **Anmelden**. Hast du dein Passwort vergessen, tippst du auf **Passwort vergessen?** und bittest einen Erziehungsberechtigten deiner Familie um einen Code ([Passwort zurücksetzen](/settings/members-devices#passwort-zuruecksetzen)).
 
 ## 2. Neue Familie anlegen
 

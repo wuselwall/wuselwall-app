@@ -132,7 +132,7 @@ List<Override> _journeyOverrides(
 /// The address, then the six digits (E1, E2), from wherever E1 is.
 Future<void> _enterAddressAndCode(WidgetTester t, String address) async {
   await t.enterText(find.byType(TextField), address);
-  await t.tap(find.text('Weiter'));
+  await t.tap(find.text('Code senden'));
   await t.pumpAndSettle();
   expect(find.text(_codeTitle), findsOneWidget);
   await t.enterText(find.byKey(const ValueKey('email-code-field')), '123456');
@@ -178,7 +178,7 @@ void main() {
         final log = ScreenLog(container.read(routerProvider));
         addTearDown(log.dispose);
 
-        await t.tap(find.text('Mit E-Mail fortfahren'));
+        await t.tap(find.text('Anmelden oder Konto erstellen'));
         await t.pumpAndSettle();
         await _enterAddressAndCode(t, 'daniel@example.org');
         await _answerE3(t, log);
@@ -255,7 +255,7 @@ void main() {
       final log = ScreenLog(container.read(routerProvider));
       addTearDown(log.dispose);
 
-      await t.tap(find.text('Mit E-Mail fortfahren'));
+      await t.tap(find.text('Anmelden oder Konto erstellen'));
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextFormField).first, 'daniel@example.org');
       await t.enterText(find.byType(TextField).last, 'a long enough one');

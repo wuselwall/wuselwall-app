@@ -26,7 +26,8 @@ En bas, **Politique de confidentialité** ouvre la page dans le navigateur. Le l
 Un serveur fraîchement installé n’a pas de famille. La personne qui l’a installé détient la
 **clé de configuration** : l’installation l’affiche, et le lien ou le QR code de configuration
 la contient. L’écran d’accueil d’un tel serveur le dit et propose **J’ai la clé de
-configuration** ; le lien de configuration ouvre directement **Configurer ton serveur**.
+configuration** ; le lien de configuration ouvre directement **Configurer ton serveur**. Le
+bouton en dessous indique alors seulement **Se connecter**, pour les comptes qui existent déjà.
 
 Vous y saisissez votre adresse e-mail à côté de la clé. WuselWall vérifie la clé auprès du
 serveur et annonce votre adresse avec elle : tant que la famille n’existe pas, le serveur ne
@@ -42,17 +43,17 @@ une deuxième fois ; la personne qui gère le serveur en crée une nouvelle avec
 
 ### Avec les e-mails du serveur
 
-Sur votre téléphone personnel, touchez **Continuer par e-mail** et saisissez une adresse valide. L’app vérifie le champ avant tout envoi. Vous recevez un **code à six chiffres**, valable **10 minutes**. Gardez le champ ouvert et saisissez-y le code reçu. Consultez les indésirables si le message n’arrive pas ; un nouvel envoi est possible au plus tôt après une minute.
+Sur votre téléphone personnel, touchez **Se connecter ou créer un compte**, saisissez une adresse valide et touchez **Envoyer le code**. **Aucun compte n’est nécessaire au préalable :** les étapes sont les mêmes dans les deux cas. Si l’adresse est nouvelle, le code crée votre compte ; si elle a déjà un compte, le code vous connecte. L’app vérifie le champ avant tout envoi. Vous recevez un **code à six chiffres**, valable **10 minutes**. Gardez le champ ouvert et saisissez-y le code reçu. Consultez les indésirables si le message n’arrive pas ; un nouvel envoi est possible au plus tôt après une minute.
 
 Ce code vérifie votre adresse. Il est différent de la **clé de configuration du serveur** et ne demande ni lien de connexion ni deuxième connexion.
 
 <Shot name="setup-sign-in" alt="La connexion par e-mail" />
 
-Pour utiliser un mot de passe, choisissez l’option correspondante et saisissez votre adresse e-mail et votre mot de passe, puis touchez **Se connecter**. L’app vérifie les deux champs avant la connexion. Vous pouvez définir votre mot de passe dans **Paramètres → Compte et sécurité → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible tant que le serveur envoie des e-mails. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
+Pour utiliser un mot de passe, touchez **Se connecter avec un mot de passe**. C’est pour un compte qui en a déjà un ; s’il n’en a pas encore ou si vous l’avez oublié, utilisez le code. Saisissez votre adresse e-mail et votre mot de passe, puis touchez **Se connecter**. L’app vérifie les deux champs avant la connexion. Vous pouvez définir votre mot de passe dans **Paramètres → Compte et sécurité → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible tant que le serveur envoie des e-mails. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
 
 ### Sans e-mails du serveur
 
-**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Continuer par e-mail** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)).
+**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Se connecter ou créer un compte** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)).
 
 ## 2. Créer une famille {#_2-creating-a-new-family}
 
