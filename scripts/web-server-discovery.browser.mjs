@@ -54,7 +54,7 @@ try {
       await page.locator('input').first().fill('browser-probe@example.org', { force: true });
       const sent = page.waitForResponse((response) => response.request().method() === 'POST' &&
         new URL(response.url()).pathname === '/auth/v1/otp');
-      await page.getByRole('button', { name: 'Continue', exact: true }).click();
+      await page.getByRole('button', { name: 'Send code', exact: true }).click();
       assert.equal((await sent).status(), 200);
       await page.waitForFunction(() => document.body.innerText.includes('6-digit code'));
       assert.ok(discoveryRequests > 0, 'web app must fetch its installation discovery document');
@@ -75,7 +75,7 @@ try {
       await page.locator('input').first().fill('browser-probe@example.org', { force: true });
       const resent = page.waitForResponse((response) => response.request().method() === 'POST' &&
         new URL(response.url()).pathname === '/auth/v1/otp');
-      await page.getByRole('button', { name: 'Continue', exact: true }).click();
+      await page.getByRole('button', { name: 'Send code', exact: true }).click();
       assert.equal((await resent).status(), 200);
       assert.equal(otpRequests.length, 2);
       assert.ok(otpRequests[1].url.startsWith(`${backend}/auth/v1/otp`), 'cached browser must stop using retired backend');

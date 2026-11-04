@@ -20,16 +20,22 @@ import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
 /// password, nothing by mail. Opens on a new account, because founders and invited people
 /// are who arrive here fresh; "Anmelden" is one tap away. There is no E2 or E3: the server
 /// autoconfirms the address, and the password is the way to sign in. A forgotten password
-/// is reset with a guardian's code ([Routes.passwordReset]).
+/// is reset with a guardian's code ([Routes.passwordReset]). While [signUpClosed], only
+/// "Anmelden": the way to a new account is the setup key.
 class PasswordSignInPage extends ConsumerStatefulWidget {
   const PasswordSignInPage({
     required this.onBack,
     this.initialEmail,
+    this.signUpClosed = false,
     super.key,
   });
 
   final String? initialEmail;
   final VoidCallback onBack;
+
+  /// A server without a family, before this device has its setup key: the server would
+  /// refuse a new account.
+  final bool signUpClosed;
 
   @override
   ConsumerState<PasswordSignInPage> createState() => _PasswordSignInPageState();
@@ -41,7 +47,7 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
   final _formKey = GlobalKey<FormState>();
   late final _email = TextEditingController(text: widget.initialEmail ?? '');
   final _password = TextEditingController();
-  _Mode _mode = _Mode.signUp;
+  late _Mode _mode = widget.signUpClosed ? _Mode.signIn : _Mode.signUp;
   bool _busy = false;
   bool _wrongCredentials = false;
   bool _accountExists = false;
@@ -52,6 +58,12 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
     _email.dispose();
     _password.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(PasswordSignInPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.signUpClosed) _mode = _Mode.signIn;
   }
 
   void _switchTo(_Mode mode) => setState(() {
@@ -134,21 +146,24 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
           ),
           const SizedBox(height: Tokens.space4),
         ],
-        SegmentedButton<_Mode>(
-          key: const ValueKey('password-mode'),
-          segments: [
-            ButtonSegment(
-              value: _Mode.signUp,
-              label: Text(l10n.passwordSignUpTab),
-            ),
-            ButtonSegment(
-              value: _Mode.signIn,
-              label: Text(l10n.passwordSignInTab),
-            ),
-          ],
-          selected: {_mode},
-          onSelectionChanged: busy ? null : (s) => _switchTo(s.first),
-        ),
+        if (widget.signUpClosed)
+          Text(l10n.passwordSignInLeadUnclaimed)
+        else
+          SegmentedButton<_Mode>(
+            key: const ValueKey('password-mode'),
+            segments: [
+              ButtonSegment(
+                value: _Mode.signUp,
+                label: Text(l10n.passwordSignUpTab),
+              ),
+              ButtonSegment(
+                value: _Mode.signIn,
+                label: Text(l10n.passwordSignInTab),
+              ),
+            ],
+            selected: {_mode},
+            onSelectionChanged: busy ? null : (s) => _switchTo(s.first),
+          ),
         const SizedBox(height: Tokens.space6),
         Form(
           key: _formKey,
@@ -232,6 +247,12 @@ class _PasswordSignInPageState extends ConsumerState<PasswordSignInPage> {
                     ),
                   ),
             child: Text(l10n.passwordForgot),
+          ),
+        if (widget.signUpClosed)
+          TextButton(
+            key: const ValueKey('sign-in-claim'),
+            onPressed: busy ? null : () => context.go(Routes.claim),
+            child: Text(l10n.doorUnclaimedAction),
           ),
       ],
     );

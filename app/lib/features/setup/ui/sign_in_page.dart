@@ -117,9 +117,15 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    // A server without a family takes no new account until this device has its setup
+    // key (specs/20 "Claiming the server").
+    final signUpClosed =
+        ref.watch(serverUnclaimedProvider) &&
+        !ref.watch(serverSessionProvider).setupPending.value;
     if (!ref.watch(emailCodeSignInProvider)) {
       return PasswordSignInPage(
         initialEmail: widget.initialEmail,
+        signUpClosed: signUpClosed,
         onBack: () => unawaited(_cancelSetup()),
       );
     }
@@ -145,9 +151,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           ),
           const SizedBox(height: Tokens.space4),
         ],
-        // New or returning, the steps are the same (specs/20 E1); only a server without
-        // a family refuses new accounts until the setup key is used.
-        Text(switch ((_showPassword, ref.watch(serverUnclaimedProvider))) {
+        // New or returning, the steps are the same (specs/20 E1), unless sign-up is closed.
+        Text(switch ((_showPassword, signUpClosed)) {
           (true, _) => l10n.signInPasswordLead,
           (false, true) => l10n.signInCodeLeadUnclaimed,
           (false, false) => l10n.signInCodeLead,
@@ -252,6 +257,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 : Text(l10n.signInPasskey),
           ),
         ],
+        if (signUpClosed)
+          TextButton(
+            key: const ValueKey('sign-in-claim'),
+            onPressed: busy ? null : () => context.go(Routes.claim),
+            child: Text(l10n.doorUnclaimedAction),
+          ),
       ],
     );
   }

@@ -2121,6 +2121,7 @@
   "signInCodeLead": "Nous enverrons un code à 6 chiffres à ton adresse e-mail. Première fois ? Le code crée ton compte. Tu as déjà un compte ? Le code te connecte.",
   "signInCodeLeadUnclaimed": "Nous enverrons un code à 6 chiffres à ton adresse e-mail pour te connecter. Un nouveau compte nécessite d’abord la clé de configuration.",
   "signInPasswordLead": "Pour les comptes qui ont déjà un mot de passe. Pas encore de mot de passe, ou oublié ? Utilise plutôt un code par e-mail.",
+  "passwordSignInLeadUnclaimed": "Pour les comptes qui existent déjà. Un nouveau compte nécessite d’abord la clé de configuration.",
   "signInMethodReady": "Ton compte est prêt.",
   "emailHavePassword": "Se connecter avec un mot de passe",
   "emailWrongCredentials": "L’adresse e-mail ou le mot de passe est incorrect.",

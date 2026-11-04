@@ -133,6 +133,8 @@ class _ClaimPageState extends ConsumerState<ClaimPage> {
         context.showFailure(failure);
         return;
     }
+    // A typed key counts like a setup link's: the server waits for this address.
+    ref.read(serverSessionProvider).setupPending.value = true;
     // The address is announced: now the account, as on E1. On a server with mail the
     // code goes out at once; without mail the password page opens on "Neues Konto".
     if (!ref.read(emailCodeSignInProvider)) {

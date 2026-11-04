@@ -6674,6 +6674,12 @@ abstract class AppLocalizations {
   /// **'For accounts that already have a password. No password yet, or forgot it? Use an email code instead.'**
   String get signInPasswordLead;
 
+  /// No description provided for @passwordSignInLeadUnclaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'For accounts that already exist. A new account needs the setup key first.'**
+  String get passwordSignInLeadUnclaimed;
+
   /// No description provided for @signInMethodReady.
   ///
   /// In en, this message translates to:

@@ -83,7 +83,9 @@ class ServerSession {
   /// whoever handles the link.
   final ValueNotifier<LinkEvent?> inbox;
 
-  /// Non-secret signal used to skip the generic front door.
+  /// Non-secret signal that this device is setting up the server: a setup link brought
+  /// the key, or the claim (S1) accepted one. It skips the generic front door, and it is
+  /// what opens sign-up on a server without a family (specs/20 "Claiming the server").
   final ValueNotifier<bool> setupPending;
 
   String? _pendingEnrolCode;

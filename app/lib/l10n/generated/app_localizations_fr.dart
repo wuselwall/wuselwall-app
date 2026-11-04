@@ -3912,6 +3912,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Pour les comptes qui ont déjà un mot de passe. Pas encore de mot de passe, ou oublié ? Utilise plutôt un code par e-mail.';
 
   @override
+  String get passwordSignInLeadUnclaimed =>
+      'Pour les comptes qui existent déjà. Un nouveau compte nécessite d’abord la clé de configuration.';
+
+  @override
   String get signInMethodReady => 'Ton compte est prêt.';
 
   @override

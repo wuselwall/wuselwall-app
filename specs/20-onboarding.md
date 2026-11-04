@@ -240,7 +240,13 @@ stranger's sign-up at all.
   against the key. Then E1's call follows (the code, or on a server without mail the
   password page with the address filled in), and E2 and H1 show "‹host› wird eingerichtet"
   under their title. From E2, "Andere E-Mail-Adresse" goes back through S1, because the
-  server lets only the announced address sign up.
+  server lets only the announced address sign up. A typed key counts like a setup link's
+  here (`setupPending`, 2026-11-04).
+- **Before the key, E1 promises no new account** (2026-11-04). The front door's button says
+  "Anmelden", E1 says that a new account needs the setup key first and links to S1, and
+  without mail `PasswordSignInPage` offers only **Anmelden**, without the **Neues Konto** tab.
+  The app cannot see `household_creation` before sign-in (discovery reports `token`), so a
+  server set to `open` by hand looks the same; its founder takes the same way through S1.
 - **The gate** is GoTrue's Before User Created hook (`app.before_user_created_hook`,
   `pg-functions://`, GoTrue 2.175 or newer, hosted projects included): while no household
   exists and `household_creation` is `code`, it refuses every sign-up unless the address

@@ -3861,6 +3861,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'For accounts that already have a password. No password yet, or forgot it? Use an email code instead.';
 
   @override
+  String get passwordSignInLeadUnclaimed =>
+      'For accounts that already exist. A new account needs the setup key first.';
+
+  @override
   String get signInMethodReady => 'Your account is ready.';
 
   @override

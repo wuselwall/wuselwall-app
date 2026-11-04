@@ -52,7 +52,7 @@ Si prefieres contraseña, toca **Iniciar sesión con contraseña**. Es para una 
 
 ### Sin correo del servidor
 
-**Servidor sin correo** ([Correo](/es/server/email)): **Iniciar sesión o crear una cuenta** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)).
+**Servidor sin correo** ([Correo](/es/server/email)): **Iniciar sesión o crear una cuenta** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)). Mientras ese servidor no tenga familia, solo ofrece **Iniciar sesión**; **Cuenta nueva** aparece cuando hayas introducido la [clave de configuración](#setup-key).
 
 ## 2. Crear una familia {#_2-creating-a-new-family}
 

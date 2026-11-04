@@ -53,7 +53,7 @@ Pour utiliser un mot de passe, touchez **Se connecter avec un mot de passe**. C�
 
 ### Sans e-mails du serveur
 
-**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Se connecter ou créer un compte** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)).
+**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Se connecter ou créer un compte** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)). Tant qu’un tel serveur n’a pas de famille, il propose seulement **Se connecter** ; **Nouveau compte** apparaît une fois la [clé de configuration](#setup-key) saisie.
 
 ## 2. Créer une famille {#_2-creating-a-new-family}
 

@@ -2155,6 +2155,7 @@
   "signInCodeLead": "We’ll send a 6-digit code to your email address. New here? The code creates your account. Already have one? The code signs you in.",
   "signInCodeLeadUnclaimed": "We’ll send a 6-digit code to your email address to sign you in. A new account needs the setup key first.",
   "signInPasswordLead": "For accounts that already have a password. No password yet, or forgot it? Use an email code instead.",
+  "passwordSignInLeadUnclaimed": "For accounts that already exist. A new account needs the setup key first.",
   "signInMethodReady": "Your account is ready.",
   "emailHavePassword": "Sign in with a password",
   "emailWrongCredentials": "Email or password is incorrect.",

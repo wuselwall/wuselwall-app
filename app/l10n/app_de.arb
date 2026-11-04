@@ -1493,6 +1493,7 @@
   "signInCodeLead": "Wir schicken einen 6-stelligen Code an deine E-Mail-Adresse. Neu hier? Der Code erstellt dein Konto. Schon ein Konto? Der Code meldet dich an.",
   "signInCodeLeadUnclaimed": "Wir schicken einen 6-stelligen Code an deine E-Mail-Adresse, damit du dich anmelden kannst. Ein neues Konto braucht zuerst den Einrichtungsschlüssel.",
   "signInPasswordLead": "Für Konten, die schon ein Passwort haben. Noch kein Passwort oder vergessen? Nimm stattdessen einen Code per E-Mail.",
+  "passwordSignInLeadUnclaimed": "Für Konten, die es schon gibt. Ein neues Konto braucht zuerst den Einrichtungsschlüssel.",
   "signInMethodReady": "Dein Konto ist bereit.",
   "emailHavePassword": "Mit Passwort anmelden",
   "emailWrongCredentials": "E-Mail oder Passwort stimmt nicht.",

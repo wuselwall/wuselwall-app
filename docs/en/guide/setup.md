@@ -67,7 +67,7 @@ If two-factor sign-in is on, the six-digit code from your authenticator app foll
 
 ### On a server without email {#without-email}
 
-Some family servers send no email ([Email](/en/server/email)). Then **Sign in or create an account** opens on **New account**: enter your address and a password of at least 10 characters, and tap **Create account**. There is no code and no confirmation email. Already have an account? Tap **Sign in**. If you forget your password, tap **Forgot your password?** and ask a guardian of your family for a code ([Reset password](/en/settings/members-devices#reset-password)).
+Some family servers send no email ([Email](/en/server/email)). Then **Sign in or create an account** opens on **New account**: enter your address and a password of at least 10 characters, and tap **Create account**. There is no code and no confirmation email. Already have an account? Tap **Sign in**. If you forget your password, tap **Forgot your password?** and ask a guardian of your family for a code ([Reset password](/en/settings/members-devices#reset-password)). Before such a server has a family, it offers only **Sign in**; **New account** follows once you have entered the [setup key](#setup-key).
 
 ## 2. Creating a new family
 
