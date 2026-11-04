@@ -3,6 +3,7 @@
 // The app runs on in-memory data (lib/demo). The scenario comes from the URL:
 //   ?scenario=setup | newfamily | adult | kid | kiosk   (default adult)
 //   ?scenario=noschool   adult, with no school yet
+//   ?scenario=kidshopping   kid, with the family's Shopping tab switched on
 //   ?scenario=server   the store app's first question: which server (ADR-018)
 //   &still=1           nothing moves and Wusel's words are fixed, for screenshots
 // On a device (no URL): flutter run -t lib/main_demo.dart --dart-define=DEMO_SCENARIO=kid

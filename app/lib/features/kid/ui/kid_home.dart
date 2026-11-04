@@ -24,8 +24,8 @@ import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/ui/open_settings.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
 
-/// The children's iPad (specs/09 "Screens by register"): five big destinations, icons
-/// first, and the avatar bar at the bottom to say who is holding the device. No
+/// The children's iPad (specs/09 "Screens by register"): four or five big destinations,
+/// icons first, and the avatar bar at the bottom to say who is holding the device. No
 /// destructive action; settings only behind a quiet gear, guarded by the PIN there. Without an acting child, the first three tabs are
 /// replaced by the picker; shopping and family stay open to everyone.
 class KidHome extends ConsumerWidget {
@@ -34,7 +34,10 @@ class KidHome extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final tab = ref.watch(kidTabProvider);
+    final tabs = ref.watch(kidTabsProvider);
+    final selected = ref.watch(kidTabProvider);
+    // Shopping switched off while a child is on it: back to their day.
+    final tab = tabs.contains(selected) ? selected : KidTab.today;
     final actor = ref.watch(actingProfileProvider);
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     final member = members.where((m) => m.id == actor).firstOrNull;
@@ -63,14 +66,14 @@ class KidHome extends ConsumerWidget {
     // The tab labels at a size that fits; where even the smallest does not, the
     // timetable takes its short label ("Schule"), so no label breaks in a word.
     final full = fitNavLabels(context, [
-      for (final t in KidTab.values) _label(l10n, t),
+      for (final t in tabs) _label(l10n, t),
     ], base: _navLabel);
     final labels = full.fits
         ? full
         : (
             style: fitNavLabels(
               context,
-              [for (final t in KidTab.values) _label(l10n, t, short: true)],
+              [for (final t in tabs) _label(l10n, t, short: true)],
               base: _navLabel,
               // A very small phone: smaller still rather than a broken word.
               minSize: 9,
@@ -167,15 +170,14 @@ class KidHome extends ConsumerWidget {
                       context: context,
                       removeBottom: !picking,
                       child: NavigationBar(
-                        selectedIndex: tab.index,
+                        selectedIndex: tabs.indexOf(tab),
                         // A phone's bar is lower than Material's (specs/09 "the
                         // bottom bar"); the kid's larger icon and label need 72.
                         height: navBarHeight(context, phone: 72),
-                        onDestinationSelected: (i) => ref
-                            .read(kidTabProvider.notifier)
-                            .select(KidTab.values[i]),
+                        onDestinationSelected: (i) =>
+                            ref.read(kidTabProvider.notifier).select(tabs[i]),
                         destinations: [
-                          for (final t in KidTab.values)
+                          for (final t in tabs)
                             NavigationDestination(
                               icon: Icon(_icon(t)),
                               label: unbreakable(

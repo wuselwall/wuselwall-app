@@ -5308,6 +5308,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le drapeau de votre pays sur la colline le jour de sa fête nationale, par exemple le 1er août en Suisse. Le pays vient de votre région.';
 
   @override
+  String get settingHouseholdKidShoppingTitle =>
+      'Courses dans la vue des enfants';
+
+  @override
+  String get settingHouseholdKidShoppingHelp =>
+      'Ajoute l’onglet Courses à la vue des enfants, où ils ajoutent et cochent des articles. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.';
+
+  @override
   String get settingRitualsCountdownDaysTitle => 'Le compte à rebours commence';
 
   @override

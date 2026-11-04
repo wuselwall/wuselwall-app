@@ -566,6 +566,16 @@ void main() {
       );
       expect(find.byKey(const ValueKey('settings-members')), findsOneWidget);
       expect(find.byKey(const ValueKey('settings-baselines')), findsOneWidget);
+      // The children's Shopping tab is off for a new family: the way to it stays in Basic.
+      await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('setting-household.kid_shopping')),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(
+        find.byKey(const ValueKey('setting-household.kid_shopping')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('Devices holds this device and all devices', (tester) async {

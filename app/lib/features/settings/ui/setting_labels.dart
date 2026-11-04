@@ -178,6 +178,10 @@ SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
     title: l10n.settingAmbienceNationalDayTitle,
     help: l10n.settingAmbienceNationalDayHelp,
   ),
+  'household.kid_shopping' => (
+    title: l10n.settingHouseholdKidShoppingTitle,
+    help: l10n.settingHouseholdKidShoppingHelp,
+  ),
   'rituals.countdown_days' => (
     title: l10n.settingRitualsCountdownDaysTitle,
     help: l10n.settingRitualsCountdownDaysHelp,

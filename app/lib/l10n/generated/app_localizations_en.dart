@@ -5238,6 +5238,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your country\'s flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.';
 
   @override
+  String get settingHouseholdKidShoppingTitle =>
+      'Shopping in the children\'s view';
+
+  @override
+  String get settingHouseholdKidShoppingHelp =>
+      'Adds the Shopping tab to the children\'s view, where they add and tick items. On the wall display they can add items either way.';
+
+  @override
   String get settingRitualsCountdownDaysTitle => 'Start looking forward';
 
   @override

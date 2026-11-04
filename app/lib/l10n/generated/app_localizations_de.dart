@@ -5280,6 +5280,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Flagge eures Landes auf dem Hügel an seinem Nationalfeiertag, etwa am 1. August in der Schweiz. Das Land kommt aus eurer Region.';
 
   @override
+  String get settingHouseholdKidShoppingTitle =>
+      'Einkaufen in der Kinder-Ansicht';
+
+  @override
+  String get settingHouseholdKidShoppingHelp =>
+      'Zeigt in der Kinder-Ansicht den Reiter Einkaufen, dort fügen Kinder Artikel hinzu und haken sie ab. Am Wanddisplay können sie in jedem Fall Artikel hinzufügen.';
+
+  @override
   String get settingRitualsCountdownDaysTitle => 'Vorfreude beginnt';
 
   @override

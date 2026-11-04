@@ -8917,6 +8917,18 @@ abstract class AppLocalizations {
   /// **'Your country\'s flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.'**
   String get settingAmbienceNationalDayHelp;
 
+  /// No description provided for @settingHouseholdKidShoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping in the children\'s view'**
+  String get settingHouseholdKidShoppingTitle;
+
+  /// No description provided for @settingHouseholdKidShoppingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds the Shopping tab to the children\'s view, where they add and tick items. On the wall display they can add items either way.'**
+  String get settingHouseholdKidShoppingHelp;
+
   /// No description provided for @settingRitualsCountdownDaysTitle.
   ///
   /// In en, this message translates to:

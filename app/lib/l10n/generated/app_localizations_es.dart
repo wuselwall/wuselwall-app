@@ -5295,6 +5295,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'La bandera de vuestro país en la colina en su fiesta nacional, como el 1 de agosto en Suiza. El país sale de vuestra región.';
 
   @override
+  String get settingHouseholdKidShoppingTitle => 'Compra en la vista infantil';
+
+  @override
+  String get settingHouseholdKidShoppingHelp =>
+      'Añade la pestaña Compra a la vista infantil, donde añaden y marcan artículos. En la pantalla de pared pueden añadirlos de todos modos.';
+
+  @override
   String get settingRitualsCountdownDaysTitle => 'La cuenta atrás empieza';
 
   @override
