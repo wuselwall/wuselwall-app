@@ -730,6 +730,14 @@ const _catalogue = <_Definition>[
     selfService: false,
   ),
   (
+    key: 'household.kid_shopping',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: false,
+    constraints: {},
+    selfService: false,
+  ),
+  (
     key: 'board.member_label',
     scope: SettingScope.household,
     type: SettingType.enumeration,
@@ -1207,7 +1215,24 @@ List<SettingEntry> demoSettingCatalogue() => [
 
 /// In-memory household settings: a set or reset changes the rows the page shows.
 class DemoHouseholdSettingsRepository implements HouseholdSettingsRepository {
-  DemoHouseholdSettingsRepository() : _rows = demoSettingCatalogue();
+  /// [kidShopping]: the family has switched on the children's Shopping tab.
+  DemoHouseholdSettingsRepository({bool kidShopping = false})
+    : _rows = [
+        for (final e in demoSettingCatalogue())
+          if (kidShopping && e.key == 'household.kid_shopping')
+            SettingEntry(
+              key: e.key,
+              scope: e.scope,
+              type: e.type,
+              constraints: e.constraints,
+              selfService: e.selfService,
+              defaultValue: e.defaultValue,
+              value: true,
+              isDefault: false,
+            )
+          else
+            e,
+      ];
 
   final List<SettingEntry> _rows;
 

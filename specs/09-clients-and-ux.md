@@ -98,7 +98,11 @@ counts); when the acting person becomes nobody, the open settings page leaves fo
 - Mein Stundenplan (the week's grid, today's lessons as large cards)
 - My points (balance, reward shop, badges, streaks)
 - Shopping (add + tick — children are surprisingly good at this; no list editing,
-  no new list, no history)
+  no new list, no history). Only where a guardian switched it on (`household.kid_shopping`;
+  decided 2026-11-04): a new family's children have the other four tabs, so the bar and the
+  day stay about them. One switch for the family, not per child or by age: on a shared tablet
+  every child has the same tab bar, Shopping opens before anyone is picked, and a birthday is
+  optional. Every family that existed then keeps the tab. Children can still add on the wall.
 - Family (who is doing what today)
 
 How the kid register fits its screen (decided 2026-10-26, after layout checks on phones,

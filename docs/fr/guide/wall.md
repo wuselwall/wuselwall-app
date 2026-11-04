@@ -2,9 +2,11 @@
 
 ## Tablette des enfants {#kids-tablet}
 
-La vue des enfants est plus grande et plus simple. Chacun touche son prénom, puis ajoute et coche les courses. Les tuiles permettent de participer sans savoir écrire. Les enfants ne gèrent ni membres ni appareils.
+La vue des enfants est plus grande et plus simple. Chacun touche son prénom et voit sa journée. Les enfants ne gèrent ni membres ni appareils.
 
 Dans **Ma journée**, [Wusel](/fr/guide/wusel) accueille l’enfant. En dessous : ses tâches, **Ce qui m’attend**, l’école du jour sur une seule carte (un toucher ouvre l’emploi du temps), le repas, la carte **Ton repas préféré** et, les jours où il y en a, les rendez-vous ; pendant le repas, la [question à table](/fr/guide/rituals#table-question), et le dimanche soir **Notre semaine** (voir [Rituels](/fr/guide/rituals)).
+
+L’onglet **Courses** est désactivé dans une nouvelle famille ; les familles qui utilisaient déjà WuselWall le conservent. Un responsable le règle avec **Courses dans la vue des enfants** dans [Paramètres → Famille](/fr/settings/household#the-areas). Les enfants ajoutent et cochent alors les articles ; les tuiles permettent de participer sans savoir écrire. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.
 
 <Shot name="kid-shopping" alt="La liste de courses dans la vue des enfants" wide />
 
@@ -45,7 +47,7 @@ Touchez les courses dans le pied de page, puis votre prénom. Le mur ajoute uniq
 
 À partir de 21 h (ou des heures de nuit réglées pour cet appareil), le mur adopte le thème de nuit et Wusel dort. Le mur ne joue de sons que si vous les activez, et jamais la nuit. Pour éviter le marquage, l’affichage se décale de 2 pixels au plus toutes les 10 minutes (voir [Wusel et les couleurs](/fr/guide/wusel#burn-in)). Sans connexion, il conserve le dernier plan et indique la dernière actualisation, et Wusel réfléchit. Quand tout fonctionne, ces indications restent discrètes.
 
-La vue des enfants possède les onglets **Ma journée**, **Emploi du temps**, **Points**, **Courses** et **Famille**.
+La vue des enfants possède les onglets **Ma journée**, **Emploi du temps**, **Points** et **Famille**, ainsi que **Courses** s’il est activé.
 
 ## Connecter et préparer l’appareil {#connecting}
 

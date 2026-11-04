@@ -2061,6 +2061,8 @@
   "settingAmbienceStNicholasHelp": "Ein gefüllter Stiefel am 6. Dezember (in den Niederlanden am 5.).",
   "settingAmbienceNationalDayTitle": "Nationalfeiertag",
   "settingAmbienceNationalDayHelp": "Die Flagge eures Landes auf dem Hügel an seinem Nationalfeiertag, etwa am 1. August in der Schweiz. Das Land kommt aus eurer Region.",
+  "settingHouseholdKidShoppingTitle": "Einkaufen in der Kinder-Ansicht",
+  "settingHouseholdKidShoppingHelp": "Zeigt in der Kinder-Ansicht den Reiter Einkaufen, dort fügen Kinder Artikel hinzu und haken sie ab. Am Wanddisplay können sie in jedem Fall Artikel hinzufügen.",
   "settingRitualsCountdownDaysTitle": "Vorfreude beginnt",
   "settingRitualsCountdownDaysHelp": "Wie viele Tage vor einem Geburtstag, den Ferien oder einem markierten Termin der Countdown erscheint.",
   "settingRitualsCountdownReturnTitle": "Countdown bis jemand zurückkommt",

@@ -2748,6 +2748,8 @@
   "settingAmbienceStNicholasHelp": "Une botte remplie le 6 décembre (le 5 aux Pays-Bas).",
   "settingAmbienceNationalDayTitle": "Fête nationale",
   "settingAmbienceNationalDayHelp": "Le drapeau de votre pays sur la colline le jour de sa fête nationale, par exemple le 1er août en Suisse. Le pays vient de votre région.",
+  "settingHouseholdKidShoppingTitle": "Courses dans la vue des enfants",
+  "settingHouseholdKidShoppingHelp": "Ajoute l’onglet Courses à la vue des enfants, où ils ajoutent et cochent des articles. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.",
   "settingRitualsCountdownDaysTitle": "Le compte à rebours commence",
   "settingRitualsCountdownDaysHelp": "Combien de jours avant un anniversaire, les vacances ou un évènement marqué le compte à rebours apparaît.",
   "settingRitualsCountdownReturnTitle": "Compte à rebours avant un retour",

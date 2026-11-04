@@ -2987,6 +2987,8 @@
   "settingAmbienceStNicholasHelp": "A filled boot on 6 December (5 December in the Netherlands).",
   "settingAmbienceNationalDayTitle": "National day",
   "settingAmbienceNationalDayHelp": "Your country's flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.",
+  "settingHouseholdKidShoppingTitle": "Shopping in the children's view",
+  "settingHouseholdKidShoppingHelp": "Adds the Shopping tab to the children's view, where they add and tick items. On the wall display they can add items either way.",
   "settingRitualsCountdownDaysTitle": "Start looking forward",
   "settingRitualsCountdownDaysHelp": "How many days before a birthday, the holidays or a marked event the countdown appears.",
   "settingRitualsCountdownReturnTitle": "Count down to a parent's return",
