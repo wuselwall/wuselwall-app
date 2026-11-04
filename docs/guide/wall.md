@@ -6,9 +6,9 @@ Ein Kinder-Gerät zeigt die Liste **größer und einfacher**. Die Kinder tippen 
 
 <Shot name="kid-shopping" alt="Kinder-Ansicht der Einkaufsliste" wide />
 
-Auf **Mein Tag** begrüßt [Wusel](/guide/wusel) das Kind. Darunter stehen seine Aufgaben, **Worauf ich mich freue**, die Schule, das Essen, die Karte **Dein Wunschessen** und die Termine; während des Essens die [Tischfrage](/guide/rituals#table-question) und am Sonntagabend **Unsere Woche** (siehe [Rituale](/guide/rituals)).
+Auf **Mein Tag** begrüßt [Wusel](/guide/wusel) das Kind. Darunter stehen seine Aufgaben, **Worauf ich mich freue**, die Schule von heute in einer Karte (ein Tipp öffnet den Stundenplan), das Essen, die Karte **Dein Wunschessen** und, an einem Tag mit Terminen, die Termine; während des Essens die [Tischfrage](/guide/rituals#table-question) und am Sonntagabend **Unsere Woche** (siehe [Rituale](/guide/rituals)).
 
-Kinder können keine Geräte oder Mitglieder verwalten; das bleibt Erziehungsberechtigten vorbehalten.
+Kinder können keine Geräte oder Mitglieder verwalten und keine Einkaufslisten anlegen oder bearbeiten; das bleibt Erziehungsberechtigten vorbehalten.
 
 ## Wandanzeige in der Küche
 

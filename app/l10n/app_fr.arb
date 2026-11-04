@@ -1413,6 +1413,22 @@
       }
     }
   },
+  "kidSchoolNowSubject": "Maintenant : {subject}",
+  "@kidSchoolNowSubject": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSchoolChanges": "{count, plural, =1{1 changement aujourd’hui} other{{count} changements aujourd’hui}}",
+  "@kidSchoolChanges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "kidTomorrowNeeds": "Demain, tu auras besoin de : {items}",
   "@kidTomorrowNeeds": {
     "placeholders": {
@@ -1439,11 +1455,8 @@
   },
   "kidMealNoneDinner": "Rien n’est encore prévu pour ce soir.",
   "kidMealNoneLunch": "Rien n’est encore prévu pour ce midi.",
-  "kidMealEatingYou": "Tu manges avec nous.",
   "kidEventsTitle": "Mes rendez-vous aujourd’hui",
-  "kidNoEvents": "Pas de rendez-vous aujourd’hui.",
   "kidAllDay": "toute la journée",
-  "kidTimetableTitle": "Mon emploi du temps",
   "kidTodayMarker": "Aujourd’hui",
   "kidYourPoints": "Tes points",
   "kidRewardsTitle": "Récompenses",
@@ -1475,7 +1488,6 @@
       }
     }
   },
-  "kidFamilyTitle": "La famille aujourd’hui",
   "kidOpenTasks": "{count, plural, =0{Aucune tâche à faire} =1{1 tâche à faire} other{{count} tâches à faire}}",
   "@kidOpenTasks": {
     "placeholders": {
@@ -1484,7 +1496,6 @@
       }
     }
   },
-  "kidNoPlanToday": "Rien de prévu aujourd’hui",
   "schoolsUiAddSchool": "Une autre école",
   "schoolsUiNewSchool": "Nouvelle école",
   "schoolsUiPickSchool": "Choisir l’école",

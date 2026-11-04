@@ -2670,6 +2670,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String kidSchoolNowSubject(String subject) {
+    return 'Now: $subject';
+  }
+
+  @override
+  String kidSchoolChanges(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes today',
+      one: '1 change today',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String kidTomorrowNeeds(String items) {
     return 'Tomorrow you need: $items';
   }
@@ -2691,19 +2707,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kidMealNoneLunch => 'Nothing is planned for lunch yet.';
 
   @override
-  String get kidMealEatingYou => 'You are eating too.';
-
-  @override
   String get kidEventsTitle => 'My appointments today';
 
   @override
-  String get kidNoEvents => 'No appointments today.';
-
-  @override
   String get kidAllDay => 'all day';
-
-  @override
-  String get kidTimetableTitle => 'My timetable';
 
   @override
   String get kidTodayMarker => 'Today';
@@ -2764,9 +2771,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get kidFamilyTitle => 'Family today';
-
-  @override
   String kidOpenTasks(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2777,9 +2781,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get kidNoPlanToday => 'Nothing planned today';
 
   @override
   String get schoolsUiAddSchool => 'Another school';

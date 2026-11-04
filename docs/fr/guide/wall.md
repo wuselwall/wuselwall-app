@@ -4,7 +4,7 @@
 
 La vue des enfants est plus grande et plus simple. Chacun touche son prénom, puis ajoute et coche les courses. Les tuiles permettent de participer sans savoir écrire. Les enfants ne gèrent ni membres ni appareils.
 
-Dans **Ma journée**, [Wusel](/fr/guide/wusel) accueille l’enfant. En dessous : ses tâches, **Ce qui m’attend**, l’école, le repas, la carte **Ton repas préféré** et les rendez-vous ; pendant le repas, la [question à table](/fr/guide/rituals#table-question), et le dimanche soir **Notre semaine** (voir [Rituels](/fr/guide/rituals)).
+Dans **Ma journée**, [Wusel](/fr/guide/wusel) accueille l’enfant. En dessous : ses tâches, **Ce qui m’attend**, l’école du jour sur une seule carte (un toucher ouvre l’emploi du temps), le repas, la carte **Ton repas préféré** et, les jours où il y en a, les rendez-vous ; pendant le repas, la [question à table](/fr/guide/rituals#table-question), et le dimanche soir **Notre semaine** (voir [Rituels](/fr/guide/rituals)).
 
 <Shot name="kid-shopping" alt="La liste de courses dans la vue des enfants" wide />
 

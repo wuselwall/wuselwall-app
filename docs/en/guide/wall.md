@@ -6,9 +6,9 @@ A kids' device shows the list **larger and simpler**. Children tap their name an
 
 <Shot name="kid-shopping" alt="Kids' view of the shopping list" wide />
 
-On **My day**, [Wusel](/en/guide/wusel) greets the child. Below are their chores, **Looking forward to**, school, the meal, the card **Your meal wish** and the appointments; during the meal the [question at the table](/en/guide/rituals#table-question), and on Sunday evening **Our week** (see [Rituals](/en/guide/rituals)).
+On **My day**, [Wusel](/en/guide/wusel) greets the child. Below are their chores, **Looking forward to**, today's school in one card (a tap opens the timetable), the meal, the card **Your meal wish** and, on a day that has them, the appointments; during the meal the [question at the table](/en/guide/rituals#table-question), and on Sunday evening **Our week** (see [Rituals](/en/guide/rituals)).
 
-Children cannot manage devices or members; that stays with guardians.
+Children cannot manage devices or members, nor create or edit shopping lists; that stays with guardians.
 
 ## Wall display in the kitchen
 
