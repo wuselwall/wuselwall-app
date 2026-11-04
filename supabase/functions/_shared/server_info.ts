@@ -26,6 +26,8 @@ export type DiscoveryDocument = {
   publishable_key: string;
   api_version: number;
   min_app_version: string;
+  /** `token`: only the setup key founds a family. `open`: everyone may sign up and found
+   * one (set by hand). Servers from before migration 20261104100000 always say `token`. */
   household_creation: string;
   /** Whether a family exists yet. Without one, the app shows the claim step: only the
    * address announced with the setup key may sign up (specs/20 "Claiming the server").

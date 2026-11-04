@@ -120,7 +120,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     // A server without a family takes no new account until this device has its setup
     // key (specs/20 "Claiming the server").
     final signUpClosed =
-        ref.watch(serverUnclaimedProvider) &&
+        ref.watch(setupKeyRequiredProvider) &&
         !ref.watch(serverSessionProvider).setupPending.value;
     if (!ref.watch(emailCodeSignInProvider)) {
       return PasswordSignInPage(

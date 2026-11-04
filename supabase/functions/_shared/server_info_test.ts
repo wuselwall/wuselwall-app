@@ -146,6 +146,14 @@ Deno.test("the discovery document says whether the server is claimed", () => {
   assertThrows(() => checkRow({ ...row, claimed: "false" }));
 });
 
+Deno.test("the discovery document passes on the server's creation mode", () => {
+  assertEquals(
+    discoveryDocument({ ...row, household_creation: "open" }, "k", undefined)
+      .household_creation,
+    "open",
+  );
+});
+
 Deno.test("a server that autoconfirms offers no email code", () => {
   assertEquals(
     emailCode({ mailer_autoconfirm: true, disable_signup: false }),

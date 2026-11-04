@@ -72,7 +72,8 @@ What every device shows before it belongs to a household:
 
 - The email button serves sign-up and sign-in alike, and since 2026-11-04 says so: "Mit
   E-Mail fortfahren" left people unsure whether they needed an account first.
-- **A server without a family** (its discovery document says `claimed: false`) shows a card
+- **A server without a family** (its discovery document says `claimed: false`, and
+  `household_creation` is not `open`) shows a card
   above the buttons, "Dieser Server hat noch keine Familie", with **Ich habe den
   Einrichtungsschlüssel**, which opens S1 ([Claiming the server](#claiming-the-server),
   2026-10-30). A setup link skips the front door and opens S1 directly. The email button
@@ -245,8 +246,10 @@ stranger's sign-up at all.
 - **Before the key, E1 promises no new account** (2026-11-04). The front door's button says
   "Anmelden", E1 says that a new account needs the setup key first and links to S1, and
   without mail `PasswordSignInPage` offers only **Anmelden**, without the **Neues Konto** tab.
-  The app cannot see `household_creation` before sign-in (discovery reports `token`), so a
-  server set to `open` by hand looks the same; its founder takes the same way through S1.
+  A server set to `open` by hand needs no key: discovery reports the real mode
+  (`household_creation: open`, migration `20261104100000`), and the app then shows the front
+  door and E1 of a server with a family. A server from before that migration always says
+  `token`, so its founder goes through S1.
 - **The gate** is GoTrue's Before User Created hook (`app.before_user_created_hook`,
   `pg-functions://`, GoTrue 2.175 or newer, hosted projects included): while no household
   exists and `household_creation` is `code`, it refuses every sign-up unless the address

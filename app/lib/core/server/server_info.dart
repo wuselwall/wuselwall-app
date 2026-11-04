@@ -79,6 +79,9 @@ class ServerInfo {
   final String publishableKey;
   final int apiVersion;
   final String minAppVersion;
+
+  /// `token`: only the setup key founds a family. `open`: everyone may sign up and found
+  /// one. Servers from before migration 20261104100000 always say `token`.
   final String householdCreation;
   final List<String> features;
 

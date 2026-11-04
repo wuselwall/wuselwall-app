@@ -20,22 +20,26 @@ void main() {
   setUp(() => FlutterSecureStorage.setMockInitialValues({}));
 
   /// The app on a server whose discovery document says whether a family exists.
-  AppConfig serverConfig({required bool claimed, bool emailCode = true}) =>
-      AppConfig.forServer(
-        const AppConfig(
-          environment: 'test',
-          supabaseUrl: 'http://localhost',
-          supabasePublishableKey: 'key',
-        ),
-        ServerInfo(
-          supabaseUrl: server,
-          publishableKey: 'sb_publishable_abc',
-          apiVersion: 1,
-          minAppVersion: '1.0.0',
-          emailCode: emailCode,
-          claimed: claimed,
-        ),
-      );
+  AppConfig serverConfig({
+    required bool claimed,
+    bool emailCode = true,
+    String householdCreation = 'token',
+  }) => AppConfig.forServer(
+    const AppConfig(
+      environment: 'test',
+      supabaseUrl: 'http://localhost',
+      supabasePublishableKey: 'key',
+    ),
+    ServerInfo(
+      supabaseUrl: server,
+      publishableKey: 'sb_publishable_abc',
+      apiVersion: 1,
+      minAppVersion: '1.0.0',
+      emailCode: emailCode,
+      claimed: claimed,
+      householdCreation: householdCreation,
+    ),
+  );
 
   testWidgets('a setup link lands on the claim: the key is checked, the address announced, '
       'the code sent', (t) async {
@@ -261,6 +265,46 @@ void main() {
       container.read(routerProvider).routeInformationProvider.value.uri.path,
       Routes.claim,
     );
+  });
+
+  group('a server without a family, set to open', () {
+    Future<void> pumpDoor(WidgetTester t, {bool emailCode = true}) => pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(),
+        household: FakeHouseholdOnboardingRepository(),
+        signedIn: false,
+        appConfig: serverConfig(
+          claimed: false,
+          emailCode: emailCode,
+          householdCreation: 'open',
+        ),
+      ),
+    );
+
+    testWidgets('asks for no setup key on its front door', (t) async {
+      await pumpDoor(t);
+      expect(find.text('Dieser Server hat noch keine Familie'), findsNothing);
+      expect(find.byKey(const ValueKey('door-claim')), findsNothing);
+      expect(find.text('Anmelden oder Konto erstellen'), findsOneWidget);
+    });
+
+    testWidgets('promises a new account by email', (t) async {
+      await pumpDoor(t);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      expect(find.textContaining('Neu hier?'), findsOneWidget);
+      expect(find.byKey(const ValueKey('sign-in-claim')), findsNothing);
+    });
+
+    testWidgets('without mail, opens on a new account', (t) async {
+      await pumpDoor(t, emailCode: false);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      expect(find.text('Neues Konto'), findsOneWidget);
+      expect(find.text('Konto erstellen'), findsOneWidget);
+      expect(find.byKey(const ValueKey('sign-in-claim')), findsNothing);
+    });
   });
 
   testWidgets('a server with a family shows no claim on its front door', (

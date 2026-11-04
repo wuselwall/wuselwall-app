@@ -44,7 +44,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
     final session = ref.watch(serverSessionProvider);
     // A server without a family (specs/20 "Claiming the server"): the way in is the
     // setup key, and the server refuses every other sign-up.
-    final unclaimed = ref.watch(serverUnclaimedProvider);
+    final keyRequired = ref.watch(setupKeyRequiredProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -90,7 +90,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   ),
                 ],
                 const SizedBox(height: Tokens.space6),
-                if (unclaimed) ...[
+                if (keyRequired) ...[
                   Container(
                     padding: const EdgeInsets.all(Tokens.space4),
                     decoration: BoxDecoration(
@@ -135,7 +135,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   key: const ValueKey('door-email'),
                   onPressed: !online ? null : () => context.go(Routes.signIn),
                   icon: const Icon(Icons.mail_outline),
-                  label: Text(unclaimed ? l10n.signInAction : l10n.doorEmail),
+                  label: Text(keyRequired ? l10n.signInAction : l10n.doorEmail),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: Tokens.space4),
