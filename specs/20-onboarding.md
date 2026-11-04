@@ -247,7 +247,7 @@ stranger's sign-up at all.
   "Anmelden", E1 says that a new account needs the setup key first and links to S1, and
   without mail `PasswordSignInPage` offers only **Anmelden**, without the **Neues Konto** tab.
   A server set to `open` by hand needs no key: discovery reports the real mode
-  (`household_creation: open`, migration `20261104100000`), and the app then shows the front
+  (`household_creation: open`, migration `20261104110000`), and the app then shows the front
   door and E1 of a server with a family. A server from before that migration always says
   `token`, so its founder goes through S1.
 - **The gate** is GoTrue's Before User Created hook (`app.before_user_created_hook`,
