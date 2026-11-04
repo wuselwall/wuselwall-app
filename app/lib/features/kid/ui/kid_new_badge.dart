@@ -11,6 +11,7 @@ import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
+import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
@@ -34,6 +35,23 @@ class KidNewBadge extends ConsumerStatefulWidget {
   /// The badges celebrated with a sound since the app started.
   static final _sounded = <String>{};
 
+  /// Plays the badge sound for [badge] after this frame, once per badge while the app
+  /// runs: for the card, and for *Mein Tag*'s greeting, which names the badge itself.
+  static void cueOnce(
+    BuildContext context,
+    WidgetRef ref,
+    String actor,
+    KidBadge badge,
+  ) {
+    if (!_sounded.add('$actor/${badge.id}')) return;
+    // After the frame: the sound belongs to the moment the badge appears.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) {
+        unawaited(ref.read(celebrationProvider).cue(Cue.badge));
+      }
+    });
+  }
+
   @override
   ConsumerState<KidNewBadge> createState() => _KidNewBadgeState();
 }
@@ -43,13 +61,7 @@ class _KidNewBadgeState extends ConsumerState<KidNewBadge> {
   Widget build(BuildContext context) {
     final badge = ref.watch(kidNewBadgeProvider(widget.actor));
     if (badge == null) return const SizedBox.shrink();
-    final key = '${widget.actor}/${badge.id}';
-    if (KidNewBadge._sounded.add(key)) {
-      // After the frame: the sound belongs to the moment the card appears.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(ref.read(celebrationProvider).cue(Cue.badge));
-      });
-    }
+    KidNewBadge.cueOnce(context, ref, widget.actor, badge);
     final line = context.l10n.wuselBadge(badge.title);
     final style = Theme.of(context).textTheme.titleLarge
         ?.copyWith(fontWeight: FontWeight.w800);

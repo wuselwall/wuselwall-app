@@ -2,13 +2,15 @@
 
 ## Kids' tablet
 
-A kids' device shows the list **larger and simpler**. Children tap their name and then add and tick items like everyone else — even before they can spell, because the tiles need no keyboard.
+A kids' device shows everything **larger and simpler**. Children tap their name and see their own day.
+
+On **My day**, [Wusel](/en/guide/wusel) greets the child. Below are their chores, **Looking forward to**, today's school in one card (a tap opens the timetable), the meal, the card **Your meal wish** and, on a day that has them, the appointments; during the meal the [question at the table](/en/guide/rituals#table-question), and on Sunday evening **Our week** (see [Rituals](/en/guide/rituals)).
+
+The **Shopping** tab is off in a new family; families that were already using WuselWall keep it. A guardian switches it with **Shopping in the children's view** under [Settings → Family](/en/settings/household#the-areas). With it, children add and tick items like everyone else — even before they can spell, because the tiles need no keyboard. On the wall display they can add items either way.
 
 <Shot name="kid-shopping" alt="Kids' view of the shopping list" wide />
 
-On **My day**, [Wusel](/en/guide/wusel) greets the child. Below are their chores, **Looking forward to**, school, the meal, the card **Your meal wish** and the appointments; during the meal the [question at the table](/en/guide/rituals#table-question), and on Sunday evening **Our week** (see [Rituals](/en/guide/rituals)).
-
-Children cannot manage devices or members; that stays with guardians.
+Children cannot manage devices or members, nor create or edit shopping lists; that stays with guardians.
 
 ## Wall display in the kitchen
 
@@ -68,7 +70,7 @@ The wall can do no more than that: it adds items to the shopping list and correc
 - If the connection drops, the last plan stays visible with the note "No connection", and Wusel is thinking; the top right says when it was last updated. While everything works, the wall shows nothing about it.
 
 ::: tip Kids' tablet
-The children's view has the tabs **My day**, **Timetable**, **Points**, **Shopping** and **Family**.
+The children's view has the tabs **My day**, **Timetable**, **Points** and **Family**, and **Shopping** when it is switched on.
 :::
 
 ## Connecting

@@ -69,7 +69,7 @@ class _Day extends NightNotifier {
 
 DeviceInfo? _device(String scenario) => switch (scenario) {
   'setup' || 'newfamily' => null,
-  'kid' => DeviceInfo(
+  'kid' || 'kidshopping' => DeviceInfo(
     deviceId: 'd-2',
     householdId: 'h1',
     label: DemoData.kidsTablet,
@@ -102,7 +102,8 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
 };
 
 /// Every repository and session provider replaced by its in-memory demo.
-/// [scenario]: setup | newfamily (signed in, no family yet) | adult | kid | kiosk, and an
+/// [scenario]: setup | newfamily (signed in, no family yet) | adult | kid | kidshopping (kid,
+/// with the Shopping tab switched on) | kiosk, and an
 /// adult variant for the docs: noschool (no school yet). The family's names follow
 /// the device's language, as the
 /// app's own text does.
@@ -170,7 +171,7 @@ List<Override> _overrides(
   // The shots and the first look start at home; the docs go to the store themselves.
   shoppingModeStoreProvider.overrideWithValue(MemoryShoppingModeStore()),
   householdSettingsRepositoryProvider.overrideWithValue(
-    DemoHouseholdSettingsRepository(),
+    DemoHouseholdSettingsRepository(kidShopping: scenario == 'kidshopping'),
   ),
   householdExportRepositoryProvider.overrideWithValue(
     DemoHouseholdExportRepository(),

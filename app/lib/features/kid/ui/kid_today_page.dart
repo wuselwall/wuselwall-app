@@ -37,7 +37,6 @@ import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/week_review_widgets.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
-import 'package:wuselwall/features/school/ui/school_icons.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
@@ -114,8 +113,10 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
           cheers: _cheers,
           enter: _cameBack,
         ),
-        // The greeting's Wusel holds up the star: one Wusel on the screen.
-        KidNewBadge(actor: member.id, withWusel: false),
+        // A new badge is Wusel's line in the greeting, which holds up the star; only
+        // without a lively Wusel does it take a slim line of its own.
+        if (ref.watch(lighterDayProvider).wusel != WuselPresence.lively)
+          KidNewBadge(actor: member.id, withWusel: false),
         const WeekReviewCard(kid: true),
         const TableQuestionCard(kid: true),
         KidSectionTitle(l10n.kidTasksTitle),
@@ -127,12 +128,10 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
           balance: points,
         ),
         KidCountdowns(actor: member.id),
-        KidSectionTitle(l10n.kidSchoolTitle),
         _SchoolSection(actor: member.id),
         const SizedBox(height: Tokens.space4),
         _MealSection(actor: member.id),
         KidWishCard(member: member),
-        KidSectionTitle(l10n.kidEventsTitle),
         _EventsSection(actor: member.id),
       ],
     );
@@ -501,11 +500,12 @@ class _TaskCard extends StatelessWidget {
     final theme = Theme.of(context);
     final ww = context.ww;
     // A chore open to anyone says so: the family page counts only a child's own,
-    // and the two should not seem to disagree.
+    // and the two should not seem to disagree. "Fertig" is only spoken: the green
+    // card and its tick already show it.
     final status = task.awaitsApproval
         ? l10n.kidAwaitsCheck
         : done
-        ? l10n.kidDone
+        ? null
         : task.assignedProfileId == null
         ? l10n.tasksOpenForAnyone
         : null;
@@ -516,6 +516,7 @@ class _TaskCard extends StatelessWidget {
       enabled: !done,
       label: [
         task.title,
+        if (done && !task.awaitsApproval) l10n.kidDone,
         ?status,
         if (!done && task.points > 0) l10n.tasksPointsCount(task.points),
       ].join(', '),
@@ -652,8 +653,10 @@ class _TickPopState extends State<_TickPop>
       ScaleTransition(scale: _scale, child: widget.child);
 }
 
-/// Today's lessons, from `school-week` (today and tomorrow in one call). The lesson
-/// running now is enlarged; tomorrow's equipment is a footer.
+/// Today's school as one card, from `school-week` (today and tomorrow in one call):
+/// the hours, the lesson running now and the changes. A tap opens the timetable tab,
+/// where the lessons are; *Mein Tag* does not list them twice. Tomorrow's equipment is
+/// a footer. A child without a timetable has no school section at all.
 class _SchoolSection extends ConsumerWidget {
   const _SchoolSection({required this.actor});
 
@@ -662,32 +665,73 @@ class _SchoolSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
     final today = ref.watch(kidTodayProvider);
     final tomorrow = kidTomorrowOf(today);
     final minutes = ref.watch(kidMinutesProvider);
     final week = ref.watch(schoolWeekProvider((today, tomorrow)));
-    final data = ref.watch(schoolDataProvider).value;
-    IconData iconOf(String subject) => schoolIcon(data?.iconKeyFor(subject));
 
     return AsyncValueView<SchoolWeek>(
       value: week,
       onRetry: () => ref.invalidate(schoolWeekProvider((today, tomorrow))),
       data: (w) {
-        if (w.timetableOf(actor) == null) {
-          return KidCard(
-            child: Text(
-              l10n.kidNoTimetable,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          );
-        }
+        if (w.timetableOf(actor) == null) return const SizedBox.shrink();
+        final day = w.dayOf(actor, today);
+        final summary = kidSchoolSummary(day, minutes);
         final needs = w.dayOf(actor, tomorrow)?.equipment ?? const <String>[];
+        final lines = summary == null
+            ? [
+                day?.holidayName != null
+                    ? l10n.kidHoliday(day!.holidayName!)
+                    : l10n.kidNoSchoolToday,
+              ]
+            : [
+                '${context.time(summary.starts)}\u00A0–\u00A0'
+                    '${context.time(summary.ends)}',
+                if (summary.now case final subject?)
+                  l10n.kidSchoolNowSubject(subject),
+                if (summary.changes > 0) l10n.kidSchoolChanges(summary.changes),
+              ];
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            KidDayLessons(
-              day: w.dayOf(actor, today),
-              iconOf: iconOf,
-              minutesNow: minutes,
+            KidSectionTitle(l10n.kidSchoolTitle),
+            Semantics(
+              button: true,
+              label: lines.join(', '),
+              excludeSemantics: true,
+              child: KidCard(
+                onTap: () =>
+                    ref.read(kidTabProvider.notifier).select(KidTab.school),
+                child: Row(
+                  children: [
+                    const Icon(Icons.school_rounded, size: 40),
+                    const SizedBox(width: Tokens.space3),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            lines.first,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontFamily: summary == null
+                                  ? null
+                                  : Tokens.fontNumeric,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          for (final line in lines.skip(1))
+                            Text(line, style: theme.textTheme.bodyLarge),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right_rounded, size: 32),
+                  ],
+                ),
+              ),
             ),
             if (needs.isNotEmpty)
               Padding(
@@ -703,8 +747,9 @@ class _SchoolSection extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           l10n.kidTomorrowNeeds(needs.join(', ')),
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ],
@@ -744,7 +789,7 @@ class _MealSection extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Lunch, then dinner, when both are warm.
-                for (final meal in meals) ...[
+                for (final meal in meals)
                   Text(
                     switch ((meal.slot, meal.title)) {
                       (MealSlot.dinner, final String dish) =>
@@ -759,12 +804,6 @@ class _MealSection extends ConsumerWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  if (meal.eating.contains(actor))
-                    Text(
-                      l10n.kidMealEatingYou,
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                ],
               ],
             ),
           ),
@@ -774,7 +813,8 @@ class _MealSection extends ConsumerWidget {
   }
 }
 
-/// The appointments the child attends today. Presence (who is at work) is not one.
+/// The appointments the child attends today, under their title. Presence (who is at
+/// work) is not one. A day without appointments shows nothing, not an empty card.
 class _EventsSection extends ConsumerWidget {
   const _EventsSection({required this.actor});
 
@@ -791,16 +831,11 @@ class _EventsSection extends ConsumerWidget {
           ref.invalidate(occurrencesProvider((from: today, to: today))),
       data: (w) {
         final list = kidEventsFor(w.occurrences, actor, today);
-        if (list.isEmpty) {
-          return KidCard(
-            child: Text(
-              l10n.kidNoEvents,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          );
-        }
+        if (list.isEmpty) return const SizedBox.shrink();
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            KidSectionTitle(l10n.kidEventsTitle),
             for (final o in list)
               Padding(
                 padding: const EdgeInsets.only(bottom: Tokens.space2),
@@ -986,11 +1021,15 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
               WuselLines.helloAt(DateTime.now()),
               name: member.displayName,
             );
+      // A badge earned in the last two days: the greeting's Wusel holds up the star
+      // (specs/25 `proud`) and names it.
+      final badge = ref.watch(kidNewBadgeProvider(member.id));
       // After the hello, the day's first useful fact (specs/25).
       final fact = night || thinking
           ? null
           : kidFirstFact(
               ownBirthday: birthday,
+              newBadge: badge?.title,
               minutesNow: ref.watch(kidMinutesProvider),
               tradition: ref.watch(todayTraditionProvider),
               school: ref
@@ -1015,10 +1054,10 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
           : fact == null
           ? hello
           : '$hello ${_factLine(l10n, fact, today)}';
+      if (fact is KidBadgeFact && badge != null) {
+        KidNewBadge.cueOnce(context, ref, member.id, badge);
+      }
       final cheers = widget.cheers.value;
-      // A badge earned in the last two days: the greeting's Wusel holds up the star
-      // (specs/25 `proud`), and the badge card below names it.
-      final badge = ref.watch(kidNewBadgeProvider(member.id));
       greeting = (stacked) => WuselSays(
         line: line,
         pose: night
@@ -1128,6 +1167,7 @@ const kidThinkAfter = Duration(seconds: 2);
 String _factLine(AppLocalizations l10n, KidFact fact, DateTime today) =>
     switch (fact) {
       KidBirthdayFact() => l10n.wuselFactBirthdayYou,
+      KidBadgeFact(:final title) => l10n.wuselBadge(title),
       KidTraditionFact(:final title) => l10n.wuselFactTradition(title),
       KidFirstLessonFact(:final subject) => l10n.wuselFactFirstLesson(subject),
       KidMealFact(slot: MealSlot.dinner, :final dish) =>

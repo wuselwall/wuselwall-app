@@ -1413,6 +1413,22 @@
       }
     }
   },
+  "kidSchoolNowSubject": "Ahora: {subject}",
+  "@kidSchoolNowSubject": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSchoolChanges": "{count, plural, =1{1 cambio hoy} other{{count} cambios hoy}}",
+  "@kidSchoolChanges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "kidTomorrowNeeds": "Mañana necesitas: {items}",
   "@kidTomorrowNeeds": {
     "placeholders": {
@@ -1439,11 +1455,8 @@
   },
   "kidMealNoneDinner": "Aún no hay nada previsto para cenar.",
   "kidMealNoneLunch": "Aún no hay nada previsto para almorzar.",
-  "kidMealEatingYou": "Tú también comes en casa.",
   "kidEventsTitle": "Mis citas de hoy",
-  "kidNoEvents": "Hoy no tienes citas.",
   "kidAllDay": "todo el día",
-  "kidTimetableTitle": "Mi horario",
   "kidTodayMarker": "Hoy",
   "kidYourPoints": "Tus puntos",
   "kidRewardsTitle": "Recompensas",
@@ -1475,7 +1488,6 @@
       }
     }
   },
-  "kidFamilyTitle": "La familia hoy",
   "kidOpenTasks": "{count, plural, =0{No hay tareas pendientes} =1{1 tarea pendiente} other{{count} tareas pendientes}}",
   "@kidOpenTasks": {
     "placeholders": {
@@ -1484,7 +1496,6 @@
       }
     }
   },
-  "kidNoPlanToday": "Nada previsto para hoy",
   "schoolsUiAddSchool": "Otro colegio",
   "schoolsUiNewSchool": "Nuevo colegio",
   "schoolsUiPickSchool": "Elegir colegio",
@@ -2744,6 +2755,8 @@
   "settingAmbienceStNicholasHelp": "Una bota llena el 6 de diciembre (el 5 en los Países Bajos).",
   "settingAmbienceNationalDayTitle": "Fiesta nacional",
   "settingAmbienceNationalDayHelp": "La bandera de vuestro país en la colina en su fiesta nacional, como el 1 de agosto en Suiza. El país sale de vuestra región.",
+  "settingHouseholdKidShoppingTitle": "Compra en la vista infantil",
+  "settingHouseholdKidShoppingHelp": "Añade la pestaña Compra a la vista infantil, donde añaden y marcan artículos. En la pantalla de pared pueden añadirlos de todos modos.",
   "settingRitualsCountdownDaysTitle": "La cuenta atrás empieza",
   "settingRitualsCountdownDaysHelp": "Cuántos días antes de un cumpleaños, las vacaciones o una cita marcada aparece la cuenta atrás.",
   "settingRitualsCountdownReturnTitle": "Cuenta atrás hasta una vuelta",

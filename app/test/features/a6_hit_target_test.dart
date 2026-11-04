@@ -119,20 +119,15 @@ void main() {
     }
   });
 
-  testWidgets('kid: the shopping history icon action is at least 56x56', (
-    t,
-  ) async {
-    await _pumpShopping(t, UiRegister.kid);
-
-    final historyButton = find.ancestor(
-      of: find.byIcon(Icons.history),
-      matching: find.byType(IconButton),
-    );
-    expect(historyButton, findsOneWidget);
-    final size = t.getSize(historyButton);
-    expect(size.width, greaterThanOrEqualTo(56));
-    expect(size.height, greaterThanOrEqualTo(56));
-  });
+  testWidgets(
+    'kid: no history, no list editing and no new list (children add and tick)',
+    (t) async {
+      await _pumpShopping(t, UiRegister.kid);
+      expect(find.byIcon(Icons.history), findsNothing);
+      expect(find.byKey(const ValueKey('edit-list')), findsNothing);
+      expect(find.byIcon(Icons.edit_outlined), findsNothing);
+    },
+  );
 
   testWidgets(
     'kiosk: the shopping history icon is not shown (kiosk has no detail nav)',

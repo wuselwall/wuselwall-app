@@ -12,7 +12,7 @@ Wusel félicite ce qui s’est passé, pas la personne : « Tout est fait. Ça s
 
 ## Où apparaît Wusel ? {#where}
 
-- **Ma journée** sur la tablette des enfants : Wusel fait signe et salue l’enfant par son prénom, avec une chose utile pour aujourd’hui : son propre anniversaire, une tradition familiale (« Aujourd’hui, c’est pizza du vendredi ! »), le premier cours (« Aujourd’hui, tu commences par maths. »), le repas chaud ou ce que l’enfant attend avec impatience.
+- **Ma journée** sur la tablette des enfants : Wusel fait signe et salue l’enfant par son prénom, avec une chose utile pour aujourd’hui : son propre anniversaire, un nouveau badge, une tradition familiale (« Aujourd’hui, c’est pizza du vendredi ! »), le premier cours (« Aujourd’hui, tu commences par maths. »), le repas chaud ou ce que l’enfant attend avec impatience.
 - **Son propre anniversaire** : à la première ouverture de **Ma journée** ce jour-là, Wusel avec son chapeau de fête remplit tout l’écran de confettis pendant deux secondes (un toucher ferme plus tôt). Une fois par jour et par appareil, jamais pendant les heures de nuit, et seulement si l’occasion **Anniversaires** est activée.
 - **Attente et pas de connexion** : si **Ma journée** met plus de deux secondes à se charger, ou si la tablette n’a pas de connexion, Wusel réfléchit : « Un instant… » ou « Attends, je cherche Internet… ».
 - **La dernière tâche du jour** : Wusel fait la fête, avec des confettis et un petit son.

@@ -94,10 +94,15 @@ sends them to `/settings`. The wall's 60 s idle return also runs on settings pag
 counts); when the acting person becomes nobody, the open settings page leaves for home.
 
 **kid**
-- My day (my tasks + today's meal + my events + today's lessons)
+- My day (my tasks + today's meal + my events + today's school in one card)
 - Mein Stundenplan (the week's grid, today's lessons as large cards)
 - My points (balance, reward shop, badges, streaks)
-- Shopping (add + tick — children are surprisingly good at this)
+- Shopping (add + tick — children are surprisingly good at this; no list editing,
+  no new list, no history). Only where a guardian switched it on (`household.kid_shopping`;
+  decided 2026-11-04): a new family's children have the other four tabs, so the bar and the
+  day stay about them. One switch for the family, not per child or by age: on a shared tablet
+  every child has the same tab bar, Shopping opens before anyone is picked, and a birthday is
+  optional. Every family that existed then keeps the tab. Children can still add on the wall.
 - Family (who is doing what today)
 
 How the kid register fits its screen (decided 2026-10-26, after layout checks on phones,
@@ -115,6 +120,18 @@ tablets and the web from 320 to 1920 px):
   view. On a phone Wusel and the points share a row above a full-width speech bubble.
 - An **undo message** after a tick goes by itself and when the child switches tab or
   person, so nobody undoes someone else's chore.
+
+Fewer elements (decided 2026-11-03): each thing is said once, and an empty state is
+left out rather than shown as a card.
+- *Mein Tag*: a new badge is Wusel's line in the greeting (the slim badge line only
+  without a lively Wusel); today's school is one card (first to last lesson, the lesson
+  now, the number of changes) that opens *Mein Stundenplan*, where the lessons are;
+  tomorrow's equipment stays. A done chore shows its green tick, not the word as well;
+  the meal card does not add "you eat too"; a child without a timetable has no school
+  section, and a day without appointments has no appointments section.
+- *Mein Stundenplan* and *Familie* have no page title (the tab and its band say it);
+  the day chips show the weekday, the date is spoken only. On *Familie* a member's row
+  leaves out "nothing planned" and "no chores open".
 
 **kiosk**
 - The **week board** (below): the standard screen, seven days at once.

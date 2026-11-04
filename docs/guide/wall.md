@@ -2,13 +2,15 @@
 
 ## Kinder-Tablet
 
-Ein Kinder-Gerät zeigt die Liste **größer und einfacher**. Die Kinder tippen auf ihren Namen und können dann wie alle anderen Artikel hinzufügen und abhaken – auch bevor sie schreiben können, denn die Kacheln brauchen keine Tastatur.
+Ein Kinder-Gerät zeigt alles **größer und einfacher**. Die Kinder tippen auf ihren Namen und sehen ihren eigenen Tag.
+
+Auf **Mein Tag** begrüßt [Wusel](/guide/wusel) das Kind. Darunter stehen seine Aufgaben, **Worauf ich mich freue**, die Schule von heute in einer Karte (ein Tipp öffnet den Stundenplan), das Essen, die Karte **Dein Wunschessen** und, an einem Tag mit Terminen, die Termine; während des Essens die [Tischfrage](/guide/rituals#table-question) und am Sonntagabend **Unsere Woche** (siehe [Rituale](/guide/rituals)).
+
+Der Reiter **Einkaufen** ist in einer neuen Familie aus; Familien, die WuselWall schon nutzten, behalten ihn. Erziehungsberechtigte schalten ihn mit **Einkaufen in der Kinder-Ansicht** unter [Einstellungen → Familie](/settings/household#the-areas). Dann fügen Kinder wie alle anderen Artikel hinzu und haken sie ab – auch bevor sie schreiben können, denn die Kacheln brauchen keine Tastatur. Am Wanddisplay können sie in jedem Fall Artikel hinzufügen.
 
 <Shot name="kid-shopping" alt="Kinder-Ansicht der Einkaufsliste" wide />
 
-Auf **Mein Tag** begrüßt [Wusel](/guide/wusel) das Kind. Darunter stehen seine Aufgaben, **Worauf ich mich freue**, die Schule, das Essen, die Karte **Dein Wunschessen** und die Termine; während des Essens die [Tischfrage](/guide/rituals#table-question) und am Sonntagabend **Unsere Woche** (siehe [Rituale](/guide/rituals)).
-
-Kinder können keine Geräte oder Mitglieder verwalten; das bleibt Erziehungsberechtigten vorbehalten.
+Kinder können keine Geräte oder Mitglieder verwalten und keine Einkaufslisten anlegen oder bearbeiten; das bleibt Erziehungsberechtigten vorbehalten.
 
 ## Wandanzeige in der Küche
 
@@ -68,7 +70,7 @@ Mehr kann die Wand nicht ändern: Sie setzt Artikel auf die Einkaufsliste und ko
 - Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“, und Wusel denkt nach; oben rechts steht, wann er zuletzt aktualisiert wurde. Solange alles läuft, zeigt die Wand dazu nichts an.
 
 ::: tip Kinder-Tablet
-Die Ansicht für Kinder hat die Reiter **Mein Tag**, **Stundenplan**, **Punkte**, **Einkaufen** und **Familie**.
+Die Ansicht für Kinder hat die Reiter **Mein Tag**, **Stundenplan**, **Punkte** und **Familie**, dazu **Einkaufen**, wenn es eingeschaltet ist.
 :::
 
 ## Verbinden

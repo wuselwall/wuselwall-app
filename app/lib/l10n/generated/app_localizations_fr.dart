@@ -2707,6 +2707,22 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String kidSchoolNowSubject(String subject) {
+    return 'Maintenant : $subject';
+  }
+
+  @override
+  String kidSchoolChanges(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changements aujourd’hui',
+      one: '1 changement aujourd’hui',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String kidTomorrowNeeds(String items) {
     return 'Demain, tu auras besoin de : $items';
   }
@@ -2728,19 +2744,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get kidMealNoneLunch => 'Rien n’est encore prévu pour ce midi.';
 
   @override
-  String get kidMealEatingYou => 'Tu manges avec nous.';
-
-  @override
   String get kidEventsTitle => 'Mes rendez-vous aujourd’hui';
 
   @override
-  String get kidNoEvents => 'Pas de rendez-vous aujourd’hui.';
-
-  @override
   String get kidAllDay => 'toute la journée';
-
-  @override
-  String get kidTimetableTitle => 'Mon emploi du temps';
 
   @override
   String get kidTodayMarker => 'Aujourd’hui';
@@ -2801,9 +2808,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get kidFamilyTitle => 'La famille aujourd’hui';
-
-  @override
   String kidOpenTasks(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2814,9 +2818,6 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get kidNoPlanToday => 'Rien de prévu aujourd’hui';
 
   @override
   String get schoolsUiAddSchool => 'Une autre école';
@@ -5330,6 +5331,14 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingAmbienceNationalDayHelp =>
       'Le drapeau de votre pays sur la colline le jour de sa fête nationale, par exemple le 1er août en Suisse. Le pays vient de votre région.';
+
+  @override
+  String get settingHouseholdKidShoppingTitle =>
+      'Courses dans la vue des enfants';
+
+  @override
+  String get settingHouseholdKidShoppingHelp =>
+      'Ajoute l’onglet Courses à la vue des enfants, où ils ajoutent et cochent des articles. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Le compte à rebours commence';

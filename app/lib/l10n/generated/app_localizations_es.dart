@@ -2693,6 +2693,22 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String kidSchoolNowSubject(String subject) {
+    return 'Ahora: $subject';
+  }
+
+  @override
+  String kidSchoolChanges(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cambios hoy',
+      one: '1 cambio hoy',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String kidTomorrowNeeds(String items) {
     return 'Mañana necesitas: $items';
   }
@@ -2714,19 +2730,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get kidMealNoneLunch => 'Aún no hay nada previsto para almorzar.';
 
   @override
-  String get kidMealEatingYou => 'Tú también comes en casa.';
-
-  @override
   String get kidEventsTitle => 'Mis citas de hoy';
 
   @override
-  String get kidNoEvents => 'Hoy no tienes citas.';
-
-  @override
   String get kidAllDay => 'todo el día';
-
-  @override
-  String get kidTimetableTitle => 'Mi horario';
 
   @override
   String get kidTodayMarker => 'Hoy';
@@ -2787,9 +2794,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get kidFamilyTitle => 'La familia hoy';
-
-  @override
   String kidOpenTasks(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2800,9 +2804,6 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get kidNoPlanToday => 'Nada previsto para hoy';
 
   @override
   String get schoolsUiAddSchool => 'Otro colegio';
@@ -5317,6 +5318,13 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get settingAmbienceNationalDayHelp =>
       'La bandera de vuestro país en la colina en su fiesta nacional, como el 1 de agosto en Suiza. El país sale de vuestra región.';
+
+  @override
+  String get settingHouseholdKidShoppingTitle => 'Compra en la vista infantil';
+
+  @override
+  String get settingHouseholdKidShoppingHelp =>
+      'Añade la pestaña Compra a la vista infantil, donde añaden y marcan artículos. En la pantalla de pared pueden añadirlos de todos modos.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'La cuenta atrás empieza';

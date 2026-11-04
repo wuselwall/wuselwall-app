@@ -74,8 +74,8 @@ class _KidTimetablePageState extends ConsumerState<KidTimetablePage> {
               : null,
           child: ListView(
             padding: const EdgeInsets.all(Tokens.space4),
+            // No title: the tab and its band already say where the child is.
             children: [
-              KidSectionTitle(l10n.kidTimetableTitle),
               Row(
                 children: [
                   for (var i = 0; i < dates.length; i++)
@@ -146,7 +146,7 @@ class _DayTab extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: SizedBox(
-            height: 88,
+            height: 72,
             // Five chips share a phone's width: the words shrink to fit rather than
             // run past the chip's border.
             child: Padding(
@@ -162,13 +162,7 @@ class _DayTab extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    Text(
-                      context.dayMonth(date),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontFamily: Tokens.fontNumeric,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
-                    ),
+                    // The weekday is what a child knows; the date is only spoken.
                     if (isToday)
                       Text(
                         l10n.kidTodayMarker,

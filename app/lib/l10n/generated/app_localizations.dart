@@ -4766,6 +4766,18 @@ abstract class AppLocalizations {
   /// **'Care until {time}'**
   String kidCareUntil(String time);
 
+  /// No description provided for @kidSchoolNowSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Now: {subject}'**
+  String kidSchoolNowSubject(String subject);
+
+  /// No description provided for @kidSchoolChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change today} other{{count} changes today}}'**
+  String kidSchoolChanges(int count);
+
   /// No description provided for @kidTomorrowNeeds.
   ///
   /// In en, this message translates to:
@@ -4796,35 +4808,17 @@ abstract class AppLocalizations {
   /// **'Nothing is planned for lunch yet.'**
   String get kidMealNoneLunch;
 
-  /// No description provided for @kidMealEatingYou.
-  ///
-  /// In en, this message translates to:
-  /// **'You are eating too.'**
-  String get kidMealEatingYou;
-
   /// No description provided for @kidEventsTitle.
   ///
   /// In en, this message translates to:
   /// **'My appointments today'**
   String get kidEventsTitle;
 
-  /// No description provided for @kidNoEvents.
-  ///
-  /// In en, this message translates to:
-  /// **'No appointments today.'**
-  String get kidNoEvents;
-
   /// No description provided for @kidAllDay.
   ///
   /// In en, this message translates to:
   /// **'all day'**
   String get kidAllDay;
-
-  /// No description provided for @kidTimetableTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'My timetable'**
-  String get kidTimetableTitle;
 
   /// No description provided for @kidTodayMarker.
   ///
@@ -4910,23 +4904,11 @@ abstract class AppLocalizations {
   /// **'{days, plural, =1{1 day {title}} other{{days} days {title}}}'**
   String kidStreak(int days, String title);
 
-  /// No description provided for @kidFamilyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Family today'**
-  String get kidFamilyTitle;
-
   /// No description provided for @kidOpenTasks.
   ///
   /// In en, this message translates to:
   /// **'{count, plural, =0{No chores open} =1{1 chore open} other{{count} chores open}}'**
   String kidOpenTasks(int count);
-
-  /// No description provided for @kidNoPlanToday.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing planned today'**
-  String get kidNoPlanToday;
 
   /// No description provided for @schoolsUiAddSchool.
   ///
@@ -8976,6 +8958,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your country\'s flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.'**
   String get settingAmbienceNationalDayHelp;
+
+  /// No description provided for @settingHouseholdKidShoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping in the children\'s view'**
+  String get settingHouseholdKidShoppingTitle;
+
+  /// No description provided for @settingHouseholdKidShoppingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds the Shopping tab to the children\'s view, where they add and tick items. On the wall display they can add items either way.'**
+  String get settingHouseholdKidShoppingHelp;
 
   /// No description provided for @settingRitualsCountdownDaysTitle.
   ///

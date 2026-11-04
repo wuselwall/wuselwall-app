@@ -12,7 +12,7 @@ Wusel lobt, was passiert ist, nicht die Person: „Alles erledigt. Das hat gut g
 
 ## Wo Wusel auftaucht {#where}
 
-- **Mein Tag** auf dem Kinder-Tablet: Wusel winkt und begrüßt das Kind mit Namen, dazu eine nützliche Sache für heute: der eigene Geburtstag, eine Familientradition („Heute ist Pizza-Freitag!“), die erste Stunde („Heute hast du zuerst Mathe.“), das warme Essen oder worauf sich das Kind gerade freut.
+- **Mein Tag** auf dem Kinder-Tablet: Wusel winkt und begrüßt das Kind mit Namen, dazu eine nützliche Sache für heute: der eigene Geburtstag, ein neues Abzeichen, eine Familientradition („Heute ist Pizza-Freitag!“), die erste Stunde („Heute hast du zuerst Mathe.“), das warme Essen oder worauf sich das Kind gerade freut.
 - **Der eigene Geburtstag**: Beim ersten Öffnen von **Mein Tag** an diesem Tag füllt Wusel mit Partyhut und Konfetti den ganzen Bildschirm, zwei Sekunden lang (ein Tipp schließt früher). Einmal am Tag pro Gerät, nicht in der Nachtzeit und nur, wenn der Anlass **Geburtstage** an ist.
 - **Warten und keine Verbindung**: Lädt **Mein Tag** länger als zwei Sekunden oder hat das Tablet keine Verbindung, denkt Wusel nach: „Einen Moment …“ oder „Moment, ich suche das Internet …“.
 - **Die letzte Aufgabe des Tages**: Wusel jubelt, mit Konfetti und einem kurzen Ton.

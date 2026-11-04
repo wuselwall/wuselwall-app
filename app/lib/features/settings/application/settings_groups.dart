@@ -153,6 +153,7 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
       SettingKey('household.region'),
       SettingTileItem(SettingsTile.members),
       SettingTileItem(SettingsTile.baselines),
+      SettingKey('household.kid_shopping'),
     ]),
   ],
   SettingsGroup.tasks: [
@@ -285,6 +286,7 @@ const unusedSettingKeys = {
 /// setting a newer catalogue adds, waits under Advanced and applies all the same.
 const basicSettingKeys = {
   'household.region',
+  'household.kid_shopping',
   'tasks.jokers_per_month',
   'tasks.reward_approval_default',
   'calendar.members_edit_own_events',

@@ -2,9 +2,11 @@
 
 ## Tableta infantil {#kids-tablet}
 
-La vista infantil es más grande y sencilla. Cada niño toca su nombre y añade o marca productos. Las tarjetas permiten participar sin saber escribir. Los niños no administran miembros ni dispositivos.
+La vista infantil es más grande y sencilla. Cada niño toca su nombre y ve su día. Los niños no administran miembros ni dispositivos.
 
-En **Mi día**, [Wusel](/es/guide/wusel) saluda al niño. Debajo están sus tareas, **Lo que me hace ilusión**, el colegio, la comida, la tarjeta **Tu comida favorita** y las citas; durante la comida, la [pregunta en la mesa](/es/guide/rituals#table-question), y el domingo por la tarde **Nuestra semana** (ver [Rituales](/es/guide/rituals)).
+En **Mi día**, [Wusel](/es/guide/wusel) saluda al niño. Debajo están sus tareas, **Lo que me hace ilusión**, el colegio de hoy en una sola tarjeta (un toque abre el horario), la comida, la tarjeta **Tu comida favorita** y, los días que las hay, las citas; durante la comida, la [pregunta en la mesa](/es/guide/rituals#table-question), y el domingo por la tarde **Nuestra semana** (ver [Rituales](/es/guide/rituals)).
+
+La pestaña **Compra** está desactivada en una familia nueva; las familias que ya usaban WuselWall la conservan. Un responsable la cambia con **Compra en la vista infantil** en [Ajustes → Familia](/es/settings/household#the-areas). Con ella, los niños añaden y marcan productos; las tarjetas permiten participar sin saber escribir. En la pantalla de pared pueden añadirlos de todos modos.
 
 <Shot name="kid-shopping" alt="La compra en la vista infantil" wide />
 
@@ -45,7 +47,7 @@ Abre la compra desde el pie y toca tu nombre. La pared añade solo a la **lista 
 
 Desde las 21:00 (o el horario nocturno de este dispositivo) aparece el tema nocturno y Wusel duerme. La pared solo suena si activáis los sonidos, y nunca de noche. Para que nada se queme, la imagen se mueve hasta 2 píxeles cada 10 minutos (ver [Wusel y los colores](/es/guide/wusel#burn-in)). Sin conexión se conserva el último plan, se indica cuándo se actualizó y Wusel piensa. Mientras todo funciona, esa información queda discreta.
 
-La vista infantil tiene las pestañas **Mi día**, **Horario escolar**, **Puntos**, **Compra** y **Familia**.
+La vista infantil tiene las pestañas **Mi día**, **Horario escolar**, **Puntos** y **Familia**, y **Compra** si está activada.
 
 ## Conectar y preparar {#connecting}
 

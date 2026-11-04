@@ -4,8 +4,10 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
+import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 
-/// The five destinations of the kid register (specs/09 "Screens by register").
+/// The destinations of the kid register (specs/09 "Screens by register"); which of them a
+/// family has says [kidTabsProvider].
 enum KidTab {
   today,
   school,
@@ -17,6 +19,25 @@ enum KidTab {
   /// without an acting child.
   bool get needsPerson => this != shopping && this != family;
 }
+
+/// The tabs this family's children see: Shopping only when a guardian switched it on
+/// (`household.kid_shopping`). A server older than the switch has no row and keeps the tab;
+/// so does a device that cannot read the settings, as a child only adds and ticks there.
+/// While they load the tab waits, so a family without it never sees it come and go.
+final kidTabsProvider = Provider<List<KidTab>>((ref) {
+  final settings = ref.watch(householdSettingsProvider);
+  final entries = settings.value;
+  final shopping = entries == null
+      ? settings.hasError
+      : switch (resolveSetting(entries, 'household.kid_shopping')) {
+          null => true,
+          final entry => entry.value == true,
+        };
+  return [
+    for (final tab in KidTab.values)
+      if (tab != KidTab.shopping || shopping) tab,
+  ];
+});
 
 class KidTabNotifier extends Notifier<KidTab> {
   @override
