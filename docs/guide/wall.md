@@ -6,11 +6,11 @@ Ein Kinder-Gerät zeigt alles **größer und einfacher**. Die Kinder tippen auf 
 
 Auf **Mein Tag** begrüßt [Wusel](/guide/wusel) das Kind. Darunter stehen seine Aufgaben, **Worauf ich mich freue**, die Schule von heute in einer Karte (ein Tipp öffnet den Stundenplan), das Essen, die Karte **Dein Wunschessen** und, an einem Tag mit Terminen, die Termine; während des Essens die [Tischfrage](/guide/rituals#table-question) und am Sonntagabend **Unsere Woche** (siehe [Rituale](/guide/rituals)).
 
-Der Reiter **Einkaufen** ist in einer neuen Familie aus; Familien, die WuselWall schon nutzten, behalten ihn. Erziehungsberechtigte schalten ihn mit **Einkaufen in der Kinder-Ansicht** unter [Einstellungen → Familie](/settings/household#the-areas). Dann fügen Kinder wie alle anderen Artikel hinzu und haken sie ab – auch bevor sie schreiben können, denn die Kacheln brauchen keine Tastatur. Am Wanddisplay können sie in jedem Fall Artikel hinzufügen.
+Der Reiter **Einkaufen** ist in einer neuen Familie aus; Familien, die WuselWall schon nutzten, behalten ihn. Eltern schalten ihn mit **Einkaufen in der Kinder-Ansicht** unter [Einstellungen → Familie](/settings/household#the-areas). Dann fügen Kinder wie alle anderen Artikel hinzu und haken sie ab – auch bevor sie schreiben können, denn die Kacheln brauchen keine Tastatur. Am Wanddisplay können sie in jedem Fall Artikel hinzufügen.
 
 <Shot name="kid-shopping" alt="Kinder-Ansicht der Einkaufsliste" wide />
 
-Kinder können keine Geräte oder Mitglieder verwalten und keine Einkaufslisten anlegen oder bearbeiten; das bleibt Erziehungsberechtigten vorbehalten.
+Kinder können keine Geräte oder Mitglieder verwalten und keine Einkaufslisten anlegen oder bearbeiten; das bleibt den Eltern vorbehalten.
 
 ## Wandanzeige in der Küche
 

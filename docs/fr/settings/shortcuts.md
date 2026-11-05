@@ -51,4 +51,4 @@ Les réponses suivent la langue prise en charge du téléphone, sinon celle du f
 
 ## Révoquer une clé {#revoking-a-key}
 
-Révoquez-la si le téléphone est perdu ou si elle n’est plus utile. L’effet est immédiat. La liste indique la dernière utilisation. Quitter le foyer révoque automatiquement vos clés. Les parents gèrent toutes les clés ; les membres, les leurs. L’[export](/fr/settings/members-devices#export-data) montre noms et dates, jamais les secrets.
+Révoquez-la si le téléphone est perdu ou si elle n’est plus utile. L’effet est immédiat. La liste indique la dernière utilisation. Quitter le foyer révoque automatiquement vos clés. Les parents gèrent toutes les clés ; les autres adultes, les leurs. L’[export](/fr/settings/members-devices#export-data) montre noms et dates, jamais les secrets.

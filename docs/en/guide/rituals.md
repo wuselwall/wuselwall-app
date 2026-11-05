@@ -13,9 +13,9 @@ For all of them:
 
 ## Birthdays {#birthdays}
 
-You enter a birthday on the person's page: **Settings → Members**, tap the person, **Birthday → Choose a date** (see [Edit a member](/en/settings/members-devices#edit-a-member)). Everyone can enter their own; guardians enter everyone else's.
+You enter a birthday on the person's page: **Settings → Members**, tap the person, **Birthday → Choose a date** (see [Edit a member](/en/settings/members-devices#edit-a-member)). Everyone can enter their own; parents enter everyone else's.
 
-Before the day it is counted down (see [Looking forward](#countdowns)), with the age the person turns: "Emma turns 9 · 3 more sleeps". On the wall the birthday stands under the date of its day all week, with a cake: "Emma turns 9". On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the kids' tablet Wusel cheers for the birthday child. With the occasion **Birthdays** switched off under **Seasons and occasions** (see [Wusel and colours](/en/guide/wusel#occasions)), none of this happens; the countdown stays, and the [calendar's month view](/en/calendar/#month) still shows the birthday with its cake and age.
+Before the day it is counted down (see [Looking forward](#countdowns)), with the age the person turns: "Emma turns 9 · 3 more sleeps". On the wall the birthday stands under the date of its day all week, with a cake: "Emma turns 9". On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the children's tablet Wusel cheers for the birthday child. With the occasion **Birthdays** switched off under **Seasons and occasions** (see [Wusel and colours](/en/guide/wusel#occasions)), none of this happens; the countdown stays, and the [calendar's month view](/en/calendar/#month) still shows the birthday with its cake and age.
 
 Grandparents and friends stay yearly events, as before; you can mark them for looking forward.
 
@@ -34,7 +34,7 @@ You see it on the **wall** in the footer, as many as fit; on **My day** under **
 
 Children and the wall count in nights up to a week ahead ("3 more sleeps"), and in days before that ("9 more days"). Adults read "in 3 days". The day before says **Tomorrow!**, the day itself **Today!**, and Wusel waves at the top of the wall. Then the countdown is gone.
 
-How many days ahead it starts is set by **Start looking forward** (default 14 days, 7 to 60). **Count down to a parent's return** (default on) switches off the countdown for trips.
+How many days ahead it starts is set by **Start looking forward** (default 7 days, 7 to 60). **Count down to a parent's return** (default on) switches off the countdown for trips.
 
 ## Family traditions {#traditions}
 
@@ -49,13 +49,13 @@ If a tradition doesn't happen one week, delete **Only this event**. Nothing reme
 Each child may wish for a meal; you decide how many wishes may be open at once (one by default). That way the children have a say in the meal plan.
 
 - **On My day** there is the card **Your meal wish**. **Wish** opens the choice: first **Family favourites**, the meals you have cooked most often lately, then **Our recipes**, each with a picture (with many recipes, **Find a recipe** helps), and at the bottom **Something else** with a few words, such as "pancakes", and a picture to go with them (**Pick a picture**). With **Wish for this** the wish is on its way. Until it is planned it can be **changed**.
-- **The grown-ups** see the wishes at the top of the [meal plan](/en/meals/#wishes) under **Wishes**, each with its picture, and as a quiet card on **Today**. Tap a wish, pick a day and a meal, and it is planned.
-- **When everyone may wish**, the grown-ups wish for themselves in the meal plan: **Make a wish** in the **Wishes** row opens the same choice, and **Change my wish** changes the open one.
+- **The parents** see the wishes at the top of the [meal plan](/en/meals/#wishes) under **Wishes**, each with its picture, and as a quiet card on **Today**. Tap a wish, pick a day and a meal, and it is planned.
+- **When everyone may wish**, the adults wish for themselves in the meal plan: **Make a wish** in the **Wishes** row opens the same choice, and **Change my wish** changes the open one.
 - **Once planned**, the meal carries a star and "Jack's wish" in the plan and on the wall. The child's card then says, for example, "Your wish Pancakes is on Thursday!".
 
-<Shot name="kid-wish" alt="My day on the kids' tablet with the card Your meal wish" wide />
+<Shot name="kid-wish" alt="My day on the children's tablet with the card Your meal wish" wide />
 
-A wish is **never turned down** in the app. A wish that isn't planned simply keeps waiting, the next week marked **from last week**. After four weeks a wish that was never planned quietly leaves the list and no longer counts; the child can simply wish for something new. Guardians can remove a wish; why is something you talk about together.
+A wish is **never turned down** in the app. A wish that isn't planned simply keeps waiting, the next week marked **from last week**. After four weeks a wish that was never planned quietly leaves the list and no longer counts; the child can simply wish for something new. Parents can remove a wish; why is something you talk about together.
 
 Who may wish is set by **Meal wishes**: **Children** (default), **Everyone** or **Off**. **Open wishes per person** allows up to three at once (default 1).
 
@@ -63,17 +63,17 @@ Who may wish is set by **Meal wishes**: **Children** (default), **Everyone** or 
 
 A question for the table, answered aloud. Nothing is recorded: not who answered, not what, not even whether the question was asked.
 
-The question appears during the meal: at the top of the wall's header, on **My day** and on **Today**. Every device shows the same question, and none comes back before all the others have had their turn.
+The question appears during the meal: at the top of the wall's header, on **My day** and on **Today**. No question comes back before all the others have had their turn.
 
 - **Another question** shows the next one, but only on that device. Just say "take the next one".
 - For a riddle, **Show the answer** reveals it.
-- **Our questions** (on the question's card on **Today**): with **Add a question** anyone writes their own. They show "Question from Olivia". An own question is removed by whoever wrote it or by a guardian.
-- A bundled question that doesn't suit you is taken out by a guardian with **Don't ask this one again**. Under **Questions we left out**, **Ask again** brings it back.
+- **Our questions** (on the question's card on **Today**): with **Add a question** anyone writes their own. They show "Question from Olivia". An own question is removed by whoever wrote it or by a parent.
+- A bundled question that doesn't suit you is taken out by a parent with **Don't ask this one again**. Under **Questions we left out**, **Ask again** brings it back.
 
-Settings: **Question at the table** applies to the **Warm meal** (default), to **Lunch and dinner**, or is **Off**. **Question at lunch** and **Question at dinner** set the times; no meal has to be planned for it. The default follows your region's country: 11:30 to 13:30 and 17:30 to 19:30, in France 19:00 to 21:00 for dinner, in Spain 13:30 to 15:30 and 20:00 to 22:00. **Questions for**: **All ages** works for a five-year-old, **Older children too** adds deeper questions for 8 and over.
+Settings: **Question at the table** applies to the **Warm meal** (default), to **Lunch and dinner**, or is **Off**. **Question at lunch** and **Question at dinner** set the times; no meal has to be planned for it. The default follows your region's country: 11:30 to 13:30 and 17:30 to 19:30, in France 19:00 to 21:00 for dinner, in Spain 13:30 to 15:30 and 20:00 to 22:00. The questions are not chosen in a setting but follow the children's ages, taken from their birthdays. Children who are 5 years apart or more get one question each: side by side on the wall, one card each on **Today**, and on a child's own view only the question for their age. Without any birthday the questions suit ages 5 to 7. The birthday is optional; you enter it on the member page or when you first add the children. The only setting is the **Age limit**, off by default, which hides questions from a chosen age upwards.
 
 ::: info Languages
-Each device shows the questions in its own language: about 150 in German and English, 50 in French and Spanish for now.
+Each device shows the questions in its own language: about 150 in German and English, 50 in French and Spanish.
 :::
 
 ## Our week {#week-review}

@@ -48,4 +48,4 @@ Enregistrez les ingrédients avec quantités, unités et notes, les étapes (une
 
 ## Sur le mur {#on-the-kitchen-wall}
 
-Touchez les repas pour ouvrir la semaine, puis un point pour corriger la présence au repas. Une étoile signale un repas souhaité. Le mur affiche le repas chaud du jour, ou le déjeuner et le dîner avec **Les deux**, ou aucun avec **Aucun**. Le groupe [Paramètres → Repas](/fr/settings/household) détermine lequel, selon les jours d’école et les jours libres.
+Touchez les repas pour ouvrir la semaine, puis un point pour corriger la présence au repas. Une étoile signale un repas souhaité. Le mur affiche le repas chaud du jour : le déjeuner ou le dîner, ou les deux si les boutons **Déjeuner** et **Dîner** sont activés ensemble, et aucun si les deux sont désactivés. Le groupe [Paramètres → Repas](/fr/settings/household) détermine lequel, selon les jours d’école et les jours libres.

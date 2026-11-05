@@ -14,7 +14,7 @@ Sur la tablette des enfants et sur le mur, [Wusel](/fr/guide/wusel) participe : 
 
 Les tâches à vérifier et les demandes de récompense arrivent ici. Un parent les approuve ou les refuse.
 
-Les parents voient aussi ce qui attend sur **Aujourd’hui** : la carte **En attente de ton approbation**, par exemple « 2 tâches à vérifier · 1 demande de récompense ». Un appui ouvre les approbations. L’icône des tâches, en bas, affiche le même nombre. La carte ne se ferme pas à la main : elle disparaît dès que tout est décidé. Les membres sans droits parentaux ne la voient pas.
+Les parents voient aussi ce qui attend sur **Aujourd’hui** : la carte **En attente de ton approbation**, par exemple « 2 tâches à vérifier · 1 demande de récompense ». Un appui ouvre les approbations. L’icône des tâches, en bas, affiche le même nombre. La carte ne se ferme pas à la main : elle disparaît dès que tout est décidé. Les autres adultes et les enfants ne la voient pas.
 
 ## Créer des tâches {#creating-chores}
 
@@ -25,7 +25,7 @@ Dans l’onglet des tâches, créez-en une et choisissez :
 - **répétition** : une fois, chaque jour, jours ouvrables, semaine, deux semaines ou mois ;
 - **période autorisée** : seulement à l’échéance ou quelques jours après ;
 - **personnes** : une personne, à tour de rôle, volontaire ou tout le monde ;
-- éventuelle **approbation d’un adulte**, avant attribution des points.
+- éventuelle **approbation d’un parent**, avant attribution des points.
 
 Une nouvelle tâche est quotidienne et revient à tour de rôle à tous les enfants (sans enfant : au volontaire) ; un titre suffit donc pour l’enregistrer.
 
@@ -33,7 +33,7 @@ Archiver une tâche supprime ses occurrences futures encore ouvertes. Le kit de 
 
 ## Récompenses {#rewards}
 
-Chaque récompense coûte des points. Un stock vide signifie illimité. Si l’approbation est nécessaire, un parent confirme l’échange avec son PIN ; sinon, le membre peut le faire lui-même, plutôt pour de petites choses.
+Chaque récompense coûte des points. Un stock vide signifie illimité. Si l’approbation est nécessaire, un parent confirme l’échange avec son PIN ; sinon, l’enfant peut le faire lui-même, plutôt pour de petites choses.
 
 Une demande rejoint l’historique des récompenses en attente, échangées ou remises. Marquez la récompense une fois remise.
 

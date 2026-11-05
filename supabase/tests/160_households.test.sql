@@ -1,5 +1,5 @@
 begin;
-select plan(64);
+select plan(69);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.enrol_attempt;
@@ -228,7 +228,7 @@ select is((select count(*)::int from app.shopping_category
 select pg_temp.as_device((select uid from acc where name = 'neu'), (select sess from acc where name = 'neu'),
   (select (r ->> 'household_id')::uuid from r1), (select (r ->> 'device_id')::uuid from r1), 'personal');
 create temp table added as
-  select api.household_add_members(null, '[{"display_name":"Emma","kind":"child"},{"display_name":"Paul","kind":"child"},{"display_name":"Julia","kind":"adult"}]'::jsonb) as r;
+  select api.household_add_members(null, '[{"display_name":"Emma","kind":"child","birthday":"2018-03-14"},{"display_name":"Paul","kind":"child"},{"display_name":"Julia","kind":"adult"}]'::jsonb) as r;
 grant all on added to public;
 select is(jsonb_array_length((select r from added)), 3, 'three rows are added');
 select is((select count(distinct color)::int from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1)),
@@ -237,6 +237,16 @@ select is((select role || '/' || kind from app.profile where household_id = (sel
   'member/child', 'a child is a member of kind child');
 select is((select role || '/' || kind from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1) and display_name = 'Julia'),
   'guardian/adult', 'an adult is a guardian of kind adult');
+select is((select birthday from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1) and display_name = 'Emma'),
+  date '2018-03-14', 'a child can come with a birthday');
+select is((select birthday from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1) and display_name = 'Paul'),
+  null::date, 'the birthday is optional');
+select throws_ok($$ select api.household_add_members(null, '[{"display_name":"X","kind":"child","birthday":"14.03.2018"}]') $$,
+  '22023', 'birthday invalid', 'a birthday in another format is refused');
+select throws_ok($$ select api.household_add_members(null, '[{"display_name":"X","kind":"child","birthday":"2018-02-30"}]') $$,
+  '22023', 'birthday invalid', 'a date that does not exist is refused');
+select throws_ok($$ select api.household_add_members(null, jsonb_build_array(jsonb_build_object('display_name','X','kind','child','birthday',(current_date + 1)::text))) $$,
+  '22023', 'birthday invalid', 'a birthday in the future is refused');
 select throws_ok($$ select api.household_add_members(null, '[{"display_name":"X","kind":"robot"}]') $$,
   '22023', 'kind invalid', 'an unknown kind is refused');
 select throws_ok($$ select api.household_add_members(null, '[{"display_name":"","kind":"child"}]') $$,

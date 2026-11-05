@@ -9,7 +9,7 @@ En el primer inicio elige el servidor ([Instalar la app](/es/guide/install)). De
 | Crear la primera familia en un servidor nuevo | Usa primero la [clave de configuración](#setup-key), inicia sesión y crea la familia |
 | Aceptar una invitación | [Únete a la familia](#_3-joining-a-family), sin crear otra |
 | Usar tu cuenta en otro móvil personal | [Inicia sesión](#_1-signing-in) con la misma cuenta |
-| Conectar una tableta compartida o la pantalla de la cocina | [Conecta un dispositivo compartido](#_4-connecting-a-family-tablet-or-wall-display); un responsable lo aprueba desde su móvil |
+| Conectar una tableta compartida o la pantalla de la cocina | [Conecta un dispositivo compartido](#_4-connecting-a-family-tablet-or-wall-display); una madre o un padre lo aprueba desde su móvil |
 
 La clave de configuración, el código de acceso por correo y el código de invitación sirven para cosas distintas. Usa el que te pida la página actual.
 
@@ -52,7 +52,7 @@ Si prefieres contraseña, toca **Iniciar sesión con contraseña**. Es para una 
 
 ### Sin correo del servidor
 
-**Servidor sin correo** ([Correo](/es/server/email)): **Iniciar sesión o crear una cuenta** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)). Mientras ese servidor no tenga familia, solo ofrece **Iniciar sesión**; **Cuenta nueva** aparece cuando hayas introducido la [clave de configuración](#setup-key).
+**Servidor sin correo** ([Correo](/es/server/email)): **Iniciar sesión o crear una cuenta** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a una madre o un padre de tu familia ([Restablecer](/es/settings/members-devices#reset-password)). Mientras ese servidor no tenga familia, solo ofrece **Iniciar sesión**; **Cuenta nueva** aparece cuando hayas introducido la [clave de configuración](#setup-key).
 
 ## 2. Crear una familia {#_2-creating-a-new-family}
 
@@ -87,17 +87,17 @@ Una cuenta pertenece a **una sola** familia. Si abres una invitación cuando ya 
 
 ## 4. Conectar una tableta familiar o pantalla de pared {#_4-connecting-a-family-tablet-or-wall-display}
 
-Un adulto aprueba el nuevo dispositivo desde su móvil:
+Una madre o un padre aprueba el nuevo dispositivo desde su móvil:
 
 1. En el nuevo dispositivo, toca **Conectar una tableta familiar o pantalla de pared**. Aparecen un QR y un código.
 2. En tu móvil, abre **Ajustes → Dispositivos → Conectar un dispositivo**. También puedes empezar desde **Primeros pasos**.
 3. Escanea el QR o escribe el código y toca **Siguiente**. Las letras pasan a mayúsculas y el guion se inserta automáticamente.
 4. Elige pantalla de pared, tableta infantil, tableta compartida o teléfono de un niño. Para este último, elige al niño. Pon un nombre y conecta.
-5. La primera vez defines el **PIN de responsable** para acciones protegidas en dispositivos compartidos ([¿Quién eres?](/es/guide/who-are-you)).
+5. La primera vez defines el **PIN de los padres** para acciones protegidas en dispositivos compartidos ([¿Quién eres?](/es/guide/who-are-you)).
 
 <Shot name="pair-device" alt="El QR y el código del nuevo dispositivo" />
 
-<Shot name="pair-approve" alt="La aprobación del dispositivo en el móvil de un adulto" />
+<Shot name="pair-approve" alt="La aprobación del dispositivo en el móvil de una madre o un padre" />
 
 El QR contiene el servidor: también puedes abrirlo con la cámara del móvil para llegar a la confirmación. El código dura **10 minutos** y se usa **una sola vez**. Si falla, empieza de nuevo en el dispositivo nuevo. La pantalla de pared muestra después una breve [lista de preparación](/es/guide/wall).
 

@@ -1,6 +1,6 @@
 # Stundenplan
 
-Der Stundenplan zeigt jedem Kind seine Woche: welche Stunden, welche Fächer und was anders ist. Erwachsene pflegen ihn. Die Küchenwand zeigt ihn an.
+Der Stundenplan zeigt jedem Kind seine Woche: welche Stunden, welche Fächer und was anders ist. Eltern pflegen ihn. Die Küchenwand zeigt ihn an.
 
 <Shot name="school-week" alt="Stundenplan eines Kindes für die Woche, mit Entfall und Vertretung" wide />
 
@@ -184,4 +184,4 @@ Auf der Küchenwand steht bei einem Kind **Morgen einpacken**, wenn morgen etwas
 
 ## Kinder melden Änderungen
 
-Nur Erziehungsberechtigte pflegen den Stundenplan. Ihr könnt aber erlauben, dass ein Kind einen Entfall meldet. Eine erziehungsberechtigte Person bestätigt ihn dann. Die Option findet ihr unter [Einstellungen → Kalender & Schule](/settings/household) bei **Mitglieder melden Plan-Änderungen**.
+Nur Eltern pflegen den Stundenplan. Ihr könnt aber erlauben, dass ein Kind einen Entfall meldet. Ein Elternteil bestätigt ihn dann. Die Option findet ihr unter [Einstellungen → Kalender & Schule](/settings/household) bei **Kinder melden Plan-Änderungen**.

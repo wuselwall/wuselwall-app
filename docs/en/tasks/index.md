@@ -14,13 +14,13 @@ This is where today's chores are listed, per person.
 
 On the kitchen wall, a tap on **Open today** opens the same family chore board.
 
-On the kids' tablet and on the wall, [Wusel](/en/guide/wusel) joins in: when the last chore of the day is ticked, Wusel cheers with confetti and a short sound, on the wall at the top of that person's column. When a child requests a reward, Wusel is proud. For a chore left undone, Wusel says nothing.
+On the children's tablet and on the wall, [Wusel](/en/guide/wusel) joins in: when the last chore of the day is ticked, Wusel cheers with confetti and a short sound, on the wall at the top of that person's column. When a child requests a reward, Wusel is proud. For a chore left undone, Wusel says nothing.
 
 ## Approvals
 
 Everything that someone needs to confirm lands here: finished chores that should be checked, and **reward requests**. Tap **Approve** or **Decline**.
 
-Guardians also see what is waiting on **Today**: the card **Waiting for your approval**, for example "2 chores to check · 1 reward request". Tapping it opens the approvals. The **Tasks** icon at the bottom shows the same number. The card cannot be dismissed; it disappears once everything is decided. Members without guardian rights do not see it.
+Parents also see what is waiting on **Today**: the card **Waiting for your approval**, for example "2 chores to check · 1 reward request". Tapping it opens the approvals. The **Tasks** icon at the bottom shows the same number. The card cannot be dismissed; it disappears once everything is decided. Members without parent rights do not see it.
 
 ## Creating chores
 
@@ -31,7 +31,7 @@ In the **Chores** tab, tap **New chore**:
 - **Repeat**: once, daily, on weekdays, weekly, every 2 weeks or monthly
 - **Can be done**: only on the due day, or for some days after it
 - **Who**: **One person** (fixed), **Taking turns**, **Whoever wants** (open) or **Everyone**
-- **Approval by a grown-up**: points come only after a check
+- **Approval by a parent**: points come only after a check
 
 A new chore is daily and goes to all the children **Taking turns** (with no children: **Whoever wants**), so a title is enough to save it.
 
@@ -45,7 +45,7 @@ The **Chores** tab offers a **starter pack**: five chores, three rewards and fou
 
 Each reward costs points. **Stock** limits the number; empty means unlimited.
 
-- **Needs approval first**: when on, a guardian confirms the redemption with the PIN. When off, you redeem it yourself. That only suits small things.
+- **Needs approval first**: when on, a parent confirms the redemption with the PIN. When off, you redeem it yourself. That only suits small things.
 - Anyone who wants a reward taps **Ask for it**.
 - The **History** shows what is waiting, redeemed and already handed over. Mark a reward with **Mark as handed over**.
 

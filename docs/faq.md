@@ -1,7 +1,7 @@
 # Häufige Fragen
 
 ## „Dieses Gerät wurde gesperrt“ {#blocked}
-Ein Erziehungsberechtigter hat das Gerät gesperrt. Verbinde es neu über [Familien-Tablet oder Wanddisplay verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
+Ein Elternteil hat das Gerät gesperrt. Verbinde es neu über [Familien-Tablet oder Wanddisplay verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
 
 ## „Dieser Code ist falsch oder abgelaufen“ {#wrong-code}
 Codes gelten 10 Minuten und nur einmal. Tippe auf dem neuen Gerät noch einmal auf **Familien-Tablet oder Wanddisplay verbinden**, dann zeigt es einen neuen Code. Nach mehreren Fehlversuchen musst du ein paar Minuten warten.
@@ -13,7 +13,7 @@ Einladungen gelten 7 Tage und funktionieren einmal. Bitte die Person, die dich e
 Auf geteilten Geräten musst du sagen, wer du bist, bevor du etwas änderst ([Wer bist du?](/guide/who-are-you)).
 
 ## „PIN gesperrt“ {#pin-locked}
-Zehn falsche Versuche sperren die PIN. Setze auf deinem eigenen Handy eine neue ([Sicherheit](/settings/security#pin-fur-erziehungsberechtigte)).
+Zehn falsche Versuche sperren die PIN. Setze auf deinem eigenen Handy eine neue ([Sicherheit](/settings/security#pin-fur-eltern)).
 
 ## „Keine Verbindung zum Server“ {#no-connection}
 Prüfe WLAN oder Mobilfunk und tippe auf **Erneut versuchen**. Die Einkaufsliste funktioniert auch ohne Netz weiter und sendet später ([Ohne Netz](/shopping/store#ohne-netz)); diese Meldung siehst du dort nur, wenn das Gerät die Liste noch nie geladen hat.

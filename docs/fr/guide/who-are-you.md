@@ -11,7 +11,7 @@ Sans prénom sélectionné, aucune modification n’est possible. Sur l’écran
 Sur une **tablette pour tous**, la roue dentée des **Paramètres** n’apparaît que lorsque quelqu’un a touché son prénom. Ce que vous y trouvez dépend de qui vous êtes :
 
 - Les **parents** voient tous les paramètres, comme sur leur téléphone personnel. Ils confirment les changements avec leur PIN (voir ci-dessous).
-- Les **enfants et les adultes qui ne sont pas parents** ne voient que **leurs propres paramètres** : **Wusel**, **La tenue de Wusel** et le **son** des tâches. Aucun PIN n’est nécessaire pour cela, et il n’y a pas d’autres paramètres pour eux.
+- Les **enfants et les autres adultes** ne voient que **leurs propres paramètres** : **Wusel**, **La tenue de Wusel** et le **son** des tâches. Aucun PIN n’est nécessaire pour cela, et il n’y a pas d’autres paramètres pour eux.
 - Sur l’**écran mural**, la roue dentée est toujours là. Si personne n’est sélectionné, WuselWall demande d’abord **Qui êtes-vous ?** Les paramètres ne s’ouvrent qu’après avoir touché votre prénom ; **Annuler** n’ouvre rien.
 
 Quand l’appareil revient à « personne », par exemple après une minute sans interaction au mur, les paramètres se ferment aussi.

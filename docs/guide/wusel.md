@@ -16,7 +16,7 @@ Wusel lobt, was passiert ist, nicht die Person: „Alles erledigt. Das hat gut g
 - **Der eigene Geburtstag**: Beim ersten Öffnen von **Mein Tag** an diesem Tag füllt Wusel mit Partyhut und Konfetti den ganzen Bildschirm, zwei Sekunden lang (ein Tipp schließt früher). Einmal am Tag pro Gerät, nicht in der Nachtzeit und nur, wenn der Anlass **Geburtstage** an ist.
 - **Warten und keine Verbindung**: Lädt **Mein Tag** länger als zwei Sekunden oder hat das Tablet keine Verbindung, denkt Wusel nach: „Einen Moment …“ oder „Moment, ich suche das Internet …“.
 - **Die letzte Aufgabe des Tages**: Wusel jubelt, mit Konfetti und einem kurzen Ton.
-- **Eine Belohnung gewünscht**: Wusel ist stolz: „Abgeschickt! Jetzt entscheidet ein Erwachsener.“ Sagt ein Erwachsener auf einem anderen Gerät Ja, spielt das Kinder-Tablet den Abzeichen-Ton.
+- **Eine Belohnung gewünscht**: Wusel ist stolz: „Abgeschickt! Jetzt entscheiden deine Eltern.“ Sagt ein Elternteil auf einem anderen Gerät Ja, spielt das Kinder-Tablet den Abzeichen-Ton.
 - **Ein neues Abzeichen**: Wusel hält einen Stern hoch und nennt das Abzeichen, zwei Tage lang auf **Mein Tag** und unter **Punkte**.
 - **Leere Seiten**: Wusel schaut über den unteren Rand, zum Beispiel bei einer leeren Einkaufsliste: „Noch nichts auf der Liste. Tipp auf eine Kachel.“
 - **Auf der Wand** sitzt Wusel oben in der Kopfzeile. In der ersten halben Stunde nach der Nachtzeit (normalerweise 6:00 bis 6:30) winkt Wusel und sagt „Guten Morgen, ihr alle!“. Nachts schläft Wusel, ohne Verbindung denkt Wusel nach, und an einem Geburtstag gibt es den Partyhut.

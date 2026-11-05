@@ -1122,7 +1122,7 @@ const _catalogue = <_Definition>[
     key: 'rituals.countdown_days',
     scope: SettingScope.household,
     type: SettingType.integer,
-    defaultValue: 14,
+    defaultValue: 7,
     constraints: {'min': 7, 'max': 60},
     selfService: false,
   ),
@@ -1179,13 +1179,11 @@ const _catalogue = <_Definition>[
     selfService: false,
   ),
   (
-    key: 'rituals.table_question_deck',
+    key: 'rituals.table_question_age_limit',
     scope: SettingScope.household,
-    type: SettingType.enumeration,
-    defaultValue: 'family',
-    constraints: {
-      'values': ['family', 'older'],
-    },
+    type: SettingType.integer,
+    defaultValue: null,
+    constraints: {'min': 6, 'max': 16, 'nullable': true},
     selfService: false,
   ),
   (

@@ -16,7 +16,7 @@ Wusel félicite ce qui s’est passé, pas la personne : « Tout est fait. Ça s
 - **Son propre anniversaire** : à la première ouverture de **Ma journée** ce jour-là, Wusel avec son chapeau de fête remplit tout l’écran de confettis pendant deux secondes (un toucher ferme plus tôt). Une fois par jour et par appareil, jamais pendant les heures de nuit, et seulement si l’occasion **Anniversaires** est activée.
 - **Attente et pas de connexion** : si **Ma journée** met plus de deux secondes à se charger, ou si la tablette n’a pas de connexion, Wusel réfléchit : « Un instant… » ou « Attends, je cherche Internet… ».
 - **La dernière tâche du jour** : Wusel fait la fête, avec des confettis et un petit son.
-- **Une récompense demandée** : Wusel est fier : « Envoyé ! Un adulte va décider. » Quand un adulte dit oui sur un autre appareil, la tablette des enfants joue le son du badge.
+- **Une récompense demandée** : Wusel est fier : « Envoyé ! Tes parents vont décider. » Quand un parent dit oui sur un autre appareil, la tablette des enfants joue le son du badge.
 - **Un nouveau badge** : Wusel lève une étoile et nomme le badge, pendant deux jours sur **Ma journée** et sous **Points**.
 - **Les pages vides** : Wusel regarde par-dessus le bord, par exemple sur une liste de courses vide : « La liste est vide. Touche une vignette. »
 - **Sur l’écran mural**, Wusel est dans l’en-tête. Dans la première demi-heure après la nuit (en général de 6 h à 6 h 30), Wusel fait signe et dit « Bonjour tout le monde ! ». La nuit, Wusel dort ; sans connexion, Wusel réfléchit ; et un jour d’anniversaire, il porte un chapeau de fête.

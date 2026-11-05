@@ -12,14 +12,14 @@ Ein Schlüssel gehört zu **einer Person**. Ein Kurzbefehl mit diesem Schlüssel
 
 - Er kann **lesen**: den Tag, das Essen, den Stundenplan, wer da ist, die Punkte.
 - Er kann **hinzufügen**: Dinge auf die Einkaufsliste setzen und eine eigene Aufgabe abhaken.
-- Er kann **nichts löschen und nichts verwalten**: keine Termine ändern, keine Punkte korrigieren, keine Einstellungen. Das gilt auch für den Schlüssel eines Erziehungsberechtigten.
+- Er kann **nichts löschen und nichts verwalten**: keine Termine ändern, keine Punkte korrigieren, keine Einstellungen. Das gilt auch für den Schlüssel eines Elternteils.
 - Pro Tag trägt ein Schlüssel höchstens 100-mal etwas ein. Falls ein Kurzbefehl versehentlich in einer Schleife läuft, ist damit Schluss.
 
 ## Einen Schlüssel erstellen
 
 1. Öffne **Einstellungen → Erweitert → Apps und Automationen** und tippe auf **Neuer Schlüssel**.
 2. Gib ihm einen **Namen**, zum Beispiel „iPhone“.
-3. Als Erziehungsberechtigte·r wählst du unter **Für wen?** die Person. Alle anderen erstellen ihren eigenen Schlüssel auf dem eigenen Handy.
+3. Als Elternteil wählst du unter **Für wen?** die Person. Alle anderen erstellen ihren eigenen Schlüssel auf dem eigenen Handy.
 4. Tippe auf **Schlüssel erstellen**.
 
 Der Schlüssel wird **nur einmal** angezeigt, zusammen mit der **Adresse** eures Servers. Kopiere beides. Wer den Schlüssel hat, kann als diese Person lesen und hinzufügen. Behandle ihn deshalb wie ein Passwort. Die Kurzbefehle-App synchronisiert ihn über iCloud auf deine anderen Apple-Geräte.
@@ -64,7 +64,7 @@ Die Antworten kommen in der Sprache des iPhones, wenn es Deutsch, Englisch, Fran
 
 Ist ein Handy weg oder braucht jemand den Kurzbefehl nicht mehr, tippe in der Liste auf **Sperren**. Das wirkt sofort: Der Kurzbefehl antwortet dann nur noch, dass er nicht mehr gilt. Die Liste zeigt, wann ein Schlüssel zuletzt benutzt wurde. Verlässt jemand die Familie, werden die Schlüssel dieser Person automatisch gesperrt.
 
-Erziehungsberechtigte sehen und sperren alle Schlüssel der Familie, alle anderen ihre eigenen. Der [Datenexport](/settings/members-devices#daten-exportieren) enthält jeden Schlüssel mit Namen und Datum, aber nicht den Schlüssel selbst.
+Eltern sehen und sperren alle Schlüssel der Familie, alle anderen ihre eigenen. Der [Datenexport](/settings/members-devices#daten-exportieren) enthält jeden Schlüssel mit Namen und Datum, aber nicht den Schlüssel selbst.
 
 ::: info Ohne iPhone
 Ein Kurzbefehl ist eine gewöhnliche Web-Anfrage. Jede App, die eine Anfrage mit einem Header schicken kann, funktioniert genauso.

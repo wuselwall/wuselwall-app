@@ -1,6 +1,6 @@
 # Seguridad
 
-Los ajustes de acceso y seguridad están en **Ajustes → Cuenta y seguridad**, solo en el **móvil personal de un adulto responsable**.
+Los ajustes de acceso y seguridad están en **Ajustes → Cuenta y seguridad**, solo en el **móvil personal de una madre o un padre**.
 
 ## Inicio de sesión {#sign-in}
 
@@ -18,7 +18,7 @@ Además de la contraseña, se pide un **código de seis cifras** de una app de a
 
 Cada nueva sesión pedirá ese código antes de acceder a datos familiares. Puedes desactivarlo en el mismo lugar.
 
-## PIN de responsable {#guardian-pin}
+## PIN de los padres {#guardian-pin}
 
 El PIN de seis cifras protege acciones en [dispositivos compartidos](/es/guide/who-are-you). Tu móvil personal conectado permite poner uno nuevo, aunque el antiguo esté bloqueado.
 

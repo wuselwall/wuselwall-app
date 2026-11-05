@@ -18,7 +18,7 @@ A star marks the **default list** (the supermarket at first). It is the only one
 
 ## Editing a list
 
-Select the list and tap the **pencil** to the right of the lists (or press and hold its name). There you change the **name** and make it the **default list**. The **Advanced** view adds the **categories**, in the order you walk through the shop: drag a category by its handle to another place, rename it, add a new one or remove it (its items stay on the list without a category). At the bottom is **Delete list**: open items move to the default list; the list's history and tiles are gone. The default list itself cannot be deleted. Deleting is for guardians; renaming and ordering is open to everyone.
+Select the list and tap the **pencil** to the right of the lists (or press and hold its name). There you change the **name** and make it the **default list**. The **Advanced** view adds the **categories**, in the order you walk through the shop: drag a category by its handle to another place, rename it, add a new one or remove it (its items stay on the list without a category). At the bottom is **Delete list**: open items move to the default list; the list's history and tiles are gone. The default list itself cannot be deleted. Deleting is for parents; renaming and ordering is open to everyone.
 
 <Shot name="shopping-edit-list" alt="Editing a list: name, default list and categories" />
 

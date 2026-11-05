@@ -16,7 +16,7 @@ Chaque réglage propose une valeur par défaut. Une valeur différente est signa
 - **Famille** : le **profil de la famille** (nom, fuseau horaire, export, suppression), la **région** des jours fériés et vacances, les **membres**, la **semaine habituelle** et **Courses dans la vue des enfants** (désactivé dans une nouvelle famille). La première école permet de choisir la région, modifiable ici.
 - **Tâches et récompenses** : points des obligations et bonus, type initial, vérification, jokers mensuels et approbation des récompenses.
 - **Calendrier et école** : modifications des enfants, affichage mural des nouveaux événements, signalement des changements de cours et matériel à apporter. La vue **Avancés** ajoute **Partage et connexions** : partager le calendrier familial et calendriers externes.
-- **Repas** : quel repas est le repas chaud les jours d’école et les jours sans école : **Déjeuner**, **Dîner**, **Les deux** ou **Aucun** (par défaut : dîner les jours d’école, déjeuner les jours sans école). Avec **Les deux**, le déjeuner et le dîner s’affichent ensemble comme repas principaux du jour sur le mur, dans le plan des repas et sur **Aujourd’hui**, et la question à table se pose aux deux ; avec **Aucun**, la ligne des repas du mur reste vide ce jour-là, la question à table suit le dîner et un repas souhaité va au dîner. Aussi : absence signifiant ne pas manger, prise en compte de la garde pour le déjeuner et repas souhaités.
+- **Repas** : quel repas est le repas chaud les jours d’école et les jours sans école. Deux boutons, **Déjeuner** et **Dîner**, s’activent chacun à leur tour (par défaut : dîner les jours d’école, déjeuner les jours sans école). Avec les deux activés, le déjeuner et le dîner s’affichent ensemble comme repas principaux du jour sur le mur, dans le plan des repas et sur **Aujourd’hui**, et la question à table se pose aux deux ; avec les deux désactivés, il n’y a pas de repas chaud : la ligne des repas du mur reste vide ce jour-là, la question à table suit le dîner et un repas souhaité va au dîner. Aussi : absence signifiant ne pas manger, prise en compte de la garde pour le déjeuner et repas souhaités.
 - **Rituels** : question à table, notre semaine et compte à rebours, voir [plus bas](#rituals).
 - **Fêtes et saisons** : les décorations du ciel, d’abord **Au fil de l’année** (saisons, vacances, anniversaires), puis les **Jours de fête** (Pâques, Pâques orthodoxes, Fête nationale, Saint-Nicolas, Avent, Noël, Nouvel An).
 - **Écran de la cuisine** (Avancés) : noms complets ou initiales sur le mur, passage à la semaine suivante et limites entre matin/après-midi/soir.
@@ -31,7 +31,7 @@ Sur une tablette pour tous ou l’écran mural, les parents qui ont touché leur
 
 <Shot name="settings-tasks" alt="Le groupe Tâches et récompenses avec ses réglages" />
 
-La description sous chaque réglage explique son effet. Essayez les valeurs par défaut, puis ajustez ce qui gêne après quelques semaines.
+La description sous chaque réglage explique son effet.
 
 ## Rituels {#rituals}
 
@@ -41,12 +41,14 @@ Les [rituels](/fr/guide/rituals) sont tous activés au départ. Chacun se modifi
 |---|---|---|
 | **Question à table** | quand une question pour discuter apparaît : **Repas chaud**, **Déjeuner et dîner** ou **Désactivé** | Repas chaud |
 | **Question au déjeuner**, **Question au dîner** | les horaires de la question | 11 h 30–13 h 30, 17 h 30–19 h 30 ; en France dîner 19 h–21 h, en Espagne 13 h 30–15 h 30 et 20 h–22 h |
-| **Questions pour** | **Tous les âges** ou **Aussi les plus grands** (questions plus profondes dès 8 ans) | Tous les âges |
+| **Limite d’âge** | masque les questions à partir d’un âge choisi | Désactivée |
 | **Notre semaine** | jour et heure du retour sur la semaine, ou désactivé | dimanche 16 h |
 | **Repas souhaités** | qui peut souhaiter un repas : **Enfants**, **Tout le monde** ou **Désactivé** | Enfants |
 | **Souhaits ouverts par personne** | combien de souhaits peuvent attendre à la fois (1 à 3) | 1 |
-| **Le compte à rebours commence** | combien de jours avant un compte à rebours apparaît (7 à 60) | 14 jours |
+| **Le compte à rebours commence** | combien de jours avant un compte à rebours apparaît (7 à 60) | 7 jours |
 | **Compte à rebours avant un retour** | « De retour dans 2 dodos » quand un adulte part deux nuits ou plus | activé |
+
+Les questions à table suivent l’âge des enfants, d’après leur anniversaire. Si deux enfants ont 5 ans d’écart ou plus, chacun reçoit sa question : côte à côte sur le mur, une carte chacun sur **Aujourd’hui**, et sur sa propre vue un enfant ne voit que la question de son âge. Sans aucun anniversaire, les questions conviennent aux enfants de 5 à 7 ans. L’anniversaire est facultatif : saisissez-le sur la page de la personne ou en ajoutant les enfants pour la première fois.
 
 Sous les rituels, **Nos questions** mène aux questions de la famille pour la [question à table](/fr/guide/rituals#table-question), à toute heure.
 

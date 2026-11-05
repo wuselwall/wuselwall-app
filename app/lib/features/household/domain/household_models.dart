@@ -134,16 +134,28 @@ class ClaimRefused extends ClaimOutcome {
 
 /// A row of H2: a person in the family who has no account yet.
 class NewMember {
-  const NewMember({required this.displayName, required this.isChild});
+  const NewMember({
+    required this.displayName,
+    required this.isChild,
+    this.birthday,
+  });
 
   final String displayName;
 
   /// A child is a `member` of kind child; an adult a `guardian` of kind adult.
   final bool isChild;
 
+  /// Optional: a child's age chooses the questions at the table (specs/27).
+  final DateTime? birthday;
+
   Map<String, dynamic> toJson() => {
     'display_name': displayName.trim(),
     'kind': isChild ? 'child' : 'adult',
+    if (birthday case final b?)
+      'birthday':
+          '${b.year.toString().padLeft(4, '0')}-'
+          '${b.month.toString().padLeft(2, '0')}-'
+          '${b.day.toString().padLeft(2, '0')}',
   };
 }
 

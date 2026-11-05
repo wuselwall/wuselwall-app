@@ -9,7 +9,7 @@ Au premier démarrage, choisissez le serveur ([Installer l’app](/fr/guide/inst
 | Créer la première famille sur un nouveau serveur | Utilisez d’abord la [clé de configuration](#setup-key), puis connectez-vous et créez la famille |
 | Accepter une invitation | [Rejoignez la famille](#_3-joining-a-family), sans en créer une autre |
 | Utiliser votre compte sur un autre téléphone personnel | [Connectez-vous](#_1-signing-in) avec le même compte |
-| Connecter une tablette partagée ou le mur de la cuisine | [Connectez un appareil partagé](#_4-connecting-a-family-tablet-or-wall-display) ; un responsable l’approuve sur son téléphone |
+| Connecter une tablette partagée ou le mur de la cuisine | [Connectez un appareil partagé](#_4-connecting-a-family-tablet-or-wall-display) ; un parent l’approuve sur son téléphone |
 
 La clé de configuration, le code de connexion par e-mail et le code d’invitation ont des rôles différents. Utilisez celui demandé par la page affichée.
 
@@ -53,7 +53,7 @@ Pour utiliser un mot de passe, touchez **Se connecter avec un mot de passe**. C�
 
 ### Sans e-mails du serveur
 
-**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Se connecter ou créer un compte** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)). Tant qu’un tel serveur n’a pas de famille, il propose seulement **Se connecter** ; **Nouveau compte** apparaît une fois la [clé de configuration](#setup-key) saisie.
+**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Se connecter ou créer un compte** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un parent de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)). Tant qu’un tel serveur n’a pas de famille, il propose seulement **Se connecter** ; **Nouveau compte** apparaît une fois la [clé de configuration](#setup-key) saisie.
 
 ## 2. Créer une famille {#_2-creating-a-new-family}
 
@@ -103,5 +103,5 @@ Un parent approuve le nouvel appareil sur son téléphone :
 Le code QR contient aussi le serveur : la caméra de votre téléphone peut donc ouvrir directement la confirmation dans l’app. Le code dure **10 minutes** et ne sert **qu’une fois**. En cas d’échec, recommencez sur le nouvel appareil. L’écran mural présente ensuite une courte [liste de préparation](/fr/guide/wall).
 
 ::: tip Appareils plus anciens
-Dans **Paramètres → Avancés → Appareils**, **Créer un code pour un ancien appareil** permet encore de connecter une ancienne version. Cette option disparaîtra à la prochaine version.
+Dans **Paramètres → Avancés → Appareils**, **Créer un code pour un ancien appareil** permet encore de connecter une ancienne version.
 :::

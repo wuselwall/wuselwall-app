@@ -34,7 +34,7 @@ El resumen da la dirección. Configura base, acceso, autenticación, funciones, 
 
 ## Correo {#mail}
 
-El correo es opcional. **Sin los secretos `SMTP_`**, todos inician sesión con dirección y contraseña; un responsable restablece una contraseña olvidada en la app. El envío integrado de Supabase no interviene: solo entrega a las direcciones de tu cuenta de Supabase.
+El correo es opcional. **Sin los secretos `SMTP_`**, todos inician sesión con dirección y contraseña; una madre o un padre restablece una contraseña olvidada en la app. El envío integrado de Supabase no interviene: solo entrega a las direcciones de tu cuenta de Supabase.
 
 **Con los cinco secretos `SMTP_`**, los códigos llegan por correo. Basta una cuenta de Gmail con contraseña de aplicación: ver [Correo](/es/server/email). También sirve Scaleway: `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM` (opcionales: `SCW_REGION`, `MAIL_FROM_NAME`). Puedes añadir o quitar los secretos más tarde y volver a ejecutar; las cuentas se mantienen.
 

@@ -12,7 +12,7 @@
   "errorUnknown": "Something went wrong.",
   "configMissing": "This build is missing its configuration: {missing}",
   "registerAdult": "Adult",
-  "registerKid": "Kid",
+  "registerKid": "Child",
   "registerKiosk": "Wall display",
   "systemTitle": "System",
   "systemBuild": "Build",
@@ -60,7 +60,7 @@
   "errPasswordTooShort": "The password needs at least 10 characters.",
   "errPinFormat": "The PIN must be exactly 6 digits.",
   "errCodeInvalid": "That code is wrong or has expired.",
-  "errGuardianRequired": "Only a guardian can do that.",
+  "errGuardianRequired": "Only a parent can do that.",
   "errDeviceRevoked": "This device has been blocked.",
   "errActorRequired": "Tap your name first.",
   "errNameRequired": "Please enter a name.",
@@ -89,7 +89,7 @@
     }
   },
   "actingWho": "Who are you?",
-  "pinTitle": "Guardian PIN",
+  "pinTitle": "Parent PIN",
   "pinPrompt": "Enter the PIN for {name}",
   "@pinPrompt": {
     "placeholders": {
@@ -107,15 +107,15 @@
     }
   },
   "pinBackoff": "Too many attempts. Please wait a moment.",
-  "pinLocked": "PIN locked. A guardian must sign in to unlock it.",
+  "pinLocked": "PIN locked. A parent must sign in to unlock it.",
   "settingsTitle": "Settings",
   "settingsMembers": "Members",
   "settingsDevices": "Devices",
   "addMember": "Add member",
   "addMemberSubtitle": "A child, or someone without an account of their own",
   "memberName": "Name",
-  "roleGuardian": "Guardian",
-  "roleMember": "Member",
+  "roleGuardian": "Parent",
+  "roleMember": "Other adult",
   "addDevice": "Add device",
   "deviceLabel": "Device name",
   "createCode": "Create code",
@@ -232,7 +232,7 @@
   "shoppingCat_household": "Household",
   "shoppingCat_other": "Other",
   "shoppingCat_care": "Body care",
-  "shoppingCat_baby": "Baby & kids",
+  "shoppingCat_baby": "Baby & children",
   "shoppingCat_cleaning": "Cleaning",
   "shoppingCat_health": "Health",
   "shoppingCat_tools": "Tools",
@@ -256,7 +256,7 @@
       }
     }
   },
-  "pinChangeTitle": "Guardian PIN",
+  "pinChangeTitle": "Parent PIN",
   "pinChangeBody": "Set a new 6-digit PIN. This also unlocks a PIN that was locked by too many wrong tries.",
   "pinChangeAction": "Change",
   "pinChangeField": "New PIN (6 digits)",
@@ -522,7 +522,7 @@
       }
     }
   },
-  "boardTasksComingSoon": "Tasks arrive with the next update.",
+  "boardTasksComingSoon": "Tasks are not shown here.",
   "presenceWorking": "At work",
   "presenceHomeOffice": "Home office",
   "presenceTravel": "Travelling",
@@ -578,7 +578,6 @@
   "settingValueAll": "All",
   "settingValueNone": "None",
   "settingValueLunch": "Lunch",
-  "settingValueBoth": "Both",
   "settingValueDinner": "Dinner",
   "settingBoardMemberLabelTitle": "Names on the board",
   "settingBoardMemberLabelHelp": "A name reads better than an initial from two metres. Pick initials if visitors are often in the kitchen.",
@@ -587,23 +586,23 @@
   "settingTasksBonusPointsTitle": "Points for a bonus task",
   "settingTasksBonusPointsHelp": "One bonus task buys the cheapest starter reward, so a younger child gets there within days.",
   "settingTasksKindTitle": "New tasks are",
-  "settingTasksKindHelp": "A new chore is a duty unless someone deliberately makes it a bonus. That keeps the earning surface narrow.",
-  "settingTasksVerificationTitle": "Guardians check chores",
+  "settingTasksKindHelp": "A new chore is a duty unless someone deliberately makes it a bonus.",
+  "settingTasksVerificationTitle": "Parents check chores",
   "settingTasksVerificationHelp": "Checking turns every chore into an inspection, so use it only for valuable bonus tasks.",
   "settingTasksJokersTitle": "Streak jokers per month",
   "settingTasksJokersHelp": "A joker keeps a streak alive on a missed day, so one sick day does not wipe out a three-week streak.",
   "settingTasksRewardApprovalTitle": "Rewards need approval",
-  "settingTasksRewardApprovalHelp": "A guardian approves each redemption with the PIN. Self-serve suits only trivial rewards.",
-  "settingCalendarMembersEditTitle": "Members edit their own events",
-  "settingCalendarMembersEditHelp": "Children create and edit events they attend themselves. Deleting someone else's event stays a guardian action.",
+  "settingTasksRewardApprovalHelp": "A parent approves each redemption with the PIN. Self-serve suits only trivial rewards.",
+  "settingCalendarMembersEditTitle": "Children edit their own events",
+  "settingCalendarMembersEditHelp": "Children create and edit events they attend themselves. Deleting someone else's event stays with the parents.",
   "settingCalendarKeyDefaultTitle": "New events on the kitchen wall",
-  "settingCalendarKeyDefaultHelp": "Decides which new events appear on the kitchen wall without anyone ticking the box. Review it after two weeks of use.",
-  "settingSchoolReportTitle": "Members report timetable changes",
-  "settingSchoolReportHelp": "Only guardians maintain the timetable. With this on, a child can report a cancelled lesson for a guardian to confirm.",
+  "settingCalendarKeyDefaultHelp": "Decides which new events appear on the kitchen wall without anyone ticking the box.",
+  "settingSchoolReportTitle": "Children report timetable changes",
+  "settingSchoolReportHelp": "Only parents maintain the timetable. With this on, a child can report a cancelled lesson for a parent to confirm.",
   "settingSchoolEquipmentTitle": "Equipment hint for tomorrow",
   "settingSchoolEquipmentHelp": "Shows what to bring tomorrow, such as sports kit, from tomorrow's subjects.",
   "settingMealsSchoolDayTitle": "Warm meal on school days",
-  "settingMealsSchoolDayHelp": "The warm meal on the kitchen wall: lunch, dinner, both or none. On school days children often eat lunch at school or at after-school care.",
+  "settingMealsSchoolDayHelp": "The warm meal on the kitchen wall. Both on means two warm meals, both off means none. On school days children often eat lunch at school or at after-school care.",
   "settingMealsFreeDayTitle": "Warm meal on free days",
   "settingMealsFreeDayHelp": "For weekends and holidays.",
   "settingMealsAwayTitle": "Away means not eating",
@@ -611,23 +610,23 @@
   "settingMealsCareCutoffTitle": "Lunch cut-off for care",
   "settingMealsCareCutoffHelp": "A child whose care runs past this time is out for lunch.",
   "settingBoardRolloverTitle": "Kitchen wall moves on",
-  "settingBoardRolloverHelp": "When the wall moves to the coming week. Sunday evening planning wants next week; Saturday morning still wants this one.",
+  "settingBoardRolloverHelp": "When the wall moves on to the coming week.",
   "settingBoardDayPartsTitle": "Morning, afternoon, evening",
-  "settingBoardDayPartsHelp": "Where the appointment zone splits into morning, afternoon and evening.",
+  "settingBoardDayPartsHelp": "Where the day splits into morning, afternoon and evening on the board.",
   "settingDeviceNightHoursTitle": "Night theme hours",
-  "settingDeviceNightHoursHelp": "When the kiosk switches to the amber night theme.",
+  "settingDeviceNightHoursHelp": "When the wall display switches to its night colours.",
   "settingDeviceIdleRevertTitle": "Back to the wall after",
-  "settingDeviceIdleRevertHelp": "How long an opened profile or detail view stays open before the kiosk returns to the wall.",
+  "settingDeviceIdleRevertHelp": "How long an opened profile or detail view stays open before the display goes back to the wall.",
   "settingMemberCompletionSoundTitle": "Sound when a chore is ticked",
   "settingMemberCompletionSoundHelp": "Ticking a chore off makes a short sound. Switch it off if you do not want it.",
   "settingCalendarTentativeTitle": "Check uncertain events at",
   "settingCalendarTentativeHelp": "Asks whether a tentative entry is happening, so it does not stay uncertain until it starts.",
   "settingNotifyMorningTitle": "Morning summary",
-  "settingNotifyMorningHelp": "Today's tasks and events for you. Pending redemptions appear here for guardians.",
+  "settingNotifyMorningHelp": "Today's tasks and events for you. Pending redemptions appear here for parents.",
   "settingNotifyEventReminderTitle": "Reminder before events",
   "settingNotifyEventReminderHelp": "A notification before an event starts.",
   "settingNotifyTaskVerifiedTitle": "When a chore is verified",
-  "settingNotifyTaskVerifiedHelp": "A notification when a guardian verifies a chore and its points are credited.",
+  "settingNotifyTaskVerifiedHelp": "A notification when a parent checks a chore and its points are credited.",
   "settingNotifyRedemptionTitle": "When a reward is requested",
   "settingNotifyRedemptionHelp": "An immediate notification when a child asks for a reward.",
   "boardCareShort": "{label} {time}",
@@ -672,7 +671,7 @@
   "@calendarNewEvent": {},
   "calendarEmpty": "Nothing planned",
   "@calendarEmpty": {},
-  "calendarEditorPlaceholder": "The event editor is coming soon.",
+  "calendarEditorPlaceholder": "The event editor is not available here.",
   "@calendarEditorPlaceholder": {},
   "eventEditTitle": "Edit event",
   "@eventEditTitle": {},
@@ -806,7 +805,7 @@
   "scheduleTitle": "Timetable",
   "tasksTitle": "Tasks",
   "mealsTitle": "Meals",
-  "comingSoon": "This part is being built.",
+  "comingSoon": "This page is not available.",
   "mealsWeekRange": "{from} – {to}",
   "@mealsWeekRange": {
     "placeholders": {
@@ -1326,7 +1325,7 @@
   "tasksPickPool": "Who takes part?",
   "tasksPickOpenPool": "Who may take it? Empty means everyone.",
   "tasksPoolRequired": "Pick at least one person.",
-  "tasksFieldVerification": "Approval by a grown-up",
+  "tasksFieldVerification": "Approval by a parent",
   "tasksVerificationHelp": "Points come after a check.",
   "tasksArchive": "Archive",
   "tasksArchiveHelp": "The chore disappears. Its open entries in the future are removed.",
@@ -1847,7 +1846,7 @@
       }
     }
   },
-  "extCalReadOnlyHint": "Only guardians can subscribe to calendars or change them.",
+  "extCalReadOnlyHint": "Only parents can subscribe to calendars or change them.",
   "extCalErrUnreachable": "The address cannot be reached right now.",
   "extCalErrTimeout": "The address answers too slowly.",
   "extCalErrForbiddenHost": "This address is not allowed.",
@@ -2012,13 +2011,13 @@
   "pairConfirmHint": "Only confirm if you can see this device in front of you.",
   "pairKindLabel": "What kind of device is this?",
   "pairKindWall": "Wall display",
-  "pairKindKid": "Kids' tablet",
+  "pairKindKid": "Children's tablet",
   "pairKindFamily": "Shared tablet",
   "pairKindChild": "A child's phone",
   "pairChildLabel": "Which child?",
   "pairNameLabel": "Device name",
   "pairDefaultWall": "Wall display",
-  "pairDefaultKid": "Kids' tablet",
+  "pairDefaultKid": "Children's tablet",
   "pairDefaultFamily": "Tablet",
   "pairDefaultChild": "{name}'s phone",
   "@pairDefaultChild": {
@@ -2031,7 +2030,7 @@
   "pairApproveAction": "Connect",
   "pairApproved": "Device connected",
   "pairOnlyOnPersonal": "This works only on your own phone.",
-  "pairPinTitle": "Set the guardian PIN",
+  "pairPinTitle": "Set the parent PIN",
   "pairPinBody": "The PIN confirms changes on shared devices. Set it once.",
   "pairPinConfirm": "Enter the PIN again",
   "pairPinMismatch": "The PINs do not match. Try again.",
@@ -2091,14 +2090,14 @@
   "householdNewCreate": "Create family",
   "householdNewCreating": "Creating your family …",
   "householdNewInvited": "I was invited",
-  "householdInvitedNote": "Invitations arrive with the next update.",
+  "householdInvitedNote": "Invitations are not available here.",
   "householdNewSignOut": "Sign out",
   "householdNewErrNoCode": "This server needs a setup key to create a family. Use the key from the server installation, not your email code.",
   "householdNewErrCodeWrong": "This setup key is invalid or has already been used. Ask the person who runs your server for a new setup link or key.",
   "householdNewErrRateLimited": "Too many attempts. Wait a few minutes and try again.",
   "householdNewStalled": "This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.",
   "claimTitle": "Set up your server",
-  "claimLead": "{host} has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first guardian account.",
+  "claimLead": "{host} has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first parent account.",
   "@claimLead": {
     "placeholders": {
       "host": {
@@ -2248,7 +2247,7 @@
   },
   "leaveDeleteNext": "Next",
   "leaveDeleteWordTitle": "Delete for good?",
-  "leaveDeleteWordBody": "The family and all its data are deleted immediately and permanently. Nobody can restore them, not even a guardian. Export the data first if you want to keep it.",
+  "leaveDeleteWordBody": "The family and all its data are deleted immediately and permanently. Nobody can restore them, not even a parent. Export the data first if you want to keep it.",
   "leaveDeleteWord": "DELETE",
   "@leaveDeleteWord": {
     "description": "The word the guardian types in capitals to delete the family for good."
@@ -2274,7 +2273,7 @@
     }
   },
   "leaveDeletedBodyGuardian": "You can restore the family. All data is still there. This phone becomes the family's phone again; the other devices sign in again.",
-  "leaveDeletedBodyMember": "Only a guardian can restore the family. You can also start afresh; then your account leaves this family.",
+  "leaveDeletedBodyMember": "Only a parent can restore the family. You can also start afresh; then your account leaves this family.",
   "leaveRestore": "Restore",
   "leaveStartAfresh": "Start afresh",
   "leaveStartAfreshHint": "Your account leaves the deleted family, and you start a new one.",
@@ -2312,8 +2311,8 @@
       }
     }
   },
-  "inviteRoleLineGuardian": "As a guardian you see everything and approve rewards.",
-  "inviteRoleLineMember": "As a member you tick off tasks, without approving rewards.",
+  "inviteRoleLineGuardian": "As a parent you see everything and approve rewards.",
+  "inviteRoleLineMember": "As another adult you tick off tasks, without approving rewards.",
   "inviteContinue": "Continue to sign-in",
   "inviteJoin": "Join",
   "inviteNewFamilyInstead": "Start my own family",
@@ -2402,8 +2401,8 @@
   "inviteAdultTitle": "Invite an adult",
   "inviteAdultName": "Name",
   "inviteAdultRole": "Role",
-  "inviteRoleGuardian": "Guardian",
-  "inviteRoleMember": "Member",
+  "inviteRoleGuardian": "Parent",
+  "inviteRoleMember": "Other adult",
   "inviteRoleGuardianHelp": "Sees everything and approves rewards.",
   "inviteRoleMemberHelp": "Ticks off tasks but does not approve rewards. For an au pair or grandparents.",
   "inviteAdultEmail": "Email (optional)",
@@ -2425,7 +2424,7 @@
   "inviteScanTitle": "Scan invitation",
   "accountDeleteTile": "Delete account",
   "accountDeleteExplain": "Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history.",
-  "accountDeleteBlocked": "You are the last guardian with an account in this family. Invite a second adult first, or delete the family.",
+  "accountDeleteBlocked": "You are the last parent with an account in this family. Invite a second adult first, or delete the family.",
   "accountDeleteDialogTitle": "Delete account?",
   "accountDeleteDialogBody": "This cannot be undone. Your sign-in is removed, and your profile stays in the family.",
   "accountDeleteConfirm": "Delete account",
@@ -2856,8 +2855,8 @@
   "memberAvatarInitial": "Initial",
   "memberKind": "Child or adult",
   "memberRole": "Role",
-  "memberRoleHelp": "Guardians see everything and approve rewards. Members tick off tasks.",
-  "memberReadOnlyHint": "Only guardians change other people. You can change your own name, colour and picture.",
+  "memberRoleHelp": "Parents see everything and approve rewards. Other adults tick off tasks.",
+  "memberReadOnlyHint": "Only parents change other people. You can change your own name, colour and picture.",
   "memberKioskReadOnly": "Nobody is changed on the wall display. Change names, colours, pictures and birthdays in the app on a phone or tablet.",
   "@memberKioskReadOnly": {
     "description": "On the member page of a wall display, which may not edit members (the server refuses a kiosk)."
@@ -2891,9 +2890,9 @@
     }
   },
   "memberReorderHandle": "Change order",
-  "memberErrKindAdult": "A guardian, or someone with an account, is an adult.",
-  "memberErrRoleChild": "A child cannot be a guardian. Make the person an adult first.",
-  "memberErrSelf": "You cannot remove yourself. Another guardian can.",
+  "memberErrKindAdult": "A parent, or someone with an account, is an adult.",
+  "memberErrRoleChild": "A child cannot be a parent. Make the person an adult first.",
+  "memberErrSelf": "You cannot remove yourself. Another parent can.",
   "memberErrHasAccount": "This person has an account and leaves from their own phone.",
   "deviceRename": "Rename device",
   "deviceLastSeen": "last active {ago}",
@@ -2945,7 +2944,7 @@
     }
   },
   "schoolScanFile": "Choose a file (PDF or picture)",
-  "schoolImportPhotoUnavailable": "Your server can't read photos yet.",
+  "schoolImportPhotoUnavailable": "Your server can't read photos.",
   "settingsVersions": "Versions",
   "settingsVersionsLine": "App {app} · Server {server} · API {api}",
   "settingsVersionUnknown": "unknown",
@@ -2977,7 +2976,7 @@
   "settingAmbienceSeasonTitle": "Seasons",
   "settingAmbienceSeasonHelp": "Blossom, sun, leaves or snowflakes in the sky.",
   "settingAmbienceBirthdaysTitle": "Birthdays",
-  "settingAmbienceBirthdaysHelp": "Bunting in the member's colour and a party hat for Wusel on their birthday.",
+  "settingAmbienceBirthdaysHelp": "Bunting in the person's colour and a party hat for Wusel on their birthday.",
   "settingAmbienceFerienTitle": "School holidays",
   "settingAmbienceFerienHelp": "A ribbon on the first and the last day of the holidays.",
   "settingAmbienceAdventTitle": "Advent",
@@ -3010,8 +3009,8 @@
   "settingTableQuestionLunchHelp": "When the question shows at lunch.",
   "settingTableQuestionDinnerTitle": "Question at dinner",
   "settingTableQuestionDinnerHelp": "When the question shows at dinner.",
-  "settingTableQuestionDeckTitle": "Questions for",
-  "settingTableQuestionDeckHelp": "All ages works for a five-year-old; older children adds deeper questions for 8 and over.",
+  "settingTableQuestionAgeLimitTitle": "Age limit",
+  "settingTableQuestionAgeLimitHelp": "Questions follow the children's ages, from their birthdays, with one question each when they are far apart. Turn this on to hide questions from an age upwards.",
   "settingWeekReviewTitle": "Our week",
   "settingWeekReviewHelp": "When the look back at the week appears. It stays until the next morning.",
   "settingValueAuto": "Automatic",
@@ -3023,8 +3022,14 @@
   "settingValueEveryone": "Everyone",
   "settingValueWarmMeal": "Warm meal",
   "settingValueMainMeals": "Lunch and dinner",
-  "settingValueAllAges": "All ages",
-  "settingValueOlderChildren": "Older children too",
+  "settingUnitFromAge": "from age {age}",
+  "@settingUnitFromAge": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
   "settingUnitDays": "{count, plural, =1{1 day} other{{count} days}}",
   "@settingUnitDays": {
     "placeholders": {
@@ -3187,9 +3192,9 @@
   "wuselAllDone2": "Everything's ticked off. Thank you!",
   "wuselAllDone3": "Done for today. The house says thanks!",
   "wuselAllDone4": "Your list is empty. Time to play!",
-  "wuselRewardSent1": "Sent! A grown-up will decide.",
+  "wuselRewardSent1": "Sent! Your parents will decide.",
   "wuselRewardSent2": "Your wish is on its way.",
-  "wuselRewardSent3": "Wish sent! Now a grown-up takes a look.",
+  "wuselRewardSent3": "Wish sent! Now your parents take a look.",
   "wuselBadge": "A new badge: {badge}!",
   "@wuselBadge": {
     "placeholders": {
@@ -3261,7 +3266,8 @@
   "ambienceFerienLast": "School again tomorrow",
   "shoppingEmptyTapTile": "Nothing on the list yet. Tap a tile.",
   "memberBirthday": "Birthday",
-  "memberBirthdayHelp": "Shown on the wall on the day, and counted down to before it.",
+  "memberBirthdayHelp": "Shown on the wall on the day, and counted down to before it. For a child it also sets which questions come up at the table.",
+  "memberBirthdayOptional": "Birthday (optional)",
   "memberBirthdayPick": "Choose a date",
   "memberBirthdayClear": "Remove the birthday",
   "countdownBirthdayOf": "{name}'s birthday",
@@ -3392,7 +3398,7 @@
   "eventIcon_star": "Special",
   "kidWishTitle": "Your meal wish",
   "kidWishInvite": "What would you like to eat this week?",
-  "kidWishWaiting": "You wished for {title}. A grown-up will find a day.",
+  "kidWishWaiting": "You wished for {title}. Your parents will find a day.",
   "@kidWishWaiting": {
     "placeholders": {
       "title": {
@@ -3873,11 +3879,11 @@
   "passwordSignUpTab": "New account",
   "passwordSignInTab": "Sign in",
   "passwordSignUpAction": "Create account",
-  "passwordNoMailHint": "This server sends no email. Choose a password you will remember: if you forget it, a guardian of your family can give you a code for a new one.",
+  "passwordNoMailHint": "This server sends no email. Choose a password you will remember: if you forget it, a parent in your family can give you a code for a new one.",
   "passwordAccountExists": "There is already an account with this address. Sign in with its password.",
   "passwordForgot": "Forgot your password?",
   "passwordResetTitle": "New password",
-  "passwordResetIntro": "Ask a guardian of your family for a code: in the app under Members, at your name, “Reset password”. It works once, for 10 minutes.",
+  "passwordResetIntro": "Ask a parent in your family for a code: in the app under Members, at your name, “Reset password”. It works once, for 10 minutes.",
   "passwordResetCodeLabel": "Reset code",
   "passwordResetSave": "Save and sign in",
   "errResetCodeExpired": "This code has expired. Ask for a new one.",
@@ -3919,7 +3925,7 @@
     }
   },
   "settingsPasswordNoMail": "Your family’s server sends no email: you sign in with your address and this password.",
-  "passwordDialogBodyNoMail": "At least 10 characters. If you forget it, a guardian of your family can give you a code for a new one.",
+  "passwordDialogBodyNoMail": "At least 10 characters. If you forget it, a parent in your family can give you a code for a new one.",
   "errEmailNotConfirmed": "This server wants to confirm the address by email but sends none. Ask whoever runs it.",
   "accountDeleteReauthPasswordBody": "Deleting an account needs a fresh sign-in. Enter the password of {email}.",
   "@accountDeleteReauthPasswordBody": {
@@ -4110,7 +4116,7 @@
       }
     }
   },
-  "accountMfaResetRecent": "You reset the two-factor sign-in of {name} less than a day ago. Another guardian can create the code, or wait a day.",
+  "accountMfaResetRecent": "You reset the two-factor sign-in of {name} less than a day ago. Another parent can create the code, or wait a day.",
   "@accountMfaResetRecent": {
     "placeholders": {
       "name": {
@@ -4118,7 +4124,7 @@
       }
     }
   },
-  "accountPasswordResetRecent": "You created a password code for {name} less than a day ago. Another guardian can reset the two-factor sign-in, or wait a day.",
+  "accountPasswordResetRecent": "You created a password code for {name} less than a day ago. Another parent can reset the two-factor sign-in, or wait a day.",
   "@accountPasswordResetRecent": {
     "placeholders": {
       "name": {
@@ -4135,7 +4141,7 @@
       }
     }
   },
-  "errInvitationRequired": "This server takes only invited people. Ask a guardian of the family for an invitation.",
+  "errInvitationRequired": "This server takes only invited people. Ask a parent in the family for an invitation.",
   "accountNoticeMfaResetYou": "{name} reset your two-factor sign-in",
   "@accountNoticeMfaResetYou": {
     "placeholders": {

@@ -1,6 +1,6 @@
 # Emploi du temps
 
-Les adultes saisissent l’emploi du temps ; chaque enfant consulte sa semaine et les changements. L’écran de cuisine les affiche aussi.
+Les parents saisissent l’emploi du temps ; chaque enfant consulte sa semaine et les changements. L’écran de cuisine les affiche aussi.
 
 <Shot name="school-week" alt="L’emploi du temps d’un enfant avec un cours annulé et un remplacement" wide />
 
@@ -166,4 +166,4 @@ Le mur et la journée de l’enfant indiquent le matériel pour le lendemain, pa
 
 ## Les enfants signalent un changement {#children-report-changes}
 
-Seuls les parents gèrent l’emploi du temps. Vous pouvez autoriser les membres à signaler une annulation, à confirmer ensuite par un parent, dans [Paramètres → Calendrier et école](/fr/settings/household).
+Seuls les parents gèrent l’emploi du temps. Vous pouvez autoriser les enfants à signaler une annulation, à confirmer ensuite par un parent, dans [Paramètres → Calendrier et école](/fr/settings/household).

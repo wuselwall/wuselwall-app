@@ -13,7 +13,7 @@ Für alle gilt:
 
 ## Geburtstage {#birthdays}
 
-Den Geburtstag trägst du auf der Seite einer Person ein: **Einstellungen → Mitglieder**, Person antippen, **Geburtstag → Datum wählen** (siehe [Mitglied bearbeiten](/settings/members-devices#mitglied-bearbeiten)). Jede Person kann ihren eigenen eintragen, alle anderen die Erziehungsberechtigten.
+Den Geburtstag trägst du auf der Seite einer Person ein: **Einstellungen → Mitglieder**, Person antippen, **Geburtstag → Datum wählen** (siehe [Mitglied bearbeiten](/settings/members-devices#mitglied-bearbeiten)). Jede Person kann ihren eigenen eintragen, alle anderen die Eltern.
 
 Vorher wird heruntergezählt (siehe [Vorfreude](#countdowns)), mit dem Alter, das die Person wird: „Emma wird 9 · noch 3× schlafen“. An der Wand steht der Geburtstag die ganze Woche unter dem Datum seines Tages, mit einem Kuchen: „Emma wird 9“. Am Tag selbst hängen Wimpel in der Farbe der Person über der Wand, Wusel trägt den Partyhut, auf **Heute** steht eine Geburtstagskarte, und auf dem Kinder-Tablet jubelt Wusel dem Geburtstagskind zu. Ist der Anlass **Geburtstage** unter **Jahreszeiten und Anlässe** ausgeschaltet (siehe [Wusel und Farben](/guide/wusel#occasions)), entfällt all das; der Countdown bleibt, und im [Monat des Kalenders](/calendar/#month) steht der Geburtstag weiterhin mit Kuchen und Alter.
 
@@ -34,7 +34,7 @@ Zu sehen ist er auf der **Wand** in der Fußzeile, so viele wie hineinpassen, au
 
 Kinder und Wand zählen bis zu einer Woche vorher in Nächten („noch 3× schlafen“), davor in Tagen („noch 9 Tage“). Erwachsene lesen „in 3 Tagen“. Am Vortag steht dort **Morgen!**, am Tag selbst **Heute!**, und Wusel winkt oben in der Kopfzeile der Wand dazu. Danach verschwindet der Countdown.
 
-Wie viele Tage vorher es losgeht, stellt ihr mit **Vorfreude beginnt** ein (Standard 14 Tage, 7 bis 60). **Countdown bis jemand zurückkommt** (Standard an) schaltet die Rückkehr von Reisen aus.
+Wie viele Tage vorher es losgeht, stellt ihr mit **Vorfreude beginnt** ein (Standard 7 Tage, 7 bis 60). **Countdown bis jemand zurückkommt** (Standard an) schaltet die Rückkehr von Reisen aus.
 
 ## Familientraditionen {#traditions}
 
@@ -55,7 +55,7 @@ Jedes Kind darf sich ein Essen wünschen; wie viele Wünsche gleichzeitig offen 
 
 <Shot name="kid-wish" alt="Mein Tag auf dem Kinder-Tablet mit der Karte Dein Wunschessen" wide />
 
-Ein Wunsch wird in der App **nie abgelehnt**. Ein nicht geplanter Wunsch wartet einfach weiter, in der nächsten Woche mit dem Zusatz **von letzter Woche**. Nach vier Wochen verschwindet ein Wunsch, der nie geplant wurde, still aus der Liste und zählt nicht mehr mit; das Kind kann sich einfach Neues wünschen. Erziehungsberechtigte können einen Wunsch entfernen; warum, besprecht ihr miteinander.
+Ein Wunsch wird in der App **nie abgelehnt**. Ein nicht geplanter Wunsch wartet einfach weiter, in der nächsten Woche mit dem Zusatz **von letzter Woche**. Nach vier Wochen verschwindet ein Wunsch, der nie geplant wurde, still aus der Liste und zählt nicht mehr mit; das Kind kann sich einfach Neues wünschen. Eltern können einen Wunsch entfernen; warum, besprecht ihr miteinander.
 
 Wer wünschen darf, legt **Wunschessen** fest: **Kinder** (Standard), **Alle** oder **Aus**. **Offene Wünsche pro Person** erlaubt bis zu drei gleichzeitig (Standard 1).
 
@@ -67,13 +67,13 @@ Die Frage erscheint während des Essens: oben in der Kopfzeile der Wand, auf **M
 
 - **Andere Frage** zeigt die nächste, aber nur auf diesem Gerät. Sagt einfach „nimm die nächste“.
 - Bei einem Rätsel zeigt **Antwort zeigen** die Lösung.
-- **Unsere Fragen** (auf der Karte der Tischfrage unter **Heute**): Mit **Frage hinzufügen** schreibt jede Person eigene Fragen dazu. Sie erscheinen mit „Frage von Emma“. Eine eigene Frage entfernt, wer sie geschrieben hat, oder ein Erziehungsberechtigter.
-- Eine mitgelieferte Frage, die nicht zu euch passt, nehmen Erziehungsberechtigte mit **Diese Frage nicht mehr stellen** heraus. Unter **Weggelassene Fragen** holt **Wieder stellen** sie zurück.
+- **Unsere Fragen** (auf der Karte der Tischfrage unter **Heute**): Mit **Frage hinzufügen** schreibt jede Person eigene Fragen dazu. Sie erscheinen mit „Frage von Emma“. Eine eigene Frage entfernt, wer sie geschrieben hat, oder ein Elternteil.
+- Eine mitgelieferte Frage, die nicht zu euch passt, nehmen Eltern mit **Diese Frage nicht mehr stellen** heraus. Unter **Weggelassene Fragen** holt **Wieder stellen** sie zurück.
 
-Einstellungen: **Tischfrage** gilt für die **Warme Mahlzeit** (Standard), für **Mittag- und Abendessen** oder ist **Aus**. **Tischfrage mittags** und **Tischfrage abends** legen die Zeiten fest; geplant sein muss dafür kein Essen. Der Standard folgt dem Land eurer Region: 11:30 bis 13:30 und 17:30 bis 19:30, in Frankreich abends 19:00 bis 21:00, in Spanien 13:30 bis 15:30 und 20:00 bis 22:00. **Fragen für**: **Alle Alter** passt schon für Fünfjährige, **Auch ältere Kinder** ergänzt tiefere Fragen ab 8.
+Einstellungen: **Tischfrage** gilt für die **Warme Mahlzeit** (Standard), für **Mittag- und Abendessen** oder ist **Aus**. **Tischfrage mittags** und **Tischfrage abends** legen die Zeiten fest; geplant sein muss dafür kein Essen. Der Standard folgt dem Land eurer Region: 11:30 bis 13:30 und 17:30 bis 19:30, in Frankreich abends 19:00 bis 21:00, in Spanien 13:30 bis 15:30 und 20:00 bis 22:00. Die Fragen richten sich nach dem Alter der Kinder, aus ihren Geburtstagen. Liegen Kinder mindestens 5 Jahre auseinander, bekommt jedes eine eigene Frage: an der Wand nebeneinander, auf **Heute** als je eine Karte, und auf dem Gerät eines Kindes steht nur die Frage für sein Alter. Ohne Geburtstag passen die Fragen für 5 bis 7 Jahre. Den Geburtstag trägst du auf der Seite einer Person ein oder beim ersten Anlegen der Kinder; er ist freiwillig. Die **Altersgrenze** ist aus; schaltest du sie ein, blendet sie Fragen ab dem gewählten Alter aus.
 
 ::: info Sprachen
-Jedes Gerät zeigt die Fragen in seiner Sprache: rund 150 auf Deutsch und Englisch, vorerst 50 auf Französisch und Spanisch.
+Jedes Gerät zeigt die Fragen in seiner Sprache: rund 300 auf Deutsch und Englisch, rund 100 auf Französisch und Spanisch.
 :::
 
 ## Wochenrückblick {#week-review}

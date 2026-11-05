@@ -114,7 +114,7 @@ class BoardHeader extends ConsumerWidget {
                 Expanded(
                   // During the meal the table question takes the middle (specs/27).
                   child: tableMoment != null
-                      ? const Center(child: BoardTableQuestion())
+                      ? const BoardTableQuestions()
                       : Center(
                           // On a nearly opaque pill, so the member dots never sit on the sky.
                           child: Container(

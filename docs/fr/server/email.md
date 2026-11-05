@@ -5,7 +5,7 @@ Un serveur WuselWall fonctionne **avec ou sans e-mails**. Sans, chacun crée son
 | | Sans e-mails | Avec e-mails |
 |---|---|---|
 | **Créer un compte** | Adresse et mot de passe. L’app s’ouvre sur **Nouveau compte** | Un code par e-mail ; le mot de passe est facultatif |
-| **Mot de passe oublié** | Un responsable donne un code à usage unique ([plus bas](#forgotten-password)) | Un code par e-mail |
+| **Mot de passe oublié** | Un parent donne un code à usage unique ([plus bas](#forgotten-password)) | Un code par e-mail |
 | **Invitations** | Par lien, QR ou code d’invitation | Idem, et une invitation qui nomme votre adresse vous trouve seule |
 | **Qui voit quoi** | Personne d’autre | Le fournisseur voit adresses et codes |
 
@@ -70,8 +70,8 @@ Exemples, pas des recommandations ; WuselWall n’est lié à aucun de ces fourn
 
 ## Mot de passe oublié sans e-mails {#forgotten-password}
 
-1. Un **responsable**, sur son propre téléphone : **Paramètres → Famille → Membres**, **Réinitialiser le mot de passe** à côté du nom, puis **Créer le code**.
+1. Un **parent**, sur son propre téléphone : **Paramètres → Famille → Membres**, **Réinitialiser le mot de passe** à côté du nom, puis **Créer le code**.
 2. L’app affiche un **code de 8 caractères**, valable **une fois**, **10 minutes**. Remettez-le en personne.
 3. Sur l’appareil concerné : **Se connecter ou créer un compte** → **Se connecter** → **Mot de passe oublié ?**, puis l’adresse, le code et un nouveau mot de passe d’au moins 10 caractères.
 
-La double authentification reste demandée si elle est active. **Le seul responsable a oublié ?** L’administrateur du serveur crée le même code : `./wuselwall password adresse@example.org`, ou chez Supabase dans **SQL Editor** : `select app.password_reset_issue_for_email('adresse@example.org') ->> 'code';`
+La double authentification reste demandée si elle est active. **Le seul parent a oublié ?** L’administrateur du serveur crée le même code : `./wuselwall password adresse@example.org`, ou chez Supabase dans **SQL Editor** : `select app.password_reset_issue_for_email('adresse@example.org') ->> 'code';`

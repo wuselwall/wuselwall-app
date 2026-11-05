@@ -15,7 +15,7 @@ Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appa
 
 Ouvrez **Paramètres → Famille → Membres** et touchez **Inviter un adulte** :
 
-1. Saisissez son prénom et choisissez le rôle : **Responsable parental** pour administrer et approuver, **Membre** pour participer sans ces droits, par exemple un grand-parent.
+1. Saisissez son prénom et choisissez le rôle : **Parent** pour administrer et approuver, **Autre adulte** pour participer sans ces droits, par exemple un grand-parent ou une personne au pair.
 2. Ajoutez éventuellement son adresse e-mail. Si la personne vérifie cette adresse par un code reçu par e-mail, l’invitation se présente automatiquement après connexion. Sans e-mails du serveur, partagez le lien, le QR code ou le code.
 3. Touchez **Créer l’invitation**.
 
@@ -23,7 +23,7 @@ Ouvrez **Paramètres → Famille → Membres** et touchez **Inviter un adulte** 
 
 Partagez le code, le serveur, le lien ou le code QR dans un message. Le lien et le QR contiennent le serveur et ouvrent directement l’invitation dans l’app. Avec le code seul, la personne saisit aussi le serveur si nécessaire ([Rejoindre la famille](/fr/guide/setup#_3-joining-a-family)).
 
-Une invitation dure **7 jours** et sert **une seule fois**. Les invitations ouvertes affichent leur échéance directement dans la ligne de la personne invitée ; vous pouvez les repartager ou les retirer. Un membre sans compte peut être invité depuis sa ligne. Sans adresse e-mail sur l’invitation, le lien, le QR code et le code fonctionnent aussi ; l’invitation n’est pas retrouvée automatiquement par l’adresse.
+Une invitation dure **7 jours** et sert **une seule fois**. Les invitations ouvertes affichent leur échéance directement dans la ligne de la personne invitée ; vous pouvez les repartager ou les retirer. Un adulte sans compte peut être invité depuis sa ligne. Sans adresse e-mail sur l’invitation, le lien, le QR code et le code fonctionnent aussi ; l’invitation n’est pas retrouvée automatiquement par l’adresse.
 
 **Inviter ton ou ta partenaire**, sur la carte **Premiers pas**, demande d’abord **Qui veux-tu inviter ?** lorsque la famille compte déjà des adultes sans compte, par exemple la personne ajoutée à la création de la famille. Choisissez-la : l’invitation lui est destinée et elle n’est pas ajoutée une seconde fois. **Quelqu’un d’autre** ajoute une nouvelle personne.
 
@@ -39,11 +39,11 @@ Les enfants n’ont pas besoin de compte ni d’invitation : ajoutez leur préno
 
 Touchez une personne de la liste. Sur sa page, vous changez le **nom**, la **couleur** et l’**image** (un animal ou un symbole à la place de l’initiale, visible sur la tablette des enfants et dans les listes). **Enfant ou adulte** décide de la tablette des enfants, des tâches de départ et de l’emploi du temps ; les parents et les personnes avec un compte sont toujours des adultes. Un lien mène à la **semaine habituelle** de la personne.
 
-Sous **Anniversaire**, **Choisir une date** enregistre la date de naissance. L’anniversaire s’affiche sur le mur le jour même, avec un compte à rebours avant, et Wusel porte un chapeau de fête (voir [Rituels](/fr/guide/rituals#birthdays)). **Supprimer l’anniversaire** l’efface.
+Sous **Anniversaire**, **Choisir une date** enregistre la date de naissance. L’anniversaire s’affiche sur le mur le jour même, avec un compte à rebours avant, et Wusel porte un chapeau de fête (voir [Rituels](/fr/guide/rituals#birthdays)). **Supprimer l’anniversaire** l’efface. L’anniversaire est facultatif ; pour un enfant, il détermine aussi les questions à table (voir [Question à table](/fr/guide/rituals#table-question)). Vous pouvez le saisir ici ou en ajoutant les enfants pour la première fois.
 
 <Shot name="settings-member" alt="La page d’un membre avec nom, couleur, image et anniversaire" />
 
-En vue **Avancés**, la page montre aussi le **rôle** (parent ou membre ; un enfant ne peut pas être parent, et le dernier parent avec un compte le reste) et **Ne fait plus partie du foyer** : la personne disparaît du mur, des rangées d’avatars et des nouvelles tâches ; l’historique et les points restent, l’anniversaire est effacé, et vous pouvez la ramener ici. Un téléphone personnel de la personne (connecté comme « téléphone d’un enfant ») est bloqué en même temps et devra être reconnecté ; il en va de même quand vous faites de quelqu’un un parent, qui se connecte alors avec son compte. Un adulte avec un compte quitte la famille depuis son propre téléphone (voir [Compte et famille](/fr/settings/account)).
+En vue **Avancés**, la page montre aussi le **rôle** (parent ou autre adulte ; un enfant ne peut pas être parent, et le dernier parent avec un compte le reste) et **Ne fait plus partie du foyer** : la personne disparaît du mur, des rangées d’avatars et des nouvelles tâches ; l’historique et les points restent, l’anniversaire est effacé, et vous pouvez la ramener ici. Un téléphone personnel de la personne (connecté comme « téléphone d’un enfant ») est bloqué en même temps et devra être reconnecté ; il en va de même quand vous faites de quelqu’un un parent, qui se connecte alors avec son compte. Un adulte avec un compte quitte la famille depuis son propre téléphone (voir [Compte et famille](/fr/settings/account)).
 
 Chacun change lui-même son nom, sa couleur, son image et son anniversaire. Le reste revient aux parents, avec le PIN sur les appareils partagés.
 

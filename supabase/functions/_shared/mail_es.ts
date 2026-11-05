@@ -46,7 +46,7 @@ export const MAIL_ES: MailMessages = {
       subject: "Se ha restablecido tu inicio de sesión en dos pasos",
       heading: "Inicio de sesión en dos pasos restablecido",
       lead:
-        "Otra persona adulta responsable de tu familia acaba de quitar la aplicación de autenticación de tu cuenta de WuselWall. En el próximo inicio de sesión no se te pedirá ningún código de la aplicación.",
+        "Una madre o un padre de tu familia acaba de quitar la aplicación de autenticación de tu cuenta de WuselWall. En el próximo inicio de sesión no se te pedirá ningún código de la aplicación.",
       advice:
         "Si lo esperabas, vuelve a activar el inicio de sesión en dos pasos en Ajustes › Seguridad. Si no, cambia tu contraseña de inmediato y habla con tu familia.",
     },

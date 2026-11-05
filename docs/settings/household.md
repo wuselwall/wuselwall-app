@@ -14,9 +14,9 @@ Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er pass
 
 - **Persönlich** (sobald jemand ausgewählt ist; auf dem eigenen Handy immer): **Wusel** und **Was Wusel trägt**, der **Ton** beim Abhaken und auf dem eigenen Handy die **Benachrichtigungen**: **Erinnerungen** auf diesem Handy, Morgenübersicht, Erinnerung vor Terminen, Einpack-Erinnerung und wann unsichere Termine nachgefragt werden. Sie gelten nur für die ausgewählte Person (siehe [Wusel und Farben](/guide/wusel#how-lively))
 - **Familie**: das **Familienprofil** (Name, Zeitzone, Datenexport, Löschen), die **Region** (Land, Kanton oder Bundesland, Gemeinde), nach der Feiertage und Schulferien gelten, die **Mitglieder**, die **übliche Woche** und **Einkaufen in der Kinder-Ansicht** (ob Kinder den Reiter Einkaufen haben; in einer neuen Familie aus). Die Region wählst du beim Anlegen der ersten Schule; hier kannst du sie später ändern
-- **Aufgaben & Belohnungen**: Punkte für eine Pflicht und für eine Extra-Aufgabe, ob neue Aufgaben Pflicht oder Extra sind, ob Erziehungsberechtigte Aufgaben prüfen, wie viele **Serien-Joker** es pro Monat gibt und ob **Belohnungen Freigabe brauchen**
+- **Aufgaben & Belohnungen**: Punkte für eine Pflicht und für eine Extra-Aufgabe, ob neue Aufgaben Pflicht oder Extra sind, ob Eltern Aufgaben prüfen, wie viele **Serien-Joker** es pro Monat gibt und ob **Belohnungen Freigabe brauchen**
 - **Kalender & Schule**: ob Kinder ihre eigenen Termine ändern, welche neuen Termine auf der Küchenwand erscheinen, ob Kinder Plan-Änderungen melden und ob der Hinweis **Sachen für morgen** erscheint. In der Ansicht **Erweitert** kommt **Teilen und Verbindungen** dazu: Familienkalender teilen und Kalender von außen
-- **Essen**: welche Mahlzeit an **Schultagen** und an **freien Tagen** (Wochenende, Feiertage, Ferien) die warme ist: **Mittagessen**, **Abendessen**, **Beide** oder **Keine** (Standard: abends an Schultagen, mittags an freien Tagen). Bei **Beide** stehen Mittag- und Abendessen auf der Wand, im Essensplan und auf **Heute** beide als Hauptmahlzeiten, und die Tischfrage fragt zu beiden; bei **Keine** bleibt die Mahlzeitenzeile der Wand für den Tag leer, die Tischfrage geht zum Abendessen und ein Wunschessen landet auf dem Abendessen. Außerdem: dass **abwesend heißt nicht essen**, bis wann Betreuung mittags zählt und das Wunschessen
+- **Essen**: welche Mahlzeit an **Schultagen** und an **freien Tagen** (Wochenende, Feiertage, Ferien) die warme ist, mit zwei Schaltern, **Mittagessen** und **Abendessen** (Standard: abends an Schultagen, mittags an freien Tagen). Sind beide an, gibt es zwei warme Mahlzeiten: Mittag- und Abendessen stehen auf der Wand, im Essensplan und auf **Heute** beide als Hauptmahlzeiten, und die Tischfrage fragt zu beiden. Sind beide aus, gibt es keine warme Mahlzeit: Dann bleibt die Mahlzeitenzeile der Wand für den Tag leer, die Tischfrage geht zum Abendessen und ein Wunschessen landet auf dem Abendessen. Außerdem: dass **abwesend heißt nicht essen**, bis wann Betreuung mittags zählt und das Wunschessen
 - **Rituale**: Tischfrage, Wochenrückblick und Vorfreude, siehe [unten](#rituals)
 - **Feste & Jahreszeiten**: der Schmuck am Himmel, zuerst **Durchs Jahr** (Jahreszeiten, Ferien, Geburtstage), dann die **Feiertage** (Ostern, Orthodoxes Ostern, Nationalfeiertag, Nikolaus, Advent, Weihnachten, Silvester)
 - **Küchenwand** (Erweitert): ob die Wand den **Vollnamen** oder nur die **Initiale** zeigt, wann sie zur kommenden Woche wechselt und wo Vormittag, Nachmittag und Abend getrennt werden
@@ -27,7 +27,7 @@ Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er pass
 
 Ganz unten auf der Liste steht **Dieses Gerät abmelden**.
 
-Auf einem Tablet für alle oder an der Wandanzeige sehen Erziehungsberechtigte, die ihren Namen getippt haben, alles. Alle anderen finden nur ihre eigenen Einstellungen (Wusel, Was Wusel trägt, Ton), und ohne ausgewählte Person gibt es auf dem Tablet gar keine; siehe [Wer bist du?](/guide/who-are-you#settings-on-shared-devices).
+Auf einem Tablet für alle oder an der Wandanzeige sehen Eltern, die ihren Namen getippt haben, alles. Alle anderen finden nur ihre eigenen Einstellungen (Wusel, Was Wusel trägt, Ton), und ohne ausgewählte Person gibt es auf dem Tablet gar keine; siehe [Wer bist du?](/guide/who-are-you#settings-on-shared-devices).
 
 <Shot name="settings-tasks" alt="Die Gruppe Aufgaben & Belohnungen mit ihren Einstellungen" />
 
@@ -41,11 +41,11 @@ Die [Rituale](/guide/rituals) sind am Anfang alle eingeschaltet. Jedes lässt si
 |---|---|---|
 | **Tischfrage** | wann eine Gesprächsfrage erscheint: **Warme Mahlzeit**, **Mittag- und Abendessen** oder **Aus** | Warme Mahlzeit |
 | **Tischfrage mittags**, **Tischfrage abends** | die Zeiten, in denen die Frage steht | 11:30–13:30, 17:30–19:30; in Frankreich abends 19:00–21:00, in Spanien 13:30–15:30 und 20:00–22:00 |
-| **Fragen für** | **Alle Alter** oder **Auch ältere Kinder** (tiefere Fragen ab 8) | Alle Alter |
+| **Altersgrenze** | blendet Fragen ab einem gewählten Alter aus; sonst richten sich die Fragen nach den Geburtstagen der Kinder | aus |
 | **Unsere Woche** | Wochentag und Uhrzeit des Wochenrückblicks, oder aus | Sonntag 16:00 |
 | **Wunschessen** | wer sich ein Essen wünschen darf: **Kinder**, **Alle** oder **Aus** | Kinder |
 | **Offene Wünsche pro Person** | wie viele Wünsche gleichzeitig warten dürfen (1–3) | 1 |
-| **Vorfreude beginnt** | wie viele Tage vorher ein Countdown erscheint (7–60) | 14 Tage |
+| **Vorfreude beginnt** | wie viele Tage vorher ein Countdown erscheint (7–60) | 7 Tage |
 | **Countdown bis jemand zurückkommt** | „In 2× schlafen zurück“, wenn ein Erwachsener zwei Nächte oder länger verreist | an |
 
 Unter den Ritualen führt **Unsere Fragen** zu den eigenen Fragen der Familie für die [Tischfrage](/guide/rituals#table-question), zu jeder Tageszeit.
@@ -65,6 +65,3 @@ Diese Einstellungen stehen unter **Geräte → Dieses Gerät** und gelten nur f�
 | **Himmel in der Kopfzeile** | der Himmel, der sich mit der Tageszeit ändert | an |
 | **Bildschirm vor Einbrennen schützen** | verschiebt alles alle 10 Minuten um bis zu 2 Pixel, für OLED-Bildschirme | Automatisch: an der Wand an, sonst aus |
 
-::: tip Erst ausprobieren
-Die Standards sind ein guter Anfang. Nach zwei Wochen Nutzung lohnt sich ein Blick, ob etwas stört.
-:::

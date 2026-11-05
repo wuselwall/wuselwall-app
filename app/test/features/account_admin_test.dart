@@ -115,7 +115,7 @@ void main() {
         await t.pumpAndSettle();
         expect(
           find.text(
-            'Du bist die letzte Elternperson mit Konto in dieser Familie. Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.',
+            'Du bist der letzte Elternteil mit Konto in dieser Familie. Lade zuerst einen weiteren Elternteil ein oder lösche die Familie.',
           ),
           findsOneWidget,
         );
@@ -319,15 +319,12 @@ void main() {
       // The reset control is a sibling of the member link, so screen readers
       // encounter two independent actions rather than a button inside a button.
       final row = find.byKey(const ValueKey('member-$mamaId'));
-      final role = find.descendant(
-        of: row,
-        matching: find.text('Erziehungsberechtigter'),
-      );
+      final role = find.descendant(of: row, matching: find.text('Elternteil'));
       expect(role, findsOneWidget);
-      // The role takes the column's width and wraps at most to two lines, not
-      // one or two letters per line as it did beside the buttons.
+      // The role keeps its width and wraps at most to two lines, not one or two
+      // letters per line as it did beside the buttons.
       expect(t.getSize(role).height, lessThan(50));
-      expect(t.getSize(role).width, greaterThan(200));
+      expect(t.getSize(role).width, greaterThan(100));
       expect(resetButton, findsOneWidget);
       expect(t.takeException(), isNull);
       await unmountApp(t, s.container);

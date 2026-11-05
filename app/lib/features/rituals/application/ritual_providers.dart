@@ -28,7 +28,7 @@ final ritualTodayProvider = Provider<DateTime>(
 /// How far ahead Vorfreude looks (`rituals.countdown_days`, specs/27).
 final countdownHorizonProvider = Provider.autoDispose<int>((ref) {
   final v = ref.watch(lighterDayProvider).value('rituals.countdown_days');
-  return v is num ? v.toInt() : 14;
+  return v is num ? v.toInt() : 7;
 });
 
 /// The longest window the `occurrences` function answers, both ends included
@@ -161,20 +161,37 @@ final bundledDeckProvider = FutureProvider.family<List<TableQuestion>, String>((
   }
 });
 
-/// The household's questions for a device in [lang]: the bundled deck (the household's
-/// choice of ages, minus what it hid) and its own questions. Their order comes from
-/// [householdQuestion], per household and walk, so nothing here depends on the clock.
-final householdDeckProvider = Provider.autoDispose
-    .family<List<TableQuestion>, String>((ref, lang) {
-      final day = ref.watch(lighterDayProvider);
-      return householdDeck(
+/// Who the household's questions are for, from the children's birthdays (specs/27); null
+/// until the members have loaded, so no question for the wrong age shows first.
+final tableAgeGroupsProvider = Provider.autoDispose<List<TableAges>?>((ref) {
+  final members = ref.watch(membersProvider).value;
+  if (members == null) return null;
+  final today = ref.watch(ritualTodayProvider);
+  final children = members.where((m) => m.active && m.isChild);
+  return tableAgeGroups([
+    for (final c in children)
+      if (c.birthday != null) ageOn(c.birthday!, today),
+  ], hasChildren: children.isNotEmpty);
+});
+
+/// The household's questions for a device in [lang]: the bundled deck (for the children's
+/// ages, below the age limit, minus what it hid) and its own questions, per age group.
+/// Their order comes from [householdQuestion], per household and walk, so nothing here
+/// depends on the clock.
+final tableTracksProvider = Provider.autoDispose
+    .family<List<TableTrack>, String>((ref, lang) {
+      final limit = ref
+          .watch(lighterDayProvider)
+          .value('rituals.table_question_age_limit');
+      return tableTracks(
+        groups: ref.watch(tableAgeGroupsProvider) ?? const [],
         bundled:
             ref.watch(bundledDeckProvider(lang)).value ??
             const <TableQuestion>[],
         family:
             ref.watch(familyQuestionsProvider).value ??
             const <FamilyQuestion>[],
-        older: day.value('rituals.table_question_deck') == 'older',
+        ageLimit: limit is num ? limit.toInt() : null,
       );
     });
 
@@ -194,7 +211,6 @@ final tableMomentProvider = Provider.autoDispose.family<TableMoment?, String>((
       (n) => DateTime(n.year, n.month, n.day, n.hour, n.minute),
     ),
   );
-  final deck = ref.watch(householdDeckProvider(lang));
   return tableMomentAt(
     now: now,
     mode: mode,
@@ -202,29 +218,25 @@ final tableMomentProvider = Provider.autoDispose.family<TableMoment?, String>((
     dinner: day.value('rituals.table_question.dinner'),
     warmIsDinner: (d) => ref.watch(warmSlotProvider(d)) == PlanSlot.dinner,
     bothWarm: (d) => ref.watch(warmSlotsProvider(d)).length == 2,
-    deck: deck,
+    tracks: ref.watch(tableTracksProvider(lang)),
     householdId: ref.watch(deviceProvider).value?.householdId ?? '',
-    cycleLength: tableCycleLength(
-      bundled:
-          ref.watch(bundledDeckProvider(lang)).value ?? const <TableQuestion>[],
-      older: day.value('rituals.table_question_deck') == 'older',
-      deckSize: deck.length,
-    ),
   );
 });
 
-/// How many times this device pressed "Andere Frage" in a meal window. Local on
-/// purpose: a shared "next" would be a write per tap (specs/27).
-class TableSkipNotifier extends Notifier<Map<int, int>> {
+/// How many times this device pressed "Andere Frage" in a meal window, per age group's
+/// question. Local on purpose: a shared "next" would be a write per tap (specs/27).
+class TableSkipNotifier extends Notifier<Map<(int, int), int>> {
   @override
-  Map<int, int> build() => const {};
+  Map<(int, int), int> build() => const {};
 
-  void next(int window) => state = {...state, window: (state[window] ?? 0) + 1};
+  void next(int window, int track) =>
+      state = {...state, (window, track): (state[(window, track)] ?? 0) + 1};
 }
 
-final tableSkipProvider = NotifierProvider<TableSkipNotifier, Map<int, int>>(
-  TableSkipNotifier.new,
-);
+final tableSkipProvider =
+    NotifierProvider<TableSkipNotifier, Map<(int, int), int>>(
+      TableSkipNotifier.new,
+    );
 
 /// The meal windows whose table question this device put away on Today (specs/27: "a
 /// dismissible card"). Local and in memory: the next meal brings the card back.

@@ -16,7 +16,7 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 - **Familia**: el **perfil de la familia** (nombre, zona horaria, exportación, eliminar), la **región** de festivos y vacaciones, los **miembros**, la **semana habitual** y **Compra en la vista infantil** (desactivada en una familia nueva). Se elige al añadir el primer colegio y se cambia aquí.
 - **Tareas y recompensas**: puntos de obligaciones y bonus, tipo inicial, revisión, comodines mensuales y aprobación de recompensas.
 - **Calendario y colegio**: cambios de niños, eventos nuevos en la pared, avisos de cambios escolares y material. La vista **Avanzados** añade **Compartir y conexiones**: compartir el calendario familiar y calendarios externos.
-- **Comidas**: qué comida es la caliente en días lectivos y en días libres: **Almuerzo**, **Cena**, **Ambas** o **Ninguno** (predeterminado: cena en días lectivos, almuerzo en días libres). Con **Ambas**, el almuerzo y la cena aparecen juntos como comidas principales del día en la pared, en el plan de comidas y en **Hoy**, y la pregunta en la mesa se hace en las dos; con **Ninguno**, la fila de comidas de la pared queda vacía ese día, la pregunta en la mesa va con la cena y una comida deseada se planifica en la cena. Además: ausencia como no comer, cuidado extraescolar para el almuerzo y comida deseada.
+- **Comidas**: qué comida es la caliente en días lectivos y en días libres, con dos botones: **Almuerzo** y **Cena** (predeterminado: cena en días lectivos, almuerzo en días libres). Con uno activado, esa es la comida caliente. Con los dos activados hay dos comidas calientes: el almuerzo y la cena aparecen juntos como comidas principales del día en la pared, en el plan de comidas y en **Hoy**, y la pregunta en la mesa se hace en las dos. Con los dos desactivados no hay comida caliente: la fila de comidas de la pared queda vacía ese día, la pregunta en la mesa va con la cena y una comida deseada se planifica en la cena. Además: ausencia como no comer, cuidado extraescolar para el almuerzo y comida deseada.
 - **Rituales**: pregunta en la mesa, nuestra semana y cuentas atrás, ver [más abajo](#rituals).
 - **Celebraciones y estaciones**: las decoraciones del cielo, primero **A lo largo del año** (estaciones, vacaciones, cumpleaños) y luego las **Fiestas** (Pascua, Pascua ortodoxa, Fiesta nacional, San Nicolás, Adviento, Navidad, Nochevieja).
 - **Pantalla de la cocina** (Avanzados): nombres completos o iniciales en la pared, paso a la semana siguiente y límites entre mañana/tarde/noche.
@@ -27,7 +27,7 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 
 **Cerrar sesión en este dispositivo** está al final de la lista.
 
-En una tableta para todos o en la pantalla de pared, los responsables que han tocado su nombre lo ven todo. Los demás solo encuentran sus propios ajustes (Wusel, la ropa de Wusel, sonido), y sin nadie elegido la tableta no tiene ninguno; ver [¿Quién eres?](/es/guide/who-are-you#settings-on-shared-devices).
+En una tableta para todos o en la pantalla de pared, los padres que han tocado su nombre lo ven todo. Los demás solo encuentran sus propios ajustes (Wusel, la ropa de Wusel, sonido), y sin nadie elegido la tableta no tiene ninguno; ver [¿Quién eres?](/es/guide/who-are-you#settings-on-shared-devices).
 
 <Shot name="settings-tasks" alt="El grupo Tareas y recompensas con sus ajustes" />
 
@@ -41,11 +41,11 @@ Los [rituales](/es/guide/rituals) empiezan todos activados. Cada uno se cambia o
 |---|---|---|
 | **Pregunta en la mesa** | cuándo aparece una pregunta para conversar: **Comida caliente**, **Comida y cena** o **Desactivado** | Comida caliente |
 | **Pregunta en la comida**, **Pregunta en la cena** | las horas de la pregunta | 11:30–13:30, 17:30–19:30; en Francia, cena 19:00–21:00; en España, 13:30–15:30 y 20:00–22:00 |
-| **Preguntas para** | **Todas las edades** o **También niños mayores** (preguntas más profundas a partir de 8) | Todas las edades |
+| **Límite de edad** | oculta las preguntas a partir de la edad elegida (las preguntas siguen la edad de los niños, ver [Pregunta en la mesa](/es/guide/rituals#table-question)) | Desactivado |
 | **Nuestra semana** | día y hora del repaso de la semana, o desactivado | domingo 16:00 |
 | **Comida deseada** | quién puede pedir una comida: **Niños**, **Todos** o **Desactivado** | Niños |
 | **Deseos abiertos por persona** | cuántos deseos pueden esperar a la vez (1–3) | 1 |
-| **La cuenta atrás empieza** | cuántos días antes aparece una cuenta atrás (7–60) | 14 días |
+| **La cuenta atrás empieza** | cuántos días antes aparece una cuenta atrás (7–60) | 7 días |
 | **Cuenta atrás hasta una vuelta** | «Vuelve en 2 noches» cuando un adulto viaja dos noches o más | activado |
 
 Debajo de los rituales, **Nuestras preguntas** lleva a las preguntas propias de la familia para la [pregunta en la mesa](/es/guide/rituals#table-question), a cualquier hora.

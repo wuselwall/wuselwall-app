@@ -18,13 +18,13 @@ Willst du nicht mehr zu einer Familie gehören, tippe auf **Familie verlassen** 
 - Die Einträge, die du gemacht hast, bleiben bei der Familie.
 - Danach kannst du eine neue Familie anlegen oder einer anderen beitreten.
 
-Das geht nicht, wenn du die **letzte Elternperson mit Konto** bist. Lade dann zuerst eine zweite erwachsene Person ein (siehe [Mitglieder und Geräte](/settings/members-devices)) oder lösche die Familie.
+Das geht nicht, wenn du das **letzte Elternteil mit Konto** bist. Lade dann zuerst einen weiteren Elternteil ein (siehe [Mitglieder und Geräte](/settings/members-devices)) oder lösche die Familie.
 
 ## Familie löschen
 
-Eine Familie löscht nur eine Elternperson, und zwar auf dem eigenen Handy, unter **Einstellungen → Familie** (Ansicht **Erweitert**). Tippe auf **Familie löschen**, tippe den **Namen der Familie** und dann auf **Weiter**. Im zweiten Schritt tippst du **LÖSCHEN** (in Großbuchstaben) und dann auf **Familie löschen**.
+Eine Familie löscht nur ein Elternteil, und zwar auf dem eigenen Handy, unter **Einstellungen → Familie** (Ansicht **Erweitert**). Tippe auf **Familie löschen**, tippe den **Namen der Familie** und dann auf **Weiter**. Im zweiten Schritt tippst du **LÖSCHEN** (in Großbuchstaben) und dann auf **Familie löschen**.
 
-- Die Familie wird mit **allen Daten sofort und endgültig gelöscht**. Es gibt keine Wartezeit und kein Wiederherstellen, auch nicht für Elternpersonen.
+- Die Familie wird mit **allen Daten sofort und endgültig gelöscht**. Es gibt keine Wartezeit und kein Wiederherstellen, auch nicht für Eltern.
 - Alle Geräte melden sich sofort ab. Die Konten der Erwachsenen bleiben bestehen: Wer sich wieder anmeldet, kann eine neue Familie gründen oder einer anderen beitreten.
 
 ## Konto löschen
@@ -33,7 +33,7 @@ Willst du dein WuselWall-Konto selbst löschen, tippe auf **Konto löschen**. Di
 
 - Dein **Profil** bleibt mit allem, was du getan hast, in der Familie. Nur der Zugang geht weg.
 - Zum Löschen fragt WuselWall, ob du es wirklich bist. Ist deine Anmeldung schon etwas älter (mehr als 5 Minuten), schickt WuselWall einen **Code per E-Mail**, bevor es weitergeht; auf einem Server ohne E-Mail fragt es nach deinem **Passwort**.
-- Die letzte Elternperson mit Konto kann ihr Konto nicht löschen (siehe oben).
+- Das letzte Elternteil mit Konto kann sein Konto nicht löschen (siehe oben).
 
 ## Gut zu wissen
 

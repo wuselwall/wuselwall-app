@@ -1,6 +1,6 @@
 # Members and devices
 
-This belongs to the **guardians**. On your phone, open the cog at the top right (**Settings**).
+This belongs to the **parents**. On your phone, open the cog at the top right (**Settings**).
 When you came from another view, swipe inward from the left edge on iPhone or iPad to return; the back arrow at the top left works too.
 
 <Shot name="settings-phone" alt="Settings with members and devices" />
@@ -15,7 +15,7 @@ Whatever is hidden **still applies**. The view only changes what you see, and Wu
 
 Invite a person who should take part in the family with their own account. Open **Settings → Family → Members** and tap **Invite an adult**:
 
-1. Enter the **name** and choose the **role**: **Guardian** sees everything and approves rewards. **Member** does tasks but does not approve rewards (for example an au pair or grandparents).
+1. Enter the **name** and choose the **role**: **Parent** sees everything and approves rewards. **Other adult** does tasks but does not approve rewards (for example an au pair or grandparents).
 2. Optionally an **email address**. If the person verifies exactly this address with an email code, they find the invitation automatically. Without email from the server, share the link, QR code or code instead.
 3. Tap **Create invitation**.
 
@@ -25,7 +25,7 @@ WuselWall then shows the **code**, your family's **server**, a **QR code** and t
 
 An invitation is valid for **7 days** and works **once**. Open invitations appear directly in the invited member’s row with their expiry date: **Share again** sends it once more, **Withdraw** cancels it.
 
-Once the person has joined, **every guardian** gets a notice on the **Today** tab ("Sarah joined"). **Got it** hides it, **Members** leads to the list. Notices disappear on their own after 14 days.
+Once the person has joined, **every parent** gets a notice on the **Today** tab ("Sarah joined"). **Got it** hides it, **Members** leads to the list. Notices disappear on their own after 14 days.
 
 Without an email address on the invitation, the link, QR code and invitation code still work. The invitation is not found automatically by address.
 
@@ -43,23 +43,23 @@ With **Add member** below the list on the **Members** page you add a person by *
 
 ## Edit a member {#edit-a-member}
 
-Tap a person in the list. On their page you change the **name**, the **colour** and the **picture**: an animal or a symbol instead of the initial, shown on the kids' tablet and in the lists. **Child or adult** decides whether the person gets the kids' tablet, starter chores and the timetable; guardians and people with an account are always adults. A link to the person's **usual week** is there too.
+Tap a person in the list. On their page you change the **name**, the **colour** and the **picture**: an animal or a symbol instead of the initial, shown on the children's tablet and in the lists. **Child or adult** decides whether the person gets the children's tablet, starter chores and the timetable; parents and people with an account are always adults. A link to the person's **usual week** is there too.
 
 Under **Birthday**, **Choose a date** sets the birthday. It is shown on the wall on the day, counted down to before it, and Wusel wears the party hat (see [Rituals](/en/guide/rituals#birthdays)). **Remove the birthday** deletes it again.
 
 <Shot name="settings-member" alt="A member's page with name, colour, picture and birthday" />
 
-In the **Advanced** view the page also shows the **role** (guardian or member; a child cannot be a guardian, and the last guardian with an account stays one) and **No longer with us**: the person disappears from the wall, the avatar rows and new chores; history and points stay, the birthday is deleted, and you can bring them back here at any time. A phone of the person's own (connected as "A child's phone") is blocked at the same time and has to be connected again afterwards; the same happens when you make someone a guardian, who then signs in with their account. An adult with an account is not removed this way; they leave the family from their own phone (see [Account and family](/en/settings/account)).
+In the **Advanced** view the page also shows the **role** (parent or other adult; a child cannot be a parent, and the last parent with an account stays one) and **No longer with us**: the person disappears from the wall, the avatar rows and new chores; history and points stay, the birthday is deleted, and you can bring them back here at any time. A phone of the person's own (connected as "A child's phone") is blocked at the same time and has to be connected again afterwards; the same happens when you make someone a parent, who then signs in with their account. An adult with an account is not removed this way; they leave the family from their own phone (see [Account and family](/en/settings/account)).
 
-Everyone can change their own name, colour, picture and birthday. Everything else is for guardians, with the PIN on shared devices.
+Everyone can change their own name, colour, picture and birthday. Everything else is for parents, with the PIN on shared devices.
 
 ### Changing the order
 
-The order of the members in the list is the order on the wall and in every list. Guardians drag a person by the **handle** on the right to another place.
+The order of the members in the list is the order on the wall and in every list. Parents drag a person by the **handle** on the right to another place.
 
 ## Reset two-factor
 
-If another guardian has lost their second factor, tap **Reset two-factor** next to their name. Then they can sign in without the second factor and set it up again (see [Security](/en/settings/security#two-factor-sign-in)). If your server sends email, the person gets an email about it. WuselWall first asks you for a fresh sign-in (a code by email or your password, and your own second factor if you have one). Whoever reset the second factor cannot also create a password code for the same person in the same week, and the other way round; another guardian can. The person concerned and the other guardians also see it on Today.
+If another parent has lost their second factor, tap **Reset two-factor** next to their name. Then they can sign in without the second factor and set it up again (see [Security](/en/settings/security#two-factor-sign-in)). If your server sends email, the person gets an email about it. WuselWall first asks you for a fresh sign-in (a code by email or your password, and your own second factor if you have one). Whoever reset the second factor cannot also create a password code for the same person in the same week, and the other way round; another parent can. The person concerned and the other parents also see it on Today.
 
 ## Reset password {#reset-password}
 
@@ -67,9 +67,9 @@ Only on a server without email ([Email](/en/server/email#forgotten-password)): i
 
 ## Connect a device
 
-To connect a kids' tablet, a shared tablet or the wall display: under **Settings → Devices → All devices**, tap **Connect a device**, scan the QR code or type in the code the new device shows, and choose the kind and a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+To connect a children's tablet, a shared tablet or the wall display: under **Settings → Devices → All devices**, tap **Connect a device**, scan the QR code or type in the code the new device shows, and choose the kind and a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
-<Shot name="pair-approve" alt="A guardian's phone: check the device and connect it" />
+<Shot name="pair-approve" alt="A parent's phone: check the device and connect it" />
 
 You do not need to type the code: the new device shows a QR code that you scan with your phone's camera. It also contains the server; WuselWall opens right at the confirmation. If the link belongs to a different server than the one you are signed in on, the app does not follow it by itself but tells you so.
 
@@ -77,7 +77,7 @@ Older devices with an older version of WuselWall still get a code from **Create 
 
 ## Rename a device
 
-Tap a device in the list to give it another **name**, for example "Kitchen tablet" instead of "iPad". Under each device you see when it was **last active** ("last active 3 days ago"), so you know which device it is before blocking it. Anyone can rename their own device; other devices are renamed by guardians.
+Tap a device in the list to give it another **name**, for example "Kitchen tablet" instead of "iPad". Under each device you see when it was **last active** ("last active 3 days ago"), so you know which device it is before blocking it. Anyone can rename their own device; other devices are renamed by parents.
 
 ## Block a device
 
@@ -91,17 +91,17 @@ On your own phone you can also sign yourself out with **Sign out this device**.
 
 Under **Settings → Server** (**Advanced** view), this shows which server the app talks to, with its **QR code**. A new device scans it at the question **Which server?** and is then connected to the same server.
 
-You only need **Change server** when your family moves to another server. The device signs out and forgets everything stored on it, including shopping it could not send yet. On shared devices WuselWall asks for a guardian's PIN first.
+You only need **Change server** when your family moves to another server. The device signs out and forgets everything stored on it, including shopping it could not send yet. On shared devices WuselWall asks for a parent's PIN first.
 
 ## Family {#family}
 
-Under **Settings → Family → Family profile** you change the **family's name** chosen when it was started. In the **Advanced** view the page also has the **time zone** (the wall and reminders follow it; tap it and search, for example, "Zurich") and the **language on the wall**, in which public holidays are named on the wall display. All of this is for guardians.
+Under **Settings → Family → Family profile** you change the **family's name** chosen when it was started. In the **Advanced** view the page also has the **time zone** (the wall and reminders follow it; tap it and search, for example, "Zurich") and the **language on the wall**, in which public holidays are named on the wall display. All of this is for parents.
 
 <Shot name="settings-family" alt="The Family page with name, time zone, language on the wall and data export" />
 
 ## Export data
 
-Guardians can save all data of your family as one zip file, for example for a move to another server. It is under **Settings → Family → Family profile** (**Advanced** view), with **Export data**, and only from a guardian's own phone.
+Parents can save all data of your family as one zip file, for example for a move to another server. It is under **Settings → Family → Family profile** (**Advanced** view), with **Export data**, and only from a parent's own phone.
 
 The file contains what you entered: members, appointments, timetables, tasks, recipes, shopping lists and so on. Passwords, PINs and sign-in data are **not** included, and devices appear only with their name and date.
 

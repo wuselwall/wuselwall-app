@@ -384,6 +384,34 @@ void main() {
       expect(find.text('Wer gehört noch zu euch?'), findsNothing);
     });
 
+    test('a birthday travels as a plain date, and only when it is known', () {
+      expect(
+        NewMember(
+          displayName: 'Emma',
+          isChild: true,
+          birthday: DateTime(2018, 3, 4),
+        ).toJson()['birthday'],
+        '2018-03-04',
+      );
+      expect(
+        const NewMember(
+          displayName: 'Julia',
+          isChild: false,
+        ).toJson().containsKey('birthday'),
+        isFalse,
+      );
+    });
+
+    testWidgets('a child\'s birthday is offered, an adult\'s is not', (
+      t,
+    ) async {
+      await onH2(t);
+      expect(find.text('Geburtstag (freiwillig)'), findsOneWidget);
+      await t.tap(find.text('Erwachsen').at(0));
+      await t.pump();
+      expect(find.text('Geburtstag (freiwillig)'), findsNothing);
+    });
+
     testWidgets('without children the examples are not completed again', (
       t,
     ) async {

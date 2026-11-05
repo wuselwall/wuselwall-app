@@ -55,7 +55,7 @@ The access token can do anything in your Supabase account. If you want to be car
 
 ## Email {#mail}
 
-Email is optional. **Without the `SMTP_` secrets**, everyone signs up and signs in with email address and password; a guardian resets a forgotten password in the app. Supabase's built-in mailer plays no part: it delivers only to the addresses of your own Supabase account.
+Email is optional. **Without the `SMTP_` secrets**, everyone signs up and signs in with email address and password; a parent resets a forgotten password in the app. Supabase's built-in mailer plays no part: it delivers only to the addresses of your own Supabase account.
 
 **With the five `SMTP_` secrets**, sign-in codes come by email. A Gmail account with an app password is enough; how to set it up, and which providers work, is under [Email](/en/server/email). Instead of SMTP, Scaleway works too: `SCW_SECRET_KEY`, `SCW_PROJECT_ID` and `MAIL_FROM` (optionally `SCW_REGION`, `MAIL_FROM_NAME`).
 

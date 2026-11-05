@@ -1,5 +1,5 @@
 begin;
-select plan(58);
+select plan(61);
 
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
@@ -257,6 +257,14 @@ select is((select importance from api.events where title = 'Pizza'), 'key', 'a t
 
 
 select ok(api.server_info() -> 'features' ? 'lighter-day', 'the server announces a lighter day');
+
+-- Simpler settings (migration 20261104120000).
+select is((select default_value from app.setting_definition where key = 'rituals.countdown_days'),
+  '7'::jsonb, 'Vorfreude starts seven days ahead by default');
+select is((select default_value from app.setting_definition where key = 'rituals.table_question_age_limit'),
+  'null'::jsonb, 'the age limit is off by default');
+select is((select constraints from app.setting_definition where key = 'rituals.table_question_age_limit'),
+  '{"min":6,"max":16,"nullable":true}'::jsonb, 'the age limit runs from 6 to 16 or off');
 
 select * from finish();
 rollback;
