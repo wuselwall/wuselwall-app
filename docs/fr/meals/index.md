@@ -34,6 +34,14 @@ WuselWall utilise les présences et les horaires de garde. Une personne absente 
 
 L’aperçu indique les ingrédients nécessaires, leur repas et ceux déjà sur la liste. Ajoutez-les à la [liste de courses](/fr/shopping/add). Une simple note n’a pas d’ingrédients ; une recette en a. Les articles indiquent leur provenance dans le menu et le repas concerné.
 
+### Exemple : des pâtes mercredi
+
+1. Prévoyez une **recette** pour mercredi avec ses ingrédients enregistrés. Une simple note « Pâtes » n’a pas d’ingrédients à ajouter.
+2. Ouvrez **Compléter la liste de courses**. Vérifiez les ingrédients et ceux déjà sur la liste ; décochez ce que vous avez à la maison.
+3. Confirmez avec **Ajouter … articles** ; le bouton indique le nombre choisi. Les ingrédients sélectionnés apparaissent alors sur la liste de courses.
+
+<Shot name="meals-shopping-preview" alt="L’aperçu des ingrédients avec les quantités et les articles déjà sur la liste" />
+
 ## Recettes {#recipes}
 
 Enregistrez les ingrédients avec quantités, unités et notes, les étapes (une par ligne), des étiquettes comme « rapide » et le lien de la source. Choisissez une recette lors de la planification pour en reprendre les ingrédients.

@@ -68,7 +68,7 @@ Ein Gmail-Konto ist der schnellste Weg zu den Codes: keine Domain, keine DNS-Ein
    ```
 
    Bei der Frage nach dem Passwort fügst du die 16 Buchstaben ein (die Leerzeichen sind egal). Bei Supabase kommen sie in `SMTP_PASS`.
-5. **Probier es aus.** In der App fragt **Mit E-Mail fortfahren** jetzt nach einem Code per Mail.
+5. **Probier es aus.** In der App fragt **Anmelden oder Konto erstellen** jetzt nach einem Code per Mail.
 
 Gut zu wissen:
 
@@ -94,7 +94,7 @@ Port `587` ist üblich, `465` geht auch. Die Namen sind Beispiele, keine Empfehl
 
 1. Ein **Erziehungsberechtigter** öffnet auf dem eigenen Handy **Einstellungen → Familie → Mitglieder**, tippt neben dem Namen der Person auf **Passwort zurücksetzen** und bestätigt mit **Code erstellen**.
 2. Die App zeigt einen **Code aus 8 Zeichen**. Er gilt **einmal**, **10 Minuten** lang. Gib ihn persönlich weiter, nicht per Nachricht.
-3. Auf dem Gerät der Person, die es vergessen hat: **Mit E-Mail fortfahren** → **Anmelden** → **Passwort vergessen?** Dann die E-Mail-Adresse, den Code und ein neues Passwort mit mindestens 10 Zeichen.
+3. Auf dem Gerät der Person, die es vergessen hat: **Anmelden oder Konto erstellen** → **Anmelden** → **Passwort vergessen?** Dann die E-Mail-Adresse, den Code und ein neues Passwort mit mindestens 10 Zeichen.
 
 Ist für das Konto die Zwei-Faktor-Anmeldung an, fragt sie weiterhin nach dem Code aus der Authenticator-App: Der Rücksetz-Code ersetzt nur das Passwort.
 

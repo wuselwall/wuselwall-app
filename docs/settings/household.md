@@ -4,7 +4,9 @@ Nicht jede Familie macht es gleich: Wie viele Punkte eine Aufgabe bringt, ob Kin
 
 <Shot name="settings-phone" alt="Einstellungen: die Liste der Gruppen von Persönlich bis Hilfe & Info" />
 
-In der Ansicht **Einfach** siehst du nur die wichtigsten Einstellungen: die Region, den Reiter Einkaufen für Kinder, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht, die Erinnerung vor Terminen, die Jahreszeiten und die Feiertage, die eure Region feiert (in der Schweiz zum Beispiel Ostern, Nationalfeiertag, Samichlaus, Advent und Weihnachten), dazu jeden Feiertag, den ihr selbst umgestellt habt. Feiertage, die in eurer Region von Haus aus aus sind (etwa Orthodoxes Ostern in der Schweiz oder Silvester), sowie Ferien und Geburtstage und alle anderen Einstellungen zeigt **Erweitert** (oben rechts umschalten; eine Zeile unten auf der Seite sagt, wenn etwas ausgeblendet ist). Eine Gruppe, in der die Ansicht nichts zeigt, steht gar nicht in der Liste. Ausgeblendete Einstellungen gelten trotzdem weiter.
+Zuerst siehst du die wichtigsten Einstellungen. Tippe oben rechts auf **Erweitert**, um zusätzliche Möglichkeiten einzublenden, zum Beispiel die Details der Kalenderfreigabe und die Einstellungen der Küchenwand. Tippe erneut darauf, um zur einfachen Ansicht zurückzukehren.
+
+Die Ansicht ändert nur, was du siehst: Verborgene Einstellungen gelten weiter. Ein Hinweis unten auf der Seite sagt, wenn etwas ausgeblendet ist. Die Gruppen unten erklären, wo du welche Einstellung findest.
 
 Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er passt für die meisten Familien. Weicht euer Wert davon ab, steht dort **angepasst**. Mit **Auf Standard zurücksetzen** geht es jederzeit zurück.
 

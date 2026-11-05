@@ -21,7 +21,7 @@ The adults' view has these areas:
 
 <Shot name="today" alt="The Today tab with the Getting started card, the appointments and the warm meal" />
 
-As long as something from the setup is missing, the **Getting started** card is at the top: invite your partner, connect the family tablet, set up the wall display, set your PIN, subscribe to the calendar and add the timetable. Each item disappears once it is done. If you do not need one, tap **Not needed**. On narrow screens or with larger text, buttons appear below the message. Guardians see the card on their own phone and on shared devices; under **Settings → Getting started** it comes back.
+As long as something from the setup is missing, the **Getting started** card is at the top: invite your partner, connect the family tablet, set up the wall display, set your PIN, subscribe to the calendar and add the timetable. Each item disappears once it is done. If you do not need one, tap **Not needed**. On narrow screens or with larger text, buttons appear below the message. Guardians see the card on their own phone and on shared devices; under **Settings → Help & about → Getting started** it comes back.
 
 ## The household
 
@@ -38,7 +38,7 @@ Everything belongs to one **household**: your family. A household has **members*
 
 | Device | Who uses it? | How is it signed in? |
 |---|---|---|
-| **Personal** — your own phone | one person | You sign in with email and password. The device knows who you are. |
+| **Personal** — your own phone | one person | You sign in with your account: email code or password, depending on the server. The device knows who you are. |
 | **Shared** — the kids' tablet, for example | several people | The device belongs to the household. Whoever uses it taps their name. |
 | **Wall display** — the screen in the kitchen | everyone | Like "shared", but with big type and no keyboard. |
 

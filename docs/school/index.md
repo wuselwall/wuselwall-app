@@ -87,9 +87,28 @@ Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kin
 
 Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Es gibt zwei Wege. Alle enden auf derselben [Vorschau](#die-vorschau), und erst **Übernehmen** schreibt etwas. Auf dem Handy stehen beide Wege direkt im Menü mit den drei Punkten über dem Stundenplan.
 
-**Aus strukturiertem Text.** Tippe auf **Einlesen…** und **Aus Text einfügen**. Füge einen Stundenplan als JSON im WuselWall-Format ein und tippe auf **Einlesen**. Vor dem Speichern siehst du die Vorschau. Gewöhnlicher Fließtext wird nicht automatisch in einen Stundenplan umgewandelt.
+### Aus strukturiertem Text
 
-**Als Foto oder PDF, gelesen von eurem Server.** Hat euer Server die Texterkennung eingerichtet ([Extras für den Server](/server/extras#texterkennung)), tippst du auf **Einlesen…** und **Foto scannen**. Dann wählst du **Foto aufnehmen**, **Foto auswählen** oder **Datei wählen (PDF oder Bild)**, zum Beispiel für die PDF-Datei, die die Schule verschickt hat.
+Tippe auf **Einlesen…** und **Aus Text einfügen**. Füge einen Stundenplan als JSON im WuselWall-Format ein und tippe auf **Einlesen**. Vor dem Speichern siehst du die Vorschau. Gewöhnlicher Fließtext wird nicht automatisch in einen Stundenplan umgewandelt.
+
+#### Beispiel zum Einfügen
+
+Dieses kleine Beispiel enthält nur Montag und Dienstag. Die Zahlen `1` bis `5` stehen für Montag bis Freitag; jeder Eintrag in der Reihe ist eine Unterrichtsstunde. `null` lässt eine Stunde frei. Ersetze die Kürzel durch eure Fächer und ergänze die weiteren Tage. Wähle in der Vorschau das richtige Kind und prüfe den Zeitraum, bevor du **Übernehmen** tippst.
+
+```json
+{
+  "format": "wuselwall-timetable/1",
+  "week_cycle": "weekly",
+  "grid": {
+    "1": ["D", "Ma", "Sp"],
+    "2": ["Ma", null, "D"]
+  }
+}
+```
+
+### Foto oder PDF vom Server lesen lassen
+
+Hat euer Server die Texterkennung eingerichtet ([Extras für den Server](/server/extras#texterkennung)), tippst du auf **Einlesen…** und **Foto scannen**. Dann wählst du **Foto aufnehmen**, **Foto auswählen** oder **Datei wählen (PDF oder Bild)**, zum Beispiel für die PDF-Datei, die die Schule verschickt hat.
 
 <Shot name="timetable-scan" alt="Foto scannen: der Hinweis, dass die Datei zu Hause bleibt, und die drei Wege Foto aufnehmen, Foto auswählen und Datei wählen" />
 

@@ -2,6 +2,17 @@
 
 Au premier démarrage, choisissez le serveur ([Installer l’app](/fr/guide/install)). L’écran d’accueil propose ensuite de vous connecter, de rejoindre une famille sur invitation ou de connecter un appareil partagé.
 
+## Quel parcours choisir ?
+
+| Vous souhaitez… | Commencez ici |
+|---|---|
+| Créer la première famille sur un nouveau serveur | Utilisez d’abord la [clé de configuration](#setup-key), puis connectez-vous et créez la famille |
+| Accepter une invitation | [Rejoignez la famille](#_3-joining-a-family), sans en créer une autre |
+| Utiliser votre compte sur un autre téléphone personnel | [Connectez-vous](#_1-signing-in) avec le même compte |
+| Connecter une tablette partagée ou le mur de la cuisine | [Connectez un appareil partagé](#_4-connecting-a-family-tablet-or-wall-display) ; un responsable l’approuve sur son téléphone |
+
+La clé de configuration, le code de connexion par e-mail et le code d’invitation ont des rôles différents. Utilisez celui demandé par la page affichée.
+
 Hors ligne, l’écran d’accueil explique qu’une connexion Internet est nécessaire pour
 se connecter, accepter une invitation ou connecter un appareil partagé. Ces options
 réapparaissent dès que vous êtes de nouveau en ligne.
@@ -15,7 +26,8 @@ En bas, **Politique de confidentialité** ouvre la page dans le navigateur. Le l
 Un serveur fraîchement installé n’a pas de famille. La personne qui l’a installé détient la
 **clé de configuration** : l’installation l’affiche, et le lien ou le QR code de configuration
 la contient. L’écran d’accueil d’un tel serveur le dit et propose **J’ai la clé de
-configuration** ; le lien de configuration ouvre directement **Configurer ton serveur**.
+configuration** ; le lien de configuration ouvre directement **Configurer ton serveur**. Le
+bouton en dessous indique alors seulement **Se connecter**, pour les comptes qui existent déjà.
 
 Vous y saisissez votre adresse e-mail à côté de la clé. WuselWall vérifie la clé auprès du
 serveur et annonce votre adresse avec elle : tant que la famille n’existe pas, le serveur ne
@@ -25,17 +37,23 @@ sans e-mails — puis **Nouvelle famille**, qui ne demande plus de clé. Personn
 une deuxième fois ; la personne qui gère le serveur en crée une nouvelle avec
 `./wuselwall setup-token` tant qu’aucune famille n’existe.
 
+<Shot name="setup-claim" alt="Configurer le serveur avec la clé de configuration et l’adresse e-mail" />
+
 ## 1. Se connecter {#_1-signing-in}
 
-Sur votre téléphone personnel, touchez **Continuer par e-mail** et saisissez une adresse valide. L’app vérifie le champ avant tout envoi. Vous recevez un **code à six chiffres**, valable **10 minutes**. Gardez le champ ouvert et saisissez-y le code reçu. Consultez les indésirables si le message n’arrive pas ; un nouvel envoi est possible au plus tôt après une minute.
+### Avec les e-mails du serveur
+
+Sur votre téléphone personnel, touchez **Se connecter ou créer un compte**, saisissez une adresse valide et touchez **Envoyer le code**. **Aucun compte n’est nécessaire au préalable :** les étapes sont les mêmes dans les deux cas. Si l’adresse est nouvelle, le code crée votre compte ; si elle a déjà un compte, le code vous connecte. L’app vérifie le champ avant tout envoi. Vous recevez un **code à six chiffres**, valable **10 minutes**. Gardez le champ ouvert et saisissez-y le code reçu. Consultez les indésirables si le message n’arrive pas ; un nouvel envoi est possible au plus tôt après une minute.
 
 Ce code vérifie votre adresse. Il est différent de la **clé de configuration du serveur** et ne demande ni lien de connexion ni deuxième connexion.
 
 <Shot name="setup-sign-in" alt="La connexion par e-mail" />
 
-Pour utiliser un mot de passe, choisissez l’option correspondante et saisissez votre adresse e-mail et votre mot de passe, puis touchez **Se connecter**. L’app vérifie les deux champs avant la connexion. Vous pouvez définir votre mot de passe dans **Paramètres → Compte et sécurité → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
+Pour utiliser un mot de passe, touchez **Se connecter avec un mot de passe**. C’est pour un compte qui en a déjà un ; s’il n’en a pas encore ou si vous l’avez oublié, utilisez le code. Saisissez votre adresse e-mail et votre mot de passe, puis touchez **Se connecter**. L’app vérifie les deux champs avant la connexion. Vous pouvez définir votre mot de passe dans **Paramètres → Compte et sécurité → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible tant que le serveur envoie des e-mails. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
 
-**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Continuer par e-mail** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)).
+### Sans e-mails du serveur
+
+**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Se connecter ou créer un compte** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)). Tant qu’un tel serveur n’a pas de famille, il propose seulement **Se connecter** ; **Nouveau compte** apparaît une fois la [clé de configuration](#setup-key) saisie.
 
 ## 2. Créer une famille {#_2-creating-a-new-family}
 
@@ -64,7 +82,7 @@ Avec un code seul :
 2. Collez le code ou le lien complet, puis vérifiez l’invitation.
 3. L’app affiche votre nom et la famille. Ajustez votre prénom et votre couleur si nécessaire, puis rejoignez le foyer.
 
-Si l’invitation mentionne votre adresse e-mail, elle s’affiche automatiquement après la connexion avec cette adresse. Une invitation dure **7 jours** et sert **une seule fois**. Voir [Inviter un adulte](/fr/settings/members-devices#invite-an-adult).
+Si l’invitation mentionne votre adresse et que vous l’avez vérifiée par un code reçu par e-mail, elle s’affiche automatiquement après la connexion. Sans e-mails du serveur, utilisez le lien, le QR code ou le code d’invitation. Une invitation dure **7 jours** et sert **une seule fois**. Voir [Inviter un adulte](/fr/settings/members-devices#invite-an-adult).
 
 Un compte n’appartient qu’à **une seule** famille. Si vous ouvrez une invitation alors que vous faites déjà partie d’une famille, WuselWall affiche **Tu fais déjà partie de ‹famille›** et qui vous invite où. **Quitter la famille** vous guide, avec une confirmation ; l’invitation se poursuit ensuite directement. **Annuler** ne change rien. Si l’invitation concerne la famille dont vous faites déjà partie, WuselWall le dit simplement.
 

@@ -624,7 +624,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cette personne ne fait plus partie du foyer. La modification n’a pas été enregistrée.';
 
   @override
-  String get doorEmail => 'Continuer par e-mail';
+  String get doorEmail => 'Se connecter ou créer un compte';
 
   @override
   String get doorOr => 'ou';
@@ -3895,7 +3895,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String get emailContinue => 'Continuer';
 
   @override
-  String get emailHavePassword => 'J’ai un mot de passe';
+  String get emailSendCode => 'Envoyer le code';
+
+  @override
+  String get signInAccountTitle => 'Ton compte';
+
+  @override
+  String get signInCodeLead =>
+      'Nous enverrons un code à 6 chiffres à ton adresse e-mail. Première fois ? Le code crée ton compte. Tu as déjà un compte ? Le code te connecte.';
+
+  @override
+  String get signInCodeLeadUnclaimed =>
+      'Nous enverrons un code à 6 chiffres à ton adresse e-mail pour te connecter. Un nouveau compte nécessite d’abord la clé de configuration.';
+
+  @override
+  String get signInPasswordLead =>
+      'Pour les comptes qui ont déjà un mot de passe. Pas encore de mot de passe, ou oublié ? Utilise plutôt un code par e-mail.';
+
+  @override
+  String get passwordSignInLeadUnclaimed =>
+      'Pour les comptes qui existent déjà. Un nouveau compte nécessite d’abord la clé de configuration.';
+
+  @override
+  String get signInMethodReady => 'Ton compte est prêt.';
+
+  @override
+  String get emailHavePassword => 'Se connecter avec un mot de passe';
 
   @override
   String get emailWrongCredentials =>
@@ -3928,7 +3953,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String emailCodeSent(String email) {
-    return 'Nous avons envoyé un code à 6 chiffres à $email. Il est valable 10 minutes.';
+    return 'Nous avons envoyé un code à 6 chiffres à $email. Saisis-le ici dans les 10 minutes.';
   }
 
   @override
@@ -6578,7 +6603,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String passwordResetCodeHint(String name, String time) {
-    return 'Sur l’appareil de $name : Continuer par e-mail → Mot de passe oublié ? Puis l’adresse e-mail, ce code et un nouveau mot de passe. Valable jusqu’à $time.';
+    return 'Sur l’appareil de $name : Se connecter ou créer un compte → Se connecter → Mot de passe oublié ? Puis l’adresse e-mail, ce code et un nouveau mot de passe. Valable jusqu’à $time.';
   }
 
   @override

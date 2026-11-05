@@ -3,7 +3,7 @@
 -- every other sign-up while no household exists, and the claim stands in for the key on
 -- "Neue Familie".
 begin;
-select plan(37);
+select plan(40);
 
 -- Start from an empty, unclaimed server, whatever the database holds (all rolled back).
 delete from app.founder_attempt;
@@ -32,8 +32,13 @@ select is(pg_temp.hook('stranger@example.org') -> 'error' ->> 'message', 'setup_
 select is((pg_temp.hook('stranger@example.org') -> 'error' ->> 'http_code')::int, 403, 'the refusal is a 403');
 select is(pg_temp.hook('') -> 'error' ->> 'message', 'setup_key_required', 'an empty address is refused too');
 
+select is(api.server_info() ->> 'household_creation', 'token', 'in code mode, discovery says a key is needed');
 update app.instance_setting set value = '"open"' where key = 'household_creation';
 select is(pg_temp.hook('stranger@example.org'), '{}'::jsonb, 'in open mode the hook lets every sign-up through');
+select is(api.server_info() ->> 'household_creation', 'open', 'in open mode, discovery says so');
+set local role anon;
+select is(api.server_info() ->> 'household_creation', 'open', 'an app reads the mode before anyone signs in');
+reset role;
 update app.instance_setting set value = '"code"' where key = 'household_creation';
 
 -- ---- the claim, as the app makes it before anyone is signed in ------------------

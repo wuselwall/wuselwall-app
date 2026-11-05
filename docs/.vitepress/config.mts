@@ -63,6 +63,7 @@ const sidebar = (p: string, t: Record<string, string>) => [
 const base = process.env.DOCS_BASE ?? '/'
 
 export default defineConfig({
+  srcExclude: ['tools/**'],
   title: 'WuselWall',
   base,
   cleanUrls: true,

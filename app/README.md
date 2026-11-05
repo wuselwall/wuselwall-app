@@ -1,53 +1,94 @@
 # WuselWall app
 
-Flutter client (iOS, Android, web). Started from Supabase's `flutter-user-management`
-example; see [ADR-010](../specs/adr/ADR-010-flutter-and-self-hosted-supabase.md).
-Application/bundle ID and auth deep-link scheme: `ch.goomba.wuselwall`.
+Flutter client for iOS, iPadOS, Android and the web. Read the repository's
+[contribution rules](../AGENTS.md) and [architecture](../specs/03-architecture.md)
+before changing code. The application/bundle ID is `ch.goomba.wuselwall`.
 
-## Run
+## Explore without a server
+
+Run these commands from `app/`, with the Flutter SDK installed:
 
 ```bash
 flutter pub get
+flutter run -d chrome -t lib/main_demo.dart
+```
+
+The demo uses in-memory sample data. It needs no backend or account, and changes
+disappear when it restarts. Choose a view with a URL query, for example
+`?scenario=kiosk&still=1` for the wall display with animations held still.
+
+| `scenario` | Starting view |
+|---|---|
+| `adult` (default) | Adult's Today page |
+| `kid` | Children's profile chooser |
+| `kiosk` | Kitchen week board |
+| `setup` | Sign-in and device connection |
+| `newfamily` | New family form |
+| `noschool` | Adult view before the first school is set up |
+| `server` | Server selection |
+
+For a native demo, choose the view at launch:
+
+```bash
+flutter run -t lib/main_demo.dart --dart-define=DEMO_SCENARIO=kid
+```
+
+## Connect to a development backend
+
+Copy `env/dev.example.json` to the git-ignored `env/dev.json` and enter the URL and
+publishable key of a development server. Then run:
+
+```bash
 flutter run --dart-define-from-file=env/dev.json -d web-server --web-hostname localhost --web-port 3000
 ```
 
-`env/dev.json` is git-ignored: copy `env/dev.example.json` and point it at your server
-([ADR-013](../specs/adr/ADR-013-self-hosted-compose-stack.md)) — if that server holds a
-family's data, develop with care. Without `SUPABASE_URL` (as in `env/store.json`) the app
-asks for its server at the start ([ADR-018](../specs/adr/ADR-018-self-hosted-only.md)). `env/ci.json` points at a throwaway stack on `http://127.0.0.1:54321`
-(`npm run db:start` with Docker on the laptop); the integration tests use only that.
+Without a configured URL, as in `env/store.json`, the app asks for its server at
+first start. No household's backend is built into the store app.
 
-## Layout
-
-```
-lib/
-  main.dart                bootstrap: config check, Supabase init, ProviderScope
-  app/                     app widget, router, theme (tokens, per-register ThemeData)
-  core/                    config · error (Failure, Result, mapper) · supabase (ApiClient,
-                           secure session storage) · connectivity · realtime · l10n · ui
-  features/<module>/       data/ (repository) · domain/ (models) · application/ (providers) · ui/
-    identity/              device + acting profile, PIN pad, tap-to-switch bar, guardian gate
-    setup/                 splash, setup landing, household wizard, sign-in, enrol by code
-    settings/              members, devices (enrolment code, revoke)
-    shopping/              the shared list, live via Realtime
-    system/                debug-only diagnostics (reference feature)
-  l10n/generated/          gen-l10n output (committed)
-l10n/app_en.arb, app_de.arb   every user-facing string, always both
-env/                       dev.json, ci.json (public values only)
-test/                      unit + widget tests; integration/ needs a running backend
-```
+For a throwaway local stack, run `npm ci` and `npm run db:start` from the repository
+root, with Docker running. From `app/`, use `env/ci.json`, which points to
+`http://127.0.0.1:54321`. The local development seed provides the setup key
+`dev-setup`: enter it under **I have the setup key**, then sign in and create the family.
+That key is for the seeded local database only.
 
 ## Checks
+
+From `app/`:
 
 ```bash
 flutter analyze
 flutter test
-flutter test test/integration --dart-define-from-file=env/dev.json   # needs backend
 ```
 
-First run on an empty database: open the app, "Set up a new household", setup token
-`dev-setup`. Daily use: sign in, add members, create an enrolment code in Settings → Devices
-and enter it on a second device.
+Backend integration tests create households and revoke devices. Run them **only
+against a throwaway stack**, after starting it as described above:
 
 ```bash
+flutter test test/integration --dart-define-from-file=env/ci.json
 ```
+
+Never point these tests at a server holding family data. See the
+[testing strategy](../specs/18-testing-strategy.md) for backend and device checks.
+
+## Layout
+
+```text
+lib/
+  app/                     bootstrap, router and per-register themes
+  core/                    configuration, API client, errors, connectivity, l10n, shared UI
+  features/<module>/       data/, domain/, application/ providers, ui/
+  demo/                    in-memory repositories and sample data
+  l10n/generated/          generated localisation output (committed)
+l10n/app_{en,de,fr,es}.arb  user-facing strings in all four languages
+env/                       build configuration; dev.json is git-ignored
+test/                      unit, widget, golden and journey tests
+test/integration/          backend integration tests; throwaway stack only
+```
+
+Widgets call repositories through providers. Repositories use the `api` schema or
+Edge Functions and return typed results. Domain rules live on the server.
+
+## Screenshots and guide
+
+The [screenshot workflow](../docs/tools/README.md) captures this demo for the family
+guide. Update the corresponding guide pages in DE/EN/FR/ES when a screen or label changes.

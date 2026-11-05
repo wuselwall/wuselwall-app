@@ -19,7 +19,7 @@ WuselWall organise la vie de famille : **calendrier**, **emploi du temps**, **t�
 
 <Shot name="today" alt="L’onglet Aujourd’hui, les premiers pas, les rendez-vous et le repas chaud" />
 
-La carte **Premiers pas** reste en haut tant que la configuration est incomplète : inviter un adulte, connecter la tablette, préparer l’écran mural, définir le PIN, s’abonner au calendrier et saisir l’emploi du temps. Chaque étape disparaît une fois terminée. Vous pouvez choisir de ne pas en avoir besoin. Sur un écran étroit ou avec des caractères plus grands, les boutons passent sous le texte. Les parents voient la carte sur leur téléphone et les appareils partagés. **Paramètres → Premiers pas** la réaffiche.
+La carte **Premiers pas** reste en haut tant que la configuration est incomplète : inviter un adulte, connecter la tablette, préparer l’écran mural, définir le PIN, s’abonner au calendrier et saisir l’emploi du temps. Chaque étape disparaît une fois terminée. Vous pouvez choisir de ne pas en avoir besoin. Sur un écran étroit ou avec des caractères plus grands, les boutons passent sous le texte. Les parents voient la carte sur leur téléphone et les appareils partagés. **Paramètres → Aide et infos → Premiers pas** la réaffiche.
 
 ## Le foyer {#the-household}
 

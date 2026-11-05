@@ -1,6 +1,6 @@
 # Cuenta y familia
 
-Estas acciones afectan a tu cuenta o a todo el hogar. Están al final de los ajustes de **tu móvil personal**. Eliminar la cuenta siempre aparece; el resto está en **Avanzados**. Lee las consecuencias antes de confirmar.
+Estas acciones afectan a **tu cuenta** o a **toda la familia**. La contraseña, salir de la familia y eliminar la cuenta están en **Ajustes → Cuenta y seguridad**, en **tu móvil personal**. Eliminar la familia está en el **Perfil de la familia**, en la vista **Avanzados**. Antes de confirmar, comprueba qué datos se conservan y cuáles se eliminan definitivamente.
 
 En pantallas estrechas o con texto grande, los botones de acción aparecen debajo de la descripción; desplázate hacia abajo si hace falta.
 

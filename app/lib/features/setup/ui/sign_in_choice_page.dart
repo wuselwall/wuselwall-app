@@ -71,6 +71,8 @@ class _SignInChoicePageState extends ConsumerState<SignInChoicePage> {
       title: l10n.signInMethodsTitle,
       showBack: false,
       children: [
+        Text(l10n.signInMethodReady),
+        const SizedBox(height: Tokens.space2),
         Text(l10n.signInMethodTitle, style: theme.textTheme.headlineSmall),
         const SizedBox(height: Tokens.space2),
         RadioGroup<_Choice>(
