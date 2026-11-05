@@ -21,7 +21,7 @@ second adult decides it in the first sixty seconds. Everything below is ordered 
 2. **Ask only what cannot be inferred or deferred.**
    *Inferred:* timezone and language (from the device), their colour (the next free one in
    the palette), the device's name ("Thomas’ iPhone"). *Deferred:* the guardian PIN (until the first shared device exists), avatars,
-   birthdays, presence baselines, a second factor, a passkey, push permission.
+   presence baselines, a second factor, a passkey, push permission.
 3. **Nobody types on a shared device.** Not a password, not a code, not a name. The wall
    display and the children's iPads are set up from a parent's phone.
 4. **Every path ends inside the household**, never on an empty screen: a new household
@@ -319,7 +319,9 @@ At the bottom: "Ich wurde eingeladen" for anyone who arrived here by mistake.
   Each person gets the next free palette colour, shown as the dot, changeable later on
   the member page ([16, step 10.1](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)),
   as are the name, the kind and the order. Avatars and baselines come later, where they
-  are used; birthdays are [Q50](14-open-questions.md).
+  are used. A child's row also offers an optional birthday ([Q50](14-open-questions.md),
+  *since 2026-11-04*): it takes one tap to skip, and without it the questions at the table can't
+  fit the child's age ([27](27-family-rituals.md#tischfrage)).
 - **Examples are on by default**, because a task board with nothing on it teaches
   nothing. They are ordinary rows the family edits or deletes. The default shopping list
   "Supermarkt" and its categories are always created: they are structure, not examples.

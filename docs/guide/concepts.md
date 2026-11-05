@@ -21,18 +21,18 @@ Die Erwachsenen-Ansicht hat diese Bereiche:
 
 <Shot name="today" alt="Der Tab Heute mit der Karte Erste Schritte, den Terminen und dem warmen Essen" />
 
-Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Auf schmalen Bildschirmen oder bei größerer Schrift stehen die Schaltflächen unter dem Text. Die Karte sehen Erziehungsberechtigte auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Erste Schritte** kommt sie zurück.
+Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Auf schmalen Bildschirmen oder bei größerer Schrift stehen die Schaltflächen unter dem Text. Die Karte sehen Eltern auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Erste Schritte** kommt sie zurück.
 
 ## Der Haushalt
 
 Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitglieder** (jede Person hat einen Namen und eine eigene Farbe) und **Geräte** (Handys, Tablets, der Bildschirm in der Küche).
 
-## Zwei Arten von Mitgliedern
+## Wer was darf
 
 | | Darf |
 |---|---|
-| **Erziehungsberechtigte** | alles: Mitglieder hinzufügen, Geräte verbinden und sperren, Sicherheit einstellen |
-| **Mitglieder** (zum Beispiel die Kinder) | die Einkaufsliste benutzen: Artikel hinzufügen, abhaken, Einkauf beenden |
+| **Eltern** | alles: Personen hinzufügen, Geräte verbinden und sperren, Sicherheit einstellen |
+| **Weitere Erwachsene** (zum Beispiel Au-pair oder Großeltern) und **Kinder** | die Einkaufsliste benutzen: Artikel hinzufügen, abhaken, Einkauf beenden |
 
 ## Drei Arten von Geräten
 
@@ -44,7 +44,7 @@ Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitgliede
 
 ## Drei Ansichten
 
-Jedes Gerät zeigt WuselWall in der passenden **Ansicht**: für Erwachsene kompakt, für Kinder größer und einfacher, für die Wand besonders groß. Welche Ansicht ein Gerät hat, legen die Erziehungsberechtigten beim Verbinden fest.
+Jedes Gerät zeigt WuselWall in der passenden **Ansicht**: für Erwachsene kompakt, für Kinder größer und einfacher, für die Wand besonders groß. Welche Ansicht ein Gerät hat, legen die Eltern beim Verbinden fest.
 
 ::: tip Sprache und Design
 WuselWall spricht Deutsch, Englisch, Französisch und Spanisch und folgt zunächst der Sprache deines Geräts; andere Sprachen zeigen die deutsche Version. Unter **Einstellungen → Sprache** legst du die Sprache für dieses Gerät fest. Deutsch schreibt WuselWall so wie im Land eurer Familie (nach der **Region** unter Einstellungen): in der Schweiz und in Liechtenstein etwa „Ämtli“, „Zmittag“ und „ss“ statt „ß“, in Österreich etwa „Jause“ und „Jänner“. Wer es anders haben will, wählt für sein Gerät **Deutsch (Deutschland)**, **Deutsch (Schweiz)** oder **Deutsch (Österreich)**. Hell oder dunkel folgt es zunächst auch dem Gerät; unter **Einstellungen → Darstellung** stellst du es für dieses Gerät fest auf **Hell** oder **Dunkel** (oder zurück auf **Automatisch**). Auf der Wand wird es ab 21 Uhr automatisch dunkel, egal was eingestellt ist.

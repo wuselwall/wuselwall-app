@@ -198,7 +198,7 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
       SettingKey('rituals.table_question'),
       SettingKey('rituals.table_question.lunch'),
       SettingKey('rituals.table_question.dinner'),
-      SettingKey('rituals.table_question_deck'),
+      SettingKey('rituals.table_question_age_limit'),
       SettingTileItem(SettingsTile.familyQuestions),
     ]),
     SettingsSection(SettingsSectionId.weekReview, [
@@ -273,10 +273,12 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
   ],
 };
 
-/// In the catalogue but read by nothing yet, so not offered: the idle return is fixed at
-/// 60 s, and the two notifications wait for #143. They come back here once something
-/// applies them.
+/// In the catalogue but read by nothing, so not offered: the idle return is fixed at
+/// 60 s, and the two notifications wait for #143; they come back here once something
+/// applies them. The question deck's choice stays for the previous app release, the
+/// children's ages replaced it (specs/27).
 const unusedSettingKeys = {
+  'rituals.table_question_deck',
   'device.idle_revert_seconds',
   'notify.task_verified',
   'notify.redemption_request',

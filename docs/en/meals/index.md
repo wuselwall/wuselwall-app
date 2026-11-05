@@ -19,7 +19,7 @@ Children wish for a meal on **My day** on their tablet (see [Meal wishes](/en/gu
 
 - Tap a wish, pick a day and a meal, and it is planned. Each meal shows what is already planned there. If a meal is planned, the app asks before the wish replaces it; the cook, the time and the servings stay. A recipe wish fills the shopping list like any recipe.
 - A planned wish carries a star and "Jack's wish" in the plan and on the wall.
-- The **×** removes a wish (**Remove the wish**). Guardians can do that, and so can whoever made the wish.
+- The **×** removes a wish (**Remove the wish**). Parents can do that, and so can whoever made the wish.
 
 A wish is never turned down; whatever isn't planned simply waits. Who may wish and how many wishes may be open is set under [Settings → Meals](/en/settings/household).
 
@@ -63,4 +63,4 @@ When you plan a meal, WuselWall suggests matching recipes (see [Suggestions](#su
 
 A tap on the meal area shows the week's meals. A star marks a meal wish. Tap a dot afterwards to change who is eating.
 
-The wall shows the day's warm meal, or both lunch and dinner with **Both**, or none with **None**. Which it is, and how school days and free days count, is set under [Settings → Meals](/en/settings/household).
+The wall shows the day's warm meal. With both **Lunch** and **Dinner** switched on it shows both, with both off none. Which it is, and how school days and free days count, is set under [Settings → Meals](/en/settings/household).

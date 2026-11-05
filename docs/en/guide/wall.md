@@ -1,16 +1,16 @@
-# Wall display and kids
+# Wall display and children
 
-## Kids' tablet
+## Children's tablet {#childrens-tablet}
 
-A kids' device shows everything **larger and simpler**. Children tap their name and see their own day.
+A children's device shows everything **larger and simpler**. Children tap their name and see their own day.
 
 On **My day**, [Wusel](/en/guide/wusel) greets the child. Below are their chores, **Looking forward to**, today's school in one card (a tap opens the timetable), the meal, the card **Your meal wish** and, on a day that has them, the appointments; during the meal the [question at the table](/en/guide/rituals#table-question), and on Sunday evening **Our week** (see [Rituals](/en/guide/rituals)).
 
-The **Shopping** tab is off in a new family; families that were already using WuselWall keep it. A guardian switches it with **Shopping in the children's view** under [Settings → Family](/en/settings/household#the-areas). With it, children add and tick items like everyone else — even before they can spell, because the tiles need no keyboard. On the wall display they can add items either way.
+The **Shopping** tab is off in a new family; families that were already using WuselWall keep it. A parent switches it with **Shopping in the children's view** under [Settings → Family](/en/settings/household#the-areas). With it, children add and tick items like everyone else — even before they can spell, because the tiles need no keyboard. On the wall display they can add items either way.
 
-<Shot name="kid-shopping" alt="Kids' view of the shopping list" wide />
+<Shot name="kid-shopping" alt="Children's view of the shopping list" wide />
 
-Children cannot manage devices or members, nor create or edit shopping lists; that stays with guardians.
+Children cannot manage devices or members, nor create or edit shopping lists; that stays with parents.
 
 ## Wall display in the kitchen
 
@@ -30,7 +30,7 @@ The seven days stand side by side, Monday to Sunday. Today's column is wider and
 - **Appointments**: morning, afternoon and evening. Only appointments marked for the kitchen display are shown. A dot shows who is involved. Dashed and with a "?" means not certain yet. If there is no room left, it says "+2 more". A [family tradition](/en/guide/rituals#traditions) is always shown, with a lemon-yellow ribbon and its picture.
   With **All events** (at the right of the band above the appointments) every column shows all its appointments, not only the marked ones. The tick goes off again by itself when nobody touches the wall.
   Next to it, **Next week** shows the coming week’s columns; a swipe to the left does the same, and a swipe to the right or a second tap goes back. The clock, the next-up line and the footer stay with today. After a minute without a touch the wall shows this week again.
-- **Hot meal** (named at the left of its row): the warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks. A star means someone wished for it ([meal wishes](/en/guide/rituals#meal-wishes)). If your family eats warm at lunch and dinner (**Both** under [Settings → Meals](/en/settings/household)), lunch sits above dinner; with **None** the day stays empty.
+- **Hot meal** (named at the left of its row): the warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks. A star means someone wished for it ([meal wishes](/en/guide/rituals#meal-wishes)). If your family eats warm at lunch and dinner (both **Lunch** and **Dinner** switched on under [Settings → Meals](/en/settings/household)), lunch sits above dinner; with both off the day stays empty.
 - **Footer**: each person's open tasks for today; a tap on **Open today** opens the family's chore board. Also the number of items on the shopping list. In between are the next [countdowns](/en/guide/rituals#countdowns), such as "Olivia turns 10 · 3 more sleeps", as many as fit, and on Sunday evening the tile **Our week**.
 
 On the chore board Wusel cheers at the top of a person's column as soon as they have done everything for today.
@@ -69,7 +69,7 @@ The wall can do no more than that: it adds items to the shopping list and correc
 - So that nothing burns in, the display moves by up to 2 pixels every 10 minutes (see [Wusel and colours](/en/guide/wusel#burn-in)).
 - If the connection drops, the last plan stays visible with the note "No connection", and Wusel is thinking; the top right says when it was last updated. While everything works, the wall shows nothing about it.
 
-::: tip Kids' tablet
+::: tip Children's tablet
 The children's view has the tabs **My day**, **Timetable**, **Points** and **Family**, and **Shopping** when it is switched on.
 :::
 

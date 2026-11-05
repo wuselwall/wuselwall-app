@@ -179,7 +179,7 @@ abstract class AppLocalizations {
   /// No description provided for @registerKid.
   ///
   /// In en, this message translates to:
-  /// **'Kid'**
+  /// **'Child'**
   String get registerKid;
 
   /// No description provided for @registerKiosk.
@@ -425,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @errGuardianRequired.
   ///
   /// In en, this message translates to:
-  /// **'Only a guardian can do that.'**
+  /// **'Only a parent can do that.'**
   String get errGuardianRequired;
 
   /// No description provided for @errDeviceRevoked.
@@ -539,7 +539,7 @@ abstract class AppLocalizations {
   /// No description provided for @pinTitle.
   ///
   /// In en, this message translates to:
-  /// **'Guardian PIN'**
+  /// **'Parent PIN'**
   String get pinTitle;
 
   /// No description provided for @pinPrompt.
@@ -563,7 +563,7 @@ abstract class AppLocalizations {
   /// No description provided for @pinLocked.
   ///
   /// In en, this message translates to:
-  /// **'PIN locked. A guardian must sign in to unlock it.'**
+  /// **'PIN locked. A parent must sign in to unlock it.'**
   String get pinLocked;
 
   /// No description provided for @settingsTitle.
@@ -605,13 +605,13 @@ abstract class AppLocalizations {
   /// No description provided for @roleGuardian.
   ///
   /// In en, this message translates to:
-  /// **'Guardian'**
+  /// **'Parent'**
   String get roleGuardian;
 
   /// No description provided for @roleMember.
   ///
   /// In en, this message translates to:
-  /// **'Member'**
+  /// **'Other adult'**
   String get roleMember;
 
   /// No description provided for @addDevice.
@@ -1085,7 +1085,7 @@ abstract class AppLocalizations {
   /// No description provided for @shoppingCat_baby.
   ///
   /// In en, this message translates to:
-  /// **'Baby & kids'**
+  /// **'Baby & children'**
   String get shoppingCat_baby;
 
   /// No description provided for @shoppingCat_cleaning.
@@ -1145,7 +1145,7 @@ abstract class AppLocalizations {
   /// No description provided for @pinChangeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Guardian PIN'**
+  /// **'Parent PIN'**
   String get pinChangeTitle;
 
   /// No description provided for @pinChangeBody.
@@ -1631,7 +1631,7 @@ abstract class AppLocalizations {
   /// No description provided for @boardTasksComingSoon.
   ///
   /// In en, this message translates to:
-  /// **'Tasks arrive with the next update.'**
+  /// **'Tasks are not shown here.'**
   String get boardTasksComingSoon;
 
   /// No description provided for @presenceWorking.
@@ -1838,12 +1838,6 @@ abstract class AppLocalizations {
   /// **'Lunch'**
   String get settingValueLunch;
 
-  /// No description provided for @settingValueBoth.
-  ///
-  /// In en, this message translates to:
-  /// **'Both'**
-  String get settingValueBoth;
-
   /// No description provided for @settingValueDinner.
   ///
   /// In en, this message translates to:
@@ -1895,13 +1889,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingTasksKindHelp.
   ///
   /// In en, this message translates to:
-  /// **'A new chore is a duty unless someone deliberately makes it a bonus. That keeps the earning surface narrow.'**
+  /// **'A new chore is a duty unless someone deliberately makes it a bonus.'**
   String get settingTasksKindHelp;
 
   /// No description provided for @settingTasksVerificationTitle.
   ///
   /// In en, this message translates to:
-  /// **'Guardians check chores'**
+  /// **'Parents check chores'**
   String get settingTasksVerificationTitle;
 
   /// No description provided for @settingTasksVerificationHelp.
@@ -1931,19 +1925,19 @@ abstract class AppLocalizations {
   /// No description provided for @settingTasksRewardApprovalHelp.
   ///
   /// In en, this message translates to:
-  /// **'A guardian approves each redemption with the PIN. Self-serve suits only trivial rewards.'**
+  /// **'A parent approves each redemption with the PIN. Self-serve suits only trivial rewards.'**
   String get settingTasksRewardApprovalHelp;
 
   /// No description provided for @settingCalendarMembersEditTitle.
   ///
   /// In en, this message translates to:
-  /// **'Members edit their own events'**
+  /// **'Children edit their own events'**
   String get settingCalendarMembersEditTitle;
 
   /// No description provided for @settingCalendarMembersEditHelp.
   ///
   /// In en, this message translates to:
-  /// **'Children create and edit events they attend themselves. Deleting someone else\'s event stays a guardian action.'**
+  /// **'Children create and edit events they attend themselves. Deleting someone else\'s event stays with the parents.'**
   String get settingCalendarMembersEditHelp;
 
   /// No description provided for @settingCalendarKeyDefaultTitle.
@@ -1955,19 +1949,19 @@ abstract class AppLocalizations {
   /// No description provided for @settingCalendarKeyDefaultHelp.
   ///
   /// In en, this message translates to:
-  /// **'Decides which new events appear on the kitchen wall without anyone ticking the box. Review it after two weeks of use.'**
+  /// **'Decides which new events appear on the kitchen wall without anyone ticking the box.'**
   String get settingCalendarKeyDefaultHelp;
 
   /// No description provided for @settingSchoolReportTitle.
   ///
   /// In en, this message translates to:
-  /// **'Members report timetable changes'**
+  /// **'Children report timetable changes'**
   String get settingSchoolReportTitle;
 
   /// No description provided for @settingSchoolReportHelp.
   ///
   /// In en, this message translates to:
-  /// **'Only guardians maintain the timetable. With this on, a child can report a cancelled lesson for a guardian to confirm.'**
+  /// **'Only parents maintain the timetable. With this on, a child can report a cancelled lesson for a parent to confirm.'**
   String get settingSchoolReportHelp;
 
   /// No description provided for @settingSchoolEquipmentTitle.
@@ -1991,7 +1985,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingMealsSchoolDayHelp.
   ///
   /// In en, this message translates to:
-  /// **'The warm meal on the kitchen wall: lunch, dinner, both or none. On school days children often eat lunch at school or at after-school care.'**
+  /// **'The warm meal on the kitchen wall. Both on means two warm meals, both off means none. On school days children often eat lunch at school or at after-school care.'**
   String get settingMealsSchoolDayHelp;
 
   /// No description provided for @settingMealsFreeDayTitle.
@@ -2039,7 +2033,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingBoardRolloverHelp.
   ///
   /// In en, this message translates to:
-  /// **'When the wall moves to the coming week. Sunday evening planning wants next week; Saturday morning still wants this one.'**
+  /// **'When the wall moves on to the coming week.'**
   String get settingBoardRolloverHelp;
 
   /// No description provided for @settingBoardDayPartsTitle.
@@ -2051,7 +2045,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingBoardDayPartsHelp.
   ///
   /// In en, this message translates to:
-  /// **'Where the appointment zone splits into morning, afternoon and evening.'**
+  /// **'Where the day splits into morning, afternoon and evening on the board.'**
   String get settingBoardDayPartsHelp;
 
   /// No description provided for @settingDeviceNightHoursTitle.
@@ -2063,7 +2057,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingDeviceNightHoursHelp.
   ///
   /// In en, this message translates to:
-  /// **'When the kiosk switches to the amber night theme.'**
+  /// **'When the wall display switches to its night colours.'**
   String get settingDeviceNightHoursHelp;
 
   /// No description provided for @settingDeviceIdleRevertTitle.
@@ -2075,7 +2069,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingDeviceIdleRevertHelp.
   ///
   /// In en, this message translates to:
-  /// **'How long an opened profile or detail view stays open before the kiosk returns to the wall.'**
+  /// **'How long an opened profile or detail view stays open before the display goes back to the wall.'**
   String get settingDeviceIdleRevertHelp;
 
   /// No description provided for @settingMemberCompletionSoundTitle.
@@ -2111,7 +2105,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingNotifyMorningHelp.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s tasks and events for you. Pending redemptions appear here for guardians.'**
+  /// **'Today\'s tasks and events for you. Pending redemptions appear here for parents.'**
   String get settingNotifyMorningHelp;
 
   /// No description provided for @settingNotifyEventReminderTitle.
@@ -2135,7 +2129,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingNotifyTaskVerifiedHelp.
   ///
   /// In en, this message translates to:
-  /// **'A notification when a guardian verifies a chore and its points are credited.'**
+  /// **'A notification when a parent checks a chore and its points are credited.'**
   String get settingNotifyTaskVerifiedHelp;
 
   /// No description provided for @settingNotifyRedemptionTitle.
@@ -2225,7 +2219,7 @@ abstract class AppLocalizations {
   /// No description provided for @calendarEditorPlaceholder.
   ///
   /// In en, this message translates to:
-  /// **'The event editor is coming soon.'**
+  /// **'The event editor is not available here.'**
   String get calendarEditorPlaceholder;
 
   /// No description provided for @eventEditTitle.
@@ -2537,7 +2531,7 @@ abstract class AppLocalizations {
   /// No description provided for @comingSoon.
   ///
   /// In en, this message translates to:
-  /// **'This part is being built.'**
+  /// **'This page is not available.'**
   String get comingSoon;
 
   /// No description provided for @mealsWeekRange.
@@ -4355,7 +4349,7 @@ abstract class AppLocalizations {
   /// No description provided for @tasksFieldVerification.
   ///
   /// In en, this message translates to:
-  /// **'Approval by a grown-up'**
+  /// **'Approval by a parent'**
   String get tasksFieldVerification;
 
   /// No description provided for @tasksVerificationHelp.
@@ -5669,7 +5663,7 @@ abstract class AppLocalizations {
   /// No description provided for @extCalReadOnlyHint.
   ///
   /// In en, this message translates to:
-  /// **'Only guardians can subscribe to calendars or change them.'**
+  /// **'Only parents can subscribe to calendars or change them.'**
   String get extCalReadOnlyHint;
 
   /// No description provided for @extCalErrUnreachable.
@@ -6107,7 +6101,7 @@ abstract class AppLocalizations {
   /// No description provided for @pairKindKid.
   ///
   /// In en, this message translates to:
-  /// **'Kids\' tablet'**
+  /// **'Children\'s tablet'**
   String get pairKindKid;
 
   /// No description provided for @pairKindFamily.
@@ -6143,7 +6137,7 @@ abstract class AppLocalizations {
   /// No description provided for @pairDefaultKid.
   ///
   /// In en, this message translates to:
-  /// **'Kids\' tablet'**
+  /// **'Children\'s tablet'**
   String get pairDefaultKid;
 
   /// No description provided for @pairDefaultFamily.
@@ -6179,7 +6173,7 @@ abstract class AppLocalizations {
   /// No description provided for @pairPinTitle.
   ///
   /// In en, this message translates to:
-  /// **'Set the guardian PIN'**
+  /// **'Set the parent PIN'**
   String get pairPinTitle;
 
   /// No description provided for @pairPinBody.
@@ -6395,7 +6389,7 @@ abstract class AppLocalizations {
   /// No description provided for @householdInvitedNote.
   ///
   /// In en, this message translates to:
-  /// **'Invitations arrive with the next update.'**
+  /// **'Invitations are not available here.'**
   String get householdInvitedNote;
 
   /// No description provided for @householdNewSignOut.
@@ -6437,7 +6431,7 @@ abstract class AppLocalizations {
   /// No description provided for @claimLead.
   ///
   /// In en, this message translates to:
-  /// **'{host} has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first guardian account.'**
+  /// **'{host} has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first parent account.'**
   String claimLead(String host);
 
   /// No description provided for @claimHeader.
@@ -6923,7 +6917,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaveDeleteWordBody.
   ///
   /// In en, this message translates to:
-  /// **'The family and all its data are deleted immediately and permanently. Nobody can restore them, not even a guardian. Export the data first if you want to keep it.'**
+  /// **'The family and all its data are deleted immediately and permanently. Nobody can restore them, not even a parent. Export the data first if you want to keep it.'**
   String get leaveDeleteWordBody;
 
   /// The word the guardian types in capitals to delete the family for good.
@@ -6959,7 +6953,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaveDeletedBodyMember.
   ///
   /// In en, this message translates to:
-  /// **'Only a guardian can restore the family. You can also start afresh; then your account leaves this family.'**
+  /// **'Only a parent can restore the family. You can also start afresh; then your account leaves this family.'**
   String get leaveDeletedBodyMember;
 
   /// No description provided for @leaveRestore.
@@ -7085,13 +7079,13 @@ abstract class AppLocalizations {
   /// No description provided for @inviteRoleLineGuardian.
   ///
   /// In en, this message translates to:
-  /// **'As a guardian you see everything and approve rewards.'**
+  /// **'As a parent you see everything and approve rewards.'**
   String get inviteRoleLineGuardian;
 
   /// No description provided for @inviteRoleLineMember.
   ///
   /// In en, this message translates to:
-  /// **'As a member you tick off tasks, without approving rewards.'**
+  /// **'As another adult you tick off tasks, without approving rewards.'**
   String get inviteRoleLineMember;
 
   /// No description provided for @inviteContinue.
@@ -7264,13 +7258,13 @@ abstract class AppLocalizations {
   /// No description provided for @inviteRoleGuardian.
   ///
   /// In en, this message translates to:
-  /// **'Guardian'**
+  /// **'Parent'**
   String get inviteRoleGuardian;
 
   /// No description provided for @inviteRoleMember.
   ///
   /// In en, this message translates to:
-  /// **'Member'**
+  /// **'Other adult'**
   String get inviteRoleMember;
 
   /// No description provided for @inviteRoleGuardianHelp.
@@ -7360,7 +7354,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountDeleteBlocked.
   ///
   /// In en, this message translates to:
-  /// **'You are the last guardian with an account in this family. Invite a second adult first, or delete the family.'**
+  /// **'You are the last parent with an account in this family. Invite a second adult first, or delete the family.'**
   String get accountDeleteBlocked;
 
   /// No description provided for @accountDeleteDialogTitle.
@@ -8482,13 +8476,13 @@ abstract class AppLocalizations {
   /// No description provided for @memberRoleHelp.
   ///
   /// In en, this message translates to:
-  /// **'Guardians see everything and approve rewards. Members tick off tasks.'**
+  /// **'Parents see everything and approve rewards. Other adults tick off tasks.'**
   String get memberRoleHelp;
 
   /// No description provided for @memberReadOnlyHint.
   ///
   /// In en, this message translates to:
-  /// **'Only guardians change other people. You can change your own name, colour and picture.'**
+  /// **'Only parents change other people. You can change your own name, colour and picture.'**
   String get memberReadOnlyHint;
 
   /// On the member page of a wall display, which may not edit members (the server refuses a kiosk).
@@ -8548,19 +8542,19 @@ abstract class AppLocalizations {
   /// No description provided for @memberErrKindAdult.
   ///
   /// In en, this message translates to:
-  /// **'A guardian, or someone with an account, is an adult.'**
+  /// **'A parent, or someone with an account, is an adult.'**
   String get memberErrKindAdult;
 
   /// No description provided for @memberErrRoleChild.
   ///
   /// In en, this message translates to:
-  /// **'A child cannot be a guardian. Make the person an adult first.'**
+  /// **'A child cannot be a parent. Make the person an adult first.'**
   String get memberErrRoleChild;
 
   /// No description provided for @memberErrSelf.
   ///
   /// In en, this message translates to:
-  /// **'You cannot remove yourself. Another guardian can.'**
+  /// **'You cannot remove yourself. Another parent can.'**
   String get memberErrSelf;
 
   /// No description provided for @memberErrHasAccount.
@@ -8704,7 +8698,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolImportPhotoUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Your server can\'t read photos yet.'**
+  /// **'Your server can\'t read photos.'**
   String get schoolImportPhotoUnavailable;
 
   /// No description provided for @settingsVersions.
@@ -8818,7 +8812,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingAmbienceBirthdaysHelp.
   ///
   /// In en, this message translates to:
-  /// **'Bunting in the member\'s colour and a party hat for Wusel on their birthday.'**
+  /// **'Bunting in the person\'s colour and a party hat for Wusel on their birthday.'**
   String get settingAmbienceBirthdaysHelp;
 
   /// No description provided for @settingAmbienceFerienTitle.
@@ -9013,17 +9007,17 @@ abstract class AppLocalizations {
   /// **'When the question shows at dinner.'**
   String get settingTableQuestionDinnerHelp;
 
-  /// No description provided for @settingTableQuestionDeckTitle.
+  /// No description provided for @settingTableQuestionAgeLimitTitle.
   ///
   /// In en, this message translates to:
-  /// **'Questions for'**
-  String get settingTableQuestionDeckTitle;
+  /// **'Age limit'**
+  String get settingTableQuestionAgeLimitTitle;
 
-  /// No description provided for @settingTableQuestionDeckHelp.
+  /// No description provided for @settingTableQuestionAgeLimitHelp.
   ///
   /// In en, this message translates to:
-  /// **'All ages works for a five-year-old; older children adds deeper questions for 8 and over.'**
-  String get settingTableQuestionDeckHelp;
+  /// **'Questions follow the children\'s ages, from their birthdays, with one question each when they are far apart. Turn this on to hide questions from an age upwards.'**
+  String get settingTableQuestionAgeLimitHelp;
 
   /// No description provided for @settingWeekReviewTitle.
   ///
@@ -9091,17 +9085,11 @@ abstract class AppLocalizations {
   /// **'Lunch and dinner'**
   String get settingValueMainMeals;
 
-  /// No description provided for @settingValueAllAges.
+  /// No description provided for @settingUnitFromAge.
   ///
   /// In en, this message translates to:
-  /// **'All ages'**
-  String get settingValueAllAges;
-
-  /// No description provided for @settingValueOlderChildren.
-  ///
-  /// In en, this message translates to:
-  /// **'Older children too'**
-  String get settingValueOlderChildren;
+  /// **'from age {age}'**
+  String settingUnitFromAge(int age);
 
   /// No description provided for @settingUnitDays.
   ///
@@ -9298,7 +9286,7 @@ abstract class AppLocalizations {
   /// No description provided for @wuselRewardSent1.
   ///
   /// In en, this message translates to:
-  /// **'Sent! A grown-up will decide.'**
+  /// **'Sent! Your parents will decide.'**
   String get wuselRewardSent1;
 
   /// No description provided for @wuselRewardSent2.
@@ -9310,7 +9298,7 @@ abstract class AppLocalizations {
   /// No description provided for @wuselRewardSent3.
   ///
   /// In en, this message translates to:
-  /// **'Wish sent! Now a grown-up takes a look.'**
+  /// **'Wish sent! Now your parents take a look.'**
   String get wuselRewardSent3;
 
   /// No description provided for @wuselBadge.
@@ -9442,8 +9430,14 @@ abstract class AppLocalizations {
   /// No description provided for @memberBirthdayHelp.
   ///
   /// In en, this message translates to:
-  /// **'Shown on the wall on the day, and counted down to before it.'**
+  /// **'Shown on the wall on the day, and counted down to before it. For a child it also sets which questions come up at the table.'**
   String get memberBirthdayHelp;
+
+  /// No description provided for @memberBirthdayOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday (optional)'**
+  String get memberBirthdayOptional;
 
   /// No description provided for @memberBirthdayPick.
   ///
@@ -9784,7 +9778,7 @@ abstract class AppLocalizations {
   /// No description provided for @kidWishWaiting.
   ///
   /// In en, this message translates to:
-  /// **'You wished for {title}. A grown-up will find a day.'**
+  /// **'You wished for {title}. Your parents will find a day.'**
   String kidWishWaiting(String title);
 
   /// No description provided for @kidWishPlanned.
@@ -10941,7 +10935,7 @@ abstract class AppLocalizations {
   /// No description provided for @passwordNoMailHint.
   ///
   /// In en, this message translates to:
-  /// **'This server sends no email. Choose a password you will remember: if you forget it, a guardian of your family can give you a code for a new one.'**
+  /// **'This server sends no email. Choose a password you will remember: if you forget it, a parent in your family can give you a code for a new one.'**
   String get passwordNoMailHint;
 
   /// No description provided for @passwordAccountExists.
@@ -10965,7 +10959,7 @@ abstract class AppLocalizations {
   /// No description provided for @passwordResetIntro.
   ///
   /// In en, this message translates to:
-  /// **'Ask a guardian of your family for a code: in the app under Members, at your name, “Reset password”. It works once, for 10 minutes.'**
+  /// **'Ask a parent in your family for a code: in the app under Members, at your name, “Reset password”. It works once, for 10 minutes.'**
   String get passwordResetIntro;
 
   /// No description provided for @passwordResetCodeLabel.
@@ -11031,7 +11025,7 @@ abstract class AppLocalizations {
   /// No description provided for @passwordDialogBodyNoMail.
   ///
   /// In en, this message translates to:
-  /// **'At least 10 characters. If you forget it, a guardian of your family can give you a code for a new one.'**
+  /// **'At least 10 characters. If you forget it, a parent in your family can give you a code for a new one.'**
   String get passwordDialogBodyNoMail;
 
   /// No description provided for @errEmailNotConfirmed.
@@ -11271,13 +11265,13 @@ abstract class AppLocalizations {
   /// No description provided for @accountMfaResetRecent.
   ///
   /// In en, this message translates to:
-  /// **'You reset the two-factor sign-in of {name} less than a day ago. Another guardian can create the code, or wait a day.'**
+  /// **'You reset the two-factor sign-in of {name} less than a day ago. Another parent can create the code, or wait a day.'**
   String accountMfaResetRecent(String name);
 
   /// No description provided for @accountPasswordResetRecent.
   ///
   /// In en, this message translates to:
-  /// **'You created a password code for {name} less than a day ago. Another guardian can reset the two-factor sign-in, or wait a day.'**
+  /// **'You created a password code for {name} less than a day ago. Another parent can reset the two-factor sign-in, or wait a day.'**
   String accountPasswordResetRecent(String name);
 
   /// No description provided for @accountPasswordSavedOthersOut.
@@ -11295,7 +11289,7 @@ abstract class AppLocalizations {
   /// No description provided for @errInvitationRequired.
   ///
   /// In en, this message translates to:
-  /// **'This server takes only invited people. Ask a guardian of the family for an invitation.'**
+  /// **'This server takes only invited people. Ask a parent in the family for an invitation.'**
   String get errInvitationRequired;
 
   /// No description provided for @accountNoticeMfaResetYou.

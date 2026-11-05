@@ -55,7 +55,7 @@ Das Access Token darf alles in eurem Supabase-Konto. Wer vorsichtig ist, löscht
 
 ## E-Mail-Versand {#e-mail-versand}
 
-E-Mail ist freiwillig. **Ohne die `SMTP_`-Secrets** melden sich alle mit E-Mail-Adresse und Passwort an; ein vergessenes Passwort setzt ein Erziehungsberechtigter in der App zurück. Der eingebaute Mail-Versand von Supabase spielt keine Rolle: Er schickt nur an die Adressen eures eigenen Supabase-Kontos.
+E-Mail ist freiwillig. **Ohne die `SMTP_`-Secrets** melden sich alle mit E-Mail-Adresse und Passwort an; ein vergessenes Passwort setzt ein Elternteil in der App zurück. Der eingebaute Mail-Versand von Supabase spielt keine Rolle: Er schickt nur an die Adressen eures eigenen Supabase-Kontos.
 
 **Mit den fünf `SMTP_`-Secrets** kommen Anmelde-Codes per Mail. Ein Gmail-Konto mit App-Passwort reicht; wie das geht und welche Anbieter passen, steht unter [E-Mail](/server/email). Statt SMTP geht auch Scaleway: `SCW_SECRET_KEY`, `SCW_PROJECT_ID` und `MAIL_FROM` (optional `SCW_REGION`, `MAIL_FROM_NAME`).
 

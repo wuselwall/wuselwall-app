@@ -35,7 +35,7 @@ Ce code vérifie votre adresse. Il est différent de la **clé de configuration 
 
 Pour utiliser un mot de passe, choisissez l’option correspondante et saisissez votre adresse e-mail et votre mot de passe, puis touchez **Se connecter**. L’app vérifie les deux champs avant la connexion. Vous pouvez définir votre mot de passe dans **Paramètres → Compte et sécurité → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
 
-**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Continuer par e-mail** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)).
+**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Continuer par e-mail** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un parent de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)).
 
 ## 2. Créer une famille {#_2-creating-a-new-family}
 
@@ -85,5 +85,5 @@ Un parent approuve le nouvel appareil sur son téléphone :
 Le code QR contient aussi le serveur : la caméra de votre téléphone peut donc ouvrir directement la confirmation dans l’app. Le code dure **10 minutes** et ne sert **qu’une fois**. En cas d’échec, recommencez sur le nouvel appareil. L’écran mural présente ensuite une courte [liste de préparation](/fr/guide/wall).
 
 ::: tip Appareils plus anciens
-Dans **Paramètres → Avancés → Appareils**, **Créer un code pour un ancien appareil** permet encore de connecter une ancienne version. Cette option disparaîtra à la prochaine version.
+Dans **Paramètres → Avancés → Appareils**, **Créer un code pour un ancien appareil** permet encore de connecter une ancienne version.
 :::

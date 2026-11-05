@@ -13,7 +13,7 @@ Para todos vale:
 
 ## Cumpleaños {#birthdays}
 
-El cumpleaños se introduce en la página de la persona: **Ajustes → Miembros**, toca a la persona, **Cumpleaños → Elegir una fecha** (ver [Editar un miembro](/es/settings/members-devices#edit-a-member)). Cada persona puede poner el suyo; los adultos responsables, el de los demás.
+El cumpleaños se introduce en la página de la persona: **Ajustes → Miembros**, toca a la persona, **Cumpleaños → Elegir una fecha** (ver [Editar un miembro](/es/settings/members-devices#edit-a-member)). Cada persona puede poner el suyo; los padres, el de los demás.
 
 Antes del día hay una cuenta atrás (ver [Cuentas atrás](#countdowns)), con los años que cumple la persona: «Emma cumple 9 años · 3 noches más». En la pared, el cumpleaños aparece toda la semana bajo la fecha de su día, con una tarta: «Emma cumple 9 años». Ese día cuelgan banderines del color de la persona sobre la pared, Wusel lleva gorro de fiesta, **Hoy** muestra una tarjeta de cumpleaños y en la tableta infantil Wusel lo celebra con quien cumple años. Si la celebración **Cumpleaños** está desactivada en **Estaciones y celebraciones** (ver [Wusel y los colores](/es/guide/wusel#occasions)), nada de esto aparece; la cuenta atrás se queda, y la [vista Mes del calendario](/es/calendar/#month) sigue mostrando el cumpleaños con su tarta y la edad.
 
@@ -34,7 +34,7 @@ Aparece en la **pared**, en el pie (tantas como quepan), en **Mi día** bajo **L
 
 Los niños y la pared cuentan en noches hasta una semana antes («3 noches más») y en días antes de eso («faltan 9 días»). Los adultos leen «en 3 días». La víspera dice **¡Mañana!**, el mismo día **¡Hoy!**, y Wusel saluda arriba en la pared. Después la cuenta atrás desaparece.
 
-**La cuenta atrás empieza** fija cuántos días antes (14 días por defecto, de 7 a 60). **Cuenta atrás hasta una vuelta** (activada por defecto) desactiva la de los viajes.
+**La cuenta atrás empieza** fija cuántos días antes (7 días por defecto, de 7 a 60). **Cuenta atrás hasta una vuelta** (activada por defecto) desactiva la de los viajes.
 
 ## Tradiciones familiares {#traditions}
 
@@ -49,13 +49,13 @@ Si una semana no se hace, elimina **Solo este evento**. Nada recuerda que no se 
 Cada niño puede pedir una comida; vosotros decidís cuántos deseos pueden esperar a la vez (uno por defecto). Así los niños opinan sobre el menú.
 
 - **En Mi día** aparece la tarjeta **Tu comida favorita**. **Pedir** abre la elección: primero **Favoritos de la familia**, las comidas que más habéis cocinado últimamente, después **Nuestras recetas**, cada una con su imagen (con muchas recetas ayuda **Buscar una receta**), y abajo **Otra cosa** con unas pocas palabras, como «tortitas», y una imagen (**Elige una imagen**). Con **Pido esto**, el deseo va de camino. Hasta que se planifique, se puede **cambiar**.
-- **Los adultos** ven los deseos arriba del [menú](/es/meals/#wishes) bajo **Deseos**, cada uno con su imagen, y en una tarjeta discreta en **Hoy**. Toca un deseo, elige día y comida, y queda planificado.
+- **Los padres** ven los deseos arriba del [menú](/es/meals/#wishes) bajo **Deseos**, cada uno con su imagen, y en una tarjeta discreta en **Hoy**. Toca un deseo, elige día y comida, y queda planificado.
 - **Cuando todos pueden pedir**, los adultos también piden en el menú: **Pedir algo** en la fila **Deseos** abre la misma elección, y **Cambiar mi deseo** cambia el pendiente.
 - **Una vez planificado**, la comida lleva una estrella y «Deseo de Pablo» en el menú y en la pared. La tarjeta del niño dice entonces, por ejemplo: «¡Tu deseo, Tortitas, será el jueves!».
 
 <Shot name="kid-wish" alt="Mi día en la tableta infantil con la tarjeta Tu comida favorita" wide />
 
-La app **nunca rechaza** un deseo. Un deseo sin planificar simplemente espera, la semana siguiente con la marca **de la semana pasada**. A las cuatro semanas, un deseo que nunca se planificó sale sin ruido de la lista y ya no cuenta; el niño puede pedir otra cosa. Los adultos responsables pueden quitar un deseo; el porqué se habla en familia.
+La app **nunca rechaza** un deseo. Un deseo sin planificar simplemente espera, la semana siguiente con la marca **de la semana pasada**. A las cuatro semanas, un deseo que nunca se planificó sale sin ruido de la lista y ya no cuenta; el niño puede pedir otra cosa. Los padres pueden quitar un deseo; el porqué se habla en familia.
 
 Quién puede pedir lo decide **Comida deseada**: **Niños** (predeterminado), **Todos** o **Desactivado**. **Deseos abiertos por persona** permite hasta tres a la vez (1 por defecto).
 
@@ -67,13 +67,15 @@ La pregunta aparece durante la comida: arriba en la cabecera de la pared, en **M
 
 - **Otra pregunta** muestra la siguiente, pero solo en ese dispositivo. Basta con decir «la siguiente».
 - En una adivinanza, **Ver la respuesta** muestra la solución.
-- **Nuestras preguntas** (en la tarjeta de la pregunta en **Hoy**): con **Añadir una pregunta** cualquiera escribe las suyas. Aparecen con «Pregunta de Olivia». Una pregunta propia la quita quien la escribió o un adulto responsable.
-- Una pregunta incluida que no encaja con vosotros, un adulto responsable la aparta con **No volver a preguntar esto**. En **Preguntas apartadas**, **Volver a preguntar** la recupera.
+- **Nuestras preguntas** (en la tarjeta de la pregunta en **Hoy**): con **Añadir una pregunta** cualquiera escribe las suyas. Aparecen con «Pregunta de Olivia». Una pregunta propia la quita quien la escribió o una madre o un padre.
+- Una pregunta incluida que no encaja con vosotros, una madre o un padre la aparta con **No volver a preguntar esto**. En **Preguntas apartadas**, **Volver a preguntar** la recupera.
 
-Ajustes: **Pregunta en la mesa** vale para la **Comida caliente** (predeterminado), para **Comida y cena**, o está **Desactivado**. **Pregunta en la comida** y **Pregunta en la cena** fijan las horas; no hace falta planificar ninguna comida. Por defecto siguen el país de vuestra región: 11:30 a 13:30 y 17:30 a 19:30; en Francia, la cena de 19:00 a 21:00; en España, 13:30 a 15:30 y 20:00 a 22:00. **Preguntas para**: **Todas las edades** sirve desde los cinco años, **También niños mayores** añade preguntas más profundas a partir de 8.
+Ajustes: **Pregunta en la mesa** vale para la **Comida caliente** (predeterminado), para **Comida y cena**, o está **Desactivado**. **Pregunta en la comida** y **Pregunta en la cena** fijan las horas; no hace falta planificar ninguna comida. Por defecto siguen el país de vuestra región: 11:30 a 13:30 y 17:30 a 19:30; en Francia, la cena de 19:00 a 21:00; en España, 13:30 a 15:30 y 20:00 a 22:00. **Límite de edad**, desactivado por defecto, oculta las preguntas a partir de la edad que elijas.
+
+Las preguntas siguen la edad de los niños, según sus cumpleaños. Los niños con cinco años o más de diferencia reciben una pregunta cada uno: en la pared, una al lado de la otra; en **Hoy**, una tarjeta para cada uno; y en la vista de cada niño, solo la pregunta de su edad. Sin ningún cumpleaños, las preguntas sirven para niños de 5 a 7 años. El cumpleaños es opcional: se pone en la página de la persona o al añadir por primera vez a los niños.
 
 ::: info Idiomas
-Cada dispositivo muestra las preguntas en su idioma: unas 150 en alemán e inglés y, por ahora, 50 en francés y español.
+Cada dispositivo muestra las preguntas en su idioma: unas 150 en alemán e inglés y 50 en francés y español.
 :::
 
 ## Nuestra semana {#week-review}

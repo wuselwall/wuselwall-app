@@ -29,8 +29,8 @@ Tout appartient à un **foyer**, votre famille. Il comprend des **membres**, ave
 
 | Rôle | Droits |
 |---|---|
-| **Responsable parental** | Administrer les membres, les appareils et la sécurité, confirmer les récompenses |
-| **Membre**, par exemple un enfant | Ajouter et cocher des courses, terminer les achats et utiliser les fonctions autorisées |
+| **Parent** | Administrer les membres, les appareils et la sécurité, confirmer les récompenses |
+| **Autre adulte**, par exemple un grand-parent, ou **enfant** | Ajouter et cocher des courses, terminer les achats et utiliser les fonctions autorisées |
 
 ## Trois types d’appareils {#three-kinds-of-devices}
 

@@ -176,7 +176,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errGuardianRequired =>
-      'Solo una persona responsable puede hacer eso.';
+      'Solo una madre o un padre puede hacer eso.';
 
   @override
   String get errDeviceRevoked => 'Este dispositivo está bloqueado.';
@@ -236,7 +236,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get actingWho => '¿Quién eres?';
 
   @override
-  String get pinTitle => 'PIN de responsable';
+  String get pinTitle => 'PIN de los padres';
 
   @override
   String pinPrompt(String name) {
@@ -253,7 +253,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pinLocked =>
-      'PIN bloqueado. Una persona responsable debe iniciar sesión para desbloquearlo.';
+      'PIN bloqueado. Una madre o un padre debe iniciar sesión para desbloquearlo.';
 
   @override
   String get settingsTitle => 'Ajustes';
@@ -274,10 +274,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get memberName => 'Nombre';
 
   @override
-  String get roleGuardian => 'Responsable';
+  String get roleGuardian => 'Madre o padre';
 
   @override
-  String get roleMember => 'Miembro';
+  String get roleMember => 'Otro adulto';
 
   @override
   String get addDevice => 'Añadir dispositivo';
@@ -569,7 +569,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get pinChangeTitle => 'PIN de responsable';
+  String get pinChangeTitle => 'PIN de los padres';
 
   @override
   String get pinChangeBody =>
@@ -891,8 +891,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get boardTasksComingSoon =>
-      'Las tareas llegarán con la próxima actualización.';
+  String get boardTasksComingSoon => 'Aquí aparecerán las tareas.';
 
   @override
   String get presenceWorking => 'En el trabajo';
@@ -1012,9 +1011,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingValueLunch => 'Almuerzo';
 
   @override
-  String get settingValueBoth => 'Ambas';
-
-  @override
   String get settingValueDinner => 'Cena';
 
   @override
@@ -1043,11 +1039,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingTasksKindHelp =>
-      'Una nueva tarea es obligatoria salvo que alguien la convierta expresamente en extra. Así se limita qué tareas dan puntos.';
+      'Una nueva tarea es obligatoria salvo que alguien la convierta expresamente en extra.';
 
   @override
-  String get settingTasksVerificationTitle =>
-      'Los responsables revisan las tareas';
+  String get settingTasksVerificationTitle => 'Los padres revisan las tareas';
 
   @override
   String get settingTasksVerificationHelp =>
@@ -1066,15 +1061,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingTasksRewardApprovalHelp =>
-      'Una persona responsable aprueba cada canje con su PIN. El canje directo solo es adecuado para pequeñas recompensas.';
+      'Una madre o un padre aprueba cada canje con su PIN. El canje directo solo es adecuado para pequeñas recompensas.';
 
   @override
   String get settingCalendarMembersEditTitle =>
-      'Los miembros editan sus propios eventos';
+      'Los niños editan sus propios eventos';
 
   @override
   String get settingCalendarMembersEditHelp =>
-      'Los niños pueden crear y editar los eventos en los que participan. Solo los responsables pueden eliminar eventos de otras personas.';
+      'Los niños pueden crear y editar los eventos en los que participan. Solo los padres pueden eliminar eventos de otras personas.';
 
   @override
   String get settingCalendarKeyDefaultTitle =>
@@ -1082,15 +1077,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingCalendarKeyDefaultHelp =>
-      'Decide qué eventos nuevos aparecen en la pantalla de la cocina sin marcar ninguna casilla. Revísalo tras dos semanas de uso.';
+      'Decide qué eventos nuevos aparecen en la pantalla de la cocina sin marcar ninguna casilla.';
 
   @override
   String get settingSchoolReportTitle =>
-      'Los miembros avisan de cambios de horario';
+      'Los niños avisan de cambios de horario';
 
   @override
   String get settingSchoolReportHelp =>
-      'Solo los responsables mantienen el horario. Con esta opción, un niño puede avisar de una clase cancelada para que un responsable lo confirme.';
+      'Solo los padres mantienen el horario. Con esta opción, un niño puede avisar de una clase cancelada para que la confirme su madre o su padre.';
 
   @override
   String get settingSchoolEquipmentTitle => 'Material para mañana';
@@ -1104,7 +1099,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingMealsSchoolDayHelp =>
-      'La comida caliente que aparece en la pantalla de la cocina: al mediodía, por la noche, ambas o ninguna. En días lectivos, los niños suelen almorzar en el colegio o en el servicio de cuidado extraescolar.';
+      'La comida caliente que aparece en la pantalla de la cocina. Las dos activadas son dos comidas calientes; las dos desactivadas, ninguna. En días lectivos, los niños suelen almorzar en el colegio o en el servicio de cuidado extraescolar.';
 
   @override
   String get settingMealsFreeDayTitle => 'Comida caliente en días libres';
@@ -1132,21 +1127,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingBoardRolloverHelp =>
-      'Cuándo la pantalla pasa a la semana siguiente. El domingo por la noche interesa planificar la próxima semana; el sábado por la mañana, aún la actual.';
+      'Cuándo la pantalla pasa a la semana siguiente.';
 
   @override
   String get settingBoardDayPartsTitle => 'Mañana, tarde y noche';
 
   @override
   String get settingBoardDayPartsHelp =>
-      'Cuándo se divide la zona de citas entre mañana, tarde y noche.';
+      'Cuándo se divide el día en mañana, tarde y noche.';
 
   @override
   String get settingDeviceNightHoursTitle => 'Horario del tema nocturno';
 
   @override
   String get settingDeviceNightHoursHelp =>
-      'Cuándo la pantalla de pared cambia al tema nocturno de color ámbar.';
+      'Cuándo la pantalla de pared cambia a los colores de noche.';
 
   @override
   String get settingDeviceIdleRevertTitle => 'Volver al panel después de';
@@ -1176,7 +1171,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingNotifyMorningHelp =>
-      'Tus tareas y eventos de hoy. Los responsables también ven los canjes pendientes.';
+      'Tus tareas y eventos de hoy. Los padres también ven los canjes pendientes.';
 
   @override
   String get settingNotifyEventReminderTitle =>
@@ -1191,7 +1186,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingNotifyTaskVerifiedHelp =>
-      'Una notificación cuando un responsable confirma una tarea y se suman sus puntos.';
+      'Una notificación cuando uno de los padres confirma una tarea y se suman sus puntos.';
 
   @override
   String get settingNotifyRedemptionTitle => 'Cuando se pide una recompensa';
@@ -1242,7 +1237,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get calendarEditorPlaceholder =>
-      'El editor de eventos estará disponible pronto.';
+      'El editor de eventos no está disponible aquí.';
 
   @override
   String get eventEditTitle => 'Editar evento';
@@ -1415,7 +1410,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mealsTitle => 'Comidas';
 
   @override
-  String get comingSoon => 'Estamos preparando esta sección.';
+  String get comingSoon => 'Esta página no está disponible.';
 
   @override
   String mealsWeekRange(String from, String to) {
@@ -2461,7 +2456,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tasksPoolRequired => 'Elige al menos una persona.';
 
   @override
-  String get tasksFieldVerification => 'Aprobación de un adulto';
+  String get tasksFieldVerification => 'Aprobación de los padres';
 
   @override
   String get tasksVerificationHelp =>
@@ -3283,7 +3278,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get extCalReadOnlyHint =>
-      'Solo los responsables pueden suscribirse a calendarios o cambiarlos.';
+      'Solo los padres pueden suscribirse a calendarios o cambiarlos.';
 
   @override
   String get extCalErrUnreachable =>
@@ -3516,7 +3511,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get reminderOnlyPersonal =>
-      'Los recordatorios solo están disponibles en el dispositivo personal de un miembro.';
+      'Los recordatorios solo están disponibles en el dispositivo personal de cada persona.';
 
   @override
   String get pairFrontDoorAction =>
@@ -3617,7 +3612,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pairOnlyOnPersonal => 'Esto solo funciona en tu propio teléfono.';
 
   @override
-  String get pairPinTitle => 'Establecer el PIN de responsable';
+  String get pairPinTitle => 'Establecer el PIN de los padres';
 
   @override
   String get pairPinBody =>
@@ -3742,7 +3737,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get householdInvitedNote =>
-      'Las invitaciones llegarán con la próxima actualización.';
+      'Para unirte a una familia, abre el enlace de la invitación.';
 
   @override
   String get householdNewSignOut => 'Cerrar sesión';
@@ -4049,7 +4044,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get leaveDeleteWordBody =>
-      'La familia y todos sus datos se eliminan de inmediato y de forma permanente. Nadie puede recuperarlos, ni siquiera un tutor. Exporta primero los datos si quieres conservarlos.';
+      'La familia y todos sus datos se eliminan de inmediato y de forma permanente. Nadie puede recuperarlos, ni siquiera los padres. Exporta primero los datos si quieres conservarlos.';
 
   @override
   String get leaveDeleteWord => 'ELIMINAR';
@@ -4073,7 +4068,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get leaveDeletedBodyMember =>
-      'Solo un responsable puede restaurar la familia. También puedes empezar de nuevo; en ese caso, tu cuenta saldrá de esta familia.';
+      'Solo una madre o un padre puede restaurar la familia. También puedes empezar de nuevo; en ese caso, tu cuenta saldrá de esta familia.';
 
   @override
   String get leaveRestore => 'Restaurar';
@@ -4148,11 +4143,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get inviteRoleLineGuardian =>
-      'Como responsable, puedes verlo todo y aprobar recompensas.';
+      'Como madre o padre, puedes verlo todo y aprobar recompensas.';
 
   @override
   String get inviteRoleLineMember =>
-      'Como miembro, completas tareas, pero no apruebas recompensas.';
+      'Como otro adulto, completas tareas, pero no apruebas recompensas.';
 
   @override
   String get inviteContinue => 'Continuar al inicio de sesión';
@@ -4262,10 +4257,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get inviteAdultRole => 'Rol';
 
   @override
-  String get inviteRoleGuardian => 'Responsable';
+  String get inviteRoleGuardian => 'Madre o padre';
 
   @override
-  String get inviteRoleMember => 'Miembro';
+  String get inviteRoleMember => 'Otro adulto';
 
   @override
   String get inviteRoleGuardianHelp =>
@@ -4318,7 +4313,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get accountDeleteBlocked =>
-      'Eres la última persona responsable con cuenta de esta familia. Primero invita a otro adulto o elimina la familia.';
+      'Eres la última persona con cuenta de madre o padre en esta familia. Primero invita a otro adulto o elimina la familia.';
 
   @override
   String get accountDeleteDialogTitle => '¿Eliminar la cuenta?';
@@ -5031,11 +5026,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get memberRoleHelp =>
-      'Los adultos responsables ven todo y aprueban las recompensas. Los miembros marcan tareas.';
+      'Los padres lo ven todo y aprueban las recompensas. Otros adultos marcan tareas.';
 
   @override
   String get memberReadOnlyHint =>
-      'Solo los adultos responsables cambian a otras personas. Puedes cambiar tu propio nombre, color e imagen.';
+      'Solo los padres pueden cambiar a otras personas. Puedes cambiar tu propio nombre, color e imagen.';
 
   @override
   String get memberKioskReadOnly =>
@@ -5074,15 +5069,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get memberErrKindAdult =>
-      'Un adulto responsable, o alguien con cuenta, es adulto.';
+      'Una madre o un padre, o alguien con cuenta, es adulto.';
 
   @override
   String get memberErrRoleChild =>
-      'Un niño no puede ser adulto responsable. Primero conviértelo en adulto.';
+      'Un niño no puede ser madre o padre. Primero conviértelo en adulto.';
 
   @override
   String get memberErrSelf =>
-      'No puedes quitarte a ti mismo. Otro adulto responsable puede hacerlo.';
+      'No puedes quitarte a ti mismo. Puede hacerlo otra madre u otro padre.';
 
   @override
   String get memberErrHasAccount =>
@@ -5352,11 +5347,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'Cuándo aparece la pregunta en la cena.';
 
   @override
-  String get settingTableQuestionDeckTitle => 'Preguntas para';
+  String get settingTableQuestionAgeLimitTitle => 'Límite de edad';
 
   @override
-  String get settingTableQuestionDeckHelp =>
-      'Todas las edades sirve desde los cinco años; niños mayores añade preguntas más profundas a partir de 8.';
+  String get settingTableQuestionAgeLimitHelp =>
+      'Las preguntas siguen la edad de los niños, según su cumpleaños. Si hay cinco años o más de diferencia, cada uno recibe su propia pregunta. Actívalo para ocultar las preguntas a partir de una edad.';
 
   @override
   String get settingWeekReviewTitle => 'Nuestra semana';
@@ -5393,10 +5388,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingValueMainMeals => 'Comida y cena';
 
   @override
-  String get settingValueAllAges => 'Todas las edades';
-
-  @override
-  String get settingValueOlderChildren => 'También niños mayores';
+  String settingUnitFromAge(int age) {
+    return 'desde $age años';
+  }
 
   @override
   String settingUnitDays(int count) {
@@ -5537,13 +5531,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wuselAllDone4 => 'Tu lista está vacía. ¡A jugar!';
 
   @override
-  String get wuselRewardSent1 => '¡Enviado! Ahora decide un adulto.';
+  String get wuselRewardSent1 => '¡Enviado! Ahora deciden tus padres.';
 
   @override
   String get wuselRewardSent2 => 'Tu deseo va de camino.';
 
   @override
-  String get wuselRewardSent3 => '¡Deseo enviado! Un adulto lo mirará.';
+  String get wuselRewardSent3 => '¡Deseo enviado! Tus padres lo mirarán.';
 
   @override
   String wuselBadge(String badge) {
@@ -5626,7 +5620,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get memberBirthdayHelp =>
-      'Aparece en la pantalla de pared ese día, con una cuenta atrás antes.';
+      'Aparece en la pantalla de pared ese día, con una cuenta atrás antes. En un niño, también decide qué preguntas salen en la mesa.';
+
+  @override
+  String get memberBirthdayOptional => 'Cumpleaños (opcional)';
 
   @override
   String get memberBirthdayPick => 'Elegir una fecha';
@@ -5842,7 +5839,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String kidWishWaiting(String title) {
-    return 'Has pedido $title. Un adulto buscará un día.';
+    return 'Has pedido $title. Tus padres buscarán un día.';
   }
 
   @override
@@ -6517,7 +6514,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get passwordNoMailHint =>
-      'Este servidor no envía correos. Elige una contraseña que puedas recordar: si la olvidas, un responsable de tu familia puede darte un código para elegir otra.';
+      'Este servidor no envía correos. Elige una contraseña que puedas recordar: si la olvidas, una madre o un padre de tu familia puede darte un código para elegir otra.';
 
   @override
   String get passwordAccountExists =>
@@ -6531,7 +6528,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get passwordResetIntro =>
-      'Pide un código a un responsable de tu familia: en la app, en Miembros, junto a tu nombre, «Restablecer contraseña». Funciona una vez, durante 10 minutos.';
+      'Pide un código a una madre o un padre de tu familia: en la app, en Miembros, junto a tu nombre, «Restablecer contraseña». Funciona una vez, durante 10 minutos.';
 
   @override
   String get passwordResetCodeLabel => 'Código de restablecimiento';
@@ -6574,7 +6571,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get passwordDialogBodyNoMail =>
-      'Al menos 10 caracteres. Si la olvidas, un responsable de tu familia puede darte un código para elegir otra.';
+      'Al menos 10 caracteres. Si la olvidas, una madre o un padre de tu familia puede darte un código para elegir otra.';
 
   @override
   String get errEmailNotConfirmed =>
@@ -6731,12 +6728,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String accountMfaResetRecent(String name) {
-    return 'Restableciste el inicio de sesión en dos pasos de $name hace menos de un día. Otro adulto responsable puede crear el código, o espera un día.';
+    return 'Restableciste el inicio de sesión en dos pasos de $name hace menos de un día. Otra madre u otro padre puede crear el código, o espera un día.';
   }
 
   @override
   String accountPasswordResetRecent(String name) {
-    return 'Creaste un código de contraseña para $name hace menos de un día. Otro adulto responsable puede restablecer el inicio de sesión en dos pasos, o espera un día.';
+    return 'Creaste un código de contraseña para $name hace menos de un día. Otra madre u otro padre puede restablecer el inicio de sesión en dos pasos, o espera un día.';
   }
 
   @override
@@ -6750,7 +6747,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errInvitationRequired =>
-      'Este servidor solo acepta personas invitadas. Pide una invitación a un adulto responsable de la familia.';
+      'Este servidor solo acepta personas invitadas. Pide una invitación a una madre o un padre de la familia.';
 
   @override
   String accountNoticeMfaResetYou(String name) {

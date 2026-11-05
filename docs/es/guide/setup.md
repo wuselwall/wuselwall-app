@@ -34,7 +34,7 @@ El código verifica tu dirección. No es la **clave de configuración del servid
 
 Si prefieres contraseña, elige esa opción e introduce tu dirección de correo y la contraseña y toca **Iniciar sesión**. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Cuenta y seguridad → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
 
-**Servidor sin correo** ([Correo](/es/server/email)): **Continuar con correo electrónico** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)).
+**Servidor sin correo** ([Correo](/es/server/email)): **Continuar con correo electrónico** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a una madre o un padre de tu familia ([Restablecer](/es/settings/members-devices#reset-password)).
 
 ## 2. Crear una familia {#_2-creating-a-new-family}
 
@@ -69,17 +69,17 @@ Una cuenta pertenece a **una sola** familia. Si abres una invitación cuando ya 
 
 ## 4. Conectar una tableta familiar o pantalla de pared {#_4-connecting-a-family-tablet-or-wall-display}
 
-Un adulto aprueba el nuevo dispositivo desde su móvil:
+Una madre o un padre aprueba el nuevo dispositivo desde su móvil:
 
 1. En el nuevo dispositivo, toca **Conectar una tableta familiar o pantalla de pared**. Aparecen un QR y un código.
 2. En tu móvil, abre **Ajustes → Dispositivos → Conectar un dispositivo**. También puedes empezar desde **Primeros pasos**.
 3. Escanea el QR o escribe el código y toca **Siguiente**. Las letras pasan a mayúsculas y el guion se inserta automáticamente.
 4. Elige pantalla de pared, tableta infantil, tableta compartida o teléfono de un niño. Para este último, elige al niño. Pon un nombre y conecta.
-5. La primera vez defines el **PIN de responsable** para acciones protegidas en dispositivos compartidos ([¿Quién eres?](/es/guide/who-are-you)).
+5. La primera vez defines el **PIN de los padres** para acciones protegidas en dispositivos compartidos ([¿Quién eres?](/es/guide/who-are-you)).
 
 <Shot name="pair-device" alt="El QR y el código del nuevo dispositivo" />
 
-<Shot name="pair-approve" alt="La aprobación del dispositivo en el móvil de un adulto" />
+<Shot name="pair-approve" alt="La aprobación del dispositivo en el móvil de una madre o un padre" />
 
 El QR contiene el servidor: también puedes abrirlo con la cámara del móvil para llegar a la confirmación. El código dura **10 minutos** y se usa **una sola vez**. Si falla, empieza de nuevo en el dispositivo nuevo. La pantalla de pared muestra después una breve [lista de preparación](/es/guide/wall).
 

@@ -29,6 +29,7 @@ class _Row {
 
   final TextEditingController controller;
   bool isChild = true;
+  DateTime? birthday;
 
   void dispose() => controller.dispose();
 }
@@ -57,7 +58,11 @@ class _MembersPageState extends ConsumerState<MembersPage> {
     final members = [
       for (final r in _rows)
         if (r.controller.text.trim().isNotEmpty)
-          NewMember(displayName: r.controller.text, isChild: r.isChild),
+          NewMember(
+            displayName: r.controller.text,
+            isChild: r.isChild,
+            birthday: r.isChild ? r.birthday : null,
+          ),
     ];
     final repo = ref.read(householdOnboardingRepositoryProvider);
     final seedExamples =
@@ -176,7 +181,8 @@ class _MembersPageState extends ConsumerState<MembersPage> {
   }
 }
 
-/// A name, a Kind/Erwachsen choice and a remove button for one person.
+/// A name, a Kind/Erwachsen choice, a child's optional birthday and a remove button for
+/// one person.
 class _PersonRow extends StatelessWidget {
   const _PersonRow({
     required this.row,
@@ -237,7 +243,36 @@ class _PersonRow extends StatelessWidget {
                 : null,
           ),
         ),
+        if (row.isChild)
+          Padding(
+            padding: const EdgeInsets.only(left: 28, top: Tokens.space2),
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.cake_outlined),
+              label: Text(
+                row.birthday == null
+                    ? l10n.memberBirthdayOptional
+                    : MaterialLocalizations.of(context)
+                          .formatMediumDate(row.birthday!),
+              ),
+              onPressed: enabled ? () => _pickBirthday(context) : null,
+            ),
+          ),
       ],
     );
+  }
+
+  Future<void> _pickBirthday(BuildContext context) async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: row.birthday ?? DateTime(now.year - 8, now.month, now.day),
+      firstDate: DateTime(1900),
+      lastDate: now,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDatePickerMode: DatePickerMode.year,
+    );
+    if (picked == null) return;
+    row.birthday = picked;
+    onChanged();
   }
 }

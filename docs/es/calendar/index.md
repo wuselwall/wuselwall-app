@@ -101,7 +101,7 @@ Después solo introduces las excepciones. Los festivos, la pared no muestra un l
 
 ## Niños y citas {#children-and-appointments}
 
-El grupo [Ajustes → Calendario y colegio](/es/settings/household) decide si los niños pueden crear y cambiar sus citas. Eliminar las de otra persona sigue reservado a adultos responsables.
+El grupo [Ajustes → Calendario y colegio](/es/settings/household) decide si los niños pueden crear y cambiar sus citas. Eliminar las de otra persona sigue reservado a los padres.
 
 ## Outlook y iPhone {#appointments-in-outlook-or-on-an-iphone}
 
@@ -109,12 +109,12 @@ Una suscripción permite consultar el calendario en otra app, en modo de solo le
 
 ## Calendarios externos {#outside-calendars}
 
-Un adulto añade calendarios del club, del colegio o de recogida de basura en **Ajustes → Avanzados → Añadir calendarios externos**. Indica nombre, dirección **.ics**, color, personas y si aparece en la pared. Sin personas elegidas, vale para toda la familia.
+Una madre o un padre añade calendarios del club, del colegio o de recogida de basura en **Ajustes → Avanzados → Añadir calendarios externos**. Indica nombre, dirección **.ics**, color, personas y si aparece en la pared. Sin personas elegidas, vale para toda la familia.
 
 Los eventos llevan el color y la marca de suscripción. Son **de solo lectura**: edítalos en su origen. El servidor actualiza aproximadamente cada hora; puedes pedir una actualización inmediata. Si falla, aparece el motivo.
 
 - Se exige **HTTPS**; también se reconocen direcciones **webcal://**.
 - No se admiten direcciones hacia máquinas de redes privadas.
 - El archivo está limitado a **2 MB** y cada petición a **15 segundos**.
-- Solo los adultos responsables ven la dirección completa; los demás ven el nombre del servidor. Si la dirección incluye una clave, protégela como una contraseña.
+- Solo los padres ven la dirección completa; los demás ven el nombre del servidor. Si la dirección incluye una clave, protégela como una contraseña.
 - Para enviarlos a Outlook o iPhone, activa su inclusión en la [suscripción compartida](/es/calendar/feeds).

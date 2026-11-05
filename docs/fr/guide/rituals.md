@@ -13,7 +13,7 @@ Pour tous :
 
 ## Anniversaires {#birthdays}
 
-L’anniversaire se saisit sur la page de la personne : **Paramètres → Membres**, touchez la personne, **Anniversaire → Choisir une date** (voir [Modifier un membre](/fr/settings/members-devices#edit-a-member)). Chacun peut saisir le sien ; les parents saisissent ceux des autres.
+L’anniversaire se saisit sur la page de la personne : **Paramètres → Membres**, touchez la personne, **Anniversaire → Choisir une date** (voir [Modifier un membre](/fr/settings/members-devices#edit-a-member)). Chacun peut saisir le sien ; les parents saisissent ceux des autres. L’anniversaire est facultatif ; pour un enfant, il détermine aussi les questions à table. On peut aussi le saisir en ajoutant les enfants pour la première fois.
 
 Avant le jour, un compte à rebours apparaît (voir [Comptes à rebours](#countdowns)), avec l’âge que la personne va avoir : « Les 9 ans de Emma · encore 3 dodos ». Sur le mur, l’anniversaire figure toute la semaine sous la date de son jour, avec un gâteau : « Les 9 ans de Emma ». Le jour même, des fanions à la couleur de la personne ornent le mur, Wusel porte un chapeau de fête, **Aujourd’hui** affiche une carte d’anniversaire, et sur la tablette des enfants Wusel fait la fête pour l’enfant dont c’est l’anniversaire. Si la fête **Anniversaires** est désactivée sous **Saisons et fêtes** (voir [Wusel et les couleurs](/fr/guide/wusel#occasions)), rien de tout cela n’apparaît ; le compte à rebours reste, et la [vue Mois du calendrier](/fr/calendar/#month) montre toujours l’anniversaire avec son gâteau et l’âge.
 
@@ -34,7 +34,7 @@ Il s’affiche sur le **mur** en pied de page (autant qu’il en tient), dans **
 
 Les enfants et le mur comptent en nuits jusqu’à une semaine avant (« encore 3 dodos »), en jours avant cela (« encore 9 jours »). Les adultes lisent « dans 3 jours ». La veille affiche **Demain !**, le jour même **Aujourd’hui !**, et Wusel fait signe en haut du mur. Puis le compte à rebours disparaît.
 
-**Le compte à rebours commence** règle combien de jours avant (14 jours par défaut, de 7 à 60). **Compte à rebours avant un retour** (activé par défaut) désactive celui des voyages.
+**Le compte à rebours commence** règle combien de jours avant (7 jours par défaut, de 7 à 60). **Compte à rebours avant un retour** (activé par défaut) désactive celui des voyages.
 
 ## Traditions familiales {#traditions}
 
@@ -49,7 +49,7 @@ Si une tradition n’a pas lieu une semaine, supprimez **Cet événement uniquem
 Chaque enfant peut souhaiter un repas ; vous décidez combien de souhaits peuvent attendre à la fois (un par défaut). Les enfants ont ainsi leur mot à dire sur les menus.
 
 - **Dans Ma journée**, la carte **Ton repas préféré** s’affiche. **Choisir** ouvre le choix : d’abord **Les favoris de la famille**, les repas que vous avez le plus cuisinés ces derniers temps, puis **Nos recettes**, chacune avec son image (avec beaucoup de recettes, **Chercher une recette** aide), et en bas **Autre chose** en quelques mots, comme « des crêpes », avec une image (**Choisis une image**). Avec **Je choisis ça**, le souhait est parti. Tant qu’il n’est pas planifié, il peut être **changé**.
-- **Les adultes** voient les souhaits en haut des [menus](/fr/meals/#wishes) sous **Souhaits**, chacun avec son image, et dans une carte discrète dans **Aujourd’hui**. Touchez un souhait, choisissez un jour et un repas : il est planifié.
+- **Les parents** voient les souhaits en haut des [menus](/fr/meals/#wishes) sous **Souhaits**, chacun avec son image, et dans une carte discrète dans **Aujourd’hui**. Touchez un souhait, choisissez un jour et un repas : il est planifié.
 - **Quand tout le monde peut souhaiter**, les adultes font aussi leur souhait dans les menus : **Faire un souhait** dans la ligne **Souhaits** ouvre le même choix, **Changer mon souhait** change celui en attente.
 - **Une fois planifié**, le repas porte une étoile et « Souhait de Paul » dans les menus et sur le mur. La carte de l’enfant indique alors, par exemple : « Ton souhait Crêpes, c’est pour le jeudi ! ».
 
@@ -70,10 +70,12 @@ La question apparaît pendant le repas : en haut de l’en-tête du mur, dans **
 - **Nos questions** (sur la carte de la question dans **Aujourd’hui**) : avec **Ajouter une question**, chacun ajoute les siennes. Elles s’affichent avec « Question de Emma ». Une question ajoutée est supprimée par son auteur ou par un parent.
 - Une question fournie qui ne vous convient pas, un parent l’écarte avec **Ne plus poser cette question**. Dans **Questions écartées**, **Reposer** la fait revenir.
 
-Réglages : **Question à table** s’applique au **Repas chaud** (par défaut), au **Déjeuner et dîner**, ou est **Désactivé**. **Question au déjeuner** et **Question au dîner** fixent les horaires ; aucun repas n’a besoin d’être planifié. Par défaut, ils suivent le pays de votre région : 11 h 30 à 13 h 30 et 17 h 30 à 19 h 30, en France 19 h à 21 h pour le dîner, en Espagne 13 h 30 à 15 h 30 et 20 h à 22 h. **Questions pour** : **Tous les âges** convient dès 5 ans, **Aussi les plus grands** ajoute des questions plus profondes dès 8 ans.
+Réglages : **Question à table** s’applique au **Repas chaud** (par défaut), au **Déjeuner et dîner**, ou est **Désactivé**. **Question au déjeuner** et **Question au dîner** fixent les horaires ; aucun repas n’a besoin d’être planifié. Par défaut, ils suivent le pays de votre région : 11 h 30 à 13 h 30 et 17 h 30 à 19 h 30, en France 19 h à 21 h pour le dîner, en Espagne 13 h 30 à 15 h 30 et 20 h à 22 h. **Limite d’âge**, désactivée par défaut, masque les questions à partir d’un âge choisi.
+
+Les questions suivent l’âge des enfants, d’après leur anniversaire. Deux enfants qui ont 5 ans d’écart ou plus reçoivent chacun leur question : côte à côte sur le mur, une carte chacun dans **Aujourd’hui**, et dans **Ma journée** seulement la question de l’âge de l’enfant. Sans aucun anniversaire, les questions conviennent aux enfants de 5 à 7 ans.
 
 ::: info Langues
-Chaque appareil affiche les questions dans sa langue : environ 150 en allemand et en anglais, 50 pour l’instant en français et en espagnol.
+Chaque appareil affiche les questions dans sa langue : environ 150 en allemand et en anglais, environ 50 en français et en espagnol.
 :::
 
 ## Notre semaine {#week-review}

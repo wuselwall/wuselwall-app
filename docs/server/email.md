@@ -5,7 +5,7 @@ Ein WuselWall-Server läuft **mit oder ohne E-Mail**. Ohne meldet sich jede und 
 | | Ohne E-Mail | Mit E-Mail |
 |---|---|---|
 | **Konto anlegen** | E-Mail-Adresse und Passwort. Die App öffnet mit **Neues Konto** | Ein Code per Mail; ein Passwort ist freiwillig |
-| **Passwort vergessen** | Ein Erziehungsberechtigter gibt dir einen Einmal-Code ([unten](#passwort-vergessen)) | Ein Code per Mail |
+| **Passwort vergessen** | Ein Elternteil gibt dir einen Einmal-Code ([unten](#passwort-vergessen)) | Ein Code per Mail |
 | **Einladungen** | Per Link, QR-Code oder Einladungscode | Genauso, und eine Einladung, die deine Adresse nennt, findet dich von selbst |
 | **Wer sonst etwas sieht** | Niemand | Der Mail-Anbieter sieht Adressen und Codes |
 
@@ -92,13 +92,13 @@ Port `587` ist üblich, `465` geht auch. Die Namen sind Beispiele, keine Empfehl
 
 ## Passwort vergessen, ohne E-Mail {#passwort-vergessen}
 
-1. Ein **Erziehungsberechtigter** öffnet auf dem eigenen Handy **Einstellungen → Familie → Mitglieder**, tippt neben dem Namen der Person auf **Passwort zurücksetzen** und bestätigt mit **Code erstellen**.
+1. Ein **Elternteil** öffnet auf dem eigenen Handy **Einstellungen → Familie → Mitglieder**, tippt neben dem Namen der Person auf **Passwort zurücksetzen** und bestätigt mit **Code erstellen**.
 2. Die App zeigt einen **Code aus 8 Zeichen**. Er gilt **einmal**, **10 Minuten** lang. Gib ihn persönlich weiter, nicht per Nachricht.
 3. Auf dem Gerät der Person, die es vergessen hat: **Mit E-Mail fortfahren** → **Anmelden** → **Passwort vergessen?** Dann die E-Mail-Adresse, den Code und ein neues Passwort mit mindestens 10 Zeichen.
 
 Ist für das Konto die Zwei-Faktor-Anmeldung an, fragt sie weiterhin nach dem Code aus der Authenticator-App: Der Rücksetz-Code ersetzt nur das Passwort.
 
-**Der einzige Erziehungsberechtigte hat es vergessen?** Dann erstellt der Betreiber des Servers denselben Code:
+**Das einzige Elternteil hat es vergessen?** Dann erstellt der Betreiber des Servers denselben Code:
 
 - Zu Hause oder gemietet: `./wuselwall password adresse@example.org`
 - Bei Supabase: im Dashboard unter **SQL Editor**: `select app.password_reset_issue_for_email('adresse@example.org') ->> 'code';`

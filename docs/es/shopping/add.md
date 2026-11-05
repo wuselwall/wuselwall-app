@@ -12,7 +12,7 @@ Las tarjetas son el **catálogo** de lo que habéis comprado: primero los **8 pr
 
 - **Un toque** añade el producto y colorea su tarjeta.
 - **Otro toque** aumenta la cantidad: **2×**, **3×**… En la lista, la cantidad aparece como una etiqueta en negrita tras el nombre. El **−** quita una unidad.
-- **Una pulsación larga** abre un pequeño menú: **Añadir y editar** pone el producto en la lista y abre su ficha (cantidad, nota, categoría); **Fijar la ficha** la deja siempre delante; **Renombrar tarjeta** corrige una errata memorizada; **No sugerir más** quita la tarjeta (adultos responsables; el historial conserva el producto, y la próxima compra trae la tarjeta de vuelta).
+- **Una pulsación larga** abre un pequeño menú: **Añadir y editar** pone el producto en la lista y abre su ficha (cantidad, nota, categoría); **Fijar la ficha** la deja siempre delante; **Renombrar tarjeta** corrige una errata memorizada; **No sugerir más** quita la tarjeta (los padres; el historial conserva el producto, y la próxima compra trae la tarjeta de vuelta).
 
 ### Fijar tarjetas {#pinning-tiles}
 

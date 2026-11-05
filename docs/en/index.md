@@ -3,7 +3,7 @@ layout: home
 hero:
   name: WuselWall
   text: The family planner for home
-  tagline: Calendar, timetable, chores, meals and the shopping list — on your phone, the kids' tablet and the screen in the kitchen. This guide shows how it all works.
+  tagline: Calendar, timetable, chores, meals and the shopping list — on your phone, the children's tablet and the screen in the kitchen. This guide shows how it all works.
   image:
     src: /logo.svg
     alt: WuselWall
@@ -38,7 +38,7 @@ features:
     linkText: Tasks guide
   - icon: 🍴
     title: Meals
-    details: The week's meal plan, the kids' wishes, suggestions and recipes.
+    details: The week's meal plan, the children's wishes, suggestions and recipes.
     link: /en/meals/
     linkText: Meals guide
   - icon: 🧺
@@ -52,8 +52,8 @@ features:
     link: /en/guide/rituals
     linkText: About the rituals
   - icon: 📺
-    title: Kitchen wall and kids
-    details: A big screen for everyone and a tablet where the kids tap their name.
+    title: Kitchen wall and children
+    details: A big screen for everyone and a tablet where the children tap their name.
     link: /en/guide/wall
     linkText: Set up the wall and tablet
   - icon: 👪
@@ -177,7 +177,7 @@ Which lessons, which subjects and what is different this week. The kitchen wall 
 
 ### [Tasks: planned, not nagged](/en/tasks/)
 
-Everyone sees what is due today. Kids tick off their own chores and collect points for rewards that you choose.
+Everyone sees what is due today. Children tick off their own chores and collect points for rewards that you choose.
 
 - [How do I create chores?](/en/tasks/#creating-chores)
 - [How do points and rewards work?](/en/tasks/#rewards)
@@ -216,12 +216,12 @@ The meal plan answers "What's for dinner?", and the recipes fill the shopping li
 </div>
 <div>
 
-### [The kitchen wall and the kids' tablet](/en/guide/wall)
+### [The kitchen wall and the children's tablet](/en/guide/wall)
 
-The wall shows the whole family's week in large type. On the tablet, the kids tap their name and see their day.
+The wall shows the whole family's week in large type. On the tablet, the children tap their name and see their day.
 
 - [How do I set up the wall display?](/en/guide/wall#wall-display-in-the-kitchen)
-- [What do the kids see on the tablet?](/en/guide/wall#kids-tablet)
+- [What do the children see on the tablet?](/en/guide/wall#childrens-tablet)
 - [Why do you tap your name first on the tablet?](/en/guide/who-are-you)
 
 </div>

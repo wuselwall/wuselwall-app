@@ -17,7 +17,7 @@ Der Startbildschirm hat drei Wege:
 
 - **Mit E-Mail fortfahren**: für dich als Erwachsene:r, auf deinem eigenen Handy.
 - **Ich habe einen Einladungscode**: du wurdest von einer Familie eingeladen.
-- **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Erwachsenen auf seinem Handy freigegeben.
+- **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Elternteil auf dessen Handy freigegeben.
 
 ## Der Einrichtungsschlüssel: ein Server ohne Familie {#einrichtungsschluessel}
 
@@ -53,7 +53,7 @@ Ist die **Zwei-Faktor-Anmeldung** eingeschaltet, kommt danach noch der 6-stellig
 
 ### Auf einem Server ohne E-Mail {#ohne-e-mail}
 
-Manche Familienserver verschicken keine Mails ([E-Mail](/server/email)). Dann öffnet **Mit E-Mail fortfahren** mit **Neues Konto**: Gib deine Adresse und ein Passwort mit mindestens 10 Zeichen ein und tippe auf **Konto erstellen**. Es gibt keinen Code und keine Bestätigungsmail. Du hast schon ein Konto? Tippe auf **Anmelden**. Hast du dein Passwort vergessen, tippst du auf **Passwort vergessen?** und bittest einen Erziehungsberechtigten deiner Familie um einen Code ([Passwort zurücksetzen](/settings/members-devices#passwort-zuruecksetzen)).
+Manche Familienserver verschicken keine Mails ([E-Mail](/server/email)). Dann öffnet **Mit E-Mail fortfahren** mit **Neues Konto**: Gib deine Adresse und ein Passwort mit mindestens 10 Zeichen ein und tippe auf **Konto erstellen**. Es gibt keinen Code und keine Bestätigungsmail. Du hast schon ein Konto? Tippe auf **Anmelden**. Hast du dein Passwort vergessen, tippst du auf **Passwort vergessen?** und bittest ein Elternteil deiner Familie um einen Code ([Passwort zurücksetzen](/settings/members-devices#passwort-zuruecksetzen)).
 
 ## 2. Neue Familie anlegen
 

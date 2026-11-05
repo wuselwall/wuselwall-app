@@ -51,7 +51,7 @@ If two-factor sign-in is on, the six-digit code from your authenticator app foll
 
 ### On a server without email {#without-email}
 
-Some family servers send no email ([Email](/en/server/email)). Then **Continue with email** opens on **New account**: enter your address and a password of at least 10 characters, and tap **Create account**. There is no code and no confirmation email. Already have an account? Tap **Sign in**. If you forget your password, tap **Forgot your password?** and ask a guardian of your family for a code ([Reset password](/en/settings/members-devices#reset-password)).
+Some family servers send no email ([Email](/en/server/email)). Then **Continue with email** opens on **New account**: enter your address and a password of at least 10 characters, and tap **Create account**. There is no code and no confirmation email. Already have an account? Tap **Sign in**. If you forget your password, tap **Forgot your password?** and ask a parent of your family for a code ([Reset password](/en/settings/members-devices#reset-password)).
 
 ## 2. Creating a new family
 
@@ -94,19 +94,19 @@ An account belongs to exactly **one** family. If you open an invitation while yo
 
 ## 4. Connecting a family tablet or wall display
 
-This is how the **wall display** in the kitchen, a **kids' tablet** or a **shared tablet** join the household. You do not type a code, only briefly use your phone. The new device's QR code also names the server; if you open it with your phone's camera, WuselWall starts right at the confirmation:
+This is how the **wall display** in the kitchen, a **children's tablet** or a **shared tablet** join the household. You do not type a code, only briefly use your phone. The new device's QR code also names the server; if you open it with your phone's camera, WuselWall starts right at the confirmation:
 
 1. On the new device, tap **Connect a family tablet or wall display**. It shows a **QR code** and a code.
 2. On your phone, open **Settings → Devices → Connect a device**. You can also start from the **Getting started** card on the Today tab.
 3. Scan the QR code or type in the code, and tap **Next**. As you type, letters automatically appear in uppercase and the dash is inserted. You can enter the code in lowercase without the dash.
-4. Choose the kind of device: **Wall display**, **Kids' tablet**, **Shared tablet** or **A child's phone**. For a child's phone you pick the child. Give the device a name and tap **Connect**.
-5. The first time, you set the **guardian PIN**. It confirms changes on shared devices (see [Who are you?](/en/guide/who-are-you)).
+4. Choose the kind of device: **Wall display**, **Children's tablet**, **Shared tablet** or **A child's phone**. For a child's phone you pick the child. Give the device a name and tap **Connect**.
+5. The first time, you set the **parent PIN**. It confirms changes on shared devices (see [Who are you?](/en/guide/who-are-you)).
 
 <Shot name="pair-device" alt="New device shows a QR code and a code" />
 
-<Shot name="pair-approve" alt="A guardian's phone: check the device and connect it" />
+<Shot name="pair-approve" alt="A parent's phone: check the device and connect it" />
 
-After that the new device is ready. The wall display shows a short checklist once, so that it keeps running (see [Wall display and kids](/en/guide/wall)). The code is valid for **10 minutes** and works **once**. If it does not match, start again on the new device.
+After that the new device is ready. The wall display shows a short checklist once, so that it keeps running (see [Wall display and children](/en/guide/wall)). The code is valid for **10 minutes** and works **once**. If it does not match, start again on the new device.
 
 ::: tip Older devices
 A device with an older version of WuselWall still takes the old code: under **Settings → Advanced → Devices** tap **Create a code for an older device**. This option goes away with the next version.

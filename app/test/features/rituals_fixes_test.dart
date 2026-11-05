@@ -108,9 +108,10 @@ Widget _app(
   TableMoment? moment,
   UiRegister register = UiRegister.kid,
   String acting = 'm-kid',
+  List<Member> members = const [_child, _guardian],
 }) => ProviderScope(
   overrides: [
-    membersProvider.overrideWith((ref) async => const [_child, _guardian]),
+    membersProvider.overrideWith((ref) async => members),
     actingProfileProvider.overrideWith(() => _Acting(acting)),
     lighterDayProvider.overrideWith((ref) => day ?? _day()),
     lighterDaySupportedProvider.overrideWith((ref) => supported),
@@ -364,13 +365,103 @@ void main() {
       category: 'riddle',
       answer: 'Ein Kamm, der ganz besonders lange Zinken hat',
     );
-    final moment = (
+    final TableMoment moment = (
       window: 7,
       dinner: true,
-      questions: const [riddle],
+      tracks: [
+        (
+          ages: (youngest: 5, oldest: 7),
+          questions: const [riddle],
+          cycleLength: 1,
+        ),
+      ],
       householdId: 'h',
-      cycleLength: 1,
     );
+
+    // Two age groups, far apart (specs/27): each has a question of its own.
+    const young = TableQuestion(key: 'de:q-1', text: 'Für die Kleinen?');
+    const older = TableQuestion(key: 'de:q-2', text: 'Für die Grossen?');
+    final TableMoment twoAges = (
+      window: 7,
+      dinner: true,
+      tracks: [
+        (
+          ages: (youngest: 5, oldest: 5),
+          questions: const [young],
+          cycleLength: 1,
+        ),
+        (
+          ages: (youngest: 14, oldest: 14),
+          questions: const [older],
+          cycleLength: 1,
+        ),
+      ],
+      householdId: 'h',
+    );
+
+    testWidgets('the wall shows two questions side by side when the children '
+        'are far apart, each with its own "Andere Frage"', (t) async {
+      t.view.physicalSize = const Size(1920, 800);
+      t.view.devicePixelRatio = 1;
+      addTearDown(t.view.reset);
+      await t.pumpWidget(
+        _app(
+          const SizedBox(height: 72, child: BoardTableQuestions()),
+          moment: twoAges,
+          register: UiRegister.kiosk,
+        ),
+      );
+      await t.pumpAndSettle();
+      expect(find.text(young.text), findsOneWidget);
+      expect(find.text(older.text), findsOneWidget);
+      expect(find.byTooltip('Andere Frage'), findsNWidgets(2));
+      expect(t.takeException(), isNull);
+    });
+
+    testWidgets('Today shows a card per question, put away together', (
+      t,
+    ) async {
+      await t.pumpWidget(
+        _app(
+          const SingleChildScrollView(child: TableQuestionCard()),
+          moment: twoAges,
+          register: UiRegister.adult,
+          acting: 'm-dad',
+        ),
+      );
+      await t.pumpAndSettle();
+      expect(find.text(young.text), findsOneWidget);
+      expect(find.text(older.text), findsOneWidget);
+      await t.tap(find.byKey(const ValueKey('table-question-dismiss')).first);
+      await t.pumpAndSettle();
+      expect(find.text(young.text), findsNothing);
+      expect(find.text(older.text), findsNothing);
+    });
+
+    testWidgets('a child sees the question of their own age', (t) async {
+      final now = DateTime(_today.year - 14, 1, 1);
+      await t.pumpWidget(
+        _app(
+          const TableQuestionCard(kid: true),
+          moment: twoAges,
+          members: [
+            Member(
+              id: 'm-kid',
+              displayName: 'Paul',
+              color: _child.color,
+              role: _child.role,
+              active: true,
+              isChild: true,
+              birthday: now,
+            ),
+            _guardian,
+          ],
+        ),
+      );
+      await t.pumpAndSettle();
+      expect(find.text(older.text), findsOneWidget);
+      expect(find.text(young.text), findsNothing);
+    });
 
     testWidgets('fits the wall header\'s height, without a Wusel of its own, '
         'and its answer takes its place', (t) async {

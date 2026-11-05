@@ -17,26 +17,54 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
+import 'package:wuselwall/features/rituals/domain/countdown.dart';
 import 'package:wuselwall/features/rituals/domain/table_question.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
-/// The question of this moment for this device, with its window, or null.
-({TableQuestion question, int window})? _current(
-  BuildContext context,
-  WidgetRef ref,
-) {
+/// One question of this moment on this device, with its window and age group.
+typedef _Current = ({TableQuestion question, int window, int track});
+
+/// The questions of this moment for this device: one, or one per age group when the
+/// children are far apart (specs/27).
+List<_Current> _current(BuildContext context, WidgetRef ref) {
   final lang = Localizations.localeOf(context).languageCode;
   final moment = ref.watch(tableMomentProvider(lang));
-  if (moment == null) return null;
-  final skip = ref.watch(tableSkipProvider)[moment.window] ?? 0;
-  final q = householdQuestion(
-    moment.questions,
-    moment.householdId,
-    moment.window,
-    cycleLength: moment.cycleLength,
-    skip: skip,
-  );
-  return q == null ? null : (question: q, window: moment.window);
+  if (moment == null) return const [];
+  final skips = ref.watch(tableSkipProvider);
+  return [
+    for (final (:question, :track) in tableMomentQuestions(
+      moment,
+      skip: (track) => skips[(moment.window, track)] ?? 0,
+    ))
+      (question: question, window: moment.window, track: track),
+  ];
+}
+
+/// The question for the child at this device: the one of their age group, or the first.
+_Current? _forActingChild(
+  BuildContext context,
+  WidgetRef ref,
+  List<_Current> questions,
+) {
+  if (questions.length < 2) return questions.firstOrNull;
+  final lang = Localizations.localeOf(context).languageCode;
+  final moment = ref.watch(tableMomentProvider(lang));
+  final acting = ref.watch(actingProfileProvider);
+  final birthday = ref
+      .watch(membersProvider)
+      .value
+      ?.where((m) => m.id == acting)
+      .firstOrNull
+      ?.birthday;
+  if (moment == null || birthday == null) return questions.first;
+  final age = ageOn(
+    birthday,
+    ref.watch(ritualTodayProvider),
+  ).clamp(tableQuestionYoungest, tableQuestionOldest);
+  return questions
+          .where((q) => moment.tracks[q.track].ages.oldest >= age)
+          .firstOrNull ??
+      questions.last;
 }
 
 String? _author(WidgetRef ref, TableQuestion q) {
@@ -67,6 +95,11 @@ double boardQuestionSize(
   textDirection: textDirection,
 ).size;
 
+/// The wall's sizes for one question, and for one of two side by side, which have half
+/// the width and go smaller rather than end in an ellipsis.
+const boardQuestionSizes = [34.0, 30.0, 26.0, 24.0];
+const boardQuestionSizesHalf = [34.0, 30.0, 26.0, 24.0, 20.0, 18.0];
+
 /// The size and lines of the wall's question so that it fits [maxHeight] as well as
 /// [width]: 34 on one line, else down to 24 on as many lines as the height holds. The
 /// header keeps its height through the meal, so the rows under it never move
@@ -78,8 +111,8 @@ double boardQuestionSize(
   double maxHeight = double.infinity,
   TextScaler textScaler = TextScaler.noScaling,
   TextDirection textDirection = TextDirection.ltr,
+  List<double> sizes = boardQuestionSizes,
 }) {
-  const sizes = [34.0, 30.0, 26.0, 24.0];
   for (final size in sizes) {
     final lineHeight = textScaler.scale(size * 1.15);
     final lines = maxHeight.isFinite
@@ -116,7 +149,13 @@ double _boardQuestionHeight(BuildContext context) =>
 /// corner Wusel of the header is the one that holds it (specs/25: one Wusel per screen).
 /// The week stays on screen.
 class BoardTableQuestion extends ConsumerStatefulWidget {
-  const BoardTableQuestion({super.key});
+  const BoardTableQuestion({this.index = 0, this.half = false, super.key});
+
+  /// Which of this moment's questions: the second belongs to the older children.
+  final int index;
+
+  /// Beside another question, so with half the width.
+  final bool half;
 
   @override
   ConsumerState<BoardTableQuestion> createState() => _BoardTableQuestionState();
@@ -128,7 +167,7 @@ class _BoardTableQuestionState extends ConsumerState<BoardTableQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final current = _current(context, ref);
+    final current = _current(context, ref).elementAtOrNull(widget.index);
     if (current == null) return const SizedBox.shrink();
     final l10n = context.l10n;
     final q = current.question;
@@ -160,7 +199,7 @@ class _BoardTableQuestionState extends ConsumerState<BoardTableQuestion> {
 
   Widget _card(
     BuildContext context,
-    ({TableQuestion question, int window}) current,
+    _Current current,
     TextSpan spans,
     bool shown,
     Color ink,
@@ -174,6 +213,7 @@ class _BoardTableQuestionState extends ConsumerState<BoardTableQuestion> {
       spans,
       width: math.max(0, c.maxWidth - 24 - 56.0 * buttons),
       maxHeight: height,
+      sizes: widget.half ? boardQuestionSizesHalf : boardQuestionSizes,
       // Measured as it is painted: on the inherited style (the kiosk's letter
       // spacing), not on bare boardUi.
       style: (size) =>
@@ -233,11 +273,33 @@ class _BoardTableQuestionState extends ConsumerState<BoardTableQuestion> {
             constraints: const BoxConstraints.tightFor(width: 56, height: 56),
             iconSize: 30,
             icon: const Icon(Icons.refresh_rounded),
-            onPressed: () =>
-                ref.read(tableSkipProvider.notifier).next(current.window),
+            onPressed: () => ref
+                .read(tableSkipProvider.notifier)
+                .next(current.window, current.track),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// The wall's questions of this moment: one, or two side by side when the children are
+/// far apart (specs/27).
+class BoardTableQuestions extends ConsumerWidget {
+  const BoardTableQuestions({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = _current(context, ref).length;
+    if (count < 2) return const Center(child: BoardTableQuestion());
+    return Row(
+      spacing: Tokens.space2,
+      children: [
+        for (var i = 0; i < count; i++)
+          Expanded(
+            child: Center(child: BoardTableQuestion(index: i, half: true)),
+          ),
+      ],
     );
   }
 }
@@ -250,12 +312,26 @@ class TableQuestionCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final current = _current(context, ref);
-    if (current == null) return const SizedBox.shrink();
+    final questions = _current(context, ref);
+    // A child sees the question of their own age; Today shows each age group's.
+    if (kid) {
+      final own = _forActingChild(context, ref, questions);
+      return own == null
+          ? const SizedBox.shrink()
+          : _question(context, ref, own);
+    }
     // Put away on Today until the next meal; local to this device (specs/27).
-    if (!kid && ref.watch(tableDismissProvider).contains(current.window)) {
+    if (questions.isEmpty ||
+        ref.watch(tableDismissProvider).contains(questions.first.window)) {
       return const SizedBox.shrink();
     }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [for (final q in questions) _question(context, ref, q)],
+    );
+  }
+
+  Widget _question(BuildContext context, WidgetRef ref, _Current current) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final q = current.question;
@@ -312,8 +388,9 @@ class TableQuestionCard extends ConsumerWidget {
             OutlinedButton.icon(
               icon: const Icon(Icons.refresh_rounded),
               label: Text(l10n.tableQuestionNext),
-              onPressed: () =>
-                  ref.read(tableSkipProvider.notifier).next(current.window),
+              onPressed: () => ref
+                  .read(tableSkipProvider.notifier)
+                  .next(current.window, current.track),
             ),
             if (q.answer != null) _AnswerButton(answer: q.answer!),
             // Anyone may add a question of their own, children too.

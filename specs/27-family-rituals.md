@@ -86,7 +86,7 @@ The wording uses the member labels the household already uses on the board
 
 **How it counts**
 
-- From `rituals.countdown_days` (default 14) days before. Up to 7 days the kid register and the
+- From `rituals.countdown_days` (default 7, 14 until 2026-11-04) days before. Up to 7 days the kid register and the
   wall count **nights** ("noch 3× schlafen"); beyond 7 days they say "noch 9 Tage", and the
   adult register always says "in 3 Tagen".
 - The day before says "Morgen!" and the day itself "Heute!", with Wusel's `wave`. After that
@@ -213,13 +213,32 @@ A question for the table during the meal, answered aloud, with nothing recorded.
     target. The week stays visible.
   - On the **kid home**, the same card.
   - On **Today**, a dismissible card.
+- **For the children's ages.** *Decided 2026-11-04.* Every question has an age range: `min_age`,
+  the youngest age that can really answer it, and an optional `max_age`, where older children
+  would roll their eyes; without one it suits everyone, adults included. The ages come from the
+  children's birthdays (`profile.birthday`, optional) and are computed in the app; nothing about
+  them is stored in addition. A question is asked when its range overlaps the children's:
+  - Children **five years apart or more** get a question each, the group split halfway between
+    the youngest and the oldest. The wall shows the two side by side, going down to size 18 rather
+    than an ellipsis; Today shows a card each, put away together; the kid home shows only the
+    question of that child's group. Never more than two: the header has room for no more.
+    The second group walks its own shuffle and never shows what the first shows; the family's own
+    questions go into the first group only.
+  - Children under 4 don't count while an older child can answer, and a child over 16 counts as 16.
+  - Without any birthday the questions suit ages 5 to 7, what the old default deck was for. A
+    household without children gets all of them.
+  - `rituals.table_question_age_limit` (off by default, 6–16) lets parents hide questions from an
+    age upwards: `min_age >= limit` is never asked. It is the only setting, and replaces the
+    choice between *Familie* and *Ältere*. Turning it on starts at 12, because a limit at the
+    lowest age would leave next to no questions.
+  A birthday moves a child's age once a year, which changes that household's walk once a year.
 - **The same question everywhere.** Each household walks its own fixed shuffle of the deck,
   seeded by its id, one question per meal window. So every device shows the same question, and
   no question repeats before the deck is through. *Andere Frage* steps forward on that device
   only. A shared "next" would be a write per tap, and the family can just say "nimm die
   nächste".
-- **The deck:** about 150 questions in German and English and 50 in French and Spanish, in
-  `app/assets/table_questions/{de,en,fr,es}.json`, with stable ids and categories:
+- **The deck:** about 300 questions in German and English and 100 in French and Spanish, for ages
+  4 to 16, in `app/assets/table_questions/{de,en,fr,es}.json`, with stable ids and categories:
   - *Quatsch*: "Wenn unser Kühlschrank sprechen könnte, was würde er sagen?"
   - *Heute*: "Was war heute das Lustigste?"
   - *Stell dir vor*
@@ -228,9 +247,8 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   - *Rätsel*: a short riddle, with the answer behind a tap
   - *Danke*: used sparingly, at most one in ten
   
-  `rituals.table_question_deck` chooses *Familie* (default, fine for a five-year-old) or
-  *Ältere* (adds questions for 8+). Each language's deck is **written in that language**, not
-  translated, and none is copied from a commercial card game.
+  Each language's deck is **written in that language**, not translated, and none is copied from
+  a commercial card game. A test keeps at least 15 questions in reach of every age.
 - **FR and ES with 50 questions each.** *Decided 2026-10-24 ([Q53](14-open-questions.md)),
   changed the same day.* The French and Spanish decks were researched and drafted at 150
   questions each, without a native reviewer. The app ships 50 of each: a third of every
@@ -238,7 +256,9 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   flag as unsure and every riddle whose tradition could not be traced. The drafts and notes
   are kept in the maintainers' private notes. A
   household walks through 50 questions in about seven weeks of warm meals before one comes
-  back; a later change can add from the drafts without changing the existing ids.
+  back; a later change can add from the drafts without changing the existing ids. *2026-11-04:*
+  50 more each, written for the ages the first 50 left out (mostly 9 to 16), again without a native
+  review.
 - **The family's own questions:** `table_question(id, household_id, text, created_by_profile_id,
   created_at)`, written with `api.table_question_add` and `_remove`. Any member may add one; a
   guardian or the author removes it. Own questions mix into the shuffle and show "Frage von

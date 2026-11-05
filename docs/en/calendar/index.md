@@ -77,7 +77,7 @@ When you change or delete an event that repeats, WuselWall asks: **Only this eve
 At the bottom of the editor are three things that make the day lighter (see [Rituals](/en/guide/rituals)):
 
 - **Picture**: one of 20 pictures, such as a cake, a pizza, the zoo or a tent. It is shown with the event on the wall and with its countdown. **No picture** is the default.
-- **We are looking forward to it**: the event counts down on the wall and on the kids' tablet, for example "Trip to the zoo: 3 more sleeps".
+- **We are looking forward to it**: the event counts down on the wall and on the children's tablet, for example "Trip to the zoo: 3 more sleeps".
 - **Family tradition**: something the family does again and again, such as game night. A tradition is always on the wall, with a ribbon. Under **With a meal** you enter the meal that belongs to it and choose **Lunch** or **Dinner**.
 
 <Shot name="calendar-rituals" alt="Bottom of the event editor with picture, We are looking forward to it and a family tradition with a meal" />
@@ -106,7 +106,7 @@ After that you only enter the exceptions. A normal week stays empty. On a public
 
 ## Children and appointments
 
-You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the guardians.
+You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the parents.
 
 ## Appointments in Outlook or on an iPhone
 
@@ -116,7 +116,7 @@ The family calendar can be shown as a **subscription** in Outlook or on an iPhon
 
 Appointments from outside come into the family calendar through a **subscription**: a club's fixture list, the town's bin collection calendar, school events. You need only the calendar's address, usually a file ending in **.ics**. **webcal://** addresses work too.
 
-A guardian manages subscriptions under **Settings → Advanced → Add outside calendars**. **Subscribe to a calendar** opens the form with name, address, colour, **Who?** (without a choice the calendar is for the whole family) and **Show on the kitchen display**. The appointments appear in the calendar in the calendar's colour, with a subscription mark. They are read-only: changes come from the source.
+A parent manages subscriptions under **Settings → Advanced → Add outside calendars**. **Subscribe to a calendar** opens the form with name, address, colour, **Who?** (without a choice the calendar is for the whole family) and **Show on the kitchen display**. The appointments appear in the calendar in the calendar's colour, with a subscription mark. They are read-only: changes come from the source.
 
 Your server fetches each calendar about once an hour. **Refresh now** does it at once. If a fetch fails, the reason shows on the calendar, for example "The address cannot be reached right now."
 
@@ -124,5 +124,5 @@ Good to know:
 
 - Only **https://** addresses are accepted. Addresses that point to machines on your own network are refused.
 - A calendar may be at most 2 MB. A fetch gives up after 15 seconds.
-- Every device of your household sees only the host name of the address, for example "abfuhr.example.de". The full address is shown only to guardians, when they edit the calendar. If it contains a secret key, treat it like a password.
+- Every device of your household sees only the host name of the address, for example "abfuhr.example.de". The full address is shown only to parents, when they edit the calendar. If it contains a secret key, treat it like a password.
 - In the subscription for Outlook and iPhone, outside appointments appear only when you tick **Include outside calendars** when creating it. See [Sharing the family calendar](/en/calendar/feeds).

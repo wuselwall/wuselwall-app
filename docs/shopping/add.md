@@ -14,7 +14,7 @@ Jede Kachel zeigt ein Bild dazu: WuselWall erkennt gängige Artikel am Namen, et
 
 - **Einmal tippen** setzt den Artikel auf die Liste. Die Kachel wird grün hinterlegt.
 - **Nochmal tippen** zählt hoch: „2×“, „3×“ … In der Liste steht die Anzahl als dicke Marke hinter dem Namen. Mit dem kleinen **−** nimmst du eins wieder weg.
-- **Lange drücken** öffnet ein kleines Menü: **Hinzufügen und bearbeiten** setzt den Artikel auf die Liste und öffnet seine Karte (Anzahl, Notiz, Kategorie); **Kachel anheften** stellt die Kachel dauerhaft nach vorn; **Kachel umbenennen** korrigiert einen Tippfehler, den sich WuselWall gemerkt hat; **Nicht mehr vorschlagen** nimmt die Kachel weg (Erziehungsberechtigte; der Verlauf behält den Artikel, und beim nächsten Kauf kommt die Kachel zurück).
+- **Lange drücken** öffnet ein kleines Menü: **Hinzufügen und bearbeiten** setzt den Artikel auf die Liste und öffnet seine Karte (Anzahl, Notiz, Kategorie); **Kachel anheften** stellt die Kachel dauerhaft nach vorn; **Kachel umbenennen** korrigiert einen Tippfehler, den sich WuselWall gemerkt hat; **Nicht mehr vorschlagen** nimmt die Kachel weg (Eltern; der Verlauf behält den Artikel, und beim nächsten Kauf kommt die Kachel zurück).
 
 ### Kacheln anheften
 

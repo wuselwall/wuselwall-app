@@ -127,7 +127,7 @@ void main() {
         );
         expect(
           find.text(
-            'Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.',
+            'Lade zuerst einen weiteren Elternteil ein oder lösche die Familie.',
           ),
           findsOneWidget,
         );
@@ -178,7 +178,7 @@ void main() {
       await t.pumpAndSettle();
       expect(
         find.text(
-          'Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.',
+          'Lade zuerst einen weiteren Elternteil ein oder lösche die Familie.',
         ),
         findsWidgets,
       );
@@ -288,7 +288,7 @@ void main() {
         expect(find.text('Endgültig löschen?'), findsOneWidget);
         expect(
           find.text(
-            'Die Familie und alle ihre Daten werden sofort und endgültig gelöscht. Niemand kann sie wiederherstellen, auch keine Elternperson. Willst du etwas behalten, exportiere die Daten vorher.',
+            'Die Familie und alle ihre Daten werden sofort und endgültig gelöscht. Niemand kann sie wiederherstellen, auch kein Elternteil. Willst du etwas behalten, exportiere die Daten vorher.',
           ),
           findsOneWidget,
         );
@@ -416,7 +416,7 @@ void main() {
       expect(find.byKey(const ValueKey('deleted-restore')), findsNothing);
       expect(
         find.text(
-          'Nur eine Elternperson kann die Familie wiederherstellen. Du kannst auch neu anfangen; dann verlässt dein Konto diese Familie.',
+          'Nur ein Elternteil kann die Familie wiederherstellen. Du kannst auch neu anfangen; dann verlässt dein Konto diese Familie.',
         ),
         findsOneWidget,
       );

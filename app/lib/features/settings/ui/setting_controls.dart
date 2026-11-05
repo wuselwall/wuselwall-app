@@ -113,6 +113,10 @@ class _SettingControl extends StatelessWidget {
         onChanged: (o) => onChanged(o.name),
       );
     }
+    // A warm meal is two independent toggles: lunch and dinner, both or neither.
+    if (entry.key.startsWith('meals.warm_meal.')) {
+      return _WarmMealToggles(value: value as String, onChanged: onChanged);
+    }
     // A holiday stored as auto, on or off is a plain switch: `auto` shows what the
     // country does, and the row's reset goes back to it.
     if (Occasion.ofKey(entry.key) case final occasion?
@@ -178,6 +182,45 @@ class _SettingControl extends StatelessWidget {
   }
 }
 
+/// `meals.warm_meal.*` as two toggle buttons: both on is the stored `both`, both off
+/// `none`.
+class _WarmMealToggles extends StatelessWidget {
+  const _WarmMealToggles({required this.value, required this.onChanged});
+
+  final String value;
+  final ValueChanged<Object?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return SegmentedButton<String>(
+      multiSelectionEnabled: true,
+      emptySelectionAllowed: true,
+      showSelectedIcon: false,
+      segments: [
+        ButtonSegment(
+          value: 'lunch',
+          label: Text(l10n.settingValueLunch, softWrap: false),
+        ),
+        ButtonSegment(
+          value: 'dinner',
+          label: Text(l10n.settingValueDinner, softWrap: false),
+        ),
+      ],
+      selected: switch (value) {
+        'both' => const {'lunch', 'dinner'},
+        'none' => const {},
+        _ => {value},
+      },
+      onSelectionChanged: (s) => onChanged(switch (s.length) {
+        0 => 'none',
+        2 => 'both',
+        _ => s.first,
+      }),
+    );
+  }
+}
+
 /// A [Switch] drawn flush with the row's text. Material pads the track by 4 px on
 /// each side and centres it in that box, which set it 4 px right of the text column.
 /// Without the padding the box is the 52 px track, still wider than the 48 px target,
@@ -230,7 +273,12 @@ class _NullableSwitch extends StatelessWidget {
                 return;
               }
               if (entry.type == SettingType.integer) {
-                onChanged(entry.min);
+                // Blocking from the lowest age up would leave next to no questions.
+                onChanged(
+                  entry.key == 'rituals.table_question_age_limit'
+                      ? 12
+                      : entry.min,
+                );
                 return;
               }
               final picked = await pickSettingTime(context, '09:00');

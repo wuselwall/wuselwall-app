@@ -1,6 +1,6 @@
 # Horario escolar
 
-Los adultos mantienen el horario. Cada niño consulta su semana y los cambios, también en la pantalla de cocina.
+Los padres mantienen el horario. Cada niño consulta su semana y los cambios, también en la pantalla de cocina.
 
 <Shot name="school-week" alt="El horario de un niño con una clase cancelada y una suplencia" wide />
 
@@ -147,4 +147,4 @@ La pared y la vista del día del niño muestran el material del día siguiente, 
 
 ## Los niños informan de cambios {#children-report-changes}
 
-Solo los adultos responsables mantienen el horario. Puedes permitir que un miembro comunique una cancelación para que un adulto la confirme, en [Ajustes → Calendario y colegio](/es/settings/household).
+Solo los padres mantienen el horario. Puedes permitir que un niño comunique una cancelación para que una madre o un padre la confirme, en [Ajustes → Calendario y colegio](/es/settings/household).

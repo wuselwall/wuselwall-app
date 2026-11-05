@@ -1,6 +1,6 @@
 # Sicherheit
 
-Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Erziehungsberechtigten: **Einstellungen → Konto & Sicherheit → Anmeldung** und **Einstellungen → Konto & Sicherheit → Sicherheit**.
+Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Elternteils: **Einstellungen → Konto & Sicherheit → Anmeldung** und **Einstellungen → Konto & Sicherheit → Sicherheit**.
 
 ## Anmeldung
 
@@ -20,7 +20,7 @@ Zusätzlich zum Passwort verlangt WuselWall bei jeder Anmeldung einen **6-stelli
 
 Ab dann fragt jede neue Anmeldung nach dem Code; ohne ihn sieht ein Handy **keine** Daten des Haushalts. Mit **Ausschalten** nimmst du es wieder zurück.
 
-## PIN für Erziehungsberechtigte
+## PIN für Eltern
 
 Die 6-stellige PIN, die du auf geteilten Geräten eingibst ([Wer bist du?](/guide/who-are-you)). Hier setzt du eine **neue PIN** – auch wenn die alte nach zu vielen Fehlversuchen **gesperrt** ist. Nur dein eigenes, angemeldetes Handy darf das.
 

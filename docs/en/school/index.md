@@ -165,4 +165,4 @@ On the kitchen wall, a child's card shows **Pack for tomorrow** when something n
 
 ## Children report changes
 
-Only guardians maintain the timetable. You can allow a child to report a cancelled lesson, though. A guardian then confirms it. The option is under [Settings → Calendar & school](/en/settings/household), as **Members report timetable changes**.
+Only parents maintain the timetable. You can allow a child to report a cancelled lesson, though. A parent then confirms it. The option is under [Settings → Calendar & school](/en/settings/household), as **Children report timetable changes**.

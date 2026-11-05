@@ -197,6 +197,24 @@ Motion: 150 ms standard, 250 ms emphasised, both `easeOutCubic`. The points fly 
 balance in 600 ms along a curve, with a coin-count tick. All of it follows the system's
 reduce-motion setting.
 
+## Words for people
+
+*Decided 2026-11-04.* One word per person in each language, everywhere people read: the app, mail and
+the family guide. Code, the database and these specs keep `guardian`, `member`, `child` and `adult`.
+
+| | de | en | fr | es |
+|---|---|---|---|---|
+| `guardian` | Eltern, ein Elternteil | parents, a parent | parents, un parent | padres, madre o padre |
+| `kind = child` | Kind, Kinder | child, children | enfant, enfants | niño, niños |
+| Adult `member` (au pair, grandparent) | Weitere:r Erwachsene:r | other adult | autre adulte | otro adulto |
+| To a child, about who decides | deine Eltern | your parents | tes parents | tus padres |
+
+*Member* (Mitglied, membre, miembro) means everyone in the family and nothing else; *adult* is the
+kind of person, not the one who decides. Settings a child mostly uses say *children*, even though
+the rule behind them also covers other adults (`calendar.members_edit_own_events`,
+`school.members_report_changes`). Help text says what a setting does, and gives advice a family can
+use; never a remark for the makers. `app/test/l10n_test.dart` checks the words it can.
+
 ## The three directions
 
 The member palette, presence, icons and rules above are fixed. The directions differ
