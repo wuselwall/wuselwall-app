@@ -117,13 +117,13 @@ void main() {
     );
     container.read(routerProvider).go(Routes.signIn);
     await t.pumpAndSettle();
-    expect(find.text(_de.emailContinue), findsOneWidget);
+    expect(find.text(_de.emailSendCode), findsOneWidget);
 
     await t.tap(find.text(_de.emailHavePassword));
     await t.pumpAndSettle();
 
-    // No "Weiter" that would send a code instead.
-    expect(find.text(_de.emailContinue), findsNothing);
+    // No "Code senden" next to the password's "Anmelden".
+    expect(find.text(_de.emailSendCode), findsNothing);
     expect(buttonOf(t, find.text(_de.signInAction)), isA<FilledButton>());
     expect(find.byType(FilledButton), findsOneWidget);
     expect(buttonOf(t, find.text(_de.emailUseCodeInstead)), isA<TextButton>());

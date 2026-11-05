@@ -16,7 +16,7 @@ Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du 
 Eine Person, die mit eigenem Konto in der Familie mitmachen soll, lädst du ein. Öffne **Einstellungen → Familie → Mitglieder** und tippe auf **Erwachsene Person einladen**:
 
 1. Gib den **Namen** ein und wähle die **Rolle**: **Elternteil** sieht alles und bestätigt Belohnungen. **Weitere:r Erwachsene:r** erledigt Aufgaben, bestätigt aber keine Belohnungen (zum Beispiel für eine Au-pair oder die Großeltern).
-2. Optional eine **E-Mail-Adresse**. Meldet sich die Person mit genau dieser Adresse an, findet sie die Einladung von selbst.
+2. Optional eine **E-Mail-Adresse**. Bestätigt die Person genau diese Adresse mit einem Code per E-Mail, findet sie die Einladung von selbst. Ohne E-Mail vom Server teilst du stattdessen den Link, QR-Code oder Code.
 3. Tippe auf **Einladung erstellen**.
 
 <Shot name="invite-sheet" alt="Einladung für Oma Ruth mit Code, QR-Code und Teilen" />
@@ -27,7 +27,7 @@ Die Einladung gilt **7 Tage** und funktioniert **einmal**. Offene Einladungen st
 
 Sobald die Person beigetreten ist, bekommt **jeder Elternteil** auf dem Tab **Heute** einen Hinweis („Julia ist beigetreten“). **Gesehen** blendet ihn aus, **Mitglieder** führt zur Liste. Hinweise verschwinden nach 14 Tagen von selbst.
 
-Hast du bei der E-Mail-Adresse nichts angegeben, gibt es den Code allein. Die Person muss ihn dann in der App eingeben.
+Auch ohne eingetragene E-Mail-Adresse funktionieren Link, QR-Code und Einladungscode. Die Einladung wird dann nicht automatisch über die Adresse gefunden.
 
 Zu einem bestehenden **Mitglied** ohne Konto lädst du die Person direkt in der Mitgliederliste über **Einladen** ein.
 

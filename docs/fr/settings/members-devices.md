@@ -16,14 +16,14 @@ Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appa
 Ouvrez **Paramètres → Famille → Membres** et touchez **Inviter un adulte** :
 
 1. Saisissez son prénom et choisissez le rôle : **Parent** pour administrer et approuver, **Autre adulte** pour participer sans ces droits, par exemple un grand-parent ou une personne au pair.
-2. Ajoutez éventuellement son adresse e-mail. Avec cette adresse exacte, l’invitation se présente automatiquement après connexion.
+2. Ajoutez éventuellement son adresse e-mail. Si la personne vérifie cette adresse par un code reçu par e-mail, l’invitation se présente automatiquement après connexion. Sans e-mails du serveur, partagez le lien, le QR code ou le code.
 3. Touchez **Créer l’invitation**.
 
 <Shot name="invite-sheet" alt="L’invitation de Mamie Ruth, son code QR et le partage" />
 
 Partagez le code, le serveur, le lien ou le code QR dans un message. Le lien et le QR contiennent le serveur et ouvrent directement l’invitation dans l’app. Avec le code seul, la personne saisit aussi le serveur si nécessaire ([Rejoindre la famille](/fr/guide/setup#_3-joining-a-family)).
 
-Une invitation dure **7 jours** et sert **une seule fois**. Les invitations ouvertes affichent leur échéance directement dans la ligne de la personne invitée ; vous pouvez les repartager ou les retirer. Un membre sans compte peut être invité depuis sa ligne. Sans adresse e-mail, la personne doit saisir le code.
+Une invitation dure **7 jours** et sert **une seule fois**. Les invitations ouvertes affichent leur échéance directement dans la ligne de la personne invitée ; vous pouvez les repartager ou les retirer. Un adulte sans compte peut être invité depuis sa ligne. Sans adresse e-mail sur l’invitation, le lien, le QR code et le code fonctionnent aussi ; l’invitation n’est pas retrouvée automatiquement par l’adresse.
 
 **Inviter ton ou ta partenaire**, sur la carte **Premiers pas**, demande d’abord **Qui veux-tu inviter ?** lorsque la famille compte déjà des adultes sans compte, par exemple la personne ajoutée à la création de la famille. Choisissez-la : l’invitation lui est destinée et elle n’est pas ajoutée une seconde fois. **Quelqu’un d’autre** ajoute une nouvelle personne.
 

@@ -72,6 +72,6 @@ Son ejemplos, no recomendaciones; WuselWall no está vinculado a ninguno. En lug
 
 1. Una **madre o un padre**, en su propio teléfono: **Ajustes → Familia → Miembros**, **Restablecer contraseña** junto al nombre y luego **Crear código**.
 2. La app muestra un **código de 8 caracteres**, válido **una vez** durante **10 minutos**. Entrégalo en persona.
-3. En el dispositivo de quien la olvidó: **Continuar con correo electrónico** → **Iniciar sesión** → **¿Olvidaste tu contraseña?**, y luego la dirección, el código y una contraseña nueva de al menos 10 caracteres.
+3. En el dispositivo de quien la olvidó: **Iniciar sesión o crear una cuenta** → **Iniciar sesión** → **¿Olvidaste tu contraseña?**, y luego la dirección, el código y una contraseña nueva de al menos 10 caracteres.
 
 La verificación en dos pasos sigue pidiéndose si está activa. **¿Lo olvidó la única madre o el único padre?** Quien administra el servidor crea el mismo código: `./wuselwall password direccion@example.org`, o en Supabase en **SQL Editor**: `select app.password_reset_issue_for_email('direccion@example.org') ->> 'code';`

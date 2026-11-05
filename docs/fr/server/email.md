@@ -72,6 +72,6 @@ Exemples, pas des recommandations ; WuselWall n’est lié à aucun de ces fourn
 
 1. Un **parent**, sur son propre téléphone : **Paramètres → Famille → Membres**, **Réinitialiser le mot de passe** à côté du nom, puis **Créer le code**.
 2. L’app affiche un **code de 8 caractères**, valable **une fois**, **10 minutes**. Remettez-le en personne.
-3. Sur l’appareil concerné : **Continuer par e-mail** → **Se connecter** → **Mot de passe oublié ?**, puis l’adresse, le code et un nouveau mot de passe d’au moins 10 caractères.
+3. Sur l’appareil concerné : **Se connecter ou créer un compte** → **Se connecter** → **Mot de passe oublié ?**, puis l’adresse, le code et un nouveau mot de passe d’au moins 10 caractères.
 
 La double authentification reste demandée si elle est active. **Le seul parent a oublié ?** L’administrateur du serveur crée le même code : `./wuselwall password adresse@example.org`, ou chez Supabase dans **SQL Editor** : `select app.password_reset_issue_for_email('adresse@example.org') ->> 'code';`

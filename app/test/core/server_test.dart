@@ -228,6 +228,24 @@ void main() {
       expect(kept.claimed, isFalse, reason: 'the stored copy keeps it');
     });
 
+    test('keeps the mode the server founds families in', () {
+      final origin = Uri.parse('https://api.example.org');
+      final open = ServerInfo.fromDiscovery({
+        ...doc(),
+        'household_creation': 'open',
+      }, origin: origin);
+      expect(open.householdCreation, 'open');
+      final kept = ServerInfo.fromDiscovery(
+        jsonDecode(jsonEncode(open.toJson())),
+        origin: origin,
+      );
+      expect(
+        kept.householdCreation,
+        'open',
+        reason: 'the stored copy keeps it',
+      );
+    });
+
     test('reads whether the server mails sign-in codes (Q48)', () {
       final origin = Uri.parse('https://api.example.org');
       ServerInfo read(Object? signIn) => ServerInfo.fromDiscovery({

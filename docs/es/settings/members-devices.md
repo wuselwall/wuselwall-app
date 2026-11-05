@@ -16,14 +16,14 @@ Lo oculto sigue activo. La app recuerda la vista por dispositivo. Las páginas d
 Abre **Ajustes → Familia → Miembros** y toca **Invitar a un adulto**:
 
 1. Introduce nombre y rol: **Madre o padre** para administrar y aprobar, u **Otro adulto** para participar sin esos permisos, como un abuelo o una au pair.
-2. Añade un correo opcional. Con esa dirección exacta, la invitación aparece automáticamente al iniciar sesión.
+2. Añade un correo opcional. Si verifica esa dirección con un código por correo, la invitación aparece automáticamente al iniciar sesión. Sin correo del servidor, comparte el enlace, el QR o el código.
 3. Toca **Crear invitación**.
 
 <Shot name="invite-sheet" alt="La invitación de Abuela Ruth con QR y opción de compartir" />
 
 Comparte código, servidor, enlace o QR en un mensaje. Enlace y QR llevan el servidor y abren la invitación directamente. Con código solo, se introduce también el servidor si se pide ([Unirse](/es/guide/setup#_3-joining-a-family)).
 
-La invitación dura **7 días** y funciona **una vez**. Las abiertas muestran su caducidad directamente en la fila de la persona invitada; puedes compartirlas otra vez o retirarlas. Un adulto sin cuenta puede recibir invitación desde su fila. Sin correo, tendrá que introducir el código.
+La invitación dura **7 días** y funciona **una vez**. Las abiertas muestran su caducidad directamente en la fila de la persona invitada; puedes compartirlas otra vez o retirarlas. Un adulto sin cuenta puede recibir invitación desde su fila. Sin dirección en la invitación, también funcionan el enlace, el QR y el código; la invitación no se encuentra automáticamente por la dirección.
 
 **Invita a tu pareja**, en la tarjeta **Primeros pasos**, pregunta primero **¿A quién quieres invitar?** cuando la familia ya tiene adultos sin cuenta, como la persona que añadiste al crear la familia. Elígela y la invitación será para ella, sin añadirla dos veces. **Otra persona** añade a alguien nuevo.
 

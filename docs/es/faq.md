@@ -30,7 +30,7 @@ El mismo nombre aumenta normalmente la cantidad a **2×**. Para dos filas separa
 
 ## ¿Dónde están las tarjetas? {#tiles}
 
-Se crean al terminar la compra. Los primeros productos se escriben; la primera compra crea las primeras tarjetas.
+Una lista nueva ya muestra [sugerencias iniciales](/es/shopping/add#starter-suggestions). Tus propias tarjetas aparecen al **terminar la compra**. Comprueba la lista seleccionada: cada una tiene su catálogo.
 
 ## ¿Cómo cambio el idioma? {#language}
 

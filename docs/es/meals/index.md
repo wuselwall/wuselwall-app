@@ -34,6 +34,14 @@ WuselWall usa la presencia y los horarios de cuidado. Quien está de viaje o aus
 
 La vista previa muestra ingredientes, comidas de origen y lo que ya está en la lista. Añádelos a la [compra](/es/shopping/add). Una nota libre no tiene ingredientes; una receta sí. Los productos indican que vienen del plan y para qué comida son.
 
+### Ejemplo: pasta el miércoles
+
+1. Planifica una **receta** para el miércoles con sus ingredientes guardados. Una nota que solo diga «Pasta» no tiene ingredientes que añadir.
+2. Abre **Completar la lista de la compra**. Revisa los ingredientes y lo que ya está en la lista; desmarca lo que tengas en casa.
+3. Confirma con **Añadir … productos**; el botón indica cuántos has seleccionado. Los ingredientes seleccionados aparecen entonces en la lista de la compra.
+
+<Shot name="meals-shopping-preview" alt="Vista previa de ingredientes con cantidades y productos que ya están en la lista" />
+
 ## Recetas {#recipes}
 
 Guarda ingredientes con cantidades, unidades y notas, pasos (uno por línea), etiquetas como «rápido» y el enlace de origen. Elegir una receta al planificar permite añadir sus ingredientes a la compra.

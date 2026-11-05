@@ -7,7 +7,7 @@ Ein Elternteil hat das Gerät gesperrt. Verbinde es neu über [Familien-Tablet o
 Codes gelten 10 Minuten und nur einmal. Tippe auf dem neuen Gerät noch einmal auf **Familien-Tablet oder Wanddisplay verbinden**, dann zeigt es einen neuen Code. Nach mehreren Fehlversuchen musst du ein paar Minuten warten.
 
 ## Der Einladungscode funktioniert nicht {#invitation-code}
-Einladungen gelten 7 Tage und funktionieren einmal. Bitte die Person, die dich eingeladen hat, um **Erneut teilen** oder um eine neue Einladung. Den Link öffnet die Einladungsseite im Browser; den Code gibst du in der App unter **Ich habe einen Einladungscode** ein ([Anmelden und verbinden](/guide/setup#_3-einer-familie-beitreten)).
+Einladungen gelten 7 Tage und funktionieren einmal. Bitte die Person, die dich eingeladen hat, um **Erneut teilen** oder um eine neue Einladung. Ist die App installiert, öffnet der Link direkt die Einladung in der App. Einen einzelnen Code gibst du unter **Ich habe einen Einladungscode** ein; falls nach dem Server gefragt wird, nenne ihn wie in der Einladungsnachricht angegeben ([Anmelden und verbinden](/guide/setup#_3-einer-familie-beitreten)).
 
 ## „Tippe zuerst auf deinen Namen“ {#tap-your-name}
 Auf geteilten Geräten musst du sagen, wer du bist, bevor du etwas änderst ([Wer bist du?](/guide/who-are-you)).
@@ -22,7 +22,7 @@ Prüfe WLAN oder Mobilfunk und tippe auf **Erneut versuchen**. Die Einkaufsliste
 Wird derselbe Name ein zweites Mal hinzugefügt, zählt WuselWall ihn als **2×** hoch, statt eine zweite Zeile anzulegen. Möchtest du ihn ausnahmsweise getrennt führen, gib ihm einen leicht anderen Namen.
 
 ## Wo sind meine Kacheln? {#tiles}
-Kacheln entstehen, wenn ihr einen Einkauf **beendet**. Bis dahin tippst du Namen ein; beim ersten Einkauf wird daraus eine Kachel.
+Eine neue Liste zeigt bereits [Vorschläge](/shopping/add#vorschlage-fur-den-anfang). Eure eigenen Kacheln entstehen, wenn ihr einen Einkauf **beendet**. Prüfe, ob du die richtige Liste gewählt hast: Jede Liste hat ihren eigenen Katalog.
 
 ## Wie ändere ich die Sprache? {#language}
 Unter **Einstellungen → Sprache** wählst du Deutsch, Englisch, Französisch oder Spanisch für dieses Gerät; das gilt auch für die Erinnerungen auf dem Handy. Mit **Automatisch** folgt WuselWall der Sprache deines Geräts (bei anderen Sprachen erscheint die deutsche Version). Die Wahl bleibt auf dem Gerät, im Browser bei der Web-App: jedes Handy, Tablet und jeder Browser der Familie kann eine andere Sprache zeigen.

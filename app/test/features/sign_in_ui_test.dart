@@ -19,7 +19,7 @@ void main() {
           signedIn: false,
         ),
       );
-      expect(find.text('Mit E-Mail fortfahren'), findsOneWidget);
+      expect(find.text('Anmelden oder Konto erstellen'), findsOneWidget);
       expect(find.text('oder'), findsOneWidget);
       expect(find.textContaining('Apple'), findsNothing);
       expect(find.textContaining('Google'), findsNothing);
@@ -65,6 +65,33 @@ void main() {
   });
 
   group('email sign-in validation', () {
+    testWidgets(
+      'says that the code serves new and existing accounts alike, and whom the password is for',
+      (t) async {
+        final container = await pumpApp(
+          t,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(),
+            signedIn: false,
+          ),
+        );
+        container.read(routerProvider).go(Routes.signIn);
+        await t.pumpAndSettle();
+        expect(find.text('Dein Konto'), findsOneWidget);
+        expect(find.textContaining('Neu hier?'), findsOneWidget);
+        expect(find.textContaining('Schon ein Konto?'), findsOneWidget);
+        expect(find.text('Code senden'), findsOneWidget);
+
+        await t.tap(find.text('Mit Passwort anmelden'));
+        await t.pumpAndSettle();
+        expect(find.textContaining('Neu hier?'), findsNothing);
+        expect(
+          find.textContaining('Für Konten, die schon ein Passwort haben.'),
+          findsOneWidget,
+        );
+      },
+    );
+
     testWidgets('does not send an empty or malformed address', (t) async {
       final identity = FakeIdentityRepository();
       final container = await pumpApp(
@@ -74,13 +101,13 @@ void main() {
       container.read(routerProvider).go(Routes.signIn);
       await t.pumpAndSettle();
 
-      await t.tap(find.text('Weiter'));
+      await t.tap(find.text('Code senden'));
       await t.pumpAndSettle();
       expect(find.text('Gib deine E-Mail-Adresse ein.'), findsOneWidget);
       expect(identity.codeRequests, isEmpty);
 
       await t.enterText(find.byType(TextFormField).first, 'kein-email');
-      await t.tap(find.text('Weiter'));
+      await t.tap(find.text('Code senden'));
       await t.pumpAndSettle();
       expect(find.text('Gib eine gültige E-Mail-Adresse ein.'), findsOneWidget);
       expect(identity.codeRequests, isEmpty);
@@ -100,7 +127,7 @@ void main() {
         find.byType(TextFormField).first,
         ' daniel@example.org ',
       );
-      await t.tap(find.text('Ich habe ein Passwort'));
+      await t.tap(find.text('Mit Passwort anmelden'));
       await t.pumpAndSettle();
 
       await t.tap(find.text('Anmelden'));
@@ -128,7 +155,7 @@ void main() {
       router.go(Routes.signIn);
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextFormField).first, 'daniel@example.org');
-      await t.tap(find.text('Ich habe ein Passwort'));
+      await t.tap(find.text('Mit Passwort anmelden'));
       await t.pumpAndSettle();
 
       // Show the required-password error first, then use the email-code fallback.
@@ -175,7 +202,7 @@ void main() {
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextFormField).first, 'daniel@example.org');
 
-      await t.tap(find.text('Weiter'));
+      await t.tap(find.text('Code senden'));
       await t.pump();
       expect(find.text('Code wird gesendet …'), findsOneWidget);
       expect(

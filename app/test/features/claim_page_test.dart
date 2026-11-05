@@ -20,22 +20,26 @@ void main() {
   setUp(() => FlutterSecureStorage.setMockInitialValues({}));
 
   /// The app on a server whose discovery document says whether a family exists.
-  AppConfig serverConfig({required bool claimed, bool emailCode = true}) =>
-      AppConfig.forServer(
-        const AppConfig(
-          environment: 'test',
-          supabaseUrl: 'http://localhost',
-          supabasePublishableKey: 'key',
-        ),
-        ServerInfo(
-          supabaseUrl: server,
-          publishableKey: 'sb_publishable_abc',
-          apiVersion: 1,
-          minAppVersion: '1.0.0',
-          emailCode: emailCode,
-          claimed: claimed,
-        ),
-      );
+  AppConfig serverConfig({
+    required bool claimed,
+    bool emailCode = true,
+    String householdCreation = 'token',
+  }) => AppConfig.forServer(
+    const AppConfig(
+      environment: 'test',
+      supabaseUrl: 'http://localhost',
+      supabasePublishableKey: 'key',
+    ),
+    ServerInfo(
+      supabaseUrl: server,
+      publishableKey: 'sb_publishable_abc',
+      apiVersion: 1,
+      minAppVersion: '1.0.0',
+      emailCode: emailCode,
+      claimed: claimed,
+      householdCreation: householdCreation,
+    ),
+  );
 
   testWidgets('a setup link lands on the claim: the key is checked, the address announced, '
       'the code sent', (t) async {
@@ -149,8 +153,159 @@ void main() {
         Routes.signIn,
       );
       expect(find.text('mama@example.org'), findsOneWidget);
+      // The typed key opened sign-up, as a setup link does.
+      expect(find.text('Neues Konto'), findsOneWidget);
+      expect(find.text('Konto erstellen'), findsOneWidget);
     },
   );
+
+  group('without mail, before the setup key', () {
+    Future<void> pumpDoor(WidgetTester t) => pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(),
+        household: FakeHouseholdOnboardingRepository(),
+        signedIn: false,
+        appConfig: serverConfig(claimed: false, emailCode: false),
+      ),
+    );
+
+    testWidgets('the front door’s "Anmelden" offers only signing in', (
+      t,
+    ) async {
+      await pumpDoor(t);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+
+      expect(find.text('Neues Konto'), findsNothing);
+      expect(find.text('Konto erstellen'), findsNothing);
+      expect(find.widgetWithText(FilledButton, 'Anmelden'), findsOneWidget);
+      expect(find.text('Passwort vergessen?'), findsOneWidget);
+      expect(
+        find.textContaining('Ein neues Konto braucht zuerst'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('the setup key is one tap away, instead of the tab', (t) async {
+      await pumpDoor(t);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const ValueKey('sign-in-claim')));
+      await t.pumpAndSettle();
+      expect(find.text('Server einrichten'), findsOneWidget);
+    });
+
+    testWidgets(
+      '"Ich habe schon ein Konto" on the claim offers only signing in',
+      (t) async {
+        await pumpDoor(t);
+        await t.tap(find.byKey(const ValueKey('door-claim')));
+        await t.pumpAndSettle();
+        await t.tap(find.text('Ich habe schon ein Konto'));
+        await t.pumpAndSettle();
+        expect(find.text('Neues Konto'), findsNothing);
+        expect(find.widgetWithText(FilledButton, 'Anmelden'), findsOneWidget);
+      },
+    );
+
+    testWidgets('leaving after the key closes sign-up again', (t) async {
+      await pumpDoor(t);
+      await t.tap(find.byKey(const ValueKey('door-claim')));
+      await t.pumpAndSettle();
+      await t.enterText(
+        find.byKey(const ValueKey('claim-key')),
+        'Cake-On-Sunday',
+      );
+      await t.enterText(
+        find.byKey(const ValueKey('claim-email')),
+        'mama@example.org',
+      );
+      await t.tap(find.byKey(const ValueKey('claim-continue')));
+      await t.pumpAndSettle();
+      expect(find.text('Neues Konto'), findsOneWidget);
+
+      await t.tap(find.byType(BackButton));
+      await t.pumpAndSettle();
+      expect(find.text('Dieser Server hat noch keine Familie'), findsOneWidget);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      expect(find.text('Neues Konto'), findsNothing);
+    });
+  });
+
+  testWidgets('with mail, a typed key sends another address back through the '
+      'claim', (t) async {
+    final container = await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(),
+        household: FakeHouseholdOnboardingRepository(),
+        signedIn: false,
+        appConfig: serverConfig(claimed: false),
+      ),
+    );
+    await t.tap(find.byKey(const ValueKey('door-claim')));
+    await t.pumpAndSettle();
+    await t.enterText(
+      find.byKey(const ValueKey('claim-key')),
+      'Cake-On-Sunday',
+    );
+    await t.enterText(
+      find.byKey(const ValueKey('claim-email')),
+      'mama@example.org',
+    );
+    await t.tap(find.byKey(const ValueKey('claim-continue')));
+    await t.pumpAndSettle();
+    expect(find.text('Andere E-Mail-Adresse'), findsOneWidget);
+
+    await t.tap(find.text('Andere E-Mail-Adresse'));
+    await t.pumpAndSettle();
+    expect(
+      container.read(routerProvider).routeInformationProvider.value.uri.path,
+      Routes.claim,
+    );
+  });
+
+  group('a server without a family, set to open', () {
+    Future<void> pumpDoor(WidgetTester t, {bool emailCode = true}) => pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(),
+        household: FakeHouseholdOnboardingRepository(),
+        signedIn: false,
+        appConfig: serverConfig(
+          claimed: false,
+          emailCode: emailCode,
+          householdCreation: 'open',
+        ),
+      ),
+    );
+
+    testWidgets('asks for no setup key on its front door', (t) async {
+      await pumpDoor(t);
+      expect(find.text('Dieser Server hat noch keine Familie'), findsNothing);
+      expect(find.byKey(const ValueKey('door-claim')), findsNothing);
+      expect(find.text('Anmelden oder Konto erstellen'), findsOneWidget);
+    });
+
+    testWidgets('promises a new account by email', (t) async {
+      await pumpDoor(t);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      expect(find.textContaining('Neu hier?'), findsOneWidget);
+      expect(find.byKey(const ValueKey('sign-in-claim')), findsNothing);
+    });
+
+    testWidgets('without mail, opens on a new account', (t) async {
+      await pumpDoor(t, emailCode: false);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      expect(find.text('Neues Konto'), findsOneWidget);
+      expect(find.text('Konto erstellen'), findsOneWidget);
+      expect(find.byKey(const ValueKey('sign-in-claim')), findsNothing);
+    });
+  });
 
   testWidgets('a server with a family shows no claim on its front door', (
     t,
@@ -165,5 +320,33 @@ void main() {
     );
     expect(find.text('Dieser Server hat noch keine Familie'), findsNothing);
     expect(find.byKey(const ValueKey('door-claim')), findsNothing);
+    expect(find.text('Anmelden oder Konto erstellen'), findsOneWidget);
   });
+
+  testWidgets(
+    'on a server without a family, email promises sign-in, not a new account',
+    (t) async {
+      await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(),
+          signedIn: false,
+          appConfig: serverConfig(claimed: false),
+        ),
+      );
+      expect(find.text('Anmelden oder Konto erstellen'), findsNothing);
+      await t.tap(find.byKey(const ValueKey('door-email')));
+      await t.pumpAndSettle();
+      expect(find.textContaining('Neu hier?'), findsNothing);
+      expect(
+        find.textContaining(
+          'Ein neues Konto braucht zuerst den Einrichtungsschlüssel.',
+        ),
+        findsOneWidget,
+      );
+      await t.tap(find.byKey(const ValueKey('sign-in-claim')));
+      await t.pumpAndSettle();
+      expect(find.text('Server einrichten'), findsOneWidget);
+    },
+  );
 }

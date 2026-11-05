@@ -1,6 +1,6 @@
 # Account and family
 
-These steps concern **your account** or the **whole family**. They are at the bottom of the settings on your **personal phone**, and only there. **Delete account** is always shown; the other steps are in the **Advanced** view. Know what happens first: none of the steps can be undone.
+These steps affect **your account** or the **whole family**. Your password, **Leave family** and **Delete account** are under **Settings → Account & security** on your **personal phone**. **Delete family** is in the **Family profile**, in the **Advanced** view. Before confirming, check which data remains and which is permanently deleted.
 
 On narrow screens or with larger text, action buttons sit below their descriptions; scroll down if needed.
 

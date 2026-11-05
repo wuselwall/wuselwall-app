@@ -282,7 +282,7 @@
   "errCategoryNotFound": "That category no longer exists. The change was not saved.",
   "errNameTooLong": "That name is too long.",
   "errActorInvalid": "That person is no longer part of the household. The change was not saved.",
-  "doorEmail": "Continue with email",
+  "doorEmail": "Sign in or create an account",
   "doorOr": "or",
   "errSignupDisabled": "There is no WuselWall account for this address yet. Ask your family for an invitation, or start a new family.",
   "errEmailExists": "This email address already belongs to another account.",
@@ -2160,7 +2160,14 @@
   "householdDeviceBrowser": "browser",
   "householdDeviceComputer": "computer",
   "emailContinue": "Continue",
-  "emailHavePassword": "I have a password",
+  "emailSendCode": "Send code",
+  "signInAccountTitle": "Your account",
+  "signInCodeLead": "We’ll send a 6-digit code to your email address. New here? The code creates your account. Already have one? The code signs you in.",
+  "signInCodeLeadUnclaimed": "We’ll send a 6-digit code to your email address to sign you in. A new account needs the setup key first.",
+  "signInPasswordLead": "For accounts that already have a password. No password yet, or forgot it? Use an email code instead.",
+  "passwordSignInLeadUnclaimed": "For accounts that already exist. A new account needs the setup key first.",
+  "signInMethodReady": "Your account is ready.",
+  "emailHavePassword": "Sign in with a password",
   "emailWrongCredentials": "Email or password is incorrect.",
   "emailUseCodeInstead": "Use an email code instead",
   "emailOffline": "No connection – signing in by email needs one.",
@@ -2170,7 +2177,7 @@
   "emailSendingCode": "Sending code…",
   "signInProgress": "Signing in…",
   "emailCodeTitle": "Code from the email",
-  "emailCodeSent": "We sent a 6-digit code to {email}. It is valid for 10 minutes.",
+  "emailCodeSent": "We sent a 6-digit code to {email}. Enter it here within 10 minutes.",
   "@emailCodeSent": {
     "placeholders": {
       "email": {
@@ -3906,7 +3913,7 @@
       }
     }
   },
-  "passwordResetCodeHint": "On the device of {name}: Continue with email → Forgot your password? Then the email address, this code and a new password. Valid until {time}.",
+  "passwordResetCodeHint": "On the device of {name}: Sign in or create an account → Sign in → Forgot your password? Then the email address, this code and a new password. Valid until {time}.",
   "@passwordResetCodeHint": {
     "placeholders": {
       "name": {

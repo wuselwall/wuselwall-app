@@ -82,9 +82,28 @@ Elige ritmo semanal o semanas A/B, que se rellenan por separado. Añade cuidado 
 
 En vez de teclear cada clase, puedes hacer que se lea la hoja. Hay dos caminos. Todos terminan en la misma [vista previa](#preview), y solo **Aplicar** escribe algo. En el móvil, los dos caminos están directamente en el menú de los tres puntos encima del horario.
 
-**Desde texto estructurado.** Toca **Importar…** y **Pegar como texto**. Pega un horario en JSON con el formato de WuselWall y toca **Importar** para abrir la vista previa. Un texto normal no se convierte automáticamente en un horario.
+### Desde texto estructurado
 
-**Como foto o PDF, leído por vuestro servidor.** Si vuestro servidor tiene reconocimiento de texto ([Extras para el servidor](/es/server/extras#text-recognition)), toca **Importar…** y **Escanear una foto**. Después elige **Hacer una foto**, **Elegir una foto** o **Elegir un archivo (PDF o imagen)**, por ejemplo para el PDF que envió el colegio.
+Toca **Importar…** y **Pegar como texto**. Pega un horario en JSON con el formato de WuselWall y toca **Importar** para abrir la vista previa. Un texto normal no se convierte automáticamente en un horario.
+
+#### Ejemplo para pegar
+
+Este pequeño ejemplo solo incluye lunes y martes. Las claves `1` a `5` significan lunes a viernes; cada entrada de una fila es una clase. `null` deja una clase vacía. Sustituye los códigos por tus asignaturas y añade los demás días. Elige al niño correcto y comprueba el periodo escolar en la vista previa antes de tocar **Aplicar**.
+
+```json
+{
+  "format": "wuselwall-timetable/1",
+  "week_cycle": "weekly",
+  "grid": {
+    "1": ["Len", "Mat", "EF"],
+    "2": ["Mat", null, "Len"]
+  }
+}
+```
+
+### Desde una foto o PDF, en vuestro servidor
+
+Si vuestro servidor tiene reconocimiento de texto ([Extras para el servidor](/es/server/extras#text-recognition)), toca **Importar…** y **Escanear una foto**. Después elige **Hacer una foto**, **Elegir una foto** o **Elegir un archivo (PDF o imagen)**, por ejemplo para el PDF que envió el colegio.
 
 <Shot name="timetable-scan" alt="Escanear una foto: el aviso de que el archivo se queda en casa y los tres caminos Hacer una foto, Elegir una foto y Elegir un archivo" />
 

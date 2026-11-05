@@ -616,7 +616,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'That person is no longer part of the household. The change was not saved.';
 
   @override
-  String get doorEmail => 'Continue with email';
+  String get doorEmail => 'Sign in or create an account';
 
   @override
   String get doorOr => 'or';
@@ -3843,7 +3843,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emailContinue => 'Continue';
 
   @override
-  String get emailHavePassword => 'I have a password';
+  String get emailSendCode => 'Send code';
+
+  @override
+  String get signInAccountTitle => 'Your account';
+
+  @override
+  String get signInCodeLead =>
+      'We’ll send a 6-digit code to your email address. New here? The code creates your account. Already have one? The code signs you in.';
+
+  @override
+  String get signInCodeLeadUnclaimed =>
+      'We’ll send a 6-digit code to your email address to sign you in. A new account needs the setup key first.';
+
+  @override
+  String get signInPasswordLead =>
+      'For accounts that already have a password. No password yet, or forgot it? Use an email code instead.';
+
+  @override
+  String get passwordSignInLeadUnclaimed =>
+      'For accounts that already exist. A new account needs the setup key first.';
+
+  @override
+  String get signInMethodReady => 'Your account is ready.';
+
+  @override
+  String get emailHavePassword => 'Sign in with a password';
 
   @override
   String get emailWrongCredentials => 'Email or password is incorrect.';
@@ -3874,7 +3899,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String emailCodeSent(String email) {
-    return 'We sent a 6-digit code to $email. It is valid for 10 minutes.';
+    return 'We sent a 6-digit code to $email. Enter it here within 10 minutes.';
   }
 
   @override
@@ -6503,7 +6528,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String passwordResetCodeHint(String name, String time) {
-    return 'On the device of $name: Continue with email → Forgot your password? Then the email address, this code and a new password. Valid until $time.';
+    return 'On the device of $name: Sign in or create an account → Sign in → Forgot your password? Then the email address, this code and a new password. Valid until $time.';
   }
 
   @override

@@ -48,6 +48,14 @@ WuselWall rechnet das automatisch aus. Wer zur Essenszeit verreist oder unterweg
 
 **Einkaufsliste füllen** zeigt vorab, was für die geplanten Mahlzeiten fehlt, für welche Mahlzeit es ist und was schon auf der Liste steht. Tippe auf **Artikel hinzufügen**, und die Zutaten kommen auf die [Einkaufsliste](/shopping/add). Freie Notizen haben keine Zutaten, Rezepte schon. Ein Artikel aus dem Essensplan trägt die Markierung **Kommt aus dem Essensplan** und zeigt, für welches Essen er gebraucht wird, etwa „Für: Lasagne · Mi“.
 
+### Beispiel: Pasta für Mittwoch
+
+1. Plane für Mittwoch ein **Rezept**, dessen Zutaten gespeichert sind. Nur „Pasta“ als Notiz reicht dafür nicht.
+2. Öffne **Einkaufsliste füllen**. Prüfe die Zutaten und was schon auf der Liste steht; wähle ab, was ihr zu Hause habt.
+3. Bestätige mit **… Artikel hinzufügen**; die Schaltfläche nennt die gewählte Anzahl. Erst dann erscheinen die gewählten Zutaten auf der Einkaufsliste.
+
+<Shot name="meals-shopping-preview" alt="Vorschau der Rezeptzutaten mit Mengen und bereits vorhandenen Artikeln" />
+
 ## Rezepte
 
 Unter **Rezepte** speicherst du, was ihr oft kocht:
@@ -57,7 +65,7 @@ Unter **Rezepte** speicherst du, was ihr oft kocht:
 - **Schlagwörter**, etwa „schnell“ oder „vegetarisch“
 - einen **Quelle**-Link, wenn du es aus dem Netz hast
 
-Beim Planen einer Mahlzeit schlägt WuselWall passende Rezepte vor (siehe [Vorschläge](#vorschlaege)). Ein Tipp nimmt eins, seine Zutaten landen dann auf der Einkaufsliste.
+Beim Planen einer Mahlzeit schlägt WuselWall passende Rezepte vor (siehe [Vorschläge](#vorschlage)). Ein Tipp übernimmt das Rezept. Mit **Einkaufsliste füllen** prüfst du danach die Zutaten und fügst sie hinzu.
 
 ## Auf der Küchenwand
 

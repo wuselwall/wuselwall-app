@@ -31,5 +31,5 @@ With a **passkey** you sign in by fingerprint or face instead of a password. Not
 ## Good to know
 
 - **Password**: at least 10 characters; a whole sentence is better.
-- **Lost phone**: **block** it at once from another device (see [Members and devices](/en/settings/members-devices#blocking-a-device)).
-- **Your data** lives on your family's server, not with us and not with a cloud provider.
+- **Lost phone**: **block** it at once from another device (see [Members and devices](/en/settings/members-devices#block-a-device)).
+- **Your data** lives on the server your family chose. If you use Supabase or another hosting provider, that provider hosts it; WuselWall runs no data service for your family.

@@ -91,13 +91,19 @@ Toca la cabecera de un día para indicar hasta qué hora estás en reuniones. La
 
 ## Semana habitual {#usual-week}
 
-En **Ajustes → Semana habitual**, elige dónde sueles estar cada día: oficina, teletrabajo, etc. Toca el día, elige el lugar y aplica. Puedes copiar el lunes de martes a viernes. Un día sin configurar queda vacío. Guarda al terminar.
+En **Ajustes → Familia → Semana habitual**, elige dónde sueles estar cada día: oficina, teletrabajo, etc. Toca el día, elige el lugar y aplica. Puedes copiar el lunes de martes a viernes. Un día sin configurar queda vacío. Guarda al terminar.
 
 Con las **franjas horarias**, define hasta **tres al día**. Para hoy, la pared muestra la vigente; para otros días, la primera, con **+1** si sigue otra.
 
 Activa las **semanas alternas A/B** para un ciclo de dos semanas. Indica una vez si la actual es A o B y configura cada una. Desactivarlo conserva la semana B para recuperarla después.
 
 Después solo introduces las excepciones. Los festivos, la pared no muestra un lugar habitual.
+
+### Ejemplo: un martes libre
+
+Normalmente trabajas en la oficina los martes. Guárdalo una vez en la **semana habitual**. Para un martes libre concreto, crea un evento de **Presencia** con el estado **Día libre** y **Todo el día** en el calendario. Ese evento sustituye al lugar habitual; el martes siguiente vuelve a seguir la semana habitual.
+
+<Shot name="usual-week" alt="Semana habitual con los lugares de una persona para cada día" />
 
 ## Niños y citas {#children-and-appointments}
 
@@ -109,11 +115,11 @@ Una suscripción permite consultar el calendario en otra app, en modo de solo le
 
 ## Calendarios externos {#outside-calendars}
 
-Una madre o un padre añade calendarios del club, del colegio o de recogida de basura en **Ajustes → Avanzados → Añadir calendarios externos**. Indica nombre, dirección **.ics**, color, personas y si aparece en la pared. Sin personas elegidas, vale para toda la familia.
+Una madre o un padre añade calendarios del club, del colegio o de recogida de basura en **Ajustes → Avanzados → Calendario y colegio → Añadir calendarios externos**. Indica nombre, dirección **.ics**, color, personas y si aparece en la pared. Sin personas elegidas, vale para toda la familia.
 
 Los eventos llevan el color y la marca de suscripción. Son **de solo lectura**: edítalos en su origen. El servidor actualiza aproximadamente cada hora; puedes pedir una actualización inmediata. Si falla, aparece el motivo.
 
-- Se exige **HTTPS**; también se reconocen direcciones **webcal://**.
+- Los calendarios se descargan por **HTTPS**; las direcciones **webcal://** se convierten automáticamente a HTTPS.
 - No se admiten direcciones hacia máquinas de redes privadas.
 - El archivo está limitado a **2 MB** y cada petición a **15 segundos**.
 - Solo los padres ven la dirección completa; los demás ven el nombre del servidor. Si la dirección incluye una clave, protégela como una contraseña.

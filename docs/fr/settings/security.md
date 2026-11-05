@@ -1,6 +1,6 @@
 # Sécurité
 
-Les réglages de connexion et de sécurité sont réservés au **téléphone personnel d’un parent**, dans **Paramètres → Avancés**.
+Les réglages de connexion et de sécurité sont réservés au **téléphone personnel d’un parent**, dans **Paramètres → Compte et sécurité**.
 
 ## Connexion {#sign-in}
 
@@ -28,4 +28,4 @@ Une clé d’accès remplace le mot de passe par l’empreinte ou le visage. Ell
 
 ## À retenir {#good-to-know}
 
-Choisissez un mot de passe d’au moins **10 caractères**, idéalement une phrase. Si un téléphone est perdu, [bloquez-le](/fr/settings/members-devices#blocking-a-device) depuis un autre appareil. Vos données restent sur le serveur choisi par votre famille.
+Choisissez un mot de passe d’au moins **10 caractères**, idéalement une phrase. Si un téléphone est perdu, [bloquez-le](/fr/settings/members-devices#blocking-a-device) depuis un autre appareil. Vos données restent sur le serveur choisi par votre famille. Si vous utilisez Supabase ou un autre hébergeur, elles sont hébergées chez ce prestataire ; WuselWall ne gère aucun service de données pour votre famille.

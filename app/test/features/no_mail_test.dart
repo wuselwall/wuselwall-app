@@ -73,8 +73,8 @@ void main() {
       expect(find.text('Neues Konto'), findsOneWidget);
       expect(find.text('Konto erstellen'), findsOneWidget);
       expect(find.textContaining('verschickt keine E-Mails'), findsOneWidget);
-      expect(find.text('Ich habe ein Passwort'), findsNothing);
-      expect(find.text('Weiter'), findsNothing);
+      expect(find.text('Mit Passwort anmelden'), findsNothing);
+      expect(find.text('Code senden'), findsNothing);
 
       await t.enterText(find.byType(TextFormField).first, ' lea@example.org ');
       await t.enterText(find.byType(TextField).last, 'short');
@@ -195,8 +195,8 @@ void main() {
       );
       container.read(routerProvider).go(Routes.signIn);
       await t.pumpAndSettle();
-      expect(find.text('Weiter'), findsOneWidget);
-      expect(find.text('Ich habe ein Passwort'), findsOneWidget);
+      expect(find.text('Code senden'), findsOneWidget);
+      expect(find.text('Mit Passwort anmelden'), findsOneWidget);
       expect(find.text('Neues Konto'), findsNothing);
     });
   });

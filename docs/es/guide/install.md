@@ -26,7 +26,7 @@ Abre la dirección de la app web que te facilite quien gestiona el servidor. Sir
 En iPhone: **Compartir → Añadir a pantalla de inicio**. En Android: **⋮ → Añadir a pantalla de inicio**. WuselWall se abrirá como una app.
 :::
 
-Las claves de acceso todavía no están disponibles en el navegador. Usa el código por correo o una contraseña.
+Las claves de acceso todavía no están disponibles en el navegador. Usa el código por correo o una contraseña. Si el servidor no envía correo, usa la contraseña.
 
 ## Android {#android-app-tablet-and-android-phones}
 

@@ -93,13 +93,19 @@ Touchez l’en-tête d’un jour pour indiquer jusqu’à quelle heure vous ête
 
 ## Semaine habituelle {#usual-week}
 
-Dans **Paramètres → Semaine habituelle**, choisissez votre lieu habituel pour chaque jour : bureau, télétravail, etc. Touchez un jour, choisissez le lieu et appliquez-le. Vous pouvez reprendre le lundi du mardi au vendredi. Un jour non défini reste vide. Enregistrez à la fin.
+Dans **Paramètres → Famille → Semaine habituelle**, choisissez votre lieu habituel pour chaque jour : bureau, télétravail, etc. Touchez un jour, choisissez le lieu et appliquez-le. Vous pouvez reprendre le lundi du mardi au vendredi. Un jour non défini reste vide. Enregistrez à la fin.
 
 Avec les **créneaux horaires**, saisissez jusqu’à **trois créneaux par jour**. Pour aujourd’hui, le mur affiche le créneau en cours ; pour les autres jours, le premier, avec **+1** si un autre suit.
 
 Activez les **semaines alternées A/B** pour un cycle de deux semaines. Précisez une fois si la semaine actuelle est A ou B, puis saisissez chacune. Désactiver l’alternance conserve la semaine B pour plus tard.
 
 Ensuite, saisissez seulement les exceptions. Les jours fériés, le mur n’affiche pas de lieu habituel.
+
+### Exemple : un mardi de congé
+
+Vous travaillez habituellement au bureau le mardi. Enregistrez-le une fois dans la **semaine habituelle**. Pour un seul mardi de congé, créez un événement de **Présence** avec l’état **En congé** et **Toute la journée** dans le calendrier. Cet événement remplace le lieu habituel ; le mardi suivant reprend la semaine habituelle.
+
+<Shot name="usual-week" alt="La semaine habituelle avec les lieux d’une personne pour chaque jour" />
 
 ## Les enfants {#children-and-appointments}
 
@@ -111,11 +117,11 @@ Un abonnement permet de consulter le calendrier familial en lecture seule dans u
 
 ## Calendriers externes {#outside-calendars}
 
-Un parent ajoute les calendriers du club, de l’école ou des collectes dans **Paramètres → Avancés → Ajouter des calendriers externes**. Indiquez le nom, l’adresse **.ics**, la couleur, les personnes et l’affichage sur le mur. Sans personne sélectionnée, le calendrier concerne toute la famille.
+Un parent ajoute les calendriers du club, de l’école ou des collectes dans **Paramètres → Avancés → Calendrier et école → Ajouter des calendriers externes**. Indiquez le nom, l’adresse **.ics**, la couleur, les personnes et l’affichage sur le mur. Sans personne sélectionnée, le calendrier concerne toute la famille.
 
 Les événements portent la couleur et la marque de l’abonnement. Ils sont **en lecture seule** : modifiez-les à la source. Votre serveur les récupère environ une fois par heure ; une actualisation immédiate est possible. En cas d’erreur, sa raison apparaît.
 
-- Les adresses doivent utiliser **HTTPS** ; les liens **webcal://** sont également reconnus.
+- Les calendriers sont récupérés en **HTTPS** ; les liens **webcal://** sont automatiquement convertis en HTTPS.
 - Les adresses pointant vers des machines du réseau privé sont refusées.
 - Le fichier est limité à **2 Mo** ; une requête s’arrête après **15 secondes**.
 - Seuls les parents voient l’adresse complète ; les autres appareils voient le nom d’hôte. Une clé dans l’adresse doit rester secrète.

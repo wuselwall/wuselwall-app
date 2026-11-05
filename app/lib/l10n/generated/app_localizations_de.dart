@@ -620,7 +620,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Person gehört nicht mehr zum Haushalt. Die Änderung wurde nicht gespeichert.';
 
   @override
-  String get doorEmail => 'Mit E-Mail fortfahren';
+  String get doorEmail => 'Anmelden oder Konto erstellen';
 
   @override
   String get doorOr => 'oder';
@@ -3869,7 +3869,32 @@ class AppLocalizationsDe extends AppLocalizations {
   String get emailContinue => 'Weiter';
 
   @override
-  String get emailHavePassword => 'Ich habe ein Passwort';
+  String get emailSendCode => 'Code senden';
+
+  @override
+  String get signInAccountTitle => 'Dein Konto';
+
+  @override
+  String get signInCodeLead =>
+      'Wir schicken einen 6-stelligen Code an deine E-Mail-Adresse. Neu hier? Der Code erstellt dein Konto. Schon ein Konto? Der Code meldet dich an.';
+
+  @override
+  String get signInCodeLeadUnclaimed =>
+      'Wir schicken einen 6-stelligen Code an deine E-Mail-Adresse, damit du dich anmelden kannst. Ein neues Konto braucht zuerst den Einrichtungsschlüssel.';
+
+  @override
+  String get signInPasswordLead =>
+      'Für Konten, die schon ein Passwort haben. Noch kein Passwort oder vergessen? Nimm stattdessen einen Code per E-Mail.';
+
+  @override
+  String get passwordSignInLeadUnclaimed =>
+      'Für Konten, die es schon gibt. Ein neues Konto braucht zuerst den Einrichtungsschlüssel.';
+
+  @override
+  String get signInMethodReady => 'Dein Konto ist bereit.';
+
+  @override
+  String get emailHavePassword => 'Mit Passwort anmelden';
 
   @override
   String get emailWrongCredentials => 'E-Mail oder Passwort stimmt nicht.';
@@ -3901,7 +3926,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String emailCodeSent(String email) {
-    return 'Wir haben einen 6-stelligen Code an $email geschickt. Er ist 10 Minuten gültig.';
+    return 'Wir haben einen 6-stelligen Code an $email geschickt. Gib ihn innerhalb von 10 Minuten hier ein.';
   }
 
   @override
@@ -6546,7 +6571,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String passwordResetCodeHint(String name, String time) {
-    return 'Auf dem Gerät von $name: Mit E-Mail fortfahren → Passwort vergessen? Dann die E-Mail-Adresse, diesen Code und ein neues Passwort. Gültig bis $time.';
+    return 'Auf dem Gerät von $name: Anmelden oder Konto erstellen → Anmelden → Passwort vergessen? Dann die E-Mail-Adresse, diesen Code und ein neues Passwort. Gültig bis $time.';
   }
 
   @override

@@ -82,9 +82,28 @@ Choisissez un rythme hebdomadaire ou des semaines A/B, saisies séparément. Ajo
 
 Au lieu de taper chaque cours, tu peux faire lire la feuille. Il y a deux façons. Toutes aboutissent au même [aperçu](#preview), et seul **Appliquer** écrit quelque chose. Sur un téléphone, les deux façons sont directement dans le menu aux trois points au-dessus de l’emploi du temps.
 
-**Depuis du texte structuré.** Touche **Importer…**, puis **Coller du texte**. Colle un emploi du temps en JSON au format WuselWall, puis touche **Importer** pour ouvrir l’aperçu. Un texte ordinaire n’est pas automatiquement converti en emploi du temps.
+### Depuis du texte structuré
 
-**Comme photo ou PDF, lu par votre serveur.** Si votre serveur a la reconnaissance de texte ([Extras pour le serveur](/fr/server/extras#text-recognition)), touche **Importer…** et **Scanner une photo**. Choisis ensuite **Prendre une photo**, **Choisir une photo** ou **Choisir un fichier (PDF ou image)**, par exemple pour le PDF envoyé par l’école.
+Touche **Importer…**, puis **Coller du texte**. Colle un emploi du temps en JSON au format WuselWall, puis touche **Importer** pour ouvrir l’aperçu. Un texte ordinaire n’est pas automatiquement converti en emploi du temps.
+
+#### Exemple à coller
+
+Ce petit exemple contient seulement lundi et mardi. Les clés `1` à `5` correspondent à lundi à vendredi ; chaque entrée d’une ligne est une période de cours. `null` laisse une période vide. Remplacez les codes par vos matières et ajoutez les autres jours. Choisissez le bon enfant et vérifiez la période scolaire dans l’aperçu avant de toucher **Appliquer**.
+
+```json
+{
+  "format": "wuselwall-timetable/1",
+  "week_cycle": "weekly",
+  "grid": {
+    "1": ["FRA", "Ma", "EPS"],
+    "2": ["Ma", null, "FRA"]
+  }
+}
+```
+
+### Depuis une photo ou un PDF, sur votre serveur
+
+Si votre serveur a la reconnaissance de texte ([Extras pour le serveur](/fr/server/extras#text-recognition)), touche **Importer…** et **Scanner une photo**. Choisis ensuite **Prendre une photo**, **Choisir une photo** ou **Choisir un fichier (PDF ou image)**, par exemple pour le PDF envoyé par l’école.
 
 <Shot name="timetable-scan" alt="Scanner une photo : la remarque que le fichier reste à la maison, et les trois choix Prendre une photo, Choisir une photo et Choisir un fichier" />
 

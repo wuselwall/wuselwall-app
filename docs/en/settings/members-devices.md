@@ -16,7 +16,7 @@ Whatever is hidden **still applies**. The view only changes what you see, and Wu
 Invite a person who should take part in the family with their own account. Open **Settings → Family → Members** and tap **Invite an adult**:
 
 1. Enter the **name** and choose the **role**: **Parent** sees everything and approves rewards. **Other adult** does tasks but does not approve rewards (for example an au pair or grandparents).
-2. Optionally an **email address**. If the person signs in with exactly this address, they find the invitation by themselves.
+2. Optionally an **email address**. If the person verifies exactly this address with an email code, they find the invitation automatically. Without email from the server, share the link, QR code or code instead.
 3. Tap **Create invitation**.
 
 <Shot name="invite-sheet" alt="Invitation for Oma Ruth with code, QR code and share" />
@@ -27,7 +27,7 @@ An invitation is valid for **7 days** and works **once**. Open invitations appea
 
 Once the person has joined, **every parent** gets a notice on the **Today** tab ("Sarah joined"). **Got it** hides it, **Members** leads to the list. Notices disappear on their own after 14 days.
 
-If you left out the email address, the code is all there is. The person then has to enter it in the app.
+Without an email address on the invitation, the link, QR code and invitation code still work. The invitation is not found automatically by address.
 
 For an existing **member** without an account, invite them from the member list with **Invite**.
 

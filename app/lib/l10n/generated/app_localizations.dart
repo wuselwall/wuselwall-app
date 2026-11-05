@@ -1211,7 +1211,7 @@ abstract class AppLocalizations {
   /// No description provided for @doorEmail.
   ///
   /// In en, this message translates to:
-  /// **'Continue with email'**
+  /// **'Sign in or create an account'**
   String get doorEmail;
 
   /// No description provided for @doorOr.
@@ -6620,10 +6620,52 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get emailContinue;
 
+  /// No description provided for @emailSendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get emailSendCode;
+
+  /// No description provided for @signInAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account'**
+  String get signInAccountTitle;
+
+  /// No description provided for @signInCodeLead.
+  ///
+  /// In en, this message translates to:
+  /// **'We’ll send a 6-digit code to your email address. New here? The code creates your account. Already have one? The code signs you in.'**
+  String get signInCodeLead;
+
+  /// No description provided for @signInCodeLeadUnclaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'We’ll send a 6-digit code to your email address to sign you in. A new account needs the setup key first.'**
+  String get signInCodeLeadUnclaimed;
+
+  /// No description provided for @signInPasswordLead.
+  ///
+  /// In en, this message translates to:
+  /// **'For accounts that already have a password. No password yet, or forgot it? Use an email code instead.'**
+  String get signInPasswordLead;
+
+  /// No description provided for @passwordSignInLeadUnclaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'For accounts that already exist. A new account needs the setup key first.'**
+  String get passwordSignInLeadUnclaimed;
+
+  /// No description provided for @signInMethodReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is ready.'**
+  String get signInMethodReady;
+
   /// No description provided for @emailHavePassword.
   ///
   /// In en, this message translates to:
-  /// **'I have a password'**
+  /// **'Sign in with a password'**
   String get emailHavePassword;
 
   /// No description provided for @emailWrongCredentials.
@@ -6683,7 +6725,7 @@ abstract class AppLocalizations {
   /// No description provided for @emailCodeSent.
   ///
   /// In en, this message translates to:
-  /// **'We sent a 6-digit code to {email}. It is valid for 10 minutes.'**
+  /// **'We sent a 6-digit code to {email}. Enter it here within 10 minutes.'**
   String emailCodeSent(String email);
 
   /// No description provided for @emailCodeFieldLabel.
@@ -11013,7 +11055,7 @@ abstract class AppLocalizations {
   /// No description provided for @passwordResetCodeHint.
   ///
   /// In en, this message translates to:
-  /// **'On the device of {name}: Continue with email → Forgot your password? Then the email address, this code and a new password. Valid until {time}.'**
+  /// **'On the device of {name}: Sign in or create an account → Sign in → Forgot your password? Then the email address, this code and a new password. Valid until {time}.'**
   String passwordResetCodeHint(String name, String time);
 
   /// No description provided for @settingsPasswordNoMail.

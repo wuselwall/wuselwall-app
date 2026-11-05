@@ -87,9 +87,28 @@ When no timetable exists yet, the view shows a message about the selected child 
 
 Instead of typing every lesson, you can have the sheet read in. There are two ways. All of them end on the same [preview](#preview), and only **Apply** writes anything. On a phone both ways are directly in the menu with the three dots above the timetable.
 
-**From structured text.** Tap **Read in…** and **Paste as text**. Paste timetable JSON in the WuselWall format, then tap **Read in** to open the preview. Ordinary prose is not automatically converted into a timetable.
+### From structured text
 
-**As a photo or a PDF, read by your server.** If your server has text recognition set up ([Extras for the server](/en/server/extras#text-recognition)), tap **Read in…** and **Scan a photo**. Then choose **Take a photo**, **Choose a photo** or **Choose a file (PDF or picture)**, for example for the PDF the school sent you.
+Tap **Read in…** and **Paste as text**. Paste timetable JSON in the WuselWall format, then tap **Read in** to open the preview. Ordinary prose is not automatically converted into a timetable.
+
+#### Example to paste
+
+This small example includes only Monday and Tuesday. The keys `1` to `5` mean Monday to Friday; each entry in a row is one lesson period. `null` leaves a period empty. Replace the codes with your subjects and add the other days. Choose the right child and check the term in the preview before tapping **Apply**.
+
+```json
+{
+  "format": "wuselwall-timetable/1",
+  "week_cycle": "weekly",
+  "grid": {
+    "1": ["En", "Ma", "PE"],
+    "2": ["Ma", null, "En"]
+  }
+}
+```
+
+### From a photo or PDF on your server
+
+If your server has text recognition set up ([Extras for the server](/en/server/extras#text-recognition)), tap **Read in…** and **Scan a photo**. Then choose **Take a photo**, **Choose a photo** or **Choose a file (PDF or picture)**, for example for the PDF the school sent you.
 
 <Shot name="timetable-scan" alt="Scan a photo: the note that the file stays at home, and the three ways Take a photo, Choose a photo and Choose a file" />
 

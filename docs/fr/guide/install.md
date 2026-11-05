@@ -26,7 +26,7 @@ Ouvrez l’adresse de l’app web fournie par la personne qui gère votre serveu
 Sur iPhone : **Partager → Sur l’écran d’accueil**. Sur Android : **⋮ → Ajouter à l’écran d’accueil**. WuselWall s’ouvre ensuite comme une app.
 :::
 
-Les clés d’accès ne sont pas encore disponibles dans le navigateur. Utilisez le code par e-mail ou votre mot de passe.
+Les clés d’accès ne sont pas encore disponibles dans le navigateur. Utilisez le code par e-mail ou votre mot de passe. Sans e-mails du serveur, utilisez le mot de passe.
 
 ## Android {#android-app-tablet-and-android-phones}
 

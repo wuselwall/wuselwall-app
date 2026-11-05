@@ -21,7 +21,7 @@ Die Erwachsenen-Ansicht hat diese Bereiche:
 
 <Shot name="today" alt="Der Tab Heute mit der Karte Erste Schritte, den Terminen und dem warmen Essen" />
 
-Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Auf schmalen Bildschirmen oder bei größerer Schrift stehen die Schaltflächen unter dem Text. Die Karte sehen Eltern auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Erste Schritte** kommt sie zurück.
+Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Auf schmalen Bildschirmen oder bei größerer Schrift stehen die Schaltflächen unter dem Text. Die Karte sehen Eltern auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Hilfe & Info → Erste Schritte** kommt sie zurück.
 
 ## Der Haushalt
 
@@ -38,7 +38,7 @@ Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitgliede
 
 | Gerät | Wer benutzt es? | Wie ist es angemeldet? |
 |---|---|---|
-| **Persönlich** – das eigene Handy | eine Person | Du meldest dich mit E-Mail und Passwort an. Das Gerät weiß, wer du bist. |
+| **Persönlich** – das eigene Handy | eine Person | Du meldest dich mit deinem Konto an: per E-Mail-Code oder Passwort, je nach Server. Das Gerät weiß, wer du bist. |
 | **Geteilt** – zum Beispiel das Kinder-Tablet | mehrere Personen | Das Gerät ist für den Haushalt eingerichtet. Wer es benutzt, tippt auf seinen Namen. |
 | **Wandanzeige** – der Bildschirm in der Küche | alle | Wie „geteilt“, aber mit großer Schrift und ohne Tastatur. |
 

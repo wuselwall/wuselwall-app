@@ -19,7 +19,7 @@ WuselWall reúne el **calendario**, el **horario escolar**, las **tareas**, las 
 
 <Shot name="today" alt="La pestaña Hoy con los primeros pasos, las citas y la comida caliente" />
 
-La tarjeta **Primeros pasos** aparece mientras falte configurar algo: invitar a un adulto, conectar una tableta, preparar la pantalla de pared, definir el PIN, suscribirse al calendario o añadir el horario escolar. Cada paso desaparece al terminarlo. También puedes indicar que no lo necesitas. En pantallas estrechas o con letra más grande, los botones aparecen debajo del texto. Los padres la ven en su móvil y en dispositivos compartidos. **Ajustes → Primeros pasos** permite recuperarla.
+La tarjeta **Primeros pasos** aparece mientras falte configurar algo: invitar a un adulto, conectar una tableta, preparar la pantalla de pared, definir el PIN, suscribirse al calendario o añadir el horario escolar. Cada paso desaparece al terminarlo. También puedes indicar que no lo necesitas. En pantallas estrechas o con letra más grande, los botones aparecen debajo del texto. Los padres la ven en su móvil y en dispositivos compartidos. **Ajustes → Ayuda e información → Primeros pasos** permite recuperarla.
 
 ## El hogar {#the-household}
 

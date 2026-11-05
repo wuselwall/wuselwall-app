@@ -59,10 +59,10 @@ void main() {
         appConfig: config,
       ),
     );
-    await t.tap(find.text('Mit E-Mail fortfahren'));
+    await t.tap(find.text('Anmelden oder Konto erstellen'));
     await t.pumpAndSettle();
     await t.enterText(find.byType(TextField), 'lea@example.org');
-    await t.tap(find.text('Weiter'));
+    await t.tap(find.text('Code senden'));
     await t.pumpAndSettle();
 
     final router = container.read(routerProvider);

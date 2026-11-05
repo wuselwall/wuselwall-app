@@ -4,7 +4,9 @@ Not every family does things the same way: how many points a chore earns, whethe
 
 <Shot name="settings-phone" alt="Settings: the list of groups from Personal to Help & about" />
 
-The **Basic** view shows only the most important settings: the region, the Shopping tab for children, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, the question at the table, our week, meal wishes, this device's night hours, Wusel, the sound when a chore is ticked, the morning summary, the reminder before appointments the seasons and the holidays your region celebrates (in Switzerland, for example, Easter, National day, Saint Nicholas, Advent and Christmas), plus any holiday you have switched yourselves. Holidays that are off by default in your region (such as Orthodox Easter in Switzerland, or New Year's Eve), as well as school holidays and birthdays and all the other settings, are under **Advanced**. **Advanced** shows all the others (switch it at the top right; a line at the bottom of a page says when something is hidden). A group in which the view shows nothing is not in the list at all. Hidden settings still apply.
+The everyday settings appear first. Tap **Advanced** at the top right to show additional options, such as calendar sharing details and the kitchen wall settings. Tap it again to return to the basic view.
+
+The view changes only what you see: hidden settings still apply. A note at the bottom of a page tells you when something is hidden. The groups below explain where to find each setting.
 
 Every setting has a **default**, which WuselWall suggests. It suits most families. If your value differs, the setting says **Customised**. **Reset to default** brings it back at any time.
 

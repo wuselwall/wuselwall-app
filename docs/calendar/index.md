@@ -96,13 +96,19 @@ Tippe auf die Überschrift eines Tages, um **Termine bis** zu setzen: Ab dieser 
 
 ## Übliche Woche
 
-Unter **Einstellungen → Übliche Woche** tragt ihr für jeden Wochentag ein, wo ihr normalerweise seid, zum Beispiel montags im Büro und an den anderen Tagen im Homeoffice. Tippe auf einen Tag, wähle den Ort und tippe auf **Übernehmen**. Mit **Dienstag bis Freitag wie Montag** gilt der Montag für die ganze Arbeitswoche. Ein Tag mit **Nichts eingetragen** bleibt auf der Küchenwand leer, so wie meist das Wochenende. Zum Schluss tippst du auf **Speichern**.
+Unter **Einstellungen → Familie → Übliche Woche** tragt ihr für jeden Wochentag ein, wo ihr normalerweise seid, zum Beispiel montags im Büro und an den anderen Tagen im Homeoffice. Tippe auf einen Tag, wähle den Ort und tippe auf **Übernehmen**. Mit **Dienstag bis Freitag wie Montag** gilt der Montag für die ganze Arbeitswoche. Ein Tag mit **Nichts eingetragen** bleibt auf der Küchenwand leer, so wie meist das Wochenende. Zum Schluss tippst du auf **Speichern**.
 
 Bist du an einem Tag nicht den ganzen Tag am selben Ort, wählst du **Zeitfenster**: bis zu drei pro Tag, zum Beispiel von 8 bis 12 Uhr im Büro und von 13 bis 17 Uhr im Homeoffice. Die Küchenwand zeigt heute das Zeitfenster, das gerade gilt, an den anderen Tagen das erste, und mit „+1“, dass noch eines folgt.
 
 Wiederholt sich dein Plan alle zwei Wochen, schalte **Abwechselnde Wochen (A/B)** ein. WuselWall fragt einmal, ob diese Woche Woche A oder Woche B ist. Danach trägst du unter **Woche A** und **Woche B** je eine eigene Woche ein. Schaltest du es aus, bleibt Woche B gespeichert und ist beim nächsten Einschalten wieder da.
 
 Danach tragt ihr nur noch Abweichungen ein. Eine normale Woche bleibt leer. An einem Feiertag zeigt die Küchenwand keinen üblichen Ort.
+
+### Beispiel: ein freier Dienstag
+
+Du arbeitest normalerweise dienstags im Büro. Trage das einmal in der **üblichen Woche** ein. Für einen einzelnen freien Dienstag legst du im Kalender eine **Anwesenheit** mit dem Zustand **Frei** und **Ganztägig** an. Die Ausnahme gilt für diesen Termin; der nächste Dienstag folgt wieder der üblichen Woche.
+
+<Shot name="usual-week" alt="Übliche Woche mit den Orten einer Person für jeden Wochentag" />
 
 ## Kinder und Termine
 
@@ -116,13 +122,13 @@ Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anze
 
 Termine von außen kommen mit einem **Abo** in den Familienkalender: der Spielplan des Vereins, der Abfuhrkalender der Gemeinde, Schulveranstaltungen. Ihr braucht dafür nur die Adresse des Kalenders, meist eine Datei, die auf **.ics** endet. Adressen mit **webcal://** gehen auch.
 
-Abos verwaltet ein Elternteil unter **Einstellungen → Erweitert → Kalender von außen hinzufügen**. **Kalender abonnieren** öffnet das Formular mit Name, Adresse, Farbe, **Für wen?** (ohne Auswahl gilt der Kalender für die ganze Familie) und **Auf dem Küchendisplay zeigen**. Die Termine erscheinen im Kalender in der Farbe des Kalenders, mit einem Abo-Symbol. Sie sind nur zum Lesen: Änderungen kommen von der Quelle.
+Abos verwaltet ein Elternteil unter **Einstellungen → Erweitert → Kalender & Schule → Kalender von außen hinzufügen**. **Kalender abonnieren** öffnet das Formular mit Name, Adresse, Farbe, **Für wen?** (ohne Auswahl gilt der Kalender für die ganze Familie) und **Auf dem Küchendisplay zeigen**. Die Termine erscheinen im Kalender in der Farbe des Kalenders, mit einem Abo-Symbol. Sie sind nur zum Lesen: Änderungen kommen von der Quelle.
 
 Euer Server holt jeden Kalender etwa einmal pro Stunde. Mit **Jetzt aktualisieren** geht es sofort. Schlägt der Abruf fehl, steht der Grund bei dem Kalender, zum Beispiel „Die Adresse ist gerade nicht erreichbar“.
 
 Wissenswert:
 
-- Es gehen nur Adressen mit **https://**. Adressen, die auf Rechner im eigenen Netz zeigen, nimmt WuselWall nicht an.
+- Kalender werden über **https://** abgerufen; **webcal://**-Adressen werden automatisch in HTTPS umgewandelt. Adressen, die auf Rechner im eigenen Netz zeigen, nimmt WuselWall nicht an.
 - Ein Kalender darf höchstens 2 MB groß sein. Der Abruf bricht nach 15 Sekunden ab.
 - Alle Geräte des Haushalts sehen nur den Rechnernamen der Adresse, zum Beispiel „abfuhr.example.de“. Die ganze Adresse sehen nur Eltern, wenn sie den Kalender bearbeiten. Enthält sie einen geheimen Schlüssel, gilt sie wie ein Passwort.
 - Im Abo für Outlook und iPhone erscheinen Termine von außen nur, wenn du beim Abo **Kalender von außen einschließen** anhakst. Siehe [Den Familienkalender teilen](/calendar/feeds).

@@ -9,7 +9,7 @@ Die App weiß nicht von selbst, wo eure Daten liegen. Beim ersten Start fragt si
 <Shot name="setup-server" alt="Die Frage nach dem Server" />
 
 - **Adresse eingeben**, die du von der Person bekommen hast, die euren Server eingerichtet hat, z. B. `api.example.org`. Bei einem Server bei Supabase reicht die Projekt-ID.
-- **QR-Code scannen**: Auf einem Gerät, das schon verbunden ist, steht er unter **Einstellungen → Erweitert → Server**. Der Code von **Gerät hinzufügen** geht auch und verbindet das Gerät gleich mit ([Gerät mit Code verbinden](/guide/setup#_2-gerat-mit-code-verbinden)).
+- **QR-Code scannen**: Auf einem Gerät, das schon verbunden ist, steht er unter **Einstellungen → Erweitert → Server**. Der Code von **Gerät hinzufügen** geht auch und verbindet das Gerät gleich mit ([Geteiltes Gerät verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden)).
 - **Ohne Server ausprobieren**: Die App zeigt eine Beispielfamilie. Nichts davon wird gespeichert, und nichts verlässt das Gerät. Mit **Beenden** kommst du zurück zur Frage.
 
 Kommt der Server aus einem Link oder einem gescannten QR-Code, oder führt die eingegebene Adresse zu einem anderen Server, zeigt die App zuerst dessen Adresse und fragt **Mit diesem Server verbinden?** Verbinde dich nur mit einer Adresse, die du kennst; im Zweifel tippst du sie selbst ein. Wo du dich anmeldest oder einen Code oder ein Passwort eingibst, steht in der App klein **Server:** mit der Adresse.
@@ -28,7 +28,7 @@ Euer Server bringt seine eigene Web-App mit. Öffne ihre Adresse im Browser, am 
 Auf dem iPhone: **Teilen → Zum Home-Bildschirm**. Auf Android: **⋮ → Zum Startbildschirm hinzufügen**. Dann öffnet sich WuselWall wie eine App.
 :::
 
-Passkeys gibt es im Browser noch nicht; melde dich mit E-Mail und Passwort an.
+Melde dich mit einem Code per E-Mail oder mit deinem Passwort an. Auf einem Server ohne E-Mail brauchst du das Passwort. Passkeys gibt es im Browser noch nicht.
 
 ## Android-App – Tablet und Android-Handys
 

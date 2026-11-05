@@ -16,7 +16,7 @@ update app.setting_definition
  where key = 'rituals.countdown_days';
 
 insert into app.setting_definition (key, scope, type, default_value, constraints, self_service, since_migration) values
-  ('rituals.table_question_age_limit', 'household', 'integer', 'null', '{"min":6,"max":16,"nullable":true}', false, '20261104110000');
+  ('rituals.table_question_age_limit', 'household', 'integer', 'null', '{"min":6,"max":16,"nullable":true}', false, '20261104120000');
 
 -- H2 may carry a child's birthday, so the questions fit from the first meal. Optional, and a
 -- previous app release simply doesn't send it. The audit row says that it was set, not the date:

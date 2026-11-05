@@ -21,7 +21,7 @@ import 'package:wuselwall/features/setup/ui/busy_button_label.dart';
 import 'package:wuselwall/features/setup/ui/password_sign_in_page.dart';
 
 /// E1 (specs/20, "With email"): the address, then a code by e-mail (E2). A password is
-/// one step behind "Ich habe ein Passwort". The same answer for every address. On a
+/// one step behind "Mit Passwort anmelden". The same answer for every address. On a
 /// server without mail, [PasswordSignInPage] instead (Q48).
 class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({this.initialEmail, super.key});
@@ -117,9 +117,15 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    // A server without a family takes no new account until this device has its setup
+    // key (specs/20 "Claiming the server").
+    final signUpClosed =
+        ref.watch(setupKeyRequiredProvider) &&
+        !ref.watch(serverSessionProvider).setupPending.value;
     if (!ref.watch(emailCodeSignInProvider)) {
       return PasswordSignInPage(
         initialEmail: widget.initialEmail,
+        signUpClosed: signUpClosed,
         onBack: () => unawaited(_cancelSetup()),
       );
     }
@@ -132,7 +138,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     return AuthFormScaffold(
       showServer: true,
       onBack: () => unawaited(_cancelSetup()),
-      title: l10n.doorEmail,
+      title: l10n.signInAccountTitle,
       children: [
         if (!online) ...[
           Container(
@@ -145,6 +151,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           ),
           const SizedBox(height: Tokens.space4),
         ],
+        // New or returning, the steps are the same (specs/20 E1), unless sign-up is closed.
+        Text(switch ((_showPassword, signUpClosed)) {
+          (true, _) => l10n.signInPasswordLead,
+          (false, true) => l10n.signInCodeLeadUnclaimed,
+          (false, false) => l10n.signInCodeLead,
+        }),
+        const SizedBox(height: Tokens.space4),
         Form(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -194,7 +207,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           ),
         ),
         const SizedBox(height: Tokens.space6),
-        // One filled action at a time (specs/20 E1): "Weiter" mails a code; once the
+        // One filled action at a time (specs/20 E1): "Code senden" mails a code; once the
         // password field is open, "Anmelden" signs in with it and the code is the quiet
         // alternative below.
         if (!_showPassword) ...[
@@ -203,7 +216,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             onPressed: busy ? null : _sendCode,
             child: _busyAction == _SignInAction.emailCode
                 ? BusyButtonLabel(label: l10n.emailSendingCode)
-                : Text(l10n.emailContinue),
+                : Text(l10n.emailSendCode),
           ),
           TextButton(
             onPressed: busy ? null : () => setState(() => _showPassword = true),
@@ -244,6 +257,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 : Text(l10n.signInPasskey),
           ),
         ],
+        if (signUpClosed)
+          TextButton(
+            key: const ValueKey('sign-in-claim'),
+            onPressed: busy ? null : () => context.go(Routes.claim),
+            child: Text(l10n.doorUnclaimedAction),
+          ),
       ],
     );
   }
