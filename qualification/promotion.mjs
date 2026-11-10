@@ -91,7 +91,7 @@ export async function authorize({ sha, repository, token, fetcher = fetch, api =
   assert.match(sha ?? '', /^[a-f0-9]{40}$/, 'A full release commit SHA is required');
   assert.match(repository ?? '', /^[\w.-]+\/[\w.-]+$/, 'Invalid repository');
   const request = async (suffix, binary = false) => {
-    const response = await fetcher(`${api}/repos/${repository}/${suffix}`, {
+    const response = await fetcher(`${api}/repos/${repository}${suffix ? `/${suffix}` : ''}`, {
       headers: { accept: 'application/vnd.github+json', authorization: `Bearer ${token}`,
         'X-GitHub-Api-Version': '2022-11-28' }, signal: AbortSignal.timeout(30_000),
     });
