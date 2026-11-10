@@ -88,6 +88,8 @@ mit der Person, die eure Familie anlegt.
 
 <Shot name="new-family" alt="Formular „Neue Familie“" />
 
+Wenn du die App hier schließt, bleiben Familienname, dein Name, deine Farbe und die Wahl der Beispiele auf diesem Gerät gespeichert. Beim nächsten Start mit demselben Konto und Server geht es hier weiter. Nach dem Anlegen der Familie, beim Abmelden oder beim Wechsel zu einer Einladung wird der Entwurf gelöscht. Ein hier eingetippter Einrichtungsschlüssel wird nicht im Entwurf gespeichert.
+
 Bleibt die App nach dem Anlegen länger als 15 Sekunden stehen, zeigt sie einen Hinweis.
 Du kannst dann **Ich wurde eingeladen** wählen oder dich **abmelden**. **Familie anlegen**
 bleibt gesperrt, damit nicht versehentlich eine zweite Familie entsteht. Kommt die
@@ -128,5 +130,5 @@ So kommen das **Wanddisplay** in der Küche, ein **Kinder-Tablet** oder ein **Ta
 Danach ist das neue Gerät fertig. Das Wanddisplay zeigt einmal eine kurze Checkliste, damit es dauerhaft läuft (siehe [Wandanzeige](/guide/wall)). Der Code gilt **10 Minuten** und nur **einmal**. Stimmt er nicht, fange auf dem neuen Gerät noch einmal an.
 
 ::: tip Ältere Geräte
-Hat ein Gerät noch eine ältere Version von WuselWall, nimmt es den alten Code an: unter **Einstellungen → Erweitert → Geräte** tippst du dafür auf **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit verschwindet mit der nächsten Version.
+Hat ein Gerät noch eine ältere Version von WuselWall, nimmt es den alten Code an: unter **Einstellungen → Erweitert → Geräte** tippst du dafür auf **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit bleibt, solange unterstützte ältere App-Versionen sie noch brauchen.
 :::

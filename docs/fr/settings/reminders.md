@@ -15,3 +15,5 @@ Chaque type a son interrupteur et vos réglages n’affectent que vous. Les heur
 ## Autorisation {#permission}
 
 La première activation demande l’autorisation système d’afficher des notifications. Un refus empêche les rappels ; vous pouvez changer cela dans les réglages du téléphone. L’écran mural n’envoie pas de rappels : il affiche déjà les événements.
+
+**Activer les rappels** fait aussi partie des premières étapes sur votre téléphone personnel. Autoriser les notifications marque cette étape comme terminée et la conserve dans le total. Refuser la laisse ouverte. **Pas nécessaire** masque l’étape sur cet appareil sans accorder l’autorisation. Si vous changez l’autorisation dans les réglages du système, la progression se met à jour à votre retour dans l’application.

@@ -83,10 +83,7 @@ void main() {
         Routes.home,
       );
       expect(container.read(homeTabProvider), HomeTab.shopping);
-      expect(
-        t.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
-        5,
-      );
+      expect(selectedHomeDestination(t), 5);
     });
 
     testWidgets('Android Back from directly opened settings falls back home', (
@@ -105,7 +102,7 @@ void main() {
         container.read(routerProvider).routeInformationProvider.value.uri.path,
         Routes.home,
       );
-      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(homeNavigation(), findsOneWidget);
     });
 
     testWidgets('Back from a group page leads to the list of groups', (

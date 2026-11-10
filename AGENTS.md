@@ -91,6 +91,15 @@ is still open. The former M2/R1–R4 lists are no longer separate schedules; lat
 live in [specs/23](specs/23-roadmap-after-alpha.md). Merged migrations and functions reach a live server after a backup
 (`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`, one without sets it
 `true` (`wuselwall mail` checks which).
+Onboarding journey finish (#129, 2026-11-10): H1 saves local name/colour/examples drafts
+per server and account, clears them on success/sign-out/invitation, and excludes codes.
+A sole guardian account sees a TOTP recovery warning before enrolment; Today counts OS
+notification permission as a completed step. The adult register uses a rail from 840
+logical pixels and preserves the selected tab through Settings Back and resizing.
+Passkeys default off pending native verification (`ENABLE_PASSKEYS` is verification-only,
+fixed-server builds). Legacy wizard/enrolment retirement stays conditional in #221;
+website deletion/progress work is tracked separately in wuselwall-website#17. Native and
+publication evidence remain release gates; see specs/release-checklist.md's #129 review.
 The second security review ([specs/19](specs/19-security-and-architecture-review.md) "Second
 review", fixed 2026-11-02) hardened the flows around the perimeter: the Send Email Hook mails each
 email-change code to its own address and `app.proven_address` records what was proven; links never

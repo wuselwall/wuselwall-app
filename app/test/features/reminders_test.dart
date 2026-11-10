@@ -7,8 +7,10 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
 import 'package:wuselwall/features/reminders/domain/reminder_plan.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
+import 'package:wuselwall/features/today/domain/getting_started.dart';
 import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 
+import '../support/fake_getting_started.dart';
 import '../support/fake_notifications.dart';
 import '../support/fake_tasks.dart';
 import '../support/fakes.dart';
@@ -637,6 +639,50 @@ void main() {
           tasks: waiting(),
         );
         expect(memberPhone.active, isEmpty);
+        await unmountApp(t, container);
+      },
+    );
+
+    testWidgets(
+      'permission keeps a stable total, denial stays open and resume rereads the OS',
+      (t) async {
+        final notifications = FakeNotificationScheduler(
+          granted: false,
+          grantOnRequest: false,
+        );
+        final container = await pumpApp(
+          t,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(current: device()),
+            notifications: notifications,
+          ),
+          gettingStarted: FakeGettingStartedRepository(const [
+            GettingStartedItem(item: StartItem.wallDisplay, done: false),
+            GettingStartedItem(item: StartItem.subscribeFeed, done: true),
+          ]),
+        );
+        expect(find.text(_de.todayStartProgress(1, 3)), findsOneWidget);
+        await t.tap(find.text(_de.reminderStartLabel));
+        await t.pumpAndSettle();
+        expect(find.text(_de.todayStartProgress(1, 3)), findsOneWidget);
+        expect(container.read(reminderSetupProvider).value, isFalse);
+        notifications.grantOnRequest = true;
+        await t.tap(find.text(_de.reminderStartLabel));
+        await t.pumpAndSettle();
+        expect(find.text(_de.todayStartProgress(2, 3)), findsOneWidget);
+        expect(container.read(reminderSetupProvider).value, isTrue);
+        expect(find.text(_de.reminderStartLabel), findsOneWidget);
+        // A system-settings revocation is discovered on foregrounding, without prompting.
+        notifications.granted = false;
+        t.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+        t.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+        t.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+        t.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+        t.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+        t.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+        await t.pumpAndSettle();
+        expect(find.text(_de.todayStartProgress(1, 3)), findsOneWidget);
+        expect(notifications.requests, 2);
         await unmountApp(t, container);
       },
     );

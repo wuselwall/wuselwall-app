@@ -13,7 +13,7 @@ laptop can be the same physical size and still need different interfaces.
 
 | Register | Devices | Character |
 |---|---|---|
-| **adult** | Laptop browser (web build), parents' iPhones | Dense. Full navigation and all administrative screens; a navigation rail on wide screens ([16, step 10.11](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)). This is where planning happens. Keyboard shortcuts and bulk editing are M3. |
+| **adult** | Laptop browser (web build), parents' iPhones | Dense. Full navigation and all administrative screens; a navigation rail at 840 logical pixels and wider (built #129; [16, step 10.11](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)). This is where planning happens. Keyboard shortcuts and bulk editing are M3. |
 | **kid** | Children's iPads | Large. Icons before words, four or five destinations maximum, no destructive actions, generous animation and feedback. |
 | **kiosk** | Wall display | Glanceable. A read-first **week board**, no navigation chrome, huge type, tap-to-act on a small set of things, auto-revert to home after 60 s. |
 

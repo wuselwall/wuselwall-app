@@ -31,6 +31,7 @@ import 'package:wuselwall/features/calendar/data/external_calendars_repository.d
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/household/data/household_leave_repository.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/household/data/new_family_draft_store.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/pairing_repository.dart';
@@ -1015,6 +1016,16 @@ class EmptySetupStore extends SetupStore {
   Future<void> clear() async {}
 }
 
+/// Default tests do not need disk state; recovery tests pass the real secure store.
+class EmptyNewFamilyDraftStore extends NewFamilyDraftStore {
+  @override
+  Future<NewFamilyDraft?> read(String server, String userId) async => null;
+  @override
+  Future<void> save(String server, String userId, NewFamilyDraft draft) async {}
+  @override
+  Future<void> clear(String server, String userId) async {}
+}
+
 /// The clock of a test that names none: today at 10:30. That is outside every time
 /// window the app has (the table question's meals, the look-back from Sunday 16:00 to
 /// Monday 10:00, the wall's night from 21:00), so what a test sees does not depend on when
@@ -1044,6 +1055,7 @@ List<Override> baseOverrides({
   FakeInvitationRepository? invitations,
   MemoryInvitationStore? invitationStore,
   SetupStore? setupStore,
+  NewFamilyDraftStore? draftStore,
   AppearanceStore? appearance,
   AppLanguageStore? language,
 
@@ -1067,6 +1079,9 @@ List<Override> baseOverrides({
   Override? sessionUser,
 }) => [
   setupStoreProvider.overrideWithValue(setupStore ?? EmptySetupStore()),
+  newFamilyDraftStoreProvider.overrideWithValue(
+    draftStore ?? EmptyNewFamilyDraftStore(),
+  ),
   householdLeaveRepositoryProvider.overrideWithValue(
     leave ?? FakeHouseholdLeaveRepository(),
   ),
@@ -1216,6 +1231,17 @@ Future<ProviderContainer> pumpApp(
   return container;
 }
 
+/// The adult navigation surface changes with window width.
+Finder homeNavigation() =>
+    find.byWidgetPredicate((w) => w is NavigationBar || w is NavigationRail);
+
+int? selectedHomeDestination(WidgetTester tester) =>
+    switch (tester.widget(homeNavigation())) {
+      NavigationRail(:final selectedIndex) => selectedIndex,
+      NavigationBar(:final selectedIndex) => selectedIndex,
+      _ => null,
+    };
+
 /// Switches the adult home to the tab with [label] (its navigation bar label). Today is
 /// the default tab, so tests about another tab start by tapping it.
 ///
@@ -1223,6 +1249,19 @@ Future<ProviderContainer> pumpApp(
 /// selected destination shows its label, and Material still lays the hidden one out
 /// below the centred icon, where a low bar (specs/09) puts it at the screen's edge.
 Future<void> openTab(WidgetTester tester, String label) async {
+  final rail = find.byType(NavigationRail);
+  if (rail.evaluate().isNotEmpty) {
+    final labels = tester.widget<NavigationRail>(rail).destinations;
+    final index = labels.indexWhere((d) => (d.label as Text).data == label);
+    expect(index, greaterThanOrEqualTo(0));
+    await tester.ensureVisible(
+      find.descendant(of: rail, matching: find.text(label)),
+    );
+    await tester.tap(find.descendant(of: rail, matching: find.text(label)));
+    await tester.pumpAndSettle();
+    expect(tester.widget<NavigationRail>(rail).selectedIndex, index);
+    return;
+  }
   final bar = find.byType(NavigationBar);
   final destinations = find.descendant(
     of: bar,
@@ -1237,7 +1276,6 @@ Future<void> openTab(WidgetTester tester, String label) async {
   );
   await tester.tap(destination);
   await tester.pumpAndSettle();
-  // A tap that misses only warns; a tab that did not open must fail here.
   expect(tester.widget<NavigationBar>(bar).selectedIndex, index);
 }
 

@@ -3,8 +3,8 @@
 This checklist decides whether a candidate build and server are fit for the pilot household
 (M1.6, [13 — Roadmap](13-roadmap.md)), and which checks have only been planned. It is
 executable: each item says what to run or look at, what passes, and where the evidence goes.
-It was written at base `43ac2e5` (2026-10-17). It records no results. Every Result field is
-`NOT RUN` until someone runs the check and writes the evidence.
+It was written at base `43ac2e5` (2026-10-17). Candidate Result fields stay `NOT RUN` until someone runs each check and writes the
+evidence. Dated implementation reviews below record source/local-check findings separately.
 
 **Base history and the CI matrix.** At base `43ac2e5`, `ci.yml` ran the `app` and `website`
 jobs on every pull request and the `backend` job only on a tag or a manual run, and no CI step
@@ -156,7 +156,7 @@ hesitation, not only the total. The screen count follows the journey test's defi
 
 | ID | Check | Mode | Pass when | Result | Evidence |
 |---|---|---|---|---|---|
-| T1 | J1: start a family with Apple or Google, on the candidate app, on a clean install | Manual | At most 3 screens after sign-in, and at most 90 s. Typed: names only | NOT RUN | time, screen count, hesitations |
+| T1 | J1: start a family using the sign-in method offered by its server (email code or password), on the candidate app, on a clean install | Manual | At most 3 screens after sign-in, and at most 90 s. Typed: names only | NOT RUN | time, screen count, hesitations |
 | T2 | J2: join by invitation link, with the app installed | Manual | At most 2 screens after sign-in, and at most 60 s | NOT RUN | time, screen count, hesitations |
 | T3 | J3: connect a shared device by pairing (nothing typed on the device) | Manual | At most 30 s of a guardian's time. Nothing typed on the shared device | NOT RUN | time, hesitations |
 | T4 | J1 with the email code: time from the code request to Today, with the mail delay recorded apart from the app's own time | Manual | The app's part meets T1's limit; the mail delay is recorded, not counted against NFR-17 | NOT RUN | app time, mail delay |
@@ -293,3 +293,52 @@ complete at `43ac2e5`, and this checklist does not mark them complete.
 
 A run is complete when each section has a result for every item, and every PASS has evidence.
 Blocked items stay `NOT RUN` with the reason written next to them.
+
+## #129 implementation review — 2026-11-10
+
+This reviews the existing checklist; it is not a candidate qualification or a second
+checklist. Existing J1–J3 screen budgets, #117 Settings Back/tab regressions, member and
+shopping editing tests remain applicable. No live-household operations were run.
+
+- **Built:** local H1 draft recovery (non-secret form choices, per server/account), the
+  warning before a sole guardian account enrols TOTP, reminder progress derived from OS
+  permission, and the adult rail at 840 logical pixels. DE/EN/FR/ES guides and screenshot
+  definitions accompany the widget/journey checks. A1/A7 need the PR's check results;
+  native timings, OS delivery, native iOS interaction and release evidence remain NOT RUN
+  until recorded for a distributed candidate.
+- **Local implementation checks:** Flutter analysis and the full widget/unit suite passed
+  (1,988 tests, seven skipped). After adding sign-out/invitation, failed-create and
+  large-text cases, the recovery suite passed all 14 tests. Formatting, repository
+  boundaries, `docs:check` and the guide build passed. Eleven affected demo views were
+  captured in DE/EN/FR/ES and light/dark (88 images); warning captures assert the dialog
+  is visible in both themes. Generated images are not part of the source change.
+  These are local implementation results;
+  A1 still needs CI evidence and the native parts of J7–J10 remain NOT RUN.
+- **Passkeys:** default disabled. Only fixed-server verification builds may explicitly set
+  `ENABLE_PASSKEYS=true`; chosen-server/store builds keep them disabled (ADR-018). Do not
+  offer them in ordinary builds until native registration, sign-in and recovery evidence
+  exists. The getting-started card offers no passkey step.
+- **Deletion web resource:** review of the separate website's `main` at
+  `79d53c60ebe4cad0e2b00f75f8d09777b9cf6e72` found no deletion-request page. Source review
+  does not establish live publication or a configured Play Console URL. The required page,
+  DE/EN/FR/ES content, actual outside-the-app request path and store URL verification are
+  [website #17](https://github.com/wuselwall/wuselwall-website/issues/17), together with the
+  separate DE/EN public-progress update. This stays an opening/store gate. Compare the
+  [official Play deletion-resource requirements](https://support.google.com/googleplay/android-developer/answer/13327111?hl=en):
+  a working, discoverable request path naming the app/developer; reinstall instructions
+  alone are insufficient. WuselWall operates no household data service; the page must
+  explain how to reach the chosen server's operator and accurately describe retained
+  family profiles/history and backup retention. Do not claim the website project can
+  delete a family's data centrally.
+- **Legacy compatibility:** the GitHub releases reviewed were `server-v*` only. They do
+  not establish a distributed app or expiry of the supported previous-app window. Keep
+  wizard/enrolment APIs and routes; conditional retirement and its evidence are tracked
+  separately in [#221](https://github.com/wuselwall/wuselwall-app/issues/221).
+
+| ID | Check | Mode | Pass when | Result | Evidence |
+|---|---|---|---|---|---|
+| J7 | Close H1 after editing names, colour and examples; restart with the same account/server | Widget + native | Choices resume without another setup screen. A different account/server cannot read them. Creation/sign-out/invitation clears the draft; codes never enter it | NOT RUN | candidate test run, native restart capture |
+| J8 | Enable TOTP with one guardian account, then with a second active guardian account | Widget + native | Sole guardian sees recovery warning before enrolment; Cancel enrols nothing; an unclaimed/inactive guardian is not a recovery account | NOT RUN | DE/EN/FR/ES dialog captures, native enrolment |
+| J9 | Deny/grant/revoke notification permission and return to Today | Widget + native | Denial stays open, grant counts done without shrinking total, dismissal omits rather than completes the step; foreground rechecks without a prompt | NOT RUN | progress before/after, OS permission |
+| J10 | Resize adult home across 839/840 px, switch every tab, open Settings and go Back | Widget + native | Rail starts at 840, selected tab and approval badge survive; toolbar/system Back and iOS edge swipe retain the tab; short windows/large text reach all destinations | NOT RUN | widget run, phone/tablet captures |
+| W1 | Public deletion-request page and Play Console URL | Website + manual | The website follow-up is published and the entered store URL opens a working deletion request path in DE/EN/FR/ES | NOT RUN | website PR/deploy, final URL and store record |

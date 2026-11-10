@@ -130,7 +130,7 @@ void main() {
     await pumpApp(
       t,
       locale: const Locale('de'),
-      size: const Size(1000, 900),
+      size: const Size(1280, 900),
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
         now: DateTime(2026, 10, 25, 9),
@@ -156,7 +156,7 @@ void main() {
     await pumpApp(
       t,
       locale: const Locale('de'),
-      size: const Size(1000, 900),
+      size: const Size(1280, 900),
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
         now: DateTime(2026, 10, 25, 9),

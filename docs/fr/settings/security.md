@@ -18,13 +18,17 @@ En plus du mot de passe, l’app demande un **code à six chiffres** d’une app
 
 Chaque nouvelle connexion demandera ce code avant de donner accès aux données du foyer. Vous pouvez désactiver cette protection dans les mêmes réglages.
 
+Si un seul parent a un compte connecté, un avertissement apparaît avant l’activation : sans votre authentificateur, aucun deuxième parent ne peut réinitialiser votre second facteur. Invitez d’abord un autre parent et demandez-lui de se connecter, ou conservez une sauvegarde séparée de votre authentificateur. Sinon, il faudra l’aide de la personne qui gère votre serveur. Vous pouvez annuler ou activer quand même.
+
+<Shot name="totp-recovery-warning" alt="Avertissement avant l’activation sans deuxième parent connecté" />
+
 ## PIN parental {#guardian-pin}
 
 Le PIN à six chiffres protège les actions parentales sur les [appareils partagés](/fr/guide/who-are-you). Votre téléphone personnel connecté permet d’en définir un nouveau, même si l’ancien est bloqué.
 
 ## Clé d’accès {#passkey}
 
-Une clé d’accès remplace le mot de passe par l’empreinte ou le visage. Elle n’est pas disponible sur tous les appareils ni pour toutes les installations ; utilisez les méthodes proposées par votre app.
+Les clés d’accès ne sont pas encore disponibles dans l’application habituelle. Elles seront proposées après vérification sur de vrais appareils.
 
 ## À retenir {#good-to-know}
 

@@ -57,8 +57,10 @@ void main() {
     }
   });
 
-  testWidgets('a wide screen keeps the Material height', (t) async {
-    await pumpAdult(t, const Size(1000, 1600));
+  testWidgets('below the rail breakpoint the bar keeps the Material height', (
+    t,
+  ) async {
+    await pumpAdult(t, const Size(839, 1600));
     expect(navBarHeight(t.element(find.byType(NavigationBar))), isNull);
     expect(t.getSize(find.byType(NavigationBar)).height, 80);
   });

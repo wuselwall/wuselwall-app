@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
+import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
@@ -201,6 +202,38 @@ class SecuritySection extends ConsumerWidget {
 
   Future<void> _enableTotp(BuildContext context, WidgetRef ref) async {
     final repo = ref.read(identityRepositoryProvider);
+    // A named guardian without an account cannot reset a lost second factor. Wait
+    // for the current member list before offering enrolment; never guess on failure.
+    final List<Member> members;
+    try {
+      members = await ref.read(membersProvider.future);
+    } on Failure catch (failure) {
+      if (context.mounted) context.showFailure(failure);
+      return;
+    }
+    if (!context.mounted) return;
+    if (members.where((m) => m.active && m.isGuardian && m.hasAccount).length <
+        2) {
+      final proceed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          scrollable: true,
+          title: Text(context.l10n.totpTitle),
+          content: Text(context.l10n.totpSingleGuardianWarning),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(context.l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(context.l10n.totpEnable),
+            ),
+          ],
+        ),
+      );
+      if (proceed != true || !context.mounted) return;
+    }
     final enrolment = await repo.totpEnrol();
     if (!context.mounted) return;
     switch (enrolment) {

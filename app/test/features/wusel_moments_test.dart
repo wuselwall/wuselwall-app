@@ -47,7 +47,7 @@ void main() {
       await tester.pumpWidget(
         _app([
           gettingStartedProvider.overrideWith((ref) async => ref.watch(_items)),
-          reminderCardProvider.overrideWith((ref) async => false),
+          reminderSetupProvider.overrideWith((ref) async => null),
         ], const GettingStartedCard()),
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -79,7 +79,7 @@ void main() {
             GettingStartedItem(item: StartItem.setPin, done: true),
           ],
         ),
-        reminderCardProvider.overrideWith((ref) async => false),
+        reminderSetupProvider.overrideWith((ref) async => null),
       ], const GettingStartedCard()),
     );
     await tester.pump(const Duration(seconds: 3));

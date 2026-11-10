@@ -57,7 +57,7 @@ void main() {
         await t.pumpAndSettle();
 
         expect(
-          Theme.of(t.element(find.byType(NavigationBar))).platform,
+          Theme.of(t.element(homeNavigation())).platform,
           TargetPlatform.iOS,
         );
         await t.tap(find.byTooltip(_de.settingsTitle));
@@ -91,10 +91,7 @@ void main() {
           findsNothing,
         );
         expect(container.read(homeTabProvider), HomeTab.shopping);
-        expect(
-          t.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
-          HomeTab.shopping.index,
-        );
+        expect(selectedHomeDestination(t), HomeTab.shopping.index);
         await unmountApp(t, container);
       }),
     );
@@ -111,7 +108,7 @@ void main() {
         ),
       );
       expect(
-        Theme.of(t.element(find.byType(NavigationBar))).platform,
+        Theme.of(t.element(homeNavigation())).platform,
         TargetPlatform.iOS,
       );
 
@@ -128,7 +125,7 @@ void main() {
         find.byKey(const ValueKey('settings-group-devices')),
         findsNothing,
       );
-      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(homeNavigation(), findsOneWidget);
       await unmountApp(t, container);
     }),
   );

@@ -20,13 +20,17 @@ On top of the password, WuselWall asks for a **6-digit code** from an authentica
 
 From then on every new sign-in asks for the code; without it a phone sees **none** of the household's data. **Turn off** takes it back.
 
+If only one parent has a signed-in account, a warning appears before turning this on: without your authenticator, no second parent can reset your second factor. Invite another parent and have them sign in first, or keep a separate backup of your authenticator. Otherwise you will need help from whoever runs your server. You can cancel or turn it on anyway.
+
+<Shot name="totp-recovery-warning" alt="Warning before turning on two-factor sign-in without a second signed-in parent" />
+
 ## Parent PIN
 
 The 6-digit PIN you enter on shared devices ([Who are you?](/en/guide/who-are-you)). Here you set a **new PIN** — even if the old one is **locked** after too many wrong tries. Only your own, signed-in phone may do this.
 
 ## Passkey
 
-With a **passkey** you sign in by fingerprint or face instead of a password. Not every device supports it.
+Passkeys are not available in the regular app yet. They will be offered after verification on real devices.
 
 ## Good to know
 

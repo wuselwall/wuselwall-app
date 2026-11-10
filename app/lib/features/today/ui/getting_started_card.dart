@@ -31,16 +31,17 @@ class GettingStartedCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items =
-        ref.watch(gettingStartedProvider).value ?? const <GettingStartedItem>[];
+    final loadedItems = ref.watch(gettingStartedProvider);
+    final items = loadedItems.value ?? const <GettingStartedItem>[];
     // Client-side item: the phone's reminders (specs/20, "Erinnerungen einschalten").
-    final reminderOpen = ref.watch(reminderCardProvider).value ?? false;
-    final allDone = items.every((i) => i.done) && !reminderOpen;
+    final loadedReminder = ref.watch(reminderSetupProvider);
+    final reminder = loadedReminder.value;
+    final allDone = items.every((i) => i.done) && reminder != false;
     // Seeing an open item and then none: the family has just finished setting up, and
     // Wusel cheers once (specs/25). A card that loads already complete stays hidden.
-    if (!allDone && items.isNotEmpty) {
+    if (!allDone && (items.isNotEmpty || reminder != null)) {
       ref.read(_setupProgressProvider.notifier).sawOpen();
-    } else if (allDone) {
+    } else if (allDone && loadedItems.hasValue && loadedReminder.hasValue) {
       ref.read(_setupProgressProvider.notifier).sawDone();
     }
     if (allDone) {
@@ -51,8 +52,9 @@ class GettingStartedCard extends ConsumerWidget {
 
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final total = items.length + (reminderOpen ? 1 : 0);
-    final doneCount = items.where((i) => i.done).length;
+    final total = items.length + (reminder != null ? 1 : 0);
+    final doneCount =
+        items.where((i) => i.done).length + (reminder == true ? 1 : 0);
     final rows = <Widget>[];
     var openShown = 0;
     for (final entry in items) {
@@ -97,7 +99,8 @@ class GettingStartedCard extends ConsumerWidget {
               ),
             ),
             ...rows,
-            if (reminderOpen) const ReminderStartRow(),
+            if (reminder != null && (reminder || openShown < _maxOpenItems))
+              ReminderStartRow(done: reminder),
           ],
         ),
       ),

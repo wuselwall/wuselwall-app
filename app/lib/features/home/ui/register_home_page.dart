@@ -63,6 +63,7 @@ class RegisterHomePage extends ConsumerWidget {
 
     final l10n = context.l10n;
     final adult = register == UiRegister.adult;
+    final rail = adult && MediaQuery.sizeOf(context).width >= 840;
     final tab = adult ? ref.watch(homeTabProvider) : HomeTab.shopping;
     final section = homeSections[tab]!;
     // What waits for the acting guardian, on the Tasks destination (specs/16 step 10.5).
@@ -104,6 +105,9 @@ class RegisterHomePage extends ConsumerWidget {
     final home = Theme(
       data: base.copyWith(
         appBarTheme: base.appBarTheme.copyWith(backgroundColor: band),
+        navigationRailTheme: base.navigationRailTheme.copyWith(
+          indicatorColor: band,
+        ),
         navigationBarTheme: base.navigationBarTheme.copyWith(
           indicatorColor: band,
         ),
@@ -142,17 +146,32 @@ class RegisterHomePage extends ConsumerWidget {
                   : null,
             ),
         body: SafeArea(
-          bottom: false,
-          child: Column(
+          bottom: rail,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const StaleStrip(),
-              Expanded(child: section.body),
-              const ActingProfileBar(),
+              if (rail) ...[
+                _AdultNavRail(
+                  tab: tab,
+                  approvals: approvals,
+                  onSelect: (t) => ref.read(homeTabProvider.notifier).select(t),
+                ),
+                const VerticalDivider(width: 1),
+              ],
+              Expanded(
+                child: Column(
+                  children: [
+                    const StaleStrip(),
+                    Expanded(child: section.body),
+                    const ActingProfileBar(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
         floatingActionButton: section.fab?.call(context),
-        bottomNavigationBar: adult
+        bottomNavigationBar: adult && !rail
             ? _AdultNavBar(
                 tab: tab,
                 approvals: approvals,
@@ -163,6 +182,51 @@ class RegisterHomePage extends ConsumerWidget {
     );
     return PixelShift(child: home);
   }
+}
+
+/// Same destinations and tab state as the phone, with room for all labels. Scrolling
+/// keeps every destination reachable in short landscape windows and at large text sizes.
+class _AdultNavRail extends StatelessWidget {
+  const _AdultNavRail({
+    required this.tab,
+    required this.approvals,
+    required this.onSelect,
+  });
+
+  final HomeTab tab;
+  final int approvals;
+  final ValueChanged<HomeTab> onSelect;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) => SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: box.maxHeight),
+        child: IntrinsicHeight(
+          child: NavigationRail(
+            selectedIndex: tab.index,
+            onDestinationSelected: (i) => onSelect(HomeTab.values[i]),
+            labelType: NavigationRailLabelType.all,
+            destinations: [
+              for (final t in HomeTab.values)
+                NavigationRailDestination(
+                  icon: Badge.count(
+                    count: approvals,
+                    isLabelVisible: t == HomeTab.tasks && approvals > 0,
+                    child: Icon(homeSections[t]!.icon),
+                  ),
+                  label: Text(
+                    (homeSections[t]!.navLabel ?? homeSections[t]!.label)(
+                      context.l10n,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 /// The adult home's six destinations (specs/09). The labels keep to one line: their

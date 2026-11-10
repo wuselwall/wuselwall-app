@@ -15,3 +15,5 @@ Cada tipo tiene interruptor y solo afecta a tu persona. Las horas propuestas son
 ## Permiso {#permission}
 
 La primera activación pide permiso para mostrar notificaciones. Si lo deniegas, no habrá recordatorios; puedes cambiarlo en los ajustes del teléfono. La pared ya muestra las citas y no envía avisos propios.
+
+**Activar recordatorios** también forma parte de los primeros pasos en tu teléfono personal. Dar permiso para las notificaciones marca este paso como completado y lo mantiene en el total. Rechazarlo lo deja pendiente. **No lo necesitamos** oculta el paso en este dispositivo sin conceder permiso. Si cambias el permiso en los ajustes del sistema, el progreso se actualiza al volver a la aplicación.

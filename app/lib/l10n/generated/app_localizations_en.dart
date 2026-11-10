@@ -6733,4 +6733,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String accountNoticePasswordReset(String name, String target) {
     return '$name created a password code for $target';
   }
+
+  @override
+  String get totpSingleGuardianWarning =>
+      'You are the only parent with a signed-in account. If you lose access to your authenticator, another parent cannot reset your second factor. Invite a second parent and have them sign in first, or keep a separate backup of your authenticator. Otherwise you will need help from whoever runs your server. Turn on anyway?';
 }

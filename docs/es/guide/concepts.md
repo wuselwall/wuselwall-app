@@ -17,9 +17,15 @@ WuselWall reúne el **calendario**, el **horario escolar**, las **tareas**, las 
 
 **Hoy** es la primera página de los adultos. Muestra las citas, las tareas para marcar, la comida caliente y los productos pendientes. Se suman los pequeños [rituales](/es/guide/rituals): la próxima cuenta atrás bajo **Con ilusión**, los deseos de comida de los niños, la pregunta en la mesa durante la comida, **Nuestra semana** el domingo por la tarde y, en un cumpleaños, una tarjeta con [Wusel](/es/guide/wusel). La hora aparece encima del título de la cita para seguir siendo legible con letra más grande.
 
+En una pantalla ancha, las seis secciones aparecen en una barra de navegación a la izquierda; en el teléfono, están abajo. Girar el dispositivo o cambiar el tamaño de la ventana conserva la sección seleccionada. Tanto la flecha de volver de Ajustes como la acción Atrás del dispositivo vuelven a esa sección.
+
+<Shot name="adult-navigation" alt="La vista de adultos con la navegación a la izquierda en una pantalla ancha" wide />
+
 <Shot name="today" alt="La pestaña Hoy con los primeros pasos, las citas y la comida caliente" />
 
-La tarjeta **Primeros pasos** aparece mientras falte configurar algo: invitar a un adulto, conectar una tableta, preparar la pantalla de pared, definir el PIN, suscribirse al calendario o añadir el horario escolar. Cada paso desaparece al terminarlo. También puedes indicar que no lo necesitas. En pantallas estrechas o con letra más grande, los botones aparecen debajo del texto. Los padres la ven en su móvil y en dispositivos compartidos. **Ajustes → Ayuda e información → Primeros pasos** permite recuperarla.
+La tarjeta **Primeros pasos** aparece mientras falte configurar algo: invitar a un adulto, conectar una tableta, preparar la pantalla de pared, definir el PIN, suscribirse al calendario o añadir el horario escolar. Los pasos completados siguen marcados mientras quede otro pendiente. También puedes indicar que no lo necesitas. En pantallas estrechas o con letra más grande, los botones aparecen debajo del texto. Los padres la ven en su móvil y en dispositivos compartidos. **Ajustes → Ayuda e información → Primeros pasos** permite recuperarla.
+
+**Activar recordatorios** también forma parte de los primeros pasos en tu teléfono personal. Dar permiso para las notificaciones marca este paso como completado y lo mantiene en el total. Rechazarlo lo deja pendiente. **No lo necesitamos** oculta el paso en este dispositivo sin conceder permiso. Si cambias el permiso en los ajustes del sistema, el progreso se actualiza al volver a la aplicación.
 
 ## El hogar {#the-household}
 

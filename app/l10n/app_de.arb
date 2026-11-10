@@ -2483,5 +2483,6 @@
   "accountNoticeMfaResetYou": "{name} hat deine Zwei-Faktor-Anmeldung zurückgesetzt",
   "accountNoticeMfaReset": "{name} hat die Zwei-Faktor-Anmeldung von {target} zurückgesetzt",
   "accountNoticePasswordResetYou": "{name} hat einen Passwort-Code für dich erstellt",
-  "accountNoticePasswordReset": "{name} hat einen Passwort-Code für {target} erstellt"
+  "accountNoticePasswordReset": "{name} hat einen Passwort-Code für {target} erstellt",
+  "totpSingleGuardianWarning": "Du hast als einziger Elternteil ein angemeldetes Konto. Wenn du den Zugang zu deiner Authenticator-App verlierst, kann kein anderer Elternteil deinen zweiten Faktor zurücksetzen. Lade zuerst einen zweiten Elternteil ein und lass ihn sich anmelden, oder sichere deinen Authenticator getrennt. Sonst brauchst du Hilfe von der Person, die euren Server betreibt. Trotzdem einschalten?"
 }

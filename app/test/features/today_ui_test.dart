@@ -78,8 +78,7 @@ void main() {
       ),
     );
 
-    final bar = t.widget<NavigationBar>(find.byType(NavigationBar));
-    expect(bar.selectedIndex, 0);
+    expect(selectedHomeDestination(t), 0);
     expect(find.text(_de.todayTasksTitle), findsOneWidget);
     expect(find.text('Müll rausbringen'), findsOneWidget);
     expect(find.text('Blumen gießen'), findsNothing);
@@ -164,7 +163,7 @@ void main() {
     );
 
     expect(find.text(_de.todayStartTitle), findsOneWidget);
-    expect(find.text('2 von 4'), findsOneWidget);
+    expect(find.text('3 von 5'), findsOneWidget);
     expect(find.text(_de.todayStartWallDisplay), findsOneWidget);
     expect(find.text(_de.todayStartSubscribeFeed), findsOneWidget);
     expect(find.text(_de.todayStartConnectTablet), findsOneWidget);
@@ -192,7 +191,7 @@ void main() {
       item: StartItem.wallDisplay,
     ));
     expect(find.text(_de.todayStartWallDisplay), findsNothing);
-    expect(find.text('2 von 3'), findsOneWidget);
+    expect(find.text('3 von 4'), findsOneWidget);
   });
 
   testWidgets('the card is hidden when everything is done', (t) async {
@@ -296,8 +295,7 @@ void main() {
     await t.pumpAndSettle();
 
     expect(repo.restored, [guardianId]);
-    final bar = t.widget<NavigationBar>(find.byType(NavigationBar));
-    expect(bar.selectedIndex, 0);
+    expect(selectedHomeDestination(t), 0);
     expect(find.text(_de.todayStartTitle), findsOneWidget);
   });
 }

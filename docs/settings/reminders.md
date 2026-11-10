@@ -19,3 +19,5 @@ Beim ersten Einschalten fragt das Telefon nach der Erlaubnis für Benachrichtigu
 ::: tip Auf der Wandanzeige
 Die Wandanzeige hat keine eigenen Erinnerungen. Die Termine stehen dort ohnehin auf der Woche.
 :::
+
+Auch **Erinnerungen einschalten** gehört auf deinem eigenen Telefon zu den ersten Schritten. Erlaubst du Mitteilungen, zählt der Schritt als erledigt und bleibt im Fortschritt enthalten. Lehnst du ab, bleibt er offen. **Brauchen wir nicht** blendet ihn auf diesem Gerät aus; es erteilt keine Erlaubnis. Wenn du die Erlaubnis in den Systemeinstellungen änderst, wird der Fortschritt beim Zurückkehren zur App aktualisiert.

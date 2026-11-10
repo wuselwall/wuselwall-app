@@ -17,9 +17,15 @@ WuselWall organise la vie de famille : **calendrier**, **emploi du temps**, **t�
 
 **Aujourd’hui** est la première page des adultes. Elle affiche les rendez-vous, les tâches du jour à cocher, le repas chaud et le nombre d’articles restant à acheter. Les petits [rituels](/fr/guide/rituals) s’y ajoutent : le prochain compte à rebours sous **On a hâte**, les repas souhaités des enfants, la question à table pendant le repas, **Notre semaine** le dimanche soir et, le jour d’un anniversaire, une carte avec [Wusel](/fr/guide/wusel). L’heure apparaît au-dessus du titre du rendez-vous pour rester lisible avec des caractères plus grands.
 
+Sur un grand écran, les six rubriques apparaissent dans une barre de navigation à gauche ; sur un téléphone, elles se trouvent en bas. Tourner l’appareil ou redimensionner la fenêtre conserve la rubrique sélectionnée. La flèche de retour des paramètres et l’action Retour de l’appareil ramènent à cette rubrique.
+
+<Shot name="adult-navigation" alt="La vue des adultes avec la navigation à gauche sur un grand écran" wide />
+
 <Shot name="today" alt="L’onglet Aujourd’hui, les premiers pas, les rendez-vous et le repas chaud" />
 
-La carte **Premiers pas** reste en haut tant que la configuration est incomplète : inviter un adulte, connecter la tablette, préparer l’écran mural, définir le PIN, s’abonner au calendrier et saisir l’emploi du temps. Chaque étape disparaît une fois terminée. Vous pouvez choisir de ne pas en avoir besoin. Sur un écran étroit ou avec des caractères plus grands, les boutons passent sous le texte. Les parents voient la carte sur leur téléphone et les appareils partagés. **Paramètres → Aide et infos → Premiers pas** la réaffiche.
+La carte **Premiers pas** reste en haut tant que la configuration est incomplète : inviter un adulte, connecter la tablette, préparer l’écran mural, définir le PIN, s’abonner au calendrier et saisir l’emploi du temps. Les étapes terminées restent cochées tant qu’une autre étape est ouverte. Vous pouvez choisir de ne pas en avoir besoin. Sur un écran étroit ou avec des caractères plus grands, les boutons passent sous le texte. Les parents voient la carte sur leur téléphone et les appareils partagés. **Paramètres → Aide et infos → Premiers pas** la réaffiche.
+
+**Activer les rappels** fait aussi partie des premières étapes sur votre téléphone personnel. Autoriser les notifications marque cette étape comme terminée et la conserve dans le total. Refuser la laisse ouverte. **Pas nécessaire** masque l’étape sur cet appareil sans accorder l’autorisation. Si vous changez l’autorisation dans les réglages du système, la progression se met à jour à votre retour dans l’application.
 
 ## Le foyer {#the-household}
 
