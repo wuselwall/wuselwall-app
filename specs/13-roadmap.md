@@ -43,15 +43,18 @@ flowchart LR
     C --> D["4 · Other families\nInstall, update, publish"]
 ```
 
-| Order | Milestone | Status | Done when |
+| Order | Stage | Status | Done when |
 |---|---|---|---|
-| **1** | [**Everyday essentials**](https://github.com/wuselwall/wuselwall-app/milestone/1) | Now | A family can start without SMTP, guardians see approvals, the wall starts offline, and onboarding and wide-screen navigation have no remaining dead ends |
-| **2** | [**A lighter day**](https://github.com/wuselwall/wuselwall-app/milestone/2) | Built; native qualification open | Wusel, colour, ambience, birthdays and all five agreed rituals work together, with accessible motion and controls |
-| **3** | [**Family Alpha**](https://github.com/wuselwall/wuselwall-app/milestone/3) | After 1–2 | Candidate checks pass, the household completes two weeks of everyday use, blockers are fixed and every new delight has a keep/change/remove verdict |
-| **4** | [**Ready for other families**](https://github.com/wuselwall/wuselwall-app/milestone/4) | After the Alpha | Another household can install and update safely, compatibility and security checks pass, and the store, legal and publication gates are complete |
+| **1** | [**Everyday essentials**](https://github.com/wuselwall/wuselwall-app/issues?q=label%3Astage-1) | Now | A family can start without SMTP, guardians see approvals, the wall starts offline, and onboarding and wide-screen navigation have no remaining dead ends |
+| **2** | [**A lighter day**](https://github.com/wuselwall/wuselwall-app/issues?q=label%3Astage-2) | Built; native qualification open | Wusel, colour, ambience, birthdays and all five agreed rituals work together, with accessible motion and controls |
+| **3** | [**Family Alpha**](https://github.com/wuselwall/wuselwall-app/issues?q=label%3Astage-3) | After 1–2 | Candidate checks pass, the household completes two weeks of everyday use, blockers are fixed and every new delight has a keep/change/remove verdict |
+| **4** | [**Ready for other families**](https://github.com/wuselwall/wuselwall-app/issues?q=label%3Astage-4) | After the Alpha | Another household can install and update safely, compatibility and security checks pass, and the store, legal and publication gates are complete |
 
-The [pinned roadmap](https://github.com/wuselwall/wuselwall-app/issues/125) links all
-14 work issues to these milestones. No due dates are promised. Within a milestone, work
+On GitHub the four stages are the labels `stage-1` to `stage-4`; GitHub's milestones are
+releases (`v1.12.0`), and an issue enters one when it is planned for that release
+([CONTRIBUTING.md](../CONTRIBUTING.md)). The
+[pinned roadmap](https://github.com/wuselwall/wuselwall-app/issues/125) links all
+14 work issues to these stages. No due dates are promised. Within a milestone, work
 follows the dependency order in [16](16-setup-plan.md).
 
 ## 1 — Everyday essentials
@@ -176,8 +179,11 @@ availability do not have a reliable development estimate.
 ## Milestone discipline
 
 - Keep one active build milestone; start writing the milestone-2 content early if useful.
-- Each issue has one outcome and belongs to one milestone. Acceptance criteria are
+- Each issue has one outcome and carries the label of its stage. Acceptance criteria are
   checkboxes inside the issue; do not mirror every specification paragraph as an issue.
+- An issue that is being built belongs to a release milestone on GitHub, and every feature
+  or fix reaches `main` through a pull request that closes its issue
+  ([CONTRIBUTING.md](../CONTRIBUTING.md)).
 - New ideas go to [23](23-roadmap-after-alpha.md), unless they fix a blocker for the current
   outcome. Preserve the scope cuts in [05](05-module-calendar.md), [06](06-module-tasks.md),
   [07](07-module-meals-shopping.md) and [15](15-module-school-timetable.md).

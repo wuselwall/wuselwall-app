@@ -1,0 +1,18 @@
+# The sections of generated release notes (release.yml, server-release.yml), by the type
+# label every pull request carries (CONTRIBUTING.md). A line is the pull request's title.
+changelog:
+  exclude:
+    labels: [skip-release-notes]
+  categories:
+    - title: New
+      labels: [enhancement]
+    - title: Fixed
+      labels: [bug]
+    - title: Guide and documentation
+      labels: [documentation]
+    - title: Dependencies
+      labels: [dependencies]
+    - title: Behind the scenes
+      labels: [chore, ci]
+    - title: Other changes
+      labels: ['*']

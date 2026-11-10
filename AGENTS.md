@@ -104,6 +104,42 @@ SSH alias, machine or the fact that someone runs one. Placeholders (`example.org
 committed files; real values in git-ignored files (`scripts/remote.env`,
 `app/env/dev.json`, `CLAUDE.local.md`) or CI variables and secrets.
 
+## Development workflow
+
+The whole process is in [CONTRIBUTING.md](CONTRIBUTING.md); these are the rules an agent
+follows without being asked.
+
+- **Never commit to `main` or push to it.** It is protected (pull request, required checks,
+  squash only, no administrator bypass). Work in a branch, in its own worktree under
+  `.worktrees/` when another checkout is in use.
+- **A feature or a fix needs an issue in a release milestone before the code.** Find the
+  issue or create it (`gh issue create --label enhancement --milestone v1.12.0`, or `bug`),
+  with the outcome and acceptance checkboxes. Milestones are releases (`v<app version>`);
+  the open one with the lowest version is the next release
+  (`gh api repos/{owner}/{repo}/milestones --jq '.[].title'`). If the right release is not
+  yours to choose, create the issue without one (it gets `needs-triage`) and ask.
+  Documentation, chores, CI and dependency changes need no issue.
+- **Name the branch by type**: `feat/<issue>-<slug>`, `fix/<issue>-<slug>`, `docs/…`,
+  `chore/…`, `ci/…`. The prefix sets the pull request's type label, and the label sorts the
+  release notes.
+- **Open a pull request with the template**: a plain-sentence title without a prefix (it
+  becomes the commit on `main` and a line of the release notes), `Closes #<issue>` for a
+  feature or a fix, and what was run under "How it was checked". Do not set labels or the
+  milestone by hand: the `triage` workflow takes them from the branch and the issue.
+- **All five required checks must pass**: `app`, `scripts`, `audit` (ci), `required`
+  (backend-ci) and `pr-policy` (the issue and milestone rule). Read a failing check and fix
+  its cause; never weaken a check, a ruleset or [scripts/github-settings.sh](scripts/github-settings.sh)
+  to get a change through. `gh pr merge --squash --auto` merges when they pass; merge only
+  when the owner asked for the merge.
+- **A release is cut by the `release` workflow**, never by pushing tags by hand:
+  `gh workflow run release.yml -f dry_run=true` prints the plan, `-f dry_run=false` creates
+  the tags `v<app>` and `server-v<server>`, the GitHub releases with generated notes, starts
+  the gated builds and rolls the milestone over. Cut a release only on the owner's request.
+  Release tags are never moved or deleted; a bad release is followed by a patch release.
+- A new workflow pins its actions to commits, declares `permissions`, and keeps write tokens
+  and secrets away from jobs that run a pull request's code. Repository settings change in
+  `scripts/github-settings.sh` and `.github/rulesets/`, then on GitHub by running the script.
+
 ## Architecture rules
 
 See [specs/03-architecture.md](specs/03-architecture.md),

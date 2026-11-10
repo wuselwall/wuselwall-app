@@ -82,7 +82,9 @@ test('authorization checks downloaded ZIP bytes and the contained evidence befor
   };
   const attempt = async (bytes, digest = createHash('sha256').update(bytes).digest('hex')) => {
     const fetcher = async url => {
-      const suffix = new URL(url).pathname.replace('/repos/test/app/', '');
+      // GitHub answers 404 for a path that ends in a slash, the repository's own included.
+      assert.doesNotMatch(url, /\/$/, `Trailing slash: ${url}`);
+      const suffix = new URL(url).pathname.replace(/^\/repos\/test\/app\/?/, '');
       const values = {
         '': { default_branch: 'main' },
         'environments/release-promotion': { name: 'release-promotion', can_admins_bypass: false,

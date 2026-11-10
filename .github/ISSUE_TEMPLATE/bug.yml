@@ -1,0 +1,41 @@
+name: Bug
+description: Something does not work as the guide or the specification says
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Please leave out names, addresses and anything else from your family's data, and
+        never paste a key or a setup link. A security problem goes to a private report
+        instead (SECURITY.md).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: And what you expected instead.
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      value: |
+        1. 
+    validations: { required: true }
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      multiple: true
+      options: [iPhone or iPad, Android phone or tablet, Web app, Wall display, Server (install, update, backup), Family guide]
+    validations: { required: true }
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: App and server version, if you know them.
+      placeholder: app 1.11.0, server 0.12.0
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: Screenshots, the language the app is in, whether the device was offline.
