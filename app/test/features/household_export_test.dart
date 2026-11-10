@@ -265,6 +265,7 @@ class _ExportApi implements ApiClient {
     String name, {
     Map<String, dynamic>? body,
     required T Function(Object? json) parse,
+    String? cacheKey,
   }) async {
     calls.add('fn:$name $body');
     return switch (reply) {
@@ -278,6 +279,8 @@ class _ExportApi implements ApiClient {
     String fn, {
     Map<String, dynamic>? params,
     required T Function(Object? json) parse,
+    String? cacheKey,
+    Duration? patience,
   }) async {
     calls.add('$fn $params');
     return Result.guard(() async => parse(document));
@@ -292,5 +295,6 @@ class _ExportApi implements ApiClient {
     )?
     build,
     required T Function(Map<String, dynamic> row) parse,
+    String? cacheKey,
   }) => throw UnimplementedError();
 }

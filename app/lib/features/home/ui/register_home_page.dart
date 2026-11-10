@@ -14,6 +14,7 @@ import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/core/ui/nav_labels.dart';
 import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
+import 'package:wuselwall/features/board/ui/last_updated.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
@@ -160,6 +161,7 @@ class RegisterHomePage extends ConsumerWidget {
               Expanded(
                 child: Column(
                   children: [
+                    const StaleStrip(),
                     Expanded(child: section.body),
                     const ActingProfileBar(),
                   ],

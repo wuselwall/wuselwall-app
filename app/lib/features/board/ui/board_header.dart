@@ -8,6 +8,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_next_up.dart';
+import 'package:wuselwall/features/board/ui/last_updated.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
 import 'package:wuselwall/features/settings/ui/open_settings.dart';
@@ -136,7 +137,9 @@ class BoardHeader extends ConsumerWidget {
                 Center(child: BoardWusel(stale: snapshot.isStale)),
                 if (_isOutdated(snapshot, now)) ...[
                   const SizedBox(width: 16),
-                  Flexible(child: _LastUpdated(snapshot: snapshot)),
+                  Flexible(
+                    child: _LastUpdated(snapshot: snapshot, now: now),
+                  ),
                 ],
                 Center(
                   child: IconButton(
@@ -212,9 +215,10 @@ bool _isOutdated(BoardSnapshot snapshot, DateTime now) {
 /// (specs/09 "Freshness and failure"). A live board says nothing about its freshness:
 /// "updated 4 s ago" on a board that is always current is only noise.
 class _LastUpdated extends StatelessWidget {
-  const _LastUpdated({required this.snapshot});
+  const _LastUpdated({required this.snapshot, required this.now});
 
   final BoardSnapshot snapshot;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -229,9 +233,7 @@ class _LastUpdated extends StatelessWidget {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            context.l10n.boardLastUpdatedAt(
-              context.time(TimeOfDay.fromDateTime(fetchedAt)),
-            ),
+            lastUpdatedText(context, fetchedAt, now),
             style: boardUi(24, weight: FontWeight.w500, color: color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wuselwall/core/cache/read_cache.dart';
 import 'package:wuselwall/core/error/result.dart';
 
 /// The only way feature repositories talk to the backend.
@@ -7,20 +8,50 @@ import 'package:wuselwall/core/error/result.dart';
 /// Reads go through `api` views, writes through `api` functions (one function = one
 /// transaction), and Edge Functions through [function]. Each call returns a [Result],
 /// so errors are values from here on up.
+///
+/// A read given a `cacheKey` survives a restart without network: its last good answer
+/// is stored and stands in while the server cannot be reached ([ReadCache]). The key
+/// names the read with its arguments (`school-week:2026-11-09:2026-11-10`), so one day's
+/// answer is never shown for another. Only reads take one, never a call that changes
+/// something.
 class ApiClient {
-  const ApiClient(this._client);
+  const ApiClient(this._client, {this._cache});
 
   final SupabaseClient _client;
+  final ReadCache? _cache;
 
-  /// Calls the `api` function [fn] and parses its JSON result with [parse].
+  Future<Result<T>> _read<T>(
+    String? cacheKey, {
+    required Future<Object?> Function() fetch,
+    required T Function(Object? json) parse,
+    Duration? patience,
+  }) {
+    final cache = _cache;
+    if (cacheKey == null || cache == null) {
+      return Result.guard(() async => parse(await fetch()));
+    }
+    return cache.through(
+      cacheKey,
+      fetch: fetch,
+      parse: parse,
+      patience: patience,
+    );
+  }
+
+  /// Calls the `api` function [fn] and parses its JSON result with [parse]. With
+  /// [patience], a stored answer is used when the server has not answered by then.
   Future<Result<T>> rpc<T>(
     String fn, {
     Map<String, dynamic>? params,
     required T Function(Object? json) parse,
-  }) => Result.guard(() async {
-    final json = await _client.rpc<Object?>(fn, params: params);
-    return parse(json);
-  });
+    String? cacheKey,
+    Duration? patience,
+  }) => _read(
+    cacheKey,
+    fetch: () => _client.rpc<Object?>(fn, params: params),
+    parse: parse,
+    patience: patience,
+  );
 
   /// Calls the Edge Function [name] with a JSON POST [body] and parses its reply. The
   /// caller's JWT is forwarded by the client, so the function runs under RLS.
@@ -28,14 +59,19 @@ class ApiClient {
     String name, {
     Map<String, dynamic>? body,
     required T Function(Object? json) parse,
-  }) => Result.guard(() async {
-    try {
-      final response = await _client.functions.invoke(name, body: body);
-      return parse(response.data);
-    } on FunctionException catch (error) {
-      throw functionError(name, error);
-    }
-  });
+    String? cacheKey,
+  }) => _read(
+    cacheKey,
+    fetch: () async {
+      try {
+        final response = await _client.functions.invoke(name, body: body);
+        return response.data as Object?;
+      } on FunctionException catch (error) {
+        throw functionError(name, error);
+      }
+    },
+    parse: parse,
+  );
 
   /// Reads rows from an `api` view; [build] shapes the query (filters, ordering).
   Future<Result<List<T>>> select<T>(
@@ -46,11 +82,18 @@ class ApiClient {
     )?
     build,
     required T Function(Map<String, dynamic> row) parse,
-  }) => Result.guard(() async {
-    final base = _client.from(view).select(columns);
-    final rows = await (build == null ? base : build(base));
-    return rows.map(parse).toList(growable: false);
-  });
+    String? cacheKey,
+  }) => _read(
+    cacheKey,
+    fetch: () {
+      final base = _client.from(view).select(columns);
+      return build == null ? base : build(base);
+    },
+    parse: (json) => [
+      for (final row in json! as List<dynamic>)
+        parse(Map<String, dynamic>.from(row as Map)),
+    ],
+  );
 }
 
 /// What an Edge Function failure looks like to the error mapper, so it becomes the same

@@ -90,6 +90,7 @@ class _SlowTasksApi extends FakeTasksApi {
     )?
     build,
     required T Function(Map<String, dynamic> row) parse,
+    String? cacheKey,
   }) async {
     if (view == 'task_instances') await release.future;
     return super.select(view, columns: columns, build: build, parse: parse);

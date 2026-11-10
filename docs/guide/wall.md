@@ -68,6 +68,7 @@ Mehr kann die Wand nicht ändern: Sie setzt Artikel auf die Einkaufsliste und ko
 - Ab 21 Uhr (oder zur Nachtzeit, die für dieses Gerät eingestellt ist) wechselt die Anzeige automatisch in eine ruhige Nachtansicht, und Wusel schläft. Töne gibt es an der Wand nur, wenn ihr sie einschaltet, und nachts nie.
 - Damit sich nichts einbrennt, verschiebt sich die Anzeige alle 10 Minuten um bis zu 2 Pixel (siehe [Wusel und Farben](/guide/wusel#burn-in)).
 - Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“, und Wusel denkt nach; oben rechts steht, wann er zuletzt aktualisiert wurde. Solange alles läuft, zeigt die Wand dazu nichts an.
+- Startet das Tablet neu, während das Netz oder der Server fehlt, zeigt die Wand die zuletzt gespeicherte Woche und das Kinder-Tablet den zuletzt gespeicherten Tag, jeweils mit **zuletzt aktualisiert** und der Uhrzeit, nach einem Tag auch mit dem Datum. Sobald die Verbindung zurück ist, lädt alles von selbst neu. Ändern lässt sich ohne Verbindung nur die Einkaufsliste.
 
 ::: tip Kinder-Tablet
 Die Ansicht für Kinder hat die Reiter **Mein Tag**, **Stundenplan**, **Punkte** und **Familie**, dazu **Einkaufen**, wenn es eingeschaltet ist.

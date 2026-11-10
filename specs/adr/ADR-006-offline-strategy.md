@@ -73,5 +73,13 @@ arrival order per op, not device clocks: ops are absolute where they can be (`ch
 removed item is a tombstone for every later op. Details in
 [07](../07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable).
 
+**Read cache extended (2026-11-10, #128).** A wall tablet that restarts during an outage
+showed nothing, because even the device's own record came from the server. As foreseen
+above, the answer was the read cache: `ApiClient` reads given a cache key store their last
+good JSON answer in a second drift database (one table; memory in the web build) and fall
+back to it on a network failure only. This is read-only and not a second offline module:
+nothing is queued, and every write still needs the server. Details in
+[09](../09-clients-and-ux.md#freshness-and-failure).
+
 **Revisit if** a second genuinely offline-first module appears. One is a feature; three
 would be an argument for an engine.

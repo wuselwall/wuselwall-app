@@ -43,7 +43,7 @@ avatar pictures appear in member lists and the kid picker.
 |---|---|---|---|
 | 1 | 10.4 | **Start without mail — built 2026-10-26 (#126)** | A fresh server without SMTP reaches Today; password sign-up/sign-in and guardian-assisted recovery work; email auto-matching cannot trust an autoconfirmed address |
 | 2 | 10.5 | **Approvals on Today — built 2026-10-24 (#127/#149)** | Guardians see pending chore/reward counts on Today and the Tasks badge; the local morning summary uses the loaded pending count; deciding clears the derived notice |
-| 3 | 10.6 | **Offline cold start** | After an app/device restart without network, the wall shows its stored week and the kid home its stored day, with freshness shown; reconnect refreshes normally |
+| 3 | 10.6 | **Offline cold start — built 2026-11-10 (#128)** | After an app/device restart without network, the wall shows its stored week and the kid home its stored day, with freshness shown; reconnect refreshes normally |
 | 4 | 10.7–10.11 | **Finish the journeys — built 2026-11-10 (#129); publication/native evidence open** | Setup resumes, MFA/notification progress is clear, wide screens use the rail, and deletion-page and checklist dependencies have an explicit result |
 
 Implementation boundaries for these four packages:
