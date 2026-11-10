@@ -350,6 +350,14 @@ the senders registered for Apple's relay while accounts with a relay address exi
 *Replaces "WuselWall Cloud" (ADR-015) since [ADR-018](adr/ADR-018-self-hosted-only.md);
 built 2026-10-14.* The project ships a **server release**, not a service.
 
+- **Cutting a release** is one manually started workflow,
+  [`release.yml`](../.github/workflows/release.yml) (2026-11-10,
+  [CONTRIBUTING.md](../CONTRIBUTING.md#releases)): a dry run prints the plan; the real run
+  checks the commit's qualification, creates the tags `v<app>` and `server-v<server>` on
+  the head of `main`, publishes the app's GitHub release with generated notes, starts the
+  build workflows on the tags (a tag made by a workflow's token starts none itself) and
+  closes the release's milestone. The builds keep their own qualification check and the
+  `release-promotion` approval. Release tags cannot be moved or deleted.
 - **A release** is a Git tag `server-v<version>`;
   [`server-release.yml`](../.github/workflows/server-release.yml) runs
   [`scripts/build-server-release.sh`](../scripts/build-server-release.sh) and attaches

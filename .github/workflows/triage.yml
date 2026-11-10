@@ -1,0 +1,41 @@
+# The pull request policy and issue triage (CONTRIBUTING.md): type labels from the branch
+# prefix, milestones from the linked issue, and the commit status "pr-policy" that the main
+# ruleset requires. scripts/pr-policy.mjs holds the rules.
+#
+# pull_request_target, because labels, milestones and statuses need a token that may write,
+# also for a pull request from a fork. The job therefore checks out the default branch and
+# never the pull request: it only reads the pull request through the API. Do not add a step
+# that fetches, builds or runs the pull request's code here.
+#
+# GitHub's runners: this job runs no repository code from a contributor and needs nothing
+# from the build fleet.
+name: triage
+on:
+  pull_request_target:
+    types: [opened, reopened, edited, synchronize, ready_for_review, labeled, unlabeled, milestoned, demilestoned, closed]
+  issues:
+    types: [opened, reopened, closed, milestoned, demilestoned]
+permissions: {}
+concurrency:
+  group: triage-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      statuses: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+          sparse-checkout: scripts
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node scripts/pr-policy.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }
