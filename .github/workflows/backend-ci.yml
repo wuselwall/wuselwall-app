@@ -1,113 +1,53 @@
-# Household data, security (RLS) and Edge Function changes get an executable gate before
-# the pilot rollout (specs/03, ADR-013). Four jobs:
-#
-#   changes           always runs, on the self-hosted build fleet, for every pull request. It
-#                     only reads `git diff` between the PR's base and head commit -- it
-#                     never builds, installs or executes anything from the PR -- and
-#                     decides whether the backend-sensitive inputs below changed. A tag
-#                     v*.*.* or "Run workflow" always treats itself as backend-sensitive,
-#                     so a release is never gated on an imperfect path list (ADR-011's "run
-#                     it by hand on a branch before its migration goes to a live server").
-#
-#   edge-functions    deno test discovers all tests below supabase/functions/ (not a
-#                     hand-picked subset). No Docker, no network permission at runtime:
-#                     the code under test never calls out, and npm/jsr modules resolve
-#                     from Deno's own cache rather than a node_modules the repository
-#                     root's package.json would otherwise pull unrelated workspace
-#                     dependencies (Playwright, Sharp, the Supabase CLI, VitePress) into.
-#                     --frozen on the repository's deno.lock makes the run reproducible:
-#                     a dependency drifting out from under the pin fails the job instead
-#                     of silently re-resolving.
-#
-#   backend           npx supabase start on a throwaway local stack, every migration from
-#                     zero, pgTAP (RLS included), the schema lint, then the Flutter
-#                     repositories against that stack (test/integration), and once more
-#                     on the stack restarted without mail (no_mail_integration_test.dart).
-#                     This is the official stack, heavier than the app's fast checks in
-#                     ci.yml, so it runs only when `changes` says it is needed.
-#
-#   required          always runs (if: always()), on the self-hosted build fleet, after the two
-#                     jobs above. It is the one check to mark "required" in branch
-#                     protection: a workflow-level `paths:` filter leaves GitHub's status
-#                     for a skipped run at Pending forever (documented GitHub behaviour,
-#                     not a bug here), which would deadlock a docs-only pull request that
-#                     can never produce that check. `required` always reports
-#                     success/failure once `changes`, `edge-functions` and `backend` have
-#                     all finished, whether they ran or were skipped as backend-irrelevant,
-#                     so branch protection always gets a terminal answer. Point branch
-#                     protection at job `required` (check name "backend-ci / required"),
-#                     not at `edge-functions` or `backend` directly.
-#
-# All jobs use the self-hosted build fleet. Backend tests require a CI-only Docker
-# daemon, never a family server's daemon. Serialize the local stack and stop it after
-# every run so a reusable runner cannot retain the previous job's database.
+# Conservative job-level selection preserves the required context on every PR.
+# Server/client-contract changes get the disposable stack; Edge Function changes get
+# Deno as well. Reusable/manual/tag runs are always full, regardless of paths.
+# Build runners use a CI-only Docker daemon, with the shared stack serialized and
+# removed after each run. Detectors, Deno and aggregates use GitHub-hosted runners.
 name: backend-ci
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      full_checks:
+        description: Reusable calls inherit the caller event; force full even for PR callers
+        type: boolean
+        default: true
   pull_request:
   push:
     tags: ['v*.*.*']
 concurrency:
-  group: backend-ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-backend-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 
 jobs:
-  # Read the base/head diff before deciding which backend checks are needed.
+  # Same conservative classifier as ci; no database or build runner needed.
   changes:
-    runs-on: [self-hosted, Linux, build]
-    if: always()
+    runs-on: ubuntu-latest
     outputs:
       backend: ${{ steps.detect.outputs.backend }}
+      edge: ${{ steps.detect.outputs.edge }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with: { node-version: 22, package-manager-cache: false }
       - id: detect
+        run: node scripts/ci-changes.mjs
         env:
+          FULL_CHECKS: ${{ inputs.full_checks }}
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-          if [ "$EVENT_NAME" != "pull_request" ]; then
-            # Manual run or a release tag: always backend-sensitive, never path-gated.
-            echo "backend=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # fetch-depth: 0 above already has full history, including the PR's merge ref;
-          # this fetch is a belt-and-suspenders retry, not the only way the SHAs get here.
-          git fetch --no-tags --depth=1 origin "$BASE_SHA" "$HEAD_SHA" || true
-          if ! git cat-file -e "$BASE_SHA" 2>/dev/null || ! git cat-file -e "$HEAD_SHA" 2>/dev/null; then
-            # Can't resolve one of the commits: fail open to "run everything" rather than
-            # silently skip the backend gate on an undiagnosed git problem.
-            echo "::warning::backend-ci changes-detector could not resolve $BASE_SHA/$HEAD_SHA; running the full gate"
-            echo "backend=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          changed="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
-          echo "Changed files:"
-          echo "$changed"
-          # Every input the edge-functions/backend jobs below can actually exercise:
-          # the backend tree itself, the two lockfiles that pin its dependencies, this
-          # workflow file, and the Flutter integration suite plus everything it needs to
-          # build and run (repository code, pubspec lock, the ci.json dart-define file,
-          # dart_test.yaml). A test-only or app-only PR that touches any of these must not
-          # skip this gate.
-          pattern='^(supabase/|package\.json$|package-lock\.json$|deno\.lock$|\.github/workflows/backend-ci\.yml$|scripts/backend-stack-images\.mjs$|scripts/image-pull\.mjs$|app/test/integration/|app/lib/|app/pubspec\.yaml$|app/pubspec\.lock$|app/env/ci\.json$|app/dart_test\.yaml$)'
-          if echo "$changed" | grep -Eq "$pattern"; then
-            echo "backend=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "backend=false" >> "$GITHUB_OUTPUT"
-          fi
 
   edge-functions:
     needs: changes
-    if: needs.changes.outputs.backend == 'true'
-    runs-on: [self-hosted, Linux, build]
+    if: needs.changes.outputs.edge == 'true'
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
       - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
         with: { deno-version: '2.5.6' }
       # Deno's module cache lives in this job's own temp directory, not the default under
@@ -140,8 +80,9 @@ jobs:
     env: { SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22, cache: npm }
+        with: { node-version: 22, cache: "${{ github.event_name == 'pull_request' && 'npm' || '' }}", package-manager-cache: false }
       - run: npm ci
       # config.toml reads its keys from supabase/.env (ADR-013). This stack is throwaway,
       # so it gets the CLI's public defaults, which env/ci.json expects.
@@ -163,7 +104,7 @@ jobs:
       # The app's repositories against the real stack: identity, enrolment, shopping,
       # realtime. Needs studio-less start from above; uses the public local dev key.
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+        with: { flutter-version-file: app/pubspec.yaml, cache: "${{ github.event_name == 'pull_request' }}" }
       - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json -j 1
         working-directory: app
       # The same stack without mail (specs/20, Q48): Auth autoconfirms, the app signs up with
@@ -187,19 +128,11 @@ jobs:
   required:
     needs: [changes, edge-functions, backend]
     if: always()
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ubuntu-latest
     steps:
-      - name: Aggregate edge-functions and backend results
-        run: |
-          set -euo pipefail
-          fail=0
-          echo "changes.backend = ${{ needs.changes.result }}"
-          echo "edge-functions   = ${{ needs.edge-functions.result }}"
-          echo "backend          = ${{ needs.backend.result }}"
-          for r in "${{ needs.changes.result }}" "${{ needs.edge-functions.result }}" "${{ needs.backend.result }}"; do
-            case "$r" in
-              success|skipped) ;;
-              *) echo "::error::backend-ci gate failed: a dependency reported '$r'"; fail=1 ;;
-            esac
-          done
-          exit "$fail"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: { persist-credentials: false }
+      - run: node scripts/ci-gate.mjs
+        env:
+          GATE: backend
+          NEEDS_JSON: ${{ toJSON(needs) }}

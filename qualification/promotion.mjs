@@ -52,7 +52,7 @@ export function validateReviewApproval(review, jobs) {
 }
 
 export function validateSummary(summary, sha) {
-  assert.equal(summary.schema, 2, 'Unsupported evidence schema');
+  assert.equal(summary.schema, 3, 'Unsupported evidence schema');
   assert.equal(summary.candidateSha, sha, 'Evidence belongs to a different commit');
   assert.equal(summary.qualification, 'READY_FOR_REVIEW', 'Candidate is not ready for release review');
   assert.equal(summary.automaticPass, true, 'Automatic qualification is incomplete');
@@ -63,10 +63,10 @@ export function validateSummary(summary, sha) {
   assert.ok(Array.isArray(summary.openGates), 'Missing gate inventory');
   assert.ok(summary.openGates.every(g => ['physical-device-review', 'approved-baseline-review'].includes(g)),
     'Implementation gates remain open');
-  for (const name of ['prepare', 'flutter', 'web', 'native', 'production']) {
+  for (const name of ['prepare', 'flutter', 'web', 'native', 'production', 'quality', 'backend', 'docs']) {
     assert.equal(summary.jobs?.[name]?.result, 'success', `${name} evidence did not pass`);
   }
-  assert.ok(summary.evidence?.flutter && summary.evidence?.web && summary.evidence?.native && summary.evidence?.production,
+  assert.ok(summary.evidence?.flutter && summary.evidence?.web && summary.evidence?.native && summary.evidence?.production && summary.evidence?.docs,
     'Missing evidence checksums');
   validateReviewApproval(summary.accessibilityReview, summary.jobs);
 }

@@ -2,14 +2,15 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { summarize, flutterCaseIds } from './summarize.mjs';
 import { cases } from './matrix.mjs';
+import { screenshotPaths } from '../docs/tools/check-shots.mjs';
 const sha = 'a'.repeat(40);
 const coverage = { states: [{ id: 'fixture', route: '/', scenario: 'adult', widths: [390] }],
   locales: ['de'], shades: ['light'], pendingRoutes: {}, openGates: ['physical-device-review'] };
 function complete() {
   const count = 2 * (cases('canonical', coverage).length + 2 * cases('responsive', coverage).length);
   const webCount = cases('full', coverage).length + 1;
-  return { sha, coverage, matrix: 'full', mode: 'compare',
-    jobs: Object.fromEntries(['prepare', 'flutter', 'web', 'native', 'production'].map(n => [n, { result: 'success' }])),
+  return { sha, coverage, docCaptures: ['fixture'], matrix: 'full', mode: 'compare',
+    jobs: Object.fromEntries(['prepare', 'flutter', 'web', 'native', 'production', 'quality', 'backend', 'docs'].map(n => [n, { result: 'success' }])),
     reports: {
       flutter: { matrix: 'full', expected: count, executed: count, results: flutterCaseIds(coverage).map(id => ({ id, status: 'PASS', findings: [] })) },
       web: { candidateSha: sha, matrix: 'full', mode: 'compare', baselineVerified: true, executionPassed: true,
@@ -18,6 +19,7 @@ function complete() {
         visual: { mode: 'compare', passed: true, checked: 8, manifestDigest: 'a'.repeat(64) },
         audits: Object.fromEntries(['android', 'ios'].map(n => [n, { supported: true, passed: true, detectorsPassed: true, cases: 8 }])) },
       production: { candidateSha: sha, executionPassed: true, entryPoint: 'lib/main.dart' },
+      docs: { candidateSha: sha, matrix: 'full', executionPassed: true, screenshots: screenshotPaths(['fixture']).map(file => ({file, sha256: sha.padEnd(64, 'a')})) },
     } };
 }
 test('complete evidence enables human review, never automatic qualification', () => {
@@ -76,5 +78,16 @@ test('reviewed exceptions cannot bypass missing approval, changed manifests, inv
   ]) {
     const c = withReviewedFinding(); mutate(c);
     assert.equal(summarize(c).automaticPass, false);
+  }
+});
+
+test('release review waits for quality, backend and full exact-SHA guide evidence', () => {
+  for (const job of ['quality', 'backend', 'docs']) for (const result of ['skipped', 'failure', 'cancelled', undefined]) {
+    const c = complete(); c.jobs[job].result = result;
+    assert.equal(summarize(c).automaticPass, false, `${job}: ${result}`);
+  }
+  for (const mutate of [c => { c.reports.docs = null; }, c => { c.reports.docs.matrix = 'source'; },
+    c => { c.reports.docs.candidateSha = 'b'.repeat(40); }, c => { c.reports.docs.screenshots.pop(); }]) {
+    const c = complete(); mutate(c); assert.equal(summarize(c).automaticPass, false);
   }
 });

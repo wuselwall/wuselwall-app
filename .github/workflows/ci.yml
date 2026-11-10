@@ -6,22 +6,52 @@
 # its heavy jobs through its own change detector rather than a workflow-level path filter,
 # and always in full on a tag or "Run workflow" (specs/10).
 #
-# All events use the self-hosted build fleet, including pull requests. Build runners
-# execute repository code and must stay separate from production/deployment credentials.
+# Builds and the Docker SMTP smoke use the isolated build fleet. Small control jobs and
+# audits use GitHub-hosted runners. No PR job receives deployment/signing credentials.
 name: ci
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      full_checks:
+        description: Reusable calls inherit the caller event; force full even for PR callers
+        type: boolean
+        default: true
+      quality_only:
+        description: Candidate evidence runs Flutter and production checks in its own strict jobs
+        type: boolean
+        default: false
   pull_request:
   push:
     tags: ['v*.*.*']
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 
 jobs:
-  app:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.detect.outputs.app }}
+      browser: ${{ steps.detect.outputs.browser }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with: { node-version: 22, package-manager-cache: false }
+      - id: detect
+        run: node scripts/ci-changes.mjs
+        env:
+          FULL_CHECKS: ${{ inputs.full_checks }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+
+  app-checks:
+    needs: changes
+    if: ${{ !inputs.quality_only && (needs.changes.outputs.app == 'true' || needs.changes.outputs.browser == 'true') }}
     runs-on: [self-hosted, Linux, build]
     # Flutter's test-platform finalization has crashed across unrelated files.
     # Serialize processes while retaining every test and the existing failure policy.
@@ -30,41 +60,66 @@ jobs:
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+        with: { flutter-version-file: app/pubspec.yaml, cache: "${{ github.event_name == 'pull_request' }}" }
       - run: flutter pub get --enforce-lockfile
       - run: flutter gen-l10n
-      - run: dart format --output=none --set-exit-if-changed lib test
-      - run: flutter analyze --fatal-infos
+      - if: needs.changes.outputs.app == 'true'
+        run: dart format --output=none --set-exit-if-changed lib test
+      - if: needs.changes.outputs.app == 'true'
+        run: flutter analyze --no-pub --fatal-infos
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22 }
+        with: { node-version: 22, package-manager-cache: false }
       # flutter test (includes the ARB parity test). On the self-hosted runners flutter_tester
       # sometimes segfaults while a file runs, with or without --coverage (upstream
       # flutter/flutter#124145, #151546); flutter_tools reports it either as the crash or, when
       # the file's channel is still piping, as "Bad state: Cannot add event while adding stream."
       # on the file's loading step. The wrapper prints the runner facts for a diagnosis and
       # reruns only the crashed files, whole and once; every other failure keeps the job red.
-      - run: node ../scripts/flutter-test-ci.mjs
+      - if: needs.changes.outputs.app == 'true'
+        run: node ../scripts/flutter-test-ci.mjs
       # Exercise real encrypted browser storage across a backend/key migration.
       # Fresh-context tests alone miss a cached browser using a retired API.
-      - run: flutter build web --release --no-web-resources-cdn --dart-define=ENV=release -o build/web-live
-      - run: npm ci --include=dev
+      - if: needs.changes.outputs.browser == 'true'
+        run: flutter build web --release --no-web-resources-cdn --dart-define=ENV=release -o build/web-live
+      - if: needs.changes.outputs.browser == 'true'
+        run: npm ci --include=dev
         working-directory: .
-      - run: npx playwright install --with-deps chromium
+      - if: needs.changes.outputs.browser == 'true'
+        run: npx playwright install --with-deps chromium
         working-directory: .
-      - run: node scripts/shopping-quick-add.browser.mjs
+      - if: needs.changes.outputs.browser == 'true'
+        run: node scripts/shopping-quick-add.browser.mjs
         working-directory: .
-      - run: node scripts/web-server-discovery.browser.mjs
+      - if: needs.changes.outputs.browser == 'true'
+        run: node scripts/web-server-discovery.browser.mjs
         working-directory: .
+
+  # This stable context always reports, including documentation-only PRs.
+  app:
+    needs: [changes, app-checks]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: { persist-credentials: false }
+      - run: node scripts/ci-gate.mjs
+        env:
+          GATE: app
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          QUALITY_ONLY: ${{ inputs.quality_only }}
 
   # Server-upgrade scripts and the code-based SMTP fallback on Compose and hosted servers.
   scripts:
     runs-on: [self-hosted, Linux, build]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22 }
-      - run: node --test scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/mail-settings.test.mjs scripts/image-pull.test.mjs scripts/backend-stack-images.test.mjs scripts/flutter-test-ci.test.mjs scripts/no-user-functions.test.mjs scripts/hosted-auth-config.test.mjs scripts/cloud-init.test.mjs scripts/dictionary.test.mjs scripts/starter.test.mjs scripts/make-env.test.mjs scripts/server-release.test.mjs scripts/backup.test.mjs scripts/github-workflow.test.mjs scripts/repository-boundaries.test.mjs
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node --test scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/mail-settings.test.mjs scripts/image-pull.test.mjs scripts/backend-stack-images.test.mjs scripts/flutter-test-ci.test.mjs scripts/no-user-functions.test.mjs scripts/hosted-auth-config.test.mjs scripts/cloud-init.test.mjs scripts/dictionary.test.mjs scripts/starter.test.mjs scripts/make-env.test.mjs scripts/server-release.test.mjs scripts/backup.test.mjs scripts/github-workflow.test.mjs scripts/repository-boundaries.test.mjs scripts/ci-changes.test.mjs scripts/ci-gate.test.mjs scripts/ci-workflows.test.mjs docs/tools/check-shots.test.mjs docs/tools/evidence.test.mjs
+      - run: node --test qualification/summarize.test.mjs qualification/promotion.test.mjs qualification/review-workflow.test.mjs
       # The committed dictionary asset must be what dictionary/*.txt renders to (specs/29).
       - run: node scripts/dictionary.mjs check
       - run: node scripts/starter.mjs check
@@ -73,12 +128,13 @@ jobs:
   # Known vulnerabilities in every lockfile (specs/11, T5). Accepted ones, each with a
   # reason and an expiry, live in osv-scanner.toml next to the lockfile.
   audit:
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ubuntu-latest
     env:
       OSV_VERSION: v2.6.0
       OSV_SHA256: ca69b3d3cd08f889a49dc0a383122f71cc528b83803671df5fd874d97485b108
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
       - run: |
           curl -fsSLo osv-scanner "https://github.com/google/osv-scanner/releases/download/$OSV_VERSION/osv-scanner_linux_amd64"
           echo "$OSV_SHA256  osv-scanner" | sha256sum -c

@@ -1,0 +1,71 @@
+# Fast source checks on PRs; full image/browser evidence before publishing or releasing.
+# Reusable validation has no Pages/write permissions and cannot deploy a site.
+name: docs-validation
+on:
+  workflow_call:
+    inputs:
+      full:
+        type: boolean
+        required: true
+      publish:
+        type: boolean
+        default: false
+      evidence_artifact:
+        type: string
+        default: docs-evidence
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0, persist-credentials: false }   # "last updated" on each page comes from git history
+      - if: inputs.full
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version-file: app/pubspec.yaml, cache: "${{ github.event_name == 'pull_request' || github.event_name == 'push' }}" }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: npm ci
+      - run: npm run repo:check
+      - run: npm run docs:check:source
+      - if: inputs.full
+        run: npx playwright install --with-deps chromium
+      - if: inputs.full
+        run: flutter pub get --enforce-lockfile && flutter gen-l10n
+        working-directory: app
+      - if: inputs.full
+        run: npm run docs:screenshots   # fails in CI when a step could not reach its screen
+      - if: inputs.full
+        run: npm run docs:check
+      - run: npm run docs:build
+        env: { DOCS_BASE: / }
+      - if: inputs.full
+        run: npm run docs:browser
+        env: { DOCS_BASE: / }
+      - name: Check the custom-domain output
+        run: |
+          test "$(cat docs/.vitepress/dist/CNAME)" = docs.wuselwall.app
+          test -s docs/.vitepress/dist/index.html
+          test -s docs/.vitepress/dist/en/index.html
+          test -s docs/.vitepress/dist/fr/index.html
+          test -s docs/.vitepress/dist/es/index.html
+          test -s docs/.vitepress/dist/sitemap.xml
+      - if: inputs.full
+        run: node docs/tools/evidence.mjs
+        env: { QUALIFY_CANDIDATE_SHA: '${{ github.sha }}' }
+      # The site already contains its screenshots; keep one preview archive.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: inputs.full
+        with: { name: docs-site, path: docs/.vitepress/dist, retention-days: 1 }
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: inputs.full
+        with:
+          name: ${{ inputs.evidence_artifact }}
+          path: build/qualification/docs/evidence.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Package GitHub Pages site
+        if: inputs.publish && inputs.full
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        with: { path: docs/.vitepress/dist }

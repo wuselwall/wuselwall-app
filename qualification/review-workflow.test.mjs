@@ -22,5 +22,5 @@ test('review application requires a protected job and never exposes download cre
   assert.match(native, /needs\.review_approval\.result == 'skipped'/);
   assert.match(native, /QUALIFY_NATIVE_REVIEW_APPROVED: \$\{\{ needs\.review_approval\.outputs\.approved \}\}/);
   assert.match(native, /QUALIFY_NATIVE_REVIEW_SHA256: \$\{\{ needs\.review_approval\.outputs\.manifest_sha256 \}\}/);
-  assert.match(workflow, /needs: \[prepare, review_approval, flutter, web, native, production\]/);
+  assert.match(workflow, /needs: \[prepare, review_approval, flutter, web, native, production, quality, backend, docs\]/);
 });

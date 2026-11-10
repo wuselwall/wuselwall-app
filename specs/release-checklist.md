@@ -91,21 +91,29 @@ Fill in before any other section. One record per run.
 
 CI matrix at the candidate (the trigger decides what runs; a skipped job is not a pass):
 
-| Workflow and job | Pull request | Tag `v*.*.*` or manual run | Runner |
+| Workflow and job | Pull request | Tag/manual/candidate run | Runner |
 |---|---|---|---|
-| `ci.yml` `app` (analyse, tests, format; web build) | Yes; the web build step is skipped | Yes, with the web build | GitHub-hosted for a PR; self-hosted build fleet for a tag or manual run |
-| `wuselwall-website` CI (build, strict legal, SSR/SEO smoke) | Yes | Yes | In the separate website repository (ADR-019) |
-| `ci.yml` `audit` (osv-scanner) | Yes | Yes | As `app` |
-| `backend-ci.yml` `changes` (reads `git diff` only) | Always | Always treated as backend-sensitive | GitHub-hosted |
-| `backend-ci.yml` `edge-functions` (Deno tests) | Only when `changes` finds a backend-sensitive path | Yes | GitHub-hosted for a PR; self-hosted for a tag or manual run |
-| `backend-ci.yml` `backend` (throwaway Supabase stack, pgTAP, Flutter integration) | Only when `changes` finds a backend-sensitive path | Yes | GitHub-hosted |
-| `backend-ci.yml` `required` (aggregate) | Always | Always | GitHub-hosted |
+| `ci.yml` `app-checks` → `app` | Flutter for app inputs; browser smoke for bootstrap/web/storage/auth/shopping inputs; always-reporting aggregate | Full; candidate quality-only reuse uses its strict Flutter/production jobs instead | Build fleet; aggregate on GitHub-hosted Ubuntu |
+| `ci.yml` `scripts`, `audit` | Always | Always | Docker/SMTP on build fleet; audit on GitHub-hosted Ubuntu |
+| `backend-ci.yml` `changes` → `required` | Always reports selection/result | Full selection | GitHub-hosted Ubuntu |
+| `backend-ci.yml` `edge-functions` | Edge Function/shared dependency inputs | Always | GitHub-hosted Ubuntu |
+| `backend-ci.yml` `backend` | Server/client-contract inputs | Always | Build fleet, serialized disposable stack |
+| `docs.yml` → `docs-validation.yml` | Source/locale/route/shot-definition checks and VitePress build | Full screenshots/browser checks; full main publication | GitHub-hosted Ubuntu |
+| `candidate-evidence` | Manual only | Full quality/backend/docs and existing Flutter/web/native/production evidence for one SHA | Isolated build/native jobs plus read-only reusable validation |
+| `wuselwall-website` CI | Independent website changes | Separate publication | Separate repository (ADR-019) |
 
-The backend-sensitive paths are listed in the `pattern` of `backend-ci.yml`'s `changes` job:
-`supabase/`, the npm and Deno lockfiles, `backend-ci.yml`, `app/test/integration/`, `app/lib/`,
-`app/pubspec.yaml`, `app/pubspec.lock`, `app/env/ci.json` and `app/dart_test.yaml`. Branch
-protection should require the check named `backend-ci / required`, not `functions` (the name
-in an older plan). The exact check name GitHub shows for it is not verified until a real run.
+The tested classifier is `scripts/ci-changes.mjs`: UI-only app changes skip backend
+integration; repository/domain/application, transport/server configuration and integration
+inputs select it. Migrations and dictionary corpus inputs also select Flutter tests that
+read them. Unknown paths, dependencies, workflow changes and diff failures select full.
+The five required names remain `app`, `scripts`, `audit`, `required`, `pr-policy`.
+A selected job must succeed; a skipped selected job does not pass its aggregate.
+
+Schema 3 candidate qualification now requires quality (scripts/audit), full backend and
+complete guide evidence before promotion/signing. The guide evidence checks every expected
+locale/theme PNG path and checksum on the exact SHA. Older summaries must be regenerated.
+The release orchestrator starts signing only after this preflight, rather than dispatching
+ci/backend in parallel with publication. Manual/tag CI remains available for diagnostics.
 
 | ID | Check | Mode | Pass when | Result | Evidence |
 |---|---|---|---|---|---|
@@ -114,7 +122,7 @@ in an older plan). The exact check name GitHub shows for it is not verified unti
 | A3 | `audit` job: `osv-scanner` over the lockfiles | CI | Green, or each finding listed in `osv-scanner.toml` with its reason and expiry | NOT RUN | CI run link |
 | A4 | `backend` job in `backend-ci.yml`: `supabase db reset` on a throwaway stack, `supabase test db`, `supabase db lint --level warning`, `flutter test test/integration` | CI. Always on a tag or a manual run. On a pull request only when `changes` finds a backend-sensitive path; a skipped run is not evidence for the migrations | Green on the candidate SHA, with `backend-ci / required` green. Required before a migration goes to any live server | NOT RUN | CI run link |
 | A5 | Local pgTAP over every migration and suite: `cd scripts/local-pgtap && npm ci && node run.mjs` | Local | Exit 0; no `not ok` in the output | NOT RUN | command, exit code, output file |
-| A6 | Edge Function unit tests: `deno test supabase/functions/ --allow-env --allow-read --node-modules-dir=none --lock=deno.lock --frozen` | CI, the `edge-functions` job of `backend-ci.yml`, with the same trigger rule as A4 (Deno 2.5.6, `--frozen` on `deno.lock`). At base `43ac2e5` no CI step ran them | Green on the candidate SHA. A local run is a second record, not a substitute | NOT RUN | CI run link; or Deno version, command, output file |
+| A6 | Edge Function unit tests: `deno test supabase/functions/ --allow-env --allow-read --node-modules-dir=none --lock=deno.lock --frozen` | CI, the `edge-functions` job of `backend-ci.yml`, when Edge Function/shared dependency inputs change, always for full qualification (Deno 2.5.6, `--frozen` on `deno.lock`). At base `43ac2e5` no CI step ran them | Green on the candidate SHA. A local run is a second record, not a substitute | NOT RUN | CI run link; or Deno version, command, output file |
 | A7 | Documentation: `npm run docs:check` and `npm run docs:build` in the repository root | Local | Both exit 0. `docs:check` needs the screenshots from `npm run docs:screenshots` present in `docs/public/screenshots/` | NOT RUN | command, exit code |
 | A8 | Website build with legal and link strictness: `LEGAL_STRICT=1 LINKS_STRICT=1 npm run build` in `wuselwall/wuselwall-website` | Local, before a website deploy | Fails while a `TODO` value remains. Record which fields still fail. Do not fill a value in to pass | NOT RUN | command, output of the failing fields |
 

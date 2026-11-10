@@ -1,43 +1,53 @@
-// Every <Shot name="…"> in the docs has its light and dark image in the page's language:
-//   npm run docs:check   (after npm run docs:screenshots)
-// VitePress cannot see these paths (the component builds them at runtime), so without
-// this a renamed or forgotten shot would publish a broken image.
+// Source checks run on PRs without rendering PNGs. Full validation additionally
+// verifies every localized image before guide publication and release qualification.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const docs = path.resolve('docs');
-const shots = path.join(docs, 'public/screenshots');
-const pages = fs.readdirSync(docs, { recursive: true })
-  .filter((f) => f.endsWith('.md') && !f.split(path.sep).some((p) => p.startsWith('.') || p === 'node_modules' || p === 'tools'));
+export const languages = ['de', 'en', 'fr', 'es'];
+export const themes = ['light', 'dark'];
 
-const defined = new Set([...fs.readFileSync(path.join(docs, 'tools/screenshots.mjs'), 'utf8').matchAll(/name: '([\w-]+)'/g)].map((m) => m[1]));
-const missing = [];
-const languages = ['de', 'en', 'fr', 'es'];
-const used = Object.fromEntries(languages.map((lang) => [lang, new Set()]));
-for (const page of pages) {
-  const lang = languages.slice(1).find((lang) => page.startsWith(`${lang}${path.sep}`)) ?? 'de';
-  const text = fs.readFileSync(path.join(docs, page), 'utf8');
-  if (text.includes('/screenshots/')) missing.push(`${page}: a plain image link to /screenshots/ — use <Shot name="…" alt="…" />`);
-  for (const [, name] of text.matchAll(/<Shot\s+name="([\w-]+)"/g)) {
-    used[lang].add(name);
-    if (!defined.has(name)) missing.push(`${page}: ${name} has no capture in screenshots.mjs`);
-    for (const file of [`${name}.png`, `${name}-dark.png`]) {
-      if (!fs.existsSync(path.join(shots, lang, file))) missing.push(`${page}: ${lang}/${file}`);
+export function captureNames(source) {
+  const inventory = source.match(/^const shots = \[([\s\S]*?)^\];/m)?.[1];
+  if (!inventory) throw new Error('Missing screenshot capture inventory');
+  const names = [...inventory.matchAll(/^\s*\{ name: '([\w-]+)'/gm)].map(m => m[1]);
+  if (!names.length || new Set(names).size !== names.length) throw new Error('Empty or duplicate screenshot capture names');
+  return names;
+}
+
+export function screenshotPaths(names) {
+  return names.flatMap(name => languages.flatMap(lang => themes.map(theme =>
+    `${lang}/${name}${theme === 'dark' ? '-dark' : ''}.png`)));
+}
+
+export function checkShots(docs, { definitionsOnly = false } = {}) {
+  const images = path.join(docs, 'public/screenshots');
+  const pages = fs.readdirSync(docs, { recursive: true })
+    .filter(file => file.endsWith('.md') && !file.split(path.sep).some(p => p.startsWith('.') || ['node_modules', 'tools'].includes(p)));
+  const defined = new Set(captureNames(fs.readFileSync(path.join(docs, 'tools/screenshots.mjs'), 'utf8')));
+  const problems = [];
+  let references = 0;
+  for (const page of pages) {
+    const lang = languages.slice(1).find(lang => page.startsWith(`${lang}${path.sep}`)) ?? 'de';
+    const text = fs.readFileSync(path.join(docs, page), 'utf8');
+    if (text.includes('/screenshots/')) problems.push(`${page}: use <Shot> instead of a plain screenshot link`);
+    for (const [, name] of text.matchAll(/<Shot\s+name="([\w-]+)"/g)) {
+      references++;
+      if (!defined.has(name)) problems.push(`${page}: ${name} has no capture in screenshots.mjs`);
+      if (!definitionsOnly) for (const suffix of ['', '-dark']) {
+        const image = `${lang}/${name}${suffix}.png`;
+        if (!fs.existsSync(path.join(images, image))) problems.push(`${page}: ${image}`);
+      }
     }
   }
+  return { problems, references };
 }
 
-for (const lang of languages) {
-  const dir = path.join(shots, lang);
-  const taken = fs.existsSync(dir) ? fs.readdirSync(dir) : [];
-  for (const file of taken) {
-    const name = file.replace(/(-dark)?\.png$/, '');
-    if (!file.endsWith('-dark.png') && !used[lang].has(name)) console.warn(`unused: ${lang}/${file}`);
-  }
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const definitionsOnly = process.argv.includes('--definitions-only');
+  const result = checkShots(path.resolve('docs'), { definitionsOnly });
+  if (result.problems.length) {
+    console.error(`Screenshot problems:\n  ${result.problems.join('\n  ')}`);
+    process.exitCode = 1;
+  } else console.log(`${result.references} screenshot references checked (${definitionsOnly ? 'capture definitions' : 'definitions and localized light/dark images'}).`);
 }
-
-if (missing.length) {
-  console.error(`Screenshot problems (a missing one goes into docs/tools/screenshots.mjs, then npm run docs:screenshots):\n  ${missing.join('\n  ')}`);
-  process.exit(1);
-}
-console.log(`${Object.values(used).reduce((sum, names) => sum + names.size, 0)} screenshots in use, all present in light and dark.`);

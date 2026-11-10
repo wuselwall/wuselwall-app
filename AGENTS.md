@@ -131,6 +131,16 @@ follows without being asked.
   its cause; never weaken a check, a ruleset or [scripts/github-settings.sh](scripts/github-settings.sh)
   to get a change through. `gh pr merge --squash --auto` merges when they pass; merge only
   when the owner asked for the merge.
+- **CI selects work by inputs** (`scripts/ci-changes.mjs`): docs-only PRs skip Flutter,
+  UI-only changes skip database integration, and unknown paths/diff failures run full.
+  Keep the five required names above; `app` and `required` always report and reject
+  failed/cancelled/skipped selected work. Detectors, aggregates, audit and Deno run on
+  GitHub-hosted runners; Flutter and Docker/SMTP jobs stay on the build fleet.
+  Guide PRs run `npm run docs:check:source` and build without screenshots; main/manual
+  docs and candidate qualification run the complete four-language/light-dark matrix.
+  Schema 3 qualification requires quality, backend and guide evidence for the exact
+  SHA before signing; regenerate older artifacts. Candidate quality-only reuse skips
+  duplicate app work because strict Flutter and production jobs already own it.
 - **A release is cut by the `release` workflow**, never by pushing tags by hand:
   `gh workflow run release.yml -f dry_run=true` prints the plan, `-f dry_run=false` creates
   the tags `v<app>` and `server-v<server>`, the GitHub releases with generated notes, starts
@@ -245,7 +255,9 @@ demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
 `name-dark.png`). They are build output, not committed: `npm run docs:screenshots` makes
 them locally. Pages show them with `<Shot name="…" alt="…" />` (add `wide` for tablet and
 wall shots), never a plain `<img>`; `npm run docs:check` fails when a page uses a shot the
-script does not take. `npm run docs:dev` previews, `npm run docs:build` checks links.
+script does not take. `npm run docs:check:source` validates capture definitions without PNGs for fast PRs;
+`npm run docs:dev` previews, `npm run docs:build` checks links. Main/manual docs and release
+qualification still generate and validate every screenshot before publication.
 **When a screen or a label changes, update the matching page in all four languages; a new
 screen gets its shot in `screenshots.mjs`.** Playwright's Chromium needs
 `sudo npx playwright install-deps chromium` once on the development machine.

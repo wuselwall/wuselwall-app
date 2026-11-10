@@ -299,6 +299,28 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  # Reuse the same checks as PRs, forced full for this exact default-branch SHA.
+  # Flutter/production already run in strict dedicated jobs above/below; quality
+  # reuse supplies scripts and audit without a duplicate Flutter/browser build.
+  quality:
+    if: inputs.matrix == 'full' && inputs.mode == 'compare'
+    needs: prepare
+    uses: ./.github/workflows/ci.yml
+    with: { quality_only: true }
+
+  backend:
+    if: inputs.matrix == 'full' && inputs.mode == 'compare'
+    needs: prepare
+    uses: ./.github/workflows/backend-ci.yml
+
+  docs:
+    if: inputs.matrix == 'full' && inputs.mode == 'compare'
+    needs: prepare
+    uses: ./.github/workflows/docs-validation.yml
+    with:
+      full: true
+      evidence_artifact: candidate-docs-${{ github.sha }}-${{ github.run_attempt }}
+
   production:
     needs: prepare
     runs-on: [self-hosted, Linux, build]
@@ -326,7 +348,7 @@ jobs:
 
   evidence:
     if: always() && needs.prepare.result == 'success'
-    needs: [prepare, review_approval, flutter, web, native, production]
+    needs: [prepare, review_approval, flutter, web, native, production, quality, backend, docs]
     runs-on: [self-hosted, Linux, build]
     timeout-minutes: 5
     steps:
@@ -358,6 +380,12 @@ jobs:
         with:
           name: candidate-production-${{ github.sha }}-${{ github.run_attempt }}
           path: build/qualification/downloaded/production
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        if: always() && needs.docs.result == 'success'
+        continue-on-error: true
+        with:
+          name: candidate-docs-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/qualification/downloaded/docs
       - run: node qualification/summarize.mjs
         env:
           QUALIFY_CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
