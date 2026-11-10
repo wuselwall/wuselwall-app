@@ -12,10 +12,10 @@ environment:
 dependencies:
   app_links: 7.2.2
   audioplayers: ^6.8.1
-  camera: ^0.12.1
+  camera: ^0.12.2
   characters: ^1.4.0
   connectivity_plus: ^7.3.2
-  crypto: ^3.0.7
+  crypto: ^3.0.8
   # cupertino_ui (pulled in by Flutter) refers to this font; without it the build warns.
   cupertino_icons: ^2.0.0
   drift: ^2.35.3
@@ -36,7 +36,7 @@ dependencies:
   intl: any
   package_info_plus: ^10.2.2
   passkeys: ^2.23.1
-  qr: ^4.0.0
+  qr: ^4.0.1
   sensors_plus: ^7.1.1
   share_plus: ^13.3.1
   supabase_flutter: ^2.18.3
