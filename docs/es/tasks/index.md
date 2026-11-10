@@ -12,9 +12,9 @@ En la tableta infantil y en la pared, [Wusel](/es/guide/wusel) se alegra con vos
 
 ## Aprobaciones {#approvals}
 
-Aquí llegan las tareas por revisar y las solicitudes de recompensa. Un adulto responsable las aprueba o rechaza.
+Aquí llegan las tareas por revisar y las solicitudes de recompensa. Una madre o un padre las aprueba o rechaza.
 
-Los adultos responsables ven también en **Hoy** lo que espera: la tarjeta **Pendiente de tu aprobación**, por ejemplo «2 tareas por revisar · 1 solicitud de recompensa». Al tocarla se abren las aprobaciones. El icono de tareas, abajo, muestra el mismo número. La tarjeta no se puede descartar: desaparece en cuanto todo está decidido. Los miembros sin derechos de responsable no la ven.
+Los padres ven también en **Hoy** lo que espera: la tarjeta **Pendiente de tu aprobación**, por ejemplo «2 tareas por revisar · 1 solicitud de recompensa». Al tocarla se abren las aprobaciones. El icono de tareas, abajo, muestra el mismo número. La tarjeta no se puede descartar: desaparece en cuanto todo está decidido. Los demás adultos y los niños no la ven.
 
 ## Crear tareas {#creating-chores}
 
@@ -25,7 +25,7 @@ En la pestaña de tareas, crea una y elige:
 - repetición: una vez, diaria, laborables, semanal, quincenal o mensual;
 - plazo: solo el día previsto o algunos días después;
 - personas: una fija, por turnos, voluntaria o todo el mundo;
-- si necesita aprobación de un adulto antes de recibir puntos.
+- si necesita la aprobación de los padres antes de recibir puntos.
 
 Una tarea nueva es diaria y va por turnos entre todos los niños (sin niños: voluntaria), así que basta con un título para guardarla.
 
@@ -33,7 +33,7 @@ Archivar elimina las próximas ocurrencias aún abiertas. El paquete inicial ofr
 
 ## Recompensas {#rewards}
 
-Cada recompensa cuesta puntos. Sin existencias indicadas, no hay límite. Si requiere aprobación, un adulto confirma con su PIN; si no, puede canjearse directamente, adecuado para cosas pequeñas.
+Cada recompensa cuesta puntos. Sin existencias indicadas, no hay límite. Si requiere aprobación, una madre o un padre confirma con su PIN; si no, puede canjearse directamente, adecuado para cosas pequeñas.
 
 Las solicitudes aparecen en el historial como pendientes, canjeadas o entregadas. Márcalas cuando las entregues.
 

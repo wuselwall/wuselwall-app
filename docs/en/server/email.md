@@ -5,7 +5,7 @@ A WuselWall server works **with or without email**. Without it, everyone signs u
 | | Without email | With email |
 |---|---|---|
 | **Signing up** | Email address and password. The app opens on **New account** | A code by email; a password is optional |
-| **Forgotten password** | A guardian gives you a one-time code ([below](#forgotten-password)) | A code by email |
+| **Forgotten password** | A parent gives you a one-time code ([below](#forgotten-password)) | A code by email |
 | **Invitations** | By link, QR code or invitation code | The same, and an invitation that names your address finds you on its own |
 | **Who else sees something** | Nobody | The mail provider sees addresses and codes |
 
@@ -92,13 +92,13 @@ Port `587` is the usual one; `465` works too. Names are examples, not recommenda
 
 ## Forgotten password without email {#forgotten-password}
 
-1. A **guardian** opens **Settings → Family → Members** on their own phone, taps **Reset password** next to the person's name and confirms with **Create code**.
+1. A **parent** opens **Settings → Family → Members** on their own phone, taps **Reset password** next to the person's name and confirms with **Create code**.
 2. The app shows an **8-character code**. It works **once**, for **10 minutes**. Hand it over in person, not by message.
 3. On the device of the person who forgot: **Sign in or create an account** → **Sign in** → **Forgot your password?** Then the email address, the code and a new password of at least 10 characters.
 
 If two-factor sign-in is on for the account, it still asks for the authenticator's code: the reset code replaces only the password.
 
-**The only guardian forgot?** Whoever runs the server creates the same code:
+**The only parent forgot?** Whoever runs the server creates the same code:
 
 - At home or rented: `./wuselwall password address@example.org`
 - At Supabase: in the dashboard under **SQL Editor**: `select app.password_reset_issue_for_email('address@example.org') ->> 'code';`

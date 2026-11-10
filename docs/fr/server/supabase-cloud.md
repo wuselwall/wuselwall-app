@@ -34,7 +34,7 @@ Le résumé du workflow fournit l’adresse. Il prépare base, accès, authentif
 
 ## E-mails {#mail}
 
-Les e-mails sont facultatifs. **Sans les secrets `SMTP_`**, chacun se connecte avec adresse et mot de passe ; un responsable réinitialise un mot de passe oublié dans l’app. L’envoi intégré de Supabase ne sert pas : il ne livre qu’aux adresses de votre compte Supabase.
+Les e-mails sont facultatifs. **Sans les secrets `SMTP_`**, chacun se connecte avec adresse et mot de passe ; un parent réinitialise un mot de passe oublié dans l’app. L’envoi intégré de Supabase ne sert pas : il ne livre qu’aux adresses de votre compte Supabase.
 
 **Avec les cinq secrets `SMTP_`**, les codes arrivent par e-mail. Un compte Gmail avec mot de passe d’application suffit : voir [E-mails](/fr/server/email). Scaleway fonctionne aussi : `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM` (facultatifs : `SCW_REGION`, `MAIL_FROM_NAME`). Ajoutez ou supprimez les secrets plus tard et relancez ; les comptes restent.
 

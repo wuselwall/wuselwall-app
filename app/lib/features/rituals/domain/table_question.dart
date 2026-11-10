@@ -11,7 +11,8 @@ class TableQuestion {
     required this.key,
     required this.text,
     this.category = 'own',
-    this.deck = 'family',
+    this.minAge = tableQuestionYoungest,
+    this.maxAge,
     this.answer,
     this.authorId,
   });
@@ -23,8 +24,11 @@ class TableQuestion {
   /// silly, today, imagine, memories, us, riddle, thanks; `own` for the family's.
   final String category;
 
-  /// `family` (fine for a five-year-old) or `older` (8 and over).
-  final String deck;
+  /// The youngest age that can really answer it.
+  final int minAge;
+
+  /// The oldest age it still suits; null when it suits everyone, adults included.
+  final int? maxAge;
 
   /// A riddle's answer, shown behind a tap.
   final String? answer;
@@ -33,6 +37,54 @@ class TableQuestion {
   final String? authorId;
 
   bool get isOwn => category == 'own';
+
+  /// Whether it suits anyone of [ages].
+  bool fits(TableAges ages) =>
+      minAge <= ages.oldest && (maxAge ?? ages.youngest) >= ages.youngest;
+}
+
+/// The ages the bundled questions are written for.
+const tableQuestionYoungest = 4;
+const tableQuestionOldest = 16;
+
+/// The children one question is for, both ends included.
+typedef TableAges = ({int youngest, int oldest});
+
+/// Children this many years apart or more get a question each (specs/27).
+const tableQuestionAgeGap = 5;
+
+/// Who the table's questions are for: one group, or two when [childAges] lie
+/// [tableQuestionAgeGap] years apart or more, split halfway between the youngest and the
+/// oldest. Children too young to answer don't count while an older one can, and a child
+/// past the deck counts as its oldest age. Without a birthday the questions suit young
+/// children, and a household without children gets all of them.
+List<TableAges> tableAgeGroups(
+  List<int> childAges, {
+  required bool hasChildren,
+}) {
+  final talking = childAges.where((a) => a >= tableQuestionYoungest).toList();
+  final ages = [
+    for (final a in talking.isEmpty ? childAges : talking)
+      a.clamp(tableQuestionYoungest, tableQuestionOldest),
+  ]..sort();
+  if (ages.isEmpty) {
+    return [
+      if (hasChildren)
+        (youngest: 5, oldest: 7)
+      else
+        (youngest: tableQuestionYoungest, oldest: tableQuestionOldest),
+    ];
+  }
+  final youngest = ages.first;
+  final oldest = ages.last;
+  if (oldest - youngest < tableQuestionAgeGap) {
+    return [(youngest: youngest, oldest: oldest)];
+  }
+  final middle = (youngest + oldest) / 2;
+  return [
+    (youngest: youngest, oldest: ages.lastWhere((a) => a <= middle)),
+    (youngest: ages.firstWhere((a) => a > middle), oldest: oldest),
+  ];
 }
 
 /// The languages with a written deck (Q53: German and English carry about 150 questions,
@@ -49,7 +101,8 @@ List<TableQuestion> parseDeck(String json) {
         key: '$lang:${q['id']}',
         text: q['text'] as String,
         category: q['category'] as String,
-        deck: q['deck'] as String,
+        minAge: q['min_age'] as int,
+        maxAge: q['max_age'] as int?,
         answer: q['answer'] as String?,
       ),
   ];
@@ -150,12 +203,18 @@ int mealWindowIndex(DateTime day, {required bool dinner, bool twoADay = true}) {
   return twoADay ? days * 2 + (dinner ? 1 : 0) : days;
 }
 
-/// The household's deck for one language: the bundled questions of the household's
-/// ages (`older` adds the 8+ ones), minus the ones it hid, and its own questions.
+/// Whether a bundled question may be asked of [ages]: it suits them, and the household's
+/// `rituals.table_question_age_limit` ([ageLimit]) doesn't block its age.
+bool _asked(TableQuestion q, TableAges ages, int? ageLimit) =>
+    q.fits(ages) && (ageLimit == null || q.minAge < ageLimit);
+
+/// The household's deck for one language and one age group: the bundled questions that
+/// may be asked of [ages], minus the ones it hid, and its own questions.
 List<TableQuestion> householdDeck({
   required List<TableQuestion> bundled,
   required List<FamilyQuestion> family,
-  required bool older,
+  required TableAges ages,
+  int? ageLimit,
 }) {
   final hidden = {
     for (final q in family)
@@ -163,7 +222,7 @@ List<TableQuestion> householdDeck({
   };
   return [
     for (final q in bundled)
-      if ((older || q.deck == 'family') && !hidden.contains(q.key)) q,
+      if (_asked(q, ages, ageLimit) && !hidden.contains(q.key)) q,
     for (final q in family)
       if (q.text != null)
         TableQuestion(key: q.id, text: q.text!, authorId: q.createdBy),
@@ -175,24 +234,98 @@ List<TableQuestion> householdDeck({
 /// in place; the deck's own size when nothing is bundled.
 int tableCycleLength({
   required List<TableQuestion> bundled,
-  required bool older,
+  required TableAges ages,
+  int? ageLimit,
   required int deckSize,
 }) {
-  final n = older
-      ? bundled.length
-      : bundled.where((q) => q.deck == 'family').length;
+  final n = bundled.where((q) => _asked(q, ages, ageLimit)).length;
   return n > 0 ? n : deckSize;
 }
 
-/// The meal the table question belongs to right now: its window, the household's
-/// questions and the length of the household's walk through them ([householdQuestion]).
+/// The walk through the questions for one age group ([householdQuestion]).
+typedef TableTrack = ({
+  TableAges ages,
+  List<TableQuestion> questions,
+  int cycleLength,
+});
+
+/// The tracks of a household: one per group of [groups]. The family's own questions go
+/// into the first only, so they don't come up twice.
+List<TableTrack> tableTracks({
+  required List<TableAges> groups,
+  required List<TableQuestion> bundled,
+  required List<FamilyQuestion> family,
+  int? ageLimit,
+}) => [
+  for (final (i, ages) in groups.indexed)
+    () {
+      final deck = householdDeck(
+        bundled: bundled,
+        family: i == 0
+            ? family
+            : [
+                for (final q in family)
+                  if (q.hiddenKey != null) q,
+              ],
+        ages: ages,
+        ageLimit: ageLimit,
+      );
+      return (
+        ages: ages,
+        questions: deck,
+        cycleLength: tableCycleLength(
+          bundled: bundled,
+          ages: ages,
+          ageLimit: ageLimit,
+          deckSize: deck.length,
+        ),
+      );
+    }(),
+];
+
+/// The meal the table question belongs to right now: its window and the walks through
+/// the household's questions ([householdQuestion]), one per age group.
 typedef TableMoment = ({
   int window,
   bool dinner,
-  List<TableQuestion> questions,
+  List<TableTrack> tracks,
   String householdId,
-  int cycleLength,
 });
+
+/// The questions of [moment], one per track that has any, with the track's index. [skip]
+/// is how many questions this device stepped on in a track. A later track walks its own
+/// order and never shows what an earlier one shows, so it may have nothing left to ask.
+List<({TableQuestion question, int track})> tableMomentQuestions(
+  TableMoment moment, {
+  int Function(int track)? skip,
+}) {
+  final out = <({TableQuestion question, int track})>[];
+  for (final (i, track) in moment.tracks.indexed) {
+    final seed = i == 0 ? moment.householdId : '${moment.householdId}|$i';
+    final steps = skip?.call(i) ?? 0;
+    final shown = {for (final o in out) o.question.key};
+    var q = householdQuestion(
+      track.questions,
+      seed,
+      moment.window,
+      cycleLength: track.cycleLength,
+      skip: steps,
+    );
+    if (q != null && shown.contains(q.key)) {
+      q = householdQuestion(
+        [
+          for (final other in track.questions)
+            if (!shown.contains(other.key)) other,
+        ],
+        seed,
+        moment.window,
+        skip: steps,
+      );
+    }
+    if (q != null) out.add((question: q, track: i));
+  }
+  return out;
+}
 
 /// Minutes after midnight of a `HH:mm` value; null for anything else, so a malformed
 /// setting falls back to its default instead of breaking the screen.
@@ -237,11 +370,10 @@ TableMoment? tableMomentAt({
   required Object? dinner,
   required bool Function(DateTime day) warmIsDinner,
   bool Function(DateTime day)? bothWarm,
-  required List<TableQuestion> deck,
+  required List<TableTrack> tracks,
   required String householdId,
-  int? cycleLength,
 }) {
-  if (mode == 'off' || deck.isEmpty) return null;
+  if (mode == 'off' || tracks.every((t) => t.questions.isEmpty)) return null;
   final minutes = now.hour * 60 + now.minute;
   final atLunch = tableWindowStart(lunch, minutes, from: '11:30', to: '13:30');
   final atDinner = tableWindowStart(
@@ -262,8 +394,7 @@ TableMoment? tableMomentAt({
   return (
     window: mealWindowIndex(day, dinner: isDinner, twoADay: twoADay),
     dinner: isDinner,
-    questions: deck,
+    tracks: tracks,
     householdId: householdId,
-    cycleLength: cycleLength ?? deck.length,
   );
 }

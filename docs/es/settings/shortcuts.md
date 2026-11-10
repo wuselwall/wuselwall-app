@@ -12,7 +12,7 @@ Pertenece a **una persona**. Lee día, comidas, colegio, presencia y puntos. Pue
 
 ## Crear una clave {#creating-a-key}
 
-En **Ajustes → Avanzados → Apps y automatizaciones**, crea una clave y ponle nombre. Un adulto responsable puede elegir a la persona; los demás crean la propia en su móvil. Copia **clave y dirección del servidor**, que se muestran una vez.
+En **Ajustes → Avanzados → Apps y automatizaciones**, crea una clave y ponle nombre. Una madre o un padre puede elegir a la persona; los demás crean la propia en su móvil. Copia **clave y dirección del servidor**, que se muestran una vez.
 
 Trátala como una contraseña. Atajos la sincroniza entre tus dispositivos Apple por iCloud.
 
@@ -51,4 +51,4 @@ La respuesta sigue el idioma admitido del móvil o, en otro caso, el del hogar. 
 
 ## Revocar una clave {#revoking-a-key}
 
-Revócala si pierdes el móvil o deja de ser necesaria. El efecto es inmediato y la lista indica el último uso. Salir del hogar revoca tus claves automáticamente. Los adultos responsables gestionan todas; los miembros, las suyas. La [exportación](/es/settings/members-devices#export-data) incluye nombres y fechas, nunca secretos.
+Revócala si pierdes el móvil o deja de ser necesaria. El efecto es inmediato y la lista indica el último uso. Salir del hogar revoca tus claves automáticamente. Los padres gestionan todas; los demás, las suyas. La [exportación](/es/settings/members-devices#export-data) incluye nombres y fechas, nunca secretos.

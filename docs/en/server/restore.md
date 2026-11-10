@@ -66,4 +66,4 @@ Delete the decrypted file afterwards. The restore drill (`infra/backup/restore-d
 - **On Pro:** in the dashboard under **Database → Backups**, pick one of the last 7 days and restore it. The project is unreachable for a few minutes.
 - **A copy of your own:** with the Supabase CLI, pull a copy to your computer about once a month. Supabase explains how, and how to restore it, in [Backup and Restore using the CLI](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore). Store the files encrypted: they contain everything.
 
-Moving between Supabase and a server at home is possible with these copies, but not yet written up step by step.
+Moving between Supabase and a server at home is possible with these copies, but there is no step-by-step guide for it.

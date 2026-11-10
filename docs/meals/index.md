@@ -19,7 +19,7 @@ Kinder wünschen sich ein Essen auf **Mein Tag** ihres Tablets (siehe [Wunschess
 
 - Tippe auf einen Wunsch, wähle Tag und Mahlzeit, und er ist eingeplant. Unter jeder Mahlzeit steht, was dort schon geplant ist. Steht dort schon ein Essen, fragt die App, bevor der Wunsch es ersetzt; wer kocht, die Uhrzeit und die Portionen bleiben. Ein Rezept-Wunsch füllt die Einkaufsliste wie jedes Rezept.
 - Ein geplanter Wunsch trägt im Plan und an der Wand einen Stern und „Wunsch von Paul“.
-- Mit dem **×** entfernst du einen Wunsch (**Wunsch entfernen**). Das dürfen Erziehungsberechtigte und wer ihn sich gewünscht hat.
+- Mit dem **×** entfernst du einen Wunsch (**Wunsch entfernen**). Das dürfen Eltern und wer ihn sich gewünscht hat.
 
 Ein Wunsch wird nie abgelehnt; was nicht geplant ist, wartet einfach. Wer wünschen darf und wie viele Wünsche offen sein dürfen, legt ihr unter [Einstellungen → Essen](/settings/household) fest.
 
@@ -71,4 +71,4 @@ Beim Planen einer Mahlzeit schlägt WuselWall passende Rezepte vor (siehe [Vorsc
 
 Ein Tipp auf den Essensbereich zeigt die Mahlzeiten der Woche. Ein Stern markiert ein Wunschessen. Tippst du danach auf einen Punkt, änderst du, wer mitisst.
 
-Die Wand zeigt pro Tag die warme Mahlzeit, bei **Beide** Mittag- und Abendessen untereinander, oder bei **Keine** keine. Welche das ist und wie Schultage und freie Tage zählen, legt ihr unter [Einstellungen → Essen](/settings/household) fest.
+Die Wand zeigt pro Tag die warme Mahlzeit. Sind Mittag- und Abendessen beide warm, stehen beide untereinander; sind beide aus, bleibt die Zeile leer. Welche das ist und wie Schultage und freie Tage zählen, legt ihr unter [Einstellungen → Essen](/settings/household) fest.

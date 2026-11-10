@@ -212,7 +212,7 @@ Turning any of these on is one deliberate checkbox on that token
 
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
-| `meals.warm_meal.school_day` | household | dinner | lunch · dinner · both · none | The warm meal on the board. On school days children often eat lunch at school or Hort. *Both and none added 2026-11-01*: both puts lunch above dinner in the board's cell (`days[i].meals`), none leaves the day's meal row empty; what needs one meal (a wish, the Tischfrage at the warm meal when not both) takes dinner | FR-8.4 |
+| `meals.warm_meal.school_day` | household | dinner | lunch · dinner · both · none | The warm meal on the board. On school days children often eat lunch at school or Hort. *Both and none added 2026-11-01*: both puts lunch above dinner in the board's cell (`days[i].meals`), none leaves the day's meal row empty; what needs one meal (a wish, the Tischfrage at the warm meal when not both) takes dinner. *Since 2026-11-04 the app shows two toggle buttons, lunch and dinner: both on stores `both`, both off `none`* | FR-8.4 |
 | `meals.warm_meal.free_day` | household | lunch | lunch · dinner · both · none | Weekends and holidays | FR-8.4 |
 | `meals.away_means_not_eating` | household | on | on · off | `travel` or `away` presence over the meal's slot marks that member as not eating, so most days need no input | [07](07-module-meals-shopping.md#views) |
 | `meals.care_lunch_cutoff` | household | 14:00 | time | A child whose care row runs past this time is out for lunch | [07](07-module-meals-shopping.md#views) |
@@ -280,13 +280,13 @@ Everything else here is under **Erweitert**, including each occasion and the pix
 | `ambience.advent`, `ambience.easter_western`, `ambience.easter_orthodox` | household | `auto`: by the country of `household.region` | auto · on · off | Easter is computed each year, Western and Orthodox separately. *Decided 2026-10-24.* Since 2026-11-01 the app shows every `auto · on · off` holiday as a switch that shows what `auto` means in the family's country; a change writes `on` or `off`, the row's reset goes back to `auto` | [26](26-colour-and-ambience.md#defaults-per-country), Q52 |
 | `ambience.christmas`, `ambience.st_nicholas`, `ambience.national_day` | household | `auto`: by the country of `household.region` | auto · on · off | A tree from 24 to 26 December (6–7 January by the Julian calendar), Saint Nicholas' boot on 6 December (5th in NL), the country's flag on its national day. *Added 2026-11-01* | [26](26-colour-and-ambience.md#defaults-per-country) |
 | `ambience.new_year` | household | off | on · off | Small fireworks in the night sky on 31 December and 1 January | [26](26-colour-and-ambience.md#seasons-and-occasions) |
-| `rituals.countdown_days` | household | 14 | 7–60 | How far ahead Vorfreude starts counting | [27](27-family-rituals.md#vorfreude) |
+| `rituals.countdown_days` | household | 7 (14 until 2026-11-04) | 7–60 | How far ahead Vorfreude starts counting | [27](27-family-rituals.md#vorfreude) |
 | `rituals.countdown_return` | household | on | on · off | "Papa ist in 2× schlafen zurück" for an adult's travel of two nights or more | [27](27-family-rituals.md#vorfreude) |
 | `meals.wishes` | household | children | children · everyone · off | Who may wish a meal | [27](27-family-rituals.md#wunschessen) |
 | `meals.wishes_per_week` | household | 1 | 1–3 | Open wishes per member | [27](27-family-rituals.md#wunschessen) |
 | `rituals.table_question` | household | warm meal | warm meal · lunch and dinner · off | When the Tischfrage appears | [27](27-family-rituals.md#tischfrage) |
 | `rituals.table_question.lunch`, `.dinner` | household | 11:30–13:30, 17:30–19:30; by country: ES 13:30–15:30 and 20:00–22:00, FR dinner 19:00–21:00 | time range | The meal windows; there are no meal times anywhere else | [27](27-family-rituals.md#tischfrage) |
-| `rituals.table_question_deck` | household | family | family · older | *Older* adds questions for 8 and over | [27](27-family-rituals.md#tischfrage) |
+| `rituals.table_question_age_limit` | household | off | 6–16 or off | Hides the questions from this age upwards. The questions themselves follow the children's ages. *Added 2026-11-04, replacing `rituals.table_question_deck`, which stays in the catalogue only for the previous app release* | [27](27-family-rituals.md#tischfrage) |
 | `rituals.week_review` | household | Sunday 16:00 | weekday + time · off | When "Unsere Woche" opens; it stays until 10:00 the next morning | [27](27-family-rituals.md#wochenrückblick) |
 
 ## Where the settings live

@@ -2,7 +2,7 @@
 
 WuselWall should not only keep order but also make the day a little lighter. That is what **Wusel** is for, a small round creature that is pleased by what the family gets done, and the **colours**, which follow the time of day and the year.
 
-<Shot name="kid-today" alt="My day on the kids' tablet: Wusel greets Olivia, her chores below" wide />
+<Shot name="kid-today" alt="My day on the children's tablet: Wusel greets Olivia, her chores below" wide />
 
 ## Who Wusel is {#who}
 
@@ -12,11 +12,11 @@ Wusel praises what happened, not the person: "All done. That went well!" rather 
 
 ## Where Wusel appears {#where}
 
-- **My day** on the kids' tablet: Wusel waves and greets the child by name, with one useful thing about today: their own birthday, a new badge, a family tradition ("Today is Pizza Friday!"), the first lesson ("Today you start with maths."), the warm meal, or what the child is looking forward to.
+- **My day** on the children's tablet: Wusel waves and greets the child by name, with one useful thing about today: their own birthday, a new badge, a family tradition ("Today is Pizza Friday!"), the first lesson ("Today you start with maths."), the warm meal, or what the child is looking forward to.
 - **The child's own birthday**: the first time **My day** opens that day, Wusel in the party hat fills the whole screen with confetti for two seconds (a tap closes it sooner). Once a day per device, not during the night hours, and only while the **Birthdays** occasion is on.
 - **Waiting and no connection**: if **My day** takes longer than two seconds to load, or the tablet has no connection, Wusel thinks: "Just a moment…" or "Hang on, looking for the internet…".
 - **The last chore of the day**: Wusel cheers, with confetti and a short sound.
-- **A reward requested**: Wusel is proud: "Sent! A grown-up will decide." When a grown-up says yes on another device, the kids' tablet plays the badge sound.
+- **A reward requested**: Wusel is proud: "Sent! Your parents will decide." When a parent says yes on another device, the children's tablet plays the badge sound.
 - **A new badge**: Wusel holds up a star and names the badge, for two days on **My day** and under **Points**.
 - **Empty pages**: Wusel peeks over the bottom edge, for example on an empty shopping list: "Nothing on the list yet. Tap a tile."
 - **On the wall** Wusel sits in the header. In the first half hour after the night ends (usually 6:00 to 6:30) Wusel waves and says "Good morning, everyone!". At night Wusel sleeps, without a connection Wusel is thinking, and on a birthday there is a party hat.
@@ -28,7 +28,7 @@ Wusel never appears where you are entering something (the shopping tiles and the
 
 ## Wusel on the move {#on-the-move}
 
-On the kids' tablet and on the wall, a lively Wusel does not always stay in one place:
+On the children's tablet and on the wall, a lively Wusel does not always stay in one place:
 
 - **A chore ticked** (on **My day**): Wusel hops over to the card, takes the points coin and carries it back to the balance.
 - **The last chore of the day**: a high jump for joy with confetti as well, and then Wusel cheers back in its usual place.
@@ -41,7 +41,7 @@ Wusel only moves when something has just happened, never on its own, and never s
 
 ## Wusel's outfit {#outfits}
 
-Everyone can dress Wusel: **Party hat**, **Crown**, **Wizard hat**, **Flower wreath**, **Sunglasses**, **Scarf**, **Headphones** or **Bow**. Every outfit is there from the start and costs nothing; nothing has to be earned. Wusel wears it whenever it is about that person: on their kids' tablet, on their phone, and on the wall once they have chosen themselves.
+Everyone can dress Wusel: **Party hat**, **Crown**, **Wizard hat**, **Flower wreath**, **Sunglasses**, **Scarf**, **Headphones** or **Bow**. Every outfit is there from the start and costs nothing; nothing has to be earned. Wusel wears it whenever it is about that person: on their children's tablet, on their phone, and on the wall once they have chosen themselves.
 
 You choose it under **Settings → Personal** at **Wusel's outfit** (**Advanced** view). On your own birthday Wusel wears the party hat. On the wall, which belongs to everyone, Wusel otherwise wears nothing.
 
@@ -52,7 +52,7 @@ You choose it under **Settings → Personal** at **Wusel's outfit** (**Advanced*
 In **Settings → Personal** each person sets **Wusel** (in the **Basic** view too):
 
 - **Automatic** (default): lively for children, quiet for adults
-- **Lively**: Wusel moves and talks, and on the kids' tablet and the wall Wusel is also [on the move](#on-the-move)
+- **Lively**: Wusel moves and talks, and on the children's tablet and the wall Wusel is also [on the move](#on-the-move)
 - **Quiet**: Wusel stays still and appears only on empty pages and special days
 - **Off**: no Wusel for this person
 
@@ -63,7 +63,7 @@ If **Reduce motion** is on for the device, Wusel stays still in its place and th
 ## Colours {#colours}
 
 - **Every area has its colour**: the bar at the top and the selected tab at the bottom. Today is yellow, Calendar blue, Tasks coral, Meals apricot, Shopping mint, Timetable lilac, Settings stone. Where the bar has room it shows a small picture: a basket for shopping, a broom and stars for tasks, a calendar page, a pot, a school bag and, quietly, two sliders in the settings. On a narrow phone they leave the room to the title. The colours and pictures only help you find your way; the people's colours stay the strongest.
-- **On the kids' tablet** cards you can tap look like stickers: a dark edge and a coloured shadow. They sink in when pressed.
+- **On the children's tablet** cards you can tap look like stickers: a dark edge and a coloured shadow. They sink in when pressed.
 - **The sky**: in the wall's header and on **Today** a sky shows the time of day: dawn, bright day with two clouds, dusk (the sun sets in the hour before the night hours), and on the wall at night a dark sky with stars. **Sky in the header** (under **This device**) switches it off.
 
 ### Seasons and occasions {#occasions}

@@ -2,7 +2,7 @@
 
 ## Este dispositivo está bloqueado {#blocked}
 
-Un adulto revocó su acceso. [Conéctalo otra vez](/es/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+Una madre o un padre revocó su acceso. [Conéctalo otra vez](/es/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
 ## El código es incorrecto o ha caducado {#wrong-code}
 

@@ -125,6 +125,26 @@ void main() {
     });
   }
 
+  // One word per person in each language (specs/17 "Words for people"), and no remark meant
+  // for the makers rather than the family.
+  const notForFamilies = {
+    'de': r'erziehungsberechtigt|elternperson|nach zwei wochen|verdienstfläche',
+    'de_CH': r'erziehungsberechtigt|elternperson|nach zwei wochen',
+    'de_AT': r'erziehungsberechtigt|elternperson|nach zwei wochen',
+    'en': r'guardian|\bkids?\b|after two weeks|earning surface|kiosk',
+    'fr': r'\bresponsables?\b|après deux semaines|kiosque',
+    'es': r'\bresponsables?\b|después de dos semanas|quiosco',
+  };
+  for (final MapEntry(key: code, value: pattern) in notForFamilies.entries) {
+    test('$code says parent and child, and has no remarks for the makers', () {
+      final words = RegExp(pattern, caseSensitive: false);
+      final arb = _catalogue(code);
+      for (final key in _messages(arb)) {
+        expect(words.hasMatch(arb[key] as String), isFalse, reason: key);
+      }
+    });
+  }
+
   test('Swiss German writes ss for every ß of German', () {
     final swiss = _catalogue('de_CH');
     final german = _catalogue('de');

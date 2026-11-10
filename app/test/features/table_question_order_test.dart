@@ -160,7 +160,7 @@ void main() {
   group('the deck', () {
     final bundled = [
       const TableQuestion(key: 'de:q-1', text: 'a'),
-      const TableQuestion(key: 'de:q-2', text: 'b', deck: 'older'),
+      const TableQuestion(key: 'de:q-2', text: 'b', minAge: 8),
       const TableQuestion(key: 'de:q-3', text: 'c'),
     ];
 
@@ -178,7 +178,7 @@ void main() {
           for (final q in householdDeck(
             bundled: bundled,
             family: family,
-            older: false,
+            ages: (youngest: 5, oldest: 7),
           ))
             q.key,
         ],
@@ -189,7 +189,7 @@ void main() {
           for (final q in householdDeck(
             bundled: bundled,
             family: family,
-            older: true,
+            ages: (youngest: 7, oldest: 9),
           ))
             q.key,
         ],
@@ -199,14 +199,23 @@ void main() {
 
     test('the walk\'s length is the bundled deck for the ages, hidden ones '
         'included', () {
-      expect(tableCycleLength(bundled: bundled, older: false, deckSize: 1), 2);
-      expect(tableCycleLength(bundled: bundled, older: true, deckSize: 1), 3);
-      expect(tableCycleLength(bundled: const [], older: false, deckSize: 4), 4);
+      const young = (youngest: 5, oldest: 7);
+      const older = (youngest: 7, oldest: 9);
+      expect(tableCycleLength(bundled: bundled, ages: young, deckSize: 1), 2);
+      expect(tableCycleLength(bundled: bundled, ages: older, deckSize: 1), 3);
+      expect(tableCycleLength(bundled: const [], ages: young, deckSize: 4), 4);
     });
   });
 
   group('the moment', () {
     final questions = deck(20);
+    final track = [
+      (
+        ages: (youngest: 5, oldest: 7),
+        questions: questions,
+        cycleLength: questions.length,
+      ),
+    ];
     TableMoment? at(
       int hour,
       int minute, {
@@ -222,7 +231,7 @@ void main() {
       dinner: dinner,
       warmIsDinner: (_) => warmIsDinner,
       bothWarm: (_) => bothWarm,
-      deck: questions,
+      tracks: track,
       householdId: 'h',
     );
 
@@ -260,7 +269,7 @@ void main() {
           lunch: null,
           dinner: null,
           warmIsDinner: (_) => true,
-          deck: const [],
+          tracks: const [],
           householdId: 'h',
         ),
         isNull,
@@ -282,7 +291,7 @@ void main() {
         lunch: null,
         dinner: late,
         warmIsDinner: (_) => true,
-        deck: questions,
+        tracks: track,
         householdId: 'h',
       );
       expect(evening, isNotNull);

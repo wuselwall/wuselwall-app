@@ -5,7 +5,7 @@ Un servidor WuselWall funciona **con o sin correo**. Sin él, cada persona crea 
 | | Sin correo | Con correo |
 |---|---|---|
 | **Crear cuenta** | Dirección y contraseña. La app se abre en **Cuenta nueva** | Un código por correo; la contraseña es opcional |
-| **Contraseña olvidada** | Un responsable te da un código de un solo uso ([abajo](#forgotten-password)) | Un código por correo |
+| **Contraseña olvidada** | Una madre o un padre te da un código de un solo uso ([abajo](#forgotten-password)) | Un código por correo |
 | **Invitaciones** | Por enlace, QR o código de invitación | Igual, y una invitación con tu dirección te encuentra sola |
 | **Quién ve algo** | Nadie más | El proveedor ve direcciones y códigos |
 
@@ -70,8 +70,8 @@ Son ejemplos, no recomendaciones; WuselWall no está vinculado a ninguno. En lug
 
 ## Contraseña olvidada sin correo {#forgotten-password}
 
-1. Un **responsable**, en su propio teléfono: **Ajustes → Familia → Miembros**, **Restablecer contraseña** junto al nombre y luego **Crear código**.
+1. Una **madre o un padre**, en su propio teléfono: **Ajustes → Familia → Miembros**, **Restablecer contraseña** junto al nombre y luego **Crear código**.
 2. La app muestra un **código de 8 caracteres**, válido **una vez** durante **10 minutos**. Entrégalo en persona.
 3. En el dispositivo de quien la olvidó: **Iniciar sesión o crear una cuenta** → **Iniciar sesión** → **¿Olvidaste tu contraseña?**, y luego la dirección, el código y una contraseña nueva de al menos 10 caracteres.
 
-La verificación en dos pasos sigue pidiéndose si está activa. **¿Lo olvidó el único responsable?** Quien administra el servidor crea el mismo código: `./wuselwall password direccion@example.org`, o en Supabase en **SQL Editor**: `select app.password_reset_issue_for_email('direccion@example.org') ->> 'code';`
+La verificación en dos pasos sigue pidiéndose si está activa. **¿Lo olvidó la única madre o el único padre?** Quien administra el servidor crea el mismo código: `./wuselwall password direccion@example.org`, o en Supabase en **SQL Editor**: `select app.password_reset_issue_for_email('direccion@example.org') ->> 'code';`

@@ -18,7 +18,7 @@ Ein Stern markiert die **Standardliste** (am Anfang der Supermarkt). Sie ist die
 
 ## Liste bearbeiten
 
-Wähle die Liste aus und tippe auf den **Stift** rechts neben den Listen (oder drücke lange auf ihren Namen). Dort änderst du den **Namen** und machst sie zur **Standardliste**. In der Ansicht **Erweitert** kommen die **Kategorien** dazu, in der Reihenfolge, in der ihr durch den Laden geht: Ziehe eine Kategorie am Griff an eine andere Stelle, benenne sie um, lege eine neue an oder entferne sie (ihre Artikel bleiben ohne Kategorie auf der Liste). Ganz unten steht **Liste löschen**: Offene Artikel wandern auf die Standardliste, Verlauf und Kacheln dieser Liste sind weg. Die Standardliste selbst lässt sich nicht löschen. Löschen ist Sache der Erziehungsberechtigten; umbenennen und ordnen darf jeder.
+Wähle die Liste aus und tippe auf den **Stift** rechts neben den Listen (oder drücke lange auf ihren Namen). Dort änderst du den **Namen** und machst sie zur **Standardliste**. In der Ansicht **Erweitert** kommen die **Kategorien** dazu, in der Reihenfolge, in der ihr durch den Laden geht: Ziehe eine Kategorie am Griff an eine andere Stelle, benenne sie um, lege eine neue an oder entferne sie (ihre Artikel bleiben ohne Kategorie auf der Liste). Ganz unten steht **Liste löschen**: Offene Artikel wandern auf die Standardliste, Verlauf und Kacheln dieser Liste sind weg. Die Standardliste selbst lässt sich nicht löschen. Löschen ist Sache der Eltern; umbenennen und ordnen darf jeder.
 
 <Shot name="shopping-edit-list" alt="Liste bearbeiten mit Name, Standardliste und Kategorien" />
 

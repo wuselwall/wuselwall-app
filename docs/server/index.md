@@ -45,7 +45,7 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 
 | Was | Ohne das |
 |---|---|
-| **E-Mail** | Alle melden sich mit E-Mail-Adresse und Passwort an, ein vergessenes Passwort setzt ein Erziehungsberechtigter zurück. Mit E-Mail (ein Gmail-Konto reicht) kommen Anmelde-Codes per Mail ([E-Mail](/server/email)) |
+| **E-Mail** | Alle melden sich mit E-Mail-Adresse und Passwort an, ein vergessenes Passwort setzt ein Elternteil zurück. Mit E-Mail (ein Gmail-Konto reicht) kommen Anmelde-Codes per Mail ([E-Mail](/server/email)) |
 | **Die Web-App** | Nur nötig, solange die Apps nicht in den Stores sind, oder für den Laptop. Zu Hause liefert der Server sie mit, bei Supabase veröffentlicht sie GitHub für euch |
 | **Feiertage und Schulferien** | Der Server holt sie einmal pro Woche bei [OpenHolidays](https://www.openholidaysapi.org/) und schickt dabei nur Ländercodes. Ohne Internetzugang des Servers fehlen sie auf der Wochentafel ([Extras](/server/extras#feiertage)) |
 | **Kalender von außen** | Abonniert ihr Kalender von Vereinen oder der Gemeinde, holt der Server sie stündlich von den Adressen, die ihr eingetragen habt. Ohne Abos ruft er nichts ab |

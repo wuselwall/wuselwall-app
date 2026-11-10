@@ -377,7 +377,7 @@ void main() {
       await t.tap(find.text('Erwachsene Person einladen'));
       await t.pumpAndSettle();
       expect(find.text('Rolle'), findsOneWidget);
-      expect(find.text('Erziehungsberechtigt'), findsWidgets);
+      expect(find.text('Elternteil'), findsWidgets);
       await unmountApp(t, container);
     });
 
@@ -551,7 +551,7 @@ void main() {
       await openLink(t, s.container);
       expect(
         find.text(
-          'Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.',
+          'Lade zuerst einen weiteren Elternteil ein oder lösche die Familie.',
         ),
         findsOneWidget,
       );

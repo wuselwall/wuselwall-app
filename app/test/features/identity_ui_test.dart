@@ -147,7 +147,7 @@ void main() {
       t,
     ) async {
       await openSettingsAndTryGuardianAction(t, sharedIdentity());
-      expect(find.text('PIN für Erziehungsberechtigte'), findsOneWidget);
+      expect(find.text('PIN für Eltern'), findsOneWidget);
     });
 
     testWidgets('digits are never echoed, only dots', (t) async {
@@ -177,7 +177,7 @@ void main() {
           );
         await openSettingsAndTryGuardianAction(t, identity);
         await enter(t, '123456');
-        expect(find.text('PIN für Erziehungsberechtigte'), findsNothing);
+        expect(find.text('PIN für Eltern'), findsNothing);
         expect(find.text('Mitglied hinzufügen'), findsWidgets);
       },
     );
@@ -202,11 +202,8 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.byIcon(Icons.person_add_alt_1));
       await t.pumpAndSettle();
-      expect(find.text('PIN für Erziehungsberechtigte'), findsNothing);
-      expect(
-        find.text('Das darf nur ein Erziehungsberechtigter.'),
-        findsOneWidget,
-      );
+      expect(find.text('PIN für Eltern'), findsNothing);
+      expect(find.text('Das darf nur ein Elternteil.'), findsOneWidget);
     });
   });
 }

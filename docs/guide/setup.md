@@ -11,7 +11,7 @@ Auf dem Startbildschirm beginnt alles. Du meldest dich mit deinem Konto an, trit
 | Eure erste Familie auf einem neuen Server anlegen | Zuerst den [Einrichtungsschlüssel](#einrichtungsschluessel) verwenden, dann anmelden und die Familie anlegen |
 | Mit einer Einladung dazukommen | [Einer Familie beitreten](#_3-einer-familie-beitreten); keine zweite Familie anlegen |
 | Dein Konto auf einem weiteren eigenen Handy nutzen | [Anmelden](#_1-anmelden) mit demselben Konto |
-| Ein Tablet für alle oder die Küchenwand verbinden | [Geteiltes Gerät verbinden](#_4-familien-tablet-oder-wanddisplay-verbinden); ein Erziehungsberechtigter bestätigt auf seinem Handy |
+| Ein Tablet für alle oder die Küchenwand verbinden | [Geteiltes Gerät verbinden](#_4-familien-tablet-oder-wanddisplay-verbinden); ein Elternteil bestätigt auf dem eigenen Handy |
 
 Einrichtungsschlüssel, E-Mail-Code und Einladungscode haben verschiedene Aufgaben. Verwende jeweils den Code, nach dem die aktuelle Seite fragt.
 
@@ -28,7 +28,7 @@ Der Startbildschirm hat drei Wege:
 
 - **Anmelden oder Konto erstellen**: für dich als Erwachsene:r, auf deinem eigenen Handy, egal ob du schon ein Konto hast oder nicht.
 - **Ich habe einen Einladungscode**: du wurdest von einer Familie eingeladen.
-- **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Erwachsenen auf seinem Handy freigegeben.
+- **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Elternteil auf dessen Handy freigegeben.
 
 ## Der Einrichtungsschlüssel: ein Server ohne Familie {#einrichtungsschluessel}
 
@@ -69,7 +69,7 @@ Ist die **Zwei-Faktor-Anmeldung** eingeschaltet, kommt danach noch der 6-stellig
 
 ### Auf einem Server ohne E-Mail {#ohne-e-mail}
 
-Manche Familienserver verschicken keine Mails ([E-Mail](/server/email)). Dann öffnet **Anmelden oder Konto erstellen** mit **Neues Konto**: Gib deine Adresse und ein Passwort mit mindestens 10 Zeichen ein und tippe auf **Konto erstellen**. Es gibt keinen Code und keine Bestätigungsmail. Du hast schon ein Konto? Tippe auf **Anmelden**. Hast du dein Passwort vergessen, tippst du auf **Passwort vergessen?** und bittest einen Erziehungsberechtigten deiner Familie um einen Code ([Passwort zurücksetzen](/settings/members-devices#passwort-zuruecksetzen)). Solange ein solcher Server noch keine Familie hat, bietet er nur **Anmelden** an; **Neues Konto** kommt, sobald du den [Einrichtungsschlüssel](#einrichtungsschluessel) eingegeben hast.
+Manche Familienserver verschicken keine Mails ([E-Mail](/server/email)). Dann öffnet **Anmelden oder Konto erstellen** mit **Neues Konto**: Gib deine Adresse und ein Passwort mit mindestens 10 Zeichen ein und tippe auf **Konto erstellen**. Es gibt keinen Code und keine Bestätigungsmail. Du hast schon ein Konto? Tippe auf **Anmelden**. Hast du dein Passwort vergessen, tippst du auf **Passwort vergessen?** und bittest einen Elternteil deiner Familie um einen Code ([Passwort zurücksetzen](/settings/members-devices#passwort-zuruecksetzen)). Solange ein solcher Server noch keine Familie hat, bietet er nur **Anmelden** an; **Neues Konto** kommt, sobald du den [Einrichtungsschlüssel](#einrichtungsschluessel) eingegeben hast.
 
 ## 2. Neue Familie anlegen
 

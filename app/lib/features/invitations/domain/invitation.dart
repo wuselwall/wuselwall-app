@@ -12,7 +12,7 @@ export 'package:wuselwall/core/server/server_link.dart' show parseInvitation;
 String inviteLink(String token, {Uri? server}) =>
     'https://$linkSiteHost/i/#${linkFragment(token, server)}';
 
-/// The role an invitation gives. `guardian` (Erziehungsberechtigt) or `member` (Mitglied).
+/// The role an invitation gives. `guardian` (Elternteil) or `member` (Weitere:r Erwachsene:r).
 enum InvitationRole {
   guardian,
   member;

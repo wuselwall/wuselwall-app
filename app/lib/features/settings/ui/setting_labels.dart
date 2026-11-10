@@ -210,9 +210,9 @@ SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
     title: l10n.settingTableQuestionDinnerTitle,
     help: l10n.settingTableQuestionDinnerHelp,
   ),
-  'rituals.table_question_deck' => (
-    title: l10n.settingTableQuestionDeckTitle,
-    help: l10n.settingTableQuestionDeckHelp,
+  'rituals.table_question_age_limit' => (
+    title: l10n.settingTableQuestionAgeLimitTitle,
+    help: l10n.settingTableQuestionAgeLimitHelp,
   ),
   'rituals.week_review' => (
     title: l10n.settingWeekReviewTitle,
@@ -234,7 +234,6 @@ String settingValueLabel(AppLocalizations l10n, String value) =>
       'all' => l10n.settingValueAll,
       'none' => l10n.settingValueNone,
       'lunch' => l10n.settingValueLunch,
-      'both' => l10n.settingValueBoth,
       'dinner' => l10n.settingValueDinner,
       'auto' => l10n.settingValueAuto,
       'lively' => l10n.settingValueLively,
@@ -245,8 +244,6 @@ String settingValueLabel(AppLocalizations l10n, String value) =>
       'everyone' => l10n.settingValueEveryone,
       'warm_meal' => l10n.settingValueWarmMeal,
       'main_meals' => l10n.settingValueMainMeals,
-      'family' => l10n.settingValueAllAges,
-      'older' => l10n.settingValueOlderChildren,
       _ => value,
     };
 
@@ -258,5 +255,6 @@ String settingIntegerLabel(AppLocalizations l10n, String key, int n) =>
       'notify.event_reminder' => l10n.settingUnitMinutes(n),
       'device.idle_revert_seconds' => l10n.settingUnitSeconds(n),
       'rituals.countdown_days' => l10n.settingUnitDays(n),
+      'rituals.table_question_age_limit' => l10n.settingUnitFromAge(n),
       _ => '$n',
     };

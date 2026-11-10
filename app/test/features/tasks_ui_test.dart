@@ -628,7 +628,7 @@ void main() {
       await t.tap(find.widgetWithText(FilledButton, 'Freigeben'));
       await t.pumpAndSettle();
 
-      expect(find.text('PIN für Erziehungsberechtigte'), findsOneWidget);
+      expect(find.text('PIN für Eltern'), findsOneWidget);
       expect(api.named('reward_decide'), isEmpty);
       await enterPin(t, '123456');
 

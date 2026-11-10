@@ -1,7 +1,7 @@
 # FAQ
 
 ## "This device has been blocked" {#blocked}
-A guardian blocked the device. Connect it again with [Connect a family tablet or wall display](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+A parent blocked the device. Connect it again with [Connect a family tablet or wall display](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
 ## "That code is wrong or has expired" {#wrong-code}
 Codes last 10 minutes and work once. Tap **Connect a family tablet or wall display** on the new device again, and it shows a new code. After several wrong tries you have to wait a few minutes.
@@ -13,7 +13,7 @@ Invitations are valid for 7 days and work once. Ask the person who invited you f
 On shared devices you have to say who you are before changing anything ([Who are you?](/en/guide/who-are-you)).
 
 ## "PIN locked" {#pin-locked}
-Ten wrong tries lock the PIN. Set a new one on your own phone ([Security](/en/settings/security#guardian-pin)).
+Ten wrong tries lock the PIN. Set a new one on your own phone ([Security](/en/settings/security#parent-pin)).
 
 ## "No connection to the server" {#no-connection}
 Check Wi-Fi or mobile data and tap **Try again**. The shopping list keeps working offline and sends later ([Offline](/en/shopping/store#offline)); there you only see this message if the device has never loaded the list.

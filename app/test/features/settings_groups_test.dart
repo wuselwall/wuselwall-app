@@ -719,6 +719,61 @@ void main() {
       expect(repo.sets.single.deviceId, isNull);
     });
 
+    testWidgets('a warm meal is two toggles: both on, both off or either', (
+      tester,
+    ) async {
+      final repo = await pumpRoute(tester, Routes.settingsMeals);
+      final row = find.byKey(
+        const ValueKey('setting-meals.warm_meal.school_day'),
+      );
+      await tester.scrollUntilVisible(
+        row,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      final l10n = AppLocalizations.of(tester.element(find.byType(Scaffold)));
+      // No third and fourth choice any more.
+      expect(
+        find.descendant(of: row, matching: find.text('both')),
+        findsNothing,
+      );
+      expect(
+        find.descendant(of: row, matching: find.text('none')),
+        findsNothing,
+      );
+      // The school day starts at dinner: lunch on as well makes both.
+      await tester.tap(
+        find.descendant(of: row, matching: find.text(l10n.settingValueLunch)),
+      );
+      await tester.pumpAndSettle();
+      expect(repo.sets.last.value, 'both');
+      // The fake keeps the stored dinner: turning that off leaves no warm meal.
+      await tester.tap(
+        find.descendant(of: row, matching: find.text(l10n.settingValueDinner)),
+      );
+      await tester.pumpAndSettle();
+      expect(repo.sets.last.key, 'meals.warm_meal.school_day');
+      expect(repo.sets.last.value, 'none');
+    });
+
+    testWidgets('the age limit starts at 12, not at its lowest age', (
+      tester,
+    ) async {
+      final repo = await pumpRoute(tester, Routes.settingsRituals);
+      final row = find.byKey(
+        const ValueKey('setting-rituals.table_question_age_limit'),
+      );
+      await tester.scrollUntilVisible(
+        row,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.tap(find.descendant(of: row, matching: find.byType(Switch)));
+      await tester.pumpAndSettle();
+      expect(repo.sets.single.key, 'rituals.table_question_age_limit');
+      expect(repo.sets.single.value, 12);
+    });
+
     testWidgets('a customised row shows its chip and resets', (tester) async {
       final repo = await pumpRoute(tester, Routes.settingsTasks);
       final l10n = AppLocalizations.of(tester.element(find.byType(Scaffold)));

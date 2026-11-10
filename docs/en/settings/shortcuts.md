@@ -12,14 +12,14 @@ A key belongs to **one person**. A shortcut with that key acts as that person: i
 
 - It can **read**: the day, the meals, the timetable, who is home, the points.
 - It can **add**: put things on the shopping list and tick one of the person's own tasks.
-- It can **neither delete nor manage anything**: no changing events, no correcting points, no settings. That holds for a guardian's key too.
+- It can **neither delete nor manage anything**: no changing events, no correcting points, no settings. That holds for a parent's key too.
 - A key adds something at most 100 times a day. If a shortcut runs in a loop by mistake, that is where it stops.
 
 ## Creating a key
 
 1. Open **Settings → Advanced → Apps and automations** and tap **New key**.
 2. Give it a **name**, for example "iPhone".
-3. As a guardian, choose the person under **For whom?**. Everyone else creates their own key on their own phone.
+3. As a parent, choose the person under **For whom?**. Everyone else creates their own key on their own phone.
 4. Tap **Create key**.
 
 The key is shown **only once**, together with your server's **address**. Copy both. Whoever has the key can read and add as that person, so treat it like a password. The Shortcuts app syncs it through iCloud to your other Apple devices.
@@ -64,7 +64,7 @@ Answers come in the iPhone's language when it is German, English, French or Span
 
 If a phone is lost, or someone no longer needs the shortcut, tap **Revoke** in the list. It takes effect at once: the shortcut then only answers that it is no longer valid. The list shows when a key was last used. When someone leaves the family, their keys are revoked automatically.
 
-Guardians see and revoke every key of the family, everyone else their own. The [data export](/en/settings/members-devices#export-data) lists each key with its name and date, but not the key itself.
+Parents see and revoke every key of the family, everyone else their own. The [data export](/en/settings/members-devices#export-data) lists each key with its name and date, but not the key itself.
 
 ::: info Without an iPhone
 A shortcut is an ordinary web request. Any app that can send a request with a header works the same way.

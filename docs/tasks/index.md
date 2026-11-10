@@ -20,7 +20,7 @@ Auf dem Kinder-Tablet und an der Wand freut sich [Wusel](/guide/wusel) mit: Ist 
 
 Hier landet alles, was jemand bestätigen muss: erledigte Aufgaben, die geprüft werden sollen, und **Belohnungswünsche**. Tippe auf **Freigeben** oder **Ablehnen**.
 
-Erziehungsberechtigte sehen auch auf **Heute**, was wartet: die Karte **Wartet auf deine Freigabe**, zum Beispiel „2 Aufgaben zu prüfen · 1 Belohnungswunsch“. Ein Tipp darauf öffnet die Freigaben. Am Symbol **Aufgaben** unten steht dieselbe Zahl. Die Karte lässt sich nicht wegtippen; sie verschwindet, sobald alles entschieden ist. Mitglieder ohne Erziehungsrecht sehen sie nicht.
+Eltern sehen auch auf **Heute**, was wartet: die Karte **Wartet auf deine Freigabe**, zum Beispiel „2 Aufgaben zu prüfen · 1 Belohnungswunsch“. Ein Tipp darauf öffnet die Freigaben. Am Symbol **Aufgaben** unten steht dieselbe Zahl. Die Karte lässt sich nicht wegtippen; sie verschwindet, sobald alles entschieden ist. Weitere Erwachsene und Kinder sehen sie nicht.
 
 ## Aufgaben anlegen
 
@@ -31,7 +31,7 @@ Tippe im Tab **Aufgaben** auf **Neue Aufgabe**:
 - **Wiederholung**: einmalig, täglich, an Wochentagen, wöchentlich, alle 2 Wochen oder monatlich
 - **Erledigbar**: nur am Fälligkeitstag oder einige Tage danach
 - **Wer**: **Eine Person** (fest), **Reihum**, **Wer will** (offen) oder **Jede Person**
-- **Freigabe durch Erwachsene**: Punkte gibt es erst nach einer Prüfung
+- **Freigabe durch Eltern**: Punkte gibt es erst nach einer Prüfung
 
 Eine neue Aufgabe ist täglich und geht **Reihum** durch alle Kinder (ohne Kinder: **Wer will**). Ein Titel genügt also zum Speichern.
 
@@ -45,7 +45,7 @@ Im Tab **Aufgaben** gibt es ein **Startpaket**: fünf Aufgaben, drei Belohnungen
 
 Jede Belohnung kostet Punkte. Mit **Vorrat** begrenzt du die Anzahl; leer heißt unbegrenzt.
 
-- **Vorher freigeben**: Ist das eingeschaltet, muss eine erziehungsberechtigte Person die Einlösung mit der PIN bestätigen. Ohne Freigabe löst man selbst ein. Das passt nur zu Kleinigkeiten.
+- **Vorher freigeben**: Ist das eingeschaltet, muss ein Elternteil die Einlösung mit der PIN bestätigen. Ohne Freigabe löst man selbst ein. Das passt nur zu Kleinigkeiten.
 - Wer eine Belohnung haben möchte, tippt auf **Wünschen**.
 - Im **Verlauf** sieht man, was wartet, eingelöst und schon übergeben ist. Übergeben markierst du mit **Als übergeben markieren**.
 
