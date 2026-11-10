@@ -12,11 +12,16 @@ class BoardRepository {
 
   final ApiClient _api;
 
+  /// The stored answer of the household's current week, the one the wall shows after a
+  /// restart without network. A week looked ahead to is not stored.
+  static const weekKey = 'board-week';
+
   /// The board for the week starting on [weekStart] (a Monday). Null asks for the
   /// household's current board week, which honours `board.rollover`.
   Future<Result<WeekBoard>> week({DateTime? weekStart}) => _api.function(
     'board-week',
     body: {'week_start': weekStart == null ? null : _ymd(weekStart)},
+    cacheKey: weekStart == null ? weekKey : null,
     parse: (json) => WeekBoard.fromJson(json! as Map<String, dynamic>),
   );
 }

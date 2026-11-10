@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/cache/read_cache.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
@@ -76,20 +77,35 @@ final sessionStateProvider = FutureProvider<SessionState>((ref) async {
     };
   }
 
+  final cache = ref.read(readCacheProvider);
   final device = await repo.currentDevice();
+  // Without network the device's stored record answers (specs/09 "Freshness and
+  // failure"): the wall and a child's tablet start with what they last knew. The
+  // server is asked again as soon as it answers anything.
+  final stored = ref
+      .read(staleReadsProvider)
+      .containsKey(ReadCache.currentDeviceKey);
+  if (stored) {
+    ref.listen(cacheRecoveryProvider, (_, _) => ref.invalidateSelf());
+  }
   switch (device) {
     case Err(:final failure):
       if (failure is AuthFailure || failure is PermissionFailure) {
+        await cache.clear();
         return dropSession();
       }
       throw failure;
     case Ok(:final value) when value != null && !value.revoked:
+      if (!stored) await cache.bindHousehold(value.householdId);
       return Ready(value);
     // A phone revoked by leaving its family, or by the family's deletion (specs/20 J6).
     case Ok(:final value) when value != null:
+      // What the server said itself: this device is no longer the family's, so nothing
+      // of the family stays on it.
+      if (!stored) await cache.clear();
       return freeAccountOrSignOut();
     case Ok():
-      break;
+      if (!stored) await cache.clear();
   }
 
   final profile = await repo.myProfile();

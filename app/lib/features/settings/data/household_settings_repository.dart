@@ -17,6 +17,7 @@ class HouseholdSettingsRepository {
   Future<Result<List<SettingEntry>>> all() async {
     final rows = await _api.select<Map<String, dynamic>>(
       'settings',
+      cacheKey: 'settings',
       parse: (row) => row,
       build: (q) => q.order('key'),
     );

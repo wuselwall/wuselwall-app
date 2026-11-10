@@ -34,6 +34,7 @@ class KidBadgesRepository {
   Future<Result<List<KidBadge>>> badges(String profileId) async {
     final defs = await _api.select(
       'badge_definitions',
+      cacheKey: 'badge-definitions',
       parse: (row) => (
         id: row['id'] as String,
         title: row['title'] as String,
@@ -43,6 +44,7 @@ class KidBadgesRepository {
     );
     final awards = await _api.select(
       'badge_awards',
+      cacheKey: 'badge-awards:$profileId',
       parse: (row) => (
         profileId: row['profile_id'] as String,
         badgeId: row['badge_definition_id'] as String,

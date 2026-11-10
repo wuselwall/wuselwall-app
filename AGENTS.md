@@ -61,6 +61,12 @@ by the node test), `app.match_dictionary` runs the same layers in plpgsql and fe
 `rankTiles` falls back to the matcher and the "Neu" tile shows the matched picture; a person's
 category choice is remembered per household in `app.match_correction` (Einstellungen > Einkaufen >
 Gelernte Wörter, Advanced, guardians forget).
+A restart without network (step 10.6, issue #128, 2026-11-10): reads given a `cacheKey` in
+`ApiClient` keep their last good JSON answer in a second drift database
+(`app/lib/core/cache/`, ADR-006's read cache) and fall back to it on a network failure only:
+the device's own record, the board week and the kid day. The wall's header and the
+`StaleStrip` on the kid and adult homes say since when (FR-8.10). Read-only: every write
+except the shopping outbox still needs the server.
 MCP and AI assistant work is **on hold** (2026-10-24), removed from the app UI and active
 milestones. The backend, keys and proposal data are retained for compatibility; existing
 MCP clients are not disabled. Siri/automations, structured timetable text import and the

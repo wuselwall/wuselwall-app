@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/core/cache/read_cache.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
@@ -13,7 +14,8 @@ export 'package:wuselwall/core/time/clock.dart' show clockProvider, nowProvider;
 /// What the wall shows: the last good board, when it was fetched, and the failure of
 /// the latest attempt if it failed. A wall display that shows yesterday's slightly
 /// stale plan is better than one showing an error (specs/09 "Freshness and failure"),
-/// so a failure never replaces a board that is already on screen.
+/// so a failure never replaces a board that is already on screen. The last good board
+/// is also stored on the device, so a restart without network starts from it.
 class BoardSnapshot {
   const BoardSnapshot({this.board, this.fetchedAt, this.failure});
 
@@ -81,8 +83,28 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
       daily.cancel();
     });
 
+    if (kept.board == null) unawaited(_showStored(_generation));
     Future.microtask(refresh);
     return kept;
+  }
+
+  /// The stored board at once, while the first fetch is under way: a wall that restarts
+  /// shows its week before the server has answered, or when it never does. The header
+  /// says how old it is as soon as that matters (two refetch intervals, or a failure).
+  Future<void> _showStored(int generation) async {
+    final stored = await ref
+        .read(readCacheProvider)
+        .peek(
+          BoardRepository.weekKey,
+          (json) => WeekBoard.fromJson(json! as Map<String, dynamic>),
+        );
+    if (stored == null || !ref.mounted || generation != _generation) return;
+    if (state.board != null) return;
+    state = _shown = BoardSnapshot(
+      board: stored.value,
+      fetchedAt: stored.fetchedAt,
+      failure: state.failure,
+    );
   }
 
   /// Fetches the board now. Calls during a fetch coalesce into one more fetch.
@@ -99,7 +121,15 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
         _again = false;
         final result = await ref.read(boardRepositoryProvider).week();
         if (!ref.mounted || generation != _generation) return;
+        // An answer from the device's store, not from the server: the board of the
+        // time it was fetched, shown as the stale board it is.
+        final storedAt = ref.read(staleReadsProvider)[BoardRepository.weekKey];
         state = _shown = switch (result) {
+          Ok(:final value) when storedAt != null => BoardSnapshot(
+            board: value,
+            fetchedAt: storedAt,
+            failure: const NetworkFailure(),
+          ),
           Ok(:final value) => BoardSnapshot(
             board: value,
             fetchedAt: DateTime.now(),

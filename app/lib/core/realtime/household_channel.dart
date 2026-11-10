@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wuselwall/core/cache/read_cache.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/realtime/refresh_events.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
@@ -49,6 +50,9 @@ final householdInvalidationsProvider =
           emit(Invalidation.all());
         }
       });
+      // The server answers again after stored answers were shown (a restart without
+      // network): everything on screen is fetched afresh.
+      ref.listen(cacheRecoveryProvider, (_, _) => emit(Invalidation.all()));
       final channel = client
           .channel(
             'household:$householdId',

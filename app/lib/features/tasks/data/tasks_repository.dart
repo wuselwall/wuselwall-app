@@ -15,6 +15,7 @@ class TasksRepository {
   /// Active task definitions, by title.
   Future<Result<List<TaskDefinition>>> definitions() => _api.select(
     'task_definitions',
+    cacheKey: 'task-definitions',
     parse: TaskDefinition.fromJson,
     build: (q) => q.eq('is_active', true).order('title'),
   );
@@ -25,6 +26,7 @@ class TasksRepository {
     final d = taskIsoDate(day);
     return _api.select(
       'task_instances',
+      cacheKey: 'task-instances:$d',
       parse: TaskInstance.fromJson,
       build: (q) => q
           .inFilter('status', ['open', 'done', 'verified'])
@@ -46,8 +48,11 @@ class TasksRepository {
         .order('completed_at'),
   );
 
-  Future<Result<List<PointBalance>>> balances() =>
-      _api.select('point_balances', parse: PointBalance.fromJson);
+  Future<Result<List<PointBalance>>> balances() => _api.select(
+    'point_balances',
+    cacheKey: 'point-balances',
+    parse: PointBalance.fromJson,
+  );
 
   /// The newest ledger rows of the household, up to [limit].
   Future<Result<List<PointTransaction>>> ledger({int limit = 300}) =>
@@ -59,6 +64,7 @@ class TasksRepository {
 
   Future<Result<List<Reward>>> rewards() => _api.select(
     'rewards',
+    cacheKey: 'rewards',
     parse: Reward.fromJson,
     build: (q) => q.eq('is_active', true).order('cost_points'),
   );
@@ -66,12 +72,13 @@ class TasksRepository {
   Future<Result<List<RewardRedemption>>> redemptions({int limit = 200}) =>
       _api.select(
         'reward_redemptions',
+        cacheKey: 'reward-redemptions:$limit',
         parse: RewardRedemption.fromJson,
         build: (q) => q.order('requested_at', ascending: false).limit(limit),
       );
 
   Future<Result<List<Streak>>> streaks() =>
-      _api.select('streaks', parse: Streak.fromJson);
+      _api.select('streaks', cacheKey: 'streaks', parse: Streak.fromJson);
 
   /// Creates or changes a definition. A recurring one then gets its next instances
   /// from the `tasks-materialise` function (specs/06, the materialiser).

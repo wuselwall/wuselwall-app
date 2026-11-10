@@ -402,6 +402,21 @@ it.
   17:05", and a lost connection adds a muted banner. The last good board stays on screen
   (FR-8.10). *(Changed 2026-10-15: the permanent "aktualisiert vor 4 s" was dropped — on a
   board that is always current it was only noise, and it crowded the next-up line.)*
+- **A restart without network** *(built 2026-11-10, #128)*: the app stores the last good
+  answer of the reads a wall and a child's tablet need — the device's own record, the
+  board week, members, settings, the day's chores and points, the timetable and the day's
+  appointments — and uses it when the server cannot be reached (the read cache of
+  [ADR-006](adr/ADR-006-offline-strategy.md)). The wall shows its stored week at once,
+  before the server has answered, and marks it as above. The children's home and a phone
+  show a strip "zuletzt aktualisiert 17:05" with the time of the oldest stored answer on
+  screen; when that is not today the day is named too ("Sa 7.11., 17:05"), on the wall as
+  well. A stored answer is keyed by its arguments, so one day's chores never stand in
+  for another's: without one there is the usual error. Only a network failure falls back;
+  what the server refuses is never papered over. The first good answer afterwards
+  refetches everything on screen. Stored answers belong to one account and one family and
+  are deleted on sign-out, on leaving the server, when the device is removed or when
+  another account or family uses the device. Nothing can be changed offline except the
+  shopping list ([07](07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable)).
 - Night variant from 21:00 (`device.night_hours`, per kiosk, default 21:00–06:00): dark ground, reduced contrast, meals and tomorrow's first
   appointment emphasised, everything else calmed down.
 

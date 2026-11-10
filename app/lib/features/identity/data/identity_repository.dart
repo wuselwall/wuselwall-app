@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:passkeys/authenticator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/cache/read_cache.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
@@ -14,12 +15,21 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 class IdentityRepository {
   const IdentityRepository(this._api, this._auth);
 
+  /// How long the device's own record is waited for before the stored one is used.
+  static const devicePatience = Duration(seconds: 4);
+
   final ApiClient _api;
   final GoTrueClient _auth;
 
   /// The calling device, or null when the session has no device (not enrolled).
+  ///
+  /// Stored, so a device that restarts without network still knows whose it is; and
+  /// used after [devicePatience] when the server stays silent (specs/09 "Freshness and
+  /// failure").
   Future<Result<DeviceInfo?>> currentDevice() => _api.rpc(
     'current_device',
+    cacheKey: ReadCache.currentDeviceKey,
+    patience: devicePatience,
     parse: (json) =>
         json == null ? null : DeviceInfo.fromJson(json as Map<String, dynamic>),
   );
@@ -29,6 +39,7 @@ class IdentityRepository {
   Future<Result<List<Member>>> members({bool includeInactive = false}) =>
       _api.select(
         'members',
+        cacheKey: includeInactive ? 'members:all' : 'members',
         parse: Member.fromJson,
         // The household's own order (specs/21): every member list follows it.
         build: (q) {
@@ -40,6 +51,7 @@ class IdentityRepository {
   Future<Result<HouseholdInfo>> household() async {
     final rows = await _api.select<HouseholdInfo>(
       'household',
+      cacheKey: 'household',
       parse: HouseholdInfo.fromJson,
     );
     return rows.map((list) => list.first);

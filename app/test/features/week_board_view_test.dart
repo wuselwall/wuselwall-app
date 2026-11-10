@@ -14,6 +14,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_footer.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
+import 'package:wuselwall/features/board/ui/board_header.dart';
 import 'package:wuselwall/features/board/ui/board_meal.dart';
 import 'package:wuselwall/features/board/ui/board_next_up.dart';
 import 'package:wuselwall/features/board/ui/board_presence.dart';
@@ -427,6 +428,38 @@ void main() {
         );
       }
       expect(find.text('Heute'), findsOneWidget);
+    });
+
+    testWidgets('a board stored before a restart says the day it dates from, '
+        'under the offline banner (FR-8.10)', (t) async {
+      // Now is Wednesday 14 October, 14:05 (_pumpBoard).
+      await _pumpBoard(
+        t,
+        snapshot: BoardSnapshot(
+          board: _board(),
+          fetchedAt: DateTime(2026, 10, 12, 17, 5),
+          failure: const NetworkFailure(),
+        ),
+      );
+      expect(find.byType(BoardOfflineBanner), findsOneWidget);
+      expect(
+        find.text('zuletzt aktualisiert Mo 12.10., 17:05'),
+        findsOneWidget,
+      );
+      expect(find.text('Emma'), findsWidgets, reason: 'the week is shown');
+    });
+
+    testWidgets('a stored board shown while the first fetch is under way says '
+        'its age once that matters, without a banner', (t) async {
+      await _pumpBoard(
+        t,
+        snapshot: BoardSnapshot(
+          board: _board(),
+          fetchedAt: DateTime(2026, 10, 14, 9, 30),
+        ),
+      );
+      expect(find.byType(BoardOfflineBanner), findsNothing);
+      expect(find.text('zuletzt aktualisiert 9:30'), findsOneWidget);
     });
 
     testWidgets('pulses the next-up dot twice, then holds still', (t) async {

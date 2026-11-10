@@ -47,6 +47,8 @@ Touchez les courses dans le pied de page, puis votre prénom. Le mur ajoute uniq
 
 À partir de 21 h (ou des heures de nuit réglées pour cet appareil), le mur adopte le thème de nuit et Wusel dort. Le mur ne joue de sons que si vous les activez, et jamais la nuit. Pour éviter le marquage, l’affichage se décale de 2 pixels au plus toutes les 10 minutes (voir [Wusel et les couleurs](/fr/guide/wusel#burn-in)). Sans connexion, il conserve le dernier plan et indique la dernière actualisation, et Wusel réfléchit. Quand tout fonctionne, ces indications restent discrètes.
 
+Si la tablette redémarre pendant une panne du réseau ou du serveur, le mur affiche la dernière semaine enregistrée et la tablette des enfants la dernière journée enregistrée, avec la mention **dernière mise à jour** et l’heure, puis la date dès que cela remonte à un autre jour. Dès que la connexion revient, tout se recharge tout seul. Sans connexion, seule la liste de courses peut être modifiée.
+
 La vue des enfants possède les onglets **Ma journée**, **Emploi du temps**, **Points** et **Famille**, ainsi que **Courses** s’il est activé.
 
 ## Connecter et préparer l’appareil {#connecting}
