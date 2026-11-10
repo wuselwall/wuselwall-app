@@ -9,6 +9,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/nav_labels.dart';
 import 'package:wuselwall/core/ui/system_bars.dart';
+import 'package:wuselwall/features/board/ui/last_updated.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -118,6 +119,7 @@ class KidHome extends ConsumerWidget {
                 ),
               ),
             ),
+            const StaleStrip(),
             Expanded(
               child: SafeArea(
                 top: false,

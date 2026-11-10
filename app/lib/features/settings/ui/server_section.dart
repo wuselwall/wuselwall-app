@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/server_session.dart';
+import 'package:wuselwall/core/cache/read_cache.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_address.dart';
@@ -83,6 +84,7 @@ class ServerSection extends ConsumerWidget {
     final personal =
         ref.read(deviceProvider).value?.deviceClass == DeviceClass.personal;
     await ref.read(shoppingStoreProvider).clear();
+    await ref.read(readCacheProvider).clear();
     // Like "Sign out": a personal phone also gives up its device record.
     await (personal ? identity.signOutDevice() : identity.signOut());
     await session.leave?.call();

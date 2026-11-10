@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wuselwall/core/cache/read_cache.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>(
@@ -7,7 +8,10 @@ final supabaseClientProvider = Provider<SupabaseClient>(
 );
 
 final apiClientProvider = Provider<ApiClient>(
-  (ref) => ApiClient(ref.watch(supabaseClientProvider)),
+  (ref) => ApiClient(
+    ref.watch(supabaseClientProvider),
+    cache: ref.watch(readCacheProvider),
+  ),
 );
 
 /// The current auth state, as a stream Riverpod can watch.

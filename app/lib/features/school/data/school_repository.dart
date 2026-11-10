@@ -15,45 +15,55 @@ class SchoolRepository {
 
   Future<Result<List<SchoolRecord>>> schools() => _api.select(
     'schools',
+    cacheKey: 'schools',
     parse: SchoolRecord.fromJson,
     build: (q) => q.order('name'),
   );
 
   Future<Result<List<PeriodRecord>>> periods() => _api.select(
     'school_periods',
+    cacheKey: 'school-periods',
     parse: PeriodRecord.fromJson,
     build: (q) => q.order('starts_at', ascending: true),
   );
 
   Future<Result<List<TermRecord>>> terms() => _api.select(
     'school_terms',
+    cacheKey: 'school-terms',
     parse: TermRecord.fromJson,
     build: (q) => q.order('starts_on'),
   );
 
   Future<Result<List<SubjectRecord>>> subjects() => _api.select(
     'subjects',
+    cacheKey: 'subjects',
     parse: SubjectRecord.fromJson,
     build: (q) => q.order('name'),
   );
 
-  Future<Result<List<TimetableRecord>>> timetables() =>
-      _api.select('timetables', parse: TimetableRecord.fromJson);
+  Future<Result<List<TimetableRecord>>> timetables() => _api.select(
+    'timetables',
+    cacheKey: 'timetables',
+    parse: TimetableRecord.fromJson,
+  );
 
   Future<Result<List<LessonRecord>>> lessons() => _api.select(
     'timetable_lessons',
+    cacheKey: 'timetable-lessons',
     parse: LessonRecord.fromJson,
     build: (q) => q.order('weekday').order('period_index'),
   );
 
   Future<Result<List<ExceptionRecord>>> exceptions() => _api.select(
     'timetable_exceptions',
+    cacheKey: 'timetable-exceptions',
     parse: ExceptionRecord.fromJson,
     build: (q) => q.order('on_date'),
   );
 
   Future<Result<List<HolidayRecord>>> holidays() => _api.select(
     'school_holidays',
+    cacheKey: 'school-holidays',
     parse: HolidayRecord.fromJson,
     build: (q) => q.order('starts_on'),
   );
@@ -81,6 +91,7 @@ class SchoolRepository {
   }) => _api.function(
     'school-week',
     body: {'from': ymd(from), 'to': ymd(to)},
+    cacheKey: 'school-week:${ymd(from)}:${ymd(to)}',
     parse: (json) => SchoolWeek.fromJson(json! as Map<String, dynamic>),
   );
 

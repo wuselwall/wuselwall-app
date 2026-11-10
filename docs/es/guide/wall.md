@@ -47,6 +47,8 @@ Abre la compra desde el pie y toca tu nombre. La pared añade solo a la **lista 
 
 Desde las 21:00 (o el horario nocturno de este dispositivo) aparece el tema nocturno y Wusel duerme. La pared solo suena si activáis los sonidos, y nunca de noche. Para que nada se queme, la imagen se mueve hasta 2 píxeles cada 10 minutos (ver [Wusel y los colores](/es/guide/wusel#burn-in)). Sin conexión se conserva el último plan, se indica cuándo se actualizó y Wusel piensa. Mientras todo funciona, esa información queda discreta.
 
+Si la tableta se reinicia mientras falla la red o el servidor, la pared muestra la última semana guardada y la tableta infantil el último día guardado, con la indicación **última actualización** y la hora, y también la fecha cuando es de otro día. En cuanto vuelve la conexión, todo se recarga solo. Sin conexión solo se puede cambiar la lista de la compra.
+
 La vista infantil tiene las pestañas **Mi día**, **Horario escolar**, **Puntos** y **Familia**, y **Compra** si está activada.
 
 ## Conectar y preparar {#connecting}

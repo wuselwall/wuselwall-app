@@ -82,6 +82,8 @@ class _Chores extends FakeTasksApi {
     String fn, {
     Map<String, dynamic>? params,
     required T Function(Object? json) parse,
+    String? cacheKey,
+    Duration? patience,
   }) {
     if (fn == 'task_complete') {
       tables['point_balances'] = [

@@ -29,6 +29,9 @@ class CalendarRepository {
       'to': isoDate(to),
       if (holidays) 'holidays': true,
     },
+    // The plain windows are the child's day and the countdowns; the month view's own
+    // (with holidays) is one per month leafed through and is not stored.
+    cacheKey: holidays ? null : 'occurrences:${isoDate(from)}:${isoDate(to)}',
     parse: (json) => OccurrenceWindow.fromJson(json! as Map<String, dynamic>),
   );
 

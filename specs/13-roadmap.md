@@ -63,8 +63,10 @@ Old step 10, grouped into four pieces of work:
    unverified email address. Mail is optional; any SMTP server works, Gmail included.
 2. **Approvals on Today — built (#127/#149):** guardian card, Tasks badge and the local
    morning summary. Keep these in regression and native qualification coverage.
-3. **Offline cold start:** persist the last wall board and kid day; show their freshness
-   and recover when connectivity returns. Shopping retains its existing offline outbox.
+3. **Offline cold start — built 2026-11-10 (#128):** the device's own record, the wall
+   board and the kid day are stored on the device; after a restart without network they
+   are shown with their freshness and refetched when the server answers again. Shopping
+   retains its existing offline outbox.
 4. **Finish the journeys:** resume household setup, single-guardian MFA warning,
    notification-permission progress, wide-screen navigation and review of the existing
    deletion-page/checklist work. Retire old enrolment paths only after the supported

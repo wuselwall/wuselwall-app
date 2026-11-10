@@ -65,6 +65,8 @@ class FakeTasksApi implements ApiClient {
     String fn, {
     Map<String, dynamic>? params,
     required T Function(Object? json) parse,
+    String? cacheKey,
+    Duration? patience,
   }) async {
     calls.add((name: fn, params: params));
     await holds[fn]?.future;
@@ -85,6 +87,7 @@ class FakeTasksApi implements ApiClient {
     String name, {
     Map<String, dynamic>? body,
     required T Function(Object? json) parse,
+    String? cacheKey,
   }) async {
     calls.add((name: 'fn:$name', params: body));
     return Ok(parse(replies[name]));
@@ -99,6 +102,7 @@ class FakeTasksApi implements ApiClient {
     )?
     build,
     required T Function(Map<String, dynamic> row) parse,
+    String? cacheKey,
   }) async {
     calls.add((name: 'view:$view', params: null));
     return Ok([
