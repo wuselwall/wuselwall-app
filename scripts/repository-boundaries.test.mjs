@@ -60,7 +60,7 @@ test('docs builds are unprivileged; publishing requires main AND explicit opt-in
   }
 });
 
-test('every workflow job uses a self-hosted runner, except the docs and the deploy a family runs in its fork', () => {
+test('every workflow job uses a self-hosted runner, except the docs, the repository housekeeping and the deploy a family runs in its fork', () => {
   const dir = new URL('../.github/workflows/', import.meta.url);
   for (const file of readdirSync(dir).filter((name) => /\.ya?ml$/.test(name))) {
     const workflow = readFileSync(new URL(file, dir), 'utf8');
@@ -71,7 +71,9 @@ test('every workflow job uses a self-hosted runner, except the docs and the depl
       // (docs/server/supabase-cloud): GitHub's runners, free for a public fork.
       // docs.yml holds no secrets and needs nothing from the fleet: GitHub's runners, free
       // for this public repository.
-      if (file === 'deploy-supabase.yml' || file === 'docs.yml') assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
+      // triage.yml and release.yml only call GitHub's API (labels, milestones, tags, starting
+      // the build workflows): they run nothing a contributor wrote and hold no signing secret.
+      if (['deploy-supabase.yml', 'docs.yml', 'triage.yml', 'release.yml'].includes(file)) assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
       else assert.match(runner, /self-hosted/, `${file}: ${runner}`);
     }
   }

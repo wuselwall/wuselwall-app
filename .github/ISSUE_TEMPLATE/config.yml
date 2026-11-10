@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/wuselwall/wuselwall-app/security/advisories/new
+    about: Privately, please — not as a public issue. See SECURITY.md.
+  - name: Help with using WuselWall
+    url: https://docs.wuselwall.app/
+    about: The family guide, in German, English, French and Spanish.

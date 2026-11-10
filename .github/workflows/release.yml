@@ -1,0 +1,109 @@
+# Cuts a release from the default branch's head (CONTRIBUTING.md "Releases"): the tags
+# v<app> and server-v<server>, the app's GitHub release with generated notes, the build
+# workflows on those tags, and the milestone's close and rollover. scripts/release.mjs holds
+# the steps.
+#
+# A dry run (the default) only prints the plan. Nothing here builds or signs: the release
+# workflows it starts keep their own qualification check and the release-promotion approval.
+# The qualification is checked here first all the same, so that no tag is made for a commit
+# the builds would refuse.
+#
+# GitHub's runners: the jobs call the API and run no build; the signing secrets stay with
+# the release workflows.
+name: release
+run-name: release ${{ inputs.version || '(next milestone)' }}${{ inputs.dry_run && ' (dry run)' || '' }}
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: App version like 1.12.0 (empty = the next open release milestone)
+        type: string
+      server:
+        description: Server version step (none = no server release)
+        type: choice
+        options: [minor, patch, major, none]
+        default: minor
+      summary:
+        description: One line for the tag messages and the release text
+        type: string
+      dry_run:
+        description: Only print the plan
+        type: boolean
+        default: true
+permissions: {}
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+      issues: read
+    outputs:
+      app_tag: ${{ steps.plan.outputs.app_tag }}
+      app_previous: ${{ steps.plan.outputs.app_previous }}
+      server_tag: ${{ steps.plan.outputs.server_tag }}
+      milestone: ${{ steps.plan.outputs.milestone }}
+      next: ${{ steps.plan.outputs.next }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - id: plan
+        run: node scripts/release.mjs plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_SERVER: ${{ inputs.server }}
+      # The same check the release workflows make. A dry run reports it without failing.
+      - name: Qualification of this commit
+        continue-on-error: ${{ inputs.dry_run }}
+        run: node qualification/promotion.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }
+
+  tag:
+    needs: plan
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write   # the tags and the app's GitHub release
+      actions: write    # starting the build workflows on the tags
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false, sparse-checkout: scripts }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node scripts/release.mjs tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APP_TAG: ${{ needs.plan.outputs.app_tag }}
+          APP_PREVIOUS: ${{ needs.plan.outputs.app_previous }}
+          SERVER_TAG: ${{ needs.plan.outputs.server_tag }}
+          RELEASE_SUMMARY: ${{ inputs.summary }}
+
+  milestone:
+    needs: [plan, tag]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false, sparse-checkout: scripts }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node scripts/release.mjs rollover
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APP_TAG: ${{ needs.plan.outputs.app_tag }}
+          MILESTONE: ${{ needs.plan.outputs.milestone }}
+          NEXT_MILESTONE: ${{ needs.plan.outputs.next }}
