@@ -1,0 +1,39 @@
+name: Feature
+description: Something a family should be able to do, or do more easily
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        One outcome per issue. A maintainer puts it in a release milestone; until then it
+        waits in `needs-triage`. See CONTRIBUTING.md.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Who can do what afterwards, in a sentence or two. Not the implementation.
+    validations: { required: true }
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: The situation at home (or on the server) that makes this worth building.
+    validations: { required: true }
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance
+      description: Checkboxes someone can tick by looking at the app or running a test.
+      value: |
+        - [ ] 
+    validations: { required: true }
+  - type: checkboxes
+    id: touches
+    attributes:
+      label: Touches
+      description: Helps to see what the change needs besides code.
+      options:
+        - label: Texts a family reads (German, English, French and Spanish in the same change)
+        - label: The server (a migration, an Edge Function, the app–server contract)
+        - label: A screen of the family guide (`docs/`)
+        - label: A specification or an ADR (`specs/`)

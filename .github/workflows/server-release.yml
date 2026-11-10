@@ -14,6 +14,8 @@
 # servers rely on the minisign signature, since they have no `gh`.
 name: server-release
 on:
+  # release.yml starts it on the tag: a tag made by a workflow's token starts nothing itself.
+  workflow_dispatch:
   push:
     tags: ['server-v*']
 permissions:
@@ -23,6 +25,8 @@ cache-mode: none
 
 jobs:
   qualification:
+    # "Run workflow" offers branches too; a server release exists only for its tag.
+    if: startsWith(github.ref, 'refs/tags/server-v')
     runs-on: [self-hosted, Linux, build]
     timeout-minutes: 5
     steps:
@@ -128,7 +132,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           version=${GITHUB_REF_NAME#server-v}
+          # What changed since the server release before this one, by the categories of
+          # .github/release.yml.
+          previous=$(gh api "repos/$GITHUB_REPOSITORY/git/matching-refs/tags/server-v" --jq '.[].ref' \
+            | sed 's#^refs/tags/##' | grep -E '^server-v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V \
+            | grep -B1 -x "$GITHUB_REF_NAME" | head -1)
+          notes=(--generate-notes)
+          if [ -n "$previous" ] && [ "$previous" != "$GITHUB_REF_NAME" ]; then notes+=(--notes-start-tag "$previous"); fi
           gh release create "$GITHUB_REF_NAME" "dist/wuselwall-server-$version.tar.gz" \
             dist/SHA256SUMS dist/SHA256SUMS.minisig \
-            --title "WuselWall server $version" \
+            --title "WuselWall server $version" --latest "${notes[@]}" \
             --notes "Install or update: see https://wuselwall.app/docs/en/server/ (German: https://wuselwall.app/docs/server/). SHA256SUMS is signed with minisign; how to check a download by hand: https://wuselwall.app/docs/en/server/rented-server#checking-a-download"
