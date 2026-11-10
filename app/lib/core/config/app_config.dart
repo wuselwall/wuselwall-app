@@ -14,7 +14,7 @@ class AppConfig {
     required this.environment,
     required this.supabaseUrl,
     required this.supabasePublishableKey,
-    this.passkeys = true,
+    this.passkeys = false,
     this.server,
   });
 
@@ -36,14 +36,17 @@ class AppConfig {
     environment: String.fromEnvironment('ENV', defaultValue: 'dev'),
     supabaseUrl: String.fromEnvironment('SUPABASE_URL'),
     supabasePublishableKey: String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY'),
+    passkeys: bool.fromEnvironment('ENABLE_PASSKEYS'),
   );
 
   final String environment;
   final String supabaseUrl;
   final String supabasePublishableKey;
 
-  /// Whether passkeys may be offered: only in a build that names its own server,
-  /// whose associated domains it controls. A chosen server never gets them.
+  /// Native verification builds may explicitly opt in with `ENABLE_PASSKEYS=true`.
+  /// Ordinary builds default off until native registration/sign-in/recovery is verified.
+  /// Only a build naming its own server can opt in (associated domains, ADR-018);
+  /// a chosen server never gets them.
   final bool passkeys;
 
   /// The chosen server, or null for a build that names its own (`SUPABASE_URL`).

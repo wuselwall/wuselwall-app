@@ -20,13 +20,17 @@ Zusätzlich zum Passwort verlangt WuselWall bei jeder Anmeldung einen **6-stelli
 
 Ab dann fragt jede neue Anmeldung nach dem Code; ohne ihn sieht ein Handy **keine** Daten des Haushalts. Mit **Ausschalten** nimmst du es wieder zurück.
 
+Wenn nur ein Elternteil ein angemeldetes Konto hat, erscheint vor dem Einschalten eine Warnung: Ohne Zugang zur Authenticator-App kann kein zweiter Elternteil den zweiten Faktor zurücksetzen. Lade zuerst einen zweiten Elternteil ein und lass ihn sich anmelden, oder sichere deinen Authenticator getrennt. Sonst brauchst du Hilfe von der Person, die euren Server betreibt. Du kannst abbrechen oder trotzdem einschalten.
+
+<Shot name="totp-recovery-warning" alt="Warnung vor dem Einschalten ohne zweiten angemeldeten Elternteil" />
+
 ## PIN für Eltern
 
 Die 6-stellige PIN, die du auf geteilten Geräten eingibst ([Wer bist du?](/guide/who-are-you)). Hier setzt du eine **neue PIN** – auch wenn die alte nach zu vielen Fehlversuchen **gesperrt** ist. Nur dein eigenes, angemeldetes Handy darf das.
 
 ## Passkey
 
-Mit einem **Passkey** meldest du dich per Fingerabdruck oder Gesicht statt mit dem Passwort an. Die Funktion ist neu und noch nicht auf allen Geräten verfügbar.
+Passkeys sind in der normalen App noch nicht verfügbar. Sie werden erst nach der Prüfung auf echten Geräten angeboten.
 
 ## Gut zu wissen
 

@@ -162,7 +162,8 @@ void main() {
         scrollable: find.byType(Scrollable).first,
       );
       expect(find.text('Zwei-Faktor-Anmeldung'), findsOneWidget);
-      expect(find.text('Passkey'), findsOneWidget);
+      // Native passkey verification is still pending; ordinary builds do not offer it.
+      expect(find.text('Passkey'), findsNothing);
     });
   });
 }

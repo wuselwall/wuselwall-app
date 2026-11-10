@@ -65,14 +65,18 @@ Old step 10, grouped into four pieces of work:
    morning summary. Keep these in regression and native qualification coverage.
 3. **Offline cold start:** persist the last wall board and kid day; show their freshness
    and recover when connectivity returns. Shopping retains its existing offline outbox.
-4. **Finish the journeys:** resume household setup, single-guardian MFA warning,
-   notification-permission progress, wide-screen navigation and review of the existing
-   deletion-page/checklist work. Retire old enrolment paths only after the supported
-   previous app release no longer needs them.
+4. **Finish the journeys — built 2026-11-10 (#129):** local H1 recovery, sole-guardian
+   TOTP warning, permission-based reminder progress and an adult rail from 840 logical
+   pixels, with #117 Back/tab regressions retained. Passkeys remain off pending native
+   verification. [Checklist review](release-checklist.md#129-implementation-review--2026-11-10)
+   records remaining evidence. Legacy retirement is conditional follow-up
+   [#221](https://github.com/wuselwall/wuselwall-app/issues/221).
 
 Member and shopping editing are verification coverage, not new implementation tasks.
 The public account-deletion page belongs to the separate website repository; confirm its
-content and store URL, and coordinate a separate website change if needed.
+content and store URL. The 2026-11-10 source review found no deletion-request page;
+[website #17](https://github.com/wuselwall/wuselwall-website/issues/17) owns the page,
+publication/store URL evidence and the separate DE/EN public-progress update.
 
 ## 2 — A lighter day
 

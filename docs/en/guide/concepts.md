@@ -19,9 +19,15 @@ The adults' view has these areas:
 
 **Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open. The small [rituals](/en/guide/rituals) join in: the nearest countdown under **Looking forward**, the children's meal wishes, the question at the table during the meal, **Our week** on Sunday evening, and on a birthday a card with [Wusel](/en/guide/wusel). Appointment times appear above their titles, so they stay readable with larger text.
 
+On a wide screen, the six areas appear in a navigation rail on the left; on a phone, they appear at the bottom. Rotating the device or resizing the window keeps the same area selected. Both the Settings back arrow and your device’s Back action return to that area.
+
+<Shot name="adult-navigation" alt="The adult view with navigation on the left on a wide screen" wide />
+
 <Shot name="today" alt="The Today tab with the Getting started card, the appointments and the warm meal" />
 
-As long as something from the setup is missing, the **Getting started** card is at the top: invite your partner, connect the family tablet, set up the wall display, set your PIN, subscribe to the calendar and add the timetable. Each item disappears once it is done. If you do not need one, tap **Not needed**. On narrow screens or with larger text, buttons appear below the message. Parents see the card on their own phone and on shared devices; under **Settings → Help & about → Getting started** it comes back.
+As long as something from the setup is missing, the **Getting started** card is at the top: invite your partner, connect the family tablet, set up the wall display, set your PIN, subscribe to the calendar and add the timetable. Done items stay checked while another step is still open. If you do not need one, tap **Not needed**. On narrow screens or with larger text, buttons appear below the message. Parents see the card on their own phone and on shared devices; under **Settings → Help & about → Getting started** it comes back.
+
+**Turn on reminders** is also a first step on your personal phone. Granting notification permission marks it done and keeps it in the progress total. Declining leaves it open. **Not needed** hides the step on this device; it does not grant permission. If you change permission in system settings, the progress updates when you return to the app.
 
 ## The household
 

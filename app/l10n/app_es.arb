@@ -3170,5 +3170,6 @@
   "accountNoticeMfaResetYou": "{name} ha restablecido tu inicio de sesión en dos pasos",
   "accountNoticeMfaReset": "{name} ha restablecido el inicio de sesión en dos pasos de {target}",
   "accountNoticePasswordResetYou": "{name} ha creado un código de contraseña para ti",
-  "accountNoticePasswordReset": "{name} ha creado un código de contraseña para {target}"
+  "accountNoticePasswordReset": "{name} ha creado un código de contraseña para {target}",
+  "totpSingleGuardianWarning": "Eres el único padre o madre con una cuenta conectada. Si pierdes el acceso a tu aplicación de autenticación, nadie más podrá restablecer tu segundo factor. Invita primero a otro padre o madre y pídele que inicie sesión, o guarda una copia de seguridad separada de tu autenticador. De lo contrario, necesitarás ayuda de quien administra vuestro servidor. ¿Activar de todos modos?"
 }

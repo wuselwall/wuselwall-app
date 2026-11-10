@@ -531,7 +531,7 @@ void main() {
         ),
       );
       await openTab(t, 'Kalender');
-      final bar = find.byType(NavigationBar);
+      final bar = homeNavigation();
       expect(bar, findsOneWidget);
       expect(find.text('Milch'), findsNothing);
 

@@ -21,6 +21,7 @@ import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/household/application/household_providers.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/household/data/new_family_draft_store.dart';
 import 'package:wuselwall/features/household/domain/device_label.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -52,6 +53,10 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   late bool _needsCode;
   String? _setupCode;
   var _loadingSetup = true;
+  var _loadingDraft = true;
+  late final NewFamilyDraftStore _draftStore;
+  late final String _draftServer;
+  String? _draftUser;
   var _seeded = false;
   var _swatch = 0;
   var _examples = true;
@@ -79,6 +84,10 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
         account?.creation != HouseholdCreation.open &&
         !(account?.setupClaimed ?? false);
     _name.text = account?.givenName ?? '';
+    _draftStore = ref.read(newFamilyDraftStoreProvider);
+    _draftServer = ref.read(appConfigProvider).supabaseUrl;
+    _draftUser = account?.userId;
+    unawaited(_loadDraft());
     unawaited(_loadTimezone());
     unawaited(_loadSetup());
     _setupExpiryTimer = Timer.periodic(const Duration(minutes: 1), (_) {
@@ -108,6 +117,47 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     super.dispose();
   }
 
+  Future<void> _loadDraft() async {
+    final user = _draftUser;
+    final draft = user == null
+        ? null
+        : await _draftStore.read(_draftServer, user);
+    if (!mounted) return;
+    if (draft != null) {
+      _family.text = draft.familyName;
+      _name.text = draft.displayName;
+      _swatch = draft.swatch.clamp(0, MemberPalette.swatches.length - 1);
+      _examples = draft.seedExamples;
+    }
+    _family.addListener(_saveDraft);
+    _name.addListener(_saveDraft);
+    setState(() => _loadingDraft = false);
+  }
+
+  void _saveDraft() {
+    final user = _draftUser;
+    if (_loadingDraft || user == null || _busy) return;
+    unawaited(
+      _draftStore.save(
+        _draftServer,
+        user,
+        NewFamilyDraft(
+          familyName: _family.text,
+          displayName: _name.text,
+          swatch: _swatch,
+          seedExamples: _examples,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _clearDraft() async {
+    final user = _draftUser;
+    // Stop late edits from writing again while leaving this form.
+    _draftUser = null;
+    if (user != null) await _draftStore.clear(_draftServer, user);
+  }
+
   Future<void> _loadSetup() async {
     final server = Uri.tryParse(ref.read(appConfigProvider).supabaseUrl);
     final code = server == null
@@ -132,7 +182,12 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   }
 
   Future<void> _submit() async {
-    if (_busy || _loadingSetup || !_form.currentState!.validate()) return;
+    if (_busy ||
+        _loadingSetup ||
+        _loadingDraft ||
+        !_form.currentState!.validate()) {
+      return;
+    }
     setState(() => _busy = true);
     if (_setupCode != null) {
       await _loadSetup();
@@ -173,6 +228,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     );
     if (mounted) setState(() => _creating = false);
     if (result is Ok) {
+      await _clearDraft();
       await setupStore.clear();
       setupSignal.value = false;
     }
@@ -216,6 +272,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   }
 
   Future<void> _signOut() async {
+    await _clearDraft();
     await ref.read(setupStoreProvider).clear();
     if (mounted) ref.read(serverSessionProvider).setupPending.value = false;
     if (mounted) await ref.read(identityRepositoryProvider).signOut();
@@ -266,7 +323,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                 children: [
                   TextFormField(
                     controller: _family,
-                    enabled: !_busy,
+                    enabled: !_busy && !_loadingDraft,
                     decoration: InputDecoration(
                       labelText: l10n.householdNewFamilyName,
                     ),
@@ -275,7 +332,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                   const SizedBox(height: Tokens.space4),
                   TextFormField(
                     controller: _name,
-                    enabled: !_busy,
+                    enabled: !_busy && !_loadingDraft,
                     decoration: InputDecoration(
                       labelText: l10n.householdNewYourName,
                     ),
@@ -294,9 +351,12 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                           swatch: swatch,
                           label: l10n.householdNewColourOption('${i + 1}'),
                           selected: i == _swatch,
-                          onTap: _busy
+                          onTap: _busy || _loadingDraft
                               ? null
-                              : () => setState(() => _swatch = i),
+                              : () {
+                                  setState(() => _swatch = i);
+                                  _saveDraft();
+                                },
                         ),
                     ],
                   ),
@@ -315,7 +375,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                     const SizedBox(height: Tokens.space4),
                     TextFormField(
                       controller: _founderCode,
-                      enabled: !_busy,
+                      enabled: !_busy && !_loadingDraft,
                       decoration: InputDecoration(
                         labelText: l10n.householdNewFounderCode,
                         helperText: l10n.householdNewFounderHelp,
@@ -335,9 +395,12 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                   const SizedBox(height: Tokens.space2),
                   CheckboxListTile(
                     value: _examples,
-                    onChanged: _busy
+                    onChanged: _busy || _loadingDraft
                         ? null
-                        : (v) => setState(() => _examples = v ?? false),
+                        : (v) {
+                            setState(() => _examples = v ?? false);
+                            _saveDraft();
+                          },
                     title: Text(l10n.householdSeedExamples),
                     contentPadding: EdgeInsets.zero,
                     controlAffinity: ListTileControlAffinity.leading,
@@ -345,7 +408,9 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                   const SizedBox(height: Tokens.space4),
                   FilledButton(
                     key: const ValueKey('new-family-create'),
-                    onPressed: _busy || _loadingSetup ? null : _submit,
+                    onPressed: _busy || _loadingSetup || _loadingDraft
+                        ? null
+                        : _submit,
                     child: _creating
                         ? BusyButtonLabel(label: l10n.householdNewCreating)
                         : Text(l10n.householdNewCreate),
@@ -369,6 +434,8 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                         onPressed: _busy && !_stalled
                             ? null
                             : () async {
+                                await _clearDraft();
+                                if (!mounted) return;
                                 await ref.read(setupStoreProvider).clear();
                                 if (mounted) {
                                   ref

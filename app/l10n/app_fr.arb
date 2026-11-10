@@ -3170,5 +3170,6 @@
   "accountNoticeMfaResetYou": "{name} a réinitialisé ta double authentification",
   "accountNoticeMfaReset": "{name} a réinitialisé la double authentification de {target}",
   "accountNoticePasswordResetYou": "{name} a créé un code de mot de passe pour toi",
-  "accountNoticePasswordReset": "{name} a créé un code de mot de passe pour {target}"
+  "accountNoticePasswordReset": "{name} a créé un code de mot de passe pour {target}",
+  "totpSingleGuardianWarning": "Tu es le seul parent avec un compte connecté. Si tu perds l’accès à ton application d’authentification, aucun autre parent ne pourra réinitialiser ton second facteur. Invite d’abord un deuxième parent et demande-lui de se connecter, ou conserve une sauvegarde séparée de ton authentificateur. Sinon, il faudra l’aide de la personne qui gère votre serveur. Activer quand même ?"
 }

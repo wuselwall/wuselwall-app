@@ -177,9 +177,9 @@ final notificationPermissionProvider = FutureProvider.autoDispose<bool>((
   return scheduler.permissionGranted();
 });
 
-/// Whether Today shows the "Erinnerungen einschalten" row: a guardian on a personal
-/// device, a platform that can show reminders, no permission yet, and not dismissed.
-final reminderCardProvider = FutureProvider.autoDispose<bool>((ref) async {
+/// The local setup step: true when permission is granted, false while open, null
+/// when ineligible or dismissed. Granting permission keeps a completed step in progress.
+final reminderSetupProvider = FutureProvider.autoDispose<bool?>((ref) async {
   ref.watch(deviceKeyProvider);
   final device = ref.watch(deviceProvider).value;
   final actor = ref.watch(actingProfileProvider);
@@ -188,14 +188,16 @@ final reminderCardProvider = FutureProvider.autoDispose<bool>((ref) async {
       actor == null ||
       !scheduler.available ||
       device.deviceClass != DeviceClass.personal) {
-    return false;
+    return null;
   }
   final members = await ref.watch(membersProvider.future);
   final isGuardian =
       members.where((m) => m.id == actor).firstOrNull?.isGuardian ?? false;
-  if (!isGuardian) return false;
-  if (await ref.watch(notificationPermissionProvider.future)) return false;
-  return !await ref.watch(reminderDismissalStoreProvider).dismissed();
+  if (!isGuardian) return null;
+  if (await ref.watch(notificationPermissionProvider.future)) return true;
+  return await ref.watch(reminderDismissalStoreProvider).dismissed()
+      ? null
+      : false;
 });
 
 /// Keeps the phone's scheduled notifications in step with the plan. Read once at app
@@ -265,7 +267,7 @@ Future<bool> enableReminders(WidgetRef ref) async {
   final granted = await scheduler.requestPermission();
   ref
     ..invalidate(notificationPermissionProvider)
-    ..invalidate(reminderCardProvider)
+    ..invalidate(reminderSetupProvider)
     ..invalidate(reminderPlanProvider);
   return granted;
 }
@@ -273,5 +275,5 @@ Future<bool> enableReminders(WidgetRef ref) async {
 /// The row's "Brauchen wir nicht": hides it on this phone for good.
 Future<void> dismissReminderCard(WidgetRef ref) async {
   await ref.read(reminderDismissalStoreProvider).dismiss();
-  ref.invalidate(reminderCardProvider);
+  ref.invalidate(reminderSetupProvider);
 }

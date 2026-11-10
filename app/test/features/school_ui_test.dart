@@ -30,7 +30,7 @@ Future<void> _openSchedule(WidgetTester t) async {
   // By its icon: on a phone or at large text the label is the short "Schule".
   await t.tap(
     find.descendant(
-      of: find.byType(NavigationBar),
+      of: homeNavigation(),
       matching: find.byIcon(Icons.school_outlined),
     ),
   );

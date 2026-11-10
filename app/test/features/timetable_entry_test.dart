@@ -74,7 +74,7 @@ void main() {
         final monday = container.read(selectedWeekProvider);
         await t.tap(
           find.descendant(
-            of: find.byType(NavigationBar),
+            of: homeNavigation(),
             matching: find.byIcon(Icons.school_outlined),
           ),
         );
@@ -167,7 +167,7 @@ void main() {
     }
     await t.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: homeNavigation(),
         matching: find.byIcon(Icons.school_outlined),
       ),
     );
@@ -201,7 +201,7 @@ void main() {
     );
     await t.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: homeNavigation(),
         matching: find.byIcon(Icons.school_outlined),
       ),
     );

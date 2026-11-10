@@ -71,7 +71,7 @@ FakeTasksApi _pending() => FakeTasksApi(
 
 /// The badge on the Tasks destination of the navigation bar, if any shows.
 Finder _tasksBadge() => find.descendant(
-  of: find.byType(NavigationBar),
+  of: homeNavigation(),
   matching: find.byWidgetPredicate((w) => w is Badge && w.isLabelVisible),
 );
 
@@ -183,8 +183,7 @@ void main() {
     await t.tap(find.text(_de.todayApprovalsTitle));
     await t.pumpAndSettle();
 
-    final bar = t.widget<NavigationBar>(find.byType(NavigationBar));
-    expect(bar.selectedIndex, 3);
+    expect(selectedHomeDestination(t), 3);
     // The Freigaben segment's own headings, not the Heute segment.
     expect(find.text(_de.tasksCheckChores), findsOneWidget);
     expect(find.text(_de.tasksRewardRequests), findsOneWidget);

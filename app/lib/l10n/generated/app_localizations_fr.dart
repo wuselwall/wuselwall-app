@@ -6808,4 +6808,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String accountNoticePasswordReset(String name, String target) {
     return '$name a créé un code de mot de passe pour $target';
   }
+
+  @override
+  String get totpSingleGuardianWarning =>
+      'Tu es le seul parent avec un compte connecté. Si tu perds l’accès à ton application d’authentification, aucun autre parent ne pourra réinitialiser ton second facteur. Invite d’abord un deuxième parent et demande-lui de se connecter, ou conserve une sauvegarde séparée de ton authentificateur. Sinon, il faudra l’aide de la personne qui gère votre serveur. Activer quand même ?';
 }

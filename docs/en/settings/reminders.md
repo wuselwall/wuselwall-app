@@ -19,3 +19,5 @@ The first time you switch them on, the phone asks for permission to show notific
 ::: tip On the wall display
 The wall display has no reminders of its own. Its appointments are shown on the week anyway.
 :::
+
+**Turn on reminders** is also a first step on your personal phone. Granting notification permission marks it done and keeps it in the progress total. Declining leaves it open. **Not needed** hides the step on this device; it does not grant permission. If you change permission in system settings, the progress updates when you return to the app.

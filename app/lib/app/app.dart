@@ -153,7 +153,7 @@ class _ReminderHostState extends ConsumerState<_ReminderHost>
     ref
       ..invalidate(reminderPlanProvider)
       ..invalidate(notificationPermissionProvider)
-      ..invalidate(reminderCardProvider);
+      ..invalidate(reminderSetupProvider);
   }
 
   @override

@@ -11357,6 +11357,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} created a password code for {target}'**
   String accountNoticePasswordReset(String name, String target);
+
+  /// No description provided for @totpSingleGuardianWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the only parent with a signed-in account. If you lose access to your authenticator, another parent cannot reset your second factor. Invite a second parent and have them sign in first, or keep a separate backup of your authenticator. Otherwise you will need help from whoever runs your server. Turn on anyway?'**
+  String get totpSingleGuardianWarning;
 }
 
 class _AppLocalizationsDelegate

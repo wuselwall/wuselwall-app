@@ -18,13 +18,17 @@ Además de la contraseña, se pide un **código de seis cifras** de una app de a
 
 Cada nueva sesión pedirá ese código antes de acceder a datos familiares. Puedes desactivarlo en el mismo lugar.
 
+Si solo un padre o madre tiene una cuenta conectada, aparece una advertencia antes de activar esta opción: sin tu autenticador, nadie más puede restablecer tu segundo factor. Invita primero a otro padre o madre y pídele que inicie sesión, o guarda una copia de seguridad separada de tu autenticador. De lo contrario, necesitarás ayuda de quien administra vuestro servidor. Puedes cancelar o activar de todos modos.
+
+<Shot name="totp-recovery-warning" alt="Advertencia antes de activar sin otro padre o madre con una cuenta conectada" />
+
 ## PIN de los padres {#guardian-pin}
 
 El PIN de seis cifras protege acciones en [dispositivos compartidos](/es/guide/who-are-you). Tu móvil personal conectado permite poner uno nuevo, aunque el antiguo esté bloqueado.
 
 ## Clave de acceso {#passkey}
 
-Una clave de acceso sustituye la contraseña por huella o rostro. No está disponible en todos los dispositivos ni instalaciones; usa los métodos que ofrezca tu app.
+Las claves de acceso todavía no están disponibles en la aplicación habitual. Se ofrecerán después de verificarlas en dispositivos reales.
 
 ## Conviene recordar {#good-to-know}
 

@@ -39,6 +39,7 @@ import 'package:wuselwall/features/calendar/data/event_templates_repository.dart
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/household/data/household_leave_repository.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/household/data/new_family_draft_store.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/pairing_repository.dart';
@@ -103,10 +104,9 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
 
 /// Every repository and session provider replaced by its in-memory demo.
 /// [scenario]: setup | newfamily (signed in, no family yet) | adult | kid | kidshopping (kid,
-/// with the Shopping tab switched on) | kiosk, and an
-/// adult variant for the docs: noschool (no school yet). The family's names follow
-/// the device's language, as the
-/// app's own text does.
+/// with the Shopping tab switched on) | kiosk. Adult variants for the docs: noschool
+/// (no school yet), soloparent (TOTP warning). The family's names follow the device's
+/// language, as the app's own text does.
 List<Override> demoOverrides({
   String scenario = 'adult',
   List<Locale>? locales,
@@ -148,8 +148,16 @@ List<Override> _overrides(
   sessionUserIdProvider.overrideWithValue(
     scenario == 'setup' ? null : 'demo-user',
   ),
+  newFamilyDraftStoreProvider.overrideWithValue(_DemoDraftStore()),
   identityRepositoryProvider.overrideWithValue(
-    DemoIdentityRepository(device: _device(scenario)),
+    DemoIdentityRepository(
+      device: _device(scenario),
+      members: scenario == 'soloparent'
+          ? DemoData.members
+                .where((m) => !m.isGuardian || m.id == DemoData.papa)
+                .toList()
+          : null,
+    ),
   ),
   pairingRepositoryProvider.overrideWithValue(DemoPairingRepository()),
   invitationRepositoryProvider.overrideWithValue(DemoInvitationRepository()),
@@ -218,3 +226,19 @@ List<Override> _overrides(
     settingsView ?? MemorySettingsViewStore(),
   ),
 ];
+
+/// The demo never writes the real local onboarding draft.
+class _DemoDraftStore extends NewFamilyDraftStore {
+  NewFamilyDraft? _draft;
+  @override
+  Future<NewFamilyDraft?> read(String server, String userId) async => _draft;
+  @override
+  Future<void> save(String server, String userId, NewFamilyDraft draft) async {
+    _draft = draft;
+  }
+
+  @override
+  Future<void> clear(String server, String userId) async {
+    _draft = null;
+  }
+}

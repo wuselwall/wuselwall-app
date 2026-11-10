@@ -77,6 +77,9 @@ for (const [lang, chooseView] of Object.entries(CALENDAR_VIEW)) T[lang].chooseVi
 
 async function open(page, scenario, route = '') {
   // still=1: nothing moves and Wusel's words are fixed, so every run gives the same picture.
+  // A hash-only navigation can leave the previous modal open. Recreate the document
+  // before reopening for dark mode, so its actions start from the underlying page.
+  if (page.url() !== 'about:blank') await page.goto('about:blank');
   await page.goto(`${base}/?scenario=${scenario}&still=1${route ? `#${route}` : ''}`);
   await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
   await page.locator('flt-semantics-placeholder').evaluate((e) => e.click()).catch(() => {});
@@ -94,14 +97,14 @@ const tapNode = async (page, role, name) => {
   await page.getByRole(role, { name, exact: true }).first().dispatchEvent('click');
   await settle(page);
 };
-// Adult navigation destinations are in the bottom bar (a NavigationBar, role depends on the
+// Adult navigation uses a bottom bar or wide-screen rail (the role depends on the
 // Flutter version), and list tiles may have no button role: match by name in both roles,
-// and by aria-label when the role is missing. A substring match tolerates a suffix such as "Tab 2 of 5",
+// and by aria-label when the role is missing. A substring match tolerates a suffix such as "Tab 2 of 6",
 // but it also matches cards that mention the name (the Today card "Warmes Essen … Einkaufsliste"),
 // so an exact match always wins and the substring is only the fallback, on buttons and tabs.
 const anyNamed = (page, name, exact) => page.getByRole('button', { name, exact }).or(page.getByRole('tab', { name, exact }))
   .or(page.locator(`flt-semantics[aria-label${exact ? '=' : '*='}"${name}"]`));
-const tapAny = async (page, name, { exact = true } = {}) => {
+const tapAny = async (page, name, { exact = false } = {}) => {
   const target = (await anyNamed(page, name, true).count()) ? anyNamed(page, name, true) : anyNamed(page, name, exact);
   await target.first().dispatchEvent('click');
   await settle(page);
@@ -120,9 +123,9 @@ const showAdvanced = async (page, t) => {
     .or(page.locator(`flt-semantics[aria-label="${name}"]`)).first().dispatchEvent('click');
   await settle(page);
 };
-// The Stundenplan in the bottom bar: its full name where it fits, the short one ("Schule") on a phone.
+// The timetable in the bar or rail: full name where it fits, short name ("Schule") on a phone.
 const openSchedule = async (page, t) => {
-  await tapAny(page, (await anyNamed(page, t.schedule, true).count()) ? t.schedule : t.scheduleNav);
+  await tapAny(page, (await anyNamed(page, t.schedule, false).count()) ? t.schedule : t.scheduleNav);
 };
 // A school action: a button where the bar has room, an item of the ⋮ menu on a phone.
 const schoolAction = async (page, t, name) => {
@@ -297,6 +300,7 @@ const shots = [
   { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editTimetable); await press(p, t.editorSchool); await p.mouse.move(2, 2); await settle(p, 1200); } },
   // The adult home opens on Today, the first destination.
   { name: 'today', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.today) },
+  { name: 'adult-navigation', scenario: 'adult', viewport: TABLET },
   // The school page's settings icon opens the school form; the region field opens the picker.
   { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editSchool); await tapAny(p, t.region, { exact: false }); } },
   { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editSchool); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
@@ -345,6 +349,14 @@ const shots = [
   { name: 'settings-sign-in', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await showAdvanced(p, t); await openGroup(p, t.gAccount); await scrollUntil(p, t.setPassword); } },
   // A guardian's phone approves new devices (pair-approve); the code is the way for an older device.
   { name: 'settings-code', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await showAdvanced(p, t); await openGroup(p, t.gDevices); await scrollUntil(p, t.oldCode); await tapAny(p, t.oldCode); await p.getByRole('textbox', { name: t.deviceName }).fill(t.kitchenTablet); await press(p, t.createCode); } },
+  { name: 'totp-recovery-warning', scenario: 'soloparent', viewport: PHONE, route: '/settings/account', reopenForDark: true, steps: async (p, t) => {
+    const label = { de: 'Einschalten', en: 'Turn on', fr: 'Activer', es: 'Activar' };
+    const lang = Object.keys(T).find((lang) => T[lang] === t);
+    await scrollUntil(p, label[lang]);
+    await press(p, label[lang]);
+    const warning = { de: /Du hast als einziger Elternteil/, en: /You are the only parent/, fr: /Tu es le seul parent/, es: /Eres el único padre o madre/ };
+    await p.getByText(warning[lang]).waitFor({ state: 'visible' });
+  } },
   { name: 'new-family', scenario: 'newfamily', viewport: PHONE },
   // The new device's pairing screen, reached from the front door.
   { name: 'pair-device', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.pairFront) },

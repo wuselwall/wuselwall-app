@@ -68,6 +68,8 @@ Si vous avez ouvert le lien ou le QR code de configuration, ou saisi la clé sou
 
 <Shot name="new-family" alt="Le formulaire de création d’une famille" />
 
+Si vous fermez l’application ici, le nom de la famille, votre prénom, votre couleur et votre choix d’exemples restent sur cet appareil. Au prochain démarrage avec le même compte et le même serveur, vous reprenez ici. La création de la famille, la déconnexion ou le passage à une invitation efface le brouillon. Une clé de configuration saisie ici n’est pas enregistrée dans le brouillon.
+
 Touchez **Créer la famille**. Si la confirmation prend plus de 15 secondes, l’app propose de signaler une invitation ou de se déconnecter. La création reste bloquée pour éviter un doublon ; si la confirmation arrive plus tard, l’app continue automatiquement.
 
 La page suivante demande qui fait encore partie de la famille. Ajoutez les enfants et les adultes par leur prénom ; vous inviterez les adultes ensuite. Vous pouvez aussi passer cette étape. Ce téléphone devient votre appareil personnel, avec un nom automatique modifiable dans les paramètres. L’onglet **Aujourd’hui** s’ouvre.
@@ -103,5 +105,5 @@ Un parent approuve le nouvel appareil sur son téléphone :
 Le code QR contient aussi le serveur : la caméra de votre téléphone peut donc ouvrir directement la confirmation dans l’app. Le code dure **10 minutes** et ne sert **qu’une fois**. En cas d’échec, recommencez sur le nouvel appareil. L’écran mural présente ensuite une courte [liste de préparation](/fr/guide/wall).
 
 ::: tip Appareils plus anciens
-Dans **Paramètres → Avancés → Appareils**, **Créer un code pour un ancien appareil** permet encore de connecter une ancienne version.
+Dans **Paramètres → Avancés → Appareils**, **Créer un code pour un ancien appareil** permet encore de connecter une ancienne version. Cette option reste disponible tant que des versions plus anciennes encore prises en charge en ont besoin.
 :::

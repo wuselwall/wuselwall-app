@@ -6777,6 +6777,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String accountNoticePasswordReset(String name, String target) {
     return '$name hat einen Passwort-Code für $target erstellt';
   }
+
+  @override
+  String get totpSingleGuardianWarning =>
+      'Du hast als einziger Elternteil ein angemeldetes Konto. Wenn du den Zugang zu deiner Authenticator-App verlierst, kann kein anderer Elternteil deinen zweiten Faktor zurücksetzen. Lade zuerst einen zweiten Elternteil ein und lass ihn sich anmelden, oder sichere deinen Authenticator getrennt. Sonst brauchst du Hilfe von der Person, die euren Server betreibt. Trotzdem einschalten?';
 }
 
 /// The translations for German, as used in Austria (`de_AT`).

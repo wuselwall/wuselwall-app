@@ -493,7 +493,9 @@ guardian's phone approves it.*
   **Lost the authenticator?** Another guardian removes the factor from their own phone
   (Einstellungen → Mitglieder → person → *Zwei-Faktor zurücksetzen*, a guardian action,
   audited). A household with a single guardian is told so when enabling TOTP, and is
-  pointed at a passkey or a second guardian as the backup (not built yet, step 10.7). Without either, recovery is a
+  pointed at a second signed-in guardian or a separate authenticator backup (built
+  2026-11-10, #129). Passkeys remain off by default pending native verification; only
+  a fixed-server verification build may opt in with `ENABLE_PASSKEYS=true`. Without a backup, recovery is a
   support request to the operator.
 
 ## J6 — Leave
@@ -535,7 +537,9 @@ the work.
 
 *Built 2026-10-14:* the card with the items above except the passkey, which waits for
 passkeys to be verified on a real device; the reminders row followed on 2026-10-15, and its
-"done when" moves to the permission in step 10.7. Stundenplan
+"done when" now follows the OS permission (2026-11-10, #129). Permission granted
+keeps a completed row in the progress total while other setup steps remain; denied
+stays open, dismissed is omitted. Foregrounding rechecks permission without prompting. Stundenplan
 eintragen is the extra item: a family with a child in school wants the timetable in the
 calendar, and the card says so in the adult's words.
 
@@ -565,7 +569,7 @@ oder nimm eine von den Beispielen." These are written with the module, in all fo
 | Wrong email code | "Der Code stimmt nicht." The field clears; after five wrong codes: "Fordere einen neuen Code an." |
 | Expired email code | "Der Code ist abgelaufen." with **Neuen Code senden** directly under it |
 | Invitation expired, used or withdrawn | "Diese Einladung gilt nicht mehr. Bitte ‹Thomas› um eine neue." |
-| Signed up, closed the app before H1 | The next launch opens H1 with whatever was typed (a local draft; not built yet, [16, step 10.7](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)) |
+| Signed up, closed the app before H1 | The next launch opens H1 with the local draft (built 2026-11-10, #129): family name, own name, colour and examples choice, isolated by server and Auth account in device-bound secure storage. Setup/founder codes are excluded; the existing setup-key store stays separate. Success, sign-out or choosing the invitation path clears the draft |
 | Household creation in `code` mode, no code | "Neue Familien gibt es gerade nur mit Gründungscode." plus "Ich wurde eingeladen" |
 | Pairing request approved but the tablet went offline | The tablet collects its credentials on its next poll, within the request's lifetime; otherwise the guardian sees it unconnected in Geräte and repeats J3 |
 | A device revoked while in use | The front door, as today ([08](08-users-auth-permissions.md#device-pairing)) |

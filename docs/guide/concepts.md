@@ -19,9 +19,15 @@ Die Erwachsenen-Ansicht hat diese Bereiche:
 
 **Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind. Dazu kommen die kleinen [Rituale](/guide/rituals): der nächste Countdown unter **Vorfreude**, die Essenswünsche der Kinder, während des Essens die Tischfrage, am Sonntagabend **Unsere Woche** und an einem Geburtstag eine Karte mit [Wusel](/guide/wusel). Bei Terminen steht die Uhrzeit über dem Titel, damit sie auch mit größerer Schrift gut lesbar bleibt.
 
+Auf einem breiten Bildschirm stehen die sechs Bereiche links in einer Navigationsleiste; auf dem Telefon stehen sie unten. Beim Drehen oder Ändern der Fenstergröße bleibt derselbe Bereich ausgewählt. Aus den Einstellungen führen der Zurück-Pfeil und die Zurück-Funktion des Geräts zu diesem Bereich zurück.
+
+<Shot name="adult-navigation" alt="Die Ansicht für Erwachsene mit Navigation links auf einem breiten Bildschirm" wide />
+
 <Shot name="today" alt="Der Tab Heute mit der Karte Erste Schritte, den Terminen und dem warmen Essen" />
 
-Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Auf schmalen Bildschirmen oder bei größerer Schrift stehen die Schaltflächen unter dem Text. Die Karte sehen Eltern auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Hilfe & Info → Erste Schritte** kommt sie zurück.
+Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Erledigte Punkte bleiben abgehakt, solange noch etwas offen ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Auf schmalen Bildschirmen oder bei größerer Schrift stehen die Schaltflächen unter dem Text. Die Karte sehen Eltern auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Hilfe & Info → Erste Schritte** kommt sie zurück.
+
+Auch **Erinnerungen einschalten** gehört auf deinem eigenen Telefon zu den ersten Schritten. Erlaubst du Mitteilungen, zählt der Schritt als erledigt und bleibt im Fortschritt enthalten. Lehnst du ab, bleibt er offen. **Brauchen wir nicht** blendet ihn auf diesem Gerät aus; es erteilt keine Erlaubnis. Wenn du die Erlaubnis in den Systemeinstellungen änderst, wird der Fortschritt beim Zurückkehren zur App aktualisiert.
 
 ## Der Haushalt
 

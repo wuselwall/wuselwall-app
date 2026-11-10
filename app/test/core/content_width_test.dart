@@ -37,7 +37,8 @@ void main() {
     );
     final page = t.getRect(find.byType(TodayPage));
     expect(page.width, adultMaxContentWidth);
-    expect(page.center.dx, 720);
+    final railRight = t.getRect(find.byType(NavigationRail)).right;
+    expect(page.center.dx, (1440 + railRight + 1) / 2);
   });
 
   testWidgets('the settings pages stop at the content width on a laptop', (

@@ -44,7 +44,7 @@ avatar pictures appear in member lists and the kid picker.
 | 1 | 10.4 | **Start without mail — built 2026-10-26 (#126)** | A fresh server without SMTP reaches Today; password sign-up/sign-in and guardian-assisted recovery work; email auto-matching cannot trust an autoconfirmed address |
 | 2 | 10.5 | **Approvals on Today — built 2026-10-24 (#127/#149)** | Guardians see pending chore/reward counts on Today and the Tasks badge; the local morning summary uses the loaded pending count; deciding clears the derived notice |
 | 3 | 10.6 | **Offline cold start** | After an app/device restart without network, the wall shows its stored week and the kid home its stored day, with freshness shown; reconnect refreshes normally |
-| 4 | 10.7–10.11 | **Finish the journeys** | Setup resumes, MFA/notification progress is clear, wide screens use the rail, and deletion-page and checklist dependencies have an explicit result |
+| 4 | 10.7–10.11 | **Finish the journeys — built 2026-11-10 (#129); publication/native evidence open** | Setup resumes, MFA/notification progress is clear, wide screens use the rail, and deletion-page and checklist dependencies have an explicit result |
 
 Implementation boundaries for these four packages:
 
@@ -76,6 +76,14 @@ Implementation boundaries for these four packages:
   second checklist. Retire the legacy wizard/enrolment APIs only after a distributed app
   release and the supported-version window permit it (old 10.10); keep that conditional
   cleanup open separately if the precondition has not happened.
+  *Built 2026-11-10 (#129):* account/server-scoped H1 drafts in secure storage,
+  TOTP recovery warning before enrolment for a sole guardian account, permission-based
+  reminder progress and the adult rail at 840 logical pixels, with #117 Back and tab
+  regressions retained. Passkeys default off pending native verification. The existing
+  [checklist review](release-checklist.md#129-implementation-review--2026-11-10) records
+  the remaining publication/native checks. Website deletion/progress work is
+  [website #17](https://github.com/wuselwall/wuselwall-website/issues/17); conditional
+  legacy retirement is [#221](https://github.com/wuselwall/wuselwall-app/issues/221).
 
 **Done when:** the four acceptance rows pass. Timed native journeys, store delivery and the
 family trial belong to milestone 3, not to an implementation-only “done” claim.

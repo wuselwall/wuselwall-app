@@ -67,6 +67,8 @@ Si abriste el enlace o el QR de configuración, o introdujiste la clave en **Ten
 
 <Shot name="new-family" alt="El formulario de creación de una familia" />
 
+Si cierras la aplicación aquí, el nombre de la familia, tu nombre, tu color y tu elección de ejemplos se guardan en este dispositivo. Al volver a abrirla con la misma cuenta y el mismo servidor, continúas aquí. Crear la familia, cerrar sesión o pasar a una invitación borra el borrador. Una clave de configuración escrita aquí no se guarda en el borrador.
+
 Toca **Crear familia**. Si la confirmación tarda más de 15 segundos, aparece un aviso con opciones para indicar que recibiste una invitación o cerrar sesión. El botón de creación sigue bloqueado para evitar duplicados. Si llega la confirmación después, la app continúa sola.
 
 A continuación, añade por nombre a los niños y otros adultos; podrás invitar a estos después. También puedes saltar este paso. El móvil se convierte en tu dispositivo personal, con un nombre automático editable en los ajustes. Se abre **Hoy**.
@@ -102,5 +104,5 @@ Una madre o un padre aprueba el nuevo dispositivo desde su móvil:
 El QR contiene el servidor: también puedes abrirlo con la cámara del móvil para llegar a la confirmación. El código dura **10 minutos** y se usa **una sola vez**. Si falla, empieza de nuevo en el dispositivo nuevo. La pantalla de pared muestra después una breve [lista de preparación](/es/guide/wall).
 
 ::: tip Versiones antiguas
-**Ajustes → Avanzados → Dispositivos → Crear un código para un dispositivo antiguo** mantiene la conexión con una versión anterior. Esta opción desaparecerá en la próxima versión.
+**Ajustes → Avanzados → Dispositivos → Crear un código para un dispositivo antiguo** mantiene la conexión con una versión anterior. Esta opción seguirá disponible mientras la necesiten versiones anteriores compatibles.
 :::

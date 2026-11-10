@@ -85,6 +85,8 @@ and share it only with the person who is creating your family.
 
 <Shot name="new-family" alt="New family form" />
 
+If you close the app here, the family name, your name, your colour and your examples choice stay on this device. The next start with the same account and server resumes here. Creating the family, signing out or switching to an invitation clears the draft. A setup key typed here is not saved in the draft.
+
 If the app stays on this page for more than 15 seconds after creation, it shows a message.
 You can then choose **I was invited** or **Sign out**. **Create family** stays locked to
 avoid accidentally creating a second family. If confirmation arrives later, the app
@@ -125,5 +127,5 @@ This is how the **wall display** in the kitchen, a **children's tablet** or a **
 After that the new device is ready. The wall display shows a short checklist once, so that it keeps running (see [Wall display and children](/en/guide/wall)). The code is valid for **10 minutes** and works **once**. If it does not match, start again on the new device.
 
 ::: tip Older devices
-A device with an older version of WuselWall still takes the old code: under **Settings → Advanced → Devices** tap **Create a code for an older device**. This option goes away with the next version.
+A device with an older version of WuselWall still takes the old code: under **Settings → Advanced → Devices** tap **Create a code for an older device**. This option stays while supported older app versions still need it.
 :::

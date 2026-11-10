@@ -30,10 +30,11 @@ import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 /// In-memory stand-ins for the backend, used only by `lib/main_demo.dart` to take
 /// the screenshots of the user documentation. The PIN is 123456; nothing leaves the page.
 class DemoIdentityRepository implements IdentityRepository {
-  DemoIdentityRepository({required this.device});
+  DemoIdentityRepository({required this.device, List<Member>? members})
+    : _members = [...(members ?? DemoData.members)];
 
   final DeviceInfo? device;
-  final _members = [...DemoData.members];
+  final List<Member> _members;
 
   @override
   Future<Result<DeviceInfo?>> currentDevice() async => Ok(device);
