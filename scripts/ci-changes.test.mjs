@@ -17,12 +17,14 @@ for (const file of ['app/lib/features/household/ui/new_family_page.dart', 'app/l
 for (const file of ['app/lib/features/shopping/data/shopping_repository.dart', 'app/lib/features/tasks/domain/task.dart', 'app/lib/features/calendar/application/providers.dart', 'app/lib/core/supabase/api_client.dart', 'app/lib/core/cache/read_cache.dart', 'app/lib/core/server/server_info.dart', 'app/test/integration/identity_test.dart', 'app/pubspec.lock', 'app/env/ci.json']) {
   test(`client contract selects backend integration: ${file}`, () => assert.equal(classifyPaths([file]).backend, true));
 }
-for (const file of ['app/web/index.html', 'app/lib/main.dart', 'app/lib/core/cache/read_cache.dart', 'app/lib/app/bootstrap.dart', 'app/lib/features/setup/ui/server_choice_page.dart', 'app/lib/features/shopping/ui/shopping_page.dart', 'scripts/web-server-discovery.browser.mjs']) {
+for (const file of ['app/web/index.html', 'app/lib/main.dart', 'app/lib/core/cache/read_cache.dart', 'app/lib/app/bootstrap.dart', 'app/lib/features/setup/ui/server_choice_page.dart', 'app/lib/features/shopping/ui/shopping_page.dart', 'scripts/web-server-discovery.browser.mjs', 'specs/mockups/shopping-quick-add.html']) {
   test(`production browser smoke selects relevant inputs: ${file}`, () => assert.equal(classifyPaths([file]).browser, true));
 }
 test('migrations run the database; Edge Functions run the database and Deno', () => {
   assert.deepEqual(classifyPaths(['supabase/migrations/change.sql']), { ...none, app: true, backend: true });
   assert.deepEqual(classifyPaths(['supabase/functions/_shared/messages.ts']), { ...none, backend: true, edge: true });
+  assert.deepEqual(classifyPaths(['supabase/templates/en/confirmation.html']), { ...none, backend: true, edge: true });
+  assert.deepEqual(classifyPaths(['supabase/functions/_shared/fixtures/timetables/expected.json']), { ...none, backend: true, edge: true });
 });
 test('dependencies, workflow/detector changes and unknown paths run everything', () => {
   for (const file of ['package.json', 'package-lock.json', 'deno.lock', '.github/workflows/docs.yml', 'scripts/ci-changes.mjs', 'scripts/ci-gate.test.mjs', 'new-build-input/config', 'app/lib/core/new_transport/client.dart', 'app/lib/features/new_feature/service/client.dart']) {

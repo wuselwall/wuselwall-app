@@ -16,7 +16,7 @@ export function classifyPaths(paths) {
     if (/^supabase\//.test(path)) {
       checks.backend = true;
       if (/^supabase\/migrations\//.test(path)) checks.app = true;
-      if (/^supabase\/functions\//.test(path)) checks.edge = true;
+      if (/^supabase\/(functions|templates)\//.test(path)) checks.edge = true;
       continue;
     }
     if (/^app\//.test(path)) {
@@ -31,6 +31,7 @@ export function classifyPaths(paths) {
     if (/^dictionary\//.test(path)) checks.app = true;
     if (/^scripts\/(backend-stack-images|image-pull)(\.test)?\.mjs$/.test(path) || /^scripts\/local-pgtap\//.test(path)) checks.backend = true;
     if (/^scripts\/.*\.browser\.mjs$/.test(path)) checks.browser = true;
+    if (path === 'specs/mockups/shopping-quick-add.html') checks.browser = true;
     // These have their own script, documentation or candidate checks. They are not
     // Flutter test or app-server contract inputs. Everything else fails open below.
     if (/^(docs\/|specs\/|scripts\/|qualification\/|dictionary\/|server\/|infra\/|licenses\/|store\/|\.github\/(ISSUE_TEMPLATE\/|rulesets\/|[^/]+$))/.test(path) || /^[^/]+\.(md|txt)$/.test(path) || /^(LICENSE|NOTICE|\.gitignore|\.gitattributes|osv-scanner\.toml)$/.test(path)) continue;
