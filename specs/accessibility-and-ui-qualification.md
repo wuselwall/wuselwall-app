@@ -348,13 +348,19 @@ The workflow runs ordinary Flutter checks, the expanded Flutter matrix, web qual
 Android/iOS qualification and the production web smoke, then aggregates their artifacts.
 Android and iOS profiles execute sequentially on native macOS; Linux jobs can run in parallel.
 Unavailable tools/devices and missing reports fail; they never count as empty successful
-jobs. Existing backend CI/checklist requirements remain independent of synthetic UI capture.
+jobs. Full comparison preflight also requires backend/quality/guide validation; synthetic
+UI captures do not replace these checks. Smoke/capture diagnostics skip the added full
+preflight jobs and remain ineligible for promotion.
 No candidate fixture contacts a live family server.
 
 Collect JSON, screenshots/semantic snapshots and diffs, browser traces, native logs and
 `.xcresult` even on failure. The aggregate validates complete expected case IDs, successful
 jobs, matching candidate SHAs, reviewed baseline checksums, native detectors/audits and
-production-entry evidence. It rejects partial/capture profiles, failed/skipped/flaky browser
+production-entry evidence. Since 2026-11-10, schema 3 also requires successful reusable
+quality (scripts/audit), full backend and complete guide validation on that exact SHA.
+Guide evidence binds every expected locale/theme screenshot path and checksum; promotion
+rejects older summaries. These checks finish before the release orchestrator starts
+signing, rather than running independently alongside publication. It rejects partial/capture profiles, failed/skipped/flaky browser
 cases, missing native profiles, unexpected result IDs and pending routes. Artifact names
 include the workflow run attempt so evidence from a rerun cannot mix with an earlier attempt.
 

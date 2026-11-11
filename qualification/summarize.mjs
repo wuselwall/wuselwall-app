@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { cases, inventory, root } from './matrix.mjs';
 import { sha256 } from './baseline.mjs';
 import { validateReviewApproval } from './promotion.mjs';
+import { captureNames } from '../docs/tools/check-shots.mjs';
+import { validateDocsEvidence } from '../docs/tools/evidence.mjs';
 
 export function flutterCaseIds(coverage) {
   return [
@@ -13,13 +15,14 @@ export function flutterCaseIds(coverage) {
     `${c.id}-${c.locale}-${c.shade}-${c.width}-${c.scale.toFixed(1)}-${platform}-${c.tier}`));
 }
 
-export function summarize({ sha, jobs, matrix, mode, reports, coverage = inventory }) {
+export function summarize({ sha, jobs, matrix, mode, reports, coverage = inventory,
+  docCaptures = captureNames(fs.readFileSync(path.join(root, 'docs/tools/screenshots.mjs'), 'utf8')) }) {
   const failures = [];
   const require = (condition, reason) => { if (!condition) failures.push(reason); };
   require(/^[a-f0-9]{40}$/.test(sha || ''), 'Missing candidate SHA');
   require(matrix === 'full', 'Only the full matrix is eligible');
   require(mode === 'compare', 'Capture output is unapproved');
-  for (const name of ['prepare', 'flutter', 'web', 'native', 'production']) {
+  for (const name of ['prepare', 'flutter', 'web', 'native', 'production', 'quality', 'backend', 'docs']) {
     require(jobs[name]?.result === 'success', `${name} job did not succeed`);
   }
   const flutter = reports.flutter;
@@ -63,9 +66,11 @@ export function summarize({ sha, jobs, matrix, mode, reports, coverage = invento
   require(production?.candidateSha === sha && production?.executionPassed === true && production?.entryPoint === 'lib/main.dart',
     'Production entry-point smoke is incomplete');
   require(Object.keys(coverage.pendingRoutes).length === 0, 'Routes remain pending');
+  try { validateDocsEvidence(reports.docs, sha, docCaptures); }
+  catch (error) { require(false, error.message); }
   const manual = ['physical-device-review', 'approved-baseline-review'];
   require(coverage.openGates.every(g => manual.includes(g)), 'Implementation gates remain open');
-  return { schema: 2, candidateSha: sha || null, matrix, mode, jobs,
+  return { schema: 3, candidateSha: sha || null, matrix, mode, jobs,
     automaticPass: failures.length === 0, qualified: false, accessibilityReview,
     qualification: failures.length ? 'INCOMPLETE' : 'READY_FOR_REVIEW',
     baselineVerified: web?.baselineVerified === true,
@@ -82,7 +87,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const result = summarize({ sha: process.env.QUALIFY_CANDIDATE_SHA,
     jobs: JSON.parse(process.env.QUALIFY_JOBS || '{}'), matrix: process.env.QUALIFY_MATRIX, mode: process.env.QUALIFY_MODE,
     reports: { flutter: read('flutter/full/results.json'), web: read('web/web/evidence.json'),
-      native: read('native/evidence.json'), production: read('production/evidence.json') } });
+      native: read('native/evidence.json'), production: read('production/evidence.json'), docs: read('docs/evidence.json') } });
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'summary.json'), JSON.stringify(result, null, 2));
   const summary = `## Candidate evidence: ${result.qualification}\n\nCommit: \`${result.candidateSha || 'unknown'}\`\n\n`

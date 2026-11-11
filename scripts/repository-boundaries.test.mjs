@@ -36,7 +36,7 @@ test('docs builds are unprivileged; publishing requires main AND explicit opt-in
   assert.ok(deploy, 'explicit deploy job');
   const condition = deploy.match(/^    if: (.+)$/m)?.[1];
   assert.equal(condition, "github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCS_PAGES_ENABLED == 'true'");
-  assert.match(workflow, /actions\/upload-pages-artifact@[0-9a-f]{40}/);
+  assert.match(read('.github/workflows/docs-validation.yml'), /actions\/upload-pages-artifact@[0-9a-f]{40}/);
   assert.match(deploy, /actions\/configure-pages@[0-9a-f]{40}/);
   assert.match(deploy, /actions\/deploy-pages@[0-9a-f]{40}/);
   // Verify the actual condition over PR, non-main, opted-out and opted-in events.
@@ -60,20 +60,16 @@ test('docs builds are unprivileged; publishing requires main AND explicit opt-in
   }
 });
 
-test('every workflow job uses a self-hosted runner, except the docs, the repository housekeeping and the deploy a family runs in its fork', () => {
+test('only explicit build/service jobs use the self-hosted fleet', () => {
   const dir = new URL('../.github/workflows/', import.meta.url);
   for (const file of readdirSync(dir).filter((name) => /\.ya?ml$/.test(name))) {
     const workflow = readFileSync(new URL(file, dir), 'utf8');
     const runners = [...workflow.matchAll(/^\s+runs-on:\s*(.+)$/gm)];
     assert.ok(runners.length > 0, `${file}: declares job runners`);
+    const hostedOnly = ['deploy-supabase.yml', 'docs.yml', 'docs-validation.yml', 'triage.yml', 'release.yml'];
     for (const [, runner] of runners) {
-      // deploy-supabase.yml runs in a family's fork, which has no runner of its own
-      // (docs/server/supabase-cloud): GitHub's runners, free for a public fork.
-      // docs.yml holds no secrets and needs nothing from the fleet: GitHub's runners, free
-      // for this public repository.
-      // triage.yml and release.yml only call GitHub's API (labels, milestones, tags, starting
-      // the build workflows): they run nothing a contributor wrote and hold no signing secret.
-      if (['deploy-supabase.yml', 'docs.yml', 'triage.yml', 'release.yml'].includes(file)) assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
+      if (hostedOnly.includes(file)) assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
+      else if (['ci.yml', 'backend-ci.yml'].includes(file)) assert.match(runner, /^(ubuntu-latest|\[self-hosted, Linux, build\])$/, `${file}: ${runner}`);
       else assert.match(runner, /self-hosted/, `${file}: ${runner}`);
     }
   }

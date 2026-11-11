@@ -134,6 +134,28 @@ Baseline fingerprints include bundled font-file checksums and the fallback lock.
 `qualify:font-policy` types CJK and an emoji and asserts that every fallback shard is
 requested from the local origin and served.
 
+## Full pre-release checks
+
+Schema 3 evidence also requires `quality`, `backend` and `docs` to succeed on the exact
+candidate SHA. Full comparisons run these gates; capture/smoke diagnostics skip them
+and remain ineligible for promotion. Reusable CI supplies script tests and OSV; strict Flutter and production
+jobs already run their app/browser checks, so quality-only reuse does not repeat them.
+Reusable backend CI runs every migration, pgTAP, lint, Deno and both mail/no-mail
+integration paths regardless of the PR detector. Full guide validation renders all four
+languages and both themes, checks the site in the browser and records every screenshot
+path/checksum in `build/qualification/docs/evidence.json`.
+
+The aggregate downloads that report and checks the complete expected inventory and SHA.
+Promotion rejects missing, skipped, failed or cancelled quality/backend/docs jobs and
+older schema-2 summaries. Re-qualify after this change; existing native/web baseline
+formats are unchanged. Signing and the release orchestrator use this aggregate before
+publishing. They do not rely on independently dispatched tag CI finishing later, and the
+orchestrator no longer launches duplicate ci/backend runs alongside signing.
+
+These jobs have no deployment or signing secrets; full guide validation cannot deploy.
+The separate docs workflow retains main-only Pages opt-in. Its PR path checks definitions,
+locale/route parity and the site build; main/manual runs still render the full matrix.
+
 ## Select the candidate
 
 Dispatch from the default branch with its current full commit SHA. Preparation checks that

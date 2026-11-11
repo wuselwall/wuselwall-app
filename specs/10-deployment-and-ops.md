@@ -432,7 +432,7 @@ Dropped 2026-10-13 ([ADR-018](adr/ADR-018-self-hosted-only.md)); see ADR-015 for
 ## Changing the database
 
 ```
-feature branch ──"Run workflow"──► ci.yml: every migration from zero on a throwaway stack,
+feature branch ──"Run workflow"──► backend-ci.yml: every migration on a throwaway stack,
                                    pgTAP, Flutter tests, the integration test
       │ green
       ▼
@@ -440,7 +440,10 @@ a release:   wuselwall update <version>     — backup, new stack, pending migra
 a checkout:  scripts/remote-migrate.sh      — backup, pending migrations, pgTAP
 ```
 
-A pull request runs only the fast checks; the backend job runs on a tag or by hand. Locally,
+PRs select checks with `scripts/ci-changes.mjs`: app inputs run Flutter; server and
+client-contract inputs run backend integration; Edge Function inputs run Deno. Unknown
+paths/diff failures run everything. Manual, reusable and tag runs are full; the required
+`app`/`required` aggregates always report and reject selected work that did not pass. Locally,
 `scripts/local-pgtap` runs every migration and suite on a throwaway Postgres without
 Docker; `scripts/remote-pgtap-dry.sh` tries new migrations on a server inside a rolled-back
 transaction. Migrations are forward-only and must keep working with the previous app
@@ -521,11 +524,14 @@ Until the Play listing exists, `release-android.yml` builds a signed APK and
 
 ### The user documentation
 
-`docs/` stays with the app and is built on self-hosted Linux build runners,
-for pull requests and `main` alike (Flutter demo, Playwright screenshots in all four
-languages/both themes, VitePress with `DOCS_BASE=/`). The
-prepared publisher uses a GitHub Pages artifact and OIDC with job-scoped `pages: write`
-and `id-token: write`; it uses the build fleet rather than the production deploy runner and needs no SSH secrets.
+`docs/` stays with the app. GitHub-hosted PR validation checks locale/route parity,
+`<Shot>` capture definitions and the VitePress build without rendering images. Main/manual
+runs and candidate qualification render the Flutter demo in all four languages and both
+themes, verify every PNG and run the guide browser checks. The reusable
+`docs-validation.yml` holds read-only validation; it cannot deploy. The parent `docs.yml`
+publishes its full Pages artifact through a main-only, opt-in OIDC job. One preview site
+archive includes the screenshots; a separate screenshot archive is no longer uploaded.
+Schema 3 candidate evidence also records screenshot paths/checksums for the exact SHA.
 
 Publishing stays disabled until `DOCS_PAGES_ENABLED=true` is set after the operator
 makes the app repository public, configures Pages and `docs.wuselwall.app`, and
@@ -564,14 +570,15 @@ Keep it proportionate — this is a family app, not a service with an SLA.
 
 ### Self-hosted Actions runners (2026-10-22)
 
-Every job uses a self-hosted runner: Linux jobs select `[self-hosted, Linux, build]`,
-iOS selects `[self-hosted, macOS]`, and website deployment retains its dedicated
-`[self-hosted, linux, wuselwall-deploy]` assignment in the separate repository.
-This also applies to PRs, change detection, required checks, docs/Pages, Play uploads
-and the manual hosted-Supabase installer. Forks must provide their own runner access.
-Build runners need the toolchains used by their jobs, including Docker/Compose for the
-backend and website checks and Chromium system dependencies for browser tests.
-Backend runners must have a CI-only Docker daemon, never access to a family's live
-stack. The backend job serializes its local stack and removes it after each run.
+Flutter builds and Docker/SMTP service tests use `[self-hosted, Linux, build]`; native
+iOS uses `[self-hosted, macOS]`. Read-only detectors, stable status aggregates, OSV and
+Deno use GitHub-hosted Ubuntu. Docs validation/publication and repository housekeeping
+also run on GitHub's runners. The manual hosted-Supabase installer runs in the family's
+fork on GitHub-hosted Ubuntu. Build runners need Docker/Compose for the disposable
+backend and Chromium dependencies for production browser tests. Backend runners must
+use a CI-only daemon, never a family's live stack; the stack remains serialized and is
+removed after every run. Runner-image SDK/image prewarming is a separate provisioning
+follow-up; this change does not alter the fleet or its cache persistence.
+
 No changes to runner registration, billing, repository visibility or deployment settings
 are implied; existing publishing gates and deployment secrets remain scoped to their jobs.

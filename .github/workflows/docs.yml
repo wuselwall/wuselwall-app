@@ -7,10 +7,10 @@ name: docs
 on:
   workflow_dispatch:
   pull_request:
-    paths: ['app/**', 'docs/**', 'package.json', 'package-lock.json', '.github/workflows/docs.yml']
+    paths: ['app/**', 'docs/**', 'package.json', 'package-lock.json', '.github/workflows/docs.yml', '.github/workflows/docs-validation.yml']
   push:
     branches: [main]
-    paths: ['app/**', 'docs/**', 'package.json', 'package-lock.json', '.github/workflows/docs.yml']
+    paths: ['app/**', 'docs/**', 'package.json', 'package-lock.json', '.github/workflows/docs.yml', '.github/workflows/docs-validation.yml']
 concurrency:
   group: docs-${{ github.ref }}
   # A full screenshot matrix takes longer than the gap between main merges. Let an
@@ -21,45 +21,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { fetch-depth: 0 }   # "last updated" on each page comes from git history
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version-file: app/pubspec.yaml, cache: true }
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22, cache: npm }
-      - run: npm ci
-      - run: npm run repo:check
-      - run: npx playwright install --with-deps chromium
-      - run: flutter pub get --enforce-lockfile && flutter gen-l10n
-        working-directory: app
-      - run: npm run docs:screenshots   # fails in CI when a step could not reach its screen
-      - run: npm run docs:check
-      - run: npm run docs:build
-        env: { DOCS_BASE: / }
-      - run: npm run docs:browser
-        env: { DOCS_BASE: / }
-      - name: Check the custom-domain output
-        run: |
-          test "$(cat docs/.vitepress/dist/CNAME)" = docs.wuselwall.app
-          test -s docs/.vitepress/dist/index.html
-          test -s docs/.vitepress/dist/en/index.html
-          test -s docs/.vitepress/dist/fr/index.html
-          test -s docs/.vitepress/dist/es/index.html
-          test -s docs/.vitepress/dist/sitemap.xml
-      # One day, not seven: the two artifacts (about 70 MB per run) are for looking at a
-      # pull request's site and screenshots right away, and a day of them across every
-      # branch already approaches the plan's Actions storage. When that quota is hit the
-      # upload fails the whole build ("Artifact storage quota has been hit").
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with: { name: docs-site, path: docs/.vitepress/dist, retention-days: 1 }
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with: { name: docs-screenshots, path: docs/public/screenshots, retention-days: 1 }
-      - name: Package GitHub Pages site
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCS_PAGES_ENABLED == 'true'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with: { path: docs/.vitepress/dist }
+    uses: ./.github/workflows/docs-validation.yml
+    with:
+      full: ${{ github.event_name != 'pull_request' }}
+      publish: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCS_PAGES_ENABLED == 'true' }}
 
   deploy:
     needs: build

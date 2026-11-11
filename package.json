@@ -37,6 +37,7 @@
     "qualify:web": "node qualification/run-web.mjs",
     "qualify:pixel-controls": "playwright test -c qualification/pixel-controls.config.mjs",
     "qualify:scroll-controls": "playwright test -c qualification/scroll-audit.config.mjs",
-    "qualify:font-policy": "playwright test -c qualification/font-policy.config.mjs"
+    "qualify:font-policy": "playwright test -c qualification/font-policy.config.mjs",
+    "docs:check:source": "node docs/tools/check-locales.mjs && node docs/tools/check-shots.mjs --definitions-only"
   }
 }

@@ -66,9 +66,21 @@ issue's. Linking an issue in the sidebar raises no event: edit the description a
 
 | Check | From |
 |---|---|
-| `app`, `scripts`, `audit` | `ci.yml`: format, analysis, unit and widget tests, script tests, the dependency audit |
-| `required` | `backend-ci.yml`: migrations, pgTAP, Edge Function tests and the integration test when the backend changed |
+| `app`, `scripts`, `audit` | `ci.yml`: selected app/browser checks through the always-reporting `app` gate; script tests and the dependency audit always run |
+| `required` | `backend-ci.yml`: selected SQL/client-contract integration and Edge Function checks, through an always-reporting gate |
 | `pr-policy` | `triage.yml`, as above |
+
+`scripts/ci-changes.mjs` selects jobs from the base/head diff. Documentation-only PRs
+skip Flutter; UI-only app changes skip database integration; dictionary/SQL inputs used
+by Flutter tests still select the suite. Unknown paths and unavailable diffs run every
+check. Manual, tag and reusable runs are full. The required context names stay the same;
+a selected job that fails, is cancelled or is skipped makes its aggregate fail.
+
+PR guide checks validate locale/route parity, screenshot capture definitions and the
+VitePress build without rendering PNGs (`npm run docs:check:source`). The full four-language,
+light/dark screenshot and browser matrix runs before main publication, in candidate
+qualification, or through Actions → docs → Run workflow on a branch for a full PR preview.
+The site archive already contains its screenshots; it is uploaded once.
 
 Merging is **squash only**, with no bypass for administrators. Turn on auto-merge
 (`gh pr merge --squash --auto`) and the pull request merges when the checks pass; the
@@ -87,7 +99,10 @@ semantic versioning: a minor for features, a patch for fixes only, a major when 
 app or server stops working with it.
 
 1. **Qualify the candidate**: run `candidate-evidence` on the head of `main`
-   ([qualification/README.md](qualification/README.md)).
+   ([qualification/README.md](qualification/README.md)). Evidence schema 3 requires quality,
+   full backend and full guide validation as well as Flutter/web/native/production.
+   Older qualification artifacts must be regenerated; a tag-triggered job running in
+   parallel with signing is not a pre-release gate.
 2. **Plan**: Actions → `release` → Run workflow. It is a dry run by default and prints the
    plan: both tags, the milestone it closes and the open issues it would move.
 
@@ -107,8 +122,9 @@ app or server stops working with it.
    - creates the two annotated tags,
    - publishes the app's GitHub release with notes generated from the merged pull requests
      ([.github/release.yml](.github/release.yml) sorts them by type label),
-   - starts `ci`, `backend-ci`, `release-android`, `release-ios` and `server-release` on the
-     tags, and `docs` on `main` (the guide's compatibility table reads the tags),
+   - starts `release-android`, `release-ios` and `server-release` on the tags after full
+     exact-commit qualification (including backend, scripts/audit and guide evidence),
+     and `docs` on `main` (the guide's compatibility table reads the tags),
    - closes the milestone, opens the next one and moves what is still open into it.
 4. **Approve**: the release builds wait for the `release-promotion` environment. After the
    approval, Android and iOS builds go to the stores' test tracks, the signed APK is attached

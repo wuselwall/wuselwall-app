@@ -15,7 +15,9 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { client, compareVersions, isVersionMilestone, nextRelease, parseVersion, summary } from './github-api.mjs';
 
-export const appWorkflows = ['ci.yml', 'backend-ci.yml', 'release-android.yml', 'release-ios.yml'];
+// Candidate evidence already requires full app, backend, scripts, audit and guide checks
+// on the exact tagged commit. Start signing only; do not rerun CI in parallel with it.
+export const appWorkflows = ['release-android.yml', 'release-ios.yml'];
 export const serverWorkflows = ['server-release.yml'];
 /** Rebuilt on the default branch afterwards: its compatibility table reads the tags. */
 export const afterWorkflows = ['docs.yml'];

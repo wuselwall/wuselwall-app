@@ -9,11 +9,11 @@ const run = { id: 12, run_attempt: 1, workflow_id: 4, head_sha: sha, head_reposi
   path: '.github/workflows/qualify-candidate.yml', head_branch: 'main', event: 'workflow_dispatch',
   status: 'completed', conclusion: 'success', run_started_at: '2026-10-25T12:00:00Z' };
 const context = { sha, repository: 'test/app', branch: 'main', workflowId: 4 };
-const summary = { schema: 2, candidateSha: sha, qualification: 'READY_FOR_REVIEW', automaticPass: true,
+const summary = { schema: 3, candidateSha: sha, qualification: 'READY_FOR_REVIEW', automaticPass: true,
   matrix: 'full', mode: 'compare', baselineVerified: true, pendingRoutes: {},
   openGates: ['physical-device-review', 'approved-baseline-review'],
-  jobs: Object.fromEntries(['prepare', 'flutter', 'web', 'native', 'production'].map(n => [n, { result: 'success' }])),
-  evidence: { flutter: sha, web: sha, native: sha, production: sha } };
+  jobs: Object.fromEntries(['prepare', 'flutter', 'web', 'native', 'production', 'quality', 'backend', 'docs'].map(n => [n, { result: 'success' }])),
+  evidence: { flutter: sha, web: sha, native: sha, production: sha, docs: sha } };
 
 test('promotion rejects other commits, forks, triggers, workflow identities and failed runs', () => {
   validateRun(run, context);
@@ -104,4 +104,12 @@ test('authorization checks downloaded ZIP bytes and the contained evidence befor
   await assert.rejects(attempt(zip(summary), 'b'.repeat(64)), /checksum/);
   await assert.rejects(attempt(zip({ ...summary, candidateSha: 'b'.repeat(40) })), /different commit/);
   await assert.rejects(attempt(zip(summary, '../summary.json')), /Cannot read qualification summary/);
+});
+
+test('old evidence and missing pre-release checks cannot authorize signing', () => {
+  assert.throws(() => validateSummary({...summary, schema: 2}, sha));
+  for (const job of ['quality', 'backend', 'docs']) for (const result of ['failure', 'skipped', 'cancelled', undefined]) {
+    assert.throws(() => validateSummary({...summary, jobs: {...summary.jobs, [job]: {result}}}, sha));
+  }
+  assert.throws(() => validateSummary({...summary, evidence: {...summary.evidence, docs: null}}, sha));
 });
