@@ -114,6 +114,21 @@ You normally work in the office on Tuesdays. Set that once in your **usual week*
 
 You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the parents.
 
+## Sending an appointment to another family {#share-event}
+
+You have arranged a games night with another family and want them to have the date. Open the appointment and tap **Share event** at the top. This is for parents, on their own phone or tablet.
+
+WuselWall makes a small **calendar file** and hands it to an app on your device, for example your messenger or your mail. The others open the file and add the appointment to their own calendar: Outlook, the iPhone calendar, Google Calendar or any other.
+
+- **This is sent:** the title, the time and the place. You see it before you send.
+- **Include the notes** adds your notes. It is off until you switch it on.
+- **Reminder for the recipients** lets their calendar app remind them, an hour or a day before. Some apps ask first or leave it out.
+- **Not sent:** who takes part, your family's name and everything else in your calendar.
+
+For a repeating appointment you choose **Only this event** or **All events in the series**.
+
+The file is a copy. If the appointment changes later, share it again; most calendar apps then update their copy. Answers do not come back to WuselWall: the others reply where you sent the file.
+
 ## Appointments in Outlook or on an iPhone
 
 The family calendar can be shown as a **subscription** in Outlook or on an iPhone, read-only. See [Sharing the family calendar](/en/calendar/feeds).

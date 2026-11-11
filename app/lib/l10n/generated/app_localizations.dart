@@ -2486,6 +2486,78 @@ abstract class AppLocalizations {
   /// **'All events in the series'**
   String get eventScopeSeries;
 
+  /// No description provided for @eventShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share event'**
+  String get eventShare;
+
+  /// No description provided for @eventShareHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Makes a calendar file and hands it to an app on this device, for example your messenger or mail. The others open it in their own calendar.'**
+  String get eventShareHelp;
+
+  /// No description provided for @eventShareSent.
+  ///
+  /// In en, this message translates to:
+  /// **'This is sent'**
+  String get eventShareSent;
+
+  /// No description provided for @eventShareNotSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sent: who takes part, your family’s name and everything else in your calendar.'**
+  String get eventShareNotSent;
+
+  /// No description provided for @eventShareIncludeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Include the notes'**
+  String get eventShareIncludeNote;
+
+  /// No description provided for @eventShareReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder for the recipients'**
+  String get eventShareReminder;
+
+  /// No description provided for @eventShareReminderHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Their calendar app shows it. Some apps ask first or leave it out.'**
+  String get eventShareReminderHelp;
+
+  /// No description provided for @eventShareReminderNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get eventShareReminderNone;
+
+  /// No description provided for @eventShareReminderHour.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour before'**
+  String get eventShareReminderHour;
+
+  /// No description provided for @eventShareReminderDay.
+  ///
+  /// In en, this message translates to:
+  /// **'The day before'**
+  String get eventShareReminderDay;
+
+  /// No description provided for @eventShareSeriesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates of the series that you moved individually are sent at their usual time.'**
+  String get eventShareSeriesNote;
+
+  /// No description provided for @eventShareSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get eventShareSend;
+
   /// No description provided for @errEventInvalid.
   ///
   /// In en, this message translates to:

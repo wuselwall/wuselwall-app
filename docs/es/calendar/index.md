@@ -109,6 +109,21 @@ Normalmente trabajas en la oficina los martes. Guárdalo una vez en la **semana 
 
 El grupo [Ajustes → Calendario y colegio](/es/settings/household) decide si los niños pueden crear y cambiar sus citas. Eliminar las de otra persona sigue reservado a los padres.
 
+## Enviar un evento a otra familia {#share-event}
+
+Habéis quedado con otra familia para una noche de juegos y queréis darle la fecha. Abre el evento y toca **Compartir el evento** arriba. Es para madres y padres, en su propio teléfono o tableta.
+
+WuselWall crea un pequeño **archivo de calendario** y lo pasa a una aplicación de tu dispositivo, por ejemplo la mensajería o el correo. Los demás abren el archivo y añaden el evento a su propio calendario: Outlook, el calendario del iPhone, Google Calendar u otro.
+
+- **Esto se envía:** el título, la hora y el lugar. Lo ves antes de enviar.
+- **Incluir las notas** añade tus notas. Está desactivado hasta que lo actives.
+- **Recordatorio para los destinatarios** deja que su aplicación de calendario les avise, una hora antes o el día anterior. Algunas preguntan antes o lo omiten.
+- **No se envía:** quién participa, el nombre de vuestra familia ni nada más de vuestro calendario.
+
+Para un evento que se repite, elige **Solo este evento** o **Todos los eventos de la serie**.
+
+El archivo es una copia. Si el evento cambia más tarde, compártelo otra vez; la mayoría de las aplicaciones actualizan entonces su copia. Las respuestas no vuelven a WuselWall: los demás responden donde enviaste el archivo.
+
 ## Outlook y iPhone {#appointments-in-outlook-or-on-an-iphone}
 
 Una suscripción permite consultar el calendario en otra app, en modo de solo lectura: [Compartir el calendario](/es/calendar/feeds).

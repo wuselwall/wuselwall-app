@@ -14,6 +14,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
+import 'package:wuselwall/features/calendar/application/event_share_providers.dart';
 import 'package:wuselwall/features/calendar/application/event_template_providers.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/event_templates_repository.dart';
@@ -22,6 +23,7 @@ import 'package:wuselwall/features/calendar/ui/editor/event_draft.dart';
 import 'package:wuselwall/features/calendar/ui/editor/presence_state_picker.dart';
 import 'package:wuselwall/features/calendar/ui/editor/repeat_section.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
+import 'package:wuselwall/features/calendar/ui/share_event_sheet.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -445,6 +447,22 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
               tooltip: l10n.eventSaveAsTemplate,
               icon: const Icon(Icons.bookmark_add_outlined),
               onPressed: _saving ? null : _saveTemplate,
+            ),
+          if (_isEdit &&
+              widget.initial!.kind == EventKind.appointment &&
+              ref.watch(canShareEventProvider))
+            IconButton(
+              key: const ValueKey('event-share'),
+              tooltip: l10n.eventShare,
+              icon: const Icon(Icons.ios_share),
+              // The saved event is shared, not what the form holds: the sheet shows it.
+              onPressed: _saving
+                  ? null
+                  : () => showShareEventSheet(
+                      context,
+                      event: widget.initial!,
+                      occurrence: _seriesOccurrence,
+                    ),
             ),
           if (_isEdit)
             IconButton(

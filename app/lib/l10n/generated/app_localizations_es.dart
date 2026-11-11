@@ -1388,6 +1388,46 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventScopeSeries => 'Todos los eventos de la serie';
 
   @override
+  String get eventShare => 'Compartir el evento';
+
+  @override
+  String get eventShareHelp =>
+      'Crea un archivo de calendario y lo pasa a una aplicación de este dispositivo, por ejemplo la mensajería o el correo. Los demás lo abren en su propio calendario.';
+
+  @override
+  String get eventShareSent => 'Esto se envía';
+
+  @override
+  String get eventShareNotSent =>
+      'No se envía: quién participa, el nombre de vuestra familia ni nada más de vuestro calendario.';
+
+  @override
+  String get eventShareIncludeNote => 'Incluir las notas';
+
+  @override
+  String get eventShareReminder => 'Recordatorio para los destinatarios';
+
+  @override
+  String get eventShareReminderHelp =>
+      'La muestra su aplicación de calendario. Algunas preguntan antes o la omiten.';
+
+  @override
+  String get eventShareReminderNone => 'Ninguno';
+
+  @override
+  String get eventShareReminderHour => '1 hora antes';
+
+  @override
+  String get eventShareReminderDay => 'El día anterior';
+
+  @override
+  String get eventShareSeriesNote =>
+      'Las fechas de la serie que moviste una a una se envían con su hora habitual.';
+
+  @override
+  String get eventShareSend => 'Compartir';
+
+  @override
   String get errEventInvalid => 'Este evento no es válido.';
 
   @override
