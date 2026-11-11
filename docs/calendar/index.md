@@ -114,6 +114,21 @@ Du arbeitest normalerweise dienstags im Büro. Trage das einmal in der **üblich
 
 Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest. Fremde Termine löschen bleibt Sache der Eltern.
 
+## Einen Termin an eine andere Familie senden {#share-event}
+
+Ihr habt mit einer anderen Familie einen Spieleabend abgemacht und möchtet ihr den Termin geben. Öffne den Termin und tippe oben auf **Termin teilen**. Das können Eltern, auf ihrem eigenen Handy oder Tablet.
+
+WuselWall erstellt eine kleine **Kalenderdatei** und gibt sie an eine App auf deinem Gerät weiter, zum Beispiel an den Messenger oder das Mailprogramm. Die anderen öffnen die Datei und nehmen den Termin in ihren eigenen Kalender auf: Outlook, den iPhone-Kalender, Google Kalender oder einen anderen.
+
+- **Das wird gesendet:** der Titel, die Zeit und der Ort. Du siehst es, bevor du sendest.
+- **Notizen mitsenden** fügt deine Notizen hinzu. Das ist aus, bis du es einschaltest.
+- **Erinnerung für die Empfänger** lässt ihre Kalender-App erinnern, eine Stunde oder einen Tag vorher. Manche Apps fragen vorher oder lassen sie weg.
+- **Nicht gesendet:** wer teilnimmt, der Name eurer Familie und alles andere aus eurem Kalender.
+
+Bei einem Termin, der sich wiederholt, wählst du **Nur dieser Termin** oder **Alle Termine der Serie**.
+
+Die Datei ist eine Kopie. Ändert sich der Termin später, teile ihn noch einmal; die meisten Kalender-Apps aktualisieren dann ihre Kopie. Antworten kommen nicht zu WuselWall zurück: Die anderen antworten dort, wo du die Datei gesendet hast.
+
 ## Termine in Outlook oder auf dem iPhone
 
 Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anzeigen, nur zum Lesen. Siehe [Den Familienkalender teilen](/calendar/feeds).

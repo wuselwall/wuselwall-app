@@ -299,6 +299,50 @@ the calendar's colour with an RSS mark.
   them (`supabase/functions/ics/index.ts`). Off by default for every token. Not verified in a real
   Outlook or iOS subscription: that check is in the [release checklist](release-checklist.md).
 
+## Sharing one event
+
+*Added 2026-11-11 ([Q60](14-open-questions.md)), FR-1.20.* A family arranges a Spieleabend with
+another family and wants to send them the date. The other family may use WuselWall on a server
+of its own, or Outlook, or the phone's calendar. Nothing may pass *between* households
+([01](01-vision-and-scope.md#explicitly-out-of-scope)), and WuselWall is not a messenger (P8,
+[23](23-roadmap-after-alpha.md)).
+
+So the app writes **one calendar file and hands it to the device's share sheet**. The family's
+own messenger or mail program carries it; the recipients open it in whatever calendar they use.
+
+- **The server takes no part.** The file is built on the device
+  (`app/lib/features/calendar/domain/event_ics.dart`) from the event the editor already loaded.
+  No address of the other family is stored, no mail is sent, no link is created and nothing is
+  logged, because nothing reaches the server.
+- **What the file holds:** title, start and end, place, the repeat rule with its cancelled
+  dates, the status (tentative or confirmed), and the notes **only when switched on** in the
+  sheet. Never the attendees, the household's name, presence, pictures, Vorfreude or tradition
+  flags. The UID is the event's own (`<event id>@wuselwall.app`), so sending the event again
+  after a change lets a calendar app replace its copy; `SEQUENCE` is the event's.
+- **No reply channel.** `METHOD:PUBLISH`, no `ORGANIZER`, no `ATTENDEE`: no calendar app offers
+  to accept or decline, and nothing comes back to WuselWall. Answers happen where the file was
+  sent.
+- **The sheet shows what leaves** before anything is sent: the title, the time in the event's
+  zone and the place, and the notes once they are switched on.
+- **A reminder for the recipients** is optional (none, one hour before, the day before): a
+  `VALARM` their own calendar app shows. WuselWall notifies nobody outside the household. For
+  an all-day event the day before means 09:00.
+- **A series:** opened on one date, the sheet sends only that date by default (its own UID,
+  no rule) or the whole series. Dates moved one by one live in `event_override`, which the
+  editor does not load, so a shared series carries them at their usual time; the sheet says so.
+- **Times** follow the feed's rules: local time with `TZID` and a `VTIMEZONE` built from the
+  zone's real transitions (the bundled `timezone` database), UTC only when the zone is unknown.
+- **Who:** a guardian on a personal device, and only for appointments. Presence entries,
+  imported occurrences, kid devices and the wall offer no sharing.
+
+**Not built, on purpose:** a link that follows later changes (it would need a public token per
+event on the family's server), invitations mailed by the server, a list of befriended families,
+replies and comments. Each one is a step towards a messaging service.
+
+**Next (not built):** opening such a file *in* WuselWall, as a copy in the family's own calendar
+after a guardian confirmed a preview. It needs the source UID on `app.event` and the hostile-file
+rules of [11](11-security-and-privacy.md).
+
 ## v1 scope cut
 
 **In:** create/edit/delete, all-day and timed, attendees, recurrence with overrides,
@@ -311,5 +355,6 @@ reminders that are not push notifications, free/busy queries and conflict detect
 natural-language event entry.
 
 *Historical cut, as written in August. Since then built: imported feeds (above, including
-their outbound feed) and local reminders (Q47). Still out: CalDAV, invitations to outsiders,
+their outbound feed), local reminders (Q47) and one event as a file for another family
+([Sharing one event](#sharing-one-event), no invitation: no reply comes back). Still out: CalDAV, invitations to outsiders,
 attachments, free/busy, conflict detection, natural-language entry.*

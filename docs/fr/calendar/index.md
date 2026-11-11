@@ -111,6 +111,21 @@ Vous travaillez habituellement au bureau le mardi. Enregistrez-le une fois dans 
 
 Le groupe [Paramètres → Calendrier et école](/fr/settings/household) détermine si les enfants peuvent créer et modifier leurs rendez-vous. Supprimer le rendez-vous d’une autre personne reste réservé aux parents.
 
+## Envoyer un événement à une autre famille {#share-event}
+
+Vous avez prévu une soirée jeux avec une autre famille et voulez lui donner la date. Ouvrez l’événement et touchez **Partager l’événement** en haut. C’est réservé aux parents, sur leur propre téléphone ou tablette.
+
+WuselWall crée un petit **fichier de calendrier** et le transmet à une application de votre appareil, par exemple la messagerie ou le courriel. Les autres ouvrent le fichier et ajoutent l’événement à leur propre calendrier : Outlook, le calendrier de l’iPhone, Google Agenda ou un autre.
+
+- **Ce qui est envoyé :** le titre, l’heure et le lieu. Vous le voyez avant d’envoyer.
+- **Joindre les notes** ajoute vos notes. C’est désactivé tant que vous ne l’activez pas.
+- **Rappel pour les destinataires** laisse leur application de calendrier les prévenir, une heure avant ou la veille. Certaines demandent d’abord ou l’ignorent.
+- **Non envoyé :** qui participe, le nom de votre famille et tout le reste de votre calendrier.
+
+Pour un événement qui se répète, choisissez **Cet événement uniquement** ou **Tous les événements de la série**.
+
+Le fichier est une copie. Si l’événement change plus tard, partagez-le de nouveau ; la plupart des applications mettent alors leur copie à jour. Les réponses ne reviennent pas dans WuselWall : les autres répondent là où vous avez envoyé le fichier.
+
 ## Outlook et iPhone {#appointments-in-outlook-or-on-an-iphone}
 
 Un abonnement permet de consulter le calendrier familial en lecture seule dans une autre app : [Partager le calendrier](/fr/calendar/feeds).

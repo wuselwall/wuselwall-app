@@ -1384,6 +1384,46 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventScopeSeries => 'Alle Termine der Serie';
 
   @override
+  String get eventShare => 'Termin teilen';
+
+  @override
+  String get eventShareHelp =>
+      'Erstellt eine Kalenderdatei und gibt sie an eine App auf diesem Gerät weiter, zum Beispiel an den Messenger oder das Mailprogramm. Die anderen öffnen sie in ihrem eigenen Kalender.';
+
+  @override
+  String get eventShareSent => 'Das wird gesendet';
+
+  @override
+  String get eventShareNotSent =>
+      'Nicht gesendet: wer teilnimmt, der Name eurer Familie und alles andere aus eurem Kalender.';
+
+  @override
+  String get eventShareIncludeNote => 'Notizen mitsenden';
+
+  @override
+  String get eventShareReminder => 'Erinnerung für die Empfänger';
+
+  @override
+  String get eventShareReminderHelp =>
+      'Ihre Kalender-App zeigt sie an. Manche Apps fragen vorher oder lassen sie weg.';
+
+  @override
+  String get eventShareReminderNone => 'Keine';
+
+  @override
+  String get eventShareReminderHour => '1 Stunde vorher';
+
+  @override
+  String get eventShareReminderDay => 'Am Tag davor';
+
+  @override
+  String get eventShareSeriesNote =>
+      'Einzeln verschobene Termine der Serie werden mit ihrer üblichen Zeit gesendet.';
+
+  @override
+  String get eventShareSend => 'Teilen';
+
+  @override
   String get errEventInvalid => 'Der Termin ist nicht gültig.';
 
   @override
