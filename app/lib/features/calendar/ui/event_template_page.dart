@@ -12,6 +12,7 @@ import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
+import 'package:wuselwall/features/calendar/application/event_import_providers.dart';
 import 'package:wuselwall/features/calendar/application/event_template_providers.dart';
 import 'package:wuselwall/features/calendar/data/event_templates_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
@@ -164,6 +165,15 @@ class EventTemplatePage extends ConsumerWidget {
                     icon: Icons.edit_outlined,
                     onTap: () => unawaited(_open(context, null)),
                   ),
+                  // An appointment somebody sent as a calendar file (specs/05).
+                  if (ref.watch(canImportEventProvider))
+                    _TemplateTile(
+                      key: const ValueKey('event-template-file'),
+                      title: l10n.eventImportTile,
+                      line: l10n.eventImportTileHelp,
+                      icon: Icons.upload_file_outlined,
+                      onTap: () => unawaited(_fromFile(context, ref)),
+                    ),
                   // A weekly family tradition starts here too (specs/27), so a phone
                   // needs no second floating button over the calendar.
                   if (ref.watch(lighterDaySupportedProvider))
@@ -211,6 +221,14 @@ class EventTemplatePage extends ConsumerWidget {
       Routes.eventEdit,
       extra: EventEditArgs(date: args?.date, template: template),
     );
+    if (saved == true && context.mounted) context.pop(true);
+  }
+
+  /// Lets the person choose a calendar file and shows its event before it is added.
+  Future<void> _fromFile(BuildContext context, WidgetRef ref) async {
+    final bytes = await ref.read(calendarFilePickerProvider)();
+    if (bytes == null || !context.mounted) return;
+    final saved = await context.push<bool>(Routes.eventImport, extra: bytes);
     if (saved == true && context.mounted) context.pop(true);
   }
 

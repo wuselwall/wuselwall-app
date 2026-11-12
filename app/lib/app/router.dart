@@ -8,6 +8,7 @@ import 'package:wuselwall/features/calendar/domain/external_calendar.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_template_page.dart';
+import 'package:wuselwall/features/calendar/ui/import_event_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/baseline_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendar_form_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.dart';
@@ -121,6 +122,7 @@ abstract final class Routes {
   static const shoppingTrip = '/shopping/trip';
   static const eventNew = '/calendar/new';
   static const eventEdit = '/calendar/edit';
+  static const eventImport = '/calendar/import';
   static const recipes = '/meals/recipes';
   static const recipeEdit = '/meals/recipes/edit';
   static const recipeView = '/meals/recipes/view';
@@ -510,6 +512,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.eventEdit,
         builder: (_, state) =>
             EventEditorPage(args: state.extra as EventEditArgs?),
+      ),
+      // A calendar file somebody sent (specs/05 "Sharing one event"): the bytes travel
+      // as the extra. Without them (a restored route) there is nothing to show.
+      _materialRoute(
+        path: Routes.eventImport,
+        builder: (_, state) =>
+            ImportEventPage(bytes: state.extra as Uint8List? ?? Uint8List(0)),
       ),
       _materialRoute(
         path: Routes.recipes,

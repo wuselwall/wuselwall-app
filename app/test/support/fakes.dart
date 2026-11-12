@@ -970,6 +970,29 @@ class FakeCalendarRepository implements CalendarRepository {
     return Ok(event.id ?? 'new-event');
   }
 
+  /// What [importLookup] answers, by the file's UID.
+  final copies = <String, ImportedCopy>{};
+
+  /// The events received as files, with the UID and SEQUENCE they were saved with.
+  final imported = <({CalendarEvent event, String uid, int sequence})>[];
+
+  @override
+  Future<Result<ImportedCopy?>> importLookup({
+    required String? actor,
+    required String uid,
+  }) async => Ok(copies[uid]);
+
+  @override
+  Future<Result<String>> importEvent({
+    required String? actor,
+    required CalendarEvent event,
+    required String uid,
+    required int sequence,
+  }) async {
+    imported.add((event: event, uid: uid, sequence: sequence));
+    return Ok(event.id ?? 'new-event');
+  }
+
   @override
   Future<Result<void>> delete({
     required String? actor,

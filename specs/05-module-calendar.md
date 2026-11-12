@@ -339,9 +339,49 @@ own messenger or mail program carries it; the recipients open it in whatever cal
 event on the family's server), invitations mailed by the server, a list of befriended families,
 replies and comments. Each one is a step towards a messaging service.
 
-**Next (not built):** opening such a file *in* WuselWall, as a copy in the family's own calendar
-after a guardian confirmed a preview. It needs the source UID on `app.event` and the hostile-file
-rules of [11](11-security-and-privacy.md).
+### Receiving one
+
+*Built 2026-11-12, FR-1.21.* The other side: a family that uses WuselWall opens such a file, or
+any calendar file with one event (an Outlook or Google export, a club's invitation).
+
+- **Ways in:** "Open with WuselWall" on the file (Android: an intent filter for `text/calendar`;
+  iOS: the document type `com.apple.ical.ics`), or Neuer Termin → **Aus einer Datei**, which is
+  also the way on the web. An opened file arrives through `app_links` like a link (`content://…`
+  or `file://…`); the bootstrap hands it to `FileHost`, which waits until the device is in its
+  family. Android reads the content address in `MainActivity` (channel `wuselwall/files`),
+  because only the activity that was given the file may read it.
+- **Nothing is saved before a guardian says so.** The import page shows title, time, place and
+  notes, lets the guardian choose who takes part (nobody: the whole family), and only then
+  writes. A guardian on a personal device only; a child's device, a shared device and the wall
+  are told so.
+- **The event becomes the family's own:** a normal row with its own id and uid, editable and
+  deletable like any other, in the outbound feed like any other. There is no link back to the
+  sender and nothing is sent to them.
+- **The same event again:** the server keeps the file's UID and SEQUENCE on the row
+  (`app.event.source_uid`, `source_sequence`, migration `20261112100000`; never in `api.events`
+  or the feed). `api.event_import_lookup` finds the copy, and the page then offers
+  *Termin aktualisieren*: title, time, place and notes are replaced, the family's choice of
+  people stays. A file the family sent itself is recognised by the row's own uid and only
+  opens that event. `api.event_import` is `api.event_save` plus the origin in one transaction;
+  both functions are for guardians and never for a kiosk. A server before this migration
+  (no `event-import` feature) adds the event with `api.event_save` and cannot recognise a second
+  copy.
+- **What is read** (`app/lib/features/calendar/domain/ics_import.dart`): one event per file;
+  several VEVENTs are accepted only when they share one UID (a series with its moved dates;
+  the series is taken, the moved dates are not). SUMMARY, DTSTART, DTEND or DURATION, LOCATION,
+  DESCRIPTION, RRULE, RDATE, EXDATE, STATUS, UID and SEQUENCE; everything else is dropped:
+  alarms, organiser, attendees, attachments, links. A cancelled event is refused.
+- **Times:** UTC as written; a `TZID` the bundled database knows (and the Windows names Outlook
+  writes) in that zone; a time without a zone, or with a zone nobody knows, in the family's
+  zone. An event without an end lasts an hour (a day for an all-day one).
+- **Repeat rules** are checked on the device with the server's own pattern (`app.rrule_valid`).
+  A rule the calendar cannot store is dropped and the page says that only the first date is
+  added.
+- **A stranger's file:** the rules are in
+  [11](11-security-and-privacy.md#a-calendar-file-from-outside).
+
+**Not built:** following later changes by itself (the sender shares again), and an answer to the
+sender.
 
 ## v1 scope cut
 

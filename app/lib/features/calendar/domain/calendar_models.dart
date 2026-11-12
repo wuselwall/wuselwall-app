@@ -338,6 +338,25 @@ class CalendarEvent {
   };
 }
 
+/// The family's event that belongs to a received file (`api.event_import_lookup`).
+class ImportedCopy {
+  const ImportedCopy({required this.eventId, required this.own, this.sequence});
+
+  factory ImportedCopy.fromJson(Map<String, dynamic> json) => ImportedCopy(
+    eventId: json['id'] as String,
+    own: json['own'] as bool? ?? false,
+    sequence: json['sequence'] as int?,
+  );
+
+  final String eventId;
+
+  /// The family made this event itself (it opened a file it sent).
+  final bool own;
+
+  /// The SEQUENCE the copy was last received with.
+  final int? sequence;
+}
+
 /// The meal a tradition carries: a slot and a recipe or a few words.
 class TraditionMeal {
   const TraditionMeal({

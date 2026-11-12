@@ -126,6 +126,19 @@ Pour un événement qui se répète, choisissez **Cet événement uniquement** o
 
 Le fichier est une copie. Si l’événement change plus tard, partagez-le de nouveau ; la plupart des applications mettent alors leur copie à jour. Les réponses ne reviennent pas dans WuselWall : les autres répondent là où vous avez envoyé le fichier.
 
+## Ajouter un événement qu’on vous a envoyé {#receive-event}
+
+Une autre famille vous a envoyé un fichier de calendrier (il se termine par **.ics**) ? Un parent peut l’ajouter au calendrier familial, sur son propre téléphone ou sa tablette.
+
+- **Depuis le message :** touchez le fichier et choisissez **WuselWall** sous « Ouvrir avec ».
+- **Depuis l’application :** Calendrier → **Nouvel événement** → **Depuis un fichier**, puis choisissez le fichier. C’est aussi la marche à suivre dans le navigateur.
+
+WuselWall affiche d’abord l’événement : titre, heure, lieu et notes. Choisissez qui participe (personne : toute la famille) et touchez **Ajouter au calendrier**. Rien n’est enregistré avant.
+
+L’événement est ensuite votre propre copie : vous pouvez le modifier ou le supprimer comme n’importe quel autre. L’expéditeur n’est informé de rien.
+
+Si le même événement est envoyé de nouveau après un changement, WuselWall le reconnaît et propose **Mettre à jour l’événement** au lieu de l’ajouter deux fois. Un fichier contenant plusieurs événements n’est pas accepté ici ; un calendrier entier se place sous [Calendriers externes](#outside-calendars).
+
 ## Outlook et iPhone {#appointments-in-outlook-or-on-an-iphone}
 
 Un abonnement permet de consulter le calendrier familial en lecture seule dans une autre app : [Partager le calendrier](/fr/calendar/feeds).

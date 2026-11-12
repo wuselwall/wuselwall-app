@@ -29,6 +29,11 @@ const featurePasswordReset = 'password-reset';
 /// corrections (specs/29). Announced by the migration 20261031151000.
 const featureLocalMatching = 'local-matching';
 
+/// The server remembers which file a received event came from, so the same event sent
+/// again updates it (specs/05 "Sharing one event"). Announced by the migration
+/// 20261112100000.
+const featureEventImport = 'event-import';
+
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
 /// signs in with a password, and a forgotten password is reset with a guardian's code
 /// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.

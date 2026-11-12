@@ -1432,6 +1432,72 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventShareSend => 'Partager';
 
   @override
+  String get eventImportTile => 'Depuis un fichier';
+
+  @override
+  String get eventImportTileHelp =>
+      'Un fichier de calendrier (.ics) qu’on vous a envoyé';
+
+  @override
+  String get eventImportTitle => 'Ajouter l’événement';
+
+  @override
+  String get eventImportIntro =>
+      'Quelqu’un vous a envoyé cet événement. Vérifiez-le, puis ajoutez-le à votre calendrier familial. Il devient votre propre copie.';
+
+  @override
+  String get eventImportAdd => 'Ajouter au calendrier';
+
+  @override
+  String get eventImportUpdate => 'Mettre à jour l’événement';
+
+  @override
+  String get eventImportExisting =>
+      'Vous avez déjà ajouté cet événement. Le fichier remplace son titre, son heure, son lieu et ses notes.';
+
+  @override
+  String get eventImportOwn =>
+      'Cet événement figure déjà dans votre calendrier : c’est le vôtre.';
+
+  @override
+  String get eventImportOpen => 'Ouvrir l’événement';
+
+  @override
+  String get eventImportRepeats => 'Se répète';
+
+  @override
+  String get eventImportRepeatDropped =>
+      'Le fichier se répète d’une manière que WuselWall ne peut pas enregistrer. Seule la première date est ajoutée.';
+
+  @override
+  String get eventImportAdded => 'Ajouté au calendrier.';
+
+  @override
+  String get eventImportUpdated => 'Événement mis à jour.';
+
+  @override
+  String get eventImportTooLarge =>
+      'Ce fichier est trop volumineux pour un seul événement.';
+
+  @override
+  String get eventImportNotAnEvent =>
+      'Ce fichier ne contient aucun événement lisible.';
+
+  @override
+  String get eventImportSeveral =>
+      'Ce fichier contient plusieurs événements. Seul un fichier avec un événement peut être ajouté ici.';
+
+  @override
+  String get eventImportCancelled => 'L’expéditeur a annulé cet événement.';
+
+  @override
+  String get eventImportParentsOnly =>
+      'Seul un parent peut ajouter un événement depuis un fichier, sur son propre appareil.';
+
+  @override
+  String get eventImportUnreadable => 'Impossible d’ouvrir le fichier.';
+
+  @override
   String get errEventInvalid => 'Cet événement n’est pas valide.';
 
   @override

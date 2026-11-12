@@ -14,6 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/bootstrap.dart';
 import 'package:wuselwall/app/licenses.dart';
+import 'package:wuselwall/app/link_source.dart';
+import 'package:wuselwall/core/files/opened_file.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/wusel/wusel_tilt.dart';
@@ -50,6 +52,12 @@ void main() {
     );
     return;
   }
+
+  // The demo has no bootstrap, so it takes a calendar file the device opens it with
+  // itself: "Open in WuselWall" can be tried without a server (specs/05).
+  openedLinks()?.listen((raw) {
+    if (isFileLink(raw)) openedFile.value = raw;
+  });
 
   runApp(
     ProviderScope(
