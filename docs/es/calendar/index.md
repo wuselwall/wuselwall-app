@@ -124,6 +124,19 @@ Para un evento que se repite, elige **Solo este evento** o **Todos los eventos d
 
 El archivo es una copia. Si el evento cambia más tarde, compártelo otra vez; la mayoría de las aplicaciones actualizan entonces su copia. Las respuestas no vuelven a WuselWall: los demás responden donde enviaste el archivo.
 
+## Añadir un evento que os han enviado {#receive-event}
+
+¿Otra familia os ha enviado un archivo de calendario (termina en **.ics**)? Una madre o un padre puede añadirlo al calendario familiar, en su propio teléfono o tableta.
+
+- **Desde el mensaje:** toca el archivo y elige **WuselWall** en «Abrir con».
+- **Desde la aplicación:** Calendario → **Nuevo evento** → **Desde un archivo**, y elige el archivo. Así se hace también en el navegador.
+
+WuselWall muestra primero el evento: título, hora, lugar y notas. Elige quién participa (nadie elegido: toda la familia) y toca **Añadir al calendario**. Antes no se guarda nada.
+
+Después el evento es vuestra propia copia: podéis cambiarlo o eliminarlo como cualquier otro. El remitente no recibe ningún aviso.
+
+Si el mismo evento llega otra vez tras un cambio, WuselWall lo reconoce y ofrece **Actualizar el evento** en lugar de añadirlo dos veces. Aquí no se acepta un archivo con varios eventos; un calendario entero va en [Calendarios externos](#outside-calendars).
+
 ## Outlook y iPhone {#appointments-in-outlook-or-on-an-iphone}
 
 Una suscripción permite consultar el calendario en otra app, en modo de solo lectura: [Compartir el calendario](/es/calendar/feeds).

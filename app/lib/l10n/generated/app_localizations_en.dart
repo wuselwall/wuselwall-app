@@ -1415,6 +1415,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventShareSend => 'Share';
 
   @override
+  String get eventImportTile => 'From a file';
+
+  @override
+  String get eventImportTileHelp => 'A calendar file (.ics) somebody sent you';
+
+  @override
+  String get eventImportTitle => 'Add appointment';
+
+  @override
+  String get eventImportIntro =>
+      'Somebody sent you this appointment. Check it, then add it to your family calendar. It becomes your own copy.';
+
+  @override
+  String get eventImportAdd => 'Add to the calendar';
+
+  @override
+  String get eventImportUpdate => 'Update the appointment';
+
+  @override
+  String get eventImportExisting =>
+      'You already added this appointment. The file replaces its title, time, place and notes.';
+
+  @override
+  String get eventImportOwn =>
+      'This appointment is already in your calendar: it is your own.';
+
+  @override
+  String get eventImportOpen => 'Open the appointment';
+
+  @override
+  String get eventImportRepeats => 'Repeats';
+
+  @override
+  String get eventImportRepeatDropped =>
+      'The file repeats in a way WuselWall cannot store. Only the first date is added.';
+
+  @override
+  String get eventImportAdded => 'Added to the calendar.';
+
+  @override
+  String get eventImportUpdated => 'Appointment updated.';
+
+  @override
+  String get eventImportTooLarge =>
+      'This file is too large for one appointment.';
+
+  @override
+  String get eventImportNotAnEvent =>
+      'This file holds no appointment that can be read.';
+
+  @override
+  String get eventImportSeveral =>
+      'This file holds several appointments. Only a file with one appointment can be added here.';
+
+  @override
+  String get eventImportCancelled => 'The sender cancelled this appointment.';
+
+  @override
+  String get eventImportParentsOnly =>
+      'Only a parent can add an appointment from a file, on their own device.';
+
+  @override
+  String get eventImportUnreadable => 'The file could not be opened.';
+
+  @override
   String get errEventInvalid => 'This event is not valid.';
 
   @override

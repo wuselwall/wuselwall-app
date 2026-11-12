@@ -32,6 +32,7 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 | FR-1.18 | Each member has a **baseline presence**, a usual week (issue #81): where they normally are on each weekday, optionally in up to three time slots a day and in alternating weeks A/B. Only deviations from it are entered and only deviations are emphasised on the week board | M | late |
 | FR-1.19 | A day may carry a **busy-until** time per member ("Termine bis 17:00"), shown under their state. Maintained by hand in v1; derivable later from an imported work calendar | S | late |
 | FR-1.20 | A guardian sends **one event** to people outside the household as a calendar file through the device's share sheet: title, time and place, notes and a reminder only when chosen, never the attendees. The server takes no part and nothing comes back ([05](05-module-calendar.md#sharing-one-event)) | S | late |
+| FR-1.21 | A guardian opens **a calendar file with one event** in the app ("Open with WuselWall", or Neuer Termin → Aus einer Datei), sees it, chooses who takes part and adds it as the family's own event. The same event sent again updates that copy. Nothing is saved without the guardian's tap ([05](05-module-calendar.md#receiving-one)) | S | late |
 
 ## FR-2 Tasks & Gamification (A2)
 

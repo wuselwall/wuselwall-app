@@ -1424,6 +1424,72 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventShareSend => 'Teilen';
 
   @override
+  String get eventImportTile => 'Aus einer Datei';
+
+  @override
+  String get eventImportTileHelp =>
+      'Eine Kalenderdatei (.ics), die euch jemand geschickt hat';
+
+  @override
+  String get eventImportTitle => 'Termin übernehmen';
+
+  @override
+  String get eventImportIntro =>
+      'Jemand hat euch diesen Termin geschickt. Schau ihn an und übernimm ihn dann in euren Familienkalender. Er wird eure eigene Kopie.';
+
+  @override
+  String get eventImportAdd => 'In den Kalender übernehmen';
+
+  @override
+  String get eventImportUpdate => 'Termin aktualisieren';
+
+  @override
+  String get eventImportExisting =>
+      'Diesen Termin habt ihr schon übernommen. Die Datei ersetzt Titel, Zeit, Ort und Notizen.';
+
+  @override
+  String get eventImportOwn =>
+      'Dieser Termin steht schon in eurem Kalender: Es ist euer eigener.';
+
+  @override
+  String get eventImportOpen => 'Termin öffnen';
+
+  @override
+  String get eventImportRepeats => 'Wiederholt sich';
+
+  @override
+  String get eventImportRepeatDropped =>
+      'Die Datei wiederholt sich auf eine Art, die WuselWall nicht speichern kann. Nur der erste Termin wird übernommen.';
+
+  @override
+  String get eventImportAdded => 'In den Kalender übernommen.';
+
+  @override
+  String get eventImportUpdated => 'Termin aktualisiert.';
+
+  @override
+  String get eventImportTooLarge =>
+      'Diese Datei ist zu groß für einen einzelnen Termin.';
+
+  @override
+  String get eventImportNotAnEvent =>
+      'In dieser Datei steht kein Termin, der sich lesen lässt.';
+
+  @override
+  String get eventImportSeveral =>
+      'In dieser Datei stehen mehrere Termine. Hier lässt sich nur eine Datei mit einem Termin übernehmen.';
+
+  @override
+  String get eventImportCancelled => 'Der Absender hat diesen Termin abgesagt.';
+
+  @override
+  String get eventImportParentsOnly =>
+      'Einen Termin aus einer Datei können nur Eltern übernehmen, auf ihrem eigenen Gerät.';
+
+  @override
+  String get eventImportUnreadable => 'Die Datei ließ sich nicht öffnen.';
+
+  @override
   String get errEventInvalid => 'Der Termin ist nicht gültig.';
 
   @override
@@ -6962,6 +7028,13 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
   @override
   String get settingNotifyTaskVerifiedHelp =>
       'Eine Benachrichtigung, wenn ein Elternteil ein Ämtli bestätigt und die Punkte gutgeschrieben werden.';
+
+  @override
+  String get eventImportTooLarge =>
+      'Diese Datei ist zu gross für einen einzelnen Termin.';
+
+  @override
+  String get eventImportUnreadable => 'Die Datei liess sich nicht öffnen.';
 
   @override
   String get tasksTitle => 'Ämtli';

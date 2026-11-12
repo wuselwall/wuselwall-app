@@ -1370,6 +1370,21 @@ class DemoCalendarRepository implements CalendarRepository {
     return const Err(NotFoundFailure(code: 'event_not_found'));
   }
 
+  // A received file (specs/05): the demo keeps no origin, so every file is a new event.
+  @override
+  Future<Result<ImportedCopy?>> importLookup({
+    required String? actor,
+    required String uid,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<String>> importEvent({
+    required String? actor,
+    required CalendarEvent event,
+    required String uid,
+    required int sequence,
+  }) => save(actor: actor, event: event);
+
   @override
   Future<Result<String>> save({
     required String? actor,

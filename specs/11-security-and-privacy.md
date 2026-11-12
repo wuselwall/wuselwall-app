@@ -252,6 +252,28 @@ carries only the country codes, date ranges and the server's own IP address, lik
 request; nothing about the household, its members, its schools or its region choice is sent.
 The results are cached as public reference data.
 
+### A calendar file from outside
+
+A file a family opens in the app ([05](05-module-calendar.md#receiving-one), 2026-11-12) is a
+stranger's text: it may come from the family next door, or from anybody who has a parent's
+number.
+
+- **Parsed on the device, by a small reader of its own**, never by the server: at most 256 KB,
+  at most 50 events looked at and one taken, at most 2000 lines of it, text cut to the lengths
+  the database stores, control characters removed. The app follows no address in the file and
+  loads nothing it names; `ATTACH`, `URL`, alarms, organiser and attendees are dropped.
+- **Nothing is written without a guardian's tap** on a page that shows what would be written.
+  Opening a file never changes the calendar by itself, and never signs anybody in or chooses a
+  server.
+- **The server checks again:** `api.event_import` takes guardians only and no kiosk, runs the
+  same validation as every event (`api.event_save`: lengths, the repeat rule, the bounded
+  recurrence engine), and updates only a row that this household received with the same UID.
+  A UID is not a secret and not an identity: knowing one lets a sender offer an update, which
+  the guardian sees before it is applied.
+- **Android:** the app's activity accepts `VIEW` for `text/calendar` only, reads the address it
+  was given once, with the size cap, off the main thread, and only `content://` addresses.
+- **Logs:** neither the file's name nor its address nor its content is logged.
+
 ### T8 — a curious nine-year-old
 
 - Guardian actions behind a 6-digit PIN, entered on a keypad with no visible echo.

@@ -2558,6 +2558,120 @@ abstract class AppLocalizations {
   /// **'Share'**
   String get eventShareSend;
 
+  /// No description provided for @eventImportTile.
+  ///
+  /// In en, this message translates to:
+  /// **'From a file'**
+  String get eventImportTile;
+
+  /// No description provided for @eventImportTileHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A calendar file (.ics) somebody sent you'**
+  String get eventImportTileHelp;
+
+  /// No description provided for @eventImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add appointment'**
+  String get eventImportTitle;
+
+  /// No description provided for @eventImportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Somebody sent you this appointment. Check it, then add it to your family calendar. It becomes your own copy.'**
+  String get eventImportIntro;
+
+  /// No description provided for @eventImportAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to the calendar'**
+  String get eventImportAdd;
+
+  /// No description provided for @eventImportUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update the appointment'**
+  String get eventImportUpdate;
+
+  /// No description provided for @eventImportExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'You already added this appointment. The file replaces its title, time, place and notes.'**
+  String get eventImportExisting;
+
+  /// No description provided for @eventImportOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'This appointment is already in your calendar: it is your own.'**
+  String get eventImportOwn;
+
+  /// No description provided for @eventImportOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the appointment'**
+  String get eventImportOpen;
+
+  /// No description provided for @eventImportRepeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get eventImportRepeats;
+
+  /// No description provided for @eventImportRepeatDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'The file repeats in a way WuselWall cannot store. Only the first date is added.'**
+  String get eventImportRepeatDropped;
+
+  /// No description provided for @eventImportAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to the calendar.'**
+  String get eventImportAdded;
+
+  /// No description provided for @eventImportUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment updated.'**
+  String get eventImportUpdated;
+
+  /// No description provided for @eventImportTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is too large for one appointment.'**
+  String get eventImportTooLarge;
+
+  /// No description provided for @eventImportNotAnEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'This file holds no appointment that can be read.'**
+  String get eventImportNotAnEvent;
+
+  /// No description provided for @eventImportSeveral.
+  ///
+  /// In en, this message translates to:
+  /// **'This file holds several appointments. Only a file with one appointment can be added here.'**
+  String get eventImportSeveral;
+
+  /// No description provided for @eventImportCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'The sender cancelled this appointment.'**
+  String get eventImportCancelled;
+
+  /// No description provided for @eventImportParentsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a parent can add an appointment from a file, on their own device.'**
+  String get eventImportParentsOnly;
+
+  /// No description provided for @eventImportUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'The file could not be opened.'**
+  String get eventImportUnreadable;
+
   /// No description provided for @errEventInvalid.
   ///
   /// In en, this message translates to:

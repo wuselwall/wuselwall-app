@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/file_host.dart';
 import 'package:wuselwall/app/link_host.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/server_session.dart';
@@ -64,9 +65,14 @@ class WuselWallApp extends ConsumerWidget {
         final app = MotionScope(
           child: WuselStage(
             child: LinkHost(
-              child: _ReminderHost(
-                child: _MemberAccent(
-                  child: EmptyIllustration(builder: _emptyWusel, child: child!),
+              child: FileHost(
+                child: _ReminderHost(
+                  child: _MemberAccent(
+                    child: EmptyIllustration(
+                      builder: _emptyWusel,
+                      child: child!,
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -29,7 +29,9 @@ the kid register; regions to any depth and holidays (DE/AT/CH/LI from OpenHolida
 by the server: public holidays automatic, Ferien imported), several schools, the timetable's
 day operations, meal suggestions, the Today tab with the getting-started card, the data
 export, one event as a calendar file for another family (FR-1.20, specs/05 "Sharing one event": built on
-the device, sent through the share sheet, no server part), subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrences in their
+the device, sent through the share sheet, no server part) and such a file opened in the app (FR-1.21,
+"Receiving one": `ics_import.dart`, the import page, `api.event_import` and `app.event.source_uid`, migration
+`20261112100000`, feature `event-import`, pgTAP 300), subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrences in their
 own tables, optionally in the outbound feed), local reminders (Q47), the QR scanner on
 `camera` and `zxing2` (Q49), Siri via Apple Shortcuts (M2, specs/12 Part 1: per-person keys
 in `app.shortcut_token`, the `shortcuts` function),

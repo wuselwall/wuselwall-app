@@ -129,6 +129,19 @@ For a repeating appointment you choose **Only this event** or **All events in th
 
 The file is a copy. If the appointment changes later, share it again; most calendar apps then update their copy. Answers do not come back to WuselWall: the others reply where you sent the file.
 
+## Adding an appointment somebody sent you {#receive-event}
+
+Another family sent you a calendar file (it ends in **.ics**)? A parent can add it to the family calendar, on their own phone or tablet.
+
+- **From the message:** tap the file and choose **WuselWall** under "Open with".
+- **From the app:** Calendar → **New event** → **From a file**, then choose the file. This is also the way in the browser.
+
+WuselWall shows the appointment first: title, time, place and notes. Choose who takes part (nobody chosen: the whole family) and tap **Add to the calendar**. Nothing is saved before that.
+
+The appointment is then your own copy: you can change or delete it like any other. The sender is not told anything.
+
+If the same appointment is sent again after a change, WuselWall recognises it and offers **Update the appointment** instead of adding it twice. A file with several appointments is not accepted here; a whole calendar belongs under [Outside calendars](#outside-calendars).
+
 ## Appointments in Outlook or on an iPhone
 
 The family calendar can be shown as a **subscription** in Outlook or on an iPhone, read-only. See [Sharing the family calendar](/en/calendar/feeds).

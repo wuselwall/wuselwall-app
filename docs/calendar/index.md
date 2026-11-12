@@ -129,6 +129,19 @@ Bei einem Termin, der sich wiederholt, wählst du **Nur dieser Termin** oder **A
 
 Die Datei ist eine Kopie. Ändert sich der Termin später, teile ihn noch einmal; die meisten Kalender-Apps aktualisieren dann ihre Kopie. Antworten kommen nicht zu WuselWall zurück: Die anderen antworten dort, wo du die Datei gesendet hast.
 
+## Einen Termin übernehmen, den euch jemand geschickt hat {#receive-event}
+
+Eine andere Familie hat euch eine Kalenderdatei geschickt (sie endet auf **.ics**)? Eltern können sie in den Familienkalender übernehmen, auf ihrem eigenen Handy oder Tablet.
+
+- **Aus der Nachricht:** Tippe auf die Datei und wähle unter „Öffnen mit“ **WuselWall**.
+- **Aus der App:** Kalender → **Neuer Termin** → **Aus einer Datei**, dann die Datei wählen. So geht es auch im Browser.
+
+WuselWall zeigt den Termin zuerst an: Titel, Zeit, Ort und Notizen. Wähle, wer teilnimmt (niemand gewählt: die ganze Familie), und tippe auf **In den Kalender übernehmen**. Vorher wird nichts gespeichert.
+
+Der Termin ist danach eure eigene Kopie: Ihr könnt ihn ändern oder löschen wie jeden anderen. Der Absender erfährt nichts.
+
+Kommt derselbe Termin nach einer Änderung noch einmal, erkennt WuselWall ihn und bietet **Termin aktualisieren** an, statt ihn doppelt einzutragen. Eine Datei mit mehreren Terminen wird hier nicht angenommen; ein ganzer Kalender gehört unter [Kalender von außen](#kalender-von-aussen).
+
 ## Termine in Outlook oder auf dem iPhone
 
 Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anzeigen, nur zum Lesen. Siehe [Den Familienkalender teilen](/calendar/feeds).

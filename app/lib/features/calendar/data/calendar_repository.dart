@@ -59,6 +59,38 @@ class CalendarRepository {
     parse: (json) => (json! as Map<String, dynamic>)['id'] as String,
   );
 
+  /// The family's event that belongs to a received file's [uid] (specs/05 "Sharing one
+  /// event"), or null. Only on servers that announce `event-import`.
+  Future<Result<ImportedCopy?>> importLookup({
+    required String? actor,
+    required String uid,
+  }) => _api.rpc(
+    'event_import_lookup',
+    params: {'p_actor': actor, 'p_source_uid': uid},
+    parse: (json) => json == null
+        ? null
+        : ImportedCopy.fromJson(json as Map<String, dynamic>),
+  );
+
+  /// Saves an event received as a file and records the file's [uid] and [sequence], so
+  /// the same event sent again is recognised. With an id in [event] the copy received
+  /// earlier is replaced. Returns the event's id.
+  Future<Result<String>> importEvent({
+    required String? actor,
+    required CalendarEvent event,
+    required String uid,
+    required int sequence,
+  }) => _api.rpc(
+    'event_import',
+    params: {
+      'p_actor': actor,
+      'p_event': event.toJson(),
+      'p_source_uid': uid,
+      'p_source_sequence': sequence,
+    },
+    parse: (json) => (json! as Map<String, dynamic>)['id'] as String,
+  );
+
   Future<Result<void>> delete({required String? actor, required String id}) =>
       _api.rpc(
         'event_delete',

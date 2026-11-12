@@ -54,6 +54,18 @@
               <data android:pathPrefix="/fr/p/" />
               <data android:pathPrefix="/es/p/" />
             </intent-filter>
+
+            <!-- "Open with WuselWall" on a calendar file somebody sent (specs/05, "Sharing
+                 one event"). The file's address arrives through app_links like a link;
+                 MainActivity reads it (channel wuselwall/files) and a guardian sees the
+                 event before anything is saved. -->
+            <intent-filter>
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <data android:scheme="content" />
+              <data android:scheme="file" />
+              <data android:mimeType="text/calendar" />
+            </intent-filter>
         </activity>
         <!-- flutter_local_notifications: shows scheduled reminders and restores them after
              a reboot or an app update (README, "AndroidManifest.xml setup"). -->

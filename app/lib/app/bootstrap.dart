@@ -15,6 +15,7 @@ import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/files/opened_file.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler.dart';
@@ -242,6 +243,12 @@ class _BootstrapState extends State<Bootstrap> {
   }
 
   Future<void> _onLink(String raw) async {
+    // A calendar file the device opened the app with, not a link: the running app
+    // takes it (FileHost), and it names no server.
+    if (isFileLink(raw)) {
+      openedFile.value = raw;
+      return;
+    }
     final setup = parseSetupLink(raw);
     if (setup != null) {
       if (!_firstLink.isCompleted) _firstLink.complete();

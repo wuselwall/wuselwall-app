@@ -98,5 +98,7 @@
   "eventStarterSportsEvent": "Sportanlass",
   "eventStarterHoliday": "Ferien / Reise",
   "shoppingSearchClear": "Leeren und schliessen",
-  "settingAmbienceStNicholasTitle": "Samichlaus"
+  "settingAmbienceStNicholasTitle": "Samichlaus",
+  "eventImportTooLarge": "Diese Datei ist zu gross für einen einzelnen Termin.",
+  "eventImportUnreadable": "Die Datei liess sich nicht öffnen."
 }

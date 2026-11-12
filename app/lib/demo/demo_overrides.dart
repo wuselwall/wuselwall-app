@@ -34,6 +34,7 @@ import 'package:wuselwall/demo/demo_shortcuts.dart';
 import 'package:wuselwall/demo/demo_tasks.dart';
 import 'package:wuselwall/features/account/application/account_admin_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
+import 'package:wuselwall/features/calendar/application/event_import_providers.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/event_templates_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
@@ -192,6 +193,7 @@ List<Override> _overrides(
   // No camera and no files in the demo: picking gives none.
   imagePickerProvider.overrideWithValue((_) async => null),
   filePickerProvider.overrideWithValue(() async => null),
+  calendarFilePickerProvider.overrideWithValue(() async => null),
   regionRepositoryProvider.overrideWithValue(DemoRegionRepository()),
   mealsRepositoryProvider.overrideWithValue(DemoMealsRepository()),
   calendarRepositoryProvider.overrideWithValue(DemoCalendarRepository()),
