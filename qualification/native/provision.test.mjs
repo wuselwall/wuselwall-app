@@ -6,6 +6,21 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 const script = 'qualification/native/provision.sh';
 
+// The script measures the real free space with Python's shutil.disk_usage. Fixtures replace
+// that one measurement through a sitecustomize module on PYTHONPATH, so the outcome does not
+// depend on the free space of whatever machine runs the tests. provision.sh is unchanged.
+async function fakeFreeDisk(root, freeGiB) {
+  const dir = path.join(root, 'fake-disk');
+  await fs.mkdir(dir);
+  await fs.writeFile(path.join(dir, 'sitecustomize.py'), [
+    'import shutil',
+    '_real_disk_usage = shutil.disk_usage',
+    `shutil.disk_usage = lambda p: _real_disk_usage(p)._replace(free=int(${Number(freeGiB)} * 1024 ** 3))`,
+    '',
+  ].join('\n'));
+  return dir;
+}
+
 test('native provisioning dry-run is offline and creates no dedicated directory', async t => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'ww-provision-plan-'));
   t.after(() => fs.rm(root, {recursive: true, force: true}));
@@ -20,9 +35,10 @@ test('native provisioning dry-run is offline and creates no dedicated directory'
   await assert.rejects(fs.stat(tools), {code: 'ENOENT'});
 });
 
-async function fakeDarwinArm64(t, {systemPath = true, javaMode = 'missing'} = {}) {
+async function fakeDarwinArm64(t, {systemPath = true, javaMode = 'missing', freeGiB = 1000} = {}) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'ww-provision-preflight-'));
   t.after(() => fs.rm(root, {recursive: true, force: true}));
+  const pythonPath = await fakeFreeDisk(root, freeGiB);
   const bin = path.join(root, 'bin');
   const tools = path.join(root, 'absent-tools');
   const javaHome = path.join(root, 'jdk');
@@ -61,7 +77,7 @@ async function fakeDarwinArm64(t, {systemPath = true, javaMode = 'missing'} = {}
     await fs.writeFile(path.join(javaBin, 'java'), '#!/bin/sh\nprintf \'openjdk version "17.0.1"\\n\' >&2\n');
   }
   if (javaMode !== 'missing') await fs.chmod(path.join(javaBin, 'java'), 0o755);
-  return {root, bin, tools, javaHome, javaBin, networkMarker, path: systemPath ? `${bin}:${process.env.PATH}` : bin};
+  return {root, bin, tools, javaHome, javaBin, networkMarker, pythonPath, path: systemPath ? `${bin}:${process.env.PATH}` : bin};
 }
 
 function applyWithFakeMac(fixture, overrides = {}) {
@@ -71,6 +87,7 @@ function applyWithFakeMac(fixture, overrides = {}) {
     env: {
       ...process.env,
       PATH: fixture.path,
+      PYTHONPATH: fixture.pythonPath,
       JAVA_HOME: fixture.javaHome,
       QUALIFICATION_TOOLS_ROOT: fixture.tools,
       QUALIFICATION_MIN_FREE_GIB: '30',
@@ -100,6 +117,39 @@ test('native apply reports a captured JVM startup error before creating SDK dire
   assert.match(result.stderr, /fake JVM startup failure detail/);
   await assert.rejects(fs.stat(fixture.tools), {code: 'ENOENT'});
   await assert.rejects(fs.stat(fixture.networkMarker), {code: 'ENOENT'});
+});
+
+test('fixtures report a fixed free space instead of the host disk', async t => {
+  for (const freeGiB of [21.6, 1000]) {
+    const fixture = await fakeDarwinArm64(t, {freeGiB});
+    const result = spawnSync('bash', [script, '--dry-run'], {encoding: 'utf8', env: {...process.env, PYTHONPATH: fixture.pythonPath, QUALIFICATION_TOOLS_ROOT: fixture.tools}});
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, new RegExp(`Free disk: ${freeGiB.toFixed(1).replace('.', '\\.')} GiB; required floor: 100 GiB`));
+    await assert.rejects(fs.stat(fixture.tools), {code: 'ENOENT'});
+  }
+});
+
+test('native apply refuses insufficient free disk before any check, download or write', async t => {
+  const fixture = await fakeDarwinArm64(t, {javaMode: 'valid', freeGiB: 29.9});
+  const result = applyWithFakeMac(fixture);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Insufficient free disk space; nothing installed/);
+  assert.match(result.stdout, /Free disk: 29\.9 GiB; required floor: 30 GiB/);
+  assert.doesNotMatch(result.stdout, /Starting installation/);
+  await assert.rejects(fs.stat(fixture.tools), {code: 'ENOENT'});
+  await assert.rejects(fs.stat(fixture.networkMarker), {code: 'ENOENT'});
+});
+
+test('native apply refuses insufficient free disk without touching an owned tools directory', async t => {
+  const config = JSON.parse(await fs.readFile('qualification/native/toolchain.json', 'utf8'));
+  const fixture = await preseededCommandTools(t, config.commandLineTools.revision, {freeGiB: 29.9});
+  const before = (await fs.readdir(fixture.toolsRoot, {recursive: true})).sort();
+  const result = applyWithFakeMac(fixture, {QUALIFICATION_TOOLS_ROOT: fixture.toolsRoot});
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Insufficient free disk space; nothing installed/);
+  assert.deepEqual((await fs.readdir(fixture.toolsRoot, {recursive: true})).sort(), before);
+  await assert.rejects(fs.stat(fixture.sdkManagerCalls), {code: 'ENOENT'});
+  await assert.rejects(fs.stat(fixture.curlMarker), {code: 'ENOENT'});
 });
 
 test('native apply names a missing required tool before creating SDK directories', async t => {
@@ -150,9 +200,10 @@ test('command-tools archive build maps to its verified archive revision and dige
   });
 });
 
-async function preseededCommandTools(t, revision) {
+async function preseededCommandTools(t, revision, {freeGiB = 1000} = {}) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'ww-provision-retry-'));
   t.after(() => fs.rm(root, {recursive: true, force: true}));
+  const pythonPath = await fakeFreeDisk(root, freeGiB);
   const bin = path.join(root, 'bin');
   const toolsRoot = path.join(root, 'owned-tools');
   const javaHome = path.join(root, 'jdk');
@@ -208,6 +259,7 @@ async function preseededCommandTools(t, revision) {
     curlMarker,
     avdSentinel,
     packageSentinel,
+    pythonPath,
     path: `${bin}:${process.env.PATH}`,
   };
 }
