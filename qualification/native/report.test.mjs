@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import sharp from 'sharp';
-import { nativeEvidence, profiles, expectedCases, pendingReviewCandidates } from './report.mjs';
+import { nativeEvidence, profiles, expectedCases, pendingReviewCandidates, profileOrigin } from './report.mjs';
 import { pendingEntry, parseReviewBundle } from './reviews.mjs';
 
 const sha = 'a'.repeat(40);
@@ -103,6 +103,36 @@ test('native evidence rejects missing screenshots even with passing audit JSON',
   const root = await fixture(t);
   await fs.rm(path.join(root, profiles[0], `${expectedCases(profiles[0], true)[0]}.png`));
   assert.equal((await nativeEvidence(root, sha, true)).executionPassed, false);
+});
+
+test('absent Android evidence fails closed with its own originating phase and no runner path', async t => {
+  const root = await fixture(t);
+  await fs.writeFile(path.join(root, 'profiles.txt'),
+    profiles.map(p => `${p}: ${['android-phone', 'android-tablet-large'].includes(p) ? 'FAIL' : 'PASS'}`).join('\n'));
+  await fs.rm(path.join(root, 'android-phone/audit.json'));
+  await fs.writeFile(path.join(root, 'android-phone/run.log'), [
+    'NATIVE PHASE BEGIN android-adb-start-server timeout=60s',
+    'NATIVE PHASE TIMEOUT android-adb-start-server after 60s',
+    'NATIVE PHASE END android-existing-emulator exit=1',
+  ].join('\n'));
+  // `adb exec-out run-as … cat` prints a missing file's error to stdout and still exits 0.
+  await fs.writeFile(path.join(root, 'android-tablet-large/audit.json'), 'cat: files/qualification-native-audit.json: No such file or directory\n');
+  await fs.writeFile(path.join(root, 'android-tablet-large/run.log'),
+    'NATIVE REPORT INVALID android-tablet-large: JSONDecodeError\n');
+  const evidence = await nativeEvidence(root, sha, true);
+  assert.equal(evidence.executionPassed, false);
+  assert.equal(evidence.audits.android.supported, false);
+  const phone = evidence.results.find(r => r.profile === 'android-phone');
+  assert.equal(phone.passed, false);
+  assert.deepEqual(phone.origin, {status: 'FAIL', log: 'android-phone/run.log',
+    markers: ['NATIVE PHASE TIMEOUT android-adb-start-server after 60s']});
+  assert.match(phone.error, /ENOENT/);
+  assert.equal(phone.error.includes(root), false, 'uploaded evidence carries no absolute runner path');
+  const tablet = evidence.results.find(r => r.profile === 'android-tablet-large');
+  assert.equal(tablet.passed, false);
+  assert.deepEqual(tablet.origin.markers, ['NATIVE REPORT INVALID android-tablet-large: JSONDecodeError']);
+  const unrun = await profileOrigin(root, 'android-min-phone', '');
+  assert.deepEqual(unrun, {status: 'not run', log: null, markers: []});
 });
 
 test('native evidence rejects unsuccessful subprocesses, ineffective font changes and detector misses', async t => {
