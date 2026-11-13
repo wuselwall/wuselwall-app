@@ -203,7 +203,12 @@ jobs:
       - run: npm run qualify:scroll-controls
       - run: flutter pub get --enforce-lockfile
         working-directory: app
+      # The font fallback shards are cached under XDG_CACHE_HOME; the self-hosted runner's
+      # ~/.cache is not the job's to write, so the job uses its temporary directory. The
+      # shards are still checked against scripts/web-font-fallback.lock.
       - run: npm run qualify:build-web
+        env:
+          WW_FONT_FALLBACK_CACHE: ${{ runner.temp }}/font-fallback
       - run: npm run qualify:font-policy
       - run: npm run qualify:web
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
