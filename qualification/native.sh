@@ -18,6 +18,19 @@ run_logged_deadline() {
   printf 'NATIVE LOGGED PHASE END %s exit=%s log=%s\n' "$phase" "$status" "${log##*/}" >&2
   return "$status"
 }
+# A collected report must be a finished audit; `adb exec-out` exits 0 even when it prints an error.
+report_complete() {
+  python3 - "$1" <<'PY'
+import json, sys
+try:
+    with open(sys.argv[1]) as handle:
+        report = json.load(handle)
+except (OSError, ValueError) as error:
+    sys.exit(f'NATIVE REPORT INVALID {sys.argv[1].rsplit("/", 2)[-2]}: {type(error).__name__}')
+if not isinstance(report, dict) or report.get('schemaVersion') != 1 or report.get('done') is not True:
+    sys.exit(f'NATIVE REPORT INVALID {sys.argv[1].rsplit("/", 2)[-2]}: not a finished audit report')
+PY
+}
 mkdir -p "$output"
 platform=all
 if [[ $# -gt 0 ]]; then
@@ -138,6 +151,7 @@ run_ios() {
   local data_path
   if data_path=$(run_deadline 60 "ios-report-container-$kind" xcrun simctl get_app_container "$simulator_id" ch.goomba.wuselwall data); then
     run_deadline 60 "ios-report-copy-$kind" cp "$data_path/tmp/native-audit.json" "$output/ios-$kind/audit.json" || failed=1
+    report_complete "$output/ios-$kind/audit.json" || failed=1
   else
     failed=1
   fi
@@ -153,7 +167,11 @@ run_android() {
   local kind="$1" avd="$2" tablet="$3"
   mkdir -p "$output/android-$kind"
   # Own one dedicated port; never stop someone else's running virtual device.
-  run_deadline 60 android-adb-start-server adb start-server || return 1
+  if ! run_deadline 60 android-adb-start-server adb start-server; then
+    # The ADB server writes its own log here; keep it as this profile's originating diagnostic.
+    cp "${TMPDIR:-/tmp}/adb.$(id -u).log" "$output/android-$kind/adb-server.log" 2>/dev/null || true
+    return 1
+  fi
   local state_status=0
   run_deadline 15 android-existing-emulator adb -s emulator-5580 get-state >/dev/null || state_status=$?
   if [[ "$state_status" == 0 ]]; then echo 'Emulator port 5580 is already in use.' >&2; return 1; fi
@@ -219,6 +237,7 @@ PY
   # Dart's systemTemp location is platform-defined; do not assume app/cache.
   run_deadline 60 "android-report-pull-$kind" adb -s emulator-5580 exec-out run-as ch.goomba.wuselwall cat files/qualification-native-audit.json \
     > "$output/android-$kind/audit.json" || failed=1
+  report_complete "$output/android-$kind/audit.json" || failed=1
   [[ "$failed" == 0 ]] || return 1
   kill "$emulator_pid"
   wait "$emulator_pid" || true
@@ -228,7 +247,9 @@ if [[ $# == 0 ]]; then
   rm -f "$output/profiles.txt" "$output/visual.json" "$output/evidence.json" "$output/diagnostic-runtime.json"
   failed=0
   for profile in ios-phone ios-tablet android-phone android-tablet ios-phone-large ios-tablet-large android-phone-large android-tablet-large android-min-phone; do
-    if bash "$0" "$profile"; then
+    # Keep each profile's own phase markers, even when it fails before writing evidence.
+    mkdir -p "$output/$profile"
+    if bash "$0" "$profile" 2>&1 | tee "$output/$profile/run.log"; then
       printf '%s: PASS\n' "$profile" >> "$output/profiles.txt"
     else
       printf '%s: FAIL\n' "$profile" >> "$output/profiles.txt"

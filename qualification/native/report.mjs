@@ -9,6 +9,18 @@ import { parseReviewBundle, reviewCase, assertReviewConsumption, pendingEntry } 
 
 export const profiles = ['ios-phone', 'ios-tablet', 'android-phone', 'android-tablet',
   'ios-phone-large', 'ios-tablet-large', 'android-phone-large', 'android-tablet-large', 'android-min-phone'];
+// Evidence is uploaded; never record the runner's absolute checkout path in it.
+export const sanitize = (root, value) => String(value).split(`${path.resolve(root)}${path.sep}`).join('');
+const failureMarker = /^NATIVE (?:PHASE (?:TIMEOUT|START FAILED|CLEANUP INCOMPLETE) |LOGGED PHASE END \S+ exit=[1-9]|REPORT INVALID )/;
+// Where a profile's evidence went missing: its execution status and failure markers from its own log.
+export async function profileOrigin(root, profile, statuses) {
+  const lines = statuses.split('\n');
+  const status = lines.includes(`${profile}: FAIL`) ? 'FAIL' : lines.includes(`${profile}: PASS`) ? 'PASS' : 'not run';
+  const log = `${profile}/run.log`;
+  const text = await fs.readFile(path.join(root, log), 'utf8').catch(() => null);
+  if (text === null) return {status, log: null, markers: []};
+  return {status, log, markers: text.split('\n').map(line => line.trim()).filter(line => failureMarker.test(line)).slice(0, 10)};
+}
 export function expectedCases(profile, smoke = false) {
   return inventory.states.filter(s => s.native && (profile.includes('tablet') || !['kid', 'kiosk'].includes(s.scenario)))
     .flatMap(s => (smoke ? ['de'] : inventory.locales).flatMap(locale =>
@@ -140,7 +152,8 @@ export async function nativeEvidence(root, candidateSha, smoke = false, reviewEn
     } catch (error) {
       results.push({profile, supported: false, collectionPassed: false, rawPassed: false, passed: false,
         detectorsPassed: false, largeTextPassed: false, frameworkErrors: 1, captures: 0, cases: 0,
-        reviewedExceptions: [], unresolvedIssues: [], error: String(error)});
+        reviewedExceptions: [], unresolvedIssues: [], error: sanitize(root, error),
+        origin: await profileOrigin(root, profile, statuses)});
     }
   }
   if (review.bundle) {
@@ -156,7 +169,7 @@ export async function nativeEvidence(root, candidateSha, smoke = false, reviewEn
     return {supported: entries.every(r => r.supported), detectorsPassed: entries.every(r => r.detectorsPassed),
       passed: entries.every(r => r.passed), cases: entries.reduce((n, r) => n + r.cases, 0)};
   };
-  const visual = await fs.readFile(path.join(root, 'visual.json'), 'utf8').then(JSON.parse).catch(error => ({passed: false, error: String(error)}));
+  const visual = await fs.readFile(path.join(root, 'visual.json'), 'utf8').then(JSON.parse).catch(error => ({passed: false, error: sanitize(root, error)}));
   if (visual.candidateSha !== candidateSha) visual.passed = false;
   const reviewMetadata = {used: review.used, manifestSha256: review.manifestSha256,
     appliedCount: appliedEntries.length, applied: appliedEntries, unresolvedCount: unresolvedAll.length};
