@@ -1,5 +1,8 @@
 // Test-only entry states for real production screens. These select a destination
 // directly; authentication, redirects and mutations are covered by journey tests.
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +20,7 @@ import 'package:wuselwall/features/calendar/data/feed_repository.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_template_page.dart';
+import 'package:wuselwall/features/calendar/ui/import_event_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/baseline_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendar_form_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.dart';
@@ -145,6 +149,29 @@ Account qualificationAccount({bool deleted = false}) => Account(
       : null,
 );
 
+/// A calendar file somebody sent (specs/05 "Sharing one event"): one weekly event
+/// with a place and notes, or [events] different events, which the page refuses.
+Uint8List qualificationEventFile({int events = 1}) => utf8.encode(
+  [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Example//Qualification//EN',
+    for (var i = 0; i < events; i++) ...[
+      'BEGIN:VEVENT',
+      'UID:qualification-$i@example.org',
+      'SUMMARY:${DemoData.tr4('Elternabend', 'Parents’ evening', 'Réunion de parents', 'Reunión de padres')}',
+      'DTSTART;TZID=Europe/Zurich:20261020T193000',
+      'DTEND;TZID=Europe/Zurich:20261020T210000',
+      'RRULE:FREQ=WEEKLY;COUNT=3',
+      'LOCATION:${DemoData.tr4('Schulhaus Lindenhof', 'Lindenhof school', 'École du Lindenhof', 'Escuela Lindenhof')}',
+      'DESCRIPTION:${DemoData.tr4('Bitte den Stundenplan mitbringen.', 'Please bring the timetable.', 'Merci d’apporter l’emploi du temps.', 'Traed el horario por favor.')}',
+      'END:VEVENT',
+    ],
+    'END:VCALENDAR',
+    '',
+  ].join('\r\n'),
+);
+
 /// Direct page composition is deliberately separate from production route guards.
 /// Every destination still uses its real widgets, repositories, theme and semantics.
 GoRouter qualificationFixtureRouter(String id) {
@@ -219,6 +246,10 @@ class _Destination extends ConsumerWidget {
     ),
     'event-edit' => const EventEditorPage(
       args: EventEditArgs(eventId: 'e-turnen'),
+    ),
+    'event-import' => ImportEventPage(bytes: qualificationEventFile()),
+    'event-import-refused' => ImportEventPage(
+      bytes: qualificationEventFile(events: 2),
     ),
     'recipe-create' => const RecipeEditorPage(),
     'recipe-edit' || 'recipe-view' => AsyncValueView(

@@ -2,7 +2,7 @@
 
 The [qualification design](../specs/accessibility-and-ui-qualification.md) is implemented
 as a manually dispatched evidence suite and an enforced app/server release gate. The shared
-inventory contains 75 states and accounts for every release route. Two exclusions are
+inventory contains 77 states and accounts for every release route. Two exclusions are
 checked against the production router: the legacy settings redirect and the developer-only
 diagnostics page. Route coverage does not mean every dialog, permission state or backend
 journey has been exercised.
@@ -19,7 +19,7 @@ from a recognized engine crash does not establish a clean release-candidate run.
 - Flutter: bundled fonts, four locales, Android/iOS widget adaptations, light/dark and
   kiosk night, semantics, labels, target sizes and rendered text contrast. The responsive
   tier adds relevant widths, 599/600/601 boundaries and 100/200% text. Every inventory
-  state runs regardless of changed paths. Fixture integrity checks render all 48 direct
+  state runs regardless of changed paths. Fixture integrity checks render all 50 direct
   destination fixtures in four languages before their audit results can count.
 - Browser: the release-compiled synthetic-data entry point, stable screenshots and ARIA
   snapshots, axe-core DOM/ARIA checks, console/page errors and blocked external requests.
@@ -47,7 +47,7 @@ qualification for that exact commit and protected human approval before publishi
 Separate backend/recovery checks remain part of the release checklist; operator-run local
 deployment utilities are independent.
 
-Current fixture checks render 192 destination/locale pairs. The full Flutter matrix
+Current fixture checks render 200 destination/locale pairs. The full Flutter matrix
 executed all 9,272 cases: 8,836 passed and 436 retained contrast findings. No label,
 target-size, layout or collection failures remained. All 436 failures have PNGs;
 the grouped report retains 212 SDK and 450 exact findings for attribution/review.

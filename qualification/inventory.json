@@ -836,6 +836,41 @@
       "fixture": true
     },
     {
+      "id": "event-import",
+      "widget": "ImportEventPage",
+      "scenario": "adult",
+      "route": "/calendar/import",
+      "titleKey": "eventImportTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "event-import-refused",
+      "widget": "ImportEventPage",
+      "scenario": "adult",
+      "route": "/calendar/import",
+      "titleKey": "eventImportTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true,
+      "minimumLabeledNodes": 2
+    },
+    {
       "id": "recipe-create",
       "widget": "RecipeEditorPage",
       "scenario": "adult",
