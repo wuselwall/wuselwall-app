@@ -61,6 +61,8 @@ status **`pr-policy`**. That status fails when
 
 It is checked again when the description, the labels or a milestone change, also the
 issue's. Linking an issue in the sidebar raises no event: edit the description afterwards.
+A GitHub server error is asked again a few times; when the bookkeeping still cannot be
+done, the status turns to error and the `triage` job fails: run it again.
 
 ### Required before a merge
 

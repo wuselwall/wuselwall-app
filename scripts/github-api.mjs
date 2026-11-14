@@ -2,7 +2,13 @@
 // release.mjs): fetch only, no dependencies, and a fetcher the tests replace.
 import assert from 'node:assert/strict';
 
-export function client({ token, repository, fetcher = fetch, api = 'https://api.github.com' }) {
+/** Answers worth asking again: GitHub's own server errors and its rate limit. */
+export const transientStatuses = new Set([429, 500, 502, 503, 504]);
+/** Methods whose repetition leaves the same result (RFC 9110); a POST is retried only when the caller says so. */
+const idempotentMethods = new Set(['GET', 'HEAD', 'PUT', 'PATCH', 'DELETE']);
+const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export function client({ token, repository, fetcher = fetch, api = 'https://api.github.com', attempts = 3, sleep = pause }) {
   assert.match(repository ?? '', /^[\w.-]+\/[\w.-]+$/, 'Invalid repository');
   assert.ok(token, 'A token is required (GH_TOKEN)');
   const [owner, name] = repository.split('/');
@@ -12,22 +18,55 @@ export function client({ token, repository, fetcher = fetch, api = 'https://api.
     'content-type': 'application/json',
     'X-GitHub-Api-Version': '2022-11-28',
   };
-  const send = async (method, url, body) => {
-    const response = await fetcher(url, {
-      method, headers, body: body === undefined ? undefined : JSON.stringify(body),
-      signal: AbortSignal.timeout(30_000),
-    });
-    const text = await response.text();
-    const data = text ? JSON.parse(text) : null;
-    if (!response.ok) {
-      const error = new Error(`${method} ${url.replace(api, '')}: HTTP ${response.status} ${data?.message ?? ''}`.trim());
-      error.status = response.status;
+  const once = async (method, url, body) => {
+    let response;
+    try {
+      response = await fetcher(url, {
+        method, headers, body: body === undefined ? undefined : JSON.stringify(body),
+        signal: AbortSignal.timeout(30_000),
+      });
+    } catch (cause) {
+      // No answer (network, timeout): the request may or may not have arrived.
+      const error = new Error(`${method} ${url.replace(api, '')}: ${cause.message}`, { cause });
+      error.transient = true;
       throw error;
     }
-    return data;
+    const text = await response.text();
+    if (!response.ok) {
+      // A proxy in front of GitHub answers a 502 with HTML: keep the status, not a JSON error.
+      let message = '';
+      try { message = JSON.parse(text)?.message ?? ''; } catch { message = ''; }
+      const error = new Error(`${method} ${url.replace(api, '')}: HTTP ${response.status} ${message}`.trim());
+      error.status = response.status;
+      error.transient = transientStatuses.has(response.status);
+      const after = Number(response.headers?.get?.('retry-after'));
+      if (Number.isFinite(after) && after > 0) error.retryAfter = after;
+      throw error;
+    }
+    return text ? JSON.parse(text) : null;
+  };
+  /**
+   * One call, asked again after a transient failure when repeating it is safe: an idempotent
+   * method, or `retry: true` from a caller whose POST leaves the same state when repeated.
+   * Anything else (401, 403, 404, 422, the last attempt) is thrown to the caller.
+   */
+  const send = async (method, url, body, { retry = idempotentMethods.has(method) } = {}) => {
+    for (let attempt = 1; ; attempt++) {
+      try {
+        return await once(method, url, body);
+      } catch (error) {
+        if (!retry || !error.transient || attempt >= attempts) {
+          if (attempt > 1) error.message += ` (after ${attempt} attempts)`;
+          throw error;
+        }
+        const wait = Math.min(error.retryAfter ? error.retryAfter * 1000 : 2000 * 2 ** (attempt - 1), 30_000);
+        console.warn(`${error.message}; asking again in ${wait / 1000} s`);
+        await sleep(wait);
+      }
+    }
   };
   /** A REST call below repos/<owner>/<name>/. */
-  const rest = (method, path, body) => send(method, `${api}/repos/${repository}/${path}`, body);
+  const rest = (method, path, body, options) => send(method, `${api}/repos/${repository}/${path}`, body, options);
   /** Every page of a REST list. */
   const list = async (path) => {
     const all = [];
@@ -39,7 +78,9 @@ export function client({ token, repository, fetcher = fetch, api = 'https://api.
     return all;
   };
   const graphql = async (query, variables = {}) => {
-    const result = await send('POST', `${api}/graphql`, { query, variables: { owner, name, ...variables } });
+    // A query only reads; a mutation is not asked twice.
+    const reads = /^\s*query\b/.test(query);
+    const result = await send('POST', `${api}/graphql`, { query, variables: { owner, name, ...variables } }, { retry: reads });
     assert.ok(!result.errors?.length, `GraphQL: ${result.errors?.map((e) => e.message).join('; ')}`);
     return result.data;
   };

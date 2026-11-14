@@ -1,7 +1,11 @@
 // The pull request policy and the release plan (CONTRIBUTING.md); no network.
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { client, nextRelease } from './github-api.mjs';
 import { checkIssue, checkPullRequest, evaluate, statusContext, typeLabels, typeOfBranch } from './pr-policy.mjs';
 import { appWorkflows, bump, plan, serverWorkflows, afterWorkflows } from './release.mjs';
@@ -135,6 +139,112 @@ test('an issue waits in needs-triage until it has a milestone', async () => {
   run = fake({ graphql: () => issue({ milestone: { number: 6, title: 'v1.12.0' } }) });
   await checkIssue(run.github, 4);
   assert.equal(run.calls.length, 1);
+});
+
+// A GitHub whose answers to one call come in turn: a status number, 'reset' (no answer), or a body.
+function flaky(script, { graphql } = {}) {
+  const calls = [];
+  const waits = [];
+  const fetcher = async (url, { method, body }) => {
+    const path = url.replace('https://api.github.com/', '');
+    const key = `${method} ${path}`;
+    calls.push(path === 'graphql' ? key : `${key}${body ? ` ${body}` : ''}`);
+    const turn = path === 'graphql' && !script[key] ? graphql(JSON.parse(body)) : (script[key]?.shift() ?? {});
+    if (turn === 'reset') throw new TypeError('fetch failed');
+    if (typeof turn === 'number') {
+      const html = turn === 502;
+      return { ok: false, status: turn, headers: new Headers(turn === 429 ? { 'retry-after': '120' } : {}),
+        text: async () => (html ? '<html>Bad gateway</html>' : JSON.stringify({ message: `Status ${turn}` })) };
+    }
+    return { ok: true, status: 200, headers: new Headers(), text: async () => JSON.stringify(turn) };
+  };
+  const github = client({ token: 't', repository: 'o/r', fetcher, sleep: async (ms) => { waits.push(ms); } });
+  return { github, calls, waits };
+}
+const openPullRequest = () => repositoryAnswer({
+  number: 9, state: 'OPEN', merged: false, baseRefName: 'main', headRefName: 'docs/x', headRefOid: 'abc',
+  labels: { nodes: [] }, milestone: null, closingIssuesReferences: { nodes: [] },
+});
+const statuses = (calls) => calls.filter((call) => call.startsWith('POST repos/o/r/statuses/abc'))
+  .map((call) => JSON.parse(call.slice(call.indexOf('{'))).state);
+
+test('a transient server error on the milestone is asked again, and the policy completes', async () => {
+  const run = flaky({ 'PATCH repos/o/r/issues/9': [500, 502, {}] }, { graphql: openPullRequest });
+  const result = await checkPullRequest(run.github, 9);
+  assert.equal(result.state, 'success');
+  assert.equal(run.calls.filter((call) => call.startsWith('PATCH repos/o/r/issues/9')).length, 3);
+  assert.deepEqual(run.waits, [2000, 4000]);
+  assert.deepEqual(statuses(run.calls), ['success']);
+});
+
+test('when the retries run out the check fails and reports an error status, never success', async () => {
+  const run = flaky({ 'PATCH repos/o/r/issues/9': [500, 500, 500, {}] }, { graphql: openPullRequest });
+  await assert.rejects(checkPullRequest(run.github, 9), (error) => {
+    assert.equal(error.status, 500);
+    assert.match(error.message, /^PATCH \/repos\/o\/r\/issues\/9: HTTP 500 Status 500 \(after 3 attempts\)$/);
+    return true;
+  });
+  assert.equal(run.calls.filter((call) => call.startsWith('PATCH')).length, 3);
+  assert.deepEqual(statuses(run.calls), ['error']);
+  const description = JSON.parse(run.calls.at(-1).slice(run.calls.at(-1).indexOf('{'))).description;
+  assert.match(description, /^Not applied, run triage again: PATCH .* HTTP 500/);
+  assert.ok(description.length <= 140);
+});
+
+test('authentication and validation failures are not asked again', async () => {
+  for (const status of [401, 403, 404, 422]) {
+    const run = flaky({ 'PATCH repos/o/r/issues/9': [status, {}] }, { graphql: openPullRequest });
+    await assert.rejects(checkPullRequest(run.github, 9), (error) => error.status === status && !/attempts/.test(error.message));
+    assert.equal(run.calls.filter((call) => call.startsWith('PATCH')).length, 1, `${status}`);
+    assert.deepEqual(run.waits, [], `${status}`);
+    assert.deepEqual(statuses(run.calls), ['error'], `${status}`);
+  }
+});
+
+test('a failing error status does not hide the original failure', async () => {
+  const run = flaky({ 'PATCH repos/o/r/issues/9': [422], 'POST repos/o/r/statuses/abc': [500, 500, 500] }, { graphql: openPullRequest });
+  await assert.rejects(checkPullRequest(run.github, 9), (error) => error.status === 422);
+  assert.equal(statuses(run.calls).length, 3);
+});
+
+test('only requests that are safe to repeat are repeated', async () => {
+  // A POST that creates something (a tag, a release, a dispatch) is asked once.
+  let run = flaky({ 'POST repos/o/r/git/tags': [500, {}] });
+  await assert.rejects(run.github.rest('POST', 'git/tags', {}), (error) => error.status === 500);
+  assert.equal(run.calls.length, 1);
+  // A POST whose caller says it may be repeated, and GET, are asked again: no answer, the rate limit.
+  run = flaky({ 'POST repos/o/r/statuses/abc': ['reset', 503, { id: 1 }], 'GET repos/o/r/milestones': [429, []] });
+  assert.deepEqual(await run.github.rest('POST', 'statuses/abc', {}, { retry: true }), { id: 1 });
+  assert.deepEqual(await run.github.rest('GET', 'milestones'), []);
+  assert.deepEqual(run.waits, [2000, 4000, 30_000]); // Retry-After 120 s, held to 30 s
+  // A GraphQL query reads and is asked again; a mutation is not.
+  run = flaky({ 'POST graphql': [504, { data: { ok: 1 } }] });
+  assert.deepEqual(await run.github.graphql('query { ok }'), { ok: 1 });
+  run = flaky({ 'POST graphql': [504, { data: { ok: 1 } }] });
+  await assert.rejects(run.github.graphql('mutation { ok }'), (error) => error.status === 504);
+  assert.equal(run.calls.length, 1);
+});
+
+test('the policy script exits nonzero when it could not apply the policy', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'pr-policy-'));
+  const event = join(dir, 'event.json');
+  writeFileSync(event, JSON.stringify({ pull_request: { number: 9 } }));
+  // Replaces fetch before the script runs: GitHub answers the query, refuses the milestone.
+  const preload = join(dir, 'fake-fetch.mjs');
+  writeFileSync(preload, `globalThis.fetch = async (url, { method, body }) => {
+    console.error('CALL', method, url, body ?? '');
+    if (url.endsWith('/graphql')) return new Response(JSON.stringify(${JSON.stringify(openPullRequest())}));
+    if (method === 'PATCH') return new Response(JSON.stringify({ message: 'Validation Failed' }), { status: 422 });
+    return new Response('{}');
+  };`);
+  const run = spawnSync(process.execPath, ['--import', pathToFileURL(preload).href, fileURLToPath(new URL('./pr-policy.mjs', import.meta.url))], {
+    env: { ...process.env, GH_TOKEN: 't', GITHUB_REPOSITORY: 'o/r', GITHUB_EVENT_PATH: event, GITHUB_STEP_SUMMARY: '' },
+    encoding: 'utf8',
+  });
+  assert.notEqual(run.status, 0, run.stderr);
+  assert.match(run.stderr, /HTTP 422 Validation Failed/);
+  assert.match(run.stderr, /CALL POST https:\/\/api\.github\.com\/repos\/o\/r\/statuses\/abc \{"state":"error"/);
+  assert.doesNotMatch(run.stderr, /"state":"success"/);
 });
 
 const tags = ['v1.9.0', 'v1.10.0', 'v1.11.0', 'server-v0.9.0', 'server-v0.12.0', 'ui-baseline-3'];
