@@ -6516,6 +6516,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventTemplatesBuiltInMore => 'Weitere Vorlagen';
 
   @override
+  String get eventTemplatesSchool => 'Schule';
+
+  @override
   String get eventTemplateBlank => 'Ohne Vorlage';
 
   @override
@@ -6547,6 +6550,24 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eventStarterCleaning => 'Putzhilfe';
+
+  @override
+  String get eventStarterParentsEvening => 'Elternabend';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Elterngespräch';
+
+  @override
+  String get eventStarterSchoolTrip => 'Schulausflug';
+
+  @override
+  String get eventStarterSchoolTest => 'Klassenarbeit';
+
+  @override
+  String get eventStarterSchoolParty => 'Schulfest';
+
+  @override
+  String get eventStarterSportsDay => 'Sportfest';
 
   @override
   String get eventTemplateAllDay => 'Ganztägig';
@@ -6942,6 +6963,15 @@ class AppLocalizationsDeAt extends AppLocalizationsDe {
 
   @override
   String get mealIcon_potato => 'Erdäpfel';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Elternsprechtag';
+
+  @override
+  String get eventStarterSchoolTrip => 'Wandertag';
+
+  @override
+  String get eventStarterSchoolTest => 'Schularbeit';
 }
 
 /// The translations for German, as used in Switzerland (`de_CH`).
@@ -7372,6 +7402,15 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get eventStarterHoliday => 'Ferien / Reise';
+
+  @override
+  String get eventStarterSchoolTrip => 'Schulreise';
+
+  @override
+  String get eventStarterSchoolTest => 'Prüfung';
+
+  @override
+  String get eventStarterSportsDay => 'Sporttag';
 
   @override
   String get shoppingSearchClear => 'Leeren und schliessen';

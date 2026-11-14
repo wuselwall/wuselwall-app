@@ -6473,6 +6473,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventTemplatesBuiltInMore => 'More templates';
 
   @override
+  String get eventTemplatesSchool => 'School';
+
+  @override
   String get eventTemplateBlank => 'Start blank';
 
   @override
@@ -6504,6 +6507,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventStarterCleaning => 'Cleaner';
+
+  @override
+  String get eventStarterParentsEvening => 'Parents’ evening';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Parent–teacher meeting';
+
+  @override
+  String get eventStarterSchoolTrip => 'School trip';
+
+  @override
+  String get eventStarterSchoolTest => 'Test';
+
+  @override
+  String get eventStarterSchoolParty => 'School fair';
+
+  @override
+  String get eventStarterSportsDay => 'Sports day';
 
   @override
   String get eventTemplateAllDay => 'All day';

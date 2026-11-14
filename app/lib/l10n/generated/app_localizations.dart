@@ -10980,6 +10980,12 @@ abstract class AppLocalizations {
   /// **'More templates'**
   String get eventTemplatesBuiltInMore;
 
+  /// Section of the new-event page: school templates, shown only to a family with a child.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get eventTemplatesSchool;
+
   /// The tile that opens the empty event editor.
   ///
   /// In en, this message translates to:
@@ -11045,6 +11051,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cleaner'**
   String get eventStarterCleaning;
+
+  /// Built-in school event template (specs/28): the evening a school invites the parents; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Parents’ evening'**
+  String get eventStarterParentsEvening;
+
+  /// Built-in school event template (specs/28): a talk with a child's teacher; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent–teacher meeting'**
+  String get eventStarterParentTeacherTalk;
+
+  /// Built-in school event template (specs/28): a class outing for the children; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'School trip'**
+  String get eventStarterSchoolTrip;
+
+  /// Built-in school event template (specs/28): a test or exam at school; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Test'**
+  String get eventStarterSchoolTest;
+
+  /// Built-in school event template (specs/28): a school fair or party; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'School fair'**
+  String get eventStarterSchoolParty;
+
+  /// Built-in school event template (specs/28): the school's sports day; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports day'**
+  String get eventStarterSportsDay;
 
   /// Part of a template tile's line: an all-day event.
   ///

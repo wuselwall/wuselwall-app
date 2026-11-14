@@ -36,6 +36,21 @@ String eventStarterName(AppLocalizations l10n, EventStarter s) => switch (s) {
   EventStarter.performance => l10n.eventStarterPerformance,
   EventStarter.dayOut => l10n.eventStarterDayOut,
   EventStarter.holiday => l10n.eventStarterHoliday,
+  EventStarter.parentsEvening => l10n.eventStarterParentsEvening,
+  EventStarter.parentTeacherTalk => l10n.eventStarterParentTeacherTalk,
+  EventStarter.schoolTrip => l10n.eventStarterSchoolTrip,
+  EventStarter.schoolTest => l10n.eventStarterSchoolTest,
+  EventStarter.schoolParty => l10n.eventStarterSchoolParty,
+  EventStarter.sportsDay => l10n.eventStarterSportsDay,
+};
+
+/// What a built-in tile shows when it has no picture of its own (`iconKey`).
+IconData? _starterIcon(EventStarter s) => switch (s) {
+  EventStarter.doctor => Icons.medical_services_outlined,
+  EventStarter.parentsEvening => Icons.groups_outlined,
+  EventStarter.parentTeacherTalk => Icons.forum_outlined,
+  EventStarter.sportsDay => Icons.directions_run,
+  _ => null,
 };
 
 /// Kalender → *Neuer Termin* (specs/28): tiles to start from, the family's frequent
@@ -94,6 +109,22 @@ class EventTemplatePage extends ConsumerWidget {
           ),
         ),
       ],
+    );
+
+    Widget starterTile(EventStarter s) => Builder(
+      builder: (context) {
+        final t = s.template(
+          title: eventStarterName(l10n, s),
+          members: active,
+          actor: actor,
+        );
+        return _TemplateTile(
+          key: ValueKey('event-template-builtin-${s.name}'),
+          template: t,
+          icon: _starterIcon(s),
+          onTap: () => unawaited(_open(context, t)),
+        );
+      },
     );
 
     return Scaffold(
@@ -187,26 +218,14 @@ class EventTemplatePage extends ConsumerWidget {
                         openNewTradition(context, inView: day, now: now),
                       ),
                     ),
-                  for (final s in EventStarter.values)
-                    Builder(
-                      builder: (context) {
-                        final t = s.template(
-                          title: eventStarterName(l10n, s),
-                          members: active,
-                          actor: actor,
-                        );
-                        return _TemplateTile(
-                          key: ValueKey('event-template-builtin-${s.name}'),
-                          template: t,
-                          icon: s == EventStarter.doctor
-                              ? Icons.medical_services_outlined
-                              : null,
-                          onTap: () => unawaited(_open(context, t)),
-                        );
-                      },
-                    ),
+                  for (final s in EventStarter.general) starterTile(s),
                 ],
               ),
+              // School events: only a family with a child has any use for them.
+              if (active.any((m) => m.isChild))
+                section(l10n.eventTemplatesSchool, [
+                  for (final s in EventStarter.schoolOnes) starterTile(s),
+                ]),
               const SliverToBoxAdapter(child: SizedBox(height: Tokens.space6)),
             ],
           ),

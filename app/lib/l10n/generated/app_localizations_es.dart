@@ -6533,6 +6533,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventTemplatesBuiltInMore => 'Más plantillas';
 
   @override
+  String get eventTemplatesSchool => 'Colegio';
+
+  @override
   String get eventTemplateBlank => 'Sin plantilla';
 
   @override
@@ -6564,6 +6567,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get eventStarterCleaning => 'Limpieza';
+
+  @override
+  String get eventStarterParentsEvening => 'Reunión de familias';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Tutoría';
+
+  @override
+  String get eventStarterSchoolTrip => 'Excursión escolar';
+
+  @override
+  String get eventStarterSchoolTest => 'Examen';
+
+  @override
+  String get eventStarterSchoolParty => 'Fiesta del colegio';
+
+  @override
+  String get eventStarterSportsDay => 'Jornada deportiva';
 
   @override
   String get eventTemplateAllDay => 'Todo el día';

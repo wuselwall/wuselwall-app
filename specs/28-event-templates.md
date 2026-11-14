@@ -68,6 +68,27 @@ last (*reordered 2026-11-01*, when Putzhilfe was added).
 creating it when there is none). Members' own birthdays need no template: they come from the
 profile (specs/27 "Birthdays"). The Geburtstag template is for grandparents and friends.
 
+### School
+
+Six more built-in templates for school life (*added 2026-11-14, issue #240*), marked `school` in
+`EventStarter`. They come under a heading of their own, *Schule*, after the general ones, and
+the section shows **only for a family with at least one active child**; a household without
+children never sees it. The general section lists only the nine above. The tiles are keyed
+`event-template-builtin-<name>` like the others.
+
+| Template | Picture | When | Length | Who | Also |
+|---|---|---|---|---|---|
+| Elternabend | — (a group icon) | 19:30 | 2 h | the person creating it | |
+| Elterngespräch | — (a talk icon) | 16:00 | 30 min | the person creating it | |
+| Schulausflug | backpack | all day | 1 day | the children | Darauf freuen wir uns |
+| Klassenarbeit | book | 08:00 | 1 h | the children | |
+| Schulfest | balloon | 16:00 | 3 h | whole family | |
+| Sportfest | — (a running icon) | all day | 1 day | the children | |
+
+Regional German names them as the school does: *Schulreise*, *Prüfung* and *Sporttag* in
+Switzerland, *Elternsprechtag* (for *Elterngespräch*), *Wandertag* and *Schularbeit* in
+Austria; *Elternabend*, *Schulfest* and the rest stay as in German.
+
 Built-in templates live in the app (`EventStarter`, beside `TraditionStarter`) and work with
 every server.
 

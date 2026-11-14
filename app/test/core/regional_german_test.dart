@@ -78,6 +78,45 @@ void main() {
     expect(ch.mealsSlotSnack, 'Zvieri');
   });
 
+  test('the school templates use the school words of each country', () {
+    final de = lookupAppLocalizations(const Locale('de'));
+    final ch = lookupAppLocalizations(const Locale('de', 'CH'));
+    final at = lookupAppLocalizations(const Locale('de', 'AT'));
+    expect(
+      [
+        de.eventStarterSchoolTrip,
+        de.eventStarterSchoolTest,
+        de.eventStarterSportsDay,
+        de.eventStarterParentTeacherTalk,
+      ],
+      ['Schulausflug', 'Klassenarbeit', 'Sportfest', 'Elterngespräch'],
+    );
+    expect(
+      [
+        ch.eventStarterSchoolTrip,
+        ch.eventStarterSchoolTest,
+        ch.eventStarterSportsDay,
+        ch.eventStarterParentTeacherTalk,
+      ],
+      ['Schulreise', 'Prüfung', 'Sporttag', 'Elterngespräch'],
+    );
+    expect(
+      [
+        at.eventStarterSchoolTrip,
+        at.eventStarterSchoolTest,
+        at.eventStarterSportsDay,
+        at.eventStarterParentTeacherTalk,
+      ],
+      ['Wandertag', 'Schularbeit', 'Sportfest', 'Elternsprechtag'],
+    );
+    // What no country words differently stays the German one.
+    for (final l in [ch, at]) {
+      expect(l.eventStarterParentsEvening, 'Elternabend');
+      expect(l.eventStarterSchoolParty, 'Schulfest');
+      expect(l.eventTemplatesSchool, 'Schule');
+    }
+  });
+
   for (final (locale, month) in [
     (const Locale('de', 'AT'), 'Jänner 2026'),
     (const Locale('de', 'CH'), 'Januar 2026'),
