@@ -280,14 +280,15 @@ reset role;
 -- listed here on purpose. A new table fails this test until someone decides which it is.
 -- proposal (specs/24): an assistant's payload waiting for a verdict, gone after 14 days; what a
 -- guardian applied is in the exported timetables. password_reset (Q48): a one-time code's hash,
--- valid ten minutes; nothing a family would move.
+-- valid ten minutes; nothing a family would move. shopping_run (specs/07 "Telling the others"): a
+-- shopping trip in progress, a signal that is gone after a day; the finished trip is exported.
 select is((select coalesce(string_agg(c.relname, ', ' order by c.relname), '') from pg_attribute a
             join pg_class c on c.oid = a.attrelid join pg_namespace n on n.oid = c.relnamespace
            where n.nspname = 'app' and c.relkind in ('r', 'p') and a.attname = 'household_id'
              and not a.attisdropped
              and c.relname <> all (array['enrolment_code', 'busy_until', 'shopping_op', 'shopping_item_alias',
                                        'getting_started_dismissal', 'notice_dismissal', 'external_occurrence',
-                                       'pairing_request', 'proposal', 'password_reset'])
+                                       'pairing_request', 'proposal', 'password_reset', 'shopping_run'])
              and not exists (select 1 from app.export_table t where t.name = c.relname)),
   '', 'every household table is exported or excluded on purpose');
 

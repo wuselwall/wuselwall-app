@@ -22,6 +22,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
 import 'package:wuselwall/features/settings/application/app_locale_provider.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_start_host.dart';
 import 'package:wuselwall/features/wusel/ui/empty_wusel.dart';
 
 export 'package:wuselwall/core/l10n/app_locale.dart'
@@ -67,10 +68,12 @@ class WuselWallApp extends ConsumerWidget {
             child: LinkHost(
               child: FileHost(
                 child: _ReminderHost(
-                  child: _MemberAccent(
-                    child: EmptyIllustration(
-                      builder: _emptyWusel,
-                      child: child!,
+                  child: ShoppingStartHost(
+                    child: _MemberAccent(
+                      child: EmptyIllustration(
+                        builder: _emptyWusel,
+                        child: child!,
+                      ),
                     ),
                   ),
                 ),

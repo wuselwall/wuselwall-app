@@ -11,7 +11,11 @@ enum NoticeKind {
   mfaReset('mfa_reset'),
 
   /// A guardian issued a password reset code for someone (shown likewise).
-  passwordResetIssued('password_reset_issued');
+  passwordResetIssued('password_reset_issued'),
+
+  /// Another adult started a shopping trip that still runs (shown to the adults who
+  /// have not switched `notify.shopping_start` off; specs/07 "Telling the others").
+  shopping('shopping');
 
   const NoticeKind(this.wire);
 
@@ -29,6 +33,7 @@ enum NoticeKind {
 /// One notice. The server derives it from the audit log and the device list; [key]
 /// identifies it for dismissal, and [name] is the joiner's name, the new device's label or,
 /// for a reset, the guardian who did it; [profileId] is then the person it was done for.
+/// A shopping trip's [name] is the shopper, with the list in [listId] and [listName].
 class AppNotice {
   const AppNotice({
     required this.key,
@@ -36,6 +41,8 @@ class AppNotice {
     required this.name,
     required this.at,
     this.profileId,
+    this.listId,
+    this.listName,
   });
 
   final String key;
@@ -44,16 +51,26 @@ class AppNotice {
   final DateTime at;
   final String? profileId;
 
+  /// The list a shopping trip is for; null for every other kind.
+  final String? listId;
+  final String? listName;
+
   /// Null for a notice this app cannot show (unknown kind, or a row without a key).
   static AppNotice? fromJson(Map<String, dynamic> json) {
     final kind = NoticeKind.parse(json['kind'] as String?);
     final key = json['key'] as String?;
     if (kind == null || key == null) return null;
+    final data = json['data'];
+    final list = data is Map<String, dynamic>
+        ? data
+        : const <String, dynamic>{};
     return AppNotice(
       key: key,
       kind: kind,
       name: (json['name'] as String?) ?? '',
       profileId: json['profile_id'] as String?,
+      listId: list['list_id'] as String?,
+      listName: list['list_name'] as String?,
       at:
           DateTime.tryParse(json['at'] as String? ?? '')?.toLocal() ??
           DateTime.now(),

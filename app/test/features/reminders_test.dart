@@ -101,6 +101,13 @@ List<Map<String, dynamic>> settingRows({int? eventMinutes}) {
       value: null,
       constraints: {'min': 5, 'max': 120, 'nullable': true},
     ),
+    row(
+      key: 'notify.shopping_start',
+      type: 'boolean',
+      defaultValue: true,
+      value: true,
+      constraints: {},
+    ),
     if (eventMinutes != null)
       row(
         key: 'notify.event_reminder',
@@ -784,6 +791,12 @@ void main() {
           find.byKey(const ValueKey('setting-notify.event_reminder')),
           findsOneWidget,
         );
+        // Somebody starting to shop: on by default, the server says it (specs/07).
+        expect(
+          find.byKey(const ValueKey('setting-notify.shopping_start')),
+          findsOneWidget,
+        );
+        expect(find.text(_de.settingNotifyShoppingStartTitle), findsOneWidget);
 
         await t.tap(
           find.widgetWithText(FilledButton, _de.reminderEnableAction),

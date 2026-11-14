@@ -12,6 +12,14 @@ Two buttons sit at the bottom: **Plan mode** on the left and **Add** on the righ
 
 WuselWall remembers on this device whether you were last planning or shopping. If you closed the phone in the store, the list reopens in the trip next time. This is only for this device; the family sees nothing of it.
 
+### Telling the others {#telling-the-others}
+
+When you tap **Go shopping**, the other adults in your family see this on **Today**: "Sabine is shopping now (Supermarket). Need anything?" **Open the list** takes them to the list so they can add what is missing; **Got it** hides the notice for them. Children, the wall display and you yourself do not get it, and a short message tells you that the others can see it. The notice belongs to this one trip: it goes away when you leave the trip (**Plan mode**, back, or after **Finish shopping**), after two hours at the latest. If you open the trip again within half an hour, it is the same trip and nobody is asked a second time. If you would rather not get the notice, you switch it off for yourself: [Reminders](/en/settings/reminders).
+
+::: warning A closed app is not reached
+A family's own server cannot send messages to the app. So only someone whose app is running gets a notification: open, or just put aside (an iPhone keeps it for a few seconds, Android a little longer). If the app is closed, the notice is on **Today** as soon as it is opened during the trip.
+:::
+
 ## Ticking
 
 - Tap anywhere on a row (at least 56 pixels tall) to tick an item. A count above 1 shows as a bold "2×" badge right after the name, so you can't miss it in the aisle.

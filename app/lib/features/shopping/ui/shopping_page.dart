@@ -62,6 +62,26 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
     _tripOpened = true;
     ref.read(shoppingModeProvider.notifier).select(ShoppingMode.shop);
     unawaited(context.push<void>(Routes.shoppingTrip));
+    unawaited(_tellTheOthers());
+  }
+
+  /// Says to the server that a trip starts, so the other adults learn it (specs/07
+  /// "Telling the others"). Only from the button: a phone that reopens the trip it was
+  /// closed in announces nothing. A courtesy, so a failure (offline in the store's
+  /// garage) is not shown.
+  Future<void> _tellTheOthers() async {
+    if (!ref.read(shoppingStartSupportedProvider)) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final told = context.l10n.shoppingStartTold;
+    final result = await repo.startTrip(
+      actor: actor,
+      listId: ref.read(currentListProvider).value?.id,
+    );
+    final start = result.valueOrNull;
+    if (start == null || !start.isNew || start.told == 0) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(told)));
   }
 
   /// The device was left in the store: the trip is where it reopens. Once, after the

@@ -81,10 +81,13 @@ void main() {
     testWidgets('a code goes to any address the same way', (t) async {
       for (final address in ['thomas@example.org', 'niemand@example.org']) {
         final identity = FakeIdentityRepository();
-        await _toCodeScreen(t, identity, address: address);
+        final container = await _toCodeScreen(t, identity, address: address);
         expect(find.text(_codeTitle), findsOneWidget);
         expect(identity.codeRequests, [address]);
         expect(find.textContaining('stimmt nicht'), findsNothing);
+        // The second app replaces the first: the ShoppingStartHost's notices
+        // subscription is closed in the test, not while it ends.
+        await unmountApp(t, container);
       }
     });
 

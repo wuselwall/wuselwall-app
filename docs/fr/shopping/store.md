@@ -12,6 +12,14 @@ Deux boutons se trouvent en bas : **Mode préparation** à gauche et **Ajouter**
 
 WuselWall retient sur cet appareil si vous prépariez ou faisiez les courses. Si vous avez fermé le téléphone au magasin, la liste se rouvre directement dans les courses. Cela ne concerne que cet appareil ; la famille n’en voit rien.
 
+### Prévenir les autres {#telling-the-others}
+
+Quand vous touchez **Aller faire les courses**, les autres adultes de la famille voient dans **Aujourd’hui** : « Sabine fait les courses (Supermarché). Il te faut quelque chose ? » **Ouvrir la liste** les mène à la liste pour qu’ils y ajoutent ce qui manque ; **Compris** masque l’avis pour eux. Les enfants, l’écran mural et vous-même ne le reçoivent pas, et un court message vous confirme que les autres le voient. L’avis vaut pour cette seule sortie : il disparaît quand vous quittez les courses (**Mode préparation**, retour, ou après **Terminer les courses**), au plus tard au bout de deux heures. Si vous rouvrez les courses dans la demi-heure, c’est la même sortie et personne n’est prévenu une seconde fois. Qui ne veut pas recevoir cet avis le désactive pour soi : [Rappels](/fr/settings/reminders).
+
+::: warning Une application fermée n’est pas prévenue
+Un serveur de famille auto-hébergé ne peut pas envoyer de messages à l’application. Seul reçoit donc une notification celui dont l’application tourne encore : ouverte, ou juste mise de côté (un iPhone ne la garde que quelques secondes, Android un peu plus longtemps). Si l’application est fermée, l’avis apparaît dans **Aujourd’hui** dès qu’on l’ouvre pendant les courses.
+:::
+
 ## Cocher {#ticking}
 
 Touchez une ligne pour cocher l’article. Une quantité supérieure à 1 apparaît en pastille en gras « 2× » juste après le nom, impossible de la manquer dans le rayon. Un **appui long** ouvre la [fiche de l’article](/fr/shopping/add#the-item-card) (quantité, précision, catégorie). La ligne reste brièvement à sa place : l’envoi et le tri ont lieu **800 millisecondes après le dernier toucher**. Touchez à nouveau pour annuler immédiatement une coche en attente. Quitter la liste envoie les coches en attente.
