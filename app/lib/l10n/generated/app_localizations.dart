@@ -488,6 +488,42 @@ abstract class AppLocalizations {
   /// **'No'**
   String get no;
 
+  /// Heading of the sheet that asks for a time of day with an hour wheel and a minute wheel, where the field has no name of its own
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeWheelTitle;
+
+  /// Screen-reader name of the hour wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get timeWheelHour;
+
+  /// Screen-reader name of the minute wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Minute'**
+  String get timeWheelMinute;
+
+  /// Screen-reader name of the wheel that chooses before or after noon on a 12-hour clock
+  ///
+  /// In en, this message translates to:
+  /// **'AM or PM'**
+  String get timeWheelPeriod;
+
+  /// Chip under the time wheels: on, the minute wheel shows every minute instead of steps of five
+  ///
+  /// In en, this message translates to:
+  /// **'Every minute'**
+  String get timeWheelExact;
+
+  /// Button that takes the time chosen on the wheels
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get timeWheelDone;
+
   /// No description provided for @shoppingTitle.
   ///
   /// In en, this message translates to:

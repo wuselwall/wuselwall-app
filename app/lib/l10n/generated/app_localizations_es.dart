@@ -209,6 +209,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get no => 'No';
 
   @override
+  String get timeWheelTitle => 'Hora';
+
+  @override
+  String get timeWheelHour => 'Hora';
+
+  @override
+  String get timeWheelMinute => 'Minuto';
+
+  @override
+  String get timeWheelPeriod => 'Mañana o tarde';
+
+  @override
+  String get timeWheelExact => 'Cada minuto';
+
+  @override
+  String get timeWheelDone => 'Listo';
+
+  @override
   String get shoppingTitle => 'Lista de la compra';
 
   @override

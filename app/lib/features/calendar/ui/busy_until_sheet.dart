@@ -5,6 +5,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/time_wheel.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
@@ -65,9 +66,9 @@ class _BusyUntilSheetState extends ConsumerState<_BusyUntilSheet> {
   }
 
   Future<void> _pickTime() async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: _until ?? const TimeOfDay(hour: 17, minute: 0),
+    final picked = await showTimeWheel(
+      context,
+      initial: _until ?? const TimeOfDay(hour: 17, minute: 0),
     );
     if (picked != null && mounted) setState(() => _until = picked);
   }

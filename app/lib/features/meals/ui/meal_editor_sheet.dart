@@ -7,6 +7,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/time_wheel.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -223,9 +224,10 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
   });
 
   Future<void> _pickTime() async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: _time ?? const TimeOfDay(hour: 18, minute: 30),
+    final picked = await showTimeWheel(
+      context,
+      initial: _time ?? const TimeOfDay(hour: 18, minute: 30),
+      title: context.l10n.mealsTime,
     );
     if (picked != null) setState(() => _time = picked);
   }

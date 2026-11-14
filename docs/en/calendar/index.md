@@ -58,7 +58,7 @@ You can:
 
 - enter a **Title**, a **Location** and **Notes**
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
-- make it **All day**, or set **Starts** and **Ends**
+- make it **All day**, or set **Starts** and **Ends**. Everywhere in the app you set a time with two wheels, one for the hour and one for the minutes in steps of five; **Every minute** shows all of them. With a keyboard you simply type the time, such as "1430"
 - pick people under **Who**. If nobody is picked, the event is for the whole family
 - switch **Show on the kitchen display** on or off right below. A line says whether the event will show on the kitchen display and changes as you pick people: on their own, only events for the whole family go there. What new events do by default is set under [Settings → Calendar & school](/en/settings/household)
 - tick **Not sure yet** if it is still unclear whether it happens

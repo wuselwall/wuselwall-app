@@ -58,7 +58,7 @@ Du kannst:
 
 - einen **Titel**, einen **Ort** und **Notizen** eintragen
 - zwischen **Termin** und **Anwesenheit** wählen. Anwesenheit hat sechs Zustände: Arbeit, Homeoffice, Unterwegs, Weg, Frei und Betreuung
-- den Termin **ganztägig** machen oder **Beginn** und **Ende** setzen
+- den Termin **ganztägig** machen oder **Beginn** und **Ende** setzen. Eine Uhrzeit stellst du überall in der App mit zwei Rädern ein, eines für die Stunde und eines für die Minuten in Fünferschritten; **Jede Minute** zeigt alle Minuten. Mit einer Tastatur tippst du die Zeit einfach ein, etwa „1430“
 - unter **Wer** Personen auswählen. Ist niemand ausgewählt, gilt der Termin für die ganze Familie
 - gleich darunter **Auf dem Küchendisplay zeigen** an- oder ausschalten. Eine Zeile sagt, ob der Termin auf dem Küchendisplay erscheint, und ändert sich, sobald du Personen auswählst: Von selbst stehen dort nur Termine der ganzen Familie. Was neue Termine standardmäßig tun, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest
 - **Noch nicht sicher** ankreuzen, wenn noch unklar ist, ob er stattfindet

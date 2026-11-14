@@ -190,6 +190,30 @@ fades out at the edge where more lies beyond it (`EdgeFade` in `core/ui`), so a 
 the edge reads as "scroll for more"; a control beside the row (the list pencil) sits
 outside it and never over a chip.
 
+### Choosing a time
+
+*Added 2026-11-14 (issue #241), after a family called Material's clock dial "weird".* A time of
+day is always asked the same way: `showTimeWheel` (`core/ui/time_wheel.dart`), a sheet from the
+bottom with an hour wheel and a minute wheel, the chosen row on a `sunken` band. No clock dial
+and no switch between hours and minutes; `showTimePicker` is not used anywhere (a test checks).
+
+- The minutes move in steps of five. **Jede Minute** shows all sixty, and a time that is on no
+  step opens that way, so no saved minute is ever rounded by opening the sheet.
+- Hours and minutes each go round; neither carries into the other.
+- 24 hours, except in English on a device set to 12 hours, where a third wheel chooses AM or PM:
+  the same rule (`clockIs24Hour`) as the texts that show a time. The settings store and show
+  24-hour times and ask for them that way.
+- The sheet is named after its field (*Beginn*, *Ende*) where the field has a name, else *Uhrzeit*.
+- A screen reader hears each wheel as one adjustable value ("Stunde, 14"), as the platforms' own
+  pickers are. With a keyboard the hours have the focus: digits type the time ("0730"), the
+  arrows step, Tab changes the wheel and Enter takes the time. A mouse turns a wheel by its
+  scroll wheel, by dragging or by a click on a row.
+- A row is as tall as its number at the current text size and never under 44; a short screen
+  shows three rows instead of five.
+
+Compared before choosing (the owner chose the wheels): Material's dial opened in its keyboard
+mode, a grid of hour and minute buttons, and a typed field with a list of quarter hours.
+
 The 24 px kiosk minimum, system text scaling and rendered contrast acceptance are
 clarified in [09 — Degradation rules](09-clients-and-ux.md#degradation-rules).
 

@@ -222,6 +222,8 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - Colours come from `app/theme/palette.dart` through `Theme.of(context).colorScheme` and
   `context.ww` (member colours, paper tints, points) — never a `Color` literal in a
   widget. Values and rules: [specs/17-design-system.md](specs/17-design-system.md).
+- A time of day is asked with `showTimeWheel` (`core/ui/time_wheel.dart`, specs/17 "Choosing a
+  time"), never with `showTimePicker`.
 - Configuration comes from `--dart-define-from-file=env/<name>.json` — never `dotenv`,
   never `kDebugMode` branches for URLs or keys.
 - Developer-only screens are gated with `kDebugMode` and must not exist in release.

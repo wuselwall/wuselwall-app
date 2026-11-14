@@ -8,6 +8,13 @@ extension L10nContext on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
 }
 
+/// Whether times are written on a 24-hour clock here: always, except in English on a
+/// device set to 12 hours. The time wheels ask the same question as the texts that show
+/// a time, so "2:30 PM" is never chosen on a 24-hour wheel.
+bool clockIs24Hour(BuildContext context) =>
+    Localizations.localeOf(context).languageCode != 'en' ||
+    MediaQuery.alwaysUse24HourFormatOf(context);
+
 extension FailureL10n on Failure {
   /// A message fit for a household member, in the current language. A stable domain
   /// code from the backend (the `hint` of an `api` function's exception) wins over the
