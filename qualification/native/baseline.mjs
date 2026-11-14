@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
-import { profiles, expectedCases } from './report.mjs';
+import { profiles, expectedCases, profileOrigin, sanitize } from './report.mjs';
 import { fontAssets } from '../baseline.mjs';
 
 export const digest = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -94,6 +94,27 @@ async function run() {
   const capture = path.join(root, 'capture');
   await fs.rm(capture, {recursive: true, force: true});
   await fs.mkdir(capture, {recursive: true});
+  const sourceSha = process.env.QUALIFY_CANDIDATE_SHA;
+  // Fail closed with each absent profile's origin instead of a partial capture.
+  const statuses = await fs.readFile(path.join(root, 'profiles.txt'), 'utf8').catch(() => '');
+  const missing = [];
+  for (const profile of profiles) {
+    try {
+      const report = JSON.parse(await fs.readFile(path.join(root, profile, 'audit.json'), 'utf8'));
+      assert.equal(report.done, true, `Incomplete native audit report: ${profile}`);
+    } catch (error) {
+      missing.push({profile, error: sanitize(root, error), origin: await profileOrigin(root, profile, statuses)});
+    }
+  }
+  if (missing.length > 0) {
+    await fs.rm(capture, {recursive: true, force: true});
+    await fs.writeFile(path.join(root, 'visual.json'), `${JSON.stringify({schemaVersion: 1, candidateSha: sourceSha, mode,
+      passed: false, checked: 0, findings: missing.map(m => `Missing native evidence: ${m.profile} (${m.origin.status})`),
+      missing}, null, 2)}\n`);
+    for (const m of missing) console.error(`Missing native evidence: ${m.profile} (${m.origin.status}) ${m.origin.markers[0] ?? m.error}`);
+    process.exitCode = 1;
+    return;
+  }
   for (const profile of profiles) {
     const out = path.join(capture, profile);
     await fs.mkdir(out);
@@ -106,7 +127,6 @@ async function run() {
     }
   }
   const env = await environment();
-  const sourceSha = process.env.QUALIFY_CANDIDATE_SHA;
   await sealNative(capture, sourceSha, env);
   const result = mode === 'compare' ? await compareNative(capture, process.env.QUALIFY_NATIVE_BASELINE_DIR,
     process.env.QUALIFY_NATIVE_BASELINE_SHA256, env) : {passed: false, checked: 0, findings: ['Capture requires visual review and an approved baseline.']};

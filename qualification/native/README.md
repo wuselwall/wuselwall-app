@@ -22,6 +22,14 @@ ten minutes for smoke or thirty for full coverage. Timeout exits with status 124
 and retains available logs/evidence. Cancellation forwards to owned process groups
 and exits; cleanup targets only the simulator ID and emulator process created by
 that run. It does not kill a shared ADB server or personal devices.
+A phase's cleanup signals only its own process group. A process that left the group
+(the ADB server daemonizes with `setsid`) is not owned by the phase and is left alone;
+macOS's EPERM for a group that holds only zombies is handled, and a member that
+refuses signals is reported as `NATIVE PHASE CLEANUP INCOMPLETE` within the grace periods.
+Each profile's output is kept in `<profile>/run.log`, and a failed ADB start keeps
+the server's own log as `adb-server.log`. A collected report that is not a finished
+audit (`adb exec-out` exits 0 after printing an error) fails the profile, and missing
+evidence fails the visual capture with that profile's originating phase in `visual.json`.
 
 For a complete local setup sequence, use [the copyable setup commands](setup-commands.md).
 

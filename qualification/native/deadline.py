@@ -10,28 +10,47 @@ import time
 TERM_GRACE_SECONDS = 5
 
 
-def stop_group(process, sig=signal.SIGTERM):
-    try:
-        os.killpg(process.pid, sig)
-    except ProcessLookupError:
-        return
-    deadline = time.monotonic() + TERM_GRACE_SECONDS
-    while time.monotonic() < deadline:
+def signal_group(process, sig):
+    """Signal the phase's own process group: 'sent', 'gone' or 'denied'.
+
+    The group id is the child's pid (start_new_session), so nothing outside the
+    phase is ever addressed. Processes that left the group (setsid daemons such
+    as the ADB server) are not owned by the phase and are deliberately left alone.
+    """
+    for reaped in (False, True):
         try:
-            os.killpg(process.pid, 0)
+            os.killpg(process.pid, sig)
+            return 'sent'
         except ProcessLookupError:
-            break
-        process.poll()
-        time.sleep(0.01)
-    else:
-        try:
-            os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
+            return 'gone'
+        except PermissionError:
+            # macOS (XNU killpg1) answers EPERM rather than ESRCH when every
+            # remaining member is a zombie, typically the unreaped leader. Reap
+            # it once and ask again; a member that still refuses is reported.
+            if reaped or process.poll() is None:
+                return 'denied'
+    return 'denied'
+
+
+def stop_group(process, phase, sig=signal.SIGTERM):
+    state = signal_group(process, sig)
+    if state != 'gone':
+        deadline = time.monotonic() + TERM_GRACE_SECONDS
+        while time.monotonic() < deadline:
+            state = signal_group(process, 0)
+            if state == 'gone':
+                break
+            process.poll()
+            time.sleep(0.01)
+        else:
+            state = signal_group(process, signal.SIGKILL)
+        if state == 'denied':
+            print(f'NATIVE PHASE CLEANUP INCOMPLETE {phase}: a process group member refused signals',
+                  file=sys.stderr, flush=True)
     try:
         process.wait(timeout=TERM_GRACE_SECONDS)
     except subprocess.TimeoutExpired:
-        print('NATIVE PHASE CLEANUP INCOMPLETE: child did not exit after SIGKILL', file=sys.stderr, flush=True)
+        print(f'NATIVE PHASE CLEANUP INCOMPLETE {phase}: child did not exit after SIGKILL', file=sys.stderr, flush=True)
 
 
 def main(argv):
@@ -61,10 +80,7 @@ def main(argv):
             received_signal.append(sig)
         if process is None:
             return
-        try:
-            os.killpg(process.pid, sig)
-        except ProcessLookupError:
-            pass
+        signal_group(process, sig)
 
     previous_handlers = {sig: signal.signal(sig, forward) for sig in (signal.SIGTERM, signal.SIGINT)}
     try:
@@ -76,12 +92,12 @@ def main(argv):
         expires = time.monotonic() + timeout
         while True:
             if received_signal:
-                stop_group(process)
+                stop_group(process, phase)
                 return 128 + received_signal[0]
             remaining = expires - time.monotonic()
             if remaining <= 0:
                 print(f'NATIVE PHASE TIMEOUT {phase} after {timeout:g}s', file=sys.stderr, flush=True)
-                stop_group(process)
+                stop_group(process, phase)
                 return 124
             try:
                 return_code = process.wait(timeout=min(remaining, 0.05))
@@ -94,7 +110,7 @@ def main(argv):
         for sig, handler in previous_handlers.items():
             signal.signal(sig, handler)
         if process is not None and process.poll() is None:
-            stop_group(process)
+            stop_group(process, phase)
 
 
 if __name__ == '__main__':

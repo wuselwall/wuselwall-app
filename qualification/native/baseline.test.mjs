@@ -4,7 +4,10 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { compareNative, digest, pixelsMatch, sealNative, verifyNative } from './baseline.mjs';
+import { profiles } from './report.mjs';
 
 const sha = 'a'.repeat(40);
 const env = {xcode: 'pinned', runtime: 'pinned', width: 390, textScale: 1};
@@ -58,4 +61,31 @@ test('native baseline creation refuses empty or unpaired screenshots', async t =
   await fs.mkdir(path.join(root, 'ios-phone'));
   await fs.writeFile(path.join(root, 'ios-phone/case.png'), 'not-paired');
   await assert.rejects(() => sealNative(root, sha, env));
+});
+
+test('absent profile evidence fails visual capture closed instead of sealing a partial capture', async t => {
+  const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'ww-native-absent-'));
+  t.after(() => fs.rm(cwd, {recursive: true, force: true}));
+  const root = path.join(cwd, 'build/qualification/native');
+  await fs.mkdir(path.join(root, 'capture/stale'), {recursive: true});
+  await fs.writeFile(path.join(root, 'profiles.txt'), profiles.map(p => `${p}: ${p === 'android-phone' ? 'FAIL' : 'PASS'}`).join('\n'));
+  for (const profile of profiles.filter(p => p !== 'android-phone')) {
+    await fs.mkdir(path.join(root, profile), {recursive: true});
+    await fs.writeFile(path.join(root, profile, 'audit.json'), JSON.stringify({schemaVersion: 1, done: true, results: []}));
+  }
+  await fs.mkdir(path.join(root, 'android-phone'));
+  await fs.writeFile(path.join(root, 'android-phone/run.log'), 'NATIVE PHASE TIMEOUT android-adb-start-server after 60s\n');
+  const script = fileURLToPath(new URL('./baseline.mjs', import.meta.url));
+  const result = spawnSync(process.execPath, [script], {cwd, encoding: 'utf8',
+    env: {...process.env, QUALIFY_MODE: 'capture', QUALIFY_CANDIDATE_SHA: sha}});
+  assert.equal(result.status, 1, result.stderr);
+  assert.match(result.stderr, /Missing native evidence: android-phone \(FAIL\) NATIVE PHASE TIMEOUT android-adb-start-server/);
+  assert.doesNotMatch(result.stderr, /ENOENT: no such file|at async/);
+  const visual = JSON.parse(await fs.readFile(path.join(root, 'visual.json'), 'utf8'));
+  assert.equal(visual.passed, false);
+  assert.equal(visual.candidateSha, sha);
+  assert.deepEqual(visual.findings, ['Missing native evidence: android-phone (FAIL)']);
+  assert.equal(visual.missing[0].origin.log, 'android-phone/run.log');
+  assert.equal(JSON.stringify(visual).includes(cwd), false, 'uploaded evidence carries no absolute runner path');
+  await assert.rejects(fs.stat(path.join(root, 'capture')), {code: 'ENOENT'});
 });
