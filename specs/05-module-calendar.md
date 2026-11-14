@@ -299,6 +299,52 @@ the calendar's colour with an RSS mark.
   them (`supabase/functions/ics/index.ts`). Off by default for every token. Not verified in a real
   Outlook or iOS subscription: that check is in the [release checklist](release-checklist.md).
 
+## A reminder for one event
+
+*Built 2026-11-14 (issue #256), FR-1.22.* Until now a phone knew one lead time for every
+appointment (`notify.event_reminder`, 5 to 120 minutes, per person). "The day before the dentist"
+could not be said. An appointment can now carry its own reminder.
+
+- **It belongs to the event**, not to the person who set it: `app.event.reminder_minutes`, one
+  value, null for none (migration `20261114120000_event_reminder.sql`, pgTAP 310). Everyone the
+  event concerns (its attendees, or the whole family when it has none) gets it, each on their own
+  phone. A parent sets "the day before" on a child's dentist appointment, and the child's phone
+  and the parent's both say so. Decided with the owner: one reminder per event, for everyone
+  concerned, over a reminder per person or one kept on a single phone.
+- **Still a local notification** ([Q47](14-open-questions.md)): the server stores the number and
+  sends nothing. The phone plans it with its other reminders
+  (`app/lib/features/reminders/domain/reminder_plan.dart`), so it comes only on a personal phone
+  with reminders switched on, and a phone whose app has not been opened since the reminder was
+  set does not know of it.
+- **What the editor offers:** none, 15 and 30 minutes, 1 and 2 hours, 1 day, 2 days, 1 week
+  (`event_reminder.dart`). The server takes any whole number of minutes from 0 to 40320 (four
+  weeks), so a later app can offer more without a migration; a stored value the list lacks is
+  shown as one more choice, never changed by opening the event. The phone plans the appointments
+  of two weeks, so a lead time over one week would be missed: offer none without widening
+  `reminderWindowDays`.
+- **An all-day event** has no clock time to count back from. It takes whole days only (the server
+  refuses anything else) and reminds at 09:00, that many days before.
+- **It replaces the personal lead time** for that event: an event with its own reminder notifies
+  once, at its own time, also for a person whose `notify.event_reminder` is off. An event without
+  one follows the person's setting as before.
+- **Whole days are counted on the calendar**: a day before 09:00 is 09:00 the day before, also
+  across a summer-time change. Only the rest of a lead time is counted in minutes.
+- **The text** says how far ahead it is: "Beginnt um 08:30" on the day itself, "Morgen um 08:30",
+  "In 2 Tagen um 08:30", for an all-day event "Morgen, ganztägig".
+- **A series** has one reminder for all of its dates; an override of one date (`event_override`)
+  carries none of its own. **A presence entry** has none: the server refuses one and clears a
+  stored one when an event becomes a presence entry.
+- **Older apps and servers:** `api.event_save` keeps the stored value when the key is missing, so
+  the previous app release edits an event without losing its reminder; where that edit turns the
+  event into an all-day one, a value that is not whole days is cleared. A file received again
+  ([Receiving one](#receiving-one)) leaves the key out too and keeps the copy's reminder. The
+  server announces the feature `event-reminder`; on a server without it the editor does not show
+  the choice. `api_version` stays 1.
+
+**Not built:** several reminders on one event, a reminder per person on a shared event, a
+`VALARM` in the outbound feed (a subscribed calendar would remind a second time beside the app),
+and a reminder in saved templates.
+
 ## Sharing one event
 
 *Added 2026-11-11 ([Q60](14-open-questions.md)), FR-1.20.* A family arranges a Spieleabend with
@@ -395,6 +441,6 @@ reminders that are not push notifications, free/busy queries and conflict detect
 natural-language event entry.
 
 *Historical cut, as written in August. Since then built: imported feeds (above, including
-their outbound feed), local reminders (Q47) and one event as a file for another family
+their outbound feed), local reminders (Q47, and [one of its own for an event](#a-reminder-for-one-event)) and one event as a file for another family
 ([Sharing one event](#sharing-one-event), no invitation: no reply comes back). Still out: CalDAV, invitations to outsiders,
 attachments, free/busy, conflict detection, natural-language entry.*

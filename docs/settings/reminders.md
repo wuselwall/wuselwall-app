@@ -7,7 +7,7 @@ Erinnerungen bekommst du auf **deinem eigenen Handy**, wenn du sie einschaltest:
 ## Was du bekommst
 
 - **Morgenübersicht**: eine Benachrichtigung am Morgen, zum Beispiel „Heute: 3 Termine, 2 Aufgaben“ und „Als Erstes um 8:00: Schwimmen“. Die Uhrzeit stellst du ein. Eltern sehen in der nächsten Morgenübersicht auch, wie viele Aufgaben und Belohnungswünsche auf ihre Freigabe warten, zum Beispiel „2 Freigaben warten“. Gezählt wird, was das Handy wusste, als es die Erinnerungen zuletzt geplant hat; öffne die App, ist die Zahl wieder aktuell.
-- **Erinnerung vor Terminen**: eine Benachrichtigung, bevor ein Termin beginnt, zu dem du eingetragen bist.
+- **Erinnerung vor Terminen**: eine Benachrichtigung, bevor ein Termin beginnt, zu dem du eingetragen bist. Ein Termin kann auch eine **eigene Erinnerung** haben, die ihr im Termin-Editor einstellt (siehe [Erinnerung vorher](/calendar/#event-reminder)). Sie gilt dann für alle, für die der Termin ist, statt deiner persönlichen Vorlaufzeit, auch wenn dieser Schalter aus ist.
 - **Einpack-Erinnerung am Vorabend**: zum Beispiel „Für morgen einpacken – Emma: Sportsachen“, aus den [Stundenplänen](/school/#morgen-einpacken). Erwachsene bekommen sie für alle Kinder, ein Kind auf dem eigenen Handy für sich. Sie kommt nur, wenn etwas einzupacken ist.
 - **Wenn jemand einkaufen geht** (nur Erwachsene, standardmäßig an): Tippt ein anderer Erwachsener auf **Einkaufen gehen**, siehst du es auf **Heute** und, solange die App läuft, als Mitteilung, zum Beispiel „Sabine geht einkaufen“. So kannst du noch etwas auf die [Liste](/shopping/store#telling-the-others) setzen. Der Server meldet den Einkauf, die Mitteilung entsteht auf deinem Handy. Eine geschlossene App wird nicht erreicht.
 

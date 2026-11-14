@@ -59,6 +59,12 @@ the others"): tapping *Einkaufen gehen* records a trip (`app.shopping_run`, `api
 `notify.shopping_start` on (default on) get a notice `shopping` on Heute, a banner and, on a
 personal phone, a local notification, for a running app only (Q47; a closed app sees the notice when
 opened; the relay is issue #243).
+A reminder for one event (2026-11-14, issue #256, [specs/05](specs/05-module-calendar.md) "A
+reminder for one event", FR-1.22): `app.event.reminder_minutes`, taken by `api.event_save` and shown
+by `api.events` and the `occurrences` function (migration `20261114120000_event_reminder.sql`, pgTAP
+`310_event_reminder.test.sql`, feature flag `event-reminder`); the editor's *Erinnerung vorher*
+(15 minutes to 1 week, whole days for an all-day event), planned on each concerned person's phone
+as a local notification in place of their `notify.event_reminder`.
 Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the

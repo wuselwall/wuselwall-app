@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/domain/usual_week.dart';
@@ -202,3 +203,10 @@ final usualWeeksProvider = FutureProvider.autoDispose<List<UsualWeek>>((
   }
   return (await ref.watch(calendarRepositoryProvider).usualWeeks()).unwrap();
 });
+
+/// Whether the server keeps a reminder of its own with an event (specs/05 "A reminder
+/// for one event"). Without it the editor does not offer the choice: an older server
+/// would drop it without a word.
+final eventReminderSupportedProvider = Provider.autoDispose<bool>(
+  (ref) => ref.watch(serverSupportsProvider(featureEventReminder)),
+);

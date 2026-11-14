@@ -428,7 +428,7 @@
   "settingNotifyMorningTitle": "Morgenübersicht",
   "settingNotifyMorningHelp": "Die heutigen Aufgaben und Termine für dich. Offene Einlösungen erscheinen hier für Eltern.",
   "settingNotifyEventReminderTitle": "Erinnerung vor Terminen",
-  "settingNotifyEventReminderHelp": "Eine Benachrichtigung, bevor ein Termin beginnt.",
+  "settingNotifyEventReminderHelp": "Eine Benachrichtigung, bevor ein Termin beginnt. Hat ein Termin eine eigene Erinnerung, gilt diese.",
   "settingNotifyTaskVerifiedTitle": "Wenn eine Aufgabe bestätigt wird",
   "settingNotifyTaskVerifiedHelp": "Eine Benachrichtigung, wenn ein Elternteil eine Aufgabe bestätigt und die Punkte gutgeschrieben werden.",
   "settingNotifyRedemptionTitle": "Wenn eine Belohnung angefragt wird",
@@ -457,6 +457,49 @@
   "eventStarts": "Beginn",
   "eventEnds": "Ende",
   "eventEndBeforeStart": "Das Ende muss nach dem Beginn liegen.",
+  "eventReminder": "Erinnerung vorher",
+  "eventReminderNone": "Keine",
+  "eventReminderMinutes": "{count} Minuten",
+  "@eventReminderMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderHours": "{count, plural, =1{1 Stunde} other{{count} Stunden}}",
+  "@eventReminderHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderDays": "{count, plural, =1{1 Tag} other{{count} Tage}}",
+  "@eventReminderDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderWeeks": "{count, plural, =1{1 Woche} other{{count} Wochen}}",
+  "@eventReminderWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderHelp": "Alle, für die der Termin ist, bekommen sie auf dem eigenen Telefon, wenn dort Erinnerungen eingeschaltet sind.",
+  "eventReminderAllDayHelp": "Ein ganztägiger Termin erinnert um {time}. Alle, für die er ist, bekommen die Erinnerung auf dem eigenen Telefon, wenn dort Erinnerungen eingeschaltet sind.",
+  "@eventReminderAllDayHelp": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "eventAttendees": "Wer",
   "eventAttendeesWholeFamily": "Niemand ausgewählt: Der Termin gilt für die ganze Familie.",
   "eventLocation": "Ort",
@@ -1340,6 +1383,25 @@
     "placeholders": {
       "time": {
         "type": "String"
+      }
+    }
+  },
+  "reminderEventBodyAhead": "{days, plural, =1{Morgen um {time}} other{In {days} Tagen um {time}}}",
+  "@reminderEventBodyAhead": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBodyAheadAllDay": "{days, plural, =1{Morgen, ganztägig} other{In {days} Tagen, ganztägig}}",
+  "@reminderEventBodyAheadAllDay": {
+    "placeholders": {
+      "days": {
+        "type": "int"
       }
     }
   },

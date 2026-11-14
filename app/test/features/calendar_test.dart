@@ -199,6 +199,7 @@ void main() {
         'icon_key',
         'countdown',
         'tradition',
+        'reminder_minutes',
       });
       expect(json['status'], 'tentative');
       expect(json['starts_at'], '2026-10-17T14:00:00.000Z');

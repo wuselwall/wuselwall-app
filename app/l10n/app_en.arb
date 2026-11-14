@@ -648,7 +648,7 @@
   "settingNotifyMorningTitle": "Morning summary",
   "settingNotifyMorningHelp": "Today's tasks and events for you. Pending redemptions appear here for parents.",
   "settingNotifyEventReminderTitle": "Reminder before events",
-  "settingNotifyEventReminderHelp": "A notification before an event starts.",
+  "settingNotifyEventReminderHelp": "A notification before an event starts. An event with a reminder of its own uses that one.",
   "settingNotifyTaskVerifiedTitle": "When a chore is verified",
   "settingNotifyTaskVerifiedHelp": "A notification when a parent checks a chore and its points are credited.",
   "settingNotifyRedemptionTitle": "When a reward is requested",
@@ -719,6 +719,52 @@
   "@eventEnds": {},
   "eventEndBeforeStart": "The end must be after the start.",
   "@eventEndBeforeStart": {},
+  "eventReminder": "Reminder before",
+  "@eventReminder": {},
+  "eventReminderNone": "None",
+  "@eventReminderNone": {},
+  "eventReminderMinutes": "{count} minutes",
+  "@eventReminderMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@eventReminderHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@eventReminderDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderWeeks": "{count, plural, =1{1 week} other{{count} weeks}}",
+  "@eventReminderWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderHelp": "Everyone the event is for gets it on their own phone, if reminders are on there.",
+  "@eventReminderHelp": {},
+  "eventReminderAllDayHelp": "An all-day event reminds at {time}. Everyone it is for gets the reminder on their own phone, if reminders are on there.",
+  "@eventReminderAllDayHelp": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "eventAttendees": "Who",
   "@eventAttendees": {},
   "eventAttendeesWholeFamily": "Nobody picked: this is for the whole family.",
@@ -2098,6 +2144,25 @@
     "placeholders": {
       "time": {
         "type": "String"
+      }
+    }
+  },
+  "reminderEventBodyAhead": "{days, plural, =1{Tomorrow at {time}} other{In {days} days at {time}}}",
+  "@reminderEventBodyAhead": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBodyAheadAllDay": "{days, plural, =1{Tomorrow, all day} other{In {days} days, all day}}",
+  "@reminderEventBodyAheadAllDay": {
+    "placeholders": {
+      "days": {
+        "type": "int"
       }
     }
   },

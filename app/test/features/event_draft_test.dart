@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/domain/event_reminder.dart';
 import 'package:wuselwall/features/calendar/ui/editor/event_draft.dart';
 
 /// A timed draft from [start] to [end], switched to all-day.
@@ -10,6 +12,103 @@ CalendarEvent _saved(EventDraft draft) =>
     draft.toEvent(attendees: const [], key: false);
 
 void main() {
+  group("an event's own reminder (specs/05)", () {
+    EventDraft draft({int? reminder}) => EventDraft(
+      start: DateTime(2026, 10, 14, 10),
+      end: DateTime(2026, 10, 14, 11),
+      title: 'Zahnarzt',
+      reminderMinutes: reminder,
+    );
+
+    test('is saved with the event and read back', () {
+      final event = _saved(draft(reminder: 30));
+      expect(event.reminderMinutes, 30);
+      expect(event.toJson()['reminder_minutes'], 30);
+      expect(EventDraft.fromEvent(event).reminderMinutes, 30);
+      expect(
+        CalendarEvent.fromJson({
+          ...event.toJson(),
+          'id': 'e1',
+          'reminder_minutes': 1440,
+        }).reminderMinutes,
+        1440,
+      );
+    });
+
+    test('none is sent as null, so a cleared reminder is cleared', () {
+      final json = _saved(draft()).toJson();
+      expect(json.containsKey('reminder_minutes'), isTrue);
+      expect(json['reminder_minutes'], isNull);
+    });
+
+    test('an all-day event carries whole days only; the choice comes back', () {
+      final minutes = draft(reminder: 30)..setAllDay(true);
+      expect(minutes.effectiveReminder, isNull);
+      expect(_saved(minutes).reminderMinutes, isNull);
+      minutes.setAllDay(false);
+      expect(_saved(minutes).reminderMinutes, 30);
+
+      final days = draft(reminder: 2 * 24 * 60)..setAllDay(true);
+      expect(_saved(days).reminderMinutes, 2 * 24 * 60);
+    });
+
+    test('a presence entry carries none', () {
+      final presence = draft(reminder: 30)
+        ..kind = EventKind.presence
+        ..presenceState = PresenceState.travel;
+      expect(_saved(presence).reminderMinutes, isNull);
+    });
+
+    test('a server before the reminder sends none', () {
+      final event = CalendarEvent.fromJson({
+        'id': 'e1',
+        'title': 'Turnen',
+        'kind': 'appointment',
+        'is_all_day': false,
+        'starts_at': '2026-10-14T14:00:00Z',
+        'ends_at': '2026-10-14T15:00:00Z',
+      });
+      expect(event.reminderMinutes, isNull);
+    });
+
+    test('the editor offers seven lead times, whole days for all day', () {
+      expect(reminderChoicesFor(allDay: false), [
+        15,
+        30,
+        60,
+        120,
+        1440,
+        2880,
+        10080,
+      ]);
+      expect(reminderChoicesFor(allDay: true), [1440, 2880, 10080]);
+    });
+
+    test('a stored lead time the list lacks is offered too', () {
+      expect(reminderChoicesFor(allDay: false, current: 45), contains(45));
+      expect(reminderChoicesFor(allDay: false, current: 45), hasLength(8));
+      expect(reminderChoicesFor(allDay: false, current: 60), hasLength(7));
+      expect(reminderChoicesFor(allDay: true, current: 4320), [
+        1440,
+        2880,
+        4320,
+        10080,
+      ]);
+      // Minutes never fit an all-day event.
+      expect(reminderChoicesFor(allDay: true, current: 45), hasLength(3));
+    });
+
+    test('a lead time is said in its largest whole unit', () {
+      expect(reminderParts(15), (unit: ReminderUnit.minutes, count: 15));
+      expect(reminderParts(90), (unit: ReminderUnit.minutes, count: 90));
+      expect(reminderParts(120), (unit: ReminderUnit.hours, count: 2));
+      expect(reminderParts(1440), (unit: ReminderUnit.days, count: 1));
+      expect(reminderParts(4320), (unit: ReminderUnit.days, count: 3));
+      expect(reminderParts(10080), (unit: ReminderUnit.weeks, count: 1));
+      expect(reminderParts(0), (unit: ReminderUnit.minutes, count: 0));
+    });
+  });
+
   // A timed end is an exclusive instant, an all-day end_date inclusive (specs/04).
   group('switching a timed draft to all-day keeps the days it covers', () {
     test('within one day', () {

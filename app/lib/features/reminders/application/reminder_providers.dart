@@ -74,7 +74,9 @@ final reminderPlanProvider = FutureProvider.autoDispose<ReminderPlan>((
 
   final now = DateTime.now();
   final from = DateTime(now.year, now.month, now.day);
-  final to = DateTime(from.year, from.month, from.day + planDays - 1);
+  // Past the planning week by the longest lead time: next week's dentist may remind
+  // inside this one.
+  final to = DateTime(from.year, from.month, from.day + reminderWindowDays - 1);
   final window = await ref.watch(
     occurrencesProvider((from: from, to: to)).future,
   );

@@ -111,6 +111,8 @@ class ImportedEvent {
     rdates: rdates,
     exdates: exdates,
     attendeeIds: attendeeIds,
+    // The file says nothing about the family's own reminder: a replaced copy keeps it.
+    reminderKept: id != null,
   );
 }
 

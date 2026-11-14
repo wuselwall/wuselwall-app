@@ -38,6 +38,10 @@ const featureEventImport = 'event-import';
 /// "Telling the others"). Announced by the migration 20261114100000.
 const featureShoppingStart = 'shopping-start';
 
+/// The server keeps a reminder of its own with an event (specs/05 "A reminder for one
+/// event"). Announced by the migration 20261114120000.
+const featureEventReminder = 'event-reminder';
+
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
 /// signs in with a password, and a forgotten password is reset with a guardian's code
 /// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.

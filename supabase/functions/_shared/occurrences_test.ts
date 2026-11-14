@@ -99,6 +99,28 @@ Deno.test("single timed event inside the window", () => {
   assertEquals(occ[0].is_override, false);
 });
 
+Deno.test("an event's reminder travels with every occurrence, null without one", () => {
+  const occ = expand(
+    [
+      timed(
+        { id: "weekly", rrule: "FREQ=WEEKLY", reminder_minutes: 1440 },
+        "2026-10-14T14:00:00Z",
+        "2026-10-14T15:00:00Z",
+      ),
+      // A row from a server before the reminder has no such column.
+      timed({ id: "plain" }, "2026-10-15T14:00:00Z", "2026-10-15T15:00:00Z"),
+    ],
+    [],
+    "2026-10-14",
+    "2026-10-21",
+    HOUSEHOLD,
+  );
+  assertEquals(
+    occ.map((o) => [o.event_id, o.reminder_minutes]),
+    [["weekly", 1440], ["plain", null], ["weekly", 1440]],
+  );
+});
+
 Deno.test("single timed event outside the window is not emitted", () => {
   const occ = expand(
     [timed({}, "2026-10-14T14:00:00Z", "2026-10-14T15:00:00Z")],

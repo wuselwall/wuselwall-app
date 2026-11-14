@@ -1,5 +1,6 @@
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/domain/event_reminder.dart';
 import 'package:wuselwall/features/calendar/domain/event_templates.dart';
 import 'package:wuselwall/features/calendar/domain/tradition_starters.dart';
 import 'package:wuselwall/features/calendar/ui/editor/recurrence.dart';
@@ -32,6 +33,7 @@ class EventDraft {
     this.traditionMeal = '',
     this.traditionMealSlot = 'dinner',
     this.traditionMealRecipe,
+    this.reminderMinutes,
   }) : duration = _positive(end.difference(start)) ?? const Duration(hours: 1);
 
   /// A new event on [day] (local), starting at [startHour] and lasting an hour.
@@ -149,6 +151,7 @@ class EventDraft {
         ),
         _ => null,
       },
+      reminderMinutes: event.reminderMinutes,
     );
   }
 
@@ -196,6 +199,20 @@ class EventDraft {
   /// The stored meal's recipe and the words it showed as. The editor takes only words,
   /// so the recipe is kept while those words stay unchanged.
   final ({String recipeId, String words})? traditionMealRecipe;
+
+  /// The reminder as chosen, in minutes before the start; null for none. What the
+  /// event can carry is [effectiveReminder].
+  int? reminderMinutes;
+
+  /// The reminder this event is saved with (specs/05 "A reminder for one event"): none
+  /// for a presence entry, and only whole days for an all-day event. The choice itself
+  /// is kept, so switching "all day" on and off again brings it back.
+  int? get effectiveReminder {
+    final minutes = reminderMinutes;
+    if (minutes == null || kind == EventKind.presence) return null;
+    if (isAllDay && !isWholeDays(minutes)) return null;
+    return minutes;
+  }
 
   bool effectiveKey(bool defaultKey) =>
       tradition || (keyTouched ? key : defaultKey);
@@ -293,6 +310,7 @@ class EventDraft {
       traditionMeal: tradition && traditionMeal.trim().isNotEmpty
           ? _meal(traditionMeal.trim())
           : null,
+      reminderMinutes: effectiveReminder,
     );
   }
 

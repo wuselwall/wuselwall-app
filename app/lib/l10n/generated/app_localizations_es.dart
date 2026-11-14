@@ -1197,7 +1197,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingNotifyEventReminderHelp =>
-      'Una notificación antes de que empiece un evento.';
+      'Una notificación antes de que empiece un evento. Un evento con recordatorio propio usa el suyo.';
 
   @override
   String get settingNotifyTaskVerifiedTitle => 'Cuando se confirma una tarea';
@@ -1289,6 +1289,59 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get eventEndBeforeStart => 'El final debe ser posterior al inicio.';
+
+  @override
+  String get eventReminder => 'Recordatorio antes';
+
+  @override
+  String get eventReminderNone => 'Ninguno';
+
+  @override
+  String eventReminderMinutes(int count) {
+    return '$count minutos';
+  }
+
+  @override
+  String eventReminderHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count horas',
+      one: '1 hora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eventReminderDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eventReminderWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count semanas',
+      one: '1 semana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get eventReminderHelp =>
+      'Todas las personas del evento lo reciben en su propio teléfono, si allí están activados los recordatorios.';
+
+  @override
+  String eventReminderAllDayHelp(String time) {
+    return 'Un evento de todo el día avisa a las $time. Todas las personas del evento reciben el recordatorio en su propio teléfono, si allí están activados los recordatorios.';
+  }
 
   @override
   String get eventAttendees => 'Quién';
@@ -3620,6 +3673,28 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String reminderEventBody(String time) {
     return 'Empieza a las $time';
+  }
+
+  @override
+  String reminderEventBodyAhead(int days, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'En $days días a las $time',
+      one: 'Mañana a las $time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderEventBodyAheadAllDay(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'En $days días, todo el día',
+      one: 'Mañana, todo el día',
+    );
+    return '$_temp0';
   }
 
   @override

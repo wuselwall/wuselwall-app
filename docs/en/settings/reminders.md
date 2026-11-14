@@ -7,7 +7,7 @@ You get reminders on **your own phone**, once you switch them on: under **Settin
 ## What you get
 
 - **Morning summary**: a notification in the morning, for example "Today: 3 appointments, 2 tasks" and "First up at 8:00: swimming". You set the time. In the next morning summary, parents also see how many chores and reward requests are waiting for their approval, for example "2 approvals waiting". The count is what the phone knew when it last planned the reminders; opening the app brings it up to date.
-- **Reminder before appointments**: a notification before an appointment you are part of starts.
+- **Reminder before appointments**: a notification before an appointment you are part of starts. An appointment can also have a **reminder of its own**, set in the event editor (see [Reminder before](/en/calendar/#event-reminder)). It then applies instead of your personal lead time, for everyone the appointment is for, even when this switch is off.
 - **Packing reminder the evening before**: for example "Pack for tomorrow – Olivia: sports kit", from the [timetables](/en/school/#pack-for-tomorrow). Adults get it for every child, a child on their own phone for themselves. It comes only when there is something to pack.
 - **When somebody goes shopping** (adults only, on by default): when another adult taps **Go shopping**, you see it on **Today** and, while the app is running, as a notification, for example "Sabine is going shopping". That leaves time to put something on the [list](/en/shopping/store#telling-the-others). The server reports the trip, the notification is created on your phone. A closed app cannot be reached.
 

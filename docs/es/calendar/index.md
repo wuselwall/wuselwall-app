@@ -54,6 +54,7 @@ Añade:
 - título, lugar y notas;
 - cita o presencia: trabajo, teletrabajo, viaje, ausencia, descanso o cuidado;
 - todo el día, o inicio y fin. En toda la aplicación, una hora se ajusta con dos ruedas, una para la hora y otra para los minutos de cinco en cinco; **Cada minuto** los muestra todos. Con un teclado basta con escribir la hora, por ejemplo «1430»;
+- justo debajo, un **Recordatorio antes** para esta cita (ver [más abajo](#event-reminder));
 - personas, o ninguna para toda la familia;
 - justo debajo, si debe verse en la pantalla de la cocina: una línea indica si aparecerá allí y cambia en cuanto eliges personas. Por defecto solo aparecen los eventos de toda la familia;
 - si aún es incierto;
@@ -66,6 +67,14 @@ El comportamiento inicial de los eventos se elige en [Ajustes → Calendario y c
 ### Repetir {#repeating}
 
 Elige cada día, semana, dos semanas, mes o año. Para turnos, selecciona días concretos en el calendario. La repetición termina por fecha o por número de veces. Al cambiar o eliminar una serie, elige esa cita sola o toda la serie.
+
+### Recordatorio antes {#event-reminder}
+
+Debajo de **Inicio** y **Fin** eliges **Recordatorio antes**: **Ninguno**, **15 minutos**, **30 minutos**, **1 hora**, **2 horas**, **1 día**, **2 días** o **1 semana**. Una cita de todo el día ofrece solo **1 día**, **2 días** y **1 semana**; el recordatorio llega a las 9:00 de la mañana, esos días antes.
+
+El recordatorio se guarda con la cita. Lo recibe cada persona a la que afecta la cita: las elegidas en **Quién**, o toda la familia si no hay nadie elegido. Cada una lo recibe en su propio móvil, y solo donde los recordatorios están activados (en [Ajustes → Recordatorios](/es/settings/reminders)) y el teléfono permite notificaciones. Se crea en el propio teléfono; no se envía nada a un servidor ni a terceros. Por eso un teléfono solo se entera de un recordatorio nuevo o cambiado la próxima vez que se abre la aplicación en él. El texto dice «Empieza a las 8:30», o «Mañana a las 8:30» o «En 2 días a las 8:30» cuando llega antes.
+
+Para esta cita sustituye tu ajuste personal **Antes de una cita**: no llega una segunda notificación, y llega aunque ese interruptor esté desactivado. Una cita que se repite tiene un solo recordatorio para todas sus fechas; guardar un cambio con **Solo este evento** no lo modifica. La **Presencia** no tiene recordatorio. Si no ves la opción, el servidor de tu familia es más antiguo; aparece cuando se actualice el servidor.
 
 ### Imagen, cuenta atrás y tradición {#picture-countdown-tradition}
 

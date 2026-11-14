@@ -26,6 +26,7 @@ Occurrence occ({
   bool presence = false,
   bool allDay = false,
   EventStatus status = EventStatus.confirmed,
+  int? reminderMinutes,
 }) {
   final d = dateOnly(day);
   final timed = from != null && !allDay;
@@ -46,6 +47,7 @@ Occurrence occ({
     localEndDate: d,
     localStarts: timed ? from : null,
     attendeeIds: attendees,
+    reminderMinutes: reminderMinutes,
   );
 }
 
@@ -319,6 +321,216 @@ void main() {
       expect(result.reminders.first.body, 'Beginnt um 09:00');
     });
 
+    test("an event's own reminder comes without the personal one", () {
+      final result = plan(
+        morningAt: null,
+        occurrences: [
+          occ(
+            title: 'Zahnarzt',
+            day: DateTime(2026, 10, 16),
+            from: const TimeOfDay(hour: 9, minute: 0),
+            attendees: [guardianId],
+            reminderMinutes: 2 * 24 * 60,
+          ),
+          occ(
+            title: 'Elternabend',
+            day: DateTime(2026, 10, 15),
+            from: const TimeOfDay(hour: 19, minute: 30),
+            reminderMinutes: 24 * 60,
+          ),
+          occ(
+            title: 'Turnen',
+            day: today,
+            from: const TimeOfDay(hour: 17, minute: 0),
+            attendees: [guardianId],
+            reminderMinutes: 30,
+          ),
+          // Without one, and with the personal reminder off: nothing.
+          occ(
+            title: 'Chor',
+            day: today,
+            from: const TimeOfDay(hour: 20, minute: 0),
+            attendees: [guardianId],
+          ),
+          // Someone else's, a presence entry and a cancelled event stay silent.
+          occ(
+            title: 'Kinderarzt',
+            day: today,
+            from: const TimeOfDay(hour: 11, minute: 0),
+            attendees: [kidId],
+            reminderMinutes: 30,
+          ),
+          occ(
+            title: 'Zuhause',
+            day: today,
+            from: const TimeOfDay(hour: 12, minute: 0),
+            presence: true,
+            attendees: [guardianId],
+            reminderMinutes: 30,
+          ),
+          occ(
+            title: 'Abgesagt',
+            day: today,
+            from: const TimeOfDay(hour: 13, minute: 0),
+            attendees: [guardianId],
+            status: EventStatus.cancelled,
+            reminderMinutes: 30,
+          ),
+        ],
+      );
+
+      expect(
+        [for (final r in result.reminders) (r.title, r.when, r.body)],
+        [
+          ('Zahnarzt', DateTime(2026, 10, 14, 9), 'In 2 Tagen um 09:00'),
+          ('Turnen', DateTime(2026, 10, 14, 16, 30), 'Beginnt um 17:00'),
+          ('Elternabend', DateTime(2026, 10, 14, 19, 30), 'Morgen um 19:30'),
+        ],
+      );
+    });
+
+    test("an event's own reminder replaces the personal one", () {
+      final result = plan(
+        morningAt: null,
+        eventMinutes: 15,
+        occurrences: [
+          occ(
+            title: 'Zahnarzt',
+            day: today,
+            from: const TimeOfDay(hour: 9, minute: 0),
+            attendees: [guardianId],
+            reminderMinutes: 120,
+          ),
+          occ(
+            title: 'Chor',
+            day: today,
+            from: const TimeOfDay(hour: 20, minute: 0),
+            attendees: [guardianId],
+          ),
+          // Its own reminder was yesterday: the personal one does not step in.
+          occ(
+            title: 'Fest',
+            day: today,
+            from: const TimeOfDay(hour: 18, minute: 0),
+            attendees: [guardianId],
+            reminderMinutes: 24 * 60,
+          ),
+        ],
+      );
+
+      expect(
+        [for (final r in result.reminders) (r.title, r.when)],
+        [
+          ('Zahnarzt', DateTime(2026, 10, 14, 7)),
+          ('Chor', DateTime(2026, 10, 14, 19, 45)),
+        ],
+      );
+    });
+
+    test('an all-day event reminds in the morning, whole days before', () {
+      final result = plan(
+        morningAt: null,
+        eventMinutes: 15,
+        occurrences: [
+          occ(
+            title: 'Geburtstagsfest',
+            day: DateTime(2026, 10, 15),
+            allDay: true,
+            reminderMinutes: 24 * 60,
+          ),
+          occ(
+            title: 'Schulreise',
+            day: DateTime(2026, 10, 21),
+            allDay: true,
+            reminderMinutes: 7 * 24 * 60,
+          ),
+          // Minutes on an all-day event mean nothing (the server refuses them), and
+          // the personal lead time never applies to one.
+          occ(
+            title: 'Feiertag',
+            day: DateTime(2026, 10, 16),
+            allDay: true,
+            reminderMinutes: 30,
+          ),
+          occ(title: 'Ferien', day: DateTime(2026, 10, 16), allDay: true),
+        ],
+      );
+
+      expect(
+        [for (final r in result.reminders) (r.title, r.when, r.body)],
+        [
+          ('Geburtstagsfest', DateTime(2026, 10, 14, 9), 'Morgen, ganztägig'),
+          ('Schulreise', DateTime(2026, 10, 14, 9), 'In 7 Tagen, ganztägig'),
+        ],
+      );
+    });
+
+    test('a reminder past midnight says tomorrow', () {
+      final result = plan(
+        morningAt: null,
+        at: DateTime(2026, 10, 14, 22),
+        occurrences: [
+          occ(
+            title: 'Nachtzug',
+            day: DateTime(2026, 10, 15),
+            from: const TimeOfDay(hour: 0, minute: 10),
+            attendees: [guardianId],
+            reminderMinutes: 15,
+          ),
+        ],
+      );
+      expect(result.reminders.single.when, DateTime(2026, 10, 14, 23, 55));
+      expect(result.reminders.single.body, 'Morgen um 00:10');
+    });
+
+    test('a day before keeps the clock time across the end of summer time', () {
+      // Where the clocks go back on 25 October 2026, 24 hours before 09:00 on the
+      // 26th would be 10:00 on the 25th.
+      final result = plan(
+        morningAt: null,
+        at: DateTime(2026, 10, 24, 12),
+        occurrences: [
+          occ(
+            title: 'Zahnarzt',
+            day: DateTime(2026, 10, 26),
+            from: const TimeOfDay(hour: 9, minute: 0),
+            attendees: [guardianId],
+            reminderMinutes: 24 * 60,
+          ),
+        ],
+      );
+      expect(result.reminders.single.when, DateTime(2026, 10, 25, 9));
+      expect(result.reminders.single.body, 'Morgen um 09:00');
+    });
+
+    test('an event after the planning week reminds inside it', () {
+      final result = plan(
+        morningAt: null,
+        occurrences: [
+          // Starts on day 12; a week before is day 5, inside the seven days.
+          occ(
+            title: 'Zahnarzt',
+            day: DateTime(2026, 10, 26),
+            from: const TimeOfDay(hour: 9, minute: 0),
+            attendees: [guardianId],
+            reminderMinutes: 7 * 24 * 60,
+          ),
+          // A day before day 12 is day 11: the plan of a later day takes it.
+          occ(
+            title: 'Elternabend',
+            day: DateTime(2026, 10, 26),
+            from: const TimeOfDay(hour: 19, minute: 30),
+            attendees: [guardianId],
+            reminderMinutes: 24 * 60,
+          ),
+        ],
+      );
+      expect(
+        [for (final r in result.reminders) (r.title, r.when, r.body)],
+        [('Zahnarzt', DateTime(2026, 10, 19, 9), 'In 7 Tagen um 09:00')],
+      );
+    });
+
     test('reminders that are already past are left out', () {
       final result = plan(
         morningAt: null,
@@ -514,6 +726,54 @@ void main() {
               DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 7),
             ),
           ]),
+        );
+      },
+    );
+
+    testWidgets(
+      "an event's own reminder is scheduled with the personal one off, also "
+      'for an event of the week after',
+      (t) async {
+        final notifications = FakeNotificationScheduler();
+        await pumpApp(
+          t,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(current: device()),
+            notifications: notifications,
+          ),
+          // The event reminder of Settings → Reminders stays off.
+          tasks: FakeTasksApi(tables: {'settings': settingRows()}),
+          calendar: FakeCalendarRepository([
+            occ(
+              title: 'Zahnarzt',
+              day: _day(10),
+              from: const TimeOfDay(hour: 9, minute: 0),
+              attendees: [guardianId],
+              reminderMinutes: 7 * 24 * 60,
+            ),
+            occ(
+              title: 'Chor',
+              day: _day(1),
+              from: const TimeOfDay(hour: 20, minute: 0),
+              attendees: [guardianId],
+            ),
+          ]),
+        );
+
+        final at = _day(3);
+        expect(
+          [
+            for (final n in notifications.active)
+              if (n.title == 'Zahnarzt' || n.title == 'Chor')
+                (n.title, n.when, n.body),
+          ],
+          [
+            (
+              'Zahnarzt',
+              DateTime(at.year, at.month, at.day, 9),
+              'In 7 Tagen um 09:00',
+            ),
+          ],
         );
       },
     );

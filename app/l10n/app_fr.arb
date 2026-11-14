@@ -617,7 +617,7 @@
   "settingNotifyMorningTitle": "Résumé du matin",
   "settingNotifyMorningHelp": "Tes tâches et événements du jour. Les parents y voient aussi les demandes de récompenses en attente.",
   "settingNotifyEventReminderTitle": "Rappel avant les événements",
-  "settingNotifyEventReminderHelp": "Une notification avant le début d’un événement.",
+  "settingNotifyEventReminderHelp": "Une notification avant le début d’un événement. Un événement qui a son propre rappel utilise celui-ci.",
   "settingNotifyTaskVerifiedTitle": "Quand une tâche est validée",
   "settingNotifyTaskVerifiedHelp": "Une notification quand un parent valide une tâche et que les points sont crédités.",
   "settingNotifyRedemptionTitle": "Quand une récompense est demandée",
@@ -688,6 +688,52 @@
   "@eventEnds": {},
   "eventEndBeforeStart": "La fin doit être après le début.",
   "@eventEndBeforeStart": {},
+  "eventReminder": "Rappel avant",
+  "@eventReminder": {},
+  "eventReminderNone": "Aucun",
+  "@eventReminderNone": {},
+  "eventReminderMinutes": "{count} minutes",
+  "@eventReminderMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderHours": "{count, plural, =1{1 heure} other{{count} heures}}",
+  "@eventReminderHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderDays": "{count, plural, =1{1 jour} other{{count} jours}}",
+  "@eventReminderDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderWeeks": "{count, plural, =1{1 semaine} other{{count} semaines}}",
+  "@eventReminderWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventReminderHelp": "Toutes les personnes concernées le reçoivent sur leur propre téléphone, si les rappels y sont activés.",
+  "@eventReminderHelp": {},
+  "eventReminderAllDayHelp": "Un événement sur toute la journée rappelle à {time}. Toutes les personnes concernées reçoivent le rappel sur leur propre téléphone, si les rappels y sont activés.",
+  "@eventReminderAllDayHelp": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "eventAttendees": "Qui",
   "@eventAttendees": {},
   "eventAttendeesWholeFamily": "Personne de sélectionné : cet événement concerne toute la famille.",
@@ -2013,6 +2059,25 @@
     "placeholders": {
       "time": {
         "type": "String"
+      }
+    }
+  },
+  "reminderEventBodyAhead": "{days, plural, =1{Demain à {time}} other{Dans {days} jours à {time}}}",
+  "@reminderEventBodyAhead": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBodyAheadAllDay": "{days, plural, =1{Demain, toute la journée} other{Dans {days} jours, toute la journée}}",
+  "@reminderEventBodyAheadAllDay": {
+    "placeholders": {
+      "days": {
+        "type": "int"
       }
     }
   },
