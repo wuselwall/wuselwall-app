@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/text/suggest.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/suggest_field.dart';
 import 'package:wuselwall/core/ui/time_wheel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -164,6 +166,23 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
     _notesText.dispose();
     _locationText.dispose();
     super.dispose();
+  }
+
+  /// A title was taken over from an earlier appointment: its usual place and picture
+  /// come along where the form has none yet. Date, time and people stay as they are.
+  void _titlePicked(TextSuggestion picked) {
+    final place = picked.location;
+    if (_locationText.text.trim().isEmpty && place != null) {
+      _locationText.text = place;
+    }
+    final icon = picked.iconKey;
+    setState(() {
+      if (_draft.iconKey == null &&
+          _draft.kind != EventKind.presence &&
+          icon != null) {
+        _draft.iconKey = icon;
+      }
+    });
   }
 
   void _syncText() {
@@ -481,8 +500,10 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
           children: [
-            TextField(
+            SuggestField(
               controller: _titleText,
+              entries: ref.watch(eventTitleHistoryProvider).value ?? const [],
+              onPicked: _titlePicked,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 labelText: l10n.eventTitleLabel,
@@ -614,8 +635,9 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
                     }),
             ),
             const SizedBox(height: 8),
-            TextField(
+            SuggestField(
               controller: _locationText,
+              entries: ref.watch(eventPlaceHistoryProvider).value ?? const [],
               decoration: InputDecoration(labelText: l10n.eventLocation),
             ),
             const SizedBox(height: 16),

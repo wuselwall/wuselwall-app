@@ -449,6 +449,7 @@
   "eventEditTitle": "Termin bearbeiten",
   "eventTitleLabel": "Titel",
   "eventTitleRequired": "Bitte einen Titel eingeben.",
+  "suggestFieldOptions": "Vorschläge",
   "eventKindAppointment": "Termin",
   "eventKindPresence": "Anwesenheit",
   "eventPresenceState": "Zustand",

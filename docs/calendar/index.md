@@ -56,7 +56,7 @@ Was die Kachel ausfüllt, ist nur ein Anfang: Du änderst im Editor, was anders 
 
 Du kannst:
 
-- einen **Titel**, einen **Ort** und **Notizen** eintragen
+- einen **Titel**, einen **Ort** und **Notizen** eintragen. Beim Tippen schlagen Titel und Ort vor, was ihr schon einmal eingetragen habt; ein Tipp übernimmt den Vorschlag (beim Titel samt Ort und Bild, wenn dort noch nichts steht)
 - zwischen **Termin** und **Anwesenheit** wählen. Anwesenheit hat sechs Zustände: Arbeit, Homeoffice, Unterwegs, Weg, Frei und Betreuung
 - den Termin **ganztägig** machen oder **Beginn** und **Ende** setzen. Eine Uhrzeit stellst du überall in der App mit zwei Rädern ein, eines für die Stunde und eines für die Minuten in Fünferschritten; **Jede Minute** zeigt alle Minuten. Mit einer Tastatur tippst du die Zeit einfach ein, etwa „1430“
 - unter **Wer** Personen auswählen. Ist niemand ausgewählt, gilt der Termin für die ganze Familie

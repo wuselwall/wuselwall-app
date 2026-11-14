@@ -20,6 +20,15 @@ class TasksRepository {
     build: (q) => q.eq('is_active', true).order('title'),
   );
 
+  /// Every task definition, active and archived (the newest [limit] by change date), as
+  /// raw material for the chore editor's proposals.
+  Future<Result<List<TaskDefinition>>> allDefinitions({int limit = 500}) =>
+      _api.select(
+        'task_definitions',
+        parse: TaskDefinition.fromJson,
+        build: (q) => q.order('updated_at', ascending: false).limit(limit),
+      );
+
   /// The instances that matter on [day]: due that day, or still open in their window.
   /// Skipped and expired ones are left out; done ones stay, so the board can strike them.
   Future<Result<List<TaskInstance>>> instancesOn(DateTime day) {

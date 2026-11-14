@@ -51,7 +51,7 @@ Lo que rellena la ficha es solo un comienzo: cambia lo que sea distinto y guarda
 
 Añade:
 
-- título, lugar y notas;
+- título, lugar y notas; mientras escribes, el título y el lugar proponen lo que ya habéis apuntado, y un toque toma la propuesta (en un título, con su lugar y su imagen si aún están vacíos);
 - cita o presencia: trabajo, teletrabajo, viaje, ausencia, descanso o cuidado;
 - todo el día, o inicio y fin. En toda la aplicación, una hora se ajusta con dos ruedas, una para la hora y otra para los minutos de cinco en cinco; **Cada minuto** los muestra todos. Con un teclado basta con escribir la hora, por ejemplo «1430»;
 - personas, o ninguna para toda la familia;

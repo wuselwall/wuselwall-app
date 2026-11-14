@@ -2276,6 +2276,12 @@ abstract class AppLocalizations {
   /// **'Enter a title.'**
   String get eventTitleRequired;
 
+  /// Screen-reader label of the small list under a text field that proposes what the family entered before.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get suggestFieldOptions;
+
   /// No description provided for @eventKindAppointment.
   ///
   /// In en, this message translates to:

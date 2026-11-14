@@ -71,6 +71,10 @@ by the node test), `app.match_dictionary` runs the same layers in plpgsql and fe
 `rankTiles` falls back to the matcher and the "Neu" tile shows the matched picture; a person's
 category choice is remembered per household in `app.match_correction` (Einstellungen > Einkaufen >
 Gelernte Wörter, Advanced, guardians forget).
+Proposals while typing (2026-11-14, issue #239, specs/05 "Proposals while typing"): an event's
+title and place and a chore's title propose what the family entered before (`SuggestField` in
+`core/ui`, ranked by `core/text/suggest.dart` from `api.events` and `api.task_definitions`; no
+server change).
 A restart without network (step 10.6, issue #128, 2026-11-10): reads given a `cacheKey` in
 `ApiClient` keep their last good JSON answer in a second drift database
 (`app/lib/core/cache/`, ADR-006's read cache) and fall back to it on a network failure only:

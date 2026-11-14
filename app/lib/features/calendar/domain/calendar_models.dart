@@ -192,6 +192,30 @@ class Occurrence {
   }
 }
 
+/// What an earlier appointment tells the editor's proposals: its title, usual place and
+/// picture, and when it was last changed (see `CalendarRepository.titleHistory`).
+class EventHistoryRow {
+  const EventHistoryRow({
+    required this.title,
+    this.location,
+    this.iconKey,
+    this.updatedAt,
+  });
+
+  factory EventHistoryRow.fromJson(Map<String, dynamic> json) =>
+      EventHistoryRow(
+        title: json['title'] as String? ?? '',
+        location: json['location'] as String?,
+        iconKey: json['icon_key'] as String?,
+        updatedAt: _instant(json['updated_at']),
+      );
+
+  final String title;
+  final String? location;
+  final String? iconKey;
+  final DateTime? updatedAt;
+}
+
 /// An `api.events` row: the editable event itself, as the editor sees it. [toJson] is
 /// the `p_event` map of `api.event_save`.
 class CalendarEvent {

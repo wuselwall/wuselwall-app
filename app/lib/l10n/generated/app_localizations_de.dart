@@ -1262,6 +1262,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventTitleRequired => 'Bitte einen Titel eingeben.';
 
   @override
+  String get suggestFieldOptions => 'Vorschläge';
+
+  @override
   String get eventKindAppointment => 'Termin';
 
   @override
