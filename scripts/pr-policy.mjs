@@ -123,18 +123,28 @@ export async function checkPullRequest(github, number) {
   if (pr.state === 'CLOSED') return null; // closed without a merge: nothing to say
   const issues = found.closingIssuesReferences.nodes.filter((issue) => issue.repository.nameWithOwner === repository.nameWithOwner);
   const result = evaluate({ pr, issues, milestones: repository.milestones.nodes, defaultBranch: repository.defaultBranchRef.name });
-  if (result.addLabels.length > 0) await github.rest('POST', `issues/${number}/labels`, { labels: result.addLabels });
-  if (result.milestone !== undefined) await github.rest('PATCH', `issues/${number}`, { milestone: result.milestone });
-  if (result.issueMilestone !== undefined) {
-    for (const issue of issues) {
-      if (issue.milestone?.number !== result.issueMilestone) await github.rest('PATCH', `issues/${issue.number}`, { milestone: result.issueMilestone });
+  const status = (state, description) => github.rest('POST', `statuses/${pr.sha}`, {
+    state, context: statusContext, description,
+    target_url: `https://github.com/${github.repository}/blob/${repository.defaultBranchRef.name}/CONTRIBUTING.md#pull-requests`,
+  }, { retry: true }); // the same status again changes nothing
+  try {
+    // Adding labels it already has changes nothing either: both POSTs may be asked again.
+    if (result.addLabels.length > 0) await github.rest('POST', `issues/${number}/labels`, { labels: result.addLabels }, { retry: true });
+    if (result.milestone !== undefined) await github.rest('PATCH', `issues/${number}`, { milestone: result.milestone });
+    if (result.issueMilestone !== undefined) {
+      for (const issue of issues) {
+        if (issue.milestone?.number !== result.issueMilestone) await github.rest('PATCH', `issues/${issue.number}`, { milestone: result.issueMilestone });
+      }
     }
-  }
-  if (!pr.merged) {
-    await github.rest('POST', `statuses/${pr.sha}`, {
-      state: result.state, context: statusContext, description: result.description,
-      target_url: `https://github.com/${github.repository}/blob/${repository.defaultBranchRef.name}/CONTRIBUTING.md#pull-requests`,
-    });
+    if (!pr.merged) await status(result.state, result.description);
+  } catch (error) {
+    // The policy was not applied: an earlier green status must not stand for it. Best effort;
+    // the job fails either way and a rerun (or the next event) checks again.
+    if (!pr.merged) {
+      await status('error', `Not applied, run triage again: ${error.message}`.slice(0, 140))
+        .catch((second) => console.error(`Could not report the error status: ${second.message}`));
+    }
+    throw error;
   }
   await summary([`### #${number}: ${result.state}`, result.description, ...result.problems.map((problem) => `- ${problem}`)].join('\n'));
   return result;
@@ -146,7 +156,7 @@ export async function checkIssue(github, number) {
   const issue = repository.issue;
   const marked = issue.labels.nodes.some((label) => label.name === triageLabel);
   const waiting = issue.state === 'OPEN' && !issue.milestone;
-  if (waiting && !marked) await github.rest('POST', `issues/${number}/labels`, { labels: [triageLabel] });
+  if (waiting && !marked) await github.rest('POST', `issues/${number}/labels`, { labels: [triageLabel] }, { retry: true });
   if (!waiting && marked) await github.rest('DELETE', `issues/${number}/labels/${encodeURIComponent(triageLabel)}`);
   for (const pr of issue.closedByPullRequestsReferences.nodes) {
     if (pr.state === 'OPEN') await checkPullRequest(github, pr.number);
