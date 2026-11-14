@@ -168,6 +168,8 @@ class _Avatar extends StatelessWidget {
               ),
               child: Text(
                 member.initial,
+                // A fixed circle keeps its letter's size (see MemberAvatar).
+                textScaler: TextScaler.noScaling,
                 style: TextStyle(
                   color: colors.onInk,
                   fontSize: size * 0.45,

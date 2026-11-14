@@ -366,6 +366,8 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
                           backgroundColor: ww.member(m.color).ink,
                           child: Text(
                             m.initial,
+                            // A fixed circle keeps its letter's size (see MemberAvatar).
+                            textScaler: TextScaler.noScaling,
                             style: TextStyle(
                               color: ww.member(m.color).onInk,
                               fontSize: 12,

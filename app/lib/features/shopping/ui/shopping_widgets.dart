@@ -1083,6 +1083,8 @@ class _ShoppingItemTileState extends State<ShoppingItemTile> {
                                 ),
                                 child: Text(
                                   adder.initial,
+                                  // A fixed circle keeps its letter's size (see MemberAvatar).
+                                  textScaler: TextScaler.noScaling,
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w800,

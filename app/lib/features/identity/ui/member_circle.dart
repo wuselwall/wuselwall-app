@@ -45,6 +45,8 @@ class MemberCircle extends StatelessWidget {
         child: asset == null
             ? Text(
                 member.initial,
+                // A fixed circle keeps its letter's size (see MemberAvatar).
+                textScaler: TextScaler.noScaling,
                 style: TextStyle(
                   fontFamily: Tokens.fontUi,
                   fontWeight: FontWeight.w800,
