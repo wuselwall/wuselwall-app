@@ -4,7 +4,7 @@ import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { CRASH, DEFAULT_CONCURRENCY, GDB_SETTINGS, SINK_ERROR, assessCrash, flutterTestConcurrency, sanitizeBacktrace } from './flutter-test-ci.mjs';
+import { CRASH, DEFAULT_CONCURRENCY, GDB_SETTINGS, MAX_RERUNS, SINK_ERROR, assessCrash, flutterTestConcurrency, sanitizeBacktrace } from './flutter-test-ci.mjs';
 
 const script = new URL('./flutter-test-ci.mjs', import.meta.url).pathname;
 const A = '/work/app/test/a_test.dart';
@@ -192,7 +192,7 @@ test('a clean run runs once and passes', () => {
   assert.match(result.stdout, /Runner facts/, JSON.stringify(result));
 });
 
-test('a crash-only failure reruns the crashed file once, with a warning, and takes its result', () => {
+test('a crash-only failure reruns the crashed file, with a warning, and takes its result', () => {
   const result = run([crashed, passed]);
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test', '--concurrency=4'], ['test', '--concurrency=4', A]]);
@@ -207,7 +207,7 @@ test('a crash mid-file reruns that file, with a warning that says how many tests
   assert.match(result.stdout, /::warning title=flutter_tester crashed::\/work\/app\/test\/a_test\.dart \(SIGSEGV, 3 of its tests cut short\)/);
 });
 
-test('a configured concurrency is used for both initial run and one retry', () => {
+test('a configured concurrency is used for the initial run and a rerun', () => {
   const result = run([crashed, passed], { concurrency: '7' });
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(
@@ -223,7 +223,7 @@ test('an invalid concurrency fails before spawning Flutter', () => {
   assert.match(result.stderr, /FLUTTER_TEST_CONCURRENCY must be an integer from 1 to 16/);
 });
 
-test('a crash seen only as the sink error reruns that file once, with a warning that says so', () => {
+test('a crash seen only as the sink error reruns that file, with a warning that says so', () => {
   const sinkOnly = { status: 1, out: 'Some tests failed.\n', json: report({ [A]: ['cut', 'cut'], [B]: ['success'] }, { sinkErrored: [A] }) };
   const result = run([sinkOnly, passed]);
   assert.equal(result.status, 0, result.stderr);
@@ -231,10 +231,49 @@ test('a crash seen only as the sink error reruns that file once, with a warning 
   assert.match(result.stdout, /::warning title=flutter_tester crashed::\/work\/app\/test\/a_test\.dart \(crash reported as the sink error, 2 of its tests cut short\)/);
 });
 
-test('a second crash fails the job, without a third run', () => {
-  const result = run([crashed, crashed]);
+const plain = (calls) => calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter')));
+// A rerun of A alone in which the tester crashed again.
+const crashedAgain = { status: 1, out: crashText(A), json: report({ [A]: ['success', 'cut'] }) };
+
+test('a file that crashes in its rerun runs again, and passes when a whole run of it passes', () => {
+  const result = run([crashed, crashedAgain, passed]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(plain(result.calls), [['test', '--concurrency=4'], ['test', '--concurrency=4', A], ['test', '--concurrency=4', A]]);
+  assert.match(result.stdout, /Running this file again \(rerun 1 of 3\)/);
+  assert.match(result.stdout, /1 of its tests cut short\)\. Running this file again \(rerun 2 of 3\)/);
+});
+
+test('a later rerun runs only the files that crashed in the one before', () => {
+  const both = { status: 1, out: crashText(A) + crashText(B), json: report({ [A]: ['success'], [B]: ['success'] }) };
+  const onlyB = { status: 1, out: crashText(B), json: report({ [A]: ['success'], [B]: ['cut'] }) };
+  const result = run([both, onlyB, passed]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(plain(result.calls), [['test', '--concurrency=4'], ['test', '--concurrency=4', A, B], ['test', '--concurrency=4', B]]);
+});
+
+test('a crash in every rerun fails the job after the last one, and says so', () => {
+  assert.equal(MAX_RERUNS, 3);
+  const result = run([crashed, crashedAgain, crashedAgain, crashedAgain, passed]);
+  assert.equal(result.status, 1);
+  assert.equal(result.calls.length, 1 + MAX_RERUNS);
+  assert.match(result.stdout, /the run stands \(flutter_tester crashed again in rerun 3 of 3: \/work\/app\/test\/a_test\.dart\)/);
+});
+
+test('a real failure in a rerun fails the job, without another run', () => {
+  const failing = { status: 1, out: crashText(A), json: report({ [A]: ['failure'] }) };
+  const result = run([crashed, failing, passed]);
   assert.equal(result.status, 1);
   assert.equal(result.calls.length, 2);
+  assert.match(result.stdout, /the run stands \(/);
+});
+
+test('a rerun that ends with a signal or another status fails the job, without another run', () => {
+  const killed = run([crashed, { ...crashedAgain, signal: 'SIGKILL' }, passed]);
+  assert.notEqual(killed.status, 0);
+  assert.equal(killed.calls.length, 2);
+  const other = run([crashed, { ...crashedAgain, status: 3 }, passed]);
+  assert.equal(other.status, 3);
+  assert.equal(other.calls.length, 2);
 });
 
 test('a real failure fails the job with its own status and no rerun', () => {

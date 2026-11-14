@@ -83,8 +83,8 @@ Median steps:
 | Server-discovery browser regression | 6s |
 
 The workflow explicitly sets `FLUTTER_TEST_CONCURRENCY=1` because of observed tester
-crashes. The wrapper reruns only a narrowly recognized process crash, once; ordinary
-failures still fail. Increasing concurrency without diagnosing those crashes is not a
+crashes. The wrapper reruns only the files of a narrowly recognized process crash, up to
+three times while that crash is the sole problem; ordinary failures still fail. Increasing concurrency without diagnosing those crashes is not a
 supported optimization.
 
 In the representative log, tests span 171 files. Summed first-to-last test-log spans

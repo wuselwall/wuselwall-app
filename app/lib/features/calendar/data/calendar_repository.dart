@@ -49,6 +49,24 @@ class CalendarRepository {
     };
   }
 
+  /// The household's latest appointments ([limit], by change date) as raw material for
+  /// the editor's proposals: title, place and, on servers with the lighter day
+  /// ([withIcon]), the picture. The view shows the caller's own household only.
+  Future<Result<List<EventHistoryRow>>> titleHistory({
+    bool withIcon = true,
+    int limit = 500,
+  }) => _api.select(
+    'events',
+    columns: withIcon
+        ? 'title,location,icon_key,updated_at'
+        : 'title,location,updated_at',
+    parse: EventHistoryRow.fromJson,
+    build: (q) => q
+        .eq('kind', 'appointment')
+        .order('updated_at', ascending: false)
+        .limit(limit),
+  );
+
   /// Inserts the event when it has no row yet, else updates it. Returns its id.
   Future<Result<String>> save({
     required String? actor,

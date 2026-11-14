@@ -56,7 +56,7 @@ What a tile fills in is only a start: change what differs in the editor and save
 
 You can:
 
-- enter a **Title**, a **Location** and **Notes**
+- enter a **Title**, a **Location** and **Notes**. While you type, the title and the location propose what you entered before; a tap takes the proposal over (for a title along with its location and picture, where those are still empty)
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
 - make it **All day**, or set **Starts** and **Ends**. Everywhere in the app you set a time with two wheels, one for the hour and one for the minutes in steps of five; **Every minute** shows all of them. With a keyboard you simply type the time, such as "1430"
 - choose a **Reminder before** for this appointment right below (see [below](#event-reminder))

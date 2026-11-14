@@ -1255,6 +1255,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventTitleRequired => 'Enter a title.';
 
   @override
+  String get suggestFieldOptions => 'Suggestions';
+
+  @override
   String get eventKindAppointment => 'Appointment';
 
   @override

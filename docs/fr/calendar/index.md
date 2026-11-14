@@ -51,7 +51,7 @@ Ce que la tuile remplit n’est qu’un point de départ : modifiez ce qui chang
 
 Indiquez ensuite :
 
-- le **titre**, le **lieu** et les **notes** ;
+- le **titre**, le **lieu** et les **notes** ; pendant la saisie, le titre et le lieu proposent ce que vous avez déjà saisi, et un toucher reprend la proposition (pour un titre, avec son lieu et son image s’ils sont encore vides) ;
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
 - toute la journée, ou les heures de début et de fin. Partout dans l’application, une heure se règle avec deux roues, l’une pour l’heure, l’autre pour les minutes par pas de cinq ; **Chaque minute** les affiche toutes. Au clavier, tapez simplement l’heure, par exemple « 1430 » ;
 - juste en dessous, un **Rappel avant** pour ce rendez-vous (voir [plus bas](#event-reminder)) ;

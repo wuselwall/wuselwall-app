@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
+import 'package:wuselwall/core/text/suggest.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/domain/usual_week.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// How many days the calendar shows at once. The week starts on Monday (specs/05).
 enum CalendarMode {
@@ -187,6 +189,44 @@ final calendarEventProvider = FutureProvider.autoDispose
     .family<CalendarEvent, String>((ref, id) async {
       ref.watch(deviceKeyProvider);
       return (await ref.watch(calendarRepositoryProvider).event(id)).unwrap();
+    });
+
+/// The raw history behind the editor's proposals: `api.events` (the last 500
+/// appointments by change date). The editor treats a failure as "nothing to propose".
+final _eventHistoryRowsProvider =
+    FutureProvider.autoDispose<List<EventHistoryRow>>((ref) async {
+      ref.watch(deviceKeyProvider);
+      final withIcon = ref.watch(lighterDaySupportedProvider);
+      return (await ref
+              .watch(calendarRepositoryProvider)
+              .titleHistory(withIcon: withIcon))
+          .unwrap();
+    });
+
+/// Earlier appointment titles with their usual place and picture, grouped in the app.
+final eventTitleHistoryProvider =
+    FutureProvider.autoDispose<List<TextSuggestion>>((ref) async {
+      final rows = await ref.watch(_eventHistoryRowsProvider.future);
+      return buildSuggestions([
+        for (final r in rows)
+          SuggestionRow(
+            text: r.title,
+            usedAt: r.updatedAt,
+            location: r.location,
+            iconKey: r.iconKey,
+          ),
+      ]);
+    });
+
+/// The places of those appointments: each distinct non-empty one, counted.
+final eventPlaceHistoryProvider =
+    FutureProvider.autoDispose<List<TextSuggestion>>((ref) async {
+      final rows = await ref.watch(_eventHistoryRowsProvider.future);
+      return buildSuggestions([
+        for (final r in rows)
+          if ((r.location ?? '').trim().isNotEmpty)
+            SuggestionRow(text: r.location!, usedAt: r.updatedAt),
+      ]);
     });
 
 /// Every member's usual week (`api.usual_weeks`), for the settings page, which

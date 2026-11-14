@@ -174,6 +174,11 @@ and adds a parental bottleneck that will quietly kill adoption within a fortnigh
 | Chore admin | adult | Definition CRUD, rotation pools, points, verification flags — laptop-oriented, dense |
 | Approvals | adult | Pending redemptions and verifications, with a PIN gate |
 
+The chore admin's title field proposes the titles of chores the family made before (archived
+ones too) while somebody types, and a picked title brings its picture along while none is
+chosen (*added 2026-11-14, issue #239*; the same field as the calendar's, see
+[05](05-module-calendar.md)).
+
 Feedback on completion should be immediate and physical: a tick animation, the points
 counter incrementing visibly, a short sound the child can switch off. This is the part
 that makes a 7-year-old want to open the app, and it is worth more implementation time

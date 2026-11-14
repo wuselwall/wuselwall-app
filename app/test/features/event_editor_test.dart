@@ -876,4 +876,147 @@ void main() {
       expect(cal.overrides.single.recurrenceId, recurrenceId);
     });
   });
+  group('proposals while typing', () {
+    final history = [
+      EventHistoryRow(
+        title: 'Turnen',
+        location: 'Halle B',
+        iconKey: 'ball',
+        updatedAt: testNow().subtract(const Duration(days: 2)),
+      ),
+      EventHistoryRow(
+        title: 'turnen',
+        location: 'Halle B',
+        iconKey: 'ball',
+        updatedAt: testNow().subtract(const Duration(days: 9)),
+      ),
+      EventHistoryRow(
+        title: 'Zahnarzt',
+        location: 'Praxis Dr. Frei',
+        updatedAt: testNow().subtract(const Duration(days: 5)),
+      ),
+    ];
+
+    Finder locationField() => find.widgetWithText(TextField, _de.eventLocation);
+
+    testWidgets('a typed prefix proposes an earlier title with its place', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository()..history = history;
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await _title(t, 'tu');
+      await t.pumpAndSettle();
+
+      expect(find.text('Turnen'), findsOneWidget);
+      expect(find.text('Halle B'), findsOneWidget);
+      expect(find.text('Zahnarzt'), findsNothing);
+    });
+
+    testWidgets(
+      'picking one fills the title, the empty place and the picture',
+      (t) async {
+        final cal = FakeCalendarRepository()..history = history;
+        await _open(
+          t,
+          calendar: cal,
+          args: EventEditArgs(date: _day),
+        );
+        await _title(t, 'tu');
+        await t.pumpAndSettle();
+        await t.tap(find.text('Turnen'));
+        await t.pumpAndSettle();
+
+        expect(
+          t.widget<TextField>(find.byType(TextField).first).controller!.text,
+          'Turnen',
+        );
+        expect(
+          t.widget<TextField>(locationField()).controller!.text,
+          'Halle B',
+        );
+        await _save(t);
+
+        final event = cal.saved.single;
+        expect(event.title, 'Turnen');
+        expect(event.location, 'Halle B');
+        expect(event.iconKey, 'ball');
+        // Date, time and people stay as the form had them.
+        expect(event.startsAt, DateTime(2026, 10, 14, 10));
+        expect(event.attendeeIds, [guardianId]);
+      },
+    );
+
+    testWidgets('a place that is already typed is kept', (t) async {
+      final cal = FakeCalendarRepository()..history = history;
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await t.enterText(locationField(), 'Turnhalle Nord');
+      await t.pump();
+      await _title(t, 'tu');
+      await t.pumpAndSettle();
+      await t.tap(find.text('Turnen'));
+      await t.pumpAndSettle();
+      await _save(t);
+
+      expect(cal.saved.single.title, 'Turnen');
+      expect(cal.saved.single.location, 'Turnhalle Nord');
+    });
+
+    testWidgets('the place field proposes earlier places', (t) async {
+      final cal = FakeCalendarRepository()..history = history;
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await t.enterText(locationField(), 'pra');
+      await t.pumpAndSettle();
+      expect(find.text('Praxis Dr. Frei'), findsOneWidget);
+      expect(find.text('Halle B'), findsNothing);
+
+      await t.tap(find.text('Praxis Dr. Frei'));
+      await t.pumpAndSettle();
+      expect(
+        t.widget<TextField>(locationField()).controller!.text,
+        'Praxis Dr. Frei',
+      );
+    });
+
+    testWidgets('an unchanged title of an existing event is not proposed', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository(const [], {'e-1': _fixture(id: 'e-1')})
+        ..history = history;
+      await _open(
+        t,
+        calendar: cal,
+        args: const EventEditArgs(eventId: 'e-1'),
+      );
+      await t.tap(find.byType(TextField).first);
+      await t.pumpAndSettle();
+
+      expect(find.text('Turnen'), findsOneWidget);
+      expect(find.text('Halle B'), findsNothing);
+    });
+
+    testWidgets('without history the fields behave like plain ones', (t) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await _title(t, 'tu');
+      await t.pumpAndSettle();
+      await _save(t);
+      expect(cal.saved.single.title, 'tu');
+    });
+  });
 }

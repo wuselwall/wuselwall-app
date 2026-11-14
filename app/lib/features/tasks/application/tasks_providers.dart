@@ -33,6 +33,15 @@ final taskDefinitionsProvider =
       return (await ref.watch(tasksRepositoryProvider).definitions()).unwrap();
     });
 
+/// Every chore the family ever made, active or archived, for the chore editor's
+/// proposals (a failure there means nothing to propose).
+final taskTitleHistoryProvider =
+    FutureProvider.autoDispose<List<TaskDefinition>>((ref) async {
+      _watchTasksTopic(ref);
+      return (await ref.watch(tasksRepositoryProvider).allDefinitions())
+          .unwrap();
+    });
+
 final pendingVerificationsProvider =
     FutureProvider.autoDispose<List<TaskInstance>>((ref) async {
       _watchTasksTopic(ref);

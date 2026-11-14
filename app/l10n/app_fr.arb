@@ -672,6 +672,8 @@
   "@eventTitleLabel": {},
   "eventTitleRequired": "Saisis un titre.",
   "@eventTitleRequired": {},
+  "suggestFieldOptions": "Suggestions",
+  "@suggestFieldOptions": {},
   "eventKindAppointment": "Rendez-vous",
   "@eventKindAppointment": {},
   "eventKindPresence": "Présence",
