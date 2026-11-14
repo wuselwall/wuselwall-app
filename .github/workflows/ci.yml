@@ -76,7 +76,8 @@ jobs:
       # flutter/flutter#124145, #151546); flutter_tools reports it either as the crash or, when
       # the file's channel is still piping, as "Bad state: Cannot add event while adding stream."
       # on the file's loading step. The wrapper prints the runner facts for a diagnosis and
-      # reruns only the crashed files, whole and once; every other failure keeps the job red.
+      # reruns only the crashed files, whole, up to three times while the crash is the sole
+      # problem; every other failure keeps the job red.
       - if: needs.changes.outputs.app == 'true'
         run: node ../scripts/flutter-test-ci.mjs
       # Exercise real encrypted browser storage across a backend/key migration.

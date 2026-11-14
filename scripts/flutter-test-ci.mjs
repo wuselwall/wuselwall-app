@@ -19,12 +19,16 @@
 // at all. Such a file is a crashed file too, and runs again as a whole.
 //
 // This wrapper prints the runner facts a native diagnosis needs, runs the suite once and, only
-// when the sole problem is that crash, runs the crashed files once more and returns that run's
-// status. Only a flutter exit status of 1 qualifies: a flutter killed by a signal, any other
-// status, a failing or unfinished test, an error event other than the crash, a test outside
-// the crashed files that did not pass, or a crash in the second run keeps the job red. Each
-// rerun leaves a warning annotation; when it declines to rerun, it says why. Where gdb is
-// installed it also lets the tester dump core and prints the crashing thread's backtrace.
+// when the sole problem is that crash, runs the crashed files again, whole. A long file can
+// crash in its rerun as well, so a rerun whose sole problem is again that crash is followed by
+// another of the files that crashed in it, up to MAX_RERUNS reruns in all. A file counts as
+// passed only when one run of it finished with every test passed; the last rerun's status is
+// returned. Only a flutter exit status of 1 qualifies, in every run: a flutter killed by a
+// signal, any other status, a failing or unfinished test, an error event other than the crash,
+// a test outside the crashed files that did not pass, or a crash in the last rerun keeps the
+// job red. Each rerun leaves a warning annotation; when it declines to rerun, it says why.
+// Where gdb is installed it also lets the tester dump core and prints the crashing thread's
+// backtrace.
 // Keep concurrent test files bounded on the self-hosted runner (default 4; configurable 1–16).
 import { spawn, spawnSync } from 'node:child_process';
 import { arch, availableParallelism, constants, cpus, freemem, release, totalmem } from 'node:os';
@@ -37,6 +41,8 @@ export const CRASH = 'TestDeviceException(Shell subprocess crashed with segmenta
 export const SINK_ERROR = 'Bad state: Cannot add event while adding stream.';
 const UNHANDLED = /unhandled error during (finalization of )?test:$/;
 export const DEFAULT_CONCURRENCY = 4;
+// How often crashed files run again before the crash stands as the job's result.
+export const MAX_RERUNS = 3;
 
 export function flutterTestConcurrency(value) {
   if (value === undefined) return DEFAULT_CONCURRENCY;
@@ -222,29 +228,34 @@ async function main() {
   console.log(`flutter-test-ci: Flutter test concurrency is ${concurrency}.`);
   diagnostics();
   mkdirSync('build', { recursive: true });
-  const report = 'build/test-results.json';
-  const first = await flutterTest([], report, concurrency);
-  if (gdb) backtraces();
-  if (first.status === 0) return 0;
-  // The crash makes flutter exit with 1. A signal or any other status is not that crash.
-  if (first.signal || first.status !== 1) {
-    const how = first.signal ? `was killed by ${first.signal}` : `exited with ${first.status}`;
-    console.log(`flutter-test-ci: the run stands (flutter ${how}).`);
-    return first.status;
+  let report = 'build/test-results.json';
+  let last = await flutterTest([], report, concurrency);
+  for (let reruns = 0; ; reruns++) {
+    if (gdb) backtraces();
+    if (last.status === 0) return 0;
+    // The crash makes flutter exit with 1. A signal or any other status is not that crash.
+    if (last.signal || last.status !== 1) {
+      const how = last.signal ? `was killed by ${last.signal}` : `exited with ${last.status}`;
+      console.log(`flutter-test-ci: the run stands (flutter ${how}).`);
+      return last.status;
+    }
+    const verdict = assessCrash(last.output, existsSync(report) ? readFileSync(report, 'utf8').split('\n') : []);
+    if (!verdict.files) {
+      console.log(`flutter-test-ci: the run stands (${verdict.reason}).`);
+      for (const line of (verdict.events ?? []).slice(0, 30)) console.log(`  ${line}`);
+      return last.status;
+    }
+    if (reruns === MAX_RERUNS) {
+      console.log(`flutter-test-ci: the run stands (flutter_tester crashed again in rerun ${reruns} of ${MAX_RERUNS}: ${verdict.files.join(', ')}).`);
+      return last.status;
+    }
+    for (const file of verdict.files) {
+      const cut = verdict.cut[file] ? `, ${verdict.cut[file]} of its tests cut short` : ', after its tests passed';
+      console.log(`::warning title=flutter_tester crashed::${file} (${verdict.how[file]}${cut}). Running this file again (rerun ${reruns + 1} of ${MAX_RERUNS}).`);
+    }
+    report = `build/test-results-retry-${reruns + 1}.json`;
+    last = await flutterTest(verdict.files, report, concurrency);
   }
-  const verdict = assessCrash(first.output, existsSync(report) ? readFileSync(report, 'utf8').split('\n') : []);
-  if (!verdict.files) {
-    console.log(`flutter-test-ci: the run stands (${verdict.reason}).`);
-    for (const line of (verdict.events ?? []).slice(0, 30)) console.log(`  ${line}`);
-    return first.status;
-  }
-  for (const file of verdict.files) {
-    const cut = verdict.cut[file] ? `, ${verdict.cut[file]} of its tests cut short` : ', after its tests passed';
-    console.log(`::warning title=flutter_tester crashed::${file} (${verdict.how[file]}${cut}). Running this file once more.`);
-  }
-  const retry = await flutterTest(verdict.files, 'build/test-results-retry.json', concurrency);
-  if (gdb) backtraces();
-  return retry.status;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
