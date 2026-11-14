@@ -1,5 +1,8 @@
 // Test-only entry states for real production screens. These select a destination
 // directly; authentication, redirects and mutations are covered by journey tests.
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +20,7 @@ import 'package:wuselwall/features/calendar/data/feed_repository.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_template_page.dart';
+import 'package:wuselwall/features/calendar/ui/import_event_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/baseline_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendar_form_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.dart';
@@ -220,6 +224,7 @@ class _Destination extends ConsumerWidget {
     'event-edit' => const EventEditorPage(
       args: EventEditArgs(eventId: 'e-turnen'),
     ),
+    'event-import' => ImportEventPage(bytes: _sharedEventFile()),
     'recipe-create' => const RecipeEditorPage(),
     'recipe-edit' || 'recipe-view' => AsyncValueView(
       value: ref.watch(recipesProvider),
@@ -273,6 +278,29 @@ class _Destination extends ConsumerWidget {
     _ => throw StateError('Missing qualification fixture: $id'),
   };
 }
+
+/// The calendar file another family sent: one all-day event, so the preview shows the
+/// same day whatever time zone the machine that renders it is in.
+Uint8List _sharedEventFile() => Uint8List.fromList(
+  utf8.encode(
+    [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'BEGIN:VEVENT',
+      'UID:qualification-school-fair@example.org',
+      'SEQUENCE:0',
+      'DTSTAMP:20261014T120000Z',
+      'DTSTART;VALUE=DATE:20261024',
+      'DTEND;VALUE=DATE:20261025',
+      'SUMMARY:${DemoData.tr4('Schulfest', 'School fair', 'Fête de l’école', 'Fiesta del colegio')}',
+      'LOCATION:${DemoData.tr4('Schulhaus Dorf', 'Village school', 'École du village', 'Colegio del pueblo')}',
+      'DESCRIPTION:${DemoData.tr4('Bitte einen Kuchen mitbringen.', 'Please bring a cake.', 'Merci d’apporter un gâteau.', 'Por favor\\, traed un pastel.')}',
+      'END:VEVENT',
+      'END:VCALENDAR',
+      '',
+    ].join('\r\n'),
+  ),
+);
 
 const qualificationNetworkFailure = NetworkFailure();
 

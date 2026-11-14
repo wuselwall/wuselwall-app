@@ -2,7 +2,7 @@
 
 The [qualification design](../specs/accessibility-and-ui-qualification.md) is implemented
 as a manually dispatched evidence suite and an enforced app/server release gate. The shared
-inventory contains 75 states and accounts for every release route. Two exclusions are
+inventory contains 76 states and accounts for every release route. Two exclusions are
 checked against the production router: the legacy settings redirect and the developer-only
 diagnostics page. Route coverage does not mean every dialog, permission state or backend
 journey has been exercised.
@@ -19,7 +19,7 @@ from a recognized engine crash does not establish a clean release-candidate run.
 - Flutter: bundled fonts, four locales, Android/iOS widget adaptations, light/dark and
   kiosk night, semantics, labels, target sizes and rendered text contrast. The responsive
   tier adds relevant widths, 599/600/601 boundaries and 100/200% text. Every inventory
-  state runs regardless of changed paths. Fixture integrity checks render all 48 direct
+  state runs regardless of changed paths. Fixture integrity checks render all 49 direct
   destination fixtures in four languages before their audit results can count.
 - Browser: the release-compiled synthetic-data entry point, stable screenshots and ARIA
   snapshots, axe-core DOM/ARIA checks, console/page errors and blocked external requests.

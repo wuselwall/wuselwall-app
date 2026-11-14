@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -64,12 +65,27 @@ async function fakeDarwinArm64(t, {systemPath = true, javaMode = 'missing'} = {}
   return {root, bin, tools, javaHome, javaBin, networkMarker, path: systemPath ? `${bin}:${process.env.PATH}` : bin};
 }
 
+// The script measures the real disk under the tools directory. A machine with less than
+// its lowest floor free (30 GiB) would stop every apply test at that check, so the fake
+// Mac also has a fake disk: Python loads this module before the script's own code.
+const fakeDisk = fsSync.mkdtempSync(path.join(os.tmpdir(), 'ww-provision-disk-'));
+fsSync.writeFileSync(path.join(fakeDisk, 'sitecustomize.py'), [
+  'import collections, os, shutil',
+  "_usage = collections.namedtuple('usage', 'total used free')",
+  "_free = int(os.environ['WW_TEST_FREE_GIB']) * 1024 ** 3",
+  'shutil.disk_usage = lambda path: _usage(_free * 2, _free, _free)',
+  '',
+].join('\n'));
+test.after(() => fsSync.rmSync(fakeDisk, {recursive: true, force: true}));
+
 function applyWithFakeMac(fixture, overrides = {}) {
   return spawnSync('/bin/bash', [script, '--apply'], {
     encoding: 'utf8',
     timeout: 10_000,
     env: {
       ...process.env,
+      PYTHONPATH: fakeDisk,
+      WW_TEST_FREE_GIB: '200',
       PATH: fixture.path,
       JAVA_HOME: fixture.javaHome,
       QUALIFICATION_TOOLS_ROOT: fixture.tools,
@@ -107,6 +123,16 @@ test('native apply names a missing required tool before creating SDK directories
   const result = applyWithFakeMac(fixture);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /Required tool 'xcrun' was not found on PATH/);
+  await assert.rejects(fs.stat(fixture.tools), {code: 'ENOENT'});
+  await assert.rejects(fs.stat(fixture.networkMarker), {code: 'ENOENT'});
+});
+
+test('native apply refuses a disk below the floor before creating SDK directories', async t => {
+  const fixture = await fakeDarwinArm64(t, {javaMode: 'valid'});
+  const result = applyWithFakeMac(fixture, {WW_TEST_FREE_GIB: '29'});
+  assert.notEqual(result.status, 0);
+  assert.match(result.stdout, /Free disk: 29\.0 GiB; required floor: 30 GiB/);
+  assert.match(result.stderr, /Insufficient free disk space; nothing installed/);
   await assert.rejects(fs.stat(fixture.tools), {code: 'ENOENT'});
   await assert.rejects(fs.stat(fixture.networkMarker), {code: 'ENOENT'});
 });

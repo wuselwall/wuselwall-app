@@ -18,7 +18,7 @@ native macOS runner for both mobile platforms, initially one virtual device at a
 No paid device cloud is needed initially. The expanded suite has no pull-request, ordinary
 push or nightly trigger. Existing fast CI checks continue to run as they do today.
 
-The [candidate suite](../qualification/README.md) implements a shared 75-state inventory,
+The [candidate suite](../qualification/README.md) implements a shared 76-state inventory,
 fixed Dart clock, bundled fonts, Flutter matrix/detectors, browser screenshot/semantic
 comparison, axe-core checks and integrity-checked web/native baseline bundles. Every release
 route is represented; the legacy settings redirect and developer-only diagnostics page have
