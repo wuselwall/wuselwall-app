@@ -99,6 +99,7 @@ class Occurrence {
     this.iconKey,
     this.countdown = false,
     this.tradition = false,
+    this.reminderMinutes,
   });
 
   factory Occurrence.fromJson(Map<String, dynamic> json) => Occurrence(
@@ -131,6 +132,8 @@ class Occurrence {
     iconKey: json['icon_key'] as String?,
     countdown: json['countdown'] as bool? ?? false,
     tradition: json['tradition'] as bool? ?? false,
+    // Absent on servers before the event's own reminder (specs/05).
+    reminderMinutes: (json['reminder_minutes'] as num?)?.toInt(),
   );
 
   final String id;
@@ -179,6 +182,10 @@ class Occurrence {
 
   /// One of the family's traditions (specs/27 "Familientraditionen").
   final bool tradition;
+
+  /// The event's own reminder in minutes before the start; null for none (specs/05
+  /// "A reminder for one event").
+  final int? reminderMinutes;
 
   bool get isImported => source == OccurrenceSource.imported;
   bool get isPresence => kind == EventKind.presence;
@@ -245,6 +252,8 @@ class CalendarEvent {
     this.countdown = false,
     this.tradition = false,
     this.traditionMeal,
+    this.reminderMinutes,
+    this.reminderKept = false,
   });
 
   factory CalendarEvent.fromJson(Map<String, dynamic> json) => CalendarEvent(
@@ -279,6 +288,7 @@ class CalendarEvent {
             (json['tradition_meal'] as Map).cast<String, dynamic>(),
           )
         : null,
+    reminderMinutes: (json['reminder_minutes'] as num?)?.toInt(),
   );
 
   /// Null for a new event: the server generates the id.
@@ -332,6 +342,15 @@ class CalendarEvent {
   /// The meal a tradition carries (Pizza-Freitag); only with [tradition].
   final TraditionMeal? traditionMeal;
 
+  /// The event's own reminder in minutes before its start (specs/05 "A reminder for one
+  /// event"); null for none. Everyone the event concerns gets it on their own phone.
+  final int? reminderMinutes;
+
+  /// The save leaves the stored reminder as it is, whatever [reminderMinutes] says: a
+  /// received file that replaces its earlier copy knows nothing of the reminder the
+  /// family gave that copy.
+  final bool reminderKept;
+
   bool get isRecurring => rrule != null || rdates.isNotEmpty;
 
   Map<String, dynamic> toJson() => {
@@ -359,6 +378,9 @@ class CalendarEvent {
     'countdown': countdown,
     'tradition': tradition,
     if (tradition) 'tradition_meal': traditionMeal?.toJson(),
+    // A server before the event's own reminder ignores the key; one that knows it
+    // keeps the stored value when the key is missing.
+    if (!reminderKept) 'reminder_minutes': reminderMinutes,
   };
 }
 

@@ -59,6 +59,7 @@ Du kannst:
 - einen **Titel**, einen **Ort** und **Notizen** eintragen. Beim Tippen schlagen Titel und Ort vor, was ihr schon einmal eingetragen habt; ein Tipp übernimmt den Vorschlag (beim Titel samt Ort und Bild, wenn dort noch nichts steht)
 - zwischen **Termin** und **Anwesenheit** wählen. Anwesenheit hat sechs Zustände: Arbeit, Homeoffice, Unterwegs, Weg, Frei und Betreuung
 - den Termin **ganztägig** machen oder **Beginn** und **Ende** setzen. Eine Uhrzeit stellst du überall in der App mit zwei Rädern ein, eines für die Stunde und eines für die Minuten in Fünferschritten; **Jede Minute** zeigt alle Minuten. Mit einer Tastatur tippst du die Zeit einfach ein, etwa „1430“
+- direkt darunter eine **Erinnerung vorher** für diesen Termin wählen (siehe [unten](#event-reminder))
 - unter **Wer** Personen auswählen. Ist niemand ausgewählt, gilt der Termin für die ganze Familie
 - gleich darunter **Auf dem Küchendisplay zeigen** an- oder ausschalten. Eine Zeile sagt, ob der Termin auf dem Küchendisplay erscheint, und ändert sich, sobald du Personen auswählst: Von selbst stehen dort nur Termine der ganzen Familie. Was neue Termine standardmäßig tun, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest
 - **Noch nicht sicher** ankreuzen, wenn noch unklar ist, ob er stattfindet
@@ -71,6 +72,14 @@ Du kannst:
 Unter **Wiederholung** wählst du **Täglich**, **Wöchentlich**, **Alle 2 Wochen**, **Monatlich** oder **Jährlich**. Für Schichtpläne gibt es **Bestimmte Tage (Dienstplan)**: Du tippst im Monatsraster die Tage an, an denen gearbeitet wird. Mit **Ende der Wiederholung** setzt du ein Datum oder eine Anzahl von Malen.
 
 Änderst oder löschst du einen Termin einer Wiederholung, fragt WuselWall: **Nur dieser Termin** oder **Alle Termine der Serie**.
+
+### Erinnerung vorher {#event-reminder}
+
+Unter **Beginn** und **Ende** wählst du **Erinnerung vorher**: **Keine**, **15 Minuten**, **30 Minuten**, **1 Stunde**, **2 Stunden**, **1 Tag**, **2 Tage** oder **1 Woche**. Ein ganztägiger Termin bietet nur **1 Tag**, **2 Tage** und **1 Woche** an; die Erinnerung kommt dann um 9:00 Uhr morgens, so viele Tage vorher.
+
+Die Erinnerung wird mit dem Termin gespeichert. Alle, für die der Termin gilt, bekommen sie: die Personen unter **Wer**, oder die ganze Familie, wenn niemand ausgewählt ist. Jede Person bekommt sie auf ihrem eigenen Handy, und nur dort, wo Erinnerungen eingeschaltet sind (unter [Einstellungen → Erinnerungen](/settings/reminders)) und das Handy Benachrichtigungen erlaubt. Sie entsteht auf dem Handy selbst; nichts wird an einen Server oder an Dritte geschickt. Darum erfährt ein Handy von einer neuen oder geänderten Erinnerung erst, wenn die App dort das nächste Mal geöffnet wird. Der Text lautet „Beginnt um 8:30“, bei einer früheren Erinnerung „Morgen um 8:30“ oder „In 2 Tagen um 8:30“.
+
+Für diesen Termin ersetzt sie die persönliche Einstellung **Erinnerung vor Terminen**: Es kommt keine zweite Benachrichtigung, und sie kommt auch, wenn dieser Schalter aus ist. Ein Termin, der sich wiederholt, hat eine Erinnerung für alle seine Tage; sie bleibt gleich, wenn du eine Änderung mit **Nur dieser Termin** speicherst. **Anwesenheit** hat keine Erinnerung. Siehst du die Auswahl nicht, ist der Server eurer Familie älter; sie erscheint, sobald er aktualisiert ist.
 
 ### Bild, Vorfreude und Tradition {#picture-countdown-tradition}
 

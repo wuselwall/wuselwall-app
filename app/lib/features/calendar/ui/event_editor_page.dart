@@ -24,6 +24,7 @@ import 'package:wuselwall/features/calendar/data/event_templates_repository.dart
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/editor/event_draft.dart';
 import 'package:wuselwall/features/calendar/ui/editor/presence_state_picker.dart';
+import 'package:wuselwall/features/calendar/ui/editor/reminder_section.dart';
 import 'package:wuselwall/features/calendar/ui/editor/repeat_section.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/share_event_sheet.dart';
@@ -576,6 +577,18 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
                   style: TextStyle(color: scheme.error),
                 ),
               ),
+            // Right under the times it counts back from. Not for a presence entry, and
+            // not on a server that would not keep it.
+            if (_draft.kind != EventKind.presence &&
+                ref.watch(eventReminderSupportedProvider)) ...[
+              const SizedBox(height: 16),
+              ReminderSection(
+                minutes: _draft.effectiveReminder,
+                allDay: _draft.isAllDay,
+                onChanged: (minutes) =>
+                    setState(() => _draft.reminderMinutes = minutes),
+              ),
+            ],
             const SizedBox(height: 16),
             Text(
               l10n.eventAttendees,

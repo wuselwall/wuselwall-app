@@ -2153,7 +2153,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingNotifyEventReminderHelp.
   ///
   /// In en, this message translates to:
-  /// **'A notification before an event starts.'**
+  /// **'A notification before an event starts. An event with a reminder of its own uses that one.'**
   String get settingNotifyEventReminderHelp;
 
   /// No description provided for @settingNotifyTaskVerifiedTitle.
@@ -2329,6 +2329,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The end must be after the start.'**
   String get eventEndBeforeStart;
+
+  /// No description provided for @eventReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder before'**
+  String get eventReminder;
+
+  /// No description provided for @eventReminderNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get eventReminderNone;
+
+  /// No description provided for @eventReminderMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} minutes'**
+  String eventReminderMinutes(int count);
+
+  /// No description provided for @eventReminderHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String eventReminderHours(int count);
+
+  /// No description provided for @eventReminderDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String eventReminderDays(int count);
+
+  /// No description provided for @eventReminderWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 week} other{{count} weeks}}'**
+  String eventReminderWeeks(int count);
+
+  /// No description provided for @eventReminderHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone the event is for gets it on their own phone, if reminders are on there.'**
+  String get eventReminderHelp;
+
+  /// No description provided for @eventReminderAllDayHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'An all-day event reminds at {time}. Everyone it is for gets the reminder on their own phone, if reminders are on there.'**
+  String eventReminderAllDayHelp(String time);
 
   /// No description provided for @eventAttendees.
   ///
@@ -6193,6 +6241,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Starts at {time}'**
   String reminderEventBody(String time);
+
+  /// No description provided for @reminderEventBodyAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Tomorrow at {time}} other{In {days} days at {time}}}'**
+  String reminderEventBodyAhead(int days, String time);
+
+  /// No description provided for @reminderEventBodyAheadAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Tomorrow, all day} other{In {days} days, all day}}'**
+  String reminderEventBodyAheadAllDay(int days);
 
   /// No description provided for @reminderSettingsTitle.
   ///

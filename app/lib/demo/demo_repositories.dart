@@ -1462,6 +1462,10 @@ class DemoCalendarRepository implements CalendarRepository {
       countdown: event.countdown,
       tradition: event.tradition,
       traditionMeal: event.traditionMeal,
+      // As the server: a save that does not name the reminder keeps the stored one.
+      reminderMinutes: event.reminderKept
+          ? _saved.where((e) => e.id == id).firstOrNull?.reminderMinutes
+          : event.reminderMinutes,
     );
     _deleted.remove(id);
     _saved
@@ -1590,6 +1594,7 @@ class DemoCalendarRepository implements CalendarRepository {
       localEnds: timed ? TimeOfDay.fromDateTime(endsAt!) : null,
       attendeeIds: e.attendeeIds,
       isRecurring: recurring,
+      reminderMinutes: e.reminderMinutes,
     );
   }
 
@@ -1650,6 +1655,7 @@ class DemoCalendarRepository implements CalendarRepository {
       attendeeIds: o.attendeeIds,
       isRecurring: o.isRecurring,
       isOverride: true,
+      reminderMinutes: o.reminderMinutes,
     );
   }
 }
@@ -1783,12 +1789,16 @@ class _OneOff {
     this.tentative = false,
     this.countdown = false,
     this.iconKey,
+    this.reminderMinutes,
   });
 
   final String id;
   final String title;
   final int firstDay;
   final bool countdown;
+
+  /// The event's own reminder, in minutes before its start.
+  final int? reminderMinutes;
   final String? iconKey;
   final int lastDay;
   final List<String> attendees;
@@ -1830,6 +1840,7 @@ class _OneOff {
       attendeeIds: attendees,
       countdown: countdown,
       iconKey: iconKey,
+      reminderMinutes: reminderMinutes,
     );
   }
 
@@ -1861,6 +1872,7 @@ class _OneOff {
       attendeeIds: attendees,
       countdown: countdown,
       iconKey: iconKey,
+      reminderMinutes: reminderMinutes,
     );
   }
 }
@@ -1946,6 +1958,7 @@ List<_OneOff> get _oneOffs => [
     attendees: const [DemoData.mama],
     start: const TimeOfDay(hour: 19, minute: 30),
     end: const TimeOfDay(hour: 21, minute: 0),
+    reminderMinutes: 60,
   ),
   // Something to look forward to (specs/27 "Vorfreude"): next week's Saturday.
   _OneOff(

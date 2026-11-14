@@ -54,8 +54,20 @@ SettingEntry _keyDefault(String value) => SettingEntry(
 );
 
 Future<void> _tap(WidgetTester t, Finder finder) async {
+  // Twice: the form is a lazily built list, and its length is an estimate until the
+  // first scroll has laid out what it brought into reach.
   await t.ensureVisible(finder);
+  await t.pumpAndSettle();
+  await t.ensureVisible(finder);
+  await t.pumpAndSettle();
   await t.tap(finder);
+  await t.pumpAndSettle();
+}
+
+/// Back to the form's first fields, which the lazily built list drops once it has
+/// been scrolled far down.
+Future<void> _toTop(WidgetTester t) async {
+  await t.drag(find.byType(ListView).first, const Offset(0, 3000));
   await t.pumpAndSettle();
 }
 
@@ -65,6 +77,7 @@ Future<ProviderContainer> _app(
   FakeCalendarRepository? calendar,
   List<SettingEntry> settings = const [],
   DateTime? now,
+  bool reminders = true,
 }) async {
   final container = await pumpApp(
     t,
@@ -76,6 +89,9 @@ Future<ProviderContainer> _app(
       householdSettingsRepositoryProvider.overrideWithValue(
         _SettingsFake(settings),
       ),
+      // A server before the event's own reminder (specs/05).
+      if (!reminders)
+        eventReminderSupportedProvider.overrideWith((ref) => false),
     ],
     calendar: calendar,
   );
@@ -92,12 +108,14 @@ Future<void> _open(
   String route = Routes.eventEdit,
   List<SettingEntry> settings = const [],
   DateTime? now,
+  bool reminders = true,
 }) async {
   final container = await _app(
     t,
     calendar: calendar,
     settings: settings,
     now: now ?? _morning,
+    reminders: reminders,
   );
   // The push completes when the editor pops, so it is not awaited.
   unawaited(container.read(routerProvider).push(route, extra: args));
@@ -111,9 +129,13 @@ Future<void> _title(WidgetTester t, String text) async {
 
 Future<void> _save(WidgetTester t) async {
   final save = find.widgetWithText(FilledButton, _de.save);
-  // The form column is narrower than the screen, so the lazily built list may need a
-  // second scroll before the last button is in view.
-  await t.ensureVisible(save);
+  // The form is a lazily built list: its last button exists only once the list has
+  // been scrolled near it.
+  await t.dragUntilVisible(
+    save,
+    find.byType(ListView).first,
+    const Offset(0, -300),
+  );
   await t.pumpAndSettle();
   await _tap(t, save);
 }
@@ -374,6 +396,7 @@ void main() {
         args: EventEditArgs(date: _day),
       );
       await _save(t);
+      await _toTop(t);
       expect(find.text(_de.eventTitleRequired), findsOneWidget);
       expect(cal.saved, isEmpty);
     });
@@ -399,6 +422,221 @@ void main() {
       final json = cal.saved.single.toJson();
       expect(json['kind'], 'presence');
       expect(json['presence_state'], 'home_office');
+    });
+  });
+
+  group('reminder before (specs/05)', () {
+    final menu = find.byType(DropdownButton<int>);
+
+    /// The lead time the menu shows; null for "Keine".
+    int? chosen(WidgetTester t) {
+      final value = t.widget<DropdownButton<int>>(menu).value;
+      return value == null || value < 0 ? null : value;
+    }
+
+    /// The lead times the menu offers, without "Keine".
+    List<int> offered(WidgetTester t) => [
+      for (final item in t.widget<DropdownButton<int>>(menu).items!)
+        if (item.value! >= 0) item.value!,
+    ];
+
+    /// Opens the menu and taps the entry that reads [label].
+    Future<void> choose(WidgetTester t, String label) async {
+      await _tap(t, menu);
+      await t.tap(find.text(label).last);
+      await t.pumpAndSettle();
+    }
+
+    testWidgets('a new event has none; a chosen lead time is saved', (t) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      expect(find.text(_de.eventReminder), findsOneWidget);
+      expect(chosen(t), isNull);
+      expect(find.text(_de.eventReminderNone), findsOneWidget);
+      expect(offered(t), [15, 30, 60, 120, 1440, 2880, 10080]);
+      expect(find.text(_de.eventReminderHelp), findsOneWidget);
+
+      // One field, and its choices only once it is opened.
+      expect(find.text('1 Woche'), findsNothing);
+      await _tap(t, menu);
+      for (final label in [
+        '15 Minuten',
+        '30 Minuten',
+        '1 Stunde',
+        '2 Stunden',
+        '1 Tag',
+        '2 Tage',
+        '1 Woche',
+      ]) {
+        expect(find.text(label), findsWidgets, reason: label);
+      }
+      await t.tap(find.text('1 Tag').last);
+      await t.pumpAndSettle();
+      expect(chosen(t), 1440);
+
+      await _toTop(t);
+      await _title(t, 'Zahnarzt');
+      await _save(t);
+      expect(cal.saved.single.toJson()['reminder_minutes'], 1440);
+    });
+
+    testWidgets('without a choice the event is saved without a reminder', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await _title(t, 'Zahnarzt');
+      await _save(t);
+      final json = cal.saved.single.toJson();
+      expect(json.containsKey('reminder_minutes'), isTrue);
+      expect(json['reminder_minutes'], isNull);
+    });
+
+    testWidgets('an all-day event offers whole days, at nine', (t) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await _title(t, 'Geburtstagsfest');
+      await choose(t, '30 Minuten');
+      expect(chosen(t), 30);
+      await _toTop(t);
+      await _tap(t, find.widgetWithText(SwitchListTile, _de.eventAllDay));
+
+      // Minutes mean nothing without a clock time: the choice falls back to none.
+      expect(offered(t), [1440, 2880, 10080]);
+      expect(chosen(t), isNull);
+      expect(find.text(_de.eventReminderAllDayHelp('9:00')), findsOneWidget);
+
+      await choose(t, '2 Tage');
+      await _save(t);
+      final json = cal.saved.single.toJson();
+      expect(json['is_all_day'], true);
+      expect(json['reminder_minutes'], 2880);
+    });
+
+    testWidgets('switching all day off again brings the minutes back', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await _title(t, 'Turnen');
+      await choose(t, '30 Minuten');
+      await _toTop(t);
+      await _tap(t, find.widgetWithText(SwitchListTile, _de.eventAllDay));
+      expect(chosen(t), isNull);
+      await _tap(t, find.widgetWithText(SwitchListTile, _de.eventAllDay));
+      expect(chosen(t), 30);
+      await _save(t);
+      expect(cal.saved.single.toJson()['reminder_minutes'], 30);
+    });
+
+    testWidgets('an existing event shows its reminder, also an unusual one', (
+      t,
+    ) async {
+      final start = DateTime(2026, 10, 14, 15);
+      final cal = FakeCalendarRepository(const [], {
+        'e-odd': CalendarEvent(
+          id: 'e-odd',
+          title: 'Turnen',
+          kind: EventKind.appointment,
+          isAllDay: false,
+          startsAt: start,
+          endsAt: start.add(const Duration(hours: 1)),
+          attendeeIds: const [guardianId],
+          reminderMinutes: 45,
+        ),
+      });
+      await _open(
+        t,
+        calendar: cal,
+        args: const EventEditArgs(eventId: 'e-odd'),
+      );
+      expect(chosen(t), 45);
+      expect(offered(t), contains(45));
+      expect(find.text('45 Minuten'), findsOneWidget);
+
+      // Saved untouched, it keeps the 45 minutes.
+      await _save(t);
+      expect(cal.saved.single.toJson()['reminder_minutes'], 45);
+    });
+
+    testWidgets('Keine clears a stored reminder', (t) async {
+      final start = DateTime(2026, 10, 14, 15);
+      final cal = FakeCalendarRepository(const [], {
+        'e-day': CalendarEvent(
+          id: 'e-day',
+          title: 'Zahnarzt',
+          kind: EventKind.appointment,
+          isAllDay: false,
+          startsAt: start,
+          endsAt: start.add(const Duration(hours: 1)),
+          attendeeIds: const [guardianId],
+          reminderMinutes: 1440,
+        ),
+      });
+      await _open(
+        t,
+        calendar: cal,
+        args: const EventEditArgs(eventId: 'e-day'),
+      );
+      expect(chosen(t), 1440);
+      await choose(t, _de.eventReminderNone);
+      expect(chosen(t), isNull);
+      await _save(t);
+      final json = cal.saved.single.toJson();
+      expect(json.containsKey('reminder_minutes'), isTrue);
+      expect(json['reminder_minutes'], isNull);
+    });
+
+    testWidgets('a presence entry has no reminder', (t) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      await _title(t, 'Dienstreise');
+      await choose(t, '1 Stunde');
+      await _toTop(t);
+      await _tap(t, find.text(_de.eventKindPresence));
+      expect(find.text(_de.eventReminder), findsNothing);
+      expect(menu, findsNothing);
+
+      await _tap(t, find.bySemanticsLabel(_de.presenceHomeOffice).first);
+      await _save(t);
+      expect(cal.saved.single.toJson()['reminder_minutes'], isNull);
+    });
+
+    testWidgets('a server that would not keep it is not offered the choice', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+        reminders: false,
+      );
+      expect(find.text(_de.eventReminder), findsNothing);
+      expect(menu, findsNothing);
+      await _title(t, 'Zahnarzt');
+      await _save(t);
+      expect(cal.saved.single.toJson()['reminder_minutes'], isNull);
     });
   });
 

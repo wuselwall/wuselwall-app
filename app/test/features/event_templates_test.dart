@@ -39,6 +39,19 @@ Future<void> _tap(WidgetTester t, Finder finder) async {
   await t.pumpAndSettle();
 }
 
+/// The editor's last button: its form is a lazily built list, so the button exists
+/// only once the list has been scrolled near it.
+Future<void> _saveEvent(WidgetTester t) async {
+  final save = find.widgetWithText(FilledButton, _de.save);
+  await t.dragUntilVisible(
+    save,
+    find.byType(ListView).first,
+    const Offset(0, -300),
+  );
+  await t.pumpAndSettle();
+  await _tap(t, save);
+}
+
 /// The calendar tab with [templates] as the server's saved templates and suggestions.
 Future<FakeCalendarRepository> _calendarTab(
   WidgetTester t, {
@@ -481,7 +494,7 @@ void main() {
           findsOneWidget,
         );
 
-        await _tap(t, find.widgetWithText(FilledButton, _de.save));
+        await _saveEvent(t);
         expect(find.byType(EventTemplatePage), findsNothing);
         expect(find.byType(EventEditorPage), findsNothing);
         final saved = cal.saved.single;
@@ -577,7 +590,7 @@ void main() {
 
       await _tap(t, find.byKey(const ValueKey('event-template-saved-t-1')));
       expect(find.widgetWithText(TextField, 'Sportplatz Ost'), findsOneWidget);
-      await _tap(t, find.widgetWithText(FilledButton, _de.save));
+      await _saveEvent(t);
       final saved = cal.saved.single;
       expect(saved.title, 'Fußballturnier');
       expect(saved.attendeeIds, [kidId]);

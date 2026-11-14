@@ -41,6 +41,8 @@ export type EventRow = {
   icon_key?: string | null;
   countdown?: boolean;
   tradition?: boolean;
+  /** Minutes before the start the event reminds (specs/05): absent before 20261114120000. */
+  reminder_minutes?: number | null;
 };
 
 export type OverrideRow = {
@@ -86,6 +88,11 @@ export type Occurrence = {
   icon_key?: string | null;
   countdown?: boolean;
   tradition?: boolean;
+  /**
+   * The event's own reminder in minutes before the start, null for none (specs/05 "A reminder
+   * for one event"). The phone plans the notification; the server sends nothing.
+   */
+  reminder_minutes?: number | null;
 };
 
 /** A row of api.external_occurrences (migrations/20261014150000_external_calendars.sql). */
@@ -983,6 +990,7 @@ function expandEvent(
       icon_key: ev.icon_key ?? null,
       countdown: ev.countdown ?? false,
       tradition: ev.tradition ?? false,
+      reminder_minutes: ev.reminder_minutes ?? null,
     });
     if (out.length >= MAX_PER_EVENT) break;
   }

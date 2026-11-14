@@ -54,6 +54,7 @@ Indiquez ensuite :
 - le **titre**, le **lieu** et les **notes** ; pendant la saisie, le titre et le lieu proposent ce que vous avez déjà saisi, et un toucher reprend la proposition (pour un titre, avec son lieu et son image s’ils sont encore vides) ;
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
 - toute la journée, ou les heures de début et de fin. Partout dans l’application, une heure se règle avec deux roues, l’une pour l’heure, l’autre pour les minutes par pas de cinq ; **Chaque minute** les affiche toutes. Au clavier, tapez simplement l’heure, par exemple « 1430 » ;
+- juste en dessous, un **Rappel avant** pour ce rendez-vous (voir [plus bas](#event-reminder)) ;
 - les personnes concernées, ou personne pour toute la famille ;
 - juste en dessous, l’affichage sur l’écran de la cuisine : une ligne indique si l’événement y apparaîtra et change dès que vous choisissez des personnes. Par défaut, seuls les événements de toute la famille y apparaissent ;
 - une éventuelle incertitude ;
@@ -68,6 +69,14 @@ Le comportement par défaut des nouveaux événements se règle dans [Paramètre
 Choisissez chaque jour, chaque semaine, toutes les deux semaines, chaque mois ou tous les ans. Le mode de jours précis permet de toucher les dates dans un calendrier pour les horaires de travail. La fin de répétition se définit par date ou par nombre d’occurrences.
 
 Pour modifier ou supprimer une série, choisissez entre cette occurrence seule et toute la série.
+
+### Rappel avant {#event-reminder}
+
+Sous **Début** et **Fin**, choisissez **Rappel avant** : **Aucun**, **15 minutes**, **30 minutes**, **1 heure**, **2 heures**, **1 jour**, **2 jours** ou **1 semaine**. Un rendez-vous sur toute la journée propose seulement **1 jour**, **2 jours** et **1 semaine** ; le rappel arrive alors à 9 h du matin, autant de jours avant.
+
+Le rappel est enregistré avec le rendez-vous. Toutes les personnes concernées le reçoivent : celles choisies sous **Qui**, ou toute la famille si personne n’est choisi. Chacune le reçoit sur son propre téléphone, et seulement là où les rappels sont activés (dans [Paramètres → Rappels](/fr/settings/reminders)) et où le téléphone autorise les notifications. Il est créé sur le téléphone lui-même ; rien n’est transmis à un serveur ni à un tiers. C’est pourquoi un téléphone ne prend connaissance d’un rappel nouveau ou modifié qu’à la prochaine ouverture de l’application. Le texte dit « Commence à 8:30 », ou « Demain à 8:30 » ou « Dans 2 jours à 8:30 » quand il arrive plus tôt.
+
+Pour ce rendez-vous, il remplace votre réglage personnel **Avant un rendez-vous** : il n’y a pas de seconde notification, et il arrive même si cet interrupteur est désactivé. Un rendez-vous qui se répète a un seul rappel pour toutes ses dates ; enregistrer une modification avec **Cet événement uniquement** ne le change pas. Une **Présence** n’a pas de rappel. Si vous ne voyez pas ce choix, le serveur de votre famille est plus ancien ; il apparaît une fois le serveur mis à jour.
 
 ### Image, compte à rebours et tradition {#picture-countdown-tradition}
 

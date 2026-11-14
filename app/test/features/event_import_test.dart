@@ -336,6 +336,22 @@ void main() {
       // The file's UID is the origin, never the row's own uid.
       expect(event.toJson().containsKey('uid'), isFalse);
     });
+
+    test('a replaced copy keeps the reminder the family gave it', () {
+      final file = parse(_file(_spieleabend));
+      // The file knows nothing of the reminder: the key is left out, so the server
+      // keeps what is stored. A new event says "none".
+      expect(
+        file
+            .toEvent(fallbackTitle: 'Termin', id: 'copy')
+            .toJson()
+            .containsKey('reminder_minutes'),
+        isFalse,
+      );
+      final fresh = file.toEvent(fallbackTitle: 'Termin').toJson();
+      expect(fresh.containsKey('reminder_minutes'), isTrue);
+      expect(fresh['reminder_minutes'], isNull);
+    });
   });
 
   group('the import page', () {

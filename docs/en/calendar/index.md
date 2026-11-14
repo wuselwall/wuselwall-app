@@ -59,6 +59,7 @@ You can:
 - enter a **Title**, a **Location** and **Notes**. While you type, the title and the location propose what you entered before; a tap takes the proposal over (for a title along with its location and picture, where those are still empty)
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
 - make it **All day**, or set **Starts** and **Ends**. Everywhere in the app you set a time with two wheels, one for the hour and one for the minutes in steps of five; **Every minute** shows all of them. With a keyboard you simply type the time, such as "1430"
+- choose a **Reminder before** for this appointment right below (see [below](#event-reminder))
 - pick people under **Who**. If nobody is picked, the event is for the whole family
 - switch **Show on the kitchen display** on or off right below. A line says whether the event will show on the kitchen display and changes as you pick people: on their own, only events for the whole family go there. What new events do by default is set under [Settings → Calendar & school](/en/settings/household)
 - tick **Not sure yet** if it is still unclear whether it happens
@@ -71,6 +72,14 @@ You can:
 Under **Repeat** you choose **Daily**, **Weekly**, **Every 2 weeks**, **Monthly** or **Yearly**. For shift plans there is **Specific days (shift plan)**: you tap the days you work in a month grid. **Repeat ends** sets a date or a number of times.
 
 When you change or delete an event that repeats, WuselWall asks: **Only this event** or **All events in the series**.
+
+### Reminder before {#event-reminder}
+
+Under **Starts** and **Ends** you choose **Reminder before**: **None**, **15 minutes**, **30 minutes**, **1 hour**, **2 hours**, **1 day**, **2 days** or **1 week**. An all-day appointment offers only **1 day**, **2 days** and **1 week**; its reminder comes at 9:00 in the morning, that many days before.
+
+The reminder is saved with the appointment. Everyone the appointment is for gets it: the people under **Who**, or the whole family if nobody is picked. Each person gets it on their own phone, and only where reminders are switched on (under [Settings → Reminders](/en/settings/reminders)) and the phone allows notifications. It is created on the phone itself; nothing is sent to a server or to third parties. That is why a phone learns about a new or changed reminder only the next time the app is opened on it. The text says "Starts at 8:30", or "Tomorrow at 8:30" or "In 2 days at 8:30" when it comes earlier.
+
+For this appointment it replaces your personal setting **Reminder before appointments**: there is no second notification, and it comes even when that switch is off. A repeating appointment has one reminder for all its dates; saving a change with **Only this event** does not change it. **Presence** has no reminder. If you do not see the choice, your family's server is older; it appears after the server is updated.
 
 ### Picture, looking forward and tradition {#picture-countdown-tradition}
 

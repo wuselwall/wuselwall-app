@@ -250,7 +250,7 @@ order can be changed by dragging.
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
 | `notify.morning_summary` | member, self | on, 07:00 | off · time | Today's tasks and events for that member. Pending redemptions appear here for guardians | Q13 |
-| `notify.event_reminder` | member, self | off | off · 5–120 min | A push before an event starts | Q13 |
+| `notify.event_reminder` | member, self | off | off · 5–120 min | A push before an event starts. An event with a reminder of its own uses that instead, for everyone it concerns ([05](05-module-calendar.md#a-reminder-for-one-event)) | Q13 |
 | `notify.packing_reminder` | member, self | on, 19:00 | off · time | *Added 2026-10-16.* "Für morgen einpacken" the evening before a school day with equipment, a local notification: every child's things on an adult's phone, a child's own on theirs. Off with `school.equipment_hint` | FR-7.12 |
 | `notify.shopping_start` | member, self | on | on · off | *Added 2026-11-14 (issue #242).* A notice on Heute and, while the app runs, a banner or a local notification when another adult taps *Einkaufen gehen* ("Sabine kauft gerade ein (Supermarkt). Brauchst du noch etwas?"). Adults only, never the shopper, children or the wall. Off: neither, and the shopper's count is one lower. A closed app is not reached (Q47). [07, "Telling the others"](07-module-meals-shopping.md#telling-the-others-added-2026-11-14-issue-242) | #242 |
 | `notify.task_verified` | member, self | off | on · off | A push when a guardian verifies a chore and points are credited *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies.)* | Q13 |

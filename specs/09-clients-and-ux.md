@@ -484,7 +484,7 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
 
 ## Realtime and notifications
 
-> **Built 2026-10-15.** Notifications are local only (Q47): on personal phones the app schedules a morning summary (default 07:00, the day's appointments and tasks, and the first appointment) and, if switched on, a reminder before each appointment. Settings are per person (Einstellungen → Erinnerungen). Nothing is sent to a server or a third party. Kiosk and kids' devices have no reminders.
+> **Built 2026-10-15.** Notifications are local only (Q47): on personal phones the app schedules a morning summary (default 07:00, the day's appointments and tasks, and the first appointment) and, if switched on, a reminder before each appointment. Settings are per person (Einstellungen → Erinnerungen). *Since 2026-11-14* an appointment can carry a reminder of its own, saved with the event and planned on the phone of everyone it concerns in place of that person's lead time ([05](05-module-calendar.md#a-reminder-for-one-event)). Nothing is sent to a server or a third party. Kiosk and kids' devices have no reminders.
 
 - **Supabase Realtime** delivers live updates while the app is open: database triggers
   broadcast small invalidation messages (`board:changed`, `shopping:changed`) on a
