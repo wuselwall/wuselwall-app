@@ -3,9 +3,12 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/calendar/domain/event_reminder.dart';
 
-/// The "Erinnerung vorher" block of the editor (specs/05 "A reminder for one event"):
-/// none or one lead time. An all-day event offers only whole days, which remind at
-/// [allDayReminderAt].
+/// The menu's value for "Keine": a lead time is never negative.
+const _none = -1;
+
+/// The "Erinnerung vorher" field of the editor (specs/05 "A reminder for one event"):
+/// one menu with none or one lead time. An all-day event offers only whole days, which
+/// remind at [allDayReminderAt].
 class ReminderSection extends StatelessWidget {
   const ReminderSection({
     required this.minutes,
@@ -26,29 +29,26 @@ class ReminderSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.eventReminder, style: theme.textTheme.titleSmall),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            ChoiceChip(
-              key: const ValueKey('event-reminder-none'),
-              label: Text(l10n.eventReminderNone),
-              selected: minutes == null,
-              onSelected: (_) => onChanged(null),
-            ),
+        DropdownButtonFormField<int>(
+          // The field keeps its own value once built: a new one when the event's
+          // reminder or the choices change from outside (all day switched on or off).
+          key: ValueKey('event-reminder-$allDay-${minutes ?? _none}'),
+          initialValue: minutes ?? _none,
+          decoration: InputDecoration(labelText: l10n.eventReminder),
+          items: [
+            DropdownMenuItem(value: _none, child: Text(l10n.eventReminderNone)),
             for (final choice in reminderChoicesFor(
               allDay: allDay,
               current: minutes,
             ))
-              ChoiceChip(
-                key: ValueKey('event-reminder-$choice'),
-                label: Text(reminderLabel(l10n, choice)),
-                selected: minutes == choice,
-                onSelected: (_) => onChanged(choice),
+              DropdownMenuItem(
+                value: choice,
+                child: Text(reminderLabel(l10n, choice)),
               ),
           ],
+          onChanged: (value) {
+            if (value != null) onChanged(value == _none ? null : value);
+          },
         ),
         const SizedBox(height: 8),
         Text(
