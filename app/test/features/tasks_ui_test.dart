@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -113,9 +114,11 @@ Future<void> _pumpEditor(
   WidgetTester t,
   List<Member> members, {
   TaskDefinition? existing,
+  FakeTasksApi? api,
 }) async {
   await t.pumpWidget(
     ProviderScope(
+      overrides: [if (api != null) apiClientProvider.overrideWithValue(api)],
       child: MaterialApp(
         theme: AppTheme.build(UiRegister.adult, Shade.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -445,6 +448,109 @@ void main() {
         greaterThan(api.calls.indexOf(save)),
         reason: 'the instances are made after the definition exists',
       );
+    });
+  });
+
+  group('chore title proposals', () {
+    final earlier = FakeTasksApi(
+      tables: {
+        'task_definitions': [
+          definitionRow(id: 'd-1', title: 'Blumen gießen', iconKey: 'plant'),
+          definitionRow(id: 'd-2', title: 'Bett machen', iconKey: 'bed'),
+        ],
+      },
+    );
+
+    // The proposals live in the overlay; the chore list behind the editor may show
+    // the same words.
+    Finder proposal(String text) => find.descendant(
+      of: find.byType(AutocompleteHighlightedOption),
+      matching: find.text(text),
+    );
+
+    FakeTasksApi fresh() => FakeTasksApi(tables: earlier.tables);
+
+    Future<void> openNewChore(WidgetTester t, FakeTasksApi api) async {
+      await pumpTasks(t, api);
+      await t.tap(find.widgetWithText(Tab, 'Aufgaben'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('Neue Aufgabe'));
+      await t.pumpAndSettle();
+    }
+
+    testWidgets('a typed prefix proposes an earlier chore; a tap takes its '
+        'title and picture', (t) async {
+      final api = fresh();
+      await openNewChore(t, api);
+
+      await t.enterText(find.byType(TextField).first, 'blu');
+      await t.pumpAndSettle();
+      expect(proposal('Blumen gießen'), findsOneWidget);
+      expect(proposal('Bett machen'), findsNothing);
+
+      await t.tap(proposal('Blumen gießen'));
+      await t.pumpAndSettle();
+      expect(
+        t.widget<TextField>(find.byType(TextField).first).controller!.text,
+        'Blumen gießen',
+      );
+      await tapIn(t, find.widgetWithText(FilledButton, 'Speichern'));
+
+      final def =
+          api.named('task_definition_save').single.params!['p_def']
+              as Map<String, dynamic>;
+      expect(def['title'], 'Blumen gießen');
+      expect(def['icon_key'], 'plant');
+    });
+
+    testWidgets('a picture that was chosen already is kept', (t) async {
+      final api = fresh();
+      final de = AppLocalizationsDe();
+      await openNewChore(t, api);
+
+      await tapIn(t, find.byTooltip(taskIconName(de, 'dog')));
+      await t.enterText(find.byType(TextField).first, 'blu');
+      await t.pumpAndSettle();
+      await t.tap(proposal('Blumen gießen'));
+      await t.pumpAndSettle();
+      await tapIn(t, find.widgetWithText(FilledButton, 'Speichern'));
+
+      final def =
+          api.named('task_definition_save').single.params!['p_def']
+              as Map<String, dynamic>;
+      expect(def['title'], 'Blumen gießen');
+      expect(def['icon_key'], 'dog');
+    });
+
+    testWidgets('the chore being edited is not proposed to itself', (t) async {
+      final api = fresh();
+      await _pumpEditor(
+        t,
+        testMembers,
+        api: api,
+        existing: TaskDefinition(
+          id: 'd-1',
+          title: 'Blumen gießen',
+          kind: TaskKind.duty,
+          points: 1,
+          startsOn: DateTime(2026, 10, 14),
+          windowDays: 1,
+          assignment: TaskAssignment.open,
+          assigneeIds: const [],
+          requiresVerification: false,
+          isActive: true,
+        ),
+      );
+
+      await t.enterText(find.byType(TextField).first, 'blu');
+      await t.pumpAndSettle();
+      // Only the field itself shows the text; the other chore is not a match.
+      expect(proposal('Blumen gießen'), findsNothing);
+      expect(proposal('Bett machen'), findsNothing);
+
+      await t.enterText(find.byType(TextField).first, 'bet');
+      await t.pumpAndSettle();
+      expect(proposal('Bett machen'), findsOneWidget);
     });
   });
 

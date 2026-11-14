@@ -666,6 +666,8 @@
   "@eventTitleLabel": {},
   "eventTitleRequired": "Introduce un título.",
   "@eventTitleRequired": {},
+  "suggestFieldOptions": "Sugerencias",
+  "@suggestFieldOptions": {},
   "eventKindAppointment": "Cita",
   "@eventKindAppointment": {},
   "eventKindPresence": "Presencia",

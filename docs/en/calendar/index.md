@@ -56,7 +56,7 @@ What a tile fills in is only a start: change what differs in the editor and save
 
 You can:
 
-- enter a **Title**, a **Location** and **Notes**
+- enter a **Title**, a **Location** and **Notes**. While you type, the title and the location propose what you entered before; a tap takes the proposal over (for a title along with its location and picture, where those are still empty)
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
 - make it **All day**, or set **Starts** and **Ends**
 - pick people under **Who**. If nobody is picked, the event is for the whole family

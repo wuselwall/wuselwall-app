@@ -1370,6 +1370,36 @@ class DemoCalendarRepository implements CalendarRepository {
     return const Err(NotFoundFailure(code: 'event_not_found'));
   }
 
+  @override
+  Future<Result<List<EventHistoryRow>>> titleHistory({
+    bool withIcon = true,
+    int limit = 500,
+  }) async {
+    final monday = _monday(_clock());
+    final savedIds = {for (final e in _saved) e.id};
+    final events = [
+      for (final e in _saved.reversed)
+        if (!_deleted.contains(e.id)) e,
+      for (final item in _weekly)
+        if (!savedIds.contains(item.id) && !_deleted.contains(item.id))
+          item.event(monday),
+      for (final item in _oneOffs)
+        if (!savedIds.contains(item.id) && !_deleted.contains(item.id))
+          item.event(monday),
+    ];
+    return Ok(
+      [
+        for (final e in events)
+          if (e.kind == EventKind.appointment)
+            EventHistoryRow(
+              title: e.title,
+              location: e.location,
+              iconKey: withIcon ? e.iconKey : null,
+            ),
+      ].take(limit).toList(),
+    );
+  }
+
   // A received file (specs/05): the demo keeps no origin, so every file is a new event.
   @override
   Future<Result<ImportedCopy?>> importLookup({

@@ -952,6 +952,21 @@ class FakeCalendarRepository implements CalendarRepository {
     ),
   );
 
+  /// The earlier appointments the editor's title and place proposals come from.
+  List<EventHistoryRow> history = [];
+
+  /// What the last [titleHistory] call asked for.
+  bool? historyWithIcon;
+
+  @override
+  Future<Result<List<EventHistoryRow>>> titleHistory({
+    bool withIcon = true,
+    int limit = 500,
+  }) async {
+    historyWithIcon = withIcon;
+    return Ok(List.of(history));
+  }
+
   @override
   Future<Result<CalendarEvent>> event(String id) async {
     final event = events[id];

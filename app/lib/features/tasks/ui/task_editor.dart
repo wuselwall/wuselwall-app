@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/text/suggest.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/suggest_field.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -120,6 +122,25 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
     _points.dispose();
     _titleFocus.dispose();
     super.dispose();
+  }
+
+  /// The chores the family made before (archived ones too), without the one being
+  /// edited, as proposals for the title.
+  List<TextSuggestion> _titleEntries() {
+    final all = ref.watch(taskTitleHistoryProvider).value ?? const [];
+    return buildSuggestions([
+      for (final d in all)
+        if (d.id != widget.existing?.id)
+          SuggestionRow(text: d.title, iconKey: d.iconKey),
+    ]);
+  }
+
+  /// A title was taken over: its picture comes along while none is chosen.
+  void _titlePicked(TextSuggestion picked) {
+    final icon = picked.iconKey;
+    if (_icon == null && icon != null && _iconChoices.contains(icon)) {
+      setState(() => _icon = icon);
+    }
   }
 
   /// Validates the form, marking what is wrong. Null when it can be sent.
@@ -333,9 +354,11 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: Tokens.space4,
             children: [
-              TextField(
+              SuggestField(
                 controller: _title,
                 focusNode: _titleFocus,
+                entries: _titleEntries(),
+                onPicked: _titlePicked,
                 autofocus: !_editing,
                 maxLength: 80,
                 onChanged: (_) => setState(() => _titleError = false),

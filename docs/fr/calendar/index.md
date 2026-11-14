@@ -51,7 +51,7 @@ Ce que la tuile remplit n’est qu’un point de départ : modifiez ce qui chang
 
 Indiquez ensuite :
 
-- le **titre**, le **lieu** et les **notes** ;
+- le **titre**, le **lieu** et les **notes** ; pendant la saisie, le titre et le lieu proposent ce que vous avez déjà saisi, et un toucher reprend la proposition (pour un titre, avec son lieu et son image s’ils sont encore vides) ;
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
 - toute la journée, ou les heures de début et de fin ;
 - les personnes concernées, ou personne pour toute la famille ;

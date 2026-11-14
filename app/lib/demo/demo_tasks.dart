@@ -298,6 +298,11 @@ class DemoTasksRepository implements TasksRepository {
       Ok(List.of(_definitions));
 
   @override
+  Future<Result<List<TaskDefinition>>> allDefinitions({
+    int limit = 500,
+  }) async => Ok(_definitions.take(limit).toList());
+
+  @override
   Future<Result<List<TaskInstance>>> instancesOn(DateTime day) async =>
       Ok(List.of(_instances));
 

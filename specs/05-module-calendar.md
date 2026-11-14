@@ -86,6 +86,19 @@ A new event starts on a page of templates (built-in, saved by the family, or sug
 its own history) that fill in the editor; what is saved is an ordinary event
 ([28](28-event-templates.md)).
 
+**Proposals while typing** (*added 2026-11-14, issue #239*). While somebody types the title or
+the place of an event, a short list under the field proposes what the family entered
+before; a tap, or the arrow keys and Enter, takes one over. Up to five proposals: the
+entries that start with what is typed come first, then the ones with a word that does
+(case, umlauts and accents do not matter), each group by how often the family used it, then
+how recently, then alphabetically. An entry equal to the typed text is not proposed. A picked
+title also fills the place and the picture the family usually gave that title, but only
+where the form has none yet; date, time and people stay as they are. The history is read
+by the app from `api.events` (the last 500 appointments by change date) and grouped in the
+app, so it needs no server change and works with every server; against a server without
+the lighter day the picture is not read. The chore title of the tasks module
+([06](06-module-tasks.md)) works the same way.
+
 ### Flexible by construction
 
 The requirement that arrived with A5 — *appointments should be flexible: regular for when

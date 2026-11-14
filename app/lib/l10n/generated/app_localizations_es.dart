@@ -1249,6 +1249,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventTitleRequired => 'Introduce un título.';
 
   @override
+  String get suggestFieldOptions => 'Sugerencias';
+
+  @override
   String get eventKindAppointment => 'Cita';
 
   @override

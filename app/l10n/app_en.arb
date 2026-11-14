@@ -679,6 +679,10 @@
   "@eventTitleLabel": {},
   "eventTitleRequired": "Enter a title.",
   "@eventTitleRequired": {},
+  "suggestFieldOptions": "Suggestions",
+  "@suggestFieldOptions": {
+    "description": "Screen-reader label of the small list under a text field that proposes what the family entered before."
+  },
   "eventKindAppointment": "Appointment",
   "@eventKindAppointment": {},
   "eventKindPresence": "Presence",
