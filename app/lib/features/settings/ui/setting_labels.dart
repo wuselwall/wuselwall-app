@@ -106,6 +106,10 @@ SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
     title: l10n.settingNotifyPackingTitle,
     help: l10n.settingNotifyPackingHelp,
   ),
+  'notify.shopping_start' => (
+    title: l10n.settingNotifyShoppingStartTitle,
+    help: l10n.settingNotifyShoppingStartHelp,
+  ),
   'notify.task_verified' => (
     title: l10n.settingNotifyTaskVerifiedTitle,
     help: l10n.settingNotifyTaskVerifiedHelp,

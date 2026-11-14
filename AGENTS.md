@@ -52,6 +52,13 @@ navigation, the last mode kept on the device, the item sheet with a count steppe
 a seeded `snacks` category, and a category inferred from a new item's name by the server's word
 list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
 grow in issue #197).
+Telling the others (2026-11-14, issue #242, [specs/07](specs/07-module-meals-shopping.md) "Telling
+the others"): tapping *Einkaufen gehen* records a trip (`app.shopping_run`, `api.shopping_start` /
+`api.shopping_leave`, migration `20261114100000_shopping_start_notice.sql`, pgTAP
+`305_shopping_start.test.sql`, feature flag `shopping-start`) and the other adults with
+`notify.shopping_start` on (default on) get a notice `shopping` on Heute, a banner and, on a
+personal phone, a local notification, for a running app only (Q47; a closed app sees the notice when
+opened; the relay is issue #243).
 Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the

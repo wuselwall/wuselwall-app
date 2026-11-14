@@ -122,6 +122,24 @@ class PluginNotificationScheduler implements NotificationScheduler {
   }
 
   @override
+  Future<void> show({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    await _ready;
+    await _plugin.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: NotificationDetails(
+        android: AndroidNotificationDetails(channelId, _channelName),
+        iOS: const DarwinNotificationDetails(),
+      ),
+    );
+  }
+
+  @override
   Future<void> cancelAll() async {
     await _ready;
     await _plugin.cancelAll();

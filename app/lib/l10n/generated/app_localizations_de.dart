@@ -3045,6 +3045,28 @@ class AppLocalizationsDe extends AppLocalizations {
   String get todayNoticeDismiss => 'Gesehen';
 
   @override
+  String todayNoticeShopping(String name, String list) {
+    return '$name kauft gerade ein ($list). Brauchst du noch etwas?';
+  }
+
+  @override
+  String get todayNoticeShoppingList => 'Zur Liste';
+
+  @override
+  String shoppingStartNotifyTitle(String name) {
+    return '$name geht einkaufen';
+  }
+
+  @override
+  String shoppingStartNotifyBody(String list) {
+    return 'Brauchst du noch etwas? Setz es auf die Liste „$list“.';
+  }
+
+  @override
+  String get shoppingStartTold =>
+      'Die anderen Erwachsenen sehen, dass du einkaufst.';
+
+  @override
   String get todayNoticeMembers => 'Mitglieder';
 
   @override
@@ -4776,6 +4798,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingNotifyPackingHelp =>
       'Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Sportsachen). Nur wenn etwas einzupacken ist.';
+
+  @override
+  String get settingNotifyShoppingStartTitle => 'Wenn jemand einkaufen geht';
+
+  @override
+  String get settingNotifyShoppingStartHelp =>
+      'Tippt ein anderer Erwachsener auf „Einkaufen gehen“, siehst du es auf Heute und, solange die App läuft, als Mitteilung. So kannst du noch etwas auf die Liste setzen. Eine geschlossene App wird nicht erreicht.';
 
   @override
   String get appearanceTitle => 'Darstellung';

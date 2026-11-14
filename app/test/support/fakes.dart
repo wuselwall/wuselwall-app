@@ -642,6 +642,31 @@ class FakeShoppingRepository implements ShoppingRepository {
   /// The names of the items added, in order.
   final adds = <String>[];
 
+  /// The trips announced with [startTrip] (the list each was for), and how often
+  /// [leaveTrip] was called.
+  final tripStarts = <String?>[];
+  int tripLeaves = 0;
+
+  /// What [startTrip] answers.
+  Result<TripStart> tripStart = const Ok(
+    TripStart(id: 'run-1', isNew: true, told: 0),
+  );
+
+  @override
+  Future<Result<TripStart>> startTrip({
+    required String? actor,
+    String? listId,
+  }) async {
+    tripStarts.add(listId);
+    return tripStart;
+  }
+
+  @override
+  Future<Result<void>> leaveTrip({required String? actor}) async {
+    tripLeaves++;
+    return const Ok(null);
+  }
+
   /// The meals behind each item id, for the item's sheet.
   final Map<String, List<ShoppingItemMeal>> mealsByItem;
 

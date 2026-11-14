@@ -7,6 +7,9 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/config/app_config.dart';
+import 'package:wuselwall/core/config/config_providers.dart';
+import 'package:wuselwall/core/server/server_info.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
@@ -64,6 +67,10 @@ Future<GoRouter> pumpShoppingFlow(
   FakeShoppingRepository? repo,
   bool spy = true,
   Locale locale = const Locale('de'),
+
+  /// The features the server announces; null is a build with a compiled-in server (no
+  /// discovery document), which supports everything.
+  List<String>? serverFeatures,
 }) async {
   final shown = items ?? [item('1', 'Milch'), item('2', 'Brot')];
   t.view.physicalSize = size;
@@ -98,6 +105,7 @@ Future<GoRouter> pumpShoppingFlow(
   await t.pumpWidget(
     ProviderScope(
       overrides: [
+        appConfigProvider.overrideWithValue(_config(serverFeatures)),
         uiRegisterProvider.overrideWithValue(register),
         shoppingViewProvider.overrideWithValue(
           AsyncData(
@@ -138,6 +146,21 @@ Future<GoRouter> pumpShoppingFlow(
   await t.pumpAndSettle();
   return router;
 }
+
+AppConfig _config(List<String>? features) => AppConfig(
+  environment: 'test',
+  supabaseUrl: 'http://localhost',
+  supabasePublishableKey: 'key',
+  server: features == null
+      ? null
+      : ServerInfo(
+          supabaseUrl: Uri.parse('https://example.org'),
+          publishableKey: 'key',
+          apiVersion: 1,
+          minAppVersion: '1.0.0',
+          features: features,
+        ),
+);
 
 ProviderContainer containerOfFlow(WidgetTester t) =>
     ProviderScope.containerOf(t.element(find.byType(MaterialApp)));

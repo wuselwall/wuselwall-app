@@ -1714,6 +1714,44 @@
     }
   },
   "todayNoticeDismiss": "Got it",
+  "todayNoticeShopping": "{name} is shopping now ({list}). Need anything?",
+  "@todayNoticeShopping": {
+    "description": "Notice on Today while another adult is on a shopping trip; name is the shopper, list the shopping list's name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeShoppingList": "Open the list",
+  "@todayNoticeShoppingList": {
+    "description": "Button on the shopping notice that opens the shopping list the trip is for"
+  },
+  "shoppingStartNotifyTitle": "{name} is going shopping",
+  "@shoppingStartNotifyTitle": {
+    "description": "Title of the phone notification when another adult starts a shopping trip",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingStartNotifyBody": "Need anything? Put it on the list “{list}”.",
+  "@shoppingStartNotifyBody": {
+    "description": "Body of the phone notification when another adult starts a shopping trip; list is the shopping list's name",
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingStartTold": "The other adults can see that you are shopping.",
+  "@shoppingStartTold": {
+    "description": "Short message to the shopper after tapping Go shopping: the other adults of the family were told"
+  },
   "todayNoticeMembers": "Members",
   "todayNoticeDevices": "Devices",
   "todayApprovalsTitle": "Waiting for your approval",
@@ -2706,6 +2744,14 @@
   },
   "settingNotifyPackingTitle": "Packing reminder the evening before",
   "settingNotifyPackingHelp": "At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.",
+  "settingNotifyShoppingStartTitle": "When somebody goes shopping",
+  "@settingNotifyShoppingStartTitle": {
+    "description": "Title of the per-person setting notify.shopping_start"
+  },
+  "settingNotifyShoppingStartHelp": "When another adult taps Go shopping, you see it on Today, and as a notification while the app is running, so you can still put something on the list. A closed app cannot be reached.",
+  "@settingNotifyShoppingStartHelp": {
+    "description": "Help text of the per-person setting notify.shopping_start"
+  },
   "appearanceTitle": "Appearance",
   "appearanceSystem": "Automatic",
   "appearanceSystemHelp": "Light or dark, as set on this device",

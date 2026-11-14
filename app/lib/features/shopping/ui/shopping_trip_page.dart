@@ -64,6 +64,11 @@ class _ShoppingTripPageState extends ConsumerState<ShoppingTripPage>
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) {
           ref.read(shoppingModeProvider.notifier).select(ShoppingMode.plan);
+          // The trip in progress ends for the others too (specs/07 "Telling the
+          // others"); a failure is not shown, it ends by itself after two hours.
+          if (ref.read(shoppingStartSupportedProvider)) {
+            unawaited(repo.leaveTrip(actor: actor));
+          }
         }
       },
       child: Scaffold(

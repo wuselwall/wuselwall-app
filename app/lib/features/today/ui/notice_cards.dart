@@ -10,6 +10,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_start_host.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
 import 'package:wuselwall/features/today/domain/notice.dart';
@@ -17,9 +18,10 @@ import 'package:wuselwall/features/today/domain/notice.dart';
 /// The notices at the top of the adult Today tab (specs/20 J2, J4): "Julia ist
 /// beigetreten" for guardians, "Neu angemeldet: ‹Gerät›" on the account's other
 /// phones, and a guardian's reset of someone's second factor or password (to that person
-/// and the other guardians). Each is dismissed with "Gesehen" and links to where the
-/// household can act: Einstellungen lists the members and, with the revoke action, the
-/// devices.
+/// and the other guardians), and "Sabine kauft gerade ein" while another adult's
+/// shopping trip runs (specs/07 "Telling the others"). Each is dismissed with "Gesehen"
+/// and links to where the household can act: Einstellungen lists the members and, with
+/// the revoke action, the devices; a trip links to its shopping list.
 class NoticeCards extends ConsumerWidget {
   const NoticeCards({super.key});
 
@@ -77,6 +79,11 @@ class _NoticeCard extends ConsumerWidget {
             : l10n.accountNoticePasswordReset(notice.name, target),
         l10n.todayNoticeMembers,
       ),
+      NoticeKind.shopping => (
+        Icons.shopping_cart_outlined,
+        l10n.todayNoticeShopping(notice.name, notice.listName ?? ''),
+        l10n.todayNoticeShoppingList,
+      ),
     };
     return Card(
       margin: const EdgeInsets.only(bottom: Tokens.space3),
@@ -98,7 +105,9 @@ class _NoticeCard extends ConsumerWidget {
               ),
             );
             final settingsButton = TextButton(
-              onPressed: () => unawaited(context.push<void>(Routes.settings)),
+              onPressed: notice.kind == NoticeKind.shopping
+                  ? () => openShoppingList(ref, notice.listId)
+                  : () => unawaited(context.push<void>(Routes.settings)),
               child: Text(linkLabel),
             );
             final dismissButton = TextButton(

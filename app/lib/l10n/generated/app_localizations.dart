@@ -5324,6 +5324,36 @@ abstract class AppLocalizations {
   /// **'Got it'**
   String get todayNoticeDismiss;
 
+  /// Notice on Today while another adult is on a shopping trip; name is the shopper, list the shopping list's name
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is shopping now ({list}). Need anything?'**
+  String todayNoticeShopping(String name, String list);
+
+  /// Button on the shopping notice that opens the shopping list the trip is for
+  ///
+  /// In en, this message translates to:
+  /// **'Open the list'**
+  String get todayNoticeShoppingList;
+
+  /// Title of the phone notification when another adult starts a shopping trip
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is going shopping'**
+  String shoppingStartNotifyTitle(String name);
+
+  /// Body of the phone notification when another adult starts a shopping trip; list is the shopping list's name
+  ///
+  /// In en, this message translates to:
+  /// **'Need anything? Put it on the list “{list}”.'**
+  String shoppingStartNotifyBody(String list);
+
+  /// Short message to the shopper after tapping Go shopping: the other adults of the family were told
+  ///
+  /// In en, this message translates to:
+  /// **'The other adults can see that you are shopping.'**
+  String get shoppingStartTold;
+
   /// No description provided for @todayNoticeMembers.
   ///
   /// In en, this message translates to:
@@ -8148,6 +8178,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.'**
   String get settingNotifyPackingHelp;
+
+  /// Title of the per-person setting notify.shopping_start
+  ///
+  /// In en, this message translates to:
+  /// **'When somebody goes shopping'**
+  String get settingNotifyShoppingStartTitle;
+
+  /// Help text of the per-person setting notify.shopping_start
+  ///
+  /// In en, this message translates to:
+  /// **'When another adult taps Go shopping, you see it on Today, and as a notification while the app is running, so you can still put something on the list. A closed app cannot be reached.'**
+  String get settingNotifyShoppingStartHelp;
 
   /// No description provided for @appearanceTitle.
   ///

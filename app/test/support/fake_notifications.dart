@@ -23,6 +23,9 @@ class FakeNotificationScheduler implements NotificationScheduler {
   bool grantOnRequest;
 
   final active = <ScheduledNotice>[];
+
+  /// What was shown at once ([show]), in order.
+  final shown = <({int id, String title, String body})>[];
   int cancelAllCalls = 0;
   int requests = 0;
   final channelNames = <String>[];
@@ -50,6 +53,15 @@ class FakeNotificationScheduler implements NotificationScheduler {
     required String body,
   }) async {
     active.add((id: id, when: when, title: title, body: body));
+  }
+
+  @override
+  Future<void> show({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    shown.add((id: id, title: title, body: body));
   }
 
   @override

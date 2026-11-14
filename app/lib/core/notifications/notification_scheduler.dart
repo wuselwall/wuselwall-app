@@ -22,6 +22,14 @@ abstract class NotificationScheduler {
     required String body,
   });
 
+  /// Shows a notification now: something that just happened while the app was running
+  /// out of sight (somebody started shopping).
+  Future<void> show({
+    required int id,
+    required String title,
+    required String body,
+  });
+
   /// Removes every scheduled notification of the app.
   Future<void> cancelAll();
 }
@@ -46,6 +54,13 @@ class NoopNotificationScheduler implements NotificationScheduler {
   Future<void> schedule({
     required int id,
     required DateTime when,
+    required String title,
+    required String body,
+  }) async {}
+
+  @override
+  Future<void> show({
+    required int id,
     required String title,
     required String body,
   }) async {}

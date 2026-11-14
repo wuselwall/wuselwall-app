@@ -19,8 +19,9 @@ import 'package:wuselwall/features/settings/data/household_settings_repository.d
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/settings/ui/setting_controls.dart';
 
-/// Einstellungen → Erinnerungen (specs/21, Notifications). The three member settings the
-/// phone turns into local notifications, and the permission they need.
+/// Einstellungen → Erinnerungen (specs/21, Notifications). The member settings the phone
+/// turns into local notifications, and the permission they need: three it plans by
+/// itself, and the one about somebody starting to shop, which the server says.
 class RemindersPage extends ConsumerWidget {
   const RemindersPage({super.key});
 
@@ -28,6 +29,7 @@ class RemindersPage extends ConsumerWidget {
     'notify.morning_summary',
     'notify.event_reminder',
     'notify.packing_reminder',
+    'notify.shopping_start',
   ];
 
   @override
