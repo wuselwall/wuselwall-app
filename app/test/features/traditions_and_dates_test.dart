@@ -68,7 +68,12 @@ Future<FakeCalendarRepository> _calendarTab(
 }
 
 Future<void> _tap(WidgetTester t, Finder finder) async {
+  // Twice: the editor's form is a lazily built list, and its length is an estimate
+  // until the first scroll has laid out what it brought into reach.
   await t.ensureVisible(finder);
+  await t.pumpAndSettle();
+  await t.ensureVisible(finder);
+  await t.pumpAndSettle();
   await t.tap(finder);
   await t.pumpAndSettle();
 }
