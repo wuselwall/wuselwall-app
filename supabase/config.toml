@@ -95,9 +95,9 @@ enable_signup = true
 enable_manual_linking = false
 
 [auth.email]
-# Must stay true: it enables the email *provider* (codes and password sign-in).
-# Allow/disallow new user signups via email to your project.
-enable_signup = true
+# Must stay true: it switches the email *provider* on (codes and password sign-in). New
+# sign-ups are [auth] enable_signup above. (Named enable_signup before Supabase CLI 3.)
+enabled = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
@@ -147,8 +147,9 @@ content_path = "./supabase/templates/de/invite.html"
 email_sent = 100
 
 [auth.sms]
-# Allow/disallow new user signups via SMS to your project.
-enable_signup = true
+# The phone provider. Unused: no SMS provider is configured below, so the CLI switches
+# phone sign-in off whatever this says.
+enabled = true
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = false
 # Template for sending OTP to users
@@ -203,8 +204,6 @@ backend = "postgres"
 
 # Experimental features may be deprecated any time
 [experimental]
-# Configures Postgres storage engine to use OrioleDB (S3)
-orioledb_version = ""
 # Configures S3 bucket URL, eg. <bucket_name>.s3-<region>.amazonaws.com
 s3_host = "env(S3_HOST)"
 # Configures S3 bucket region, eg. us-east-1
