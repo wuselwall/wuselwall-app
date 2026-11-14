@@ -685,6 +685,17 @@ class DemoShoppingRepository implements ShoppingRepository {
     return Ok(ShoppingFinishResult(bought: done, carriedOver: _items.length));
   }
 
+  // The demo has nobody to tell.
+  @override
+  Future<Result<TripStart>> startTrip({
+    required String? actor,
+    String? listId,
+  }) async => const Ok(TripStart(id: null, isNew: false, told: 0));
+
+  @override
+  Future<Result<void>> leaveTrip({required String? actor}) async =>
+      const Ok(null);
+
   ShoppingItem _copy(
     ShoppingItem it, {
     int? count,
@@ -940,6 +951,14 @@ const _catalogue = <_Definition>[
     type: SettingType.time,
     defaultValue: '19:00',
     constraints: {'nullable': true},
+    selfService: true,
+  ),
+  (
+    key: 'notify.shopping_start',
+    scope: SettingScope.member,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
     selfService: true,
   ),
   (

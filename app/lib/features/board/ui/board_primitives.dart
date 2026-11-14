@@ -452,6 +452,9 @@ class MemberAvatar extends StatelessWidget {
         decoration: BoxDecoration(color: mc.ink, shape: BoxShape.circle),
         child: Text(
           member.initial,
+          // A circle of a fixed size keeps its letter's size too: at 200 % text the
+          // letter grew past the circle onto the paper. The name beside it grows.
+          textScaler: growsWithText ? null : TextScaler.noScaling,
           style: TextStyle(
             fontFamily: Tokens.fontUi,
             fontWeight: FontWeight.w800,

@@ -211,6 +211,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get no => 'Non';
 
   @override
+  String get timeWheelTitle => 'Heure';
+
+  @override
+  String get timeWheelHour => 'Heure';
+
+  @override
+  String get timeWheelMinute => 'Minute';
+
+  @override
+  String get timeWheelPeriod => 'Matin ou après-midi';
+
+  @override
+  String get timeWheelExact => 'Chaque minute';
+
+  @override
+  String get timeWheelDone => 'Terminé';
+
+  @override
   String get shoppingTitle => 'Liste de courses';
 
   @override
@@ -3048,6 +3066,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get todayNoticeDismiss => 'Compris';
 
   @override
+  String todayNoticeShopping(String name, String list) {
+    return '$name fait les courses ($list). Il te faut quelque chose ?';
+  }
+
+  @override
+  String get todayNoticeShoppingList => 'Ouvrir la liste';
+
+  @override
+  String shoppingStartNotifyTitle(String name) {
+    return '$name part faire les courses';
+  }
+
+  @override
+  String shoppingStartNotifyBody(String list) {
+    return 'Il te faut quelque chose ? Ajoute-le à la liste « $list ».';
+  }
+
+  @override
+  String get shoppingStartTold =>
+      'Les autres adultes voient que tu fais les courses.';
+
+  @override
   String get todayNoticeMembers => 'Membres';
 
   @override
@@ -4789,6 +4829,14 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingNotifyPackingHelp =>
       'À cette heure, ton téléphone indique les affaires à mettre dans le cartable pour demain, selon les emplois du temps (par exemple la tenue de sport). Uniquement s’il y a quelque chose à préparer.';
+
+  @override
+  String get settingNotifyShoppingStartTitle =>
+      'Quand quelqu’un part faire les courses';
+
+  @override
+  String get settingNotifyShoppingStartHelp =>
+      'Quand un autre adulte touche « Aller faire les courses », tu le vois dans Aujourd’hui et, tant que l’application est ouverte, sous forme de notification. Tu peux ainsi encore ajouter quelque chose à la liste. Une application fermée n’est pas prévenue.';
 
   @override
   String get appearanceTitle => 'Apparence';
@@ -6550,6 +6598,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventTemplatesBuiltInMore => 'Autres modèles';
 
   @override
+  String get eventTemplatesSchool => 'École';
+
+  @override
   String get eventTemplateBlank => 'Sans modèle';
 
   @override
@@ -6581,6 +6632,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get eventStarterCleaning => 'Ménage';
+
+  @override
+  String get eventStarterParentsEvening => 'Réunion de parents';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Entretien avec l’école';
+
+  @override
+  String get eventStarterSchoolTrip => 'Sortie scolaire';
+
+  @override
+  String get eventStarterSchoolTest => 'Contrôle';
+
+  @override
+  String get eventStarterSchoolParty => 'Fête de l’école';
+
+  @override
+  String get eventStarterSportsDay => 'Journée sportive';
 
   @override
   String get eventTemplateAllDay => 'Toute la journée';

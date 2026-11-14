@@ -10,7 +10,8 @@ enum StarterPeople { family, children, actor }
 /// Each language names them itself (the ARB keys `eventStarter*`); this is what they
 /// start as. Every value is only a suggestion the editor shows before anything is saved.
 /// The page lists them in this order: what a family enters often first, what comes once
-/// a year last.
+/// a year last. The school ones ([school]) come after them and show only to a family
+/// with a child.
 enum EventStarter {
   cleaning(
     iconKey: 'broom',
@@ -63,7 +64,41 @@ enum EventStarter {
     people: StarterPeople.family,
     yearly: true,
     countdown: true,
-  );
+  ),
+  parentsEvening(
+    startMinute: 19 * 60 + 30,
+    minutes: 120,
+    people: StarterPeople.actor,
+    school: true,
+  ),
+  parentTeacherTalk(
+    startMinute: 16 * 60,
+    minutes: 30,
+    people: StarterPeople.actor,
+    school: true,
+  ),
+  schoolTrip(
+    iconKey: 'backpack',
+    allDay: true,
+    people: StarterPeople.children,
+    countdown: true,
+    school: true,
+  ),
+  schoolTest(
+    iconKey: 'book',
+    startMinute: 8 * 60,
+    minutes: 60,
+    people: StarterPeople.children,
+    school: true,
+  ),
+  schoolParty(
+    iconKey: 'balloon',
+    startMinute: 16 * 60,
+    minutes: 180,
+    people: StarterPeople.family,
+    school: true,
+  ),
+  sportsDay(allDay: true, people: StarterPeople.children, school: true);
 
   const EventStarter({
     required this.people,
@@ -75,7 +110,20 @@ enum EventStarter {
     this.weekly = false,
     this.yearly = false,
     this.countdown = false,
+    this.school = false,
   });
+
+  /// The general starters, in the page's order.
+  static List<EventStarter> get general => [
+    for (final s in values)
+      if (!s.school) s,
+  ];
+
+  /// The school starters, in the page's order.
+  static List<EventStarter> get schoolOnes => [
+    for (final s in values)
+      if (s.school) s,
+  ];
 
   /// One of `eventIconKeys`; null for none.
   final String? iconKey;
@@ -93,6 +141,9 @@ enum EventStarter {
   final bool weekly;
   final bool yearly;
   final bool countdown;
+
+  /// A school one: the page shows it only to a family with a child (specs/28).
+  final bool school;
 
   /// The template in the household's language ([title]), its people chosen from
   /// [members] and the person creating it ([actor]).

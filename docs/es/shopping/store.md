@@ -12,6 +12,14 @@ Abajo hay dos botones: **Modo planificar** a la izquierda y **Añadir** a la der
 
 WuselWall recuerda en este dispositivo si estabas planificando o comprando. Si cerraste el móvil en la tienda, la lista se abre de nuevo directamente en la compra. Solo vale para este dispositivo; la familia no ve nada de ello.
 
+### Avisar a los demás {#telling-the-others}
+
+Cuando tocas **Ir a comprar**, los demás adultos de la familia ven en **Hoy**: «Sabine está comprando (Supermercado). ¿Necesitas algo?» **Abrir la lista** los lleva a la lista para que añadan lo que falta; **Entendido** oculta el aviso para ellos. No lo reciben ni los niños, ni la pantalla de pared, ni tú, y un mensaje breve te confirma que los demás lo ven. El aviso vale para esta compra: desaparece cuando sales de la compra (**Modo planificar**, volver atrás o tras **Terminar la compra**), como máximo a las dos horas. Si vuelves a abrir la compra en media hora, es la misma y nadie recibe un segundo aviso. Quien no quiera recibir el aviso, lo desactiva para sí: [Recordatorios](/es/settings/reminders).
+
+::: warning Una aplicación cerrada no recibe el aviso
+Un servidor propio de la familia no puede enviar mensajes a la aplicación. Por eso solo recibe la notificación quien tiene la aplicación en marcha: abierta, o apenas dejada a un lado (un iPhone la conserva unos segundos, Android algo más). Si la aplicación está cerrada, el aviso aparece en **Hoy** en cuanto se abre durante la compra.
+:::
+
 ## Marcar {#ticking}
 
 Toca una fila para marcar el producto. Una cantidad mayor que 1 aparece como una etiqueta en negrita «2×» justo tras el nombre, para que no se te pase en el pasillo. Una **pulsación larga** abre la [ficha del producto](/es/shopping/add#the-item-card) (cantidad, nota, categoría). La fila permanece un momento en su sitio: el envío y la ordenación ocurren **800 milisegundos después del último toque**. Otro toque anula una marca pendiente. Salir de la lista envía las marcas pendientes.

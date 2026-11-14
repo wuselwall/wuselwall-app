@@ -127,7 +127,8 @@ class _PickAdultDialog extends StatelessWidget {
                 leading: CircleAvatar(
                   backgroundColor: context.ww.member(m.color).ink,
                   foregroundColor: context.ww.member(m.color).onInk,
-                  child: Text(m.initial),
+                  // A fixed circle keeps its letter's size (see MemberAvatar).
+                  child: Text(m.initial, textScaler: TextScaler.noScaling),
                 ),
                 title: Text(m.displayName),
                 subtitle: Text(l10n.invitePartnerExisting),

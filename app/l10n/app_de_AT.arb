@@ -12,5 +12,8 @@
   "wuselHelloEvening3": "Servus {name}! Bald ist Ausruhzeit.",
   "wishPickerOwnHint": "z. B. Palatschinken",
   "mealIcon_pancakes": "Palatschinken",
-  "mealIcon_potato": "Erdäpfel"
+  "mealIcon_potato": "Erdäpfel",
+  "eventStarterParentTeacherTalk": "Elternsprechtag",
+  "eventStarterSchoolTrip": "Wandertag",
+  "eventStarterSchoolTest": "Schularbeit"
 }

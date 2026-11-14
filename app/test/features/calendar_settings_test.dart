@@ -643,7 +643,7 @@ void main() {
 
       await tester.tap(find.text('Uhrzeit wählen'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('OK'));
+      await tester.tap(find.byKey(const ValueKey('time-wheel-done')));
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(FilledButton, 'Nur diesen Tag'));
       await tester.pumpAndSettle();
@@ -667,7 +667,7 @@ void main() {
 
       await tester.tap(find.text('Uhrzeit wählen'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('OK'));
+      await tester.tap(find.byKey(const ValueKey('time-wheel-done')));
       await tester.pumpAndSettle();
       await tester.tap(
         find.widgetWithText(

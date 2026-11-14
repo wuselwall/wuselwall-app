@@ -39,7 +39,7 @@ Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras 
 
 Primero ves unas fichas, para no escribirlo todo desde cero:
 
-- **Plantillas**: **Limpieza**, **Evento deportivo**, **Cita médica**, **Invitados a cenar**, **Excursión**, **Cumpleaños infantil**, **Actuación**, **Vacaciones / viaje** y **Cumpleaños** (todo el día, cada año); lo que usáis a menudo va primero y las anuales al final. **Limpieza** es la única plantilla semanal: se repite cada semana el día elegido, a las 09:00 durante tres horas, con una escoba como imagen, para la persona que la crea. Cada una rellena el título, la imagen, la hora, la duración y las personas. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
+- **Plantillas**: **Limpieza**, **Evento deportivo**, **Cita médica**, **Invitados a cenar**, **Excursión**, **Cumpleaños infantil**, **Actuación**, **Vacaciones / viaje** y **Cumpleaños** (todo el día, cada año); lo que usáis a menudo va primero y las anuales al final. **Limpieza** es la única plantilla semanal: se repite cada semana el día elegido, a las 09:00 durante tres horas, con una escoba como imagen, para la persona que la crea. Cada una rellena el título, la imagen, la hora, la duración y las personas. Una familia con hijos ve debajo una sección propia, **Colegio**: **Reunión de familias**, **Tutoría**, **Excursión escolar**, **Examen**, **Fiesta del colegio** y **Jornada deportiva**. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
 - **Vuestras plantillas**: las que habéis guardado. En el editor, toca **Guardar como plantilla** arriba; se guardan el título, la imagen, la hora, la duración, las personas, el lugar y las notas, pero no la fecha ni la repetición.
 - **Lo habitual en casa**: eventos que ya habéis apuntado al menos tres veces, como «Vienen los abuelos». WuselWall solo cuenta vuestros propios eventos en vuestro servidor; nada sale de él. Con **⋮** eliges **Guardar como plantilla** o **No volver a sugerir**.
 
@@ -53,7 +53,7 @@ Añade:
 
 - título, lugar y notas; mientras escribes, el título y el lugar proponen lo que ya habéis apuntado, y un toque toma la propuesta (en un título, con su lugar y su imagen si aún están vacíos);
 - cita o presencia: trabajo, teletrabajo, viaje, ausencia, descanso o cuidado;
-- todo el día, o inicio y fin;
+- todo el día, o inicio y fin. En toda la aplicación, una hora se ajusta con dos ruedas, una para la hora y otra para los minutos de cinco en cinco; **Cada minuto** los muestra todos. Con un teclado basta con escribir la hora, por ejemplo «1430»;
 - personas, o ninguna para toda la familia;
 - justo debajo, si debe verse en la pantalla de la cocina: una línea indica si aparecerá allí y cambia en cuanto eliges personas. Por defecto solo aparecen los eventos de toda la familia;
 - si aún es incierto;

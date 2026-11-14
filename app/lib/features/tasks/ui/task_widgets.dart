@@ -44,6 +44,8 @@ class TaskAvatar extends StatelessWidget {
         decoration: BoxDecoration(color: ground, shape: BoxShape.circle),
         child: Text(
           initial,
+          // A fixed circle keeps its letter's size (see MemberAvatar).
+          textScaler: TextScaler.noScaling,
           style: TextStyle(
             fontFamily: Tokens.fontUi,
             fontWeight: FontWeight.w800,

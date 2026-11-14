@@ -34,6 +34,10 @@ const featureLocalMatching = 'local-matching';
 /// 20261112100000.
 const featureEventImport = 'event-import';
 
+/// The server records a shopping trip in progress and tells the other adults (specs/07
+/// "Telling the others"). Announced by the migration 20261114100000.
+const featureShoppingStart = 'shopping-start';
+
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
 /// signs in with a password, and a forgotten password is reset with a guardian's code
 /// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.

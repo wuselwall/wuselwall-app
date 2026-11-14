@@ -38,7 +38,10 @@ if ! $update; then
 fi
 
 # Shards are fetched once into the cache (keyed by path, checked by hash on every use).
-mkdir -p "$cache"
+mkdir -p "$cache" && [[ -w $cache ]] || {
+  echo "font fallback cache $cache is not writable; set WW_FONT_FALLBACK_CACHE to a writable directory" >&2
+  exit 1
+}
 fetch() {
   local file="$cache/$1"
   [[ -s $file ]] && return 0

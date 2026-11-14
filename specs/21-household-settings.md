@@ -252,6 +252,7 @@ order can be changed by dragging.
 | `notify.morning_summary` | member, self | on, 07:00 | off · time | Today's tasks and events for that member. Pending redemptions appear here for guardians | Q13 |
 | `notify.event_reminder` | member, self | off | off · 5–120 min | A push before an event starts | Q13 |
 | `notify.packing_reminder` | member, self | on, 19:00 | off · time | *Added 2026-10-16.* "Für morgen einpacken" the evening before a school day with equipment, a local notification: every child's things on an adult's phone, a child's own on theirs. Off with `school.equipment_hint` | FR-7.12 |
+| `notify.shopping_start` | member, self | on | on · off | *Added 2026-11-14 (issue #242).* A notice on Heute and, while the app runs, a banner or a local notification when another adult taps *Einkaufen gehen* ("Sabine kauft gerade ein (Supermarkt). Brauchst du noch etwas?"). Adults only, never the shopper, children or the wall. Off: neither, and the shopper's count is one lower. A closed app is not reached (Q47). [07, "Telling the others"](07-module-meals-shopping.md#telling-the-others-added-2026-11-14-issue-242) | #242 |
 | `notify.task_verified` | member, self | off | on · off | A push when a guardian verifies a chore and points are credited *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies.)* | Q13 |
 | `notify.redemption_request` | member, self (guardians) | off | on · off | An immediate push when a child requests a reward *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies.)* | Q13 |
 
@@ -297,7 +298,7 @@ a test checks that every key with a title is placed in exactly one group.
 
 | Group | Holds |
 |---|---|
-| Personal (someone must be acting) | Wusel: `member.wusel`, `member.wusel_outfit` · `member.completion_sound` · Notifications (personal phone only): Reminders on this phone, `notify.morning_summary`, `notify.event_reminder`, `notify.packing_reminder`, `calendar.tentative_nudge` |
+| Personal (someone must be acting) | Wusel: `member.wusel`, `member.wusel_outfit` · `member.completion_sound` · Notifications (personal phone only): Reminders on this phone, `notify.morning_summary`, `notify.event_reminder`, `notify.packing_reminder`, `notify.shopping_start`, `calendar.tentative_nudge` |
 | Family | family profile (name, time zone, export, delete) · `household.region` · Members (reorder, add, invite) · usual week · `household.kid_shopping` |
 | Tasks and rewards | `tasks.*` |
 | Calendar and school | `calendar.members_edit_own_events`, `calendar.key_default`, `school.*` · Connections (Advanced): calendar feeds, subscribed calendars |

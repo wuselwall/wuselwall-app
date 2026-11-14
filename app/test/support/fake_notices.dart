@@ -9,12 +9,23 @@ class FakeNoticesRepository implements NoticesRepository {
 
   final List<AppNotice> _notices;
 
+  /// How often the list was asked for.
+  int fetches = 0;
+
+  /// A notice that arrives later (or one more of the same key, as a refetch may give).
+  void add(AppNotice notice) => _notices.add(notice);
+
+  /// A notice that is gone, as a trip that ended.
+  void remove(String key) => _notices.removeWhere((n) => n.key == key);
+
   /// Every dismissal, in order, with the actor that sent it.
   final dismissed = <({String actor, String key})>[];
 
   @override
-  Future<Result<List<AppNotice>>> notices({required String actor}) async =>
-      Ok(List.of(_notices));
+  Future<Result<List<AppNotice>>> notices({required String actor}) async {
+    fetches++;
+    return Ok(List.of(_notices));
+  }
 
   @override
   Future<Result<void>> dismiss({

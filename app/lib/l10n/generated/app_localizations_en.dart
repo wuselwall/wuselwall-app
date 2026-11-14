@@ -209,6 +209,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no => 'No';
 
   @override
+  String get timeWheelTitle => 'Time';
+
+  @override
+  String get timeWheelHour => 'Hour';
+
+  @override
+  String get timeWheelMinute => 'Minute';
+
+  @override
+  String get timeWheelPeriod => 'AM or PM';
+
+  @override
+  String get timeWheelExact => 'Every minute';
+
+  @override
+  String get timeWheelDone => 'Done';
+
+  @override
   String get shoppingTitle => 'Shopping list';
 
   @override
@@ -3013,6 +3031,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayNoticeDismiss => 'Got it';
 
   @override
+  String todayNoticeShopping(String name, String list) {
+    return '$name is shopping now ($list). Need anything?';
+  }
+
+  @override
+  String get todayNoticeShoppingList => 'Open the list';
+
+  @override
+  String shoppingStartNotifyTitle(String name) {
+    return '$name is going shopping';
+  }
+
+  @override
+  String shoppingStartNotifyBody(String list) {
+    return 'Need anything? Put it on the list “$list”.';
+  }
+
+  @override
+  String get shoppingStartTold =>
+      'The other adults can see that you are shopping.';
+
+  @override
   String get todayNoticeMembers => 'Members';
 
   @override
@@ -4728,6 +4768,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingNotifyPackingHelp =>
       'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.';
+
+  @override
+  String get settingNotifyShoppingStartTitle => 'When somebody goes shopping';
+
+  @override
+  String get settingNotifyShoppingStartHelp =>
+      'When another adult taps Go shopping, you see it on Today, and as a notification while the app is running, so you can still put something on the list. A closed app cannot be reached.';
 
   @override
   String get appearanceTitle => 'Appearance';
@@ -6476,6 +6523,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventTemplatesBuiltInMore => 'More templates';
 
   @override
+  String get eventTemplatesSchool => 'School';
+
+  @override
   String get eventTemplateBlank => 'Start blank';
 
   @override
@@ -6507,6 +6557,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventStarterCleaning => 'Cleaner';
+
+  @override
+  String get eventStarterParentsEvening => 'Parents’ evening';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Parent–teacher meeting';
+
+  @override
+  String get eventStarterSchoolTrip => 'School trip';
+
+  @override
+  String get eventStarterSchoolTest => 'Test';
+
+  @override
+  String get eventStarterSchoolParty => 'School fair';
+
+  @override
+  String get eventStarterSportsDay => 'Sports day';
 
   @override
   String get eventTemplateAllDay => 'All day';

@@ -39,7 +39,7 @@ Touchez **Nouvel événement** : il commence le jour affiché par le calendrier 
 
 Des tuiles s’affichent d’abord, pour ne pas tout saisir depuis le début :
 
-- **Modèles** : **Ménage**, **Événement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie**, **Goûter d’anniversaire**, **Spectacle**, **Vacances / voyage** et **Anniversaire** (toute la journée, tous les ans) ; ce que vous utilisez souvent vient en premier, les modèles annuels en dernier. **Ménage** est le seul modèle hebdomadaire : il se répète chaque semaine le jour choisi, à 09:00 pour trois heures, avec un balai comme image, pour la personne qui le saisit. Chacun remplit le titre, l’image, l’heure, la durée et les personnes. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
+- **Modèles** : **Ménage**, **Événement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie**, **Goûter d’anniversaire**, **Spectacle**, **Vacances / voyage** et **Anniversaire** (toute la journée, tous les ans) ; ce que vous utilisez souvent vient en premier, les modèles annuels en dernier. **Ménage** est le seul modèle hebdomadaire : il se répète chaque semaine le jour choisi, à 09:00 pour trois heures, avec un balai comme image, pour la personne qui le saisit. Chacun remplit le titre, l’image, l’heure, la durée et les personnes. Une famille avec un enfant voit en dessous une section **École** : **Réunion de parents**, **Entretien avec l’école**, **Sortie scolaire**, **Contrôle**, **Fête de l’école** et **Journée sportive**. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
 - **Vos modèles** : ceux que vous avez enregistrés. Dans l’éditeur, touchez **Enregistrer comme modèle** en haut ; le titre, l’image, l’heure, la durée, les personnes, le lieu et les notes sont gardés, ni la date ni la répétition.
 - **Souvent chez vous** : les événements saisis au moins trois fois, comme « Mamie et papi viennent ». WuselWall ne compte que vos propres événements, sur votre serveur ; rien n’en sort. Avec **⋮**, choisissez **Garder comme modèle** ou **Ne plus proposer**.
 
@@ -53,7 +53,7 @@ Indiquez ensuite :
 
 - le **titre**, le **lieu** et les **notes** ; pendant la saisie, le titre et le lieu proposent ce que vous avez déjà saisi, et un toucher reprend la proposition (pour un titre, avec son lieu et son image s’ils sont encore vides) ;
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
-- toute la journée, ou les heures de début et de fin ;
+- toute la journée, ou les heures de début et de fin. Partout dans l’application, une heure se règle avec deux roues, l’une pour l’heure, l’autre pour les minutes par pas de cinq ; **Chaque minute** les affiche toutes. Au clavier, tapez simplement l’heure, par exemple « 1430 » ;
 - les personnes concernées, ou personne pour toute la famille ;
 - juste en dessous, l’affichage sur l’écran de la cuisine : une ligne indique si l’événement y apparaîtra et change dès que vous choisissez des personnes. Par défaut, seuls les événements de toute la famille y apparaissent ;
 - une éventuelle incertitude ;

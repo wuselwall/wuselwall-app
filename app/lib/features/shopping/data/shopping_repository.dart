@@ -301,6 +301,41 @@ class ShoppingRepository {
     parse: (json) =>
         ShoppingFinishResult.fromJson(json! as Map<String, dynamic>),
   );
+
+  /// "Einkaufen gehen": the server records the trip and tells the other adults (specs/07
+  /// "Telling the others"). Only on a server that announces `shopping-start`.
+  Future<Result<TripStart>> startTrip({
+    required String? actor,
+    String? listId,
+  }) => _api.rpc(
+    'shopping_start',
+    params: {'p_actor': actor, 'p_list': listId},
+    parse: (json) => TripStart.fromJson(json! as Map<String, dynamic>),
+  );
+
+  /// The trip page closed: the trip in progress ends, and its notice with it.
+  Future<Result<void>> leaveTrip({required String? actor}) =>
+      _api.rpc('shopping_leave', params: {'p_actor': actor}, parse: (_) {});
+}
+
+/// What `api.shopping_start` answers.
+class TripStart {
+  const TripStart({required this.id, required this.isNew, required this.told});
+
+  factory TripStart.fromJson(Map<String, dynamic> json) => TripStart(
+    id: json['id'] as String?,
+    isNew: json['new'] as bool? ?? false,
+    told: (json['told'] as num?)?.toInt() ?? 0,
+  );
+
+  /// Null when nothing was recorded (a child's trip).
+  final String? id;
+
+  /// True when the others are told now, false when a trip was continued.
+  final bool isNew;
+
+  /// How many other adults learn of the trip.
+  final int told;
 }
 
 final shoppingRepositoryProvider = Provider<ShoppingRepository>(

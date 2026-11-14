@@ -118,28 +118,39 @@ class WeekBoardView extends ConsumerWidget {
                   LayoutBuilder(
                     builder: (context, constraints) {
                       final scaler = MediaQuery.textScalerOf(context);
+                      // One line of the board's 24 px text at the reader's text
+                      // size. Up to 200 % the bands' own heights hold it; above
+                      // that (iOS goes to 312 %) a band grows to its line rather
+                      // than cut it or overflow (specs/09: respect the system text
+                      // size, never clamp it). A canvas taller than the 800 px
+                      // reference has the room; the meal zone gives it up first.
+                      final line = (scaler.scale(24) * 1.15).ceilToDouble();
+                      final dayHeight = math.max(headerHeight, line);
+                      final memberHeight = math.max(56.0, line);
                       final reserved =
-                          headerHeight +
-                          56 * board.members.length +
+                          dayHeight +
+                          memberHeight * board.members.length +
                           math.max(56, scaler.scale(24) * 1.15 + 12) +
                           2 * BoardDivider.height +
                           math.max(56, scaler.scale(24) * 1.1 + 10);
                       // Reduce appointment summaries before squeezing any action or
                       // meal below its floor. The zone and all seven days remain.
+                      // Its full form is a line for each of the three day parts.
+                      final fullAppointments = math.max(168.0, 3 * line);
                       final appointmentHeight =
-                          constraints.maxHeight - reserved >= 168
-                          ? 168.0
-                          : 56.0;
+                          constraints.maxHeight - reserved >= fullAppointments
+                          ? fullAppointments
+                          : math.max(56.0, line);
                       return Column(
                         children: [
                           SizedBox(
-                            height: headerHeight,
+                            height: dayHeight,
                             child: DayHeaderRow(frame: frame),
                           ),
                           const BoardDivider(),
                           // Compact containing row actions have a real 56px floor.
                           SizedBox(
-                            height: 56.0 * board.members.length,
+                            height: memberHeight * board.members.length,
                             child: PresenceRows(frame: frame),
                           ),
                           const BoardDivider(trailing: BoardViewSwitches()),

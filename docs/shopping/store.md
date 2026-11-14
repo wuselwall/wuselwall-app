@@ -12,6 +12,14 @@ Unten stehen zwei Knöpfe: links **Planungsmodus**, rechts **Hinzufügen**. Mit 
 
 WuselWall merkt sich auf diesem Gerät, ob du zuletzt geplant oder eingekauft hast. Hast du das Handy im Laden zugemacht, öffnet die Liste beim nächsten Mal gleich wieder im Einkauf. Das gilt nur für dieses Gerät; die Familie sieht davon nichts.
 
+### Die anderen informieren {#telling-the-others}
+
+Tippst du auf **Einkaufen gehen**, sehen die anderen Erwachsenen deiner Familie auf **Heute**: „Sabine kauft gerade ein (Supermarkt). Brauchst du noch etwas?“ Mit **Zur Liste** öffnen sie die Liste und setzen drauf, was fehlt; **Gesehen** blendet den Hinweis für sie aus. Kinder, die Wandanzeige und du selbst bekommen ihn nicht, und dir sagt eine kurze Meldung, dass die anderen es sehen. Der Hinweis gilt für diesen einen Einkauf: Er verschwindet, sobald du den Einkauf verlässt (**Planungsmodus**, zurück oder nach **Einkauf beenden**), spätestens nach zwei Stunden. Öffnest du den Einkauf innerhalb einer halben Stunde noch einmal, ist es derselbe Einkauf, und niemand wird ein zweites Mal gefragt. Wer den Hinweis nicht bekommen möchte, schaltet ihn für sich aus: [Erinnerungen](/settings/reminders).
+
+::: warning Eine geschlossene App wird nicht erreicht
+Eine selbst betriebene Familien-Installation kann keine Nachrichten an die App schicken. Eine Mitteilung bekommt deshalb nur, wessen App läuft: offen oder gerade erst zur Seite gelegt (ein iPhone hält sie nur wenige Sekunden, Android etwas länger). Ist die App geschlossen, steht der Hinweis auf **Heute**, sobald sie während des Einkaufs geöffnet wird.
+:::
+
 ## Abhaken
 
 - Tippe irgendwo auf die Zeile (mindestens 56 Pixel hoch), um einen Artikel abzuhaken. Eine Menge über 1 steht als dicke Marke „2×“ gleich hinter dem Namen, damit du sie im Gang nicht übersiehst.

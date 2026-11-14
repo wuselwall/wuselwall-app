@@ -303,24 +303,31 @@ class _MemberPageState extends ConsumerState<MemberPage> {
         // Child or adult: starter chores, the kid register and the timetable follow it.
         Text(l10n.memberKind, style: theme.textTheme.labelLarge),
         const SizedBox(height: Tokens.space2),
-        SegmentedButton<bool>(
-          key: const ValueKey('member-kind'),
-          segments: [
-            ButtonSegment(value: true, label: Text(l10n.householdKindChild)),
-            ButtonSegment(value: false, label: Text(l10n.householdKindAdult)),
-          ],
-          selected: {m.isChild},
-          onSelectionChanged:
-              !isGuardian || _busy || m.hasAccount || m.isGuardian
-              ? null
-              : (s) => _run(
-                  () => _repo.updateMember(
-                    actor: _actor,
-                    profileId: m.id,
-                    isChild: s.first,
+        // A locked choice says so to a screen reader too: the segments of a disabled
+        // SegmentedButton do not announce it themselves.
+        Semantics(
+          enabled: !isGuardian || _busy || m.hasAccount || m.isGuardian
+              ? false
+              : null,
+          child: SegmentedButton<bool>(
+            key: const ValueKey('member-kind'),
+            segments: [
+              ButtonSegment(value: true, label: Text(l10n.householdKindChild)),
+              ButtonSegment(value: false, label: Text(l10n.householdKindAdult)),
+            ],
+            selected: {m.isChild},
+            onSelectionChanged:
+                !isGuardian || _busy || m.hasAccount || m.isGuardian
+                ? null
+                : (s) => _run(
+                    () => _repo.updateMember(
+                      actor: _actor,
+                      profileId: m.id,
+                      isChild: s.first,
+                    ),
+                    guardian: true,
                   ),
-                  guardian: true,
-                ),
+          ),
         ),
         if (m.hasAccount || m.isGuardian)
           Padding(
@@ -351,26 +358,29 @@ class _MemberPageState extends ConsumerState<MemberPage> {
           const SizedBox(height: Tokens.space6),
           Text(l10n.memberRole, style: theme.textTheme.labelLarge),
           const SizedBox(height: Tokens.space2),
-          SegmentedButton<Role>(
-            key: const ValueKey('member-role'),
-            segments: [
-              ButtonSegment(
-                value: Role.guardian,
-                label: Text(l10n.roleGuardian),
-              ),
-              ButtonSegment(value: Role.member, label: Text(l10n.roleMember)),
-            ],
-            selected: {m.role},
-            onSelectionChanged: !isGuardian || _busy || m.isChild
-                ? null
-                : (s) => _run(
-                    () => _repo.setMemberRole(
-                      actor: _actor,
-                      profileId: m.id,
-                      role: s.first,
+          Semantics(
+            enabled: !isGuardian || _busy || m.isChild ? false : null,
+            child: SegmentedButton<Role>(
+              key: const ValueKey('member-role'),
+              segments: [
+                ButtonSegment(
+                  value: Role.guardian,
+                  label: Text(l10n.roleGuardian),
+                ),
+                ButtonSegment(value: Role.member, label: Text(l10n.roleMember)),
+              ],
+              selected: {m.role},
+              onSelectionChanged: !isGuardian || _busy || m.isChild
+                  ? null
+                  : (s) => _run(
+                      () => _repo.setMemberRole(
+                        actor: _actor,
+                        profileId: m.id,
+                        role: s.first,
+                      ),
+                      guardian: true,
                     ),
-                    guardian: true,
-                  ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: Tokens.space1),

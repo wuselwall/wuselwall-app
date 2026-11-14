@@ -267,6 +267,94 @@ online-only like rename and forget). Pinned tiles come first in the picker, most
 first and then by name, ahead of the recent/frequent ranking; with a query a pinned match
 ranks above others of the same score. A pinned tile shows a small pin.
 
+### Telling the others (added 2026-11-14, issue #242)
+
+A family asked on 2026-11-14: when an adult starts the shopping, can the other adults be
+told, in case they need something? It must be switchable off in the settings. The point is
+timing: a message after the shopper has left the shop is worth nothing, one while the list
+can still grow is worth a lot.
+
+**Who is told, and when.**
+
+- The trigger is the button **Einkaufen gehen** on the Shopping tab, and only the button.
+  A phone that was closed in the store and reopens on the trip page announces nothing by
+  itself (see "Two modes").
+- Told is every *other* adult (profile kind `adult`: guardians and adult members alike)
+  whose `notify.shopping_start` is on. Never the shopper, never a child, never the wall
+  display. A child's own trip is not recorded (the kids' register can have a Shopping tab);
+  a kiosk device cannot call the functions at all.
+- The shopper sees "Die anderen Erwachsenen sehen, dass du einkaufst." once after the tap,
+  and only when the trip is new and at least one adult is told. A person who switched the
+  setting off is not counted. A failed call (no network in the car park) shows nothing: the
+  message is a courtesy and the trip works without it.
+- **One trip, told once.** A trip is the shopper's visit to one list. Tapping the button
+  again while the trip runs, or within 30 minutes after the shopper left Einkaufen,
+  continues the same trip and tells nobody again. A trip on another list is a trip of its
+  own and ends the shopper's earlier one.
+- **The trip ends** when the shopper leaves Einkaufen (**Planen**, the system back, or
+  after **Einkauf beenden**), and by itself two hours after it started. The notice is gone
+  for the others at that moment, or earlier when they tap **Gesehen**.
+
+**Three surfaces.**
+
+| Surface | When | What |
+|---|---|---|
+| Notice on **Heute** | always, while the trip runs and the person has not dismissed it | a card "Sabine kauft gerade ein (Supermarkt). Brauchst du noch etwas?" with **Zur Liste** (opens the Shopping tab on that list) and **Gesehen** (hides it for that person only). A new kind `shopping` of the Today notices ([20](20-onboarding.md), `api.notices`). A closed app shows it as soon as it is opened during the trip |
+| Banner | the moment the notice arrives, the app running and in front | a snack bar at the bottom with the same text and **Zur Liste**, for ten seconds |
+| Local notification | the moment the notice arrives, the app running out of sight, on a personal phone that allows notifications | "Sabine geht einkaufen" / "Brauchst du noch etwas? Setz es auf die Liste „Supermarkt“." Where it cannot be shown, the banner waits and appears when the app comes back to the front, if the trip still runs |
+
+Each trip is announced once per device (banner or notification, not both). The notices
+already on Today when the app starts, or when another person takes a shared device, are not
+announced: the card says it. The banner and the notification exist only in the adult
+register; a child's device and the wall fetch no notices for it.
+
+**The limit, stated plainly.** A self-hosted server cannot push to the store app
+([14 Q47](14-open-questions.md): APNs and FCM accept pushes only from the app's
+credentials). So the notification arrives only while the app is running: open, or just put
+aside. An iPhone suspends an app seconds after it leaves the screen, and Android keeps it
+for a while at most. A **closed app is not reached**; it shows the notice on Heute when it
+is opened during the trip. The owner chose this scope on 2026-11-14 (Realtime and a local
+notification, no relay). Whether the project builds a push relay is the open decision in
+issue #243. The guide and the setting's help say the same.
+
+**Data and contract.**
+
+```
+app.shopping_run
+  id, household_id, list_id, profile_id (the shopper), started_at, ended_at (null: running)
+```
+
+RLS is enabled and forced, with no policy for devices: nobody reads the table directly, only
+the functions below and `app.notices_for`. It is a signal, not a record: rows older than a
+day are deleted at the next start, it is not in the household export (listed as excluded in
+pgTAP `145`), and the finished trip with its items stays `app.shopping_trip`. Every start and
+end is audited (`shopping_run`, `start` / `end`).
+
+| Function | Who | What |
+|---|---|---|
+| `api.shopping_start(p_actor, p_list default null)` → `{id, new, told}` | an adult, not a kiosk (`kiosk_forbidden`) | records the trip on the list (null: the default list) and broadcasts on the household channel, topic `shopping`. `new` is true when the others are told now, false when a running or just-left trip (under 30 minutes, started under two hours ago) is continued; `told` is the number of adults reached. A child gets `{id: null, new: false, told: 0}` and nothing is recorded. One trip per shopper at a time (advisory lock); a trip on another list ends |
+| `api.shopping_leave(p_actor)` | any member, not a kiosk (`kiosk_forbidden`) | ends the shopper's running trip and broadcasts |
+
+`api.notices` and `app.notices_for` return one more kind, `shopping`, with `name` the
+shopper, `profile_id` the shopper's profile, `at` the start, and a new key `data`
+`{list_id, list_name}` (null for every other kind). The notice key is `shopping:<trip id>`,
+and `notice_dismissal` accepts that prefix. A notice shows only for a running trip younger
+than two hours, to an adult whose setting is on, never to its shopper.
+
+Setting `notify.shopping_start`: scope member, self-service, boolean, **on by default**
+([21](21-household-settings.md#notifications)). Under Einstellungen → Erinnerungen on a
+personal phone, and in the Personal settings group (Basic). Off: that person gets neither the
+notice nor the notification, and the shopper's `told` is one lower.
+
+**Compatibility.** `api_version` stays 1 (additive: a table, two functions, a setting, a
+notice kind and a notice key). `api.server_info` announces the feature `shopping-start`; an
+app on an older server calls nothing and nothing changes. The previous app release calls
+neither function, ignores a notice kind it does not know and lists the setting under
+Advanced by its key. App side: `ShoppingRepository.startTrip` / `leaveTrip`,
+`ShoppingStartHost` (around the app, listens to the notices and announces),
+`NotificationScheduler.show`, `NoticeKind.shopping`. Migration
+`20261114100000_shopping_start_notice.sql`, pgTAP `305_shopping_start.test.sql`.
+
 ## Offline — the one place it is non-negotiable
 
 Supermarket connectivity is unreliable, and a shopping list that fails in a shop is

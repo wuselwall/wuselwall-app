@@ -307,12 +307,16 @@ getting_started_dismissal        -- the only stored state of the getting-started
 
 ```
 notice_dismissal                 -- added 2026-10-15 (specs/20 J2, J4): "Gesehen", per profile
-  id, household_id, profile_id, notice_key,     -- 'join:<audit id>' | 'signin:<device id>'
+  id, household_id, profile_id, notice_key,     -- 'join:<audit id>' | 'signin:<device id>' | 'shopping:<run id>'
   dismissed_at                                  -- unique (profile_id, notice_key)
 ```
 
 Notices themselves are not stored: `api.notices` derives them from `audit_log` and `device`
 rows and drops anything older than 14 days.
+The one exception to the 14 days is the shopping-trip notice (2026-11-14, issue #242): it
+comes from `app.shopping_run` (id, household_id, list_id, profile_id, started_at, ended_at;
+RLS enforced, no device policy, not exported) and lasts while the trip runs, at most two
+hours ([07](07-module-meals-shopping.md#telling-the-others-added-2026-11-14-issue-242)).
 
 The card's items are derived from data and never ticked by hand (`api.getting_started`).
 The export reads every household table on the list `app.export_table` (name, order, and the

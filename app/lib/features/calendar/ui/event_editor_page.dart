@@ -11,6 +11,7 @@ import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/suggest_field.dart';
+import 'package:wuselwall/core/ui/time_wheel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -397,9 +398,10 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
 
   Future<void> _pickTime({required bool isStart}) async {
     final current = isStart ? _draft.start : _draft.end;
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(current),
+    final picked = await showTimeWheel(
+      context,
+      initial: TimeOfDay.fromDateTime(current),
+      title: isStart ? context.l10n.eventStarts : context.l10n.eventEnds,
     );
     if (picked == null || !mounted) return;
     setState(() {

@@ -144,6 +144,7 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
       SettingKey('notify.morning_summary'),
       SettingKey('notify.event_reminder'),
       SettingKey('notify.packing_reminder'),
+      SettingKey('notify.shopping_start'),
       SettingKey('calendar.tentative_nudge'),
     ], gate: _personalPhone),
   ],
@@ -298,6 +299,7 @@ const basicSettingKeys = {
   'member.completion_sound',
   'notify.morning_summary',
   'notify.event_reminder',
+  'notify.shopping_start',
   // A lighter day (specs/21): switching Wusel off must be easy to find.
   'member.wusel',
   'rituals.table_question',

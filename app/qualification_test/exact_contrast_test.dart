@@ -5,7 +5,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../qualification/fixture.dart';
+
 import 'exact_contrast.dart';
+import 'settle.dart';
 
 const _paper = Color(0xfff7f4ee);
 const _ink = Color(0xff4a4a4a);
@@ -481,6 +484,172 @@ void main() {
       );
     },
   );
+
+  // The last line of a scrolling list under the bar below it (the calendar's hour
+  // labels above the navigation bar): the list's clip cuts the line off where the bar
+  // begins, so the bar covers none of what is painted.
+  Widget lineAboveBar({required bool clipped}) {
+    final line = OverflowBox(
+      alignment: Alignment.topLeft,
+      maxHeight: 60,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Text('Clipped list line', style: _style()),
+      ),
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 240,
+          height: 30,
+          child: clipped ? ClipRect(child: line) : line,
+        ),
+        const SizedBox(
+          width: 240,
+          height: 40,
+          child: ColoredBox(color: Color(0xFF1C1F23)),
+        ),
+      ],
+    );
+  }
+
+  testWidgets(
+    'text its list clips off above a later bar is measured where it is painted',
+    (t) async {
+      await withSemantics(t, _page(lineAboveBar(clipped: true)), () async {
+        final row = (await auditExactContrast(t)).rows.single;
+        expect(row.text, 'Clipped list line');
+        expect(row.classification, 'PASS', reason: row.reason);
+        expect(row.background, _paper.toARGB32());
+        expect(row.background2, isNull);
+      });
+    },
+  );
+
+  testWidgets('unclipped text reaching under a later bar stays undecided', (
+    t,
+  ) async {
+    await withSemantics(t, _page(lineAboveBar(clipped: false)), () async {
+      final row = (await auditExactContrast(t)).rows.single;
+      expect(row.classification, 'UNDECIDED');
+      expect(row.reason, 'Overlapping later-painted sibling');
+    });
+  });
+
+  testWidgets('text a rounded clip cuts into stays undecided', (t) async {
+    await withSemantics(
+      t,
+      _page(
+        SizedBox(
+          width: 120,
+          height: 24,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: OverflowBox(
+              alignment: Alignment.centerLeft,
+              maxWidth: 400,
+              child: Text('Cut by the rounded corner', style: _style()),
+            ),
+          ),
+        ),
+      ),
+      () async {
+        final row = (await auditExactContrast(t)).rows.single;
+        expect(row.classification, 'UNDECIDED');
+        expect(row.reason, 'Cut by a rounded or shaped clip');
+      },
+    );
+  });
+
+  // Two lines set tight, as a day header over a holiday's name: the upper line's
+  // descenders reach into the lower line's box in another colour. A line full of
+  // descenders would leave too much unexplained and stay undecided.
+  Widget tightLines({required double shift}) => SizedBox(
+    width: 240,
+    height: 60,
+    child: Stack(
+      children: [
+        Positioned(
+          left: 0,
+          top: 0,
+          child: Text('Mittwoch, jeudi', style: _style(size: 24)),
+        ),
+        Positioned(
+          left: 0,
+          top: shift,
+          child: Text(
+            'Día festivo ÍÍ',
+            style: _style(color: const Color(0xFF4A5058), size: 24),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  testWidgets(
+    "another text's descenders in the line box are not a background",
+    (t) async {
+      await withSemantics(t, _page(tightLines(shift: 20)), () async {
+        final rows = (await auditExactContrast(t)).rows;
+        final lower = rows.singleWhere((r) => r.text.startsWith('Día'));
+        expect(lower.classification, 'PASS', reason: lower.reason);
+        expect(lower.background, _paper.toARGB32());
+        expect(lower.background2, isNull);
+      });
+    },
+  );
+
+  testWidgets('text painted over other text is not excused as its ink', (
+    t,
+  ) async {
+    await withSemantics(t, _page(tightLines(shift: 6)), () async {
+      final rows = (await auditExactContrast(t)).rows;
+      final lower = rows.singleWhere((r) => r.text.startsWith('Día'));
+      expect(lower.classification, isNot('PASS'));
+    });
+  });
+
+  // Stems one and a half pixels wide come out as two columns of the same partial
+  // coverage: a flat colour that is no surface. It depends on the face, the weight and
+  // where the label falls on the pixel grid, so the control is the screen it was found
+  // on: the filled button of the device registration, French, dark.
+  testWidgets('the flat edge colour of thin stems is not a second background', (
+    t,
+  ) async {
+    for (final weight in ['Regular', 'SemiBold', 'Bold', 'ExtraBold']) {
+      final font = FontLoader('AtkinsonHyperlegibleNext')
+        ..addFont(
+          rootBundle.load('assets/fonts/AtkinsonHyperlegibleNext-$weight.ttf'),
+        );
+      await font.load();
+    }
+    t.view.devicePixelRatio = 1;
+    t.view.physicalSize = const Size(390, 844);
+    addTearDown(t.view.reset);
+    final handle = t.ensureSemantics();
+    try {
+      await t.pumpWidget(
+        qualificationApp(
+          stateId: 'register',
+          scenario: 'adult',
+          locale: const Locale('fr'),
+          shade: 'dark',
+        ),
+      );
+      await settleQualification(t);
+      final row = (await auditExactContrast(t)).rows
+          .singleWhere((r) => r.text == 'Utiliser cet appareil');
+      expect(row.classification, 'PASS', reason: row.reason);
+      expect(row.background, 0xFF6CC79A);
+      expect(row.background2, isNull);
+      expect(row.ratio, greaterThan(7));
+    } finally {
+      await t.pumpWidget(const SizedBox.shrink());
+      await t.pump();
+      handle.dispose();
+    }
+  });
 
   testWidgets('a zero-area later Stack sibling does not obscure text', (
     t,

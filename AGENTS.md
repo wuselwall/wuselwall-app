@@ -37,7 +37,7 @@ own tables, optionally in the outbound feed), local reminders (Q47), the QR scan
 in `app.shortcut_token`, the `shortcuts` function),
 the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual week
 (issue #81, specs/15 "The baseline": a usual place per weekday, up to three time slots a
-day and alternating weeks A/B), event templates ([specs/28](specs/28-event-templates.md), 2026-10-25: Neuer Termin opens tiles, built-in, saved and suggested from the family's history by counting in SQL, migration `20261025150000`, pgTAP 245), and the school import of [specs/24](specs/24-school-import.md)
+day and alternating weeks A/B), event templates ([specs/28](specs/28-event-templates.md), 2026-10-25: Neuer Termin opens tiles, built-in, saved and suggested from the family's history by counting in SQL, migration `20261025150000`, pgTAP 245; six school templates for families with a child added 2026-11-14, issue #240), and the school import of [specs/24](specs/24-school-import.md)
 (2026-10-22): the proposed term, subjects from the cell, the paste import with its preview,
 the retained proposal backend (`app.proposal`, `api.mcp_propose`, `propose_timetable`),
 and the photo scan (`timetable-scan` with the optional `ocr` container, RapidOCR on the CPU),
@@ -52,6 +52,13 @@ navigation, the last mode kept on the device, the item sheet with a count steppe
 a seeded `snacks` category, and a category inferred from a new item's name by the server's word
 list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
 grow in issue #197).
+Telling the others (2026-11-14, issue #242, [specs/07](specs/07-module-meals-shopping.md) "Telling
+the others"): tapping *Einkaufen gehen* records a trip (`app.shopping_run`, `api.shopping_start` /
+`api.shopping_leave`, migration `20261114100000_shopping_start_notice.sql`, pgTAP
+`305_shopping_start.test.sql`, feature flag `shopping-start`) and the other adults with
+`notify.shopping_start` on (default on) get a notice `shopping` on Heute, a banner and, on a
+personal phone, a local notification, for a running app only (Q47; a closed app sees the notice when
+opened; the relay is issue #243).
 Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the
@@ -226,6 +233,8 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - Colours come from `app/theme/palette.dart` through `Theme.of(context).colorScheme` and
   `context.ww` (member colours, paper tints, points) — never a `Color` literal in a
   widget. Values and rules: [specs/17-design-system.md](specs/17-design-system.md).
+- A time of day is asked with `showTimeWheel` (`core/ui/time_wheel.dart`, specs/17 "Choosing a
+  time"), never with `showTimePicker`.
 - Configuration comes from `--dart-define-from-file=env/<name>.json` — never `dotenv`,
   never `kDebugMode` branches for URLs or keys.
 - Developer-only screens are gated with `kDebugMode` and must not exist in release.

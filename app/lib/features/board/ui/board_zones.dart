@@ -821,17 +821,16 @@ class BoardNextWeekToggle extends ConsumerWidget {
 }
 
 /// The board's two view switches, side by side on the band above the appointments.
+/// When a larger text size makes the pair wider than the board, the second takes a
+/// line of its own rather than run off the edge (its label stays whole).
 class BoardViewSwitches extends StatelessWidget {
   const BoardViewSwitches({super.key});
 
   @override
-  Widget build(BuildContext context) => const Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      BoardNextWeekToggle(),
-      SizedBox(width: 12),
-      BoardAllEventsToggle(),
-    ],
+  Widget build(BuildContext context) => const Wrap(
+    alignment: WrapAlignment.end,
+    spacing: 12,
+    children: [BoardNextWeekToggle(), BoardAllEventsToggle()],
   );
 }
 
@@ -865,6 +864,9 @@ class _BoardSwitch extends StatelessWidget {
             minHeight: BoardDivider.controlHeight,
           ),
           child: Center(
+            // As wide as the pill: in the wrapping row of switches a full-width
+            // switch would take a line of its own at every text size.
+            widthFactor: 1,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               decoration: BoxDecoration(

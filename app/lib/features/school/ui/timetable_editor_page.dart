@@ -11,6 +11,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/time_wheel.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -1303,9 +1304,10 @@ class _CareCardState extends State<_CareCard> {
 
   Future<void> _time({required bool start}) async {
     final b = widget.block;
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: start ? b.starts : b.ends,
+    final picked = await showTimeWheel(
+      context,
+      initial: start ? b.starts : b.ends,
+      title: start ? context.l10n.schoolStart : context.l10n.schoolEnd,
     );
     if (picked == null) return;
     setState(() {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
@@ -78,6 +79,12 @@ final shoppingPendingProvider = Provider<int>(
 /// The list the user picked; null means the household default.
 final selectedListIdProvider = NotifierProvider<SelectedListNotifier, String?>(
   SelectedListNotifier.new,
+);
+
+/// Whether the server tells the other adults when somebody starts shopping (specs/07
+/// "Telling the others"). Without it the app calls nothing.
+final shoppingStartSupportedProvider = Provider.autoDispose<bool>(
+  (ref) => ref.watch(serverSupportsProvider(featureShoppingStart)),
 );
 
 class SelectedListNotifier extends Notifier<String?> {

@@ -488,6 +488,42 @@ abstract class AppLocalizations {
   /// **'No'**
   String get no;
 
+  /// Heading of the sheet that asks for a time of day with an hour wheel and a minute wheel, where the field has no name of its own
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeWheelTitle;
+
+  /// Screen-reader name of the hour wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get timeWheelHour;
+
+  /// Screen-reader name of the minute wheel
+  ///
+  /// In en, this message translates to:
+  /// **'Minute'**
+  String get timeWheelMinute;
+
+  /// Screen-reader name of the wheel that chooses before or after noon on a 12-hour clock
+  ///
+  /// In en, this message translates to:
+  /// **'AM or PM'**
+  String get timeWheelPeriod;
+
+  /// Chip under the time wheels: on, the minute wheel shows every minute instead of steps of five
+  ///
+  /// In en, this message translates to:
+  /// **'Every minute'**
+  String get timeWheelExact;
+
+  /// Button that takes the time chosen on the wheels
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get timeWheelDone;
+
   /// No description provided for @shoppingTitle.
   ///
   /// In en, this message translates to:
@@ -5294,6 +5330,36 @@ abstract class AppLocalizations {
   /// **'Got it'**
   String get todayNoticeDismiss;
 
+  /// Notice on Today while another adult is on a shopping trip; name is the shopper, list the shopping list's name
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is shopping now ({list}). Need anything?'**
+  String todayNoticeShopping(String name, String list);
+
+  /// Button on the shopping notice that opens the shopping list the trip is for
+  ///
+  /// In en, this message translates to:
+  /// **'Open the list'**
+  String get todayNoticeShoppingList;
+
+  /// Title of the phone notification when another adult starts a shopping trip
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is going shopping'**
+  String shoppingStartNotifyTitle(String name);
+
+  /// Body of the phone notification when another adult starts a shopping trip; list is the shopping list's name
+  ///
+  /// In en, this message translates to:
+  /// **'Need anything? Put it on the list “{list}”.'**
+  String shoppingStartNotifyBody(String list);
+
+  /// Short message to the shopper after tapping Go shopping: the other adults of the family were told
+  ///
+  /// In en, this message translates to:
+  /// **'The other adults can see that you are shopping.'**
+  String get shoppingStartTold;
+
   /// No description provided for @todayNoticeMembers.
   ///
   /// In en, this message translates to:
@@ -8118,6 +8184,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.'**
   String get settingNotifyPackingHelp;
+
+  /// Title of the per-person setting notify.shopping_start
+  ///
+  /// In en, this message translates to:
+  /// **'When somebody goes shopping'**
+  String get settingNotifyShoppingStartTitle;
+
+  /// Help text of the per-person setting notify.shopping_start
+  ///
+  /// In en, this message translates to:
+  /// **'When another adult taps Go shopping, you see it on Today, and as a notification while the app is running, so you can still put something on the list. A closed app cannot be reached.'**
+  String get settingNotifyShoppingStartHelp;
 
   /// No description provided for @appearanceTitle.
   ///
@@ -10986,6 +11064,12 @@ abstract class AppLocalizations {
   /// **'More templates'**
   String get eventTemplatesBuiltInMore;
 
+  /// Section of the new-event page: school templates, shown only to a family with a child.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get eventTemplatesSchool;
+
   /// The tile that opens the empty event editor.
   ///
   /// In en, this message translates to:
@@ -11051,6 +11135,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cleaner'**
   String get eventStarterCleaning;
+
+  /// Built-in school event template (specs/28): the evening a school invites the parents; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Parents’ evening'**
+  String get eventStarterParentsEvening;
+
+  /// Built-in school event template (specs/28): a talk with a child's teacher; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent–teacher meeting'**
+  String get eventStarterParentTeacherTalk;
+
+  /// Built-in school event template (specs/28): a class outing for the children; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'School trip'**
+  String get eventStarterSchoolTrip;
+
+  /// Built-in school event template (specs/28): a test or exam at school; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Test'**
+  String get eventStarterSchoolTest;
+
+  /// Built-in school event template (specs/28): a school fair or party; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'School fair'**
+  String get eventStarterSchoolParty;
+
+  /// Built-in school event template (specs/28): the school's sports day; also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports day'**
+  String get eventStarterSportsDay;
 
   /// Part of a template tile's line: an all-day event.
   ///

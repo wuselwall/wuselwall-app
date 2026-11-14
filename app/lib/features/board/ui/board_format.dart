@@ -8,9 +8,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 extension BoardFormat on BuildContext {
   String get _locale => Localizations.localeOf(this).toLanguageTag();
 
-  bool get _use24h =>
-      Localizations.localeOf(this).languageCode != 'en' ||
-      MediaQuery.alwaysUse24HourFormatOf(this);
+  bool get _use24h => clockIs24Hour(this);
 
   /// "8:30", "14:00" (en, 12-hour: "8:30 AM").
   String time(TimeOfDay t) {

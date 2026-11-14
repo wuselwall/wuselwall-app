@@ -240,6 +240,50 @@ class _Capture {
   }
 }
 
+/// The solid ink of one paragraph: its opaque run colours and where its lines are on
+/// the screen. Another text's sample that reaches into these boxes sees this ink.
+class _Ink {
+  _Ink(this.paragraph, this.colours, this.boxes);
+  final RenderParagraph paragraph;
+  final Set<int> colours;
+  final List<Rect> boxes;
+}
+
+_Ink? _inkOf(RenderParagraph paragraph) {
+  if (paragraph.runtimeType != RenderParagraph) return null;
+  final colours = <int>{};
+  void visit(InlineSpan span, TextStyle inherited) {
+    if (span is! TextSpan) return;
+    final style = inherited.merge(span.style);
+    final colour = style.color;
+    if ((span.text ?? '').trim().isNotEmpty &&
+        colour != null &&
+        colour.a == 1 &&
+        style.foreground == null) {
+      colours.add(colour.toARGB32());
+    }
+    for (final child in span.children ?? const <InlineSpan>[]) {
+      visit(child, style);
+    }
+  }
+
+  visit(paragraph.text, const TextStyle());
+  final length = paragraph.text
+      .toPlainText(includeSemanticsLabels: false)
+      .length;
+  if (colours.isEmpty || length == 0) return null;
+  final transform = paragraph.getTransformTo(null);
+  if (_hasUnsupportedProjectiveTransform(transform)) return null;
+  final clip = _clipBelow(paragraph, null).rect;
+  final boxes = paragraph
+      .getBoxesForSelection(TextSelection(baseOffset: 0, extentOffset: length))
+      .map((box) => MatrixUtils.transformRect(transform, box.toRect()))
+      .map((box) => clip == null ? box : box.intersect(clip))
+      .where((box) => box.width > 0 && box.height > 0)
+      .toList();
+  return boxes.isEmpty ? null : _Ink(paragraph, colours, boxes);
+}
+
 class _FrameCapture {
   _FrameCapture(this.views, this.captures);
 
@@ -802,6 +846,45 @@ bool _isEmptyPaintProxy(RenderObject object) {
   return current == null;
 }
 
+/// What the ancestors of [paragraph] below [upTo] leave of it, in the coordinates of
+/// [upTo] (the screen when null). A scrolling list's last line may lie half under the
+/// bar below the list; the half the list's viewport cuts off is neither painted nor
+/// under that bar.
+///
+/// [rect] is the intersection of the clips that are exactly rectangles (a ClipRect, a
+/// viewport), null when there is none. [shaped] is the bounding box of every other
+/// clip (rounded, oval, a path): only an approximation, so text it cuts cannot be
+/// measured, because the cut edge runs through the glyphs somewhere inside that box.
+({Rect? rect, Rect? shaped}) _clipBelow(
+  RenderParagraph paragraph,
+  RenderObject? upTo,
+) {
+  Rect? exact;
+  Rect? shaped;
+  RenderObject child = paragraph;
+  for (
+    RenderObject? r = paragraph.parent;
+    r != null && r != upTo;
+    r = r.parent
+  ) {
+    final own = r.describeApproximatePaintClip(child);
+    if (own != null) {
+      final rect = MatrixUtils.transformRect(r.getTransformTo(upTo), own);
+      if (r is RenderClipRect || r is RenderAbstractViewport) {
+        exact = exact == null ? rect : exact.intersect(rect);
+      } else {
+        shaped = shaped == null ? rect : shaped.intersect(rect);
+      }
+    }
+    child = r;
+  }
+  return (rect: exact, shaped: shaped);
+}
+
+/// Whether a shaped clip cuts into [boxes] (what the exact clips left of the text).
+bool _cutByShape(Iterable<Rect> boxes, Rect? shaped) =>
+    shaped != null && boxes.any((box) => box.intersect(shaped) != box);
+
 String? _overlappingLaterSibling(
   RenderParagraph paragraph,
   RenderObject parent,
@@ -817,10 +900,12 @@ String? _overlappingLaterSibling(
       .length;
   if (length == 0) return null;
   final transform = paragraph.getTransformTo(parent);
+  final clip = _clipBelow(paragraph, parent).rect;
   final textBoxes = paragraph
       .getBoxesForSelection(TextSelection(baseOffset: 0, extentOffset: length))
       .map((box) => MatrixUtils.transformRect(transform, box.toRect()))
-      .where((box) => !box.isEmpty)
+      .map((box) => clip == null ? box : box.intersect(clip))
+      .where((box) => box.width > 0 && box.height > 0)
       .toList();
   var afterText = false;
   var foundTextBranch = false;
@@ -898,6 +983,7 @@ Future<ExactContrastReport> auditExactContrast(WidgetTester tester) async {
         live.captures[renderView];
     if (capture == null) continue;
     final paragraphs = _paragraphsIn([renderView]);
+    final inks = [for (final p in paragraphs) ?_inkOf(p)];
     for (final paragraph in paragraphs) {
       final text = paragraph.text.toPlainText(includeSemanticsLabels: false);
       if (text.trim().isEmpty) continue;
@@ -913,6 +999,10 @@ Future<ExactContrastReport> auditExactContrast(WidgetTester tester) async {
           node.id,
           text,
           capture,
+          otherInks: [
+            for (final ink in inks)
+              if (!identical(ink.paragraph, paragraph)) ink,
+          ],
           foregroundPainterProvenUnchanged: painterProven,
           foregroundPainterProof: painterApplies
               ? painterProven
@@ -931,6 +1021,7 @@ List<ExactContrastRow> _auditParagraph(
   int nodeId,
   String text,
   _Capture capture, {
+  List<_Ink> otherInks = const [],
   required bool foregroundPainterProvenUnchanged,
   required String? foregroundPainterProof,
 }) {
@@ -984,6 +1075,10 @@ List<ExactContrastRow> _auditParagraph(
   if (ancestor != null) return [undecided(ancestor)];
 
   final transform = paragraph.getTransformTo(null);
+  // Only what the ancestors' clips leave of the text is on the screen.
+  final clips = _clipBelow(paragraph, null);
+  final clip = clips.rect;
+  Rect visible(Rect box) => clip == null ? box : box.intersect(clip);
   // The shortest basis column overstates size under shear. The smaller
   // singular value bounds compression in every direction, including shear.
   final matrix = transform.storage;
@@ -1040,11 +1135,15 @@ List<ExactContrastRow> _auditParagraph(
         .getBoxesForSelection(
           TextSelection(baseOffset: run.start, extentOffset: run.end),
         )
-        .map((b) => MatrixUtils.transformRect(transform, b.toRect()))
-        .where((b) => !b.isEmpty)
+        .map((b) => visible(MatrixUtils.transformRect(transform, b.toRect())))
+        .where((b) => b.width > 0 && b.height > 0)
         .toList();
     if (boxes.isEmpty) {
       rows.add(undecided('No visible run geometry'));
+      continue;
+    }
+    if (_cutByShape(boxes, clips.shaped)) {
+      rows.add(undecided('Cut by a rounded or shaped clip'));
       continue;
     }
     // One box per glyph lets the audit look for background-specific ink blends
@@ -1055,8 +1154,8 @@ List<ExactContrastRow> _auditParagraph(
           for (final b in paragraph.getBoxesForSelection(
             TextSelection(baseOffset: i, extentOffset: i + 1),
           ))
-            MatrixUtils.transformRect(transform, b.toRect()),
-    ].where((b) => !b.isEmpty).toList();
+            visible(MatrixUtils.transformRect(transform, b.toRect())),
+    ].where((b) => b.width > 0 && b.height > 0).toList();
     // The sample: every pixel of the glyph boxes inflated by one, by index.
     final pixels = <int, int>{};
     final bounds = Rect.fromLTWH(
@@ -1066,14 +1165,44 @@ List<ExactContrastRow> _auditParagraph(
       capture.height.toDouble(),
     );
     for (final box in boxes) {
-      final rect = box.inflate(1).intersect(bounds);
-      if (rect.isEmpty) continue;
+      final rect = visible(box.inflate(1)).intersect(bounds);
+      if (rect.width <= 0 || rect.height <= 0) continue;
       for (var y = rect.top.floor(); y < rect.bottom.ceil(); y++) {
         for (var x = rect.left.floor(); x < rect.right.ceil(); x++) {
           pixels.putIfAbsent(y * capture.width + x, () => capture.argbAt(x, y));
         }
       }
     }
+    // Another text's solid ink inside this sample (the line above, whose descender
+    // reaches into this line's box; a field's content under its floating label) is
+    // that text's glyphs, not a surface this text is painted on. It leaves the sample
+    // unless the two inks touch: strokes that meet may be text painted over text, and
+    // that stays in for the rules below.
+    final foreign = <int>{};
+    final ownInk = fg.a == 1 ? fg.toARGB32() : null;
+    for (final other in otherInks) {
+      final found = <int>[];
+      for (final entry in pixels.entries) {
+        if (entry.value == ownInk || !other.colours.contains(entry.value)) {
+          continue;
+        }
+        final at = Offset(
+          entry.key % capture.width + 0.5,
+          entry.key ~/ capture.width + 0.5,
+        );
+        if (other.boxes.any((box) => box.contains(at))) found.add(entry.key);
+      }
+      final touches = found.any((index) {
+        final x = index % capture.width;
+        final y = index ~/ capture.width;
+        return (x > 0 && capture.argbAt(x - 1, y) == ownInk) ||
+            (x + 1 < capture.width && capture.argbAt(x + 1, y) == ownInk) ||
+            (y > 0 && capture.argbAt(x, y - 1) == ownInk) ||
+            (y + 1 < capture.height && capture.argbAt(x, y + 1) == ownInk);
+      });
+      if (ownInk != null && !touches) foreign.addAll(found);
+    }
+    foreign.forEach(pixels.remove);
     final sampled = pixels.length;
     if (sampled == 0) {
       rows.add(undecided('Run is outside the capture'));
@@ -1112,6 +1241,52 @@ List<ExactContrastRow> _auditParagraph(
       if (flat * 2 >= entry.value) plateaus.add(c);
       if (plateaus.length == 3) break;
     }
+    // A stem one and a half pixels wide is painted as two columns of the same partial
+    // coverage: flat, and never the full ink. Such a colour lies on the blend line
+    // between the ink and a real background and is nowhere more than two pixels thick.
+    // A surface behind a glyph is at least as wide and as high as the glyph's strokes
+    // are apart, so a colour that is only ever a streak is the glyphs' own edge.
+    bool streak(int c) {
+      for (final entry in pixels.entries) {
+        if (entry.value != c) continue;
+        final x = entry.key % capture.width;
+        final y = entry.key ~/ capture.width;
+        var across = 1;
+        for (var i = x - 1; i >= 0 && capture.argbAt(i, y) == c; i--) {
+          across++;
+        }
+        for (
+          var i = x + 1;
+          i < capture.width && capture.argbAt(i, y) == c;
+          i++
+        ) {
+          across++;
+        }
+        if (across <= 2) continue;
+        var down = 1;
+        for (var i = y - 1; i >= 0 && capture.argbAt(x, i) == c; i--) {
+          down++;
+        }
+        for (
+          var i = y + 1;
+          i < capture.height && capture.argbAt(x, i) == c;
+          i++
+        ) {
+          down++;
+        }
+        if (down > 2) return false;
+      }
+      return true;
+    }
+
+    plateaus.removeWhere(
+      (p) =>
+          plateaus.any(
+            (other) =>
+                other != p && _blendError(p, inkOn(other), other) != null,
+          ) &&
+          streak(p),
+    );
     if (plateaus.isEmpty) {
       rows.add(undecided('No flat background under the text'));
       continue;
@@ -1151,6 +1326,7 @@ List<ExactContrastRow> _auditParagraph(
       final inkEvidence = <int, int>{};
       for (var y = rect.top.floor(); y < rect.bottom.ceil(); y++) {
         for (var x = rect.left.floor(); x < rect.right.ceil(); x++) {
+          if (foreign.contains(y * capture.width + x)) continue;
           final c = capture.argbAt(x, y);
           // Plain background pixels do not establish that text is painted on
           // that background; a nearby bar can occupy part of the line box.

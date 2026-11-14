@@ -210,6 +210,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String get no => 'Nein';
 
   @override
+  String get timeWheelTitle => 'Uhrzeit';
+
+  @override
+  String get timeWheelHour => 'Stunde';
+
+  @override
+  String get timeWheelMinute => 'Minute';
+
+  @override
+  String get timeWheelPeriod => 'Vormittag oder Nachmittag';
+
+  @override
+  String get timeWheelExact => 'Jede Minute';
+
+  @override
+  String get timeWheelDone => 'Fertig';
+
+  @override
   String get shoppingTitle => 'Einkaufsliste';
 
   @override
@@ -3030,6 +3048,28 @@ class AppLocalizationsDe extends AppLocalizations {
   String get todayNoticeDismiss => 'Gesehen';
 
   @override
+  String todayNoticeShopping(String name, String list) {
+    return '$name kauft gerade ein ($list). Brauchst du noch etwas?';
+  }
+
+  @override
+  String get todayNoticeShoppingList => 'Zur Liste';
+
+  @override
+  String shoppingStartNotifyTitle(String name) {
+    return '$name geht einkaufen';
+  }
+
+  @override
+  String shoppingStartNotifyBody(String list) {
+    return 'Brauchst du noch etwas? Setz es auf die Liste „$list“.';
+  }
+
+  @override
+  String get shoppingStartTold =>
+      'Die anderen Erwachsenen sehen, dass du einkaufst.';
+
+  @override
   String get todayNoticeMembers => 'Mitglieder';
 
   @override
@@ -4761,6 +4801,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingNotifyPackingHelp =>
       'Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Sportsachen). Nur wenn etwas einzupacken ist.';
+
+  @override
+  String get settingNotifyShoppingStartTitle => 'Wenn jemand einkaufen geht';
+
+  @override
+  String get settingNotifyShoppingStartHelp =>
+      'Tippt ein anderer Erwachsener auf „Einkaufen gehen“, siehst du es auf Heute und, solange die App läuft, als Mitteilung. So kannst du noch etwas auf die Liste setzen. Eine geschlossene App wird nicht erreicht.';
 
   @override
   String get appearanceTitle => 'Darstellung';
@@ -6519,6 +6566,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventTemplatesBuiltInMore => 'Weitere Vorlagen';
 
   @override
+  String get eventTemplatesSchool => 'Schule';
+
+  @override
   String get eventTemplateBlank => 'Ohne Vorlage';
 
   @override
@@ -6550,6 +6600,24 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eventStarterCleaning => 'Putzhilfe';
+
+  @override
+  String get eventStarterParentsEvening => 'Elternabend';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Elterngespräch';
+
+  @override
+  String get eventStarterSchoolTrip => 'Schulausflug';
+
+  @override
+  String get eventStarterSchoolTest => 'Klassenarbeit';
+
+  @override
+  String get eventStarterSchoolParty => 'Schulfest';
+
+  @override
+  String get eventStarterSportsDay => 'Sportfest';
 
   @override
   String get eventTemplateAllDay => 'Ganztägig';
@@ -6945,6 +7013,15 @@ class AppLocalizationsDeAt extends AppLocalizationsDe {
 
   @override
   String get mealIcon_potato => 'Erdäpfel';
+
+  @override
+  String get eventStarterParentTeacherTalk => 'Elternsprechtag';
+
+  @override
+  String get eventStarterSchoolTrip => 'Wandertag';
+
+  @override
+  String get eventStarterSchoolTest => 'Schularbeit';
 }
 
 /// The translations for German, as used in Switzerland (`de_CH`).
@@ -7375,6 +7452,15 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get eventStarterHoliday => 'Ferien / Reise';
+
+  @override
+  String get eventStarterSchoolTrip => 'Schulreise';
+
+  @override
+  String get eventStarterSchoolTest => 'Prüfung';
+
+  @override
+  String get eventStarterSportsDay => 'Sporttag';
 
   @override
   String get shoppingSearchClear => 'Leeren und schliessen';

@@ -44,7 +44,7 @@ Tap **New event**. It starts on the day the calendar is showing (today, while to
 
 First you see tiles, so you don't have to type everything from scratch:
 
-- **Templates**: **Cleaner**, **Sports event**, **Doctor's appointment**, **Guests for dinner**, **Day out**, **Children's party**, **Performance**, **Holiday / trip** and **Birthday** (all day, yearly); what you use often comes first and the yearly ones last. **Cleaner** is the only weekly template: it repeats every week on the day you choose, at 09:00 for three hours, with a broom as its picture, for the person who enters it. Each fills in the title, picture, time, length and people. **Start blank** opens the empty editor at the next full hour.
+- **Templates**: **Cleaner**, **Sports event**, **Doctor's appointment**, **Guests for dinner**, **Day out**, **Children's party**, **Performance**, **Holiday / trip** and **Birthday** (all day, yearly); what you use often comes first and the yearly ones last. **Cleaner** is the only weekly template: it repeats every week on the day you choose, at 09:00 for three hours, with a broom as its picture, for the person who enters it. Each fills in the title, picture, time, length and people. A family with a child also sees a section of its own, **School**: **Parents’ evening**, **Parent–teacher meeting**, **School trip**, **Test**, **School fair** and **Sports day**. **Start blank** opens the empty editor at the next full hour.
 - **Your templates**: the ones you saved yourselves. In the editor, tap **Save as template** at the top; it keeps the title, picture, time, length, people, location and notes, not the date and not the repeat.
 - **Often in your family**: events you have entered at least three times, such as "Grandma & Grandpa visit". WuselWall only counts your own events on your own server; nothing leaves it. Under **⋮** you choose **Keep as template** or **Don't suggest again**.
 
@@ -58,7 +58,7 @@ You can:
 
 - enter a **Title**, a **Location** and **Notes**. While you type, the title and the location propose what you entered before; a tap takes the proposal over (for a title along with its location and picture, where those are still empty)
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
-- make it **All day**, or set **Starts** and **Ends**
+- make it **All day**, or set **Starts** and **Ends**. Everywhere in the app you set a time with two wheels, one for the hour and one for the minutes in steps of five; **Every minute** shows all of them. With a keyboard you simply type the time, such as "1430"
 - pick people under **Who**. If nobody is picked, the event is for the whole family
 - switch **Show on the kitchen display** on or off right below. A line says whether the event will show on the kitchen display and changes as you pick people: on their own, only events for the whole family go there. What new events do by default is set under [Settings → Calendar & school](/en/settings/household)
 - tick **Not sure yet** if it is still unclear whether it happens

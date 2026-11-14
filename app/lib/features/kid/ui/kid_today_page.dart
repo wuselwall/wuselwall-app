@@ -1102,6 +1102,8 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
               ),
               child: Text(
                 member.initial,
+                // A fixed circle keeps its letter's size (see MemberAvatar).
+                textScaler: TextScaler.noScaling,
                 style: TextStyle(
                   fontFamily: Tokens.fontUi,
                   fontSize: 26,

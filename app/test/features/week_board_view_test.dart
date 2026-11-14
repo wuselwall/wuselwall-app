@@ -1347,5 +1347,111 @@ void main() {
         }
       }
     });
+
+    // The largest iOS text size (accessibility XXXL, 53/17 = 312 %) on a portrait
+    // tablet, as the native tablet-large qualification profile draws the wall: the
+    // 1280-wide canvas is 1857 tall there, so the bands grow to their text instead
+    // of overflowing (t_e89fea70).
+    for (final locale in const [
+      Locale('de'),
+      Locale('en'),
+      Locale('fr'),
+      Locale('es'),
+    ]) {
+      for (final shade in [Shade.light, Shade.dark]) {
+        for (final fixture in ['reference', 'crowded']) {
+          testWidgets('834x1210, ${locale.languageCode}, ${shade.name}, 312%: '
+              '$fixture lays out without overflow or cut text', (t) async {
+            const scale = 53 / 17;
+            await _pumpBoard(
+              t,
+              snapshot: fixture == 'reference'
+                  ? _snapshot
+                  : BoardSnapshot(
+                      board: WeekBoard.fromJson(bigHouseholdJson()),
+                      fetchedAt: DateTime(2026, 10, 14, 14, 4),
+                    ),
+              size: const Size(834, 1210),
+              shade: shade,
+              locale: locale,
+              textScale: scale,
+            );
+            expect(t.takeException(), isNull);
+            expect(find.byType(DayHeaderRow), findsOneWidget);
+            expect(find.byType(TermineRows), findsOneWidget);
+            expect(find.byType(MealRow), findsOneWidget);
+            // Both view switches stay whole and on the board.
+            for (final toggle in [BoardNextWeekToggle, BoardAllEventsToggle]) {
+              final rect = t.getRect(find.byType(toggle));
+              expect(rect.left, greaterThanOrEqualTo(0), reason: '$toggle');
+              expect(rect.right, lessThanOrEqualTo(834.01), reason: '$toggle');
+            }
+            final targets = <Rect>[];
+            for (final element in find.byType(BoardTap).evaluate()) {
+              final box = element.renderObject! as RenderBox;
+              final rect = MatrixUtils.transformRect(
+                box.getTransformTo(null),
+                Offset.zero & box.size,
+              );
+              final label = (element.widget as BoardTap).label;
+              // On the canvas the targets keep the kiosk's 56 px; the canvas is
+              // scaled to the 834-wide panel, so measure them in canvas units.
+              expect(box.size.width, greaterThanOrEqualTo(56), reason: label);
+              expect(box.size.height, greaterThanOrEqualTo(56), reason: label);
+              expect(rect.bottom, lessThanOrEqualTo(1210.01), reason: label);
+              for (final previous in targets) {
+                expect(
+                  rect.overlaps(previous.deflate(0.01)),
+                  isFalse,
+                  reason: '$label: $rect overlaps $previous',
+                );
+              }
+              targets.add(rect);
+            }
+            // No line is taller than the box it was given: a band that does not
+            // grow with the text cuts it at the top or bottom without any error.
+            for (final element in find.byType(RichText).evaluate()) {
+              final paragraph = element.renderObject! as RenderParagraph;
+              final text = paragraph.text.toPlainText();
+              if (text.trim().isEmpty) continue;
+              expect(
+                paragraph.size.height,
+                greaterThanOrEqualTo(
+                  paragraph.getMinIntrinsicHeight(paragraph.size.width) - 0.5,
+                ),
+                reason: '"$text" is cut vertically',
+              );
+              // Nor does a clip (ClipFit) cut it at the top or bottom.
+              final bounds = MatrixUtils.transformRect(
+                paragraph.getTransformTo(null),
+                Offset.zero & paragraph.size,
+              );
+              for (
+                RenderObject? parent = paragraph.parent;
+                parent != null;
+                parent = parent.parent
+              ) {
+                if (parent is RenderClipRect) {
+                  final clip = MatrixUtils.transformRect(
+                    parent.getTransformTo(null),
+                    Offset.zero & parent.size,
+                  );
+                  expect(
+                    bounds.top,
+                    greaterThanOrEqualTo(clip.top - 0.1),
+                    reason: '"$text" clipped at top',
+                  );
+                  expect(
+                    bounds.bottom,
+                    lessThanOrEqualTo(clip.bottom + 0.1),
+                    reason: '"$text" clipped at bottom',
+                  );
+                }
+              }
+            }
+          });
+        }
+      }
+    }
   });
 }

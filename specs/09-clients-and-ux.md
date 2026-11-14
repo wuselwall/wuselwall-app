@@ -496,7 +496,11 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
   - an event starting in N minutes — a local notification;
   - a reward redemption awaiting guardian approval — a notice on Today, the count on the
     Tasks tab and in the next morning summary ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15));
-  - a task verified and points credited — seen in the kid views the next time they open.
+  - a task verified and points credited — seen in the kid views the next time they open;
+  - another adult starts a shopping trip (2026-11-14, issue #242) — a notice on Today, and
+    while the app is running a banner (app in front) or a local notification (app out of
+    sight, personal phone) the moment it arrives; a closed app is not reached and shows the
+    notice when it is opened during the trip ([07, "Telling the others"](07-module-meals-shopping.md#telling-the-others-added-2026-11-14-issue-242)).
 
   A native push (APNs, FCM, through a relay the project would run) comes only if families
   miss these in practice.

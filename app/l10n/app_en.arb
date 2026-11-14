@@ -71,6 +71,30 @@
   "delete": "Delete",
   "yes": "Yes",
   "no": "No",
+  "timeWheelTitle": "Time",
+  "@timeWheelTitle": {
+    "description": "Heading of the sheet that asks for a time of day with an hour wheel and a minute wheel, where the field has no name of its own"
+  },
+  "timeWheelHour": "Hour",
+  "@timeWheelHour": {
+    "description": "Screen-reader name of the hour wheel"
+  },
+  "timeWheelMinute": "Minute",
+  "@timeWheelMinute": {
+    "description": "Screen-reader name of the minute wheel"
+  },
+  "timeWheelPeriod": "AM or PM",
+  "@timeWheelPeriod": {
+    "description": "Screen-reader name of the wheel that chooses before or after noon on a 12-hour clock"
+  },
+  "timeWheelExact": "Every minute",
+  "@timeWheelExact": {
+    "description": "Chip under the time wheels: on, the minute wheel shows every minute instead of steps of five"
+  },
+  "timeWheelDone": "Done",
+  "@timeWheelDone": {
+    "description": "Button that takes the time chosen on the wheels"
+  },
   "shoppingTitle": "Shopping list",
   "shoppingAddHint": "Add item",
   "shoppingQuantityHint": "Quantity",
@@ -1694,6 +1718,44 @@
     }
   },
   "todayNoticeDismiss": "Got it",
+  "todayNoticeShopping": "{name} is shopping now ({list}). Need anything?",
+  "@todayNoticeShopping": {
+    "description": "Notice on Today while another adult is on a shopping trip; name is the shopper, list the shopping list's name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeShoppingList": "Open the list",
+  "@todayNoticeShoppingList": {
+    "description": "Button on the shopping notice that opens the shopping list the trip is for"
+  },
+  "shoppingStartNotifyTitle": "{name} is going shopping",
+  "@shoppingStartNotifyTitle": {
+    "description": "Title of the phone notification when another adult starts a shopping trip",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingStartNotifyBody": "Need anything? Put it on the list “{list}”.",
+  "@shoppingStartNotifyBody": {
+    "description": "Body of the phone notification when another adult starts a shopping trip; list is the shopping list's name",
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingStartTold": "The other adults can see that you are shopping.",
+  "@shoppingStartTold": {
+    "description": "Short message to the shopper after tapping Go shopping: the other adults of the family were told"
+  },
   "todayNoticeMembers": "Members",
   "todayNoticeDevices": "Devices",
   "todayApprovalsTitle": "Waiting for your approval",
@@ -2686,6 +2748,14 @@
   },
   "settingNotifyPackingTitle": "Packing reminder the evening before",
   "settingNotifyPackingHelp": "At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.",
+  "settingNotifyShoppingStartTitle": "When somebody goes shopping",
+  "@settingNotifyShoppingStartTitle": {
+    "description": "Title of the per-person setting notify.shopping_start"
+  },
+  "settingNotifyShoppingStartHelp": "When another adult taps Go shopping, you see it on Today, and as a notification while the app is running, so you can still put something on the list. A closed app cannot be reached.",
+  "@settingNotifyShoppingStartHelp": {
+    "description": "Help text of the per-person setting notify.shopping_start"
+  },
   "appearanceTitle": "Appearance",
   "appearanceSystem": "Automatic",
   "appearanceSystemHelp": "Light or dark, as set on this device",
@@ -3842,6 +3912,10 @@
     "description": "Section of the new-event page: the built-in templates."
   },
   "eventTemplatesBuiltInMore": "More templates",
+  "eventTemplatesSchool": "School",
+  "@eventTemplatesSchool": {
+    "description": "Section of the new-event page: school templates, shown only to a family with a child."
+  },
   "eventTemplateBlank": "Start blank",
   "@eventTemplateBlank": {
     "description": "The tile that opens the empty event editor."
@@ -3859,6 +3933,30 @@
   "eventStarterDayOut": "Day out",
   "eventStarterHoliday": "Holiday / trip",
   "eventStarterCleaning": "Cleaner",
+  "eventStarterParentsEvening": "Parents’ evening",
+  "@eventStarterParentsEvening": {
+    "description": "Built-in school event template (specs/28): the evening a school invites the parents; also the title it fills in."
+  },
+  "eventStarterParentTeacherTalk": "Parent–teacher meeting",
+  "@eventStarterParentTeacherTalk": {
+    "description": "Built-in school event template (specs/28): a talk with a child's teacher; also the title it fills in."
+  },
+  "eventStarterSchoolTrip": "School trip",
+  "@eventStarterSchoolTrip": {
+    "description": "Built-in school event template (specs/28): a class outing for the children; also the title it fills in."
+  },
+  "eventStarterSchoolTest": "Test",
+  "@eventStarterSchoolTest": {
+    "description": "Built-in school event template (specs/28): a test or exam at school; also the title it fills in."
+  },
+  "eventStarterSchoolParty": "School fair",
+  "@eventStarterSchoolParty": {
+    "description": "Built-in school event template (specs/28): a school fair or party; also the title it fills in."
+  },
+  "eventStarterSportsDay": "Sports day",
+  "@eventStarterSportsDay": {
+    "description": "Built-in school event template (specs/28): the school's sports day; also the title it fills in."
+  },
   "eventTemplateAllDay": "All day",
   "@eventTemplateAllDay": {
     "description": "Part of a template tile's line: an all-day event."

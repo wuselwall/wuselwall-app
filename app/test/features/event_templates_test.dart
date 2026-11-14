@@ -8,6 +8,7 @@ import 'package:wuselwall/features/calendar/ui/editor/event_draft.dart';
 import 'package:wuselwall/features/calendar/ui/editor/recurrence.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_template_page.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 
 import '../support/fake_event_templates.dart';
@@ -45,6 +46,7 @@ Future<FakeCalendarRepository> _calendarTab(
   bool supported = true,
   Locale locale = const Locale('de'),
   Size? size,
+  List<Member>? members,
 }) async {
   final cal = FakeCalendarRepository();
   await pumpApp(
@@ -52,7 +54,7 @@ Future<FakeCalendarRepository> _calendarTab(
     size: size ?? const Size(1000, 1600),
     overrides: [
       ...baseOverrides(
-        identity: FakeIdentityRepository(current: device()),
+        identity: FakeIdentityRepository(current: device(), members: members),
         now: _todayMorning(),
       ),
       if (!supported)
@@ -115,8 +117,121 @@ void main() {
     });
 
     test('what a family enters often comes first, the yearly last', () {
-      expect(EventStarter.values.first, EventStarter.cleaning);
-      expect(EventStarter.values.last, EventStarter.birthday);
+      expect(EventStarter.general.first, EventStarter.cleaning);
+      expect(EventStarter.general.last, EventStarter.birthday);
+      expect(EventStarter.general, hasLength(9));
+    });
+
+    test('the school ones come after the general ones, in their order', () {
+      expect(EventStarter.schoolOnes, [
+        EventStarter.parentsEvening,
+        EventStarter.parentTeacherTalk,
+        EventStarter.schoolTrip,
+        EventStarter.schoolTest,
+        EventStarter.schoolParty,
+        EventStarter.sportsDay,
+      ]);
+      expect(EventStarter.values.last, EventStarter.sportsDay);
+      expect(
+        EventStarter.values.take(9).toList(),
+        EventStarter.general,
+        reason: 'the nine general ones keep their order',
+      );
+      expect([
+        for (final s in EventStarter.general) s.school,
+      ], everyElement(false));
+    });
+
+    // What the six school templates start as (specs/28 "School").
+    for (final (starter, icon, start, end, attendees, countdown) in [
+      (
+        EventStarter.parentsEvening,
+        null,
+        DateTime(2026, 10, 14, 19, 30),
+        DateTime(2026, 10, 14, 21, 30),
+        {'p-1'},
+        false,
+      ),
+      (
+        EventStarter.parentTeacherTalk,
+        null,
+        DateTime(2026, 10, 14, 16),
+        DateTime(2026, 10, 14, 16, 30),
+        {'p-1'},
+        false,
+      ),
+      (
+        EventStarter.schoolTrip,
+        'backpack',
+        DateTime(2026, 10, 14),
+        DateTime(2026, 10, 14),
+        {'p-3'},
+        true,
+      ),
+      (
+        EventStarter.schoolTest,
+        'book',
+        DateTime(2026, 10, 14, 8),
+        DateTime(2026, 10, 14, 9),
+        {'p-3'},
+        false,
+      ),
+      (
+        EventStarter.schoolParty,
+        'balloon',
+        DateTime(2026, 10, 14, 16),
+        DateTime(2026, 10, 14, 19),
+        {'p-1', 'p-2', 'p-3'},
+        false,
+      ),
+      (
+        EventStarter.sportsDay,
+        null,
+        DateTime(2026, 10, 14),
+        DateTime(2026, 10, 14),
+        {'p-3'},
+        false,
+      ),
+    ]) {
+      test('${starter.name} starts as its table row says', () {
+        expect(starter.school, isTrue);
+        final t = starter.template(title: 'x', members: _family, actor: 'p-1');
+        final draft = EventDraft.fromTemplate(
+          t,
+          day: _day,
+          defaultHour: 10,
+          activeMembers: {'p-1', 'p-2', 'p-3'},
+        );
+        expect(draft.iconKey, icon);
+        expect(draft.start, start);
+        expect(draft.end, end);
+        expect(draft.attendeeIds, attendees);
+        expect(draft.countdown, countdown);
+        expect(draft.recurrence.kind, RepeatKind.never);
+      });
+    }
+
+    test('the school ones are all day or timed as listed', () {
+      expect(EventStarter.schoolTrip.allDay, isTrue);
+      expect(EventStarter.sportsDay.allDay, isTrue);
+      expect(EventStarter.parentsEvening.allDay, isFalse);
+      expect(EventStarter.parentsEvening.minutes, 120);
+      expect(EventStarter.parentTeacherTalk.minutes, 30);
+      expect(EventStarter.schoolTest.minutes, 60);
+      expect(EventStarter.schoolParty.minutes, 180);
+    });
+
+    test('a school trip invites the actor when the family has no child', () {
+      expect(
+        EventStarter.schoolTrip
+            .template(
+              title: 'x',
+              members: _family.take(2).toList(),
+              actor: 'p-1',
+            )
+            .attendeeIds,
+        {'p-1'},
+      );
     });
 
     test('guests for dinner start at 18:30 and last three hours', () {
@@ -547,6 +662,123 @@ void main() {
       );
     });
 
+    testWidgets('a family with a child sees the school section last', (
+      t,
+    ) async {
+      await _calendarTab(t);
+      await _newEvent(t);
+      final heading = find.text(_de.eventTemplatesSchool);
+      await t.ensureVisible(heading);
+      expect(heading, findsOneWidget);
+      for (final s in EventStarter.schoolOnes) {
+        expect(
+          find.byKey(ValueKey('event-template-builtin-${s.name}')),
+          findsOneWidget,
+        );
+      }
+      // After the built-in section: below its last tile.
+      expect(
+        t.getTopLeft(heading).dy,
+        greaterThan(
+          t
+              .getBottomLeft(
+                find.byKey(const ValueKey('event-template-builtin-birthday')),
+              )
+              .dy,
+        ),
+      );
+      // The tile opens the editor with the school trip filled in.
+      await _tap(
+        t,
+        find.byKey(const ValueKey('event-template-builtin-schoolTrip')),
+      );
+      expect(
+        find.widgetWithText(TextField, _de.eventStarterSchoolTrip),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('the general section has no school tiles', (t) async {
+      await _calendarTab(t);
+      await _newEvent(t);
+      for (final s in EventStarter.general) {
+        expect(
+          find.byKey(
+            ValueKey('event-template-builtin-${s.name}'),
+            skipOffstage: false,
+          ),
+          findsOneWidget,
+        );
+      }
+      // The school section holds exactly the school tiles.
+      final builtIn = find.byKey(
+        const ValueKey('event-template-builtin-birthday'),
+        skipOffstage: false,
+      );
+      final heading = find.text(_de.eventTemplatesSchool, skipOffstage: false);
+      for (final s in EventStarter.schoolOnes) {
+        final tile = find.byKey(
+          ValueKey('event-template-builtin-${s.name}'),
+          skipOffstage: false,
+        );
+        expect(
+          t.getTopLeft(tile).dy,
+          greaterThan(t.getTopLeft(heading).dy),
+          reason: '${s.name} sits under the school heading',
+        );
+        expect(t.getTopLeft(tile).dy, greaterThan(t.getBottomLeft(builtIn).dy));
+      }
+    });
+
+    testWidgets('a family without a child sees no school section', (t) async {
+      await _calendarTab(t, members: [testMembers.first]);
+      await _newEvent(t);
+      expect(find.text(_de.eventTemplatesBuiltIn), findsOneWidget);
+      expect(
+        find.text(_de.eventTemplatesSchool, skipOffstage: false),
+        findsNothing,
+      );
+      for (final s in EventStarter.schoolOnes) {
+        expect(
+          find.byKey(
+            ValueKey('event-template-builtin-${s.name}'),
+            skipOffstage: false,
+          ),
+          findsNothing,
+        );
+      }
+      expect(
+        find.byKey(
+          const ValueKey('event-template-builtin-birthday'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('a child who is no longer active does not count', (t) async {
+      await _calendarTab(
+        t,
+        members: [
+          testMembers.first,
+          Member(
+            id: kidId,
+            displayName: 'Anna',
+            color: testMembers.last.color,
+            role: Role.member,
+            active: false,
+            isChild: true,
+            hasAccount: false,
+          ),
+        ],
+      );
+      await _newEvent(t);
+      expect(
+        find.text(_de.eventTemplatesSchool, skipOffstage: false),
+        findsNothing,
+      );
+    });
+
     for (final lang in ['en', 'fr', 'es']) {
       testWidgets('the templates have their own names in $lang', (t) async {
         final l10n = lookupAppLocalizations(Locale(lang));
@@ -555,6 +787,20 @@ void main() {
         expect(find.text(l10n.eventStarterBirthday), findsOneWidget);
         expect(find.text(l10n.eventTemplateBlank), findsOneWidget);
         expect(l10n.eventStarterBirthday, isNot(_de.eventStarterBirthday));
+        for (final (mine, german) in [
+          (l10n.eventTemplatesSchool, _de.eventTemplatesSchool),
+          (l10n.eventStarterParentsEvening, _de.eventStarterParentsEvening),
+          (
+            l10n.eventStarterParentTeacherTalk,
+            _de.eventStarterParentTeacherTalk,
+          ),
+          (l10n.eventStarterSchoolTrip, _de.eventStarterSchoolTrip),
+          (l10n.eventStarterSchoolTest, _de.eventStarterSchoolTest),
+          (l10n.eventStarterSchoolParty, _de.eventStarterSchoolParty),
+          (l10n.eventStarterSportsDay, _de.eventStarterSportsDay),
+        ]) {
+          expect(mine, isNot(german));
+        }
         expect(t.takeException(), isNull);
       });
     }
