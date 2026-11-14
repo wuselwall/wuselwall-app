@@ -1,10 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/suggest.dart';
 
 /// A text field that proposes what the family entered before, in a small list under
 /// it, while somebody types. A tap, or the arrow keys and Enter, takes one over.
+/// Enter alone (the keyboard's Done) never does: what was typed stays, so a new title
+/// that begins like an old one is not replaced by it.
 ///
 /// It is an ordinary [TextField] around [controller]; with no [entries] (or an empty
 /// field) nothing is proposed and it behaves like the plain field.
@@ -47,6 +51,10 @@ class SuggestField extends StatefulWidget {
 class _SuggestFieldState extends State<SuggestField> {
   FocusNode? _ownFocus;
 
+  /// Whether the person moved to a proposal with the arrow keys since the text last
+  /// changed. Only then is a row highlighted, and only then does Enter take it.
+  final _chosen = ValueNotifier<bool>(false);
+
   FocusNode get _focus => widget.focusNode ?? (_ownFocus ??= FocusNode());
 
   @override
@@ -63,7 +71,30 @@ class _SuggestFieldState extends State<SuggestField> {
   @override
   void dispose() {
     _ownFocus?.dispose();
+    _chosen.dispose();
     super.dispose();
+  }
+
+  void _changed(String text) {
+    _chosen.value = false;
+    widget.onChanged?.call(text);
+  }
+
+  /// The first arrow key lands on the first proposal (RawAutocomplete already stands
+  /// there, unseen); the following ones move as it moves them.
+  KeyEventResult _onKey(FocusNode node, KeyEvent event) {
+    if (event is KeyUpEvent) return KeyEventResult.ignored;
+    final key = event.logicalKey;
+    if (key != LogicalKeyboardKey.arrowDown &&
+        key != LogicalKeyboardKey.arrowUp) {
+      return KeyEventResult.ignored;
+    }
+    if (_chosen.value ||
+        rankSuggestions(widget.controller.text, widget.entries).isEmpty) {
+      return KeyEventResult.ignored;
+    }
+    _chosen.value = true;
+    return KeyEventResult.handled;
   }
 
   void _picked(TextSuggestion option) {
@@ -72,6 +103,7 @@ class _SuggestFieldState extends State<SuggestField> {
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
     );
+    _chosen.value = false;
     widget.onChanged?.call(text);
     widget.onPicked?.call(option);
   }
@@ -85,28 +117,45 @@ class _SuggestFieldState extends State<SuggestField> {
       optionsBuilder: (value) => rankSuggestions(value.text, widget.entries),
       onSelected: _picked,
       fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) =>
-          TextField(
-            controller: controller,
-            focusNode: focusNode,
-            decoration: widget.decoration,
-            textCapitalization: widget.textCapitalization,
-            maxLength: widget.maxLength,
-            autofocus: widget.autofocus,
-            onChanged: widget.onChanged,
-            onSubmitted: (_) => onFieldSubmitted(),
+          Focus(
+            canRequestFocus: false,
+            skipTraversal: true,
+            onKeyEvent: _onKey,
+            child: TextField(
+              controller: controller,
+              focusNode: focusNode,
+              decoration: widget.decoration,
+              textCapitalization: widget.textCapitalization,
+              maxLength: widget.maxLength,
+              autofocus: widget.autofocus,
+              onChanged: _changed,
+              onSubmitted: (_) {
+                if (_chosen.value) onFieldSubmitted();
+              },
+            ),
           ),
-      optionsViewBuilder: (context, onSelected, options) =>
-          _SuggestOptions(options: options.toList(), onSelected: onSelected),
+      optionsViewBuilder: (context, onSelected, options) => _SuggestOptions(
+        options: options.toList(),
+        onSelected: onSelected,
+        chosen: _chosen,
+      ),
     );
   }
 }
 
 /// The card under the field. RawAutocomplete sizes it to the field's width.
 class _SuggestOptions extends StatefulWidget {
-  const _SuggestOptions({required this.options, required this.onSelected});
+  const _SuggestOptions({
+    required this.options,
+    required this.onSelected,
+    required this.chosen,
+  });
 
   final List<TextSuggestion> options;
   final AutocompleteOnSelected<TextSuggestion> onSelected;
+
+  /// Whether a row is highlighted at all (see [_SuggestFieldState._chosen]).
+  final ValueListenable<bool> chosen;
 
   @override
   State<_SuggestOptions> createState() => _SuggestOptionsState();
@@ -140,7 +189,14 @@ class _SuggestOptionsState extends State<_SuggestOptions> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final highlighted = AutocompleteHighlightedOption.of(context);
+    final at = AutocompleteHighlightedOption.of(context);
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.chosen,
+      builder: (context, chosen, _) => _list(theme, chosen ? at : -1),
+    );
+  }
+
+  Widget _list(ThemeData theme, int highlighted) {
     _follow(highlighted);
     return Align(
       alignment: AlignmentDirectional.topStart,
@@ -148,8 +204,14 @@ class _SuggestOptionsState extends State<_SuggestOptions> {
         container: true,
         label: context.l10n.suggestFieldOptions,
         child: Material(
-          elevation: 4,
+          // A menu over the form: a line and a soft shadow set it off (specs/17).
+          elevation: 3,
           color: theme.colorScheme.surface,
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: theme.colorScheme.outlineVariant),
+          ),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 240),
             child: ListView.builder(

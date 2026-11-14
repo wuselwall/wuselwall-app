@@ -88,7 +88,9 @@ its own history) that fill in the editor; what is saved is an ordinary event
 
 **Proposals while typing** (*added 2026-11-14, issue #239*). While somebody types the title or
 the place of an event, a short list under the field proposes what the family entered
-before; a tap, or the arrow keys and Enter, takes one over. Up to five proposals: the
+before; a tap, or the arrow keys and Enter, takes one over. Enter alone (the keyboard's
+Done) keeps what was typed, so a new title that begins like an old one is never replaced by
+it. Up to five proposals: the
 entries that start with what is typed come first, then the ones with a word that does
 (case, umlauts and accents do not matter), each group by how often the family used it, then
 how recently, then alphabetically. An entry equal to the typed text is not proposed. A picked

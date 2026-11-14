@@ -153,7 +153,7 @@ void main() {
     expect(find.text('t'), findsOneWidget);
   });
 
-  testWidgets('arrow down and Enter pick the highlighted entry', (t) async {
+  testWidgets('arrow down and Enter pick the first entry', (t) async {
     final picked = <TextSuggestion>[];
     await _pump(t, _Host(picked: picked));
     await _type(t, 't');
@@ -163,17 +163,31 @@ void main() {
     await t.testTextInput.receiveAction(TextInputAction.done);
     await t.pumpAndSettle();
 
-    // The first entry is highlighted already; one step down is the second.
     final text = t
         .widget<TextField>(find.widgetWithText(TextField, 'Titel'))
         .controller!
         .text;
-    expect(text, 'Tennis');
+    expect(text, 'Turnen');
+    expect(picked.single.text, 'Turnen');
+  });
+
+  testWidgets('a second arrow down moves to the second entry', (t) async {
+    final picked = <TextSuggestion>[];
+    await _pump(t, _Host(picked: picked));
+    await _type(t, 't');
+
+    await t.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await t.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await t.pumpAndSettle();
+    await t.testTextInput.receiveAction(TextInputAction.done);
+    await t.pumpAndSettle();
+
     expect(picked.single.text, 'Tennis');
   });
 
-  testWidgets('Enter alone picks the first entry', (t) async {
-    await _pump(t, const _Host());
+  testWidgets('Enter alone keeps what was typed', (t) async {
+    final picked = <TextSuggestion>[];
+    await _pump(t, _Host(picked: picked));
     await _type(t, 't');
     await t.testTextInput.receiveAction(TextInputAction.done);
     await t.pumpAndSettle();
@@ -182,8 +196,23 @@ void main() {
           .widget<TextField>(find.widgetWithText(TextField, 'Titel'))
           .controller!
           .text,
-      'Turnen',
+      't',
     );
+    expect(picked, isEmpty);
+  });
+
+  testWidgets('typing on after an arrow key forgets the highlighted entry', (
+    t,
+  ) async {
+    final picked = <TextSuggestion>[];
+    await _pump(t, _Host(picked: picked));
+    await _type(t, 't');
+    await t.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await t.pumpAndSettle();
+    await _type(t, 'te');
+    await t.testTextInput.receiveAction(TextInputAction.done);
+    await t.pumpAndSettle();
+    expect(picked, isEmpty);
   });
 
   testWidgets('the options vanish when the field loses focus', (t) async {
