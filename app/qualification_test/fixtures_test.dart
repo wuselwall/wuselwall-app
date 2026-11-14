@@ -12,6 +12,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
+import 'package:wuselwall/l10n/generated/app_localizations.dart';
 
 import '../qualification/fixture.dart';
 import '../qualification/inventory.g.dart';
@@ -87,6 +88,28 @@ void main() {
               findsOneWidget,
             );
           } else {
+            if (state['id'] == 'event-import') {
+              expect(
+                find.byKey(const ValueKey('import-event-preview')),
+                findsOneWidget,
+              );
+              expect(
+                find.byKey(const ValueKey('import-event-save')),
+                findsOneWidget,
+              );
+            } else if (state['id'] == 'event-import-refused') {
+              // The refusal, not the parents-only note or a preview.
+              expect(
+                find.text(
+                  lookupAppLocalizations(Locale(locale)).eventImportSeveral,
+                ),
+                findsOneWidget,
+              );
+              expect(
+                find.byKey(const ValueKey('import-event-preview')),
+                findsNothing,
+              );
+            }
             expect(
               find.byType(CircularProgressIndicator),
               findsNothing,

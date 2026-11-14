@@ -5,6 +5,7 @@ import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_template_page.dart';
+import 'package:wuselwall/features/calendar/ui/import_event_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/baseline_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendar_form_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.dart';
@@ -70,6 +71,7 @@ bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'FamilyPage' => widget is FamilyPage,
   'FeedTokensPage' => widget is FeedTokensPage,
   'FirstRunPage' => widget is FirstRunPage,
+  'ImportEventPage' => widget is ImportEventPage,
   'InviteCodePage' => widget is InviteCodePage,
   'InvitePendingPage' => widget is InvitePendingPage,
   'JoinInvitePage' => widget is JoinInvitePage,
@@ -135,6 +137,8 @@ const qualificationFixtureRoutes = <String, String>{
   'event-templates': '/calendar/new',
   'event-create': '/calendar/new',
   'event-edit': '/calendar/edit',
+  'event-import': '/calendar/import',
+  'event-import-refused': '/calendar/import',
   'recipe-create': '/meals/recipes/edit',
   'recipe-edit': '/meals/recipes/edit',
   'recipe-view': '/meals/recipes/view',
