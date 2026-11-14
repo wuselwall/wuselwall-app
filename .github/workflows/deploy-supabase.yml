@@ -99,9 +99,12 @@ jobs:
           # config.toml's env() values are for local stacks; the example's placeholders satisfy
           # the parser and are never used by the hosted project.
           cp supabase/.env.example supabase/.env
-          npx supabase link --project-ref "$PROJECT" --password "$SUPABASE_DB_PASSWORD"
+          # Supabase CLI 3: the database password comes from SUPABASE_DB_PASSWORD (this job's
+          # env; `link --password` is ignored), a command reaches the hosted project only with
+          # --remote (a bare `db push` looks for a local stack), and every change to it needs --yes.
+          npx supabase link --project-ref "$PROJECT"
           # Never --include-seed: the seed is development data.
-          npx supabase db push --password "$SUPABASE_DB_PASSWORD" --yes
+          npx supabase db push --remote --yes
 
       - name: Data API
         run: |
@@ -140,9 +143,9 @@ jobs:
               "SCW_PROJECT_ID=$SCW_PROJECT_ID" "SCW_REGION=${SCW_REGION:-fr-par}" \
               "MAIL_FROM=$MAIL_FROM" "MAIL_FROM_NAME=${MAIL_FROM_NAME:-WuselWall}"
           fi
-          npx supabase secrets set --project-ref "$PROJECT" "$@"
+          npx supabase secrets set --remote="$PROJECT" --yes "$@"
           # verify_jwt per function comes from config.toml ([functions.*]).
-          npx supabase functions deploy --project-ref "$PROJECT" --use-api
+          npx supabase functions deploy --remote="$PROJECT" --use-api --yes
 
       - name: Auth settings
         # Sign-up on, the access-token hook, TOTP, the compose overlay's limits, and mail
