@@ -6,6 +6,7 @@ import { cases, checkInventory, root } from '../matrix.mjs';
 import { auditWithScrollCheckpoints, runAxe } from './scroll-audit.mjs';
 
 const require = createRequire(import.meta.url);
+const axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 checkInventory();
 const capture = process.env.QUALIFY_MODE === 'capture';
 if (!['capture', 'compare'].includes(process.env.QUALIFY_MODE || 'compare')) throw new Error('QUALIFY_MODE must be capture or compare');
@@ -54,7 +55,10 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
       await expect.soft(page).toHaveScreenshot(`${sample.caseId}.png`);
       expect.soft(semantics).toMatchSnapshot(`${sample.caseId}-aria.yml`);
     }
-    await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
+    // The app's Content-Security-Policy allows no inline script, so a script tag with axe's
+    // source is refused. Evaluating the source over the debugging protocol is not a script
+    // the page loads: the policy stays as shipped and is not bypassed for the page itself.
+    await page.evaluate(axeSource);
     const audit = await runAxe(page);
     const scrollAudit = await auditWithScrollCheckpoints(page, audit);
     await info.attach('axe-report', { body: JSON.stringify({ ...audit,
