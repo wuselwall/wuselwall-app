@@ -95,8 +95,12 @@ jobs:
         with: { flutter-version-file: app/pubspec.yaml, cache: false }
       - run: flutter pub get --enforce-lockfile
         working-directory: app
+      # The web build's font fallback shards would be cached in ~/.cache, which is not the
+      # job's to write on the self-hosted runner; they are still checked against the lock.
       - name: Build
         run: scripts/build-server-release.sh "${GITHUB_REF_NAME#server-v}"
+        env:
+          WW_FONT_FALLBACK_CACHE: ${{ runner.temp }}/font-fallback
       - name: Sign
         env:
           SERVER_RELEASE_MINISIGN_KEY: ${{ secrets.SERVER_RELEASE_MINISIGN_KEY }}
