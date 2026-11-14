@@ -595,7 +595,8 @@ class _MemberLine extends StatelessWidget {
             radius: board ? 28 : 20,
             backgroundColor: colors.ink,
             foregroundColor: colors.onInk,
-            child: Text(member.initial),
+            // A fixed circle keeps its letter's size (see MemberAvatar).
+            child: Text(member.initial, textScaler: TextScaler.noScaling),
           ),
           const SizedBox(width: Tokens.space3),
           Expanded(

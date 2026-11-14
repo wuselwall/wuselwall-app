@@ -104,6 +104,14 @@ diagnostic. The controls in
 reproduces the SDK misattribution and is proven exact, that two backgrounds and translucent text
 are decided by their worse and composited colours, and that a gradient, an opacity and an
 overflowing fade stay undecided.
+Three more rules keep the audit to what is really painted. Only the part of a text that its
+ancestors' rectangular clips leave on the screen is measured and compared with later-painted
+siblings, so the last line of a list under the bar below it is measured where it shows; text
+cut by a rounded or shaped clip stays undecided. Another text's solid ink inside the sample
+(a descender of the line above, a field's content under its floating label) leaves the
+sample unless the two inks touch. A flat colour on the blend line between the ink and a
+background that is nowhere more than two pixels thick is the edge of thin stems, not a
+second background. Each has a control that fails without it.
 Additional paint controls reproduce neutral overlays that remain on the same colour-blend
 line as the text. Such pixels alone cannot establish a proof: perspective transforms
 and intersecting later-painted siblings stay undecided. Foreground painters also stay
