@@ -22,13 +22,6 @@ updates:
     groups:
       tooling-minor-and-patch: { update-types: [minor, patch] }
 
-  - package-ecosystem: npm
-    directory: /website
-    schedule: { interval: weekly, day: monday }
-    cooldown: { default-days: 7 }
-    groups:
-      website-minor-and-patch: { update-types: [minor, patch] }
-
   - package-ecosystem: bundler
     directories: [/app/ios, /app/android]   # fastlane; one PR keeps both locks equal
     schedule: { interval: weekly, day: monday }
@@ -42,8 +35,3 @@ updates:
     cooldown: { default-days: 7 }
     groups:
       actions: { patterns: ["*"] }
-
-  - package-ecosystem: docker
-    directory: /website          # node base image, pinned by digest
-    schedule: { interval: weekly, day: monday }
-    cooldown: { default-days: 7 }
