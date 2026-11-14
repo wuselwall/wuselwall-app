@@ -198,6 +198,10 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, package-manager-cache: false }
       - run: npm ci --include=dev
+      # The runners share one browser cache, and `playwright install` in any other job
+      # deletes the browsers its own Playwright version does not use: a two-hour run lost
+      # its browser that way. This run keeps its browsers where only this runner looks.
+      - run: echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.qualification/ms-playwright" >> "$GITHUB_ENV"
       - run: npx playwright install --with-deps chromium
       - run: npm run qualify:pixel-controls
       - run: npm run qualify:scroll-controls
@@ -338,6 +342,10 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, package-manager-cache: false }
       - run: npm ci --include=dev
+      # The runners share one browser cache, and `playwright install` in any other job
+      # deletes the browsers its own Playwright version does not use: a two-hour run lost
+      # its browser that way. This run keeps its browsers where only this runner looks.
+      - run: echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.qualification/ms-playwright" >> "$GITHUB_ENV"
       - run: npx playwright install --with-deps chromium
       - run: flutter pub get --enforce-lockfile
         working-directory: app

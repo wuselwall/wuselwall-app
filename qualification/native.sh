@@ -32,6 +32,9 @@ if not isinstance(report, dict) or report.get('schemaVersion') != 1 or report.ge
 PY
 }
 mkdir -p "$output"
+# A runner that falls asleep stops answering the server and the job is lost: keep the machine
+# awake for as long as this script runs. A closed lid on battery still sleeps.
+caffeinate -dims -w $$ &
 platform=all
 if [[ $# -gt 0 ]]; then
   case "$1" in
