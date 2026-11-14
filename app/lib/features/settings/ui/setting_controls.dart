@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/time_wheel.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/region/ui/region_field.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
@@ -573,15 +574,12 @@ class _TimeButton extends StatelessWidget {
   }
 }
 
-/// Opens the time picker in 24-hour form and returns the chosen "HH:mm", or null.
+/// Opens the time wheels in 24-hour form and returns the chosen "HH:mm", or null.
 Future<String?> pickSettingTime(BuildContext context, String current) async {
-  final picked = await showTimePicker(
-    context: context,
-    initialTime: _parseTime(current),
-    builder: (context, child) => MediaQuery(
-      data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-      child: child!,
-    ),
+  final picked = await showTimeWheel(
+    context,
+    initial: _parseTime(current),
+    use24Hour: true,
   );
   if (picked == null) return null;
   return '${picked.hour.toString().padLeft(2, '0')}:'

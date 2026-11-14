@@ -53,7 +53,7 @@ Indiquez ensuite :
 
 - le **titre**, le **lieu** et les **notes** ;
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
-- toute la journée, ou les heures de début et de fin ;
+- toute la journée, ou les heures de début et de fin. Partout dans l’application, une heure se règle avec deux roues, l’une pour l’heure, l’autre pour les minutes par pas de cinq ; **Chaque minute** les affiche toutes. Au clavier, tapez simplement l’heure, par exemple « 1430 » ;
 - les personnes concernées, ou personne pour toute la famille ;
 - juste en dessous, l’affichage sur l’écran de la cuisine : une ligne indique si l’événement y apparaîtra et change dès que vous choisissez des personnes. Par défaut, seuls les événements de toute la famille y apparaissent ;
 - une éventuelle incertitude ;

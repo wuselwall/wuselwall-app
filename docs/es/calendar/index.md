@@ -53,7 +53,7 @@ Añade:
 
 - título, lugar y notas;
 - cita o presencia: trabajo, teletrabajo, viaje, ausencia, descanso o cuidado;
-- todo el día, o inicio y fin;
+- todo el día, o inicio y fin. En toda la aplicación, una hora se ajusta con dos ruedas, una para la hora y otra para los minutos de cinco en cinco; **Cada minuto** los muestra todos. Con un teclado basta con escribir la hora, por ejemplo «1430»;
 - personas, o ninguna para toda la familia;
 - justo debajo, si debe verse en la pantalla de la cocina: una línea indica si aparecerá allí y cambia en cuanto eliges personas. Por defecto solo aparecen los eventos de toda la familia;
 - si aún es incierto;
