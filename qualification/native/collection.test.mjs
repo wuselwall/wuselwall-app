@@ -50,11 +50,11 @@ test('the instrumentation counts by its own verdict, not by the exit status of a
   assert.equal(passed.status, 0, passed.stderr);
   // Both are outputs of `adb shell am instrument` that ended with exit status 0.
   const foreignWindow = await check('android-tablet', [
-    'INSTRUMENTATION_STATUS: stack=org.junit.ComparisonFailure: expected:<c[h.goomba.wuselwall]> but was:<c[om.android.systemui]>',
-    '\tat org.junit.Assert.assertEquals(Assert.java:117)', '', 'FAILURES!!!', 'Tests run: 1,  Failures: 1', '', 'INSTRUMENTATION_CODE: -1', ''].join('\n'));
+    'INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Active window of wall-de-light belongs to com.android.systemui, not to the app; windows: Viewing full screen (com.android.systemui, type 3, active, focused), WuselWall (ch.goomba.wuselwall, type 1)',
+    '\tat org.junit.Assert.fail(Assert.java:89)', '', 'FAILURES!!!', 'Tests run: 1,  Failures: 1', '', 'INSTRUMENTATION_CODE: -1', ''].join('\n'));
   assert.notEqual(foreignWindow.status, 0);
   assert.match(foreignWindow.stderr,
-    /^NATIVE INSTRUMENTATION FAILED android-tablet: org\.junit\.ComparisonFailure: expected:<c\[h\.goomba\.wuselwall\]> but was:<c\[om\.android\.systemui\]>$/m);
+    /^NATIVE INSTRUMENTATION FAILED android-tablet: java\.lang\.AssertionError: Active window of wall-de-light belongs to com\.android\.systemui, not to the app; windows: Viewing full screen \(com\.android\.systemui, type 3, active, focused\), WuselWall \(ch\.goomba\.wuselwall, type 1\)$/m);
   const crashed = await check('android-min-phone', 'INSTRUMENTATION_STATUS_CODE: 1\nINSTRUMENTATION_RESULT: shortMsg=Process crashed.\nINSTRUMENTATION_CODE: 0\n');
   assert.match(crashed.stderr, /^NATIVE INSTRUMENTATION FAILED android-min-phone: Process crashed\.$/m);
   const silent = await check('android-phone-large', 'NATIVE PHASE TIMEOUT android-instrumentation-phone-large after 1800s\n');

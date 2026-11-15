@@ -142,8 +142,8 @@ class QualificationAuditTest {
             val id = sample.getString("id")
             val root = automation.rootInActiveWindow ?: error("No Android accessibility window for $id")
             // The audit inspects the app's own window, never one that covers it.
-            assertEquals("Active window of $id is not the app's; windows: ${windows()}",
-                context.packageName, root.packageName.toString())
+            val owner = root.packageName?.toString()
+            if (owner != context.packageName) fail("Active window of $id belongs to $owner, not to the app; windows: ${windows()}")
             val issues = JSONArray()
             if (id == "detector-keyboard") {
                 val field = find(root, "native-keyboard-field") ?: error("Flutter text input is absent from Android semantics")

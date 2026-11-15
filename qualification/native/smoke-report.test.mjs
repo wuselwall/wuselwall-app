@@ -138,7 +138,7 @@ test('a complete report with a finding is told apart from a report that was neve
   await fs.writeFile(path.join(root, 'profiles.txt'), 'android-tablet: FAIL\nandroid-min-phone: PASS\n');
   await fs.mkdir(path.join(root, 'android-tablet'));
   await fs.writeFile(path.join(root, 'android-tablet/run.log'), [
-    'NATIVE INSTRUMENTATION FAILED android-tablet: org.junit.ComparisonFailure: Active window of wall-de-light is not the app\'s',
+    'NATIVE INSTRUMENTATION FAILED android-tablet: java.lang.AssertionError: Active window of wall-de-light belongs to com.android.systemui, not to the app',
     'NATIVE REPORT MISSING android-tablet: no audit report on the device'].join('\n'));
   await profileEvidence(root, 'android-min-phone', true, report => {
     const sample = report.results.find(result => result.id === 'shopping-de-light');
