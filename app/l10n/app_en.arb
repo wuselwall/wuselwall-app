@@ -4240,6 +4240,274 @@
   "settingsGroupShoppingTitle": "Shopping",
   "settingsGroupShoppingSubtitle": "Learned words",
   "settingsSectionLearnedWords": "Learned words",
+  "tripWindowsTitle": "Time windows",
+  "tripWindowsUnavailable": "Trips are not available here.",
+  "tripWindowsIntro": "When could we travel? These are the stretches when everyone who comes along is free.",
+  "tripWindowsLengthLabel": "Shortest stay",
+  "tripWindowsWhoLabel": "Who travels?",
+  "tripWindowsWhoHint": "Nobody selected means everyone.",
+  "tripWindowDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@tripWindowDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripWindowKindLongWeekend": "Long weekend",
+  "tripWindowHolidaysFallback": "Holidays",
+  "tripWindowLeave": "{count, plural, =0{No leave days needed} =1{1 leave day for the adults} other{{count} leave days for the adults}}",
+  "@tripWindowLeave": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripWindowPartialBefore": "{name} is free from {date} already",
+  "@tripWindowPartialBefore": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripWindowPartialAfter": "{name} is still free until {date}",
+  "@tripWindowPartialAfter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripWindowFree": "Nothing in the way",
+  "tripWindowConflicts": "In the way",
+  "tripWindowTake": "Take these dates",
+  "tripWindowTakeHelp": "Dates of the trip",
+  "tripWindowTaken": "The dates are in the trip now.",
+  "tripWindowWhere": "Where is it nice then?",
+  "tripWindowNewTrip": "New trip in this window",
+  "tripWindowNewTripTitle": "New trip",
+  "tripWindowNewTripLabel": "Name of the trip",
+  "tripWindowEmpty": "No free stretch found yet. School holidays come from the region and school settings, and dates can always be entered by hand on a trip.",
+  "tripWindowEmptyAction": "Region and school settings",
+  "tripDiscoverTitle": "Where to?",
+  "tripDiscoverUnavailable": "Trips are not available here.",
+  "tripDiscoverWhen": "Time away",
+  "tripDiscoverChange": "Change",
+  "tripDiscoverPickHelp": "When do you want to go?",
+  "tripDiscoverWishes": "Wishes",
+  "tripDiscoverWishesNone": "No wishes yet",
+  "tripDiscoverWishesCount": "{count, plural, =1{1 wish} other{{count} wishes}}",
+  "@tripDiscoverWishesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverAny": "any",
+  "tripDiscoverDegrees": "{degrees} °C",
+  "@tripDiscoverDegrees": {
+    "placeholders": {
+      "degrees": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverTempMinLabel": "Days at least",
+  "tripDiscoverTempMaxLabel": "Days at most",
+  "tripDiscoverDry": "Little rain",
+  "tripDiscoverSeaLabel": "Sea at least",
+  "tripDiscoverTagsLabel": "Kind of place",
+  "tripDiscoverTagSea": "Sea",
+  "tripDiscoverTagIsland": "Island",
+  "tripDiscoverTagMountains": "Mountains",
+  "tripDiscoverTagLake": "Lake",
+  "tripDiscoverTagCity": "City",
+  "tripDiscoverTagCountryside": "Countryside",
+  "tripDiscoverTagNorth": "The North",
+  "tripDiscoverTagLongHaul": "Far away",
+  "tripDiscoverEffortLabel": "Getting there, at most",
+  "tripDiscoverEffortNear": "close by",
+  "tripDiscoverEffortCar": "a long drive",
+  "tripDiscoverEffortShort": "a short flight",
+  "tripDiscoverEffortMedium": "a medium flight",
+  "tripDiscoverEffortLong": "far away",
+  "tripDiscoverNeedsClimate": "With a weather service, WuselWall shows how warm it is. A parent can switch one on.",
+  "tripDiscoverNeedsHome": "Distances need a home place. A parent can set one.",
+  "tripDiscoverOpenServices": "Weather and maps settings",
+  "tripDiscoverIdea": "Your idea",
+  "tripDiscoverKeep": "Keep as idea",
+  "tripDiscoverKept": "Kept as an idea: {name}",
+  "@tripDiscoverKept": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripDiscoverOpen": "Open",
+  "tripDiscoverDistance": "about {km} km · {effort}",
+  "@tripDiscoverDistance": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      },
+      "effort": {
+        "type": "String"
+      }
+    }
+  },
+  "tripDiscoverTemps": "{max}° by day, {min}° at night",
+  "@tripDiscoverTemps": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverRain": "{count, plural, =1{1 rain day} other{{count} rain days}}",
+  "@tripDiscoverRain": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverSun": "{hours} h of sun a day",
+  "@tripDiscoverSun": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverSea": "Sea {temp}°",
+  "@tripDiscoverSea": {
+    "placeholders": {
+      "temp": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverNoClimate": "No climate values yet",
+  "tripDiscoverMisses": "Misses a wish",
+  "tripDiscoverPending": "Climate values are being loaded: {count, plural, =1{1 place to go} other{{count} places to go}}",
+  "@tripDiscoverPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverPendingLater": "More values will follow later; the provider only allows a few places a minute.",
+  "tripDiscoverEmpty": "No place fits these wishes. Loosen one or two.",
+  "tripDiscoverNote": "These are typical values for the time of year, not a forecast. WuselWall names no hotel, price or connection, and distances are estimates.",
+  "tripHomeTitle": "Home",
+  "tripHomeNotSet": "Not set",
+  "tripHomeExplain": "Stored rounded to about a kilometre. It is used for distances and, with a route service, sent to that service.",
+  "tripHomeSet": "Set",
+  "tripHomeChange": "Change",
+  "tripHomeForget": "Forget",
+  "tripHomeForgetAsk": "Forget the home place? Distances disappear until a new one is set.",
+  "tripHomeDialogTitle": "Home place",
+  "tripHomeName": "Name of the place",
+  "tripHomeSearch": "Search",
+  "tripHomeNoResults": "No place found.",
+  "tripHomeCoordsHint": "Or type the coordinates yourself, with two decimals.",
+  "tripHomeNoGeocode": "No place search is switched on, so type the coordinates yourself.",
+  "tripHomeLat": "Latitude",
+  "tripHomeLon": "Longitude",
+  "tripHomeInvalid": "Between -90 and 90 for latitude, -180 and 180 for longitude.",
+  "serviceTitle": "Weather and maps",
+  "serviceUnavailable": "Weather and maps are not available here.",
+  "serviceNoProviders": "This server offers no providers.",
+  "serviceIntro": "Everything here is off until you switch it on. Only your server asks a provider, never a phone or the wall. A provider gets the place you look at or search for and your server’s address, nothing about your family.",
+  "serviceReadOnly": "A parent can change this.",
+  "serviceProvidersHeading": "Providers",
+  "serviceCostFree": "Free, no key",
+  "serviceCostFreeKey": "Free with your own key",
+  "serviceCostPaidKey": "Your own key, may cost",
+  "serviceCapClimate": "Typical climate",
+  "serviceCapForecast": "Forecast",
+  "serviceCapGeocode": "Place search",
+  "serviceCapRoute": "Driving time",
+  "serviceCapMap": "Map picture",
+  "serviceReceivesCoordinates": "the coordinates of a place",
+  "serviceReceivesSearchText": "the text you search",
+  "serviceReceivesHome": "your home place, rounded",
+  "serviceReceivesLine": "It receives: {what}",
+  "@serviceReceivesLine": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceWebsite": "Website",
+  "serviceGetKey": "Get a key",
+  "serviceSwitch": "Switched on",
+  "serviceNeedsKeyFirst": "Needs a key first",
+  "serviceKeyLabel": "Key",
+  "serviceKeyHelp": "Typed once, stored on your server and never shown again.",
+  "serviceKeySaveOn": "Save key and switch on",
+  "serviceKeySave": "Save key",
+  "serviceKeyStored": "Key stored {hint}",
+  "@serviceKeyStored": {
+    "placeholders": {
+      "hint": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceKeyReplace": "Replace",
+  "serviceKeyRemove": "Remove",
+  "serviceKeyRemoveAsk": "Remove the key of {name}? The provider is switched off then.",
+  "@serviceKeyRemoveAsk": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceTest": "Test",
+  "serviceTestOk": "Works",
+  "serviceErrorKeyMissing": "This provider needs a key.",
+  "serviceErrorUnauthorized": "The provider refused the key.",
+  "serviceErrorQuota": "The provider’s allowance is used up for now.",
+  "serviceErrorTimeout": "The provider did not answer in time.",
+  "serviceErrorGeneric": "The provider did not work this time.",
+  "serviceLastError": "Last call: {reason}",
+  "@serviceLastError": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceUsedFor": "Used for",
+  "serviceMoveUp": "Ask earlier",
+  "serviceMoveDown": "Ask later",
+  "serviceOrderHint": "Where several providers offer the same thing, the first one in this order that answers wins.",
+  "serviceCallsToday": "{count, plural, =1{1 call today} other{{count} calls today}}",
+  "@serviceCallsToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceClosing": "A provider’s terms are yours to accept; some free offers are for private use only. Switching a provider off stops every call to it at once.",
   "learnedWordsHelp": "The family learned these words: from now on the item goes into this category. Forget takes a word away again.",
   "learnedWordsEmpty": "Nothing learned yet. When someone changes the category of an item, the family remembers the word here.",
   "learnedWordsMeta": "{category} · {date}",
