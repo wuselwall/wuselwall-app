@@ -11802,6 +11802,144 @@ abstract class AppLocalizations {
   /// **'The service did not answer. Try again later.'**
   String get errServiceFailed;
 
+  /// No description provided for @tripsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips'**
+  String get tripsTitle;
+
+  /// No description provided for @tripStageIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Idea'**
+  String get tripStageIdea;
+
+  /// No description provided for @tripStagePlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get tripStagePlanned;
+
+  /// No description provided for @tripStageFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Decided'**
+  String get tripStageFixed;
+
+  /// No description provided for @tripKindTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get tripKindTransport;
+
+  /// No description provided for @tripKindStay.
+  ///
+  /// In en, this message translates to:
+  /// **'Accommodation'**
+  String get tripKindStay;
+
+  /// No description provided for @tripKindRental.
+  ///
+  /// In en, this message translates to:
+  /// **'Rental car'**
+  String get tripKindRental;
+
+  /// No description provided for @tripKindActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get tripKindActivity;
+
+  /// No description provided for @tripKindNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get tripKindNote;
+
+  /// No description provided for @tripKindTransportPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get tripKindTransportPlural;
+
+  /// No description provided for @tripKindStayPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'Accommodation'**
+  String get tripKindStayPlural;
+
+  /// No description provided for @tripKindRentalPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'Rental cars'**
+  String get tripKindRentalPlural;
+
+  /// No description provided for @tripKindActivityPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities'**
+  String get tripKindActivityPlural;
+
+  /// No description provided for @tripKindNotePlural.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get tripKindNotePlural;
+
+  /// No description provided for @tripModeFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Flight'**
+  String get tripModeFlight;
+
+  /// No description provided for @tripModeTrain.
+  ///
+  /// In en, this message translates to:
+  /// **'Train'**
+  String get tripModeTrain;
+
+  /// No description provided for @tripModeCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get tripModeCar;
+
+  /// No description provided for @tripModeFerry.
+  ///
+  /// In en, this message translates to:
+  /// **'Ferry'**
+  String get tripModeFerry;
+
+  /// No description provided for @tripModeBus.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get tripModeBus;
+
+  /// No description provided for @tripModeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get tripModeOther;
+
+  /// No description provided for @tripStateOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Option'**
+  String get tripStateOption;
+
+  /// No description provided for @tripStateChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen'**
+  String get tripStateChosen;
+
+  /// No description provided for @tripStateBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'Booked'**
+  String get tripStateBooked;
+
   /// No description provided for @accountNoticeMfaResetYou.
   ///
   /// In en, this message translates to:

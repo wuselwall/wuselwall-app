@@ -7068,6 +7068,75 @@ class AppLocalizationsDe extends AppLocalizations {
       'Der Dienst hat nicht geantwortet. Versuch es später noch einmal.';
 
   @override
+  String get tripsTitle => 'Reisen';
+
+  @override
+  String get tripStageIdea => 'Idee';
+
+  @override
+  String get tripStagePlanned => 'Geplant';
+
+  @override
+  String get tripStageFixed => 'Fest';
+
+  @override
+  String get tripKindTransport => 'Transport';
+
+  @override
+  String get tripKindStay => 'Unterkunft';
+
+  @override
+  String get tripKindRental => 'Mietwagen';
+
+  @override
+  String get tripKindActivity => 'Aktivität';
+
+  @override
+  String get tripKindNote => 'Notiz';
+
+  @override
+  String get tripKindTransportPlural => 'Transport';
+
+  @override
+  String get tripKindStayPlural => 'Unterkünfte';
+
+  @override
+  String get tripKindRentalPlural => 'Mietwagen';
+
+  @override
+  String get tripKindActivityPlural => 'Aktivitäten';
+
+  @override
+  String get tripKindNotePlural => 'Notizen';
+
+  @override
+  String get tripModeFlight => 'Flug';
+
+  @override
+  String get tripModeTrain => 'Zug';
+
+  @override
+  String get tripModeCar => 'Auto';
+
+  @override
+  String get tripModeFerry => 'Fähre';
+
+  @override
+  String get tripModeBus => 'Bus';
+
+  @override
+  String get tripModeOther => 'Anderes';
+
+  @override
+  String get tripStateOption => 'Option';
+
+  @override
+  String get tripStateChosen => 'Gewählt';
+
+  @override
+  String get tripStateBooked => 'Gebucht';
+
+  @override
   String accountNoticeMfaResetYou(String name) {
     return '$name hat deine Zwei-Faktor-Anmeldung zurückgesetzt';
   }

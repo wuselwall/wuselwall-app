@@ -7099,6 +7099,75 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le service n’a pas répondu. Réessaie plus tard.';
 
   @override
+  String get tripsTitle => 'Voyages';
+
+  @override
+  String get tripStageIdea => 'Idée';
+
+  @override
+  String get tripStagePlanned => 'Prévu';
+
+  @override
+  String get tripStageFixed => 'Décidé';
+
+  @override
+  String get tripKindTransport => 'Transport';
+
+  @override
+  String get tripKindStay => 'Hébergement';
+
+  @override
+  String get tripKindRental => 'Voiture de location';
+
+  @override
+  String get tripKindActivity => 'Activité';
+
+  @override
+  String get tripKindNote => 'Note';
+
+  @override
+  String get tripKindTransportPlural => 'Transport';
+
+  @override
+  String get tripKindStayPlural => 'Hébergements';
+
+  @override
+  String get tripKindRentalPlural => 'Voitures de location';
+
+  @override
+  String get tripKindActivityPlural => 'Activités';
+
+  @override
+  String get tripKindNotePlural => 'Notes';
+
+  @override
+  String get tripModeFlight => 'Vol';
+
+  @override
+  String get tripModeTrain => 'Train';
+
+  @override
+  String get tripModeCar => 'Voiture';
+
+  @override
+  String get tripModeFerry => 'Ferry';
+
+  @override
+  String get tripModeBus => 'Bus';
+
+  @override
+  String get tripModeOther => 'Autre';
+
+  @override
+  String get tripStateOption => 'Option';
+
+  @override
+  String get tripStateChosen => 'Choisi';
+
+  @override
+  String get tripStateBooked => 'Réservé';
+
+  @override
   String accountNoticeMfaResetYou(String name) {
     return '$name a réinitialisé ta double authentification';
   }

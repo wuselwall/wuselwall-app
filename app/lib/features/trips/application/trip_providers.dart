@@ -169,7 +169,7 @@ final tripWindowsProvider = FutureProvider.autoDispose
 
 /// How long a page waits before it asks discovery again while the answer says some
 /// climates are `pending`.
-const discoverPendingRetry = Duration(seconds: 5);
+const discoverPendingRetry = Duration(seconds: 30);
 
 /// Where it is warm and dry in a window (`trips` function, action `discover`). While
 /// [DiscoverResult.pending] is above zero the page asks again after
