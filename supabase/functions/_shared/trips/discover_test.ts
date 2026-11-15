@@ -477,6 +477,29 @@ Deno.test("the answer is capped at MAX_PLACES", async () => {
   assert(DESTINATIONS.length > MAX_PLACES);
 });
 
+Deno.test("the family's own ideas come first and survive the cap", async () => {
+  // A name that sorts last and a place far from home: without the rule it would be cut off
+  // behind the bundled catalogue.
+  const idea = {
+    trip_id: "trip-1",
+    name: "Zzz am Ende der Welt",
+    destination_key: null,
+    country: "NZ",
+    lat: -45.0,
+    lon: 170.0,
+  };
+  const noHome = await discover(input({ ideas: [idea] }), fake({ offers: [] }));
+  assertEquals(noHome.places.length, MAX_PLACES);
+  assertEquals(noHome.places[0].trip_id, "trip-1");
+
+  const withHome = await discover(
+    input({ ideas: [idea], home: ZURICH }),
+    fake({ offers: [] }),
+  );
+  assertEquals(withHome.places[0].trip_id, "trip-1");
+  assert((withHome.places[0].km ?? 0) > (withHome.places[1].km ?? 0));
+});
+
 Deno.test("the window's months decide the climate shown", async () => {
   const services = fake({
     budget: 50,

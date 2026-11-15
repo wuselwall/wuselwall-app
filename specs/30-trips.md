@@ -415,7 +415,7 @@ provider failed), `invalid_request` (400), and the database's refusals passed th
 | Body | Answer |
 |---|---|
 | `{action: 'windows', from?, to?, min_days?, member_ids?}` | `{windows: [{from, to, days, name?, kind: 'holidays'|'long_weekend', leave_days, partial: [{profile_id, from, to}], conflicts: [{date, title, event_id, kind, presence_state?, profile_ids}]}]}` |
-| `{action: 'discover', from, to, lang?, filters: {temp_min?, temp_max?, dry?, sea_min?, tags?, effort?}, actor_profile_id?}` | `{places: [{key?, trip_id?, name, country, lat, lon, tags, km?, effort?, climate?: {tmax, tmin, rain_days?, sun_hours?, sea?}, fits: 'yes'|'no'|'unknown'}], pending, provider?, attribution?}` sorted: fits first, then nearer |
+| `{action: 'discover', from, to, lang?, filters: {temp_min?, temp_max?, dry?, sea_min?, tags?, effort?}, actor_profile_id?}` | `{places: [{key?, trip_id?, name, country, lat, lon, tags, km?, effort?, climate?: {tmax, tmin, rain_days?, sun_hours?, sea?}, fits: 'yes'|'no'|'unknown'}], pending, provider?, attribution?}` sorted: fits first, then the family's own ideas, then nearer; at most 80 |
 
 `fits: 'no'` places are left out of the answer. `pending` counts the filtered places without
 climate values, including those a provider had nothing for. A provider's budget is counted a

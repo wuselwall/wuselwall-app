@@ -315,8 +315,14 @@ export function candidates(
   return out;
 }
 
-function byDistanceThenName(lang: string) {
+/**
+ * The family's own ideas first, then nearer, then by name. An idea is what the family already
+ * wants: it gets its climate values first and is never pushed out of a capped answer by the
+ * bundled catalogue (found by the first run against a real stack, 2026-11-15).
+ */
+function byIdeaThenDistanceThenName(lang: string) {
   return (a: Candidate, b: Candidate) =>
+    Number(b.trip_id !== undefined) - Number(a.trip_id !== undefined) ||
     (a.km ?? Infinity) - (b.km ?? Infinity) ||
     a.name.localeCompare(b.name, lang);
 }
@@ -363,7 +369,7 @@ export async function discover(
     });
 
     const missing = pool.filter((c) => !climates.has(c)).sort(
-      byDistanceThenName(input.lang),
+      byIdeaThenDistanceThenName(input.lang),
     );
     const budget = Math.max(
       0,
@@ -429,6 +435,7 @@ export async function discover(
 
   places.sort((a, b) =>
     Number(b.fits === "yes") - Number(a.fits === "yes") ||
+    Number(b.trip_id !== undefined) - Number(a.trip_id !== undefined) ||
     (a.km ?? Infinity) - (b.km ?? Infinity) ||
     a.name.localeCompare(b.name, input.lang)
   );
