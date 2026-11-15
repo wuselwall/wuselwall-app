@@ -1,6 +1,6 @@
 # 16 — Build plan
 
-Updated 2026-10-24. [13 — Roadmap](13-roadmap.md) owns the four milestones and their exit
+Updated 2026-11-15. [13 — Roadmap](13-roadmap.md) owns the four milestones and their exit
 criteria. This file is the implementation order. Old step/slice numbers stay in the tables
 so existing specification links and ADR-020 remain usable.
 
@@ -21,6 +21,15 @@ MCP and AI assistants are on hold as of 2026-10-24, with no active build step or
 gate. Their UI is removed; retained work and the conditions for reconsideration live in
 [23](23-roadmap-after-alpha.md#on-hold--mcp-and-ai-assistants) and its linked record.
 Siri/automations and timetable text/photo import remain.
+
+**Additional slice approved 2026-11-15:** shopping-trip push delivery through the optional
+encrypted relay, [ADR-022](adr/ADR-022-encrypted-push-relay.md), implementation
+[#274](https://github.com/wuselwall/wuselwall-app/issues/274) in v1.12.0. Q47/Q38 are
+decided; the relay and closed-phone delivery are not built. Specify/review the envelope
+and registration authorization, then implement server registrations and transactional
+outbox, relay transports/operations, and native iOS extension/Android receiving. Qualify
+on physical phones and coordinate privacy/store/website changes before activation.
+The existing local/Realtime path remains available on older or push-disabled servers.
 
 ## Rules for each slice
 
@@ -193,7 +202,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | **Google Play Console** (personal) | Internal testing track for the wall tablet and Android phones | $25 once | Identity verification can take several days |
 | **Second private GitHub repository** `wuselwall-certificates` | `fastlane match` storage for iOS signing | — | Minutes |
 | Domain `wuselwall.app` ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | The project's website, docs and links site | ≈ €14 / year | in place 2026-10-13 |
-| Firebase project | Android push via FCM — only if a push relay is ever built ([Q47](14-open-questions.md)); v1's reminders are local | free | Minutes |
+| Firebase project | Android push via FCM — approved in [ADR-022](adr/ADR-022-encrypted-push-relay.md), implementation #274; current reminders are local | Verify provider pricing before activation | Setup and native delivery evidence pending |
 | **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project per server that sends mail; sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
 
 ---
@@ -771,7 +780,7 @@ manager.
 | `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `backup.env` next to the server's tool (`BACKUP_ENV`) | backups |
 | `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
-| Push credentials (APNs key, FCM service account) — only if a relay is ever built ([Q47](14-open-questions.md)) | Edge Function secrets | a future `push-send` |
+| Push credentials (APNs key, FCM service account) — approved, not provisioned by this decision ([ADR-022](adr/ADR-022-encrypted-push-relay.md)) | Project relay's secret store only, never a family server or app | Relay provider adapters (#274) |
 | Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets, or a hosted project's Auth settings. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |
 
 The **publishable key** (`WW_PUBLISHABLE_KEY`) is not a secret — it is compiled into every
