@@ -105,7 +105,8 @@ jobs:
       # realtime. Needs studio-less start from above; uses the public local dev key.
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: "${{ github.event_name == 'pull_request' }}" }
-      - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json -j 1
+      # A finite stack limit for the tester, as in ci.yml (scripts/finite-stack.sh).
+      - run: flutter pub get --enforce-lockfile && bash ../scripts/finite-stack.sh flutter test test/integration --dart-define-from-file=env/ci.json -j 1
         working-directory: app
       # The same stack without mail (specs/20, Q48): Auth autoconfirms, the app signs up with
       # a password, a guardian's code resets one. A fresh database, so the seed's founder
@@ -116,7 +117,7 @@ jobs:
           grep -qx 'enable_confirmations = false' supabase/config.toml
           npx --no-install supabase stop --no-backup
           npx supabase start -x studio,imgproxy,logflare,vector
-      - run: flutter test test/integration/no_mail_integration_test.dart --dart-define-from-file=env/ci.json --dart-define=WW_NO_MAIL=true -j 1
+      - run: bash ../scripts/finite-stack.sh flutter test test/integration/no_mail_integration_test.dart --dart-define-from-file=env/ci.json --dart-define=WW_NO_MAIL=true -j 1
         working-directory: app
       - name: Stop the disposable backend
         if: always()

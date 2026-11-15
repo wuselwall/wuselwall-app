@@ -132,7 +132,7 @@ test('any other error or an unseen file keeps the run failed', () => {
 // End to end with a stand-in `flutter` that plays one scripted run per call: it writes the
 // report and output, optionally leaves a core file, then exits with `status` or is killed by
 // `signal`. With `gdb`, a stand-in gdb prints that text and records its arguments.
-function run(runs, { gdb, concurrency } = {}) {
+function run(runs, { gdb, concurrency, stack: stackLimit } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'flutter-test-ci-'));
   try {
     const fake = join(dir, 'flutter');
@@ -143,6 +143,7 @@ const dir = ${JSON.stringify(dir)};
 const calls = fs.existsSync(dir + '/calls') ? JSON.parse(fs.readFileSync(dir + '/calls')) : [];
 calls.push(process.argv.slice(2));
 fs.writeFileSync(dir + '/calls', JSON.stringify(calls));
+fs.writeFileSync(dir + '/stack', require('child_process').execSync('ulimit -S -s', { shell: '/bin/sh', encoding: 'utf8' }).trim());
 const run = JSON.parse(fs.readFileSync(dir + '/runs.json'))[calls.length - 1];
 const report = process.argv.find((a) => a.startsWith('--file-reporter=json:')).slice(21);
 fs.writeFileSync(report, run.json.join('\\n'));
@@ -163,10 +164,15 @@ process.stdout.write(${JSON.stringify(gdb)});
     const env = { ...process.env, PATH: `${dir}:${process.env.PATH}` };
     if (concurrency === undefined) delete env.FLUTTER_TEST_CONCURRENCY;
     else env.FLUTTER_TEST_CONCURRENCY = concurrency;
-    const result = spawnSync('node', [script], { cwd: dir, encoding: 'utf8', env });
+    // With a stack limit the wrapper itself starts under it: 'unlimited' is how the
+    // self-hosted runners start it, whatever limit the machine running this test has.
+    const result = stackLimit
+      ? spawnSync('sh', ['-c', `ulimit -S -s ${stackLimit} && exec node "$0"`, script], { cwd: dir, encoding: 'utf8', env })
+      : spawnSync('node', [script], { cwd: dir, encoding: 'utf8', env });
+    const stack = existsSync(join(dir, 'stack')) ? readFileSync(join(dir, 'stack'), 'utf8') : undefined;
     const gdbArgs = existsSync(join(dir, 'gdb-args')) ? JSON.parse(readFileSync(join(dir, 'gdb-args'), 'utf8')) : undefined;
     const calls = existsSync(join(dir, 'calls')) ? JSON.parse(readFileSync(join(dir, 'calls'), 'utf8')) : [];
-    return { ...result, calls, gdbArgs, coreLeft: existsSync(join(dir, 'core')) };
+    return { ...result, calls, gdbArgs, stack, coreLeft: existsSync(join(dir, 'core')) };
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -190,6 +196,33 @@ test('a clean run runs once and passes', () => {
   assert.equal(result.calls.length, 1);
   assert.deepEqual(result.calls[0].filter((a) => !a.startsWith('--file-reporter')), ['test', '--concurrency=4']);
   assert.match(result.stdout, /Runner facts/, JSON.stringify(result));
+});
+
+// A machine whose hard limit is finite cannot play a runner with an unlimited one.
+const canUnlimit = spawnSync('sh', ['-c', 'ulimit -S -s unlimited']).status === 0;
+
+test('flutter never starts with an unlimited stack limit, in the first run or a rerun', { skip: !canUnlimit }, () => {
+  const result = run([crashed, passed], { stack: 'unlimited' });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.calls.length, 2);
+  assert.equal(result.stack, '8192');
+  assert.match(result.stdout, /stack limit unlimited \(hard unlimited\); flutter test runs with 8192/);
+});
+
+test('a stack limit somebody set is left alone', () => {
+  const result = run([passed], { stack: '4096' });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stack, '4096');
+  assert.match(result.stdout, /stack limit 4096 \(hard \w+\); flutter test runs with 4096/);
+});
+
+test('finite-stack.sh lowers only an unlimited stack limit and runs the command with its arguments', { skip: !canUnlimit }, () => {
+  const finite = new URL('./finite-stack.sh', import.meta.url).pathname;
+  const limit = (before) => spawnSync('sh', ['-c', `ulimit -S -s ${before} && exec "$0" sh -c 'echo "$(ulimit -S -s) $1"' sh 'two words'`, finite], { encoding: 'utf8' });
+  assert.equal(limit('unlimited').stdout, '8192 two words\n');
+  assert.equal(limit('4096').stdout, '4096 two words\n');
+  // The command's own status is the script's.
+  assert.equal(spawnSync(finite, ['sh', '-c', 'exit 7']).status, 7);
 });
 
 test('a crash-only failure reruns the crashed file, with a warning, and takes its result', () => {
