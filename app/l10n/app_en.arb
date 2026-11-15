@@ -4371,6 +4371,22 @@
     }
   },
   "errInvitationRequired": "This server takes only invited people. Ask a parent in the family for an invitation.",
+  "errTripInvalid": "This trip is not valid. Check the name and the dates.",
+  "errTripNotFound": "This trip no longer exists.",
+  "errTripEntryInvalid": "This entry is not valid. Check the name, the dates and the price.",
+  "errTripEntryNotFound": "This entry no longer exists.",
+  "errTripComboInvalid": "This combination is not valid. Check its name and its entries.",
+  "errTripComboNotFound": "This combination no longer exists.",
+  "errTripCheckInvalid": "This list item is not valid.",
+  "errTripCheckNotFound": "This list item no longer exists.",
+  "errTripEvent": "The calendar entry of a trip is changed in the trip, not in the calendar.",
+  "errTripHomeInvalid": "That home place is not valid.",
+  "errAdultsOnly": "Only adults can do that.",
+  "errServiceInvalid": "That service setting is not valid.",
+  "errServiceOff": "This needs a weather or map service. A parent can switch one on in the settings.",
+  "errServiceKeyMissing": "This service needs a key. A parent can add it in the settings.",
+  "errServiceLimit": "This service has been asked too often for now. Try again later.",
+  "errServiceFailed": "The service did not answer. Try again later.",
   "accountNoticeMfaResetYou": "{name} reset your two-factor sign-in",
   "@accountNoticeMfaResetYou": {
     "placeholders": {

@@ -6966,6 +6966,61 @@ class AppLocalizationsEn extends AppLocalizations {
       'This server takes only invited people. Ask a parent in the family for an invitation.';
 
   @override
+  String get errTripInvalid =>
+      'This trip is not valid. Check the name and the dates.';
+
+  @override
+  String get errTripNotFound => 'This trip no longer exists.';
+
+  @override
+  String get errTripEntryInvalid =>
+      'This entry is not valid. Check the name, the dates and the price.';
+
+  @override
+  String get errTripEntryNotFound => 'This entry no longer exists.';
+
+  @override
+  String get errTripComboInvalid =>
+      'This combination is not valid. Check its name and its entries.';
+
+  @override
+  String get errTripComboNotFound => 'This combination no longer exists.';
+
+  @override
+  String get errTripCheckInvalid => 'This list item is not valid.';
+
+  @override
+  String get errTripCheckNotFound => 'This list item no longer exists.';
+
+  @override
+  String get errTripEvent =>
+      'The calendar entry of a trip is changed in the trip, not in the calendar.';
+
+  @override
+  String get errTripHomeInvalid => 'That home place is not valid.';
+
+  @override
+  String get errAdultsOnly => 'Only adults can do that.';
+
+  @override
+  String get errServiceInvalid => 'That service setting is not valid.';
+
+  @override
+  String get errServiceOff =>
+      'This needs a weather or map service. A parent can switch one on in the settings.';
+
+  @override
+  String get errServiceKeyMissing =>
+      'This service needs a key. A parent can add it in the settings.';
+
+  @override
+  String get errServiceLimit =>
+      'This service has been asked too often for now. Try again later.';
+
+  @override
+  String get errServiceFailed => 'The service did not answer. Try again later.';
+
+  @override
   String accountNoticeMfaResetYou(String name) {
     return '$name reset your two-factor sign-in';
   }

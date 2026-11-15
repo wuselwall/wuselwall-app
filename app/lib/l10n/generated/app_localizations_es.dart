@@ -7026,6 +7026,62 @@ class AppLocalizationsEs extends AppLocalizations {
       'Este servidor solo acepta personas invitadas. Pide una invitación a una madre o un padre de la familia.';
 
   @override
+  String get errTripInvalid =>
+      'Este viaje no es válido. Revisa el nombre y las fechas.';
+
+  @override
+  String get errTripNotFound => 'Este viaje ya no existe.';
+
+  @override
+  String get errTripEntryInvalid =>
+      'Esta entrada no es válida. Revisa el nombre, las fechas y el precio.';
+
+  @override
+  String get errTripEntryNotFound => 'Esta entrada ya no existe.';
+
+  @override
+  String get errTripComboInvalid =>
+      'Esta combinación no es válida. Revisa su nombre y sus entradas.';
+
+  @override
+  String get errTripComboNotFound => 'Esta combinación ya no existe.';
+
+  @override
+  String get errTripCheckInvalid => 'Este elemento de la lista no es válido.';
+
+  @override
+  String get errTripCheckNotFound => 'Este elemento de la lista ya no existe.';
+
+  @override
+  String get errTripEvent =>
+      'La entrada del calendario de un viaje se cambia en el viaje, no en el calendario.';
+
+  @override
+  String get errTripHomeInvalid => 'Ese lugar de origen no es válido.';
+
+  @override
+  String get errAdultsOnly => 'Solo los adultos pueden hacer eso.';
+
+  @override
+  String get errServiceInvalid => 'Este ajuste del servicio no es válido.';
+
+  @override
+  String get errServiceOff =>
+      'Para eso hace falta un servicio de tiempo o de mapas. Una madre o un padre puede activar uno en los ajustes.';
+
+  @override
+  String get errServiceKeyMissing =>
+      'Este servicio necesita una clave. Una madre o un padre puede añadirla en los ajustes.';
+
+  @override
+  String get errServiceLimit =>
+      'Se ha consultado este servicio demasiadas veces. Inténtalo más tarde.';
+
+  @override
+  String get errServiceFailed =>
+      'El servicio no ha respondido. Inténtalo más tarde.';
+
+  @override
   String accountNoticeMfaResetYou(String name) {
     return '$name ha restablecido tu inicio de sesión en dos pasos';
   }

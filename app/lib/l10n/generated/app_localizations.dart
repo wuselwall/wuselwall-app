@@ -11706,6 +11706,102 @@ abstract class AppLocalizations {
   /// **'This server takes only invited people. Ask a parent in the family for an invitation.'**
   String get errInvitationRequired;
 
+  /// No description provided for @errTripInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip is not valid. Check the name and the dates.'**
+  String get errTripInvalid;
+
+  /// No description provided for @errTripNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip no longer exists.'**
+  String get errTripNotFound;
+
+  /// No description provided for @errTripEntryInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This entry is not valid. Check the name, the dates and the price.'**
+  String get errTripEntryInvalid;
+
+  /// No description provided for @errTripEntryNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This entry no longer exists.'**
+  String get errTripEntryNotFound;
+
+  /// No description provided for @errTripComboInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This combination is not valid. Check its name and its entries.'**
+  String get errTripComboInvalid;
+
+  /// No description provided for @errTripComboNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This combination no longer exists.'**
+  String get errTripComboNotFound;
+
+  /// No description provided for @errTripCheckInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This list item is not valid.'**
+  String get errTripCheckInvalid;
+
+  /// No description provided for @errTripCheckNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This list item no longer exists.'**
+  String get errTripCheckNotFound;
+
+  /// No description provided for @errTripEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar entry of a trip is changed in the trip, not in the calendar.'**
+  String get errTripEvent;
+
+  /// No description provided for @errTripHomeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That home place is not valid.'**
+  String get errTripHomeInvalid;
+
+  /// No description provided for @errAdultsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only adults can do that.'**
+  String get errAdultsOnly;
+
+  /// No description provided for @errServiceInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That service setting is not valid.'**
+  String get errServiceInvalid;
+
+  /// No description provided for @errServiceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'This needs a weather or map service. A parent can switch one on in the settings.'**
+  String get errServiceOff;
+
+  /// No description provided for @errServiceKeyMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This service needs a key. A parent can add it in the settings.'**
+  String get errServiceKeyMissing;
+
+  /// No description provided for @errServiceLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'This service has been asked too often for now. Try again later.'**
+  String get errServiceLimit;
+
+  /// No description provided for @errServiceFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The service did not answer. Try again later.'**
+  String get errServiceFailed;
+
   /// No description provided for @accountNoticeMfaResetYou.
   ///
   /// In en, this message translates to:

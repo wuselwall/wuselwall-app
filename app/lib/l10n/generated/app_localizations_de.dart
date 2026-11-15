@@ -7011,6 +7011,63 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dieser Server nimmt nur eingeladene Personen auf. Lass dich von einem Elternteil der Familie einladen.';
 
   @override
+  String get errTripInvalid =>
+      'Die Reise ist nicht gültig. Prüfe den Namen und die Daten.';
+
+  @override
+  String get errTripNotFound => 'Diese Reise gibt es nicht mehr.';
+
+  @override
+  String get errTripEntryInvalid =>
+      'Der Eintrag ist nicht gültig. Prüfe Name, Daten und Preis.';
+
+  @override
+  String get errTripEntryNotFound => 'Diesen Eintrag gibt es nicht mehr.';
+
+  @override
+  String get errTripComboInvalid =>
+      'Die Kombination ist nicht gültig. Prüfe ihren Namen und ihre Einträge.';
+
+  @override
+  String get errTripComboNotFound => 'Diese Kombination gibt es nicht mehr.';
+
+  @override
+  String get errTripCheckInvalid => 'Der Listenpunkt ist nicht gültig.';
+
+  @override
+  String get errTripCheckNotFound => 'Diesen Listenpunkt gibt es nicht mehr.';
+
+  @override
+  String get errTripEvent =>
+      'Der Kalendereintrag einer Reise wird in der Reise geändert, nicht im Kalender.';
+
+  @override
+  String get errTripHomeInvalid => 'Dieser Heimatort ist nicht gültig.';
+
+  @override
+  String get errAdultsOnly => 'Das dürfen nur Erwachsene.';
+
+  @override
+  String get errServiceInvalid =>
+      'Diese Einstellung des Dienstes ist nicht gültig.';
+
+  @override
+  String get errServiceOff =>
+      'Dafür braucht es einen Wetter- oder Kartendienst. Ein Elternteil kann einen in den Einstellungen einschalten.';
+
+  @override
+  String get errServiceKeyMissing =>
+      'Dieser Dienst braucht einen Schlüssel. Ein Elternteil kann ihn in den Einstellungen eintragen.';
+
+  @override
+  String get errServiceLimit =>
+      'Dieser Dienst wurde zu oft gefragt. Versuch es später noch einmal.';
+
+  @override
+  String get errServiceFailed =>
+      'Der Dienst hat nicht geantwortet. Versuch es später noch einmal.';
+
+  @override
   String accountNoticeMfaResetYou(String name) {
     return '$name hat deine Zwei-Faktor-Anmeldung zurückgesetzt';
   }

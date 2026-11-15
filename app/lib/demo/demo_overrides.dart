@@ -30,8 +30,10 @@ import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/demo/demo_rituals.dart';
 import 'package:wuselwall/demo/demo_scan.dart';
 import 'package:wuselwall/demo/demo_school.dart';
+import 'package:wuselwall/demo/demo_services.dart';
 import 'package:wuselwall/demo/demo_shortcuts.dart';
 import 'package:wuselwall/demo/demo_tasks.dart';
+import 'package:wuselwall/demo/demo_trips.dart';
 import 'package:wuselwall/features/account/application/account_admin_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/calendar/application/event_import_providers.dart';
@@ -54,6 +56,7 @@ import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
 import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/ui/timetable_scan.dart';
+import 'package:wuselwall/features/services/data/services_repository.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
@@ -63,6 +66,7 @@ import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
+import 'package:wuselwall/features/trips/data/trips_repository.dart';
 
 class _Day extends NightNotifier {
   @override
@@ -211,6 +215,8 @@ List<Override> _overrides(
   noticesRepositoryProvider.overrideWithValue(DemoNoticesRepository()),
   kidBadgesRepositoryProvider.overrideWithValue(DemoKidBadgesRepository()),
   ritualsRepositoryProvider.overrideWithValue(DemoRitualsRepository()),
+  tripsRepositoryProvider.overrideWithValue(DemoTripsRepository()),
+  servicesRepositoryProvider.overrideWithValue(DemoServicesRepository()),
   householdInvalidationsProvider.overrideWith(
     (ref, id) => const Stream<Invalidation>.empty(),
   ),

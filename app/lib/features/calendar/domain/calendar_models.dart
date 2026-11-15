@@ -100,6 +100,7 @@ class Occurrence {
     this.countdown = false,
     this.tradition = false,
     this.reminderMinutes,
+    this.tripId,
   });
 
   factory Occurrence.fromJson(Map<String, dynamic> json) => Occurrence(
@@ -134,6 +135,8 @@ class Occurrence {
     tradition: json['tradition'] as bool? ?? false,
     // Absent on servers before the event's own reminder (specs/05).
     reminderMinutes: (json['reminder_minutes'] as num?)?.toInt(),
+    // Absent on servers before the trips (specs/30).
+    tripId: json['trip_id'] as String?,
   );
 
   final String id;
@@ -186,6 +189,11 @@ class Occurrence {
   /// The event's own reminder in minutes before the start; null for none (specs/05
   /// "A reminder for one event").
   final int? reminderMinutes;
+
+  /// The trip this occurrence is the calendar entry of (specs/30 "In the calendar and on
+  /// the wall"); null for any other event and from a server without the trips. Opening
+  /// it opens the trip, and it is changed there, not in the calendar.
+  final String? tripId;
 
   bool get isImported => source == OccurrenceSource.imported;
   bool get isPresence => kind == EventKind.presence;
@@ -254,6 +262,7 @@ class CalendarEvent {
     this.traditionMeal,
     this.reminderMinutes,
     this.reminderKept = false,
+    this.tripId,
   });
 
   factory CalendarEvent.fromJson(Map<String, dynamic> json) => CalendarEvent(
@@ -289,6 +298,8 @@ class CalendarEvent {
           )
         : null,
     reminderMinutes: (json['reminder_minutes'] as num?)?.toInt(),
+    // Absent on servers before the trips (specs/30).
+    tripId: json['trip_id'] as String?,
   );
 
   /// Null for a new event: the server generates the id.
@@ -350,6 +361,11 @@ class CalendarEvent {
   /// received file that replaces its earlier copy knows nothing of the reminder the
   /// family gave that copy.
   final bool reminderKept;
+
+  /// The trip this event is the calendar entry of (`api.events.trip_id`, specs/30); null
+  /// for any other event. Read-only: never sent by [toJson], and the server refuses to
+  /// save or delete such an event through the calendar (`trip_event`).
+  final String? tripId;
 
   bool get isRecurring => rrule != null || rdates.isNotEmpty;
 

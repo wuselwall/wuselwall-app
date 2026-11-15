@@ -39,6 +39,7 @@ import 'package:wuselwall/features/reminders/ui/reminders_page.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/services/ui/services_page.dart';
 import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/ui/family_members_page.dart';
@@ -66,6 +67,14 @@ import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 import 'package:wuselwall/features/system/ui/system_page.dart';
+import 'package:wuselwall/features/trips/domain/trip_entry_args.dart';
+import 'package:wuselwall/features/trips/domain/trip_models.dart';
+import 'package:wuselwall/features/trips/ui/trip_compare_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_discover_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_entry_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_windows_page.dart';
+import 'package:wuselwall/features/trips/ui/trips_page.dart';
 
 abstract final class Routes {
   static const splash = '/splash';
@@ -136,6 +145,42 @@ abstract final class Routes {
   static const baselines = '/settings/baselines';
   static const reminders = '/settings/reminders';
   static const shortcuts = '/settings/shortcuts';
+
+  /// Wetter und Karten: the opt-in services (ADR-022); a guardian's page.
+  static const servicesSettings = '/settings/services';
+
+  // Trips (specs/30). The static paths come before the `:id` ones in the router.
+  static const trips = '/trips';
+
+  /// Wohin?: discovery. `extra`: a `DateTimeRange` to look at, or none.
+  static const tripDiscover = '/trips/discover';
+
+  /// Zeitfenster. Query `trip=<id>`: the idea a chosen window is for.
+  static const tripWindows = '/trips/windows';
+
+  /// One trip. [tripPath] fills the id in.
+  static const tripPathTemplate = '/trips/:id';
+
+  /// Comparing and combining. Query `kind=transport|stay|rental`. [tripComparePath].
+  static const tripComparePathTemplate = '/trips/:id/compare';
+
+  /// An entry. `extra`: a `TripEntryArgs`. [tripEntryPath].
+  static const tripEntryPathTemplate = '/trips/:id/entry';
+
+  /// The page of the trip [id].
+  static String tripPath(String id) => '$trips/${Uri.encodeComponent(id)}';
+
+  /// The comparison of the trip [id], on [kind] (transport, stay or rental).
+  static String tripComparePath(String id, {EntryKind? kind}) =>
+      '${tripPath(id)}/compare${kind == null ? '' : '?kind=${kind.wire}'}';
+
+  /// The entry page of the trip [id]; pass a `TripEntryArgs` as the `extra`.
+  static String tripEntryPath(String id) => '${tripPath(id)}/entry';
+
+  /// The windows page, for the idea [tripId] when given.
+  static String tripWindowsPath({String? tripId}) => tripId == null
+      ? tripWindows
+      : '$tripWindows?trip=${Uri.encodeComponent(tripId)}';
 
   static bool isSetup(String path) =>
       path == setup || path.startsWith('$setup/');
@@ -488,6 +533,47 @@ final routerProvider = Provider<GoRouter>((ref) {
       _materialRoute(
         path: Routes.shortcuts,
         builder: (_, _) => const ShortcutsPage(),
+      ),
+      _materialRoute(
+        path: Routes.servicesSettings,
+        builder: (_, _) => const ServicesPage(),
+      ),
+      // Static paths first: `/trips/discover` is not a trip called "discover".
+      _materialRoute(path: Routes.trips, builder: (_, _) => const TripsPage()),
+      _materialRoute(
+        path: Routes.tripDiscover,
+        builder: (_, state) =>
+            TripDiscoverPage(range: state.extra as flutter.DateTimeRange?),
+      ),
+      _materialRoute(
+        path: Routes.tripWindows,
+        builder: (_, state) =>
+            TripWindowsPage(tripId: state.uri.queryParameters['trip']),
+      ),
+      _materialRoute(
+        path: Routes.tripPathTemplate,
+        builder: (_, state) => TripPage(tripId: state.pathParameters['id']!),
+      ),
+      _materialRoute(
+        path: Routes.tripComparePathTemplate,
+        builder: (_, state) => TripComparePage(
+          tripId: state.pathParameters['id']!,
+          kind: switch (state.uri.queryParameters['kind']) {
+            'transport' => EntryKind.transport,
+            'stay' => EntryKind.stay,
+            'rental' => EntryKind.rental,
+            _ => null,
+          },
+        ),
+      ),
+      _materialRoute(
+        path: Routes.tripEntryPathTemplate,
+        builder: (_, state) => TripEntryPage(
+          tripId: state.pathParameters['id']!,
+          args: state.extra is TripEntryArgs
+              ? state.extra! as TripEntryArgs
+              : null,
+        ),
       ),
       _materialRoute(
         path: Routes.shoppingHistory,

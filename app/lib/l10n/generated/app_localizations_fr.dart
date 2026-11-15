@@ -7043,6 +7043,62 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce serveur n’accepte que les personnes invitées. Demande une invitation à un parent de la famille.';
 
   @override
+  String get errTripInvalid =>
+      'Ce voyage n’est pas valide. Vérifie le nom et les dates.';
+
+  @override
+  String get errTripNotFound => 'Ce voyage n’existe plus.';
+
+  @override
+  String get errTripEntryInvalid =>
+      'Cette entrée n’est pas valide. Vérifie le nom, les dates et le prix.';
+
+  @override
+  String get errTripEntryNotFound => 'Cette entrée n’existe plus.';
+
+  @override
+  String get errTripComboInvalid =>
+      'Cette combinaison n’est pas valide. Vérifie son nom et ses entrées.';
+
+  @override
+  String get errTripComboNotFound => 'Cette combinaison n’existe plus.';
+
+  @override
+  String get errTripCheckInvalid => 'Cet élément de la liste n’est pas valide.';
+
+  @override
+  String get errTripCheckNotFound => 'Cet élément de la liste n’existe plus.';
+
+  @override
+  String get errTripEvent =>
+      'L’entrée du calendrier d’un voyage se modifie dans le voyage, pas dans le calendrier.';
+
+  @override
+  String get errTripHomeInvalid => 'Ce lieu de départ n’est pas valide.';
+
+  @override
+  String get errAdultsOnly => 'Seuls les adultes peuvent faire cela.';
+
+  @override
+  String get errServiceInvalid => 'Ce réglage du service n’est pas valide.';
+
+  @override
+  String get errServiceOff =>
+      'Il faut un service météo ou de cartes pour cela. Un parent peut en activer un dans les réglages.';
+
+  @override
+  String get errServiceKeyMissing =>
+      'Ce service a besoin d’une clé. Un parent peut l’ajouter dans les réglages.';
+
+  @override
+  String get errServiceLimit =>
+      'Ce service a été sollicité trop souvent. Réessaie plus tard.';
+
+  @override
+  String get errServiceFailed =>
+      'Le service n’a pas répondu. Réessaie plus tard.';
+
+  @override
   String accountNoticeMfaResetYou(String name) {
     return '$name a réinitialisé ta double authentification';
   }
