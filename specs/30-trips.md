@@ -384,7 +384,7 @@ text[])`, `api.service_cache_put(p_key, p_capability, p_provider, p_payload, p_t
 Errors (the hint travels): `WW-TRIP-001 trip_invalid`, `trip_not_found`, `WW-TRIP-002
 trip_entry_invalid`, `trip_entry_not_found`, `WW-TRIP-006 trip_combo_invalid`, `trip_combo_not_found`, `WW-TRIP-003 trip_check_invalid`,
 `trip_check_not_found`, `WW-TRIP-004 trip_event` (the calendar entry of a trip is changed in the
-trip), `WW-TRIP-005 trip_home_invalid`, `adult_required`, `WW-SVC-001 service_invalid`, and the
+trip), `WW-TRIP-005 trip_home_invalid`, `adults_only`, `WW-SVC-001 service_invalid`, and the
 existing `kiosk_forbidden`, `guardian_required`, `device_revoked`.
 
 ### Edge Functions (user JWT; POST, JSON)
