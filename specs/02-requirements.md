@@ -171,7 +171,7 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 ## FR-9 Trips
 
 Added 2026-11-15 (issue #265). Specified in [30](30-trips.md); the services in
-[ADR-022](adr/ADR-022-opt-in-services.md).
+[ADR-023](adr/ADR-023-opt-in-services.md).
 
 | ID | Requirement | Prio | Origin |
 |---|---|---|---|
@@ -200,7 +200,7 @@ Added 2026-11-15 (issue #265). Specified in [30](30-trips.md); the services in
 | NFR-6 | **Availability** — self-hosted, single node, no HA | ~99% is fine; scheduled downtime acceptable | B3 |
 | NFR-7 | **Cost** — total recurring spend | Hosting ≤ €13 / month, plus the Apple Developer Program (€99 / year). *Proposed 2026-10-11 — the native apps and a larger server for Supabase break the original ≤ €10 target; confirm in [Q36](14-open-questions.md)* *Since [ADR-018](adr/ADR-018-self-hosted-only.md) (2026-10-13): no hosted flavour, so ≈ €8–12/month is the whole cost ([10](10-deployment-and-ops.md#costs)); every other household's server is its operator's cost* | B3 |
 | NFR-8 | **Data residency** — all data stored in Germany or the EU | Hard requirement for what the project ships and recommends (EU regions, EU mail providers). Each household's data lives wherever its operator runs the server ([ADR-018](adr/ADR-018-self-hosted-only.md)) | B3 |
-| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Push via APNs/FCM and distribution via Apple/Google are the accepted exceptions, and carry no data beyond the notification itself (v1 sends no push at all: its reminders are local, [Q47](14-open-questions.md)). *Since 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)):* one SMTP provider for sign-in codes is also accepted (Sign in with Apple/Google was too, until 2026-10-17). No deferred-deep-link, attribution or captcha service. *Since 2026-11-15 ([ADR-022](adr/ADR-022-opt-in-services.md)):* weather and map providers a household switched on itself are contacted by its server, never by an app, and none is on by default | B3 |
+| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Push via APNs/FCM and distribution via Apple/Google are the accepted exceptions, and carry no data beyond the notification itself (v1 sends no push at all: its reminders are local, [Q47](14-open-questions.md)). *Since 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)):* one SMTP provider for sign-in codes is also accepted (Sign in with Apple/Google was too, until 2026-10-17). No deferred-deep-link, attribution or captcha service. *Since 2026-11-15 ([ADR-023](adr/ADR-023-opt-in-services.md)):* weather and map providers a household switched on itself are contacted by its server, never by an app, and none is on by default | B3 |
 | NFR-10 | **Transport security** — HTTPS everywhere, HSTS, modern TLS only | Enforced by the reverse proxy | B3 |
 | NFR-11 | **Backups** — nightly, encrypted, off-site, with a tested restore | RPO 24 h, RTO 4 h | D |
 | NFR-12 | **Patching** — OS and dependency updates | Unattended OS security updates; dependency review monthly | B3 |

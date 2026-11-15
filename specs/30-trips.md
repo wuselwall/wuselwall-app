@@ -4,7 +4,7 @@
 the calendar file import), [15](15-module-school-timetable.md) (Ferien and public holidays),
 [27](27-family-rituals.md) (Vorfreude) and [09](09-clients-and-ux.md) (the registers). The
 optional weather and map services are decided in
-[ADR-022](adr/ADR-022-opt-in-services.md). Migrations `20261115100000_services.sql` (pgTAP 315)
+[ADR-023](adr/ADR-023-opt-in-services.md). Migrations `20261115100000_services.sql` (pgTAP 315)
 and `20261115110000_trips.sql` (pgTAP 320), Edge Functions `services` and `trips`, app code in
 `app/lib/features/trips/` and `app/lib/features/services/`.*
 
@@ -258,7 +258,7 @@ rain", the sea temperature (at least), tags, and the travel effort.
 
 ## Services
 
-Weather, place search, routes and map pictures come from third parties. ADR-022 decides how:
+Weather, place search, routes and map pictures come from third parties. ADR-023 decides how:
 
 - **A service is off until a guardian switches it on**, per household, under Einstellungen →
   *Wetter und Karten* (`/settings/services`). The page says for each provider what it

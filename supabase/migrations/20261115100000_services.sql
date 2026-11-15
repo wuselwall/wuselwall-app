@@ -1,5 +1,5 @@
 -- Opt-in services: weather, place search, routes and map pictures through the family's server,
--- with the family's own keys (ADR-022, specs/30 "Services").
+-- with the family's own keys (ADR-023, specs/30 "Services").
 --
 -- Third parties are contacted by the Edge Functions `services` and `trips`, never by an app, and
 -- only for a household whose guardian switched the provider on. This migration holds what the

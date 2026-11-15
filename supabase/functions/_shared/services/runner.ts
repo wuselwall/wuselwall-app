@@ -1,4 +1,4 @@
-// The services runner (ADR-022, specs/30 "Services"): asks the household's providers in the
+// The services runner (ADR-023, specs/30 "Services"): asks the household's providers in the
 // household's order and returns the first answer. The Edge Functions `services` and `trips` get
 // a `Services` from `openServices` and nothing else, so no provider is contacted for a caller
 // the database refused.
@@ -88,7 +88,7 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 const point = (p: LatLon): LatLon => ({ lat: round2(p.lat), lon: round2(p.lon) });
 
 /**
- * The question as a provider may see it (ADR-022: as little as the question needs):
+ * The question as a provider may see it (ADR-023: as little as the question needs):
  * coordinates to two decimals (home and route points included), search text trimmed and
  * single-spaced. The cache key is built from the same.
  */

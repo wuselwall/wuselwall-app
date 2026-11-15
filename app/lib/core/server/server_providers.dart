@@ -48,7 +48,7 @@ const featureEventReminder = 'event-reminder';
 const featureTrips = 'trips';
 
 /// The server offers opt-in weather and map services through the family's own server
-/// (ADR-022, specs/30 "Services"). Announced by the migration 20261115100000.
+/// (ADR-023, specs/30 "Services"). Announced by the migration 20261115100000.
 const featureServices = 'services';
 
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
@@ -86,7 +86,7 @@ final tripsSupportedProvider = Provider<bool>(
   (ref) => ref.watch(serverSupportsProvider(featureTrips)),
 );
 
-/// Whether the server has the opt-in services (ADR-022); without, the settings page and
+/// Whether the server has the opt-in services (ADR-023); without, the settings page and
 /// every weather, place and route line are hidden.
 final servicesSupportedProvider = Provider<bool>(
   (ref) => ref.watch(serverSupportsProvider(featureServices)),

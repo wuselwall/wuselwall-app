@@ -93,7 +93,7 @@ enum SettingsTile {
     leaveFamily ||
     deleteAccount => env.personalPhone,
     server => env.hasServer,
-    // Weather and maps of the trips (ADR-022): only where the server has them.
+    // Weather and maps of the trips (ADR-023): only where the server has them.
     services => env.services,
     // What the family taught the app is for its guardians to read and forget.
     learnedWords => env.guardian && env.localMatching,
@@ -378,7 +378,7 @@ class SettingsEnv {
   /// built by hand, as a server that does not say counts as current.
   final bool localMatching;
 
-  /// The server has the opt-in services of the trips (ADR-022): weather and maps.
+  /// The server has the opt-in services of the trips (ADR-023): weather and maps.
   final bool services;
 
   /// A non-guardian at a shared or kiosk device: only the settings the server lets a

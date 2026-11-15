@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:wuselwall/features/board/domain/week_board.dart' show parseDate;
 
-/// The opt-in services (ADR-022, specs/30 "Services"): the providers a guardian can
+/// The opt-in services (ADR-023, specs/30 "Services"): the providers a guardian can
 /// switch on, and what they answer through the family's server. Shaped by the `services`
 /// Edge Function's answers and `api.service_providers`.
 

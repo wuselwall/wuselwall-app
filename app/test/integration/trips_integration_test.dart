@@ -21,7 +21,7 @@ import 'package:wuselwall/features/trips/data/trips_repository.dart';
 import 'package:wuselwall/features/trips/domain/trip_functions.dart';
 import 'package:wuselwall/features/trips/domain/trip_models.dart';
 
-/// Family trips and the opt-in services (specs/30, ADR-022) against a real backend,
+/// Family trips and the opt-in services (specs/30, ADR-023) against a real backend,
 /// through the app's own repositories (so the Dart wire format is proven as well):
 /// `flutter test test/integration --dart-define-from-file=env/ci.json` on a throwaway stack
 /// (CI's `backend` job starts one; locally `npx supabase start`).

@@ -1,4 +1,4 @@
-// The one way a provider plug-in reaches the network (ADR-022): a fetch that only talks https
+// The one way a provider plug-in reaches the network (ADR-023): a fetch that only talks https
 // to the hosts the plug-in declared, never follows a redirect, reads at most a capped body and
 // carries no cookies. The runner wraps the real fetch in this before a plug-in sees it.
 //

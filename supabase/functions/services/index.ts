@@ -1,4 +1,4 @@
-// POST {action, ...} → opt-in services for the household's own providers (ADR-022, specs/30
+// POST {action, ...} → opt-in services for the household's own providers (ADR-023, specs/30
 // "Edge Functions"): `catalogue`, `test`, `geocode`, `forecast`, `climate`, `route`, `map`.
 //
 // The caller is verified by Auth, then by the database as the caller (`api.service_request`:

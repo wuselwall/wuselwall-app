@@ -11,7 +11,7 @@ import 'package:wuselwall/features/services/domain/service_models.dart';
 import 'package:wuselwall/features/services/ui/service_labels.dart';
 import 'package:wuselwall/features/trips/ui/trip_links.dart';
 
-/// One provider of the services page (ADR-022): what it is, what it costs and offers, and
+/// One provider of the services page (ADR-023): what it is, what it costs and offers, and
 /// in words what it receives; the switch, its key (write-only) and a test. In Advanced a
 /// guardian also chooses what it is used for and its place in the order.
 class ServiceProviderCard extends ConsumerStatefulWidget {

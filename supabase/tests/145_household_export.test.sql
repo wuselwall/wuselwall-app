@@ -282,7 +282,7 @@ reset role;
 -- guardian applied is in the exported timetables. password_reset (Q48): a one-time code's hash,
 -- valid ten minutes; nothing a family would move. shopping_run (specs/07 "Telling the others"): a
 -- shopping trip in progress, a signal that is gone after a day; the finished trip is exported.
--- service_secret (ADR-022): a family's API keys for weather and map providers, write-only, never exported.
+-- service_secret (ADR-023): a family's API keys for weather and map providers, write-only, never exported.
 select is((select coalesce(string_agg(c.relname, ', ' order by c.relname), '') from pg_attribute a
             join pg_class c on c.oid = a.attrelid join pg_namespace n on n.oid = c.relnamespace
            where n.nspname = 'app' and c.relkind in ('r', 'p') and a.attname = 'household_id'

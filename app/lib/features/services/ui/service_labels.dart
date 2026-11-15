@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/services/domain/service_models.dart';
 
-/// The words of the services page (ADR-022): what a provider offers, what it receives,
+/// The words of the services page (ADR-023): what a provider offers, what it receives,
 /// what it costs and why a call failed. One place, so the page and its tests read the same.
 
 String serviceCapabilityLabel(AppLocalizations l10n, ServiceCapability c) =>

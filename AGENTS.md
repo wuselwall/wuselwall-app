@@ -79,7 +79,7 @@ destinations (`_shared/trips/destinations.ts`) for discovery. The pages live in
 `app/lib/features/trips/` and open from the Calendar tab and a card on Today, in the adult
 register only; children and the wall see the calendar entry and the countdown. Reads go through
 the read cache, so a trip is readable without network.
-Opt-in services ([ADR-022](specs/adr/ADR-022-opt-in-services.md), the same day): weather, place
+Opt-in services ([ADR-023](specs/adr/ADR-023-opt-in-services.md), the same day): weather, place
 search, routes and map pictures come from providers a guardian switches on per household under
 Einstellungen → Wetter und Karten; none is on by default. A provider is one plug-in file in
 `supabase/functions/_shared/services/providers/` (contract in `types.ts`; `open-meteo`, `met-no`,

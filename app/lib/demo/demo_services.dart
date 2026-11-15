@@ -9,7 +9,7 @@ import 'package:wuselwall/features/services/data/services_repository.dart';
 import 'package:wuselwall/features/services/domain/service_models.dart';
 import 'package:wuselwall/features/trips/domain/trip_dates.dart';
 
-/// The opt-in services of the demo family (ADR-022): the catalogue of the seven first
+/// The opt-in services of the demo family (ADR-023): the catalogue of the seven first
 /// providers, with `open-meteo` switched on for climate, forecast and place search, as a
 /// guardian would have done. Answers are made up from the coordinates; nothing contacts
 /// a provider. Switching a provider on or off and storing a key work in memory.

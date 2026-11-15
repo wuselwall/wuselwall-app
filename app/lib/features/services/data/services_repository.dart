@@ -7,7 +7,7 @@ import 'package:wuselwall/features/services/domain/service_models.dart';
 Map<String, dynamic> _object(Object? json) =>
     Map<String, dynamic>.from(json! as Map);
 
-/// The opt-in services (ADR-022, specs/30 "Services"): the catalogue and the household's
+/// The opt-in services (ADR-023, specs/30 "Services"): the catalogue and the household's
 /// choice, and the answers of the `services` Edge Function. Only the family's server
 /// contacts a provider; the app asks the server.
 ///

@@ -1,4 +1,4 @@
-// Opt-in services (ADR-022, specs/30 "Services"): the contract between a provider plug-in,
+// Opt-in services (ADR-023, specs/30 "Services"): the contract between a provider plug-in,
 // the runner that asks the household's providers in order, and the functions that use it
 // (`services`, `trips`).
 //

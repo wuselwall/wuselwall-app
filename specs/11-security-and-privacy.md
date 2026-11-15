@@ -242,7 +242,7 @@ other households, and writes no audit row. The household export, which is guardi
 
 ### Opt-in services
 
-Added 2026-11-15 with [ADR-022](adr/ADR-022-opt-in-services.md) and [30](30-trips.md#services).
+Added 2026-11-15 with [ADR-023](adr/ADR-023-opt-in-services.md) and [30](30-trips.md#services).
 A guardian may switch on providers for weather, place search, routes and map pictures. What
 holds:
 

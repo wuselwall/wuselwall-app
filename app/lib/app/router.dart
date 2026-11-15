@@ -146,7 +146,7 @@ abstract final class Routes {
   static const reminders = '/settings/reminders';
   static const shortcuts = '/settings/shortcuts';
 
-  /// Wetter und Karten: the opt-in services (ADR-022); a guardian's page.
+  /// Wetter und Karten: the opt-in services (ADR-023); a guardian's page.
   static const servicesSettings = '/settings/services';
 
   // Trips (specs/30). The static paths come before the `:id` ones in the router.

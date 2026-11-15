@@ -23,7 +23,7 @@ import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
 /// Wetter und Karten (`Routes.servicesSettings`): a guardian switches providers on and
-/// off, stores their keys and sets the home place (ADR-022, specs/30 "Services"). Others
+/// off, stores their keys and sets the home place (ADR-023, specs/30 "Services"). Others
 /// see the same state read-only.
 class ServicesPage extends ConsumerWidget {
   const ServicesPage({super.key});

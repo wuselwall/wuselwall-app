@@ -1,7 +1,7 @@
 begin;
 select plan(126);
 
--- Opt-in services (ADR-022, specs/30 "Services"), migrations/20261115100000_services.sql: the
+-- Opt-in services (ADR-023, specs/30 "Services"), migrations/20261115100000_services.sql: the
 -- provider rows a guardian keeps, the write-only keys, the door the Edge Functions ask first, the
 -- service-role functions and the cache of public facts. Start from an empty system, whatever the
 -- database already holds (all rolled back).

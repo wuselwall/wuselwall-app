@@ -1,4 +1,4 @@
-# ADR-022 — Opt-in services: weather and maps through the family's server, with the family's keys
+# ADR-023 — Opt-in services: weather and maps through the family's server, with the family's keys
 
 **Status:** Accepted · 2026-11-15 · Amends P2 of
 [23](../23-roadmap-after-alpha.md#the-test-every-item-passes) and its "Not on the roadmap" row
