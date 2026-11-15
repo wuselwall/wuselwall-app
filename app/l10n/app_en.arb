@@ -4105,6 +4105,368 @@
   },
   "eventTemplateSavedNote": "Saved as a template.",
   "eventTemplateErrLimit": "Your family already has 50 templates. Delete one first.",
+  "tripListWindows": "Time windows",
+  "tripListWindowsHelp": "When can all of us get away?",
+  "tripListDiscover": "Where to?",
+  "tripListDiscoverHelp": "Where is it warm and dry then?",
+  "tripListNewIdea": "New idea",
+  "tripListUpcoming": "Under way and coming up",
+  "tripListIdeas": "Ideas",
+  "tripListPast": "Past trips ({count})",
+  "@tripListPast": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripListEmptyTitle": "No trips yet",
+  "tripListEmpty": "Start with an idea: a place you would like to go, with no dates yet.",
+  "tripListInDays": "{count, plural, =0{Today} =1{Tomorrow} other{In {count} days}}",
+  "@tripListInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripListDayOf": "Day {day} of {total}",
+  "@tripListDayOf": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tripListNoDates": "No dates yet",
+  "tripPageUnavailable": "Trips are not available here.",
+  "tripPageNotFound": "This trip no longer exists.",
+  "tripPageToList": "To all trips",
+  "tripPageMore": "More",
+  "tripPageEdit": "Edit",
+  "tripPageBackToIdea": "Back to idea",
+  "tripPageDelete": "Delete trip",
+  "tripPageDeleteConfirm": "Delete “{title}” with its options, plan and lists?",
+  "@tripPageDeleteConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPageWholeFamily": "The whole family",
+  "tripPageDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@tripPageDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPageChooseDates": "Choose dates",
+  "tripPageFindWindow": "Find a time window",
+  "tripPageEnterDates": "Enter dates",
+  "tripPageChangeDates": "Change dates",
+  "tripPageDatesTooLong": "A trip can last 366 days at most.",
+  "tripPageFix": "We’re doing this",
+  "tripPagePencil": "Pencil in these dates",
+  "tripPageDecided": "Decided. The family can look forward to it.",
+  "tripPageUnfix": "Back to planned",
+  "tripPageCalPlanned": "In the calendar as a dashed entry.",
+  "tripPageCalFixed": "In the calendar with a countdown, also on the wall.",
+  "tripPageTabPlan": "Plan",
+  "tripPageTabPack": "Pack",
+  "tripPageTabPrepare": "Prepare",
+  "tripEditTitle": "Edit trip",
+  "tripEditName": "Name of the trip",
+  "tripEditNameHint": "e.g. Sardinia in summer",
+  "tripEditNameRequired": "Please give the trip a name.",
+  "tripEditDestination": "Destination (optional)",
+  "tripEditFindPlace": "Find place",
+  "tripEditNoPlaces": "No place found.",
+  "tripEditPlaceFound": "Place found",
+  "tripEditWho": "Who is travelling?",
+  "tripEditWholeFamily": "Nobody selected: the whole family travels.",
+  "tripEditCurrency": "Currency",
+  "tripEditCurrencyHelp": "Three letters, e.g. CHF or EUR",
+  "tripEditCurrencyInvalid": "Three letters, please.",
+  "tripEditNote": "Note",
+  "tripPlanDay": "Day {number} · {date}",
+  "@tripPlanDay": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanToday": "Today",
+  "tripPlanDayEmpty": "Nothing planned yet",
+  "tripPlanStayTonight": "Night: {title}",
+  "@tripPlanStayTonight": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanRoleCheckIn": "Check-in",
+  "tripPlanRoleCheckOut": "Check-out",
+  "tripPlanRolePickUp": "Pick-up",
+  "tripPlanRoleReturn": "Return",
+  "tripPlanRoleDeparture": "Departure",
+  "tripPlanRoleArrival": "Arrival",
+  "tripPlanRoleStart": "Start",
+  "tripPlanRoleEnd": "End",
+  "tripPlanUndated": "Without a date",
+  "tripPlanOutside": "Outside the trip’s dates",
+  "tripPlanNoDatesHint": "Choose dates and the days of the trip appear here, with everything you have chosen.",
+  "tripPlanChosen": "Chosen and booked",
+  "tripPlanOptions": "Options",
+  "tripPlanOptionCount": "{count, plural, =1{1 option} other{{count} options}}",
+  "@tripPlanOptionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPlanPriceRange": "{low} to {high}",
+  "@tripPlanPriceRange": {
+    "placeholders": {
+      "low": {
+        "type": "String"
+      },
+      "high": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanPriceChecked": "Price from {date}",
+  "@tripPlanPriceChecked": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanBookingRef": "Booking {ref}",
+  "@tripPlanBookingRef": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanCompare": "Compare",
+  "tripPlanAddOption": "Add option",
+  "tripPlanOpenLink": "Open link",
+  "tripPlanCall": "Call",
+  "tripPlanOpenMap": "Show on map",
+  "tripPlanOpenFailed": "That could not be opened.",
+  "tripInfoSum": "Chosen and booked: {amount}",
+  "@tripInfoSum": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoSumAtLeast": "Chosen and booked: at least {amount}",
+  "@tripInfoSumAtLeast": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoForecast": "Forecast",
+  "tripInfoClimate": "Typical at this time of year",
+  "tripInfoClimateMonth": "{month}: {tmax}° / {tmin}°",
+  "@tripInfoClimateMonth": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "tmax": {
+        "type": "String"
+      },
+      "tmin": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoRainDays": "{count, plural, =1{1 rain day} other{{count} rain days}}",
+  "@tripInfoRainDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripInfoSea": "Sea {temp}°",
+  "@tripInfoSea": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoRoute": "By car from home: {time}, {km} km",
+  "@tripInfoRoute": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoDurationHM": "{hours} h {minutes} min",
+  "@tripInfoDurationHM": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tripInfoDurationM": "{minutes} min",
+  "@tripInfoDurationM": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tripInfoMap": "Map of the destination",
+  "tripInfoForecastDay": "{date}: {weather}, {tmax}° / {tmin}°",
+  "@tripInfoForecastDay": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "weather": {
+        "type": "String"
+      },
+      "tmax": {
+        "type": "String"
+      },
+      "tmin": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoWeatherClear": "Clear",
+  "tripInfoWeatherPartly": "Partly cloudy",
+  "tripInfoWeatherCloudy": "Cloudy",
+  "tripInfoWeatherFog": "Fog",
+  "tripInfoWeatherRain": "Rain",
+  "tripInfoWeatherSnow": "Snow",
+  "tripInfoWeatherStorm": "Thunderstorm",
+  "tripPackProgress": "{done} of {total}",
+  "@tripPackProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPackForAll": "For everyone",
+  "tripPackAddHint": "Add an item",
+  "tripPackAdd": "Add",
+  "tripPackItem": "Item",
+  "tripPackEmpty": "Nothing on the list yet.",
+  "tripPackRename": "Rename",
+  "tripPackRemove": "Remove",
+  "tripPackSuggestions": "Suggestions",
+  "tripPackSuggestionsHelp": "Choose what to add. What each person needs is added for everyone who travels.",
+  "tripPackSuggestionsAdd": "Add to list",
+  "tripPackLastTime": "Like last time",
+  "tripPackLastTimeChoose": "Copy the list of which trip?",
+  "tripPackLastTimeNone": "No other trip has a packing list yet.",
+  "tripPackAdded": "{count, plural, =0{Everything was already on the list.} =1{1 item added.} other{{count} items added.}}",
+  "@tripPackAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPackGroupDocuments": "Documents",
+  "tripPackGroupHealth": "Health",
+  "tripPackGroupElectronics": "Electronics",
+  "tripPackGroupClothes": "Clothes",
+  "tripPackGroupBeach": "Beach and sun",
+  "tripPackGroupKids": "For the children",
+  "tripPackStarterPassports": "Passport or ID",
+  "tripPackStarterHealthInsuranceCard": "Health insurance card",
+  "tripPackStarterBookingConfirmations": "Booking confirmations",
+  "tripPackStarterCashAndCards": "Cash and bank cards",
+  "tripPackStarterPharmacyBag": "First-aid kit",
+  "tripPackStarterRegularMedication": "Medication",
+  "tripPackStarterSunscreen": "Sunscreen",
+  "tripPackStarterInsectRepellent": "Insect repellent",
+  "tripPackStarterChargers": "Phone chargers",
+  "tripPackStarterPowerAdapter": "Travel plug adapter",
+  "tripPackStarterPowerBank": "Power bank",
+  "tripPackStarterHeadphones": "Headphones",
+  "tripPackStarterUnderwearSocks": "Underwear and socks",
+  "tripPackStarterTshirts": "T-shirts",
+  "tripPackStarterTrousersShorts": "Trousers and shorts",
+  "tripPackStarterWarmJumper": "Warm jumper",
+  "tripPackStarterRainJacket": "Rain jacket",
+  "tripPackStarterWalkingShoes": "Comfortable shoes",
+  "tripPackStarterSleepwear": "Sleepwear",
+  "tripPackStarterSwimwear": "Swimwear",
+  "tripPackStarterBeachTowels": "Beach towel",
+  "tripPackStarterSunHat": "Sun hat",
+  "tripPackStarterSunglasses": "Sunglasses",
+  "tripPackStarterCuddlyToy": "Cuddly toy",
+  "tripPackStarterKidsGames": "Games and books for the journey",
+  "tripPackStarterNappiesWipes": "Nappies and wipes",
+  "tripPackStarterJourneySnacks": "Snacks for the journey",
+  "tripTodoAdd": "Add to-do",
+  "tripTodoEdit": "Edit to-do",
+  "tripTodoTitleLabel": "What needs to happen?",
+  "tripTodoDaysLabel": "Days before the trip (optional)",
+  "tripTodoDaysBefore": "{count, plural, =0{On the first day} =1{1 day before} other{{count} days before}}",
+  "@tripTodoDaysBefore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodoDue": "By {date}",
+  "@tripTodoDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripTodoWasDue": "Was due {date}",
+  "@tripTodoWasDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripTodoEmpty": "Nothing to prepare yet. Passports, neighbours, the cat: note what has to happen before you leave.",
+  "tripTodoDone": "Done",
   "passwordSignUpTab": "New account",
   "passwordSignInTab": "Sign in",
   "passwordSignUpAction": "Create account",

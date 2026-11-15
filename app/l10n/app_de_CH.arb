@@ -3,6 +3,7 @@
   "close": "Schliessen",
   "boardPeriod": "{index}. Lektion",
   "boardTasksOf": "Ämtli von {name}",
+  "tripPlanOutside": "Ausserhalb der Reisedaten",
   "boardTasksComingSoon": "Hier erscheinen die Ämtli.",
   "errSettingInvalid": "Dieser Wert liegt ausserhalb des erlaubten Bereichs.",
   "settingMealsSchoolDayHelp": "Die warme Mahlzeit auf der Küchenwand. Beide an heisst zwei warme Mahlzeiten, beide aus keine. An Schultagen essen Kinder mittags oft in der Schule oder im Hort.",
