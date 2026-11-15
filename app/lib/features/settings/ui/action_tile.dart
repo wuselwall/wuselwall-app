@@ -24,37 +24,50 @@ class SettingsActionTile extends StatelessWidget {
   final Widget? action;
   final VoidCallback? onTap;
 
+  // ListTile's own measures, spelled out so that the action under the text can start where
+  // the title starts: the row's padding, the leading box and the gap after it.
+  static const _padding = Tokens.space4;
+  static const _leadingWidth = 40.0;
+  static const _gap = Tokens.space4;
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final action = this.action;
-      final stacked = action != null && constraints.maxWidth < stackBelow;
-      if (!stacked) {
-        return ListTile(
-          // The button ends on the row's edge, where the reset buttons of the other
-          // settings rows end, not 16 px inside it.
-          contentPadding: action == null
-              ? null
-              : const EdgeInsetsDirectional.only(start: Tokens.space4),
-          leading: leading,
-          title: title,
-          subtitle: subtitle,
-          trailing: action,
-          onTap: onTap,
-        );
-      }
-      return ListTile(
+      final tile = ListTile(
+        contentPadding: const EdgeInsetsDirectional.symmetric(
+          horizontal: _padding,
+        ),
+        minLeadingWidth: _leadingWidth,
+        horizontalTitleGap: _gap,
         leading: leading,
         title: title,
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        subtitle: subtitle,
+        onTap: onTap,
+      );
+      if (action == null) return tile;
+      // The button stands beside or under the row, never in it: a row that can be tapped
+      // is a button to a screen reader, and a button inside a button cannot be reached.
+      if (constraints.maxWidth >= stackBelow) {
+        return Row(
           children: [
-            ?subtitle,
-            const SizedBox(height: Tokens.space2),
+            Expanded(child: tile),
             action,
           ],
-        ),
-        onTap: onTap,
+        );
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          tile,
+          Padding(
+            padding: const EdgeInsetsDirectional.only(
+              start: _padding + _leadingWidth + _gap,
+              bottom: Tokens.space2,
+            ),
+            child: action,
+          ),
+        ],
       );
     },
   );

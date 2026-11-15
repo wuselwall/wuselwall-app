@@ -414,7 +414,9 @@ any calendar file with one event (an Outlook or Google export, a club's invitati
 - **Nothing is saved before a guardian says so.** The import page shows title, time, place and
   notes, lets the guardian choose who takes part (nobody: the whole family), and only then
   writes. A guardian on a personal device only; a child's device, a shared device and the wall
-  are told so.
+  are told so. A page that refuses (such a device, or a file that is no event, holds several,
+  is too large or is cancelled) says why and offers one button, *Schließen*, so that a family
+  does not depend on the bar's arrow alone.
 - **The event becomes the family's own:** a normal row with its own id and uid, editable and
   deletable like any other, in the outbound feed like any other. There is no link back to the
   sender and nothing is sent to them.

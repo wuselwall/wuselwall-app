@@ -337,7 +337,21 @@ class _Note extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Padding(
       padding: const EdgeInsets.all(Tokens.space6),
-      child: Text(text, textAlign: TextAlign.center),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(text, textAlign: TextAlign.center),
+          const SizedBox(height: Tokens.space4),
+          // Nothing can be done with this file: the page says how to leave it, not only
+          // the bar's arrow.
+          OutlinedButton(
+            key: const ValueKey('import-event-close'),
+            onPressed: () =>
+                context.canPop() ? context.pop() : context.go(Routes.home),
+            child: Text(context.l10n.close),
+          ),
+        ],
+      ),
     ),
   );
 }
