@@ -98,3 +98,21 @@ test('release orchestration starts signing after preflight instead of duplicate 
   assert.match(job(release, 'preflight'), /needs: plan/);
   assert.match(job(release, 'tag'), /needs: \[plan, preflight\]/);
 });
+
+// v1.12.0's Play upload died of "fastlane: command not found": the job had switched
+// setup-ruby's gem installation off and nothing installed the gems.
+test('a job that runs a gem through Bundler has installed the gems first', () => {
+  for (const file of ['release-android', 'release-ios', 'store-listing']) {
+    const source = workflow(file);
+    const jobs = source.split(/\n(?=  [\w-]+:\n)/).filter((body) => /bundle exec /.test(body));
+    assert.ok(jobs.length > 0, `${file} runs no gem`);
+    for (const body of jobs) {
+      const name = body.match(/^  ([\w-]+):/)[1];
+      const uses = body.indexOf('bundle exec ');
+      const cached = body.search(/bundler-cache: true/);
+      const installed = body.search(/\bbundle install\b/);
+      assert.ok((cached !== -1 && cached < uses) || (installed !== -1 && installed < uses),
+        `${file}/${name} runs bundle exec without bundler-cache: true or bundle install before it`);
+    }
+  }
+});
