@@ -5971,6 +5971,137 @@ class AppLocalizationsFr extends AppLocalizations {
   String get todayLookingForward => 'On a hâte';
 
   @override
+  String tripTodayDayOf(int day, int count) {
+    return 'Jour $day sur $count';
+  }
+
+  @override
+  String tripTodayMore(int count) {
+    return '+$count autres';
+  }
+
+  @override
+  String tripTodayPacked(int packed, int total) {
+    return '$packed sur $total dans la valise';
+  }
+
+  @override
+  String get tripTodayTodos => 'À faire';
+
+  @override
+  String get tripTodayTonight => 'Cette nuit';
+
+  @override
+  String get tripTodayTomorrow => 'Demain';
+
+  @override
+  String get tripTodayNothing => 'Rien de prévu aujourd\'hui.';
+
+  @override
+  String get tripTodayCheckIn => 'Check-in';
+
+  @override
+  String get tripTodayCheckOut => 'Check-out';
+
+  @override
+  String get tripTodayPickUp => 'Prise en charge';
+
+  @override
+  String get tripTodayReturn => 'Retour';
+
+  @override
+  String get tripTodayDeparture => 'Départ';
+
+  @override
+  String get tripTodayArrival => 'Arrivée';
+
+  @override
+  String tripTodayOpen(String title) {
+    return 'Ouvrir le voyage $title';
+  }
+
+  @override
+  String get tripTodayCall => 'Appeler';
+
+  @override
+  String get tripTodayMap => 'Voir sur la carte';
+
+  @override
+  String get tripTodayCannotOpen => 'Impossible d\'ouvrir ici.';
+
+  @override
+  String get tripImportAction => 'Ajouter au voyage';
+
+  @override
+  String get tripImportTitle => 'Quel voyage ?';
+
+  @override
+  String get tripImportIntro =>
+      'Chaque événement du fichier devient une entrée du voyage, comme réservée.';
+
+  @override
+  String tripImportEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ces $count entrées seront ajoutées',
+      one: 'Cette entrée sera ajoutée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripImportSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count événements du fichier sont ignorés (annulés ou sans début).',
+      one: '1 événement du fichier est ignoré (annulé ou sans début).',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripImportNothing =>
+      'Aucun événement de ce fichier n\'a pu être lu.';
+
+  @override
+  String get tripImportConfirm => 'Ajouter';
+
+  @override
+  String tripImportDone(int added, int updated) {
+    return '$added ajoutées, $updated mises à jour';
+  }
+
+  @override
+  String get tripImportFallbackTitle => 'Réservation';
+
+  @override
+  String get tripImportSeveral =>
+      'Ce fichier contient plusieurs événements. Ils peuvent aller dans un voyage.';
+
+  @override
+  String get tripCalendarNotice =>
+      'Ce rendez-vous fait partie d’un voyage et se modifie là-bas.';
+
+  @override
+  String get tripCalendarOpen => 'Ouvrir le voyage';
+
+  @override
+  String get tripCalendarPlanTitle => 'Planifier un voyage';
+
+  @override
+  String get tripCalendarPlanLine => 'Comparer, réserver, préparer';
+
+  @override
+  String get settingsServicesTitle => 'Météo et cartes';
+
+  @override
+  String get settingsServicesSubtitle =>
+      'Prévisions, lieux et itinéraires pour les voyages';
+
+  @override
   String get eventIconNone => 'Pas d’image';
 
   @override
@@ -6927,6 +7058,406 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shoppingTileStarter => 'Suggestion';
 
   @override
+  String get tripEntryNewTitle => 'Ajouter une option';
+
+  @override
+  String get tripEntryEditTitle => 'Modifier l\'entrée';
+
+  @override
+  String get tripEntryName => 'Nom';
+
+  @override
+  String get tripEntryNameRequired => 'Indique un nom.';
+
+  @override
+  String get tripEntryMode => 'Moyen de transport';
+
+  @override
+  String tripEntryPrice(String currency) {
+    return 'Prix ($currency)';
+  }
+
+  @override
+  String tripEntryPriceFrom(String date) {
+    return 'Prix du $date';
+  }
+
+  @override
+  String get tripEntryPriceInvalid =>
+      'Saisis un montant, par ex. 840 ou 1249,50.';
+
+  @override
+  String get tripEntryLink => 'Lien';
+
+  @override
+  String get tripEntryLinkInvalid =>
+      'Utilise une adresse web qui commence par http:// ou https://.';
+
+  @override
+  String get tripEntryPasteLink => 'Coller le lien';
+
+  @override
+  String get tripEntryPasteNone =>
+      'Le presse-papiers ne contient aucune adresse web.';
+
+  @override
+  String get tripEntryOpenLink => 'Ouvrir le lien';
+
+  @override
+  String get tripEntryOpenFailed => 'Impossible d\'ouvrir cela.';
+
+  @override
+  String get tripEntryMore => 'Plus de détails';
+
+  @override
+  String get tripEntryLess => 'Moins de détails';
+
+  @override
+  String get tripEntryDetails => 'Détails';
+
+  @override
+  String get tripEntryDetailsHint => '1 escale, bagage inclus';
+
+  @override
+  String get tripEntryFrom => 'De';
+
+  @override
+  String get tripEntryTo => 'À';
+
+  @override
+  String get tripEntryPickUpPlace => 'Lieu de prise en charge';
+
+  @override
+  String get tripEntryReturnPlace => 'Lieu de restitution';
+
+  @override
+  String get tripEntryStartTransport => 'Départ';
+
+  @override
+  String get tripEntryEndTransport => 'Arrivée';
+
+  @override
+  String get tripEntryStartStay => 'Arrivée';
+
+  @override
+  String get tripEntryEndStay => 'Départ';
+
+  @override
+  String get tripEntryStartRental => 'Prise en charge';
+
+  @override
+  String get tripEntryEndRental => 'Restitution';
+
+  @override
+  String get tripEntryStartPlain => 'Début';
+
+  @override
+  String get tripEntryEndPlain => 'Fin';
+
+  @override
+  String get tripEntryAddDate => 'Choisir la date';
+
+  @override
+  String get tripEntryAddTime => 'Choisir l\'heure';
+
+  @override
+  String get tripEntryClearDate => 'Retirer la date';
+
+  @override
+  String get tripEntryClearTime => 'Retirer l\'heure';
+
+  @override
+  String get tripEntryEndBeforeStart => 'La fin est avant le début.';
+
+  @override
+  String get tripEntryCancelUntil => 'Annulation gratuite jusqu\'au';
+
+  @override
+  String get tripEntryAddress => 'Adresse';
+
+  @override
+  String get tripEntryOpenAddress => 'Voir sur la carte';
+
+  @override
+  String get tripEntryPhone => 'Téléphone';
+
+  @override
+  String get tripEntryCallPhone => 'Appeler';
+
+  @override
+  String get tripEntryBookingRef => 'Référence de réservation';
+
+  @override
+  String get tripEntryNote => 'Note';
+
+  @override
+  String get tripEntryState => 'État';
+
+  @override
+  String get tripEntryCopy => 'Copier comme autre option';
+
+  @override
+  String get tripEntryCopied => 'Copié. Voici la copie.';
+
+  @override
+  String get tripEntryDelete => 'Supprimer l\'entrée';
+
+  @override
+  String get tripEntryDeleteTitle => 'Supprimer cette entrée ?';
+
+  @override
+  String tripEntryDeleteBody(String title) {
+    return '« $title » est retiré du voyage et des combinaisons gardées.';
+  }
+
+  @override
+  String get tripEntryGone => 'Ce voyage n\'existe plus.';
+
+  @override
+  String get tripEntryUnavailable =>
+      'Les voyages ne sont pas disponibles sur cet appareil.';
+
+  @override
+  String get tripCompareTitle => 'Comparer';
+
+  @override
+  String get tripCompareUnavailable =>
+      'La comparaison n\'est pas disponible sur cet appareil.';
+
+  @override
+  String get tripCompareGone => 'Ce voyage n\'existe plus.';
+
+  @override
+  String tripCompareSection(String kind, int count) {
+    return '$kind · $count';
+  }
+
+  @override
+  String tripCompareStripLabel(String kind) {
+    return '$kind, options côte à côte';
+  }
+
+  @override
+  String get tripCompareCheapest => 'Le moins cher';
+
+  @override
+  String tripComparePerNight(String price) {
+    return '$price par nuit';
+  }
+
+  @override
+  String tripComparePerDay(String price) {
+    return '$price par jour';
+  }
+
+  @override
+  String get tripCompareNoPrice => 'Pas encore de prix';
+
+  @override
+  String tripCompareFromTo(String from, String to) {
+    return '$from → $to';
+  }
+
+  @override
+  String tripCompareRange(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String tripCompareFreeCancel(String date) {
+    return 'Annulation gratuite jusqu\'au $date';
+  }
+
+  @override
+  String get tripCompareCancelPassed => 'L\'annulation gratuite est passée';
+
+  @override
+  String tripCompareTick(String title) {
+    return 'Essayer « $title » dans la combinaison';
+  }
+
+  @override
+  String get tripCompareEdit => 'Modifier';
+
+  @override
+  String get tripCompareAdd => 'Ajouter une option';
+
+  @override
+  String get tripCompareAddTransport => 'Ajouter un transport';
+
+  @override
+  String get tripCompareAddStay => 'Ajouter un hébergement';
+
+  @override
+  String get tripCompareAddRental => 'Ajouter une voiture de location';
+
+  @override
+  String get tripCompareEmptyTitle => 'Pas encore d\'options';
+
+  @override
+  String get tripCompareEmptyMessage =>
+      'Rassemblez ici vols, hébergements et voitures de location, comparez-les et essayez des combinaisons.';
+
+  @override
+  String get tripCompareHint =>
+      'Coche une option de chaque sorte, puis garde la combinaison.';
+
+  @override
+  String get tripComboSection => 'Combinaisons gardées';
+
+  @override
+  String tripComboTotal(String amount) {
+    return 'Total $amount';
+  }
+
+  @override
+  String tripComboTotalAtLeast(String amount) {
+    return 'Au moins $amount';
+  }
+
+  @override
+  String tripComboNights(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nuits',
+      one: '1 nuit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripComboDates(String dates, String nights) {
+    return '$dates · $nights';
+  }
+
+  @override
+  String get tripComboNoDates => 'Pas encore de dates';
+
+  @override
+  String get tripComboFits => 'Tout va ensemble';
+
+  @override
+  String tripComboWarningsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points ne vont pas',
+      one: '1 point ne va pas',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripComboShowAll => 'Tout afficher';
+
+  @override
+  String get tripComboShowLess => 'Afficher moins';
+
+  @override
+  String get tripComboKeep => 'Garder comme combinaison';
+
+  @override
+  String tripComboWarnNights(int count, String dates) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nuits sans hébergement : $dates',
+      one: '1 nuit sans hébergement : $dates',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripComboWarnRentalNoTransport(String name) {
+    return '$name : voiture de location sans transport';
+  }
+
+  @override
+  String tripComboWarnRentalBefore(String name) {
+    return '$name commence avant l\'arrivée';
+  }
+
+  @override
+  String tripComboWarnRentalAfter(String name) {
+    return '$name se termine après le départ';
+  }
+
+  @override
+  String tripComboWarnOverlap(String first, String second, String dates) {
+    return '$first et $second se chevauchent : $dates';
+  }
+
+  @override
+  String tripComboWarnPrice(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count options sans prix, le total est un minimum',
+      one: '1 option sans prix, le total est un minimum',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripComboKeepTitle => 'Garder la combinaison';
+
+  @override
+  String get tripComboName => 'Nom de la combinaison';
+
+  @override
+  String get tripComboKept => 'Combinaison gardée.';
+
+  @override
+  String get tripComboRename => 'Renommer';
+
+  @override
+  String get tripComboLoad => 'Charger dans les cases';
+
+  @override
+  String tripComboLoaded(String name) {
+    return '« $name » est chargée. Modifie les cases et garde-la à nouveau.';
+  }
+
+  @override
+  String get tripComboDelete => 'Supprimer la combinaison';
+
+  @override
+  String tripComboDeleteTitle(String name) {
+    return 'Supprimer « $name » ?';
+  }
+
+  @override
+  String get tripComboDeleteBody => 'Les options elles-mêmes restent.';
+
+  @override
+  String get tripComboTake => 'Prendre celle-ci';
+
+  @override
+  String tripComboTakeTitle(String name) {
+    return 'Prendre « $name » ?';
+  }
+
+  @override
+  String get tripComboTakeBody =>
+      'Celles-ci deviennent les choisies. Les autres transports, hébergements et voitures de location choisis redeviennent des options. Les réservés ne changent pas.';
+
+  @override
+  String tripComboSetDates(String dates) {
+    return 'Fixer aussi les dates du voyage : $dates';
+  }
+
+  @override
+  String tripComboTaken(int chosen, int released) {
+    return 'Choisies : $chosen. Redevenues des options : $released.';
+  }
+
+  @override
+  String tripComboTakenDates(int chosen, int released) {
+    return 'Choisies : $chosen. Redevenues des options : $released. Les dates du voyage sont fixées.';
+  }
+
+  @override
   String get settingsGroupShoppingTitle => 'Courses';
 
   @override
@@ -6934,6 +7465,490 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsSectionLearnedWords => 'Mots appris';
+
+  @override
+  String get tripWindowsTitle => 'Fenêtres de temps';
+
+  @override
+  String get tripWindowsUnavailable =>
+      'Les voyages ne sont pas disponibles ici.';
+
+  @override
+  String get tripWindowsIntro =>
+      'Quand pourrions-nous partir ? Voici les périodes où tous ceux qui partent sont libres.';
+
+  @override
+  String get tripWindowsLengthLabel => 'Séjour le plus court';
+
+  @override
+  String get tripWindowsWhoLabel => 'Qui part ?';
+
+  @override
+  String get tripWindowsWhoHint => 'Sans sélection, tout le monde part.';
+
+  @override
+  String tripWindowDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripWindowKindLongWeekend => 'Week-end prolongé';
+
+  @override
+  String get tripWindowHolidaysFallback => 'Vacances';
+
+  @override
+  String tripWindowLeave(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours de congé pour les adultes',
+      one: '1 jour de congé pour les adultes',
+      zero: 'Aucun jour de congé nécessaire',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripWindowPartialBefore(String name, String date) {
+    return '$name est libre dès le $date';
+  }
+
+  @override
+  String tripWindowPartialAfter(String name, String date) {
+    return '$name est encore libre jusqu’au $date';
+  }
+
+  @override
+  String get tripWindowFree => 'Rien ne gêne';
+
+  @override
+  String get tripWindowConflicts => 'Ce qui gêne';
+
+  @override
+  String get tripWindowTake => 'Prendre ces dates';
+
+  @override
+  String get tripWindowTakeHelp => 'Dates du voyage';
+
+  @override
+  String get tripWindowTaken => 'Les dates sont maintenant dans le voyage.';
+
+  @override
+  String get tripWindowWhere => 'Où fait-il beau alors ?';
+
+  @override
+  String get tripWindowNewTrip => 'Nouveau voyage sur cette période';
+
+  @override
+  String get tripWindowNewTripTitle => 'Nouveau voyage';
+
+  @override
+  String get tripWindowNewTripLabel => 'Nom du voyage';
+
+  @override
+  String get tripWindowEmpty =>
+      'Aucune période libre trouvée pour l’instant. Les vacances scolaires viennent des réglages de la région et de l’école, et les dates se saisissent toujours à la main dans un voyage.';
+
+  @override
+  String get tripWindowEmptyAction => 'Réglages région et école';
+
+  @override
+  String get tripDiscoverTitle => 'Où aller ?';
+
+  @override
+  String get tripDiscoverUnavailable =>
+      'Les voyages ne sont pas disponibles ici.';
+
+  @override
+  String get tripDiscoverWhen => 'Période';
+
+  @override
+  String get tripDiscoverChange => 'Modifier';
+
+  @override
+  String get tripDiscoverPickHelp => 'Quand voulez-vous partir ?';
+
+  @override
+  String get tripDiscoverWishes => 'Souhaits';
+
+  @override
+  String get tripDiscoverWishesNone => 'Pas encore de souhaits';
+
+  @override
+  String tripDiscoverWishesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count souhaits',
+      one: '1 souhait',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripDiscoverAny => 'peu importe';
+
+  @override
+  String tripDiscoverDegrees(int degrees) {
+    return '$degrees °C';
+  }
+
+  @override
+  String get tripDiscoverTempMinLabel => 'Le jour au moins';
+
+  @override
+  String get tripDiscoverTempMaxLabel => 'Le jour au plus';
+
+  @override
+  String get tripDiscoverDry => 'Peu de pluie';
+
+  @override
+  String get tripDiscoverSeaLabel => 'Mer au moins';
+
+  @override
+  String get tripDiscoverTagsLabel => 'Type de lieu';
+
+  @override
+  String get tripDiscoverTagSea => 'Mer';
+
+  @override
+  String get tripDiscoverTagIsland => 'Île';
+
+  @override
+  String get tripDiscoverTagMountains => 'Montagne';
+
+  @override
+  String get tripDiscoverTagLake => 'Lac';
+
+  @override
+  String get tripDiscoverTagCity => 'Ville';
+
+  @override
+  String get tripDiscoverTagCountryside => 'Campagne';
+
+  @override
+  String get tripDiscoverTagNorth => 'Le Nord';
+
+  @override
+  String get tripDiscoverTagLongHaul => 'Loin';
+
+  @override
+  String get tripDiscoverEffortLabel => 'Trajet au plus';
+
+  @override
+  String get tripDiscoverEffortNear => 'tout près';
+
+  @override
+  String get tripDiscoverEffortCar => 'un long trajet en voiture';
+
+  @override
+  String get tripDiscoverEffortShort => 'un vol court';
+
+  @override
+  String get tripDiscoverEffortMedium => 'un vol moyen';
+
+  @override
+  String get tripDiscoverEffortLong => 'très loin';
+
+  @override
+  String get tripDiscoverNeedsClimate =>
+      'Avec un service météo, WuselWall montre quelle température il fait. Un parent peut en activer un.';
+
+  @override
+  String get tripDiscoverNeedsHome =>
+      'Les distances demandent un lieu de domicile. Un parent peut l’indiquer.';
+
+  @override
+  String get tripDiscoverOpenServices => 'Réglages météo et cartes';
+
+  @override
+  String get tripDiscoverIdea => 'Votre idée';
+
+  @override
+  String get tripDiscoverKeep => 'Garder comme idée';
+
+  @override
+  String tripDiscoverKept(String name) {
+    return 'Gardé comme idée : $name';
+  }
+
+  @override
+  String get tripDiscoverOpen => 'Ouvrir';
+
+  @override
+  String tripDiscoverDistance(String km, String effort) {
+    return 'environ $km km · $effort';
+  }
+
+  @override
+  String tripDiscoverTemps(int max, int min) {
+    return '$max° le jour, $min° la nuit';
+  }
+
+  @override
+  String tripDiscoverRain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours de pluie',
+      one: '1 jour de pluie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripDiscoverSun(int hours) {
+    return '$hours h de soleil par jour';
+  }
+
+  @override
+  String tripDiscoverSea(int temp) {
+    return 'Mer $temp°';
+  }
+
+  @override
+  String get tripDiscoverNoClimate => 'Pas encore de valeurs climatiques';
+
+  @override
+  String get tripDiscoverMisses => 'Ne répond pas à tous les souhaits';
+
+  @override
+  String tripDiscoverPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'encore $count lieux',
+      one: 'encore 1 lieu',
+    );
+    return 'Chargement des valeurs climatiques : $_temp0';
+  }
+
+  @override
+  String get tripDiscoverPendingLater =>
+      'D’autres valeurs suivront plus tard ; le fournisseur n’autorise que quelques lieux par minute.';
+
+  @override
+  String get tripDiscoverEmpty =>
+      'Aucun lieu ne répond à ces souhaits. Assouplissez-en un ou deux.';
+
+  @override
+  String get tripDiscoverNote =>
+      'Ce sont des valeurs typiques pour la saison, pas une prévision. WuselWall ne nomme ni hôtel, ni prix, ni liaison, et les distances sont des estimations.';
+
+  @override
+  String get tripHomeTitle => 'Domicile';
+
+  @override
+  String get tripHomeNotSet => 'Non défini';
+
+  @override
+  String get tripHomeExplain =>
+      'Enregistré arrondi à environ un kilomètre. Il sert aux distances et, avec un service d’itinéraires, il est envoyé à ce service.';
+
+  @override
+  String get tripHomeSet => 'Définir';
+
+  @override
+  String get tripHomeChange => 'Modifier';
+
+  @override
+  String get tripHomeForget => 'Oublier';
+
+  @override
+  String get tripHomeForgetAsk =>
+      'Oublier le lieu du domicile ? Les distances disparaissent jusqu’à ce qu’un nouveau soit défini.';
+
+  @override
+  String get tripHomeDialogTitle => 'Lieu du domicile';
+
+  @override
+  String get tripHomeName => 'Nom du lieu';
+
+  @override
+  String get tripHomeSearch => 'Chercher';
+
+  @override
+  String get tripHomeNoResults => 'Aucun lieu trouvé.';
+
+  @override
+  String get tripHomeCoordsHint =>
+      'Ou saisissez vous-même les coordonnées, avec deux décimales.';
+
+  @override
+  String get tripHomeNoGeocode =>
+      'Aucune recherche de lieu n’est activée, saisissez donc les coordonnées vous-même.';
+
+  @override
+  String get tripHomeLat => 'Latitude';
+
+  @override
+  String get tripHomeLon => 'Longitude';
+
+  @override
+  String get tripHomeInvalid =>
+      'Latitude de -90 à 90, longitude de -180 à 180.';
+
+  @override
+  String get serviceTitle => 'Météo et cartes';
+
+  @override
+  String get serviceUnavailable =>
+      'La météo et les cartes ne sont pas disponibles ici.';
+
+  @override
+  String get serviceNoProviders => 'Ce serveur ne propose aucun fournisseur.';
+
+  @override
+  String get serviceIntro =>
+      'Tout est désactivé ici tant que vous ne l’activez pas. Seul votre serveur interroge un fournisseur, jamais un téléphone ni le mur. Un fournisseur reçoit le lieu que vous regardez ou cherchez et l’adresse de votre serveur, rien sur votre famille.';
+
+  @override
+  String get serviceReadOnly => 'Un parent peut modifier cela.';
+
+  @override
+  String get serviceProvidersHeading => 'Fournisseurs';
+
+  @override
+  String get serviceCostFree => 'Gratuit, sans clé';
+
+  @override
+  String get serviceCostFreeKey => 'Gratuit avec votre propre clé';
+
+  @override
+  String get serviceCostPaidKey => 'Votre propre clé, peut coûter';
+
+  @override
+  String get serviceCapClimate => 'Climat typique';
+
+  @override
+  String get serviceCapForecast => 'Prévisions';
+
+  @override
+  String get serviceCapGeocode => 'Recherche de lieux';
+
+  @override
+  String get serviceCapRoute => 'Temps de trajet';
+
+  @override
+  String get serviceCapMap => 'Image de carte';
+
+  @override
+  String get serviceReceivesCoordinates => 'les coordonnées d’un lieu';
+
+  @override
+  String get serviceReceivesSearchText => 'le texte que vous cherchez';
+
+  @override
+  String get serviceReceivesHome => 'votre lieu de domicile, arrondi';
+
+  @override
+  String serviceReceivesLine(String what) {
+    return 'Il reçoit : $what';
+  }
+
+  @override
+  String get serviceWebsite => 'Site web';
+
+  @override
+  String get serviceGetKey => 'Obtenir une clé';
+
+  @override
+  String get serviceSwitch => 'Activé';
+
+  @override
+  String get serviceNeedsKeyFirst => 'Demande d’abord une clé';
+
+  @override
+  String get serviceKeyLabel => 'Clé';
+
+  @override
+  String get serviceKeyHelp =>
+      'Saisie une fois, enregistrée sur votre serveur et jamais réaffichée.';
+
+  @override
+  String get serviceKeySaveOn => 'Enregistrer la clé et activer';
+
+  @override
+  String get serviceKeySave => 'Enregistrer la clé';
+
+  @override
+  String serviceKeyStored(String hint) {
+    return 'Clé enregistrée $hint';
+  }
+
+  @override
+  String get serviceKeyReplace => 'Remplacer';
+
+  @override
+  String get serviceKeyRemove => 'Retirer';
+
+  @override
+  String serviceKeyRemoveAsk(String name) {
+    return 'Retirer la clé de $name ? Le fournisseur sera alors désactivé.';
+  }
+
+  @override
+  String get serviceTest => 'Tester';
+
+  @override
+  String get serviceTestOk => 'Fonctionne';
+
+  @override
+  String get serviceErrorKeyMissing => 'Ce fournisseur a besoin d’une clé.';
+
+  @override
+  String get serviceErrorUnauthorized => 'Le fournisseur a refusé la clé.';
+
+  @override
+  String get serviceErrorQuota =>
+      'Le quota chez le fournisseur est épuisé pour l’instant.';
+
+  @override
+  String get serviceErrorTimeout => 'Le fournisseur n’a pas répondu à temps.';
+
+  @override
+  String get serviceErrorGeneric =>
+      'Le fournisseur n’a pas fonctionné cette fois.';
+
+  @override
+  String serviceLastError(String reason) {
+    return 'Dernier appel : $reason';
+  }
+
+  @override
+  String get serviceUsedFor => 'Utilisé pour';
+
+  @override
+  String get serviceMoveUp => 'Interroger plus tôt';
+
+  @override
+  String get serviceMoveDown => 'Interroger plus tard';
+
+  @override
+  String get serviceOrderHint =>
+      'Quand plusieurs fournisseurs offrent la même chose, le premier de cet ordre qui répond l’emporte.';
+
+  @override
+  String serviceCallsToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count appels aujourd’hui',
+      one: '1 appel aujourd’hui',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get serviceClosing =>
+      'Les conditions d’un fournisseur sont à accepter par vous ; certaines offres gratuites sont réservées à un usage privé. Désactiver un fournisseur arrête aussitôt tout appel.';
 
   @override
   String get learnedWordsHelp =>

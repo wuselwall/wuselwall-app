@@ -9883,6 +9883,204 @@ abstract class AppLocalizations {
   /// **'Looking forward'**
   String get todayLookingForward;
 
+  /// No description provided for @tripTodayDayOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} of {count}'**
+  String tripTodayDayOf(int day, int count);
+
+  /// No description provided for @tripTodayMore.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String tripTodayMore(int count);
+
+  /// No description provided for @tripTodayPacked.
+  ///
+  /// In en, this message translates to:
+  /// **'{packed} of {total} packed'**
+  String tripTodayPacked(int packed, int total);
+
+  /// No description provided for @tripTodayTodos.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to do'**
+  String get tripTodayTodos;
+
+  /// No description provided for @tripTodayTonight.
+  ///
+  /// In en, this message translates to:
+  /// **'Tonight'**
+  String get tripTodayTonight;
+
+  /// No description provided for @tripTodayTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tripTodayTomorrow;
+
+  /// No description provided for @tripTodayNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned today.'**
+  String get tripTodayNothing;
+
+  /// No description provided for @tripTodayCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get tripTodayCheckIn;
+
+  /// No description provided for @tripTodayCheckOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get tripTodayCheckOut;
+
+  /// No description provided for @tripTodayPickUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick-up'**
+  String get tripTodayPickUp;
+
+  /// No description provided for @tripTodayReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Return'**
+  String get tripTodayReturn;
+
+  /// No description provided for @tripTodayDeparture.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
+  String get tripTodayDeparture;
+
+  /// No description provided for @tripTodayArrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival'**
+  String get tripTodayArrival;
+
+  /// No description provided for @tripTodayOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the trip {title}'**
+  String tripTodayOpen(String title);
+
+  /// No description provided for @tripTodayCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get tripTodayCall;
+
+  /// No description provided for @tripTodayMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on map'**
+  String get tripTodayMap;
+
+  /// No description provided for @tripTodayCannotOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'This can\'t be opened here.'**
+  String get tripTodayCannotOpen;
+
+  /// No description provided for @tripImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to trip'**
+  String get tripImportAction;
+
+  /// No description provided for @tripImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which trip?'**
+  String get tripImportTitle;
+
+  /// No description provided for @tripImportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Every event in the file becomes an entry of the trip, as booked.'**
+  String get tripImportIntro;
+
+  /// No description provided for @tripImportEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{This entry will be added} other{These {count} entries will be added}}'**
+  String tripImportEntries(int count);
+
+  /// No description provided for @tripImportSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 event in the file is skipped (cancelled or without a start).} other{{count} events in the file are skipped (cancelled or without a start).}}'**
+  String tripImportSkipped(int count);
+
+  /// No description provided for @tripImportNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No event in this file could be read.'**
+  String get tripImportNothing;
+
+  /// No description provided for @tripImportConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get tripImportConfirm;
+
+  /// No description provided for @tripImportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{added} added, {updated} updated'**
+  String tripImportDone(int added, int updated);
+
+  /// No description provided for @tripImportFallbackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking'**
+  String get tripImportFallbackTitle;
+
+  /// No description provided for @tripImportSeveral.
+  ///
+  /// In en, this message translates to:
+  /// **'This file holds several events. They can go into a trip.'**
+  String get tripImportSeveral;
+
+  /// No description provided for @tripCalendarNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This entry belongs to a trip and is changed there.'**
+  String get tripCalendarNotice;
+
+  /// No description provided for @tripCalendarOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open trip'**
+  String get tripCalendarOpen;
+
+  /// No description provided for @tripCalendarPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan a trip'**
+  String get tripCalendarPlanTitle;
+
+  /// No description provided for @tripCalendarPlanLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare, book, pack'**
+  String get tripCalendarPlanLine;
+
+  /// No description provided for @settingsServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather and maps'**
+  String get settingsServicesTitle;
+
+  /// No description provided for @settingsServicesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forecast, places and routes for trips'**
+  String get settingsServicesSubtitle;
+
   /// No description provided for @eventIconNone.
   ///
   /// In en, this message translates to:
@@ -11544,6 +11742,630 @@ abstract class AppLocalizations {
   /// **'Suggested'**
   String get shoppingTileStarter;
 
+  /// No description provided for @tripEntryNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add option'**
+  String get tripEntryNewTitle;
+
+  /// No description provided for @tripEntryEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit entry'**
+  String get tripEntryEditTitle;
+
+  /// No description provided for @tripEntryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get tripEntryName;
+
+  /// No description provided for @tripEntryNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please give it a name.'**
+  String get tripEntryNameRequired;
+
+  /// No description provided for @tripEntryMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Type of transport'**
+  String get tripEntryMode;
+
+  /// No description provided for @tripEntryPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price ({currency})'**
+  String tripEntryPrice(String currency);
+
+  /// No description provided for @tripEntryPriceFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Price from {date}'**
+  String tripEntryPriceFrom(String date);
+
+  /// No description provided for @tripEntryPriceInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount such as 840 or 1249.50.'**
+  String get tripEntryPriceInvalid;
+
+  /// No description provided for @tripEntryLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get tripEntryLink;
+
+  /// No description provided for @tripEntryLinkInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a web address that starts with http:// or https://.'**
+  String get tripEntryLinkInvalid;
+
+  /// No description provided for @tripEntryPasteLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste link'**
+  String get tripEntryPasteLink;
+
+  /// No description provided for @tripEntryPasteNone.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no web address on the clipboard.'**
+  String get tripEntryPasteNone;
+
+  /// No description provided for @tripEntryOpenLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Open link'**
+  String get tripEntryOpenLink;
+
+  /// No description provided for @tripEntryOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That could not be opened.'**
+  String get tripEntryOpenFailed;
+
+  /// No description provided for @tripEntryMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get tripEntryMore;
+
+  /// No description provided for @tripEntryLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer details'**
+  String get tripEntryLess;
+
+  /// No description provided for @tripEntryDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get tripEntryDetails;
+
+  /// No description provided for @tripEntryDetailsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'1 stop, baggage included'**
+  String get tripEntryDetailsHint;
+
+  /// No description provided for @tripEntryFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get tripEntryFrom;
+
+  /// No description provided for @tripEntryTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get tripEntryTo;
+
+  /// No description provided for @tripEntryPickUpPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick-up place'**
+  String get tripEntryPickUpPlace;
+
+  /// No description provided for @tripEntryReturnPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Return place'**
+  String get tripEntryReturnPlace;
+
+  /// No description provided for @tripEntryStartTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
+  String get tripEntryStartTransport;
+
+  /// No description provided for @tripEntryEndTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival'**
+  String get tripEntryEndTransport;
+
+  /// No description provided for @tripEntryStartStay.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get tripEntryStartStay;
+
+  /// No description provided for @tripEntryEndStay.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get tripEntryEndStay;
+
+  /// No description provided for @tripEntryStartRental.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick-up'**
+  String get tripEntryStartRental;
+
+  /// No description provided for @tripEntryEndRental.
+  ///
+  /// In en, this message translates to:
+  /// **'Return'**
+  String get tripEntryEndRental;
+
+  /// No description provided for @tripEntryStartPlain.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get tripEntryStartPlain;
+
+  /// No description provided for @tripEntryEndPlain.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get tripEntryEndPlain;
+
+  /// No description provided for @tripEntryAddDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Add date'**
+  String get tripEntryAddDate;
+
+  /// No description provided for @tripEntryAddTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Add time'**
+  String get tripEntryAddTime;
+
+  /// No description provided for @tripEntryClearDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove date'**
+  String get tripEntryClearDate;
+
+  /// No description provided for @tripEntryClearTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove time'**
+  String get tripEntryClearTime;
+
+  /// No description provided for @tripEntryEndBeforeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'The end is before the start.'**
+  String get tripEntryEndBeforeStart;
+
+  /// No description provided for @tripEntryCancelUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation until'**
+  String get tripEntryCancelUntil;
+
+  /// No description provided for @tripEntryAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get tripEntryAddress;
+
+  /// No description provided for @tripEntryOpenAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on map'**
+  String get tripEntryOpenAddress;
+
+  /// No description provided for @tripEntryPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get tripEntryPhone;
+
+  /// No description provided for @tripEntryCallPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get tripEntryCallPhone;
+
+  /// No description provided for @tripEntryBookingRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking reference'**
+  String get tripEntryBookingRef;
+
+  /// No description provided for @tripEntryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get tripEntryNote;
+
+  /// No description provided for @tripEntryState.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get tripEntryState;
+
+  /// No description provided for @tripEntryCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy as another option'**
+  String get tripEntryCopy;
+
+  /// No description provided for @tripEntryCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied. This is the copy.'**
+  String get tripEntryCopied;
+
+  /// No description provided for @tripEntryDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete entry'**
+  String get tripEntryDelete;
+
+  /// No description provided for @tripEntryDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this entry?'**
+  String get tripEntryDeleteTitle;
+
+  /// No description provided for @tripEntryDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” is removed from the trip and from kept combinations.'**
+  String tripEntryDeleteBody(String title);
+
+  /// No description provided for @tripEntryGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip no longer exists.'**
+  String get tripEntryGone;
+
+  /// No description provided for @tripEntryUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips are not available on this device.'**
+  String get tripEntryUnavailable;
+
+  /// No description provided for @tripCompareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get tripCompareTitle;
+
+  /// No description provided for @tripCompareUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Comparing is not available on this device.'**
+  String get tripCompareUnavailable;
+
+  /// No description provided for @tripCompareGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip no longer exists.'**
+  String get tripCompareGone;
+
+  /// No description provided for @tripCompareSection.
+  ///
+  /// In en, this message translates to:
+  /// **'{kind} · {count}'**
+  String tripCompareSection(String kind, int count);
+
+  /// No description provided for @tripCompareStripLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{kind}, options side by side'**
+  String tripCompareStripLabel(String kind);
+
+  /// No description provided for @tripCompareCheapest.
+  ///
+  /// In en, this message translates to:
+  /// **'Cheapest'**
+  String get tripCompareCheapest;
+
+  /// No description provided for @tripComparePerNight.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} per night'**
+  String tripComparePerNight(String price);
+
+  /// No description provided for @tripComparePerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} per day'**
+  String tripComparePerDay(String price);
+
+  /// No description provided for @tripCompareNoPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'No price yet'**
+  String get tripCompareNoPrice;
+
+  /// No description provided for @tripCompareFromTo.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} → {to}'**
+  String tripCompareFromTo(String from, String to);
+
+  /// No description provided for @tripCompareRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} – {end}'**
+  String tripCompareRange(String start, String end);
+
+  /// No description provided for @tripCompareFreeCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation until {date}'**
+  String tripCompareFreeCancel(String date);
+
+  /// No description provided for @tripCompareCancelPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'Free cancellation has passed'**
+  String get tripCompareCancelPassed;
+
+  /// No description provided for @tripCompareTick.
+  ///
+  /// In en, this message translates to:
+  /// **'Try “{title}” in the combination'**
+  String tripCompareTick(String title);
+
+  /// No description provided for @tripCompareEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get tripCompareEdit;
+
+  /// No description provided for @tripCompareAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add option'**
+  String get tripCompareAdd;
+
+  /// No description provided for @tripCompareAddTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Add transport'**
+  String get tripCompareAddTransport;
+
+  /// No description provided for @tripCompareAddStay.
+  ///
+  /// In en, this message translates to:
+  /// **'Add accommodation'**
+  String get tripCompareAddStay;
+
+  /// No description provided for @tripCompareAddRental.
+  ///
+  /// In en, this message translates to:
+  /// **'Add rental car'**
+  String get tripCompareAddRental;
+
+  /// No description provided for @tripCompareEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No options yet'**
+  String get tripCompareEmptyTitle;
+
+  /// No description provided for @tripCompareEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect flights, accommodation and rental cars here, compare them and try out combinations.'**
+  String get tripCompareEmptyMessage;
+
+  /// No description provided for @tripCompareHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick one option of each kind, then keep the combination.'**
+  String get tripCompareHint;
+
+  /// No description provided for @tripComboSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept combinations'**
+  String get tripComboSection;
+
+  /// No description provided for @tripComboTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total {amount}'**
+  String tripComboTotal(String amount);
+
+  /// No description provided for @tripComboTotalAtLeast.
+  ///
+  /// In en, this message translates to:
+  /// **'At least {amount}'**
+  String tripComboTotalAtLeast(String amount);
+
+  /// No description provided for @tripComboNights.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 night} other{{count} nights}}'**
+  String tripComboNights(int count);
+
+  /// No description provided for @tripComboDates.
+  ///
+  /// In en, this message translates to:
+  /// **'{dates} · {nights}'**
+  String tripComboDates(String dates, String nights);
+
+  /// No description provided for @tripComboNoDates.
+  ///
+  /// In en, this message translates to:
+  /// **'No dates yet'**
+  String get tripComboNoDates;
+
+  /// No description provided for @tripComboFits.
+  ///
+  /// In en, this message translates to:
+  /// **'Fits together'**
+  String get tripComboFits;
+
+  /// No description provided for @tripComboWarningsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing does not fit} other{{count} things do not fit}}'**
+  String tripComboWarningsCount(int count);
+
+  /// No description provided for @tripComboShowAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all'**
+  String get tripComboShowAll;
+
+  /// No description provided for @tripComboShowLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get tripComboShowLess;
+
+  /// No description provided for @tripComboKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep as combination'**
+  String get tripComboKeep;
+
+  /// No description provided for @tripComboWarnNights.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 night without accommodation: {dates}} other{{count} nights without accommodation: {dates}}}'**
+  String tripComboWarnNights(int count, String dates);
+
+  /// No description provided for @tripComboWarnRentalNoTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: rental car without any transport'**
+  String tripComboWarnRentalNoTransport(String name);
+
+  /// No description provided for @tripComboWarnRentalBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} starts before the arrival'**
+  String tripComboWarnRentalBefore(String name);
+
+  /// No description provided for @tripComboWarnRentalAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ends after the departure'**
+  String tripComboWarnRentalAfter(String name);
+
+  /// No description provided for @tripComboWarnOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} and {second} overlap: {dates}'**
+  String tripComboWarnOverlap(String first, String second, String dates);
+
+  /// No description provided for @tripComboWarnPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 option has no price, the total is a minimum} other{{count} options have no price, the total is a minimum}}'**
+  String tripComboWarnPrice(int count);
+
+  /// No description provided for @tripComboKeepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this combination'**
+  String get tripComboKeepTitle;
+
+  /// No description provided for @tripComboName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name of the combination'**
+  String get tripComboName;
+
+  /// No description provided for @tripComboKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Combination kept.'**
+  String get tripComboKept;
+
+  /// No description provided for @tripComboRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get tripComboRename;
+
+  /// No description provided for @tripComboLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Load into the ticks'**
+  String get tripComboLoad;
+
+  /// No description provided for @tripComboLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'“{name}” is loaded. Change the ticks and keep it again.'**
+  String tripComboLoaded(String name);
+
+  /// No description provided for @tripComboDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete combination'**
+  String get tripComboDelete;
+
+  /// No description provided for @tripComboDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{name}”?'**
+  String tripComboDeleteTitle(String name);
+
+  /// No description provided for @tripComboDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The options themselves stay.'**
+  String get tripComboDeleteBody;
+
+  /// No description provided for @tripComboTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Take this one'**
+  String get tripComboTake;
+
+  /// No description provided for @tripComboTakeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Take “{name}”?'**
+  String tripComboTakeTitle(String name);
+
+  /// No description provided for @tripComboTakeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'These become the chosen ones. Other chosen transport, accommodation and rental cars go back to options. Booked ones stay as they are.'**
+  String get tripComboTakeBody;
+
+  /// No description provided for @tripComboSetDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Also set the trip\'s dates to {dates}'**
+  String tripComboSetDates(String dates);
+
+  /// No description provided for @tripComboTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen: {chosen}. Back to options: {released}.'**
+  String tripComboTaken(int chosen, int released);
+
+  /// No description provided for @tripComboTakenDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen: {chosen}. Back to options: {released}. The trip\'s dates are set.'**
+  String tripComboTakenDates(int chosen, int released);
+
   /// No description provided for @settingsGroupShoppingTitle.
   ///
   /// In en, this message translates to:
@@ -11561,6 +12383,786 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Learned words'**
   String get settingsSectionLearnedWords;
+
+  /// No description provided for @tripWindowsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time windows'**
+  String get tripWindowsTitle;
+
+  /// No description provided for @tripWindowsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips are not available here.'**
+  String get tripWindowsUnavailable;
+
+  /// No description provided for @tripWindowsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'When could we travel? These are the stretches when everyone who comes along is free.'**
+  String get tripWindowsIntro;
+
+  /// No description provided for @tripWindowsLengthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortest stay'**
+  String get tripWindowsLengthLabel;
+
+  /// No description provided for @tripWindowsWhoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Who travels?'**
+  String get tripWindowsWhoLabel;
+
+  /// No description provided for @tripWindowsWhoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody selected means everyone.'**
+  String get tripWindowsWhoHint;
+
+  /// No description provided for @tripWindowDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String tripWindowDays(int count);
+
+  /// No description provided for @tripWindowKindLongWeekend.
+  ///
+  /// In en, this message translates to:
+  /// **'Long weekend'**
+  String get tripWindowKindLongWeekend;
+
+  /// No description provided for @tripWindowHolidaysFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Holidays'**
+  String get tripWindowHolidaysFallback;
+
+  /// No description provided for @tripWindowLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No leave days needed} =1{1 leave day for the adults} other{{count} leave days for the adults}}'**
+  String tripWindowLeave(int count);
+
+  /// No description provided for @tripWindowPartialBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is free from {date} already'**
+  String tripWindowPartialBefore(String name, String date);
+
+  /// No description provided for @tripWindowPartialAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is still free until {date}'**
+  String tripWindowPartialAfter(String name, String date);
+
+  /// No description provided for @tripWindowFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in the way'**
+  String get tripWindowFree;
+
+  /// No description provided for @tripWindowConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'In the way'**
+  String get tripWindowConflicts;
+
+  /// No description provided for @tripWindowTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Take these dates'**
+  String get tripWindowTake;
+
+  /// No description provided for @tripWindowTakeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates of the trip'**
+  String get tripWindowTakeHelp;
+
+  /// No description provided for @tripWindowTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'The dates are in the trip now.'**
+  String get tripWindowTaken;
+
+  /// No description provided for @tripWindowWhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is it nice then?'**
+  String get tripWindowWhere;
+
+  /// No description provided for @tripWindowNewTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'New trip in this window'**
+  String get tripWindowNewTrip;
+
+  /// No description provided for @tripWindowNewTripTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New trip'**
+  String get tripWindowNewTripTitle;
+
+  /// No description provided for @tripWindowNewTripLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name of the trip'**
+  String get tripWindowNewTripLabel;
+
+  /// No description provided for @tripWindowEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No free stretch found yet. School holidays come from the region and school settings, and dates can always be entered by hand on a trip.'**
+  String get tripWindowEmpty;
+
+  /// No description provided for @tripWindowEmptyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Region and school settings'**
+  String get tripWindowEmptyAction;
+
+  /// No description provided for @tripDiscoverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where to?'**
+  String get tripDiscoverTitle;
+
+  /// No description provided for @tripDiscoverUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips are not available here.'**
+  String get tripDiscoverUnavailable;
+
+  /// No description provided for @tripDiscoverWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'Time away'**
+  String get tripDiscoverWhen;
+
+  /// No description provided for @tripDiscoverChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get tripDiscoverChange;
+
+  /// No description provided for @tripDiscoverPickHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'When do you want to go?'**
+  String get tripDiscoverPickHelp;
+
+  /// No description provided for @tripDiscoverWishes.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishes'**
+  String get tripDiscoverWishes;
+
+  /// No description provided for @tripDiscoverWishesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No wishes yet'**
+  String get tripDiscoverWishesNone;
+
+  /// No description provided for @tripDiscoverWishesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 wish} other{{count} wishes}}'**
+  String tripDiscoverWishesCount(int count);
+
+  /// No description provided for @tripDiscoverAny.
+  ///
+  /// In en, this message translates to:
+  /// **'any'**
+  String get tripDiscoverAny;
+
+  /// No description provided for @tripDiscoverDegrees.
+  ///
+  /// In en, this message translates to:
+  /// **'{degrees} °C'**
+  String tripDiscoverDegrees(int degrees);
+
+  /// No description provided for @tripDiscoverTempMinLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Days at least'**
+  String get tripDiscoverTempMinLabel;
+
+  /// No description provided for @tripDiscoverTempMaxLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Days at most'**
+  String get tripDiscoverTempMaxLabel;
+
+  /// No description provided for @tripDiscoverDry.
+  ///
+  /// In en, this message translates to:
+  /// **'Little rain'**
+  String get tripDiscoverDry;
+
+  /// No description provided for @tripDiscoverSeaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea at least'**
+  String get tripDiscoverSeaLabel;
+
+  /// No description provided for @tripDiscoverTagsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Kind of place'**
+  String get tripDiscoverTagsLabel;
+
+  /// No description provided for @tripDiscoverTagSea.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea'**
+  String get tripDiscoverTagSea;
+
+  /// No description provided for @tripDiscoverTagIsland.
+  ///
+  /// In en, this message translates to:
+  /// **'Island'**
+  String get tripDiscoverTagIsland;
+
+  /// No description provided for @tripDiscoverTagMountains.
+  ///
+  /// In en, this message translates to:
+  /// **'Mountains'**
+  String get tripDiscoverTagMountains;
+
+  /// No description provided for @tripDiscoverTagLake.
+  ///
+  /// In en, this message translates to:
+  /// **'Lake'**
+  String get tripDiscoverTagLake;
+
+  /// No description provided for @tripDiscoverTagCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get tripDiscoverTagCity;
+
+  /// No description provided for @tripDiscoverTagCountryside.
+  ///
+  /// In en, this message translates to:
+  /// **'Countryside'**
+  String get tripDiscoverTagCountryside;
+
+  /// No description provided for @tripDiscoverTagNorth.
+  ///
+  /// In en, this message translates to:
+  /// **'The North'**
+  String get tripDiscoverTagNorth;
+
+  /// No description provided for @tripDiscoverTagLongHaul.
+  ///
+  /// In en, this message translates to:
+  /// **'Far away'**
+  String get tripDiscoverTagLongHaul;
+
+  /// No description provided for @tripDiscoverEffortLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting there, at most'**
+  String get tripDiscoverEffortLabel;
+
+  /// No description provided for @tripDiscoverEffortNear.
+  ///
+  /// In en, this message translates to:
+  /// **'close by'**
+  String get tripDiscoverEffortNear;
+
+  /// No description provided for @tripDiscoverEffortCar.
+  ///
+  /// In en, this message translates to:
+  /// **'a long drive'**
+  String get tripDiscoverEffortCar;
+
+  /// No description provided for @tripDiscoverEffortShort.
+  ///
+  /// In en, this message translates to:
+  /// **'a short flight'**
+  String get tripDiscoverEffortShort;
+
+  /// No description provided for @tripDiscoverEffortMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'a medium flight'**
+  String get tripDiscoverEffortMedium;
+
+  /// No description provided for @tripDiscoverEffortLong.
+  ///
+  /// In en, this message translates to:
+  /// **'far away'**
+  String get tripDiscoverEffortLong;
+
+  /// No description provided for @tripDiscoverNeedsClimate.
+  ///
+  /// In en, this message translates to:
+  /// **'With a weather service, WuselWall shows how warm it is. A parent can switch one on.'**
+  String get tripDiscoverNeedsClimate;
+
+  /// No description provided for @tripDiscoverNeedsHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Distances need a home place. A parent can set one.'**
+  String get tripDiscoverNeedsHome;
+
+  /// No description provided for @tripDiscoverOpenServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather and maps settings'**
+  String get tripDiscoverOpenServices;
+
+  /// No description provided for @tripDiscoverIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Your idea'**
+  String get tripDiscoverIdea;
+
+  /// No description provided for @tripDiscoverKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep as idea'**
+  String get tripDiscoverKeep;
+
+  /// No description provided for @tripDiscoverKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept as an idea: {name}'**
+  String tripDiscoverKept(String name);
+
+  /// No description provided for @tripDiscoverOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get tripDiscoverOpen;
+
+  /// No description provided for @tripDiscoverDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'about {km} km · {effort}'**
+  String tripDiscoverDistance(String km, String effort);
+
+  /// No description provided for @tripDiscoverTemps.
+  ///
+  /// In en, this message translates to:
+  /// **'{max}° by day, {min}° at night'**
+  String tripDiscoverTemps(int max, int min);
+
+  /// No description provided for @tripDiscoverRain.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 rain day} other{{count} rain days}}'**
+  String tripDiscoverRain(int count);
+
+  /// No description provided for @tripDiscoverSun.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h of sun a day'**
+  String tripDiscoverSun(int hours);
+
+  /// No description provided for @tripDiscoverSea.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea {temp}°'**
+  String tripDiscoverSea(int temp);
+
+  /// No description provided for @tripDiscoverNoClimate.
+  ///
+  /// In en, this message translates to:
+  /// **'No climate values yet'**
+  String get tripDiscoverNoClimate;
+
+  /// No description provided for @tripDiscoverMisses.
+  ///
+  /// In en, this message translates to:
+  /// **'Misses a wish'**
+  String get tripDiscoverMisses;
+
+  /// No description provided for @tripDiscoverPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Climate values are being loaded: {count, plural, =1{1 place to go} other{{count} places to go}}'**
+  String tripDiscoverPending(int count);
+
+  /// No description provided for @tripDiscoverPendingLater.
+  ///
+  /// In en, this message translates to:
+  /// **'More values will follow later; the provider only allows a few places a minute.'**
+  String get tripDiscoverPendingLater;
+
+  /// No description provided for @tripDiscoverEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No place fits these wishes. Loosen one or two.'**
+  String get tripDiscoverEmpty;
+
+  /// No description provided for @tripDiscoverNote.
+  ///
+  /// In en, this message translates to:
+  /// **'These are typical values for the time of year, not a forecast. WuselWall names no hotel, price or connection, and distances are estimates.'**
+  String get tripDiscoverNote;
+
+  /// No description provided for @tripHomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get tripHomeTitle;
+
+  /// No description provided for @tripHomeNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get tripHomeNotSet;
+
+  /// No description provided for @tripHomeExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Stored rounded to about a kilometre. It is used for distances and, with a route service, sent to that service.'**
+  String get tripHomeExplain;
+
+  /// No description provided for @tripHomeSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get tripHomeSet;
+
+  /// No description provided for @tripHomeChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get tripHomeChange;
+
+  /// No description provided for @tripHomeForget.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget'**
+  String get tripHomeForget;
+
+  /// No description provided for @tripHomeForgetAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget the home place? Distances disappear until a new one is set.'**
+  String get tripHomeForgetAsk;
+
+  /// No description provided for @tripHomeDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home place'**
+  String get tripHomeDialogTitle;
+
+  /// No description provided for @tripHomeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name of the place'**
+  String get tripHomeName;
+
+  /// No description provided for @tripHomeSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get tripHomeSearch;
+
+  /// No description provided for @tripHomeNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No place found.'**
+  String get tripHomeNoResults;
+
+  /// No description provided for @tripHomeCoordsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Or type the coordinates yourself, with two decimals.'**
+  String get tripHomeCoordsHint;
+
+  /// No description provided for @tripHomeNoGeocode.
+  ///
+  /// In en, this message translates to:
+  /// **'No place search is switched on, so type the coordinates yourself.'**
+  String get tripHomeNoGeocode;
+
+  /// No description provided for @tripHomeLat.
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get tripHomeLat;
+
+  /// No description provided for @tripHomeLon.
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get tripHomeLon;
+
+  /// No description provided for @tripHomeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Between -90 and 90 for latitude, -180 and 180 for longitude.'**
+  String get tripHomeInvalid;
+
+  /// No description provided for @serviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather and maps'**
+  String get serviceTitle;
+
+  /// No description provided for @serviceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather and maps are not available here.'**
+  String get serviceUnavailable;
+
+  /// No description provided for @serviceNoProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'This server offers no providers.'**
+  String get serviceNoProviders;
+
+  /// No description provided for @serviceIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything here is off until you switch it on. Only your server asks a provider, never a phone or the wall. A provider gets the place you look at or search for and your server’s address, nothing about your family.'**
+  String get serviceIntro;
+
+  /// No description provided for @serviceReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'A parent can change this.'**
+  String get serviceReadOnly;
+
+  /// No description provided for @serviceProvidersHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Providers'**
+  String get serviceProvidersHeading;
+
+  /// No description provided for @serviceCostFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free, no key'**
+  String get serviceCostFree;
+
+  /// No description provided for @serviceCostFreeKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Free with your own key'**
+  String get serviceCostFreeKey;
+
+  /// No description provided for @serviceCostPaidKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own key, may cost'**
+  String get serviceCostPaidKey;
+
+  /// No description provided for @serviceCapClimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Typical climate'**
+  String get serviceCapClimate;
+
+  /// No description provided for @serviceCapForecast.
+  ///
+  /// In en, this message translates to:
+  /// **'Forecast'**
+  String get serviceCapForecast;
+
+  /// No description provided for @serviceCapGeocode.
+  ///
+  /// In en, this message translates to:
+  /// **'Place search'**
+  String get serviceCapGeocode;
+
+  /// No description provided for @serviceCapRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving time'**
+  String get serviceCapRoute;
+
+  /// No description provided for @serviceCapMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Map picture'**
+  String get serviceCapMap;
+
+  /// No description provided for @serviceReceivesCoordinates.
+  ///
+  /// In en, this message translates to:
+  /// **'the coordinates of a place'**
+  String get serviceReceivesCoordinates;
+
+  /// No description provided for @serviceReceivesSearchText.
+  ///
+  /// In en, this message translates to:
+  /// **'the text you search'**
+  String get serviceReceivesSearchText;
+
+  /// No description provided for @serviceReceivesHome.
+  ///
+  /// In en, this message translates to:
+  /// **'your home place, rounded'**
+  String get serviceReceivesHome;
+
+  /// No description provided for @serviceReceivesLine.
+  ///
+  /// In en, this message translates to:
+  /// **'It receives: {what}'**
+  String serviceReceivesLine(String what);
+
+  /// No description provided for @serviceWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get serviceWebsite;
+
+  /// No description provided for @serviceGetKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a key'**
+  String get serviceGetKey;
+
+  /// No description provided for @serviceSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switched on'**
+  String get serviceSwitch;
+
+  /// No description provided for @serviceNeedsKeyFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a key first'**
+  String get serviceNeedsKeyFirst;
+
+  /// No description provided for @serviceKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get serviceKeyLabel;
+
+  /// No description provided for @serviceKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Typed once, stored on your server and never shown again.'**
+  String get serviceKeyHelp;
+
+  /// No description provided for @serviceKeySaveOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Save key and switch on'**
+  String get serviceKeySaveOn;
+
+  /// No description provided for @serviceKeySave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save key'**
+  String get serviceKeySave;
+
+  /// No description provided for @serviceKeyStored.
+  ///
+  /// In en, this message translates to:
+  /// **'Key stored {hint}'**
+  String serviceKeyStored(String hint);
+
+  /// No description provided for @serviceKeyReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get serviceKeyReplace;
+
+  /// No description provided for @serviceKeyRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get serviceKeyRemove;
+
+  /// No description provided for @serviceKeyRemoveAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the key of {name}? The provider is switched off then.'**
+  String serviceKeyRemoveAsk(String name);
+
+  /// No description provided for @serviceTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Test'**
+  String get serviceTest;
+
+  /// No description provided for @serviceTestOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Works'**
+  String get serviceTestOk;
+
+  /// No description provided for @serviceErrorKeyMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This provider needs a key.'**
+  String get serviceErrorKeyMissing;
+
+  /// No description provided for @serviceErrorUnauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider refused the key.'**
+  String get serviceErrorUnauthorized;
+
+  /// No description provided for @serviceErrorQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider’s allowance is used up for now.'**
+  String get serviceErrorQuota;
+
+  /// No description provided for @serviceErrorTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider did not answer in time.'**
+  String get serviceErrorTimeout;
+
+  /// No description provided for @serviceErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider did not work this time.'**
+  String get serviceErrorGeneric;
+
+  /// No description provided for @serviceLastError.
+  ///
+  /// In en, this message translates to:
+  /// **'Last call: {reason}'**
+  String serviceLastError(String reason);
+
+  /// No description provided for @serviceUsedFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for'**
+  String get serviceUsedFor;
+
+  /// No description provided for @serviceMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask earlier'**
+  String get serviceMoveUp;
+
+  /// No description provided for @serviceMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask later'**
+  String get serviceMoveDown;
+
+  /// No description provided for @serviceOrderHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Where several providers offer the same thing, the first one in this order that answers wins.'**
+  String get serviceOrderHint;
+
+  /// No description provided for @serviceCallsToday.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 call today} other{{count} calls today}}'**
+  String serviceCallsToday(int count);
+
+  /// No description provided for @serviceClosing.
+  ///
+  /// In en, this message translates to:
+  /// **'A provider’s terms are yours to accept; some free offers are for private use only. Switching a provider off stops every call to it at once.'**
+  String get serviceClosing;
 
   /// No description provided for @learnedWordsHelp.
   ///
