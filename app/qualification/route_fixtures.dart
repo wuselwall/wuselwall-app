@@ -44,6 +44,7 @@ import 'package:wuselwall/features/school/domain/timetable_import.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/services/ui/services_page.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/ui/family_members_page.dart';
 import 'package:wuselwall/features/settings/ui/member_page.dart';
@@ -65,6 +66,15 @@ import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
+import 'package:wuselwall/features/trips/domain/trip_entry_args.dart';
+import 'package:wuselwall/features/trips/domain/trip_models.dart';
+import 'package:wuselwall/features/trips/ui/trip_compare_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_discover_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_entry_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_windows_page.dart';
+import 'package:wuselwall/features/trips/ui/trips_page.dart';
 
 import 'inventory.g.dart';
 
@@ -172,6 +182,9 @@ Uint8List qualificationEventFile({int events = 1}) => utf8.encode(
   ].join('\r\n'),
 );
 
+/// The demo's fixed trip, which the trips fixtures open (`demo_trips.dart`).
+const _qualificationTrip = 'trip-sardinia';
+
 /// Direct page composition is deliberately separate from production route guards.
 /// Every destination still uses its real widgets, repositories, theme and semantics.
 GoRouter qualificationFixtureRouter(String id) {
@@ -251,6 +264,24 @@ class _Destination extends ConsumerWidget {
     'event-import-refused' => ImportEventPage(
       bytes: qualificationEventFile(events: 2),
     ),
+    'trips' => const TripsPage(),
+    'trip-discover' => const TripDiscoverPage(),
+    'trip-windows' => const TripWindowsPage(),
+    'trip' => const TripPage(tripId: _qualificationTrip),
+    'trip-compare' => const TripComparePage(
+      tripId: _qualificationTrip,
+      kind: EntryKind.stay,
+    ),
+    'trip-entry' => AsyncValueView(
+      value: ref.watch(tripEntriesProvider(_qualificationTrip)),
+      data: (entries) => TripEntryPage(
+        tripId: _qualificationTrip,
+        args: TripEntryArgs.edit(
+          entries.firstWhere((e) => e.kind == EntryKind.stay),
+        ),
+      ),
+    ),
+    'services-settings' => const ServicesPage(),
     'recipe-create' => const RecipeEditorPage(),
     'recipe-edit' || 'recipe-view' => AsyncValueView(
       value: ref.watch(recipesProvider),

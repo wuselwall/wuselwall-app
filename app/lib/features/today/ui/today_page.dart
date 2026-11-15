@@ -22,6 +22,7 @@ import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/ui/approvals_card.dart';
 import 'package:wuselwall/features/today/ui/getting_started_card.dart';
 import 'package:wuselwall/features/today/ui/notice_cards.dart';
+import 'package:wuselwall/features/trips/ui/trip_today_card.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 
@@ -67,6 +68,7 @@ class TodayPage extends ConsumerWidget {
                 const ApprovalsCard(),
                 const GettingStartedCard(),
                 if (ferienWusel) const _FerienWusel(),
+                const TripTodayCard(),
                 const RitualCards(),
                 if (!empty)
                   AsyncValueView<TodayAgenda>(

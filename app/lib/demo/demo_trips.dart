@@ -21,6 +21,14 @@ double demoDistanceKm(double lat1, double lon1, double lat2, double lon2) {
   return 6371 * 2 * math.asin(math.sqrt(a.toDouble()));
 }
 
+/// The demo trips that own an appointment in the demo calendar: the planned and the fixed
+/// ones, with the dates of [DemoTripsRepository] (relative to [clock]), so the calendar,
+/// the wall and the trips pages tell the same story.
+List<Trip> demoCalendarTrips({DateTime Function()? clock}) => [
+  for (final t in DemoTripsRepository(clock: clock)._trips)
+    if (t.stage != TripStage.idea) t,
+];
+
 String _t(String de, String en, String fr, String es) =>
     DemoData.tr4(de, en, fr, es);
 

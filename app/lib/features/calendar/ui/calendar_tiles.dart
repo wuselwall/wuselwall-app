@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -13,6 +14,7 @@ import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/imported_occurrence_sheet.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/rituals/domain/event_icons.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
 
 /// Below this column width an appointment shows no words: a timed block its picture
 /// or its first attendee's initial, an all-day chip its picture or mark, a presence
@@ -267,16 +269,25 @@ class OccurrenceTile extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(6),
           // Imported appointments are read-only: they open the source's details, never
-          // the editor.
+          // the editor. A trip's appointment opens the trip (specs/30).
           onTap: imported
               ? () => showImportedOccurrenceSheet(context, occurrence)
-              : () => context.push(
-                  Routes.eventEdit,
-                  extra: EventEditArgs(
-                    eventId: occurrence.eventId,
-                    occurrence: occurrence,
-                  ),
-                ),
+              : () {
+                  final trip = occurrence.tripId;
+                  if (trip != null &&
+                      ProviderScope.containerOf(context)
+                          .read(tripsOfferedProvider)) {
+                    context.push(Routes.tripPath(trip));
+                    return;
+                  }
+                  context.push(
+                    Routes.eventEdit,
+                    extra: EventEditArgs(
+                      eventId: occurrence.eventId,
+                      occurrence: occurrence,
+                    ),
+                  );
+                },
           child: CustomPaint(
             foregroundPainter: occurrence.isTentative
                 ? _DashedOutlinePainter(color: bar, radius: 6)
