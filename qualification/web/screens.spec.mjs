@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { test, expect } from 'playwright/test';
-import { cases, checkInventory, root } from '../matrix.mjs';
+import { cases, checkInventory, readiness, root } from '../matrix.mjs';
 import { auditWithScrollCheckpoints, runAxe } from './scroll-audit.mjs';
 
 const require = createRequire(import.meta.url);
@@ -32,7 +32,15 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
     // The test entry point enables semantics before autofocus fields connect.
     await expect(page.locator('flt-semantics').first()).toBeAttached({ timeout: 60_000 });
     await expect(page.locator(`body[data-qualification-ready="${sample.id}"]`)).toBeAttached();
-    await expect(page.getByRole('button').first()).toBeAttached();
+    const ready = readiness(sample, sample.locale);
+    if (ready.kind === 'read-only') {
+      // A refusal has nothing to act on: wait for its own message and title, never an action.
+      await expect(page.getByRole('heading', { name: ready.title, exact: true })).toBeAttached();
+      await expect(page.getByText(ready.text, { exact: true })).toBeAttached();
+      await expect(page.getByRole('button'), 'A read-only state exposes no action').toHaveCount(0);
+    } else {
+      await expect(page.getByRole('button').first()).toBeAttached();
+    }
     const semantics = await page.locator('flt-semantics-host').ariaSnapshot();
     expect(semantics.trim().length, 'The audit must inspect a populated semantics tree').toBeGreaterThan(50);
     if (capture) {
@@ -61,14 +69,21 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
     await page.evaluate(axeSource);
     const audit = await runAxe(page);
     const scrollAudit = await auditWithScrollCheckpoints(page, audit);
-    await info.attach('axe-report', { body: JSON.stringify({ ...audit,
-      unsupported: ['Canvas-painted colour contrast: covered by Flutter checks and review'],
-    }, null, 2), contentType: 'application/json' });
-    await info.attach('axe-scroll-checkpoints', { body: JSON.stringify({
+    // Attached as files: the JSON reporter writes an attachment's body into results.json,
+    // and the full matrix's reports together are longer than a string can be, so the
+    // reporter wrote no results.json at all.
+    const attachJson = async (name, value) => {
+      const file = info.outputPath(`${name}.json`);
+      fs.writeFileSync(file, JSON.stringify(value, null, 2));
+      await info.attach(name, { path: file, contentType: 'application/json' });
+    };
+    await attachJson('axe-report', { ...audit,
+      unsupported: ['Canvas-painted colour contrast: covered by Flutter checks and review'] });
+    await attachJson('axe-scroll-checkpoints', {
       checkpoints: scrollAudit.checkpoints,
       resolved: scrollAudit.resolved,
       remainingViolations: scrollAudit.remainingViolations,
-    }, null, 2), contentType: 'application/json' });
+    });
     expect.soft(scrollAudit.remainingViolations, 'DOM/ARIA audit findings after verified scroll checkpoints').toEqual([]);
     expect.soft(blocked, 'Hermetic captures must never contact an external service').toEqual([]);
     expect.soft(errors, 'Flutter/browser errors are qualification failures').toEqual([]);

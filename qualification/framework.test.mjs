@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { cases, checkInventory, inventory } from './matrix.mjs';
+import { cases, checkInventory, inventory, readiness } from './matrix.mjs';
 import { seal, sha256, verify } from './baseline.mjs';
 
 test('matrix is unique, locale-complete, includes breakpoint boundaries and true night', () => {
@@ -25,6 +25,24 @@ test('new routes and duplicate or empty states cannot silently disappear', () =>
   assert.throws(() => checkInventory({ ...inventory, excludedRoutes: { system: { ...inventory.excludedRoutes.system, kind: 'unverified' } } }), /Unsupported route exclusion/);
   assert.throws(() => checkInventory({ ...inventory, states: [] }), /empty inventory/);
   assert.throws(() => checkInventory({ ...inventory, states: [...inventory.states, inventory.states[0]] }), /Duplicate/);
+});
+
+test('a state without actions must name a real message and title instead of waiting for a button', () => {
+  const refused = inventory.states.find(s => s.id === 'event-import-refused');
+  assert.deepEqual(readiness(inventory.states.find(s => s.id === 'event-import'), 'de'), { kind: 'action' });
+  for (const lang of inventory.locales) {
+    const ready = readiness(refused, lang);
+    assert.equal(ready.kind, 'read-only');
+    assert.ok(ready.text.length > 20 && ready.title.length > 3);
+  }
+  assert.match(readiness(refused, 'en').text, /several appointments/);
+  const swap = state => ({ ...inventory, states: inventory.states.map(s => s.id === refused.id ? state : s) });
+  assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: 'noSuchKey' })), /unusable read-only readiness/);
+  assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: '' })), /Invalid inventory state/);
+  assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: 3 })), /Invalid inventory state/);
+  assert.throws(() => checkInventory(swap({ ...refused, titleKey: null })), /Invalid inventory state/);
+  // A message with placeholders cannot be matched exactly against the rendered text.
+  assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: 'configMissing' })), /unusable read-only readiness/);
 });
 
 test('reviewed baseline checksum rejects changed, missing, added and cross-environment files', t => {

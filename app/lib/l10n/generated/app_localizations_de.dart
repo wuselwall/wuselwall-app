@@ -6790,25 +6790,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventStarterGuestDinner => 'Gäste zum Essen';
 
   @override
-  String get eventStarterKidsParty => 'Kindergeburtstag';
+  String get eventStarterPlaydate => 'Spielen mit Freunden';
 
   @override
-  String get eventStarterSportsEvent => 'Sportveranstaltung';
+  String get eventStarterSportsPractice => 'Sporttraining';
 
   @override
   String get eventStarterDoctor => 'Arzttermin';
 
   @override
-  String get eventStarterPerformance => 'Aufführung';
+  String get eventStarterCinema => 'Kinobesuch';
 
   @override
-  String get eventStarterDayOut => 'Ausflug';
+  String get eventStarterDayOut => 'Familienausflug';
 
   @override
-  String get eventStarterHoliday => 'Urlaub / Reise';
+  String get eventStarterHoliday => 'Familienurlaub';
 
   @override
-  String get eventStarterCleaning => 'Putzhilfe';
+  String get eventStarterCleaning => 'Putzhilfe kommt';
 
   @override
   String get eventStarterParentsEvening => 'Elternabend';
@@ -6826,7 +6826,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventStarterSchoolParty => 'Schulfest';
 
   @override
-  String get eventStarterSportsDay => 'Sportfest';
+  String get eventStarterSportsDay => 'Sporttag der Schule';
 
   @override
   String get eventTemplateAllDay => 'Ganztägig';
@@ -8798,9 +8798,6 @@ class AppLocalizationsDeAt extends AppLocalizationsDe {
   String get mealIcon_potato => 'Erdäpfel';
 
   @override
-  String get eventStarterParentTeacherTalk => 'Elternsprechtag';
-
-  @override
   String get eventStarterSchoolTrip => 'Wandertag';
 
   @override
@@ -9231,10 +9228,7 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
   String get eventStarterGuestDinner => 'Gäste zum Znacht';
 
   @override
-  String get eventStarterSportsEvent => 'Sportanlass';
-
-  @override
-  String get eventStarterHoliday => 'Ferien / Reise';
+  String get eventStarterHoliday => 'Familienferien';
 
   @override
   String get eventStarterSchoolTrip => 'Schulreise';

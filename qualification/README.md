@@ -1,7 +1,9 @@
 # Candidate accessibility and UI qualification
 
 The [qualification design](../specs/accessibility-and-ui-qualification.md) is implemented
-as a manually dispatched evidence suite and an enforced app/server release gate. The shared
+as a manually dispatched evidence suite and an enforced beta/live app/server release gate.
+During alpha it is optional; [release policy and routine steps](../specs/releasing.md)
+require ordinary app/security/backend checks without the exhaustive matrix. The shared
 inventory contains 84 states and accounts for every release route. Two exclusions are
 checked against the production router: the legacy settings redirect and the developer-only
 diagnostics page. Route coverage does not mean every dialog, permission state or backend
@@ -41,11 +43,12 @@ from a recognized engine crash does not establish a clean release-candidate run.
   results, screenshots or required profiles fail the native report.
 
 Expanded tests live outside `app/test/`; ordinary `flutter test` does not discover them.
-`candidate-evidence` has only `workflow_dispatch`. Existing fast CI checks retain their
-schedule. Android, iOS and server releases containing the web archive now require successful
-qualification for that exact commit and protected human approval before publishing/signing.
-Separate backend/recovery checks remain part of the release checklist; operator-run local
-deployment utilities are independent.
+`candidate-evidence` has only `workflow_dispatch`. Ordinary CI runs on PRs, main pushes
+and manual dispatch; release workflows reuse its exact-commit results or call missing checks.
+In beta/live, Android, iOS and server releases containing the web archive also require
+successful qualification for that exact commit and protected human approval before
+publishing/signing. Backend CI is part of the shared release gate; recovery checks remain
+part of the release checklist. Operator-run local deployment utilities are independent.
 
 Current fixture checks render 228 destination/locale pairs. The full Flutter matrix
 executed all 9,272 cases: 8,836 passed and 436 retained contrast findings. No label,
@@ -71,6 +74,15 @@ automatically retry. Detail contrast tests retain their tall layout and every
 paragraph check while cropping blank capture space; 144 captures allocated about 70%
 fewer image bytes. This reduces resource use without establishing the cause of an engine
 crash. A process crash remains failed evidence.
+
+One cause of the tester's crashes is established: an unlimited stack limit. `flutter test`
+runs the tester with the Dart VM's profiler, which walks the main thread's native stack by
+frame pointers and accepts only pointers inside the stack. With `ulimit -s unlimited` glibc
+reports that stack as reaching down to the end of the heap, so an arbitrary register value
+passes the check and is read. The ten tester crashes the build fleet's kernel log held
+when this was found were all a read in that walker, terabytes below the stack pointer, in
+a process without a stack limit. `scripts/finite-stack.sh` gives the candidate, backend and ordinary CI test commands
+a finite limit; it changes no test and no verdict.
 
 Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)
 wherever paint is unambiguous, and by the raw Flutter SDK guideline everywhere else. The SDK
@@ -220,11 +232,31 @@ node qualification/contrast-report.mjs build/qualification/flutter/full/results.
 ```
 
 Browser semantics are enabled from launch; a separate test-only readiness signal is emitted
-after the real destination renders. If axe reports a target clipped by a scroll viewport,
+after the real destination renders. The browser then waits for an action on the screen. A
+state that by design offers none (a refusal notice) names its message in the inventory
+(`readOnlyTextKey`, with its `titleKey`): it is ready when that exact message and the title
+heading are exposed in the test's locale, and it fails if it exposes any button. If axe reports a target clipped by a scroll viewport,
 the audit scrolls with real input and checks the same DOM node fully inside every clipping
 ancestor before accepting its size. Initial and follow-up audits and geometry are retained.
 Unreachable, replaced or genuinely undersized controls remain failures, as do all other axe
 findings. `qualify:scroll-controls` checks those boundaries independently.
+
+Flutter's web engine needs four allowances in that audit, each with a control that keeps the
+boundary. A wrapper group that is smaller than its content but is no scroller is tried and
+skipped; the innermost ancestor the wheel really moves is the checkpoint. A sideways scroller
+never reports its position in `scrollLeft` (the engine writes it to `scrollTop` of both axes),
+so the audit puts those `scrollTop` values back to 0 where the engine itself placed the
+children, and counts a node that moved along the wheel's axis as scrolled. A row as wide as its
+list touches both sides of it without being cut, so across the scrolled axis it must only not
+reach outside; along it, it must still be strictly inside. And a pointer left over a node
+with a tooltip leaves an `aria-owns` reference to the closed overlay behind: a reference to a
+node that is gone, and that the element did not have before the first wheel step, is removed
+and listed (`pointerTraces`); one present before stays a finding. A node that an earlier
+checkpoint's scroll brought into view with its neighbour counts only if it is the node axe
+reported, is whole, and a fresh axe run no longer reports it.
+
+The JSON reporter writes every attachment's body into `results.json`, so the axe reports are
+attached as files: the full matrix's reports together exceed the length of a string.
 
 Rules fail their tests; existing findings are not suppressed. Flutter's histogram-based
 contrast checker can misread image/text regions: review the rendered pixels and fix actual
@@ -346,6 +378,10 @@ A complete run uses `bash qualification/native.sh` with `QUALIFY_CANDIDATE_SHA` 
 Android acceleration needs proven `/dev/kvm` access and its own baseline environment.
 
 ## Configure and use release promotion
+
+This section is required for **beta/live**. During alpha, the shared release gate uses
+`alpha-release` and ordinary CI; the exhaustive workflow remains available for diagnosis.
+Changing the stage requires a reviewed edit to `release-policy.json`, not a dispatch toggle.
 
 Confirmed native framework false positives have an optional
 [explicit review procedure](native/README.md#explicitly-reviewed-framework-findings).

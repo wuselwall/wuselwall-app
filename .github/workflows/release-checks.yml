@@ -1,0 +1,71 @@
+# One gate for app and server releases. Normal CI is reused by exact SHA or run here;
+# the expensive candidate suite is mandatory only once the reviewed policy leaves alpha.
+name: release-checks
+on:
+  workflow_call:
+    outputs:
+      environment:
+        description: Stage-appropriate signing approval environment
+        value: ${{ jobs.required.outputs.environment }}
+permissions:
+  contents: read
+  actions: read
+cache-mode: none
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    outputs:
+      stage: ${{ steps.plan.outputs.stage }}
+      environment: ${{ steps.plan.outputs.environment }}
+      ci: ${{ steps.plan.outputs.ci }}
+      backend: ${{ steps.plan.outputs.backend }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - id: plan
+        run: node scripts/release-checks.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }
+
+  ci:
+    needs: plan
+    if: needs.plan.outputs.ci == 'false'
+    uses: ./.github/workflows/ci.yml
+
+  backend:
+    needs: plan
+    if: needs.plan.outputs.backend == 'false'
+    uses: ./.github/workflows/backend-ci.yml
+
+  required:
+    if: always()
+    needs: [plan, ci, backend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      environment: ${{ needs.plan.outputs.environment }}
+    steps:
+      - name: Require passing ordinary CI and backend checks
+        env:
+          PLAN: ${{ needs.plan.result }}
+          CI: ${{ needs.ci.result }}
+          BACKEND: ${{ needs.backend.result }}
+          REUSE_CI: ${{ needs.plan.outputs.ci }}
+          REUSE_BACKEND: ${{ needs.plan.outputs.backend }}
+        run: |
+          set -euo pipefail
+          [[ "$PLAN" == success ]]
+          [[ "$CI" == success || ( "$CI" == skipped && "$REUSE_CI" == true ) ]]
+          [[ "$BACKEND" == success || ( "$BACKEND" == skipped && "$REUSE_BACKEND" == true ) ]]
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: needs.plan.outputs.stage != 'alpha'
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: needs.plan.outputs.stage != 'alpha'
+        with: { node-version: 22, package-manager-cache: false }
+      - name: Require exhaustive qualification for beta/live
+        if: needs.plan.outputs.stage != 'alpha'
+        run: node qualification/promotion.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }

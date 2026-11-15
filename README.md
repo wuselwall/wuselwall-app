@@ -25,24 +25,25 @@ Core features are implemented: shopping with an offline queue, tasks and points,
 calendar and school timetables, meals, onboarding, household settings and the wall
 board. Local reminders, Apple Shortcuts and timetable text/photo import are built too.
 
-**WuselWall is preparing for a family Alpha.** Native-device qualification, the
+**WuselWall is in alpha development.** Native-device qualification, the
 two-week family trial and public store readiness remain open. Screenshots and demo
 checks demonstrate the interface; they do not establish release readiness. See the
-[release checklist](specs/release-checklist.md) and
+[release runbook](specs/releasing.md), [release checklist](specs/release-checklist.md) and
 [qualification record](https://github.com/wuselwall/wuselwall-app/issues/117).
 
 | Order | Milestone | Status |
 |---|---|---|
 | 1 | Everyday essentials: remaining setup, approval and offline-wall journeys | In progress |
 | 2 | A lighter day: Wusel, colour, ambience, birthdays and family rituals | Implemented |
-| 3 | Family Alpha: qualify real devices, use for two weeks, address findings | Next, after the remaining essentials and qualification |
+| 3 | Family Alpha: use on real devices for two weeks, address findings | Alpha development; trial evidence remains open |
 | 4 | Ready for other families: safe releases, independent setup and store readiness | After the Alpha |
 
 The [roadmap](specs/13-roadmap.md) defines these outcomes; the
 [build plan](specs/16-setup-plan.md) lists remaining work. Later candidates belong in
 [After the Alpha](specs/23-roadmap-after-alpha.md). MCP and AI assistant work is
 [on hold](specs/deferred/mcp-and-ai-assistants.md); the backend is retained for compatibility.
-No release dates are promised.
+Alpha releases require ordinary app, security and backend CI. Exhaustive UI/native
+qualification is retained for beta/live. No release dates are promised.
 
 ## Run a local demo
 

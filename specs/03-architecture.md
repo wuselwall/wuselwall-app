@@ -83,7 +83,7 @@ queues. It holds no business rules.
 | Composed reads, public endpoints | **Supabase Edge Functions** (Deno, TypeScript) | RFC 5545 via `rrule`, the timetable projection, ICS output via `ical-generator`, device enrolment, the send-email hook, account deletion; later MCP and Shortcuts. |
 | Background jobs | **pg_cron**, with **pg_net** to invoke Edge Functions | No worker container. Jobs and their history are visible in SQL. |
 | Realtime | **Supabase Realtime**, broadcast from triggers on a private per-household channel | Invalidations, not data: the client refetches. |
-| Push | **FCM** (Android) and **APNs** (iOS), sent from an Edge Function | Native push channels; provider choice is [Q38](14-open-questions.md). |
+| Push | **APNs direct** (iOS), **FCM** (Android), through an optional encrypted project relay | [ADR-022](adr/ADR-022-encrypted-push-relay.md), Q38/Q47: approved 2026-11-15, not built. Family servers retain registrations/outbox; provider credentials live only at the relay. Current notifications remain local/Realtime. |
 | Tests | Dart `test`/`flutter_test` · **pgTAP** via `supabase test db` · `deno test` | Domain rules and RLS are tested against a real database, always. |
 | CI/CD | **GitHub Actions**, **fastlane** for signing and upload | [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md), [16](16-setup-plan.md). |
 

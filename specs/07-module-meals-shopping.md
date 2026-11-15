@@ -314,8 +314,12 @@ credentials). So the notification arrives only while the app is running: open, o
 aside. An iPhone suspends an app seconds after it leaves the screen, and Android keeps it
 for a while at most. A **closed app is not reached**; it shows the notice on Heute when it
 is opened during the trip. The owner chose this scope on 2026-11-14 (Realtime and a local
-notification, no relay). Whether the project builds a push relay is the open decision in
-issue #243. The guide and the setting's help say the same.
+notification, no relay). **Approved 2026-11-15 in #243:** the project will build the
+optional encrypted relay of [ADR-022](adr/ADR-022-encrypted-push-relay.md), APNs direct
+for iOS and FCM for Android, with shopping first in
+[#274](https://github.com/wuselwall/wuselwall-app/issues/274). That implementation and
+physical closed-phone evidence are still open. Until it ships, the guide and the
+setting's help keep the current running-app limit.
 
 **Data and contract.**
 

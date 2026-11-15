@@ -24,10 +24,11 @@ editing it. The value is in the trail.
 | [015](ADR-015-saas-and-self-hosted-flavours.md) | Two flavours: WuselWall Cloud on hosted Supabase, and self-hosted; public store listings | Superseded by 018 (store listings and no captcha stand) |
 | [016](ADR-016-public-website.md) | A public website at the root (Astro, own compose project); the Flutter web app moves to /app/ | Accepted, superseded in part by 017, amended by 018 |
 | [017](ADR-017-wuselwall-app-domain.md) | The domain wuselwall.app for the website, the docs and the links | Accepted |
-| [018](ADR-018-self-hosted-only.md) | Self-hosted only: the store app connects to any WuselWall server; no WuselWall Cloud | Accepted, built 2026-10-14 |
+| [018](ADR-018-self-hosted-only.md) | Self-hosted only: the store app connects to any WuselWall server; no WuselWall Cloud | Accepted, built 2026-10-14; push transport exception in 022 |
 | [019](ADR-019-website-repository-and-docs-pages.md) | Private marketing repository; documentation source stays with the app and targets GitHub Pages | Accepted; documentation hosting activated 2026-10-24 |
 | [020](ADR-020-a-lighter-day.md) | A lighter day: joy as a product goal; the mascot Wusel, colour layers (A+) and five family rituals, built before M1.6 | Accepted; implemented, family-trial evidence pending |
 | [021](ADR-021-local-matching.md) | Local matching: one bundled dictionary, a layered matcher on device and server, corrections per household; models only bundled, never a service | Accepted; dictionary, matcher and shopping integration built 2026-10-31; other integrations follow |
+| [022](ADR-022-encrypted-push-relay.md) | Optional project-operated encrypted push relay; APNs direct for iOS, FCM for Android | Accepted 2026-11-15; implementation pending (#274) |
 | [023](ADR-023-opt-in-services.md) | Opt-in services: weather, place search, routes and map pictures from providers a household switches on, called by the family's server with the family's keys; off by default | Accepted 2026-11-15 |
 
 Format: Context · Decision · Alternatives considered · Consequences.

@@ -123,7 +123,8 @@ test('workflow keeps smoke and runner diagnostics outside promotion and signing'
   assert.match(workflow, /github\.event_name == 'workflow_dispatch' && inputs\.native_smoke_only && !inputs\.diagnostics_only/);
   assert.match(workflow, /inputs\.diagnostics_only != true && inputs\.native_smoke_only != true/);
   assert.match(workflow, /qualification\.result == 'success'/);
-  assert.match(workflow, /environment: release-promotion/);
+  assert.match(workflow, /uses: \.\/\.github\/workflows\/release-checks.yml/);
+  assert.match(workflow, /environment: \$\{\{ needs.qualification.outputs.environment \}\}/);
   assert.match(workflow, /both\) profiles=\(ios-phone android-phone\)/);
   assert.match(workflow, /QUALIFY_NATIVE_SMOKE: 'true'/);
   assert.match(workflow, /options: \[both, ios, android\]/);
