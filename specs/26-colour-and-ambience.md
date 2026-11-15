@@ -43,22 +43,32 @@ details, because the week board keeps its own zones. The Settings screen takes t
 
 | Module | Key | Light band | Dark band | Illustration (drawn in code, cropped) |
 |---|---|---|---|---|
-| Heute | `sonne` | `#FFF0C2` | `#3A3216` | The day-phase sky (see [Ambience](#ambience)) |
-| Kalender | `himmel` | `#DCEBFF` | `#1B2B40` | A calendar page with its rings, one day marked (`sky`, `lilac`) |
-| Aufgaben | `koralle` | `#FFE1D6` | `#3D2420` | A broom and two stars (`apricot`, `sun`) |
-| Essen | `aprikose` | `#FFE5C7` | `#3B2A18` | A pot with steam (`coral`, `apricot`) |
-| Einkauf | `minze` | `#D5F2E6` | `#173429` | A basket with two fruits (`mint`, `sun`) |
-| Stundenplan | `flieder` | `#EEE8FF` | `#2A2342` | A school bag (`lilac`, `sky`) |
-| Einstellungen | `stein` | `#ECE8E0` | `#26282B` | Two sliders and nothing else: settings stay calm (`sky`, `mint`) |
+| Heute | `sonne` | `#FFF0C2` | `#523500` | The day-phase sky (see [Ambience](#ambience)) |
+| Kalender | `himmel` | `#DCEBFF` | `#233D5F` | A calendar page with its rings, one day marked (`sky`, `lilac`) |
+| Aufgaben | `koralle` | `#FFE1D6` | `#5F2A20` | A broom and two stars (`apricot`, `sun`) |
+| Essen | `aprikose` | `#FFE5C7` | `#573119` | A pot with steam (`coral`, `apricot`) |
+| Einkauf | `minze` | `#CBF5E4` | `#094734` | A basket with two fruits (`mint`, `sun`) |
+| Stundenplan | `flieder` | `#EEE8FF` | `#3E345C` | A school bag (`lilac`, `sky`) |
+| Einstellungen | `stein` | per theme | per theme | Two sliders and nothing else: settings stay calm (`sky`, `mint`) |
 
-Contrast, checked 2026-10-24 with the WCAG 2.x formula of [17's method](17-design-system.md#method):
+*Recoloured 2026-11-15 (issue #280).* The dark bands were dim and nearly grey (OKLCH
+lightness 0.28–0.32, chroma about 0.04) and read as mud, the yellow one as olive. They now sit
+at lightness 0.355 with chroma 0.066–0.085, as light as the member inks allow, and the warm
+ones lean away from olive: `sonne` at hue 76 (bronze), `aprikose` at 52, `koralle` at 32. The
+`stein` band has no hue of its own and leans toward each theme's ground
+([17, Themes](17-design-system.md#themes)). The light bands kept their values except `minze`,
+which gained chroma; they cannot get darker, because the member inks sit at the limit on them.
+
+Contrast, checked 2026-11-15 with the WCAG 2.x formula of [17's method](17-design-system.md#method),
+the worst of all themes of the shade (`test/app/theme_test.dart` checks each):
 
 | Pair | Light, worst band | Dark, worst band |
 |---|---|---|
-| `ink` on band | 13.4:1 (koralle) | 10.4:1 (sonne) |
-| `ink-2` on band | 6.6:1 (koralle) | 6.0:1 (sonne) |
-| `ink-3` on band | **4.3:1, fails** | **3.8:1, fails** |
-| Any member ink on band, as text | 4.51:1 (on koralle; flieder was lightened from `#EAE2FF`, where petrol reached only 4.46:1) | 5.6:1 (raspberry on sonne) |
+| `ink` on band | 13.0:1 (koralle, Sonnig) | 9.2:1 |
+| `ink-2` on band | 6.6:1 (koralle) | 6.1:1 (Kakao) |
+| `ink-3` on band | **4.3:1, fails** | **4.1:1, fails** |
+| Any member ink on band, as text | 4.51:1 (on koralle; flieder was lightened from `#EAE2FF`, where petrol reached only 4.46:1) | 4.7:1 |
+| `brand` on band, as text | 4.9:1 | 6.0:1 |
 
 So **`ink-3` is never used on a band.** Captions there use `ink-2`. Night has no bands: the
 night theme stays as it is.
@@ -76,16 +86,19 @@ night theme stays as it is.
 Six decorative colours exist for illustration only. They fill blobs behind empty-state
 scenes, the confetti, the Wochenrückblick's cards ([27](27-family-rituals.md#wochenrückblick))
 and the sticker shadows of the kid register. Text may sit on them only in `ink` (light shade)
-or the dark ground `#14171A` (dark shade).
+or the theme's ground (dark shade).
 
-| Key | Light | Dark | `ink` on light | `#14171A` on dark |
+| Key | Light | Dark | `ink` on light, worst theme | Ground on dark, worst theme |
 |---|---|---|---|---|
-| `sun` | `#FFC94D` | `#C9A23E` | 10.8:1 | 7.5:1 |
-| `sky` | `#8EC5FF` | `#6E9BCB` | 9.1:1 | 6.2:1 |
-| `coral` | `#FF9F85` | `#CC8370` | 8.3:1 | 6.0:1 |
-| `apricot` | `#FFB570` | `#B7834F` | 9.5:1 | 5.5:1 |
-| `mint` | `#7FD8B5` | `#4E9A7E` | 9.8:1 | 5.4:1 |
-| `lilac` | `#B9A3FF` | `#9585D4` | 7.7:1 | 5.6:1 |
+| `sun` | `#FFC94D` | `#E6B73A` | 10.5:1 | 8.9:1 |
+| `sky` | `#8EC5FF` | `#78B1EE` | 8.9:1 | 7.4:1 |
+| `coral` | `#FF9F85` | `#ED937C` | 8.1:1 | 7.2:1 |
+| `apricot` | `#FFB570` | `#D69553` | 9.3:1 | 6.6:1 |
+| `mint` | `#7FD8B5` | `#50B490` | 9.5:1 | 6.5:1 |
+| `lilac` | `#B9A3FF` | `#AB97F7` | 7.5:1 | 6.7:1 |
+
+The dark values were brightened on 2026-11-15 (issue #280), so the pictures in the dark bands
+glow instead of sinking into them.
 
 Against the page ground they sit at 1.4–2.0:1. That is deliberate: they are soft shapes, not
 borders, and nothing depends on seeing their edge.
@@ -127,8 +140,14 @@ and its holidays, with no network. It changes decoration only, never layout or c
 
 Text over the sky is `ink` (≥ 11.2:1 on every stop) or `ink-2` (≥ 5.5:1). Member inks over
 the dusk stop drop to 3.8:1, so **member colours never sit directly on the sky**. They stay on
-the board's opaque cards. In the dark shade the sky uses the dark band `#3A3216` with the same
-sun and moon shapes, and no gradient.
+the board's opaque cards.
+
+**The dark themes have one sky, a twilight** (2026-11-15, issue #280): a gradient from deep
+blue `#2B2959` down to a warm horizon `#7A342B`, the same at every hour and in each dark
+theme, with the phase's sun in the decorative `sun` colour, its clouds and the hill. Before,
+the dark shade drew the flat `sonne` band, an olive-brown slab under a brown sun. Text over
+the twilight is the dark theme's `ink` (≥ 7.7:1 on both stops) or `ink-2` (≥ 5.1:1). With
+the sky switched off (`device.sky`), the header is the `sonne` band as before.
 
 The sky is one gradient plus three vector layers (sun or moon, clouds, a hill silhouette in
 the `sonne` band colour), recoloured per phase. The phase changes with a 30 s cross-fade. It

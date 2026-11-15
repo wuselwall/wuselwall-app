@@ -306,7 +306,7 @@ a test checks that every key with a title is placed in exactly one group.
 | Rituals | table question (`rituals.table_question*`, "Our questions") · `rituals.week_review` · countdowns (`rituals.countdown_*`) |
 | Celebrations and seasons | through the year (`ambience.season`, `.ferien`, `.birthdays`) · holidays in the year's order (`ambience.easter_*`, `.national_day`, `.st_nicholas`, `.advent`, `.christmas`, `.new_year`) |
 | Kitchen wall | `board.*` |
-| Devices | this device: language, appearance, `device.*` · all devices: the list, connect, rename, revoke |
+| Devices | this device: language, appearance (light, dark or automatic, and the colour themes of [17](17-design-system.md#themes); kept on the device, not a server setting), `device.*` · all devices: the list, connect, rename, revoke |
 | Account and security (personal phone only) | sign-in methods, password, two-factor, PIN, passkeys, leaving the family, deleting the account |
 | Server (Advanced, builds that chose a server) | address and QR code, switching server |
 | Help and about | getting started, versions, licences |

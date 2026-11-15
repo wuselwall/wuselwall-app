@@ -4917,6 +4917,40 @@ class AppLocalizationsEs extends AppLocalizations {
       'Por la noche, la pantalla de pared siempre muestra su vista nocturna.';
 
   @override
+  String get appearanceLookLight => 'Tema claro';
+
+  @override
+  String get appearanceLookDark => 'Tema oscuro';
+
+  @override
+  String get lookFrisch => 'Fresco';
+
+  @override
+  String get lookSonnig => 'Soleado';
+
+  @override
+  String get lookBlaueStunde => 'Hora azul';
+
+  @override
+  String get lookSchiefer => 'Pizarra';
+
+  @override
+  String get lookPflaume => 'Ciruela';
+
+  @override
+  String get lookKakao => 'Cacao';
+
+  @override
+  String get firstLookTitle => '¿Qué aspecto quieres para WuselWall?';
+
+  @override
+  String get firstLookHelp =>
+      'Solo en este dispositivo. Puedes cambiarlo cuando quieras en Ajustes, Apariencia.';
+
+  @override
+  String get firstLookDone => 'Listo';
+
+  @override
   String get languageTitle => 'Idioma';
 
   @override

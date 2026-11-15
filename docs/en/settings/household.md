@@ -64,3 +64,20 @@ These settings are under **Devices → This device** and apply only to the devic
 | **Sounds on this device** | silences the whole device; there is never a sound at night | Automatic: off on the wall, on elsewhere |
 | **Sky in the header** | the sky that changes with the time of day | on |
 | **Protect the screen from burn-in** | moves everything by up to 2 pixels every 10 minutes, for OLED screens | Automatic: on for the wall, off elsewhere |
+
+### Appearance {#appearance}
+
+Under **Appearance** you choose how WuselWall looks on this device. The row shows the current choice, for example "Automatic · Fresh, Blue hour", and opens a sheet from the bottom. At the top you switch between **Automatic** (light or dark, as set on the device), **Light** and **Dark**. Below it come the **Light theme** and the **Dark theme**.
+
+<Shot name="first-look" alt="The sheet for choosing light, dark or automatic and the colour themes" />
+
+Each theme is a small picture of the app in its colours. A tap applies at once, also to the page behind the sheet, so you see straight away how it looks. **Done** closes the sheet.
+
+- **Light theme**: **Fresh** (cool, minty white, the one you start with) and **Sunny** (sunny cream).
+- **Dark theme**: **Blue hour** (evening blue, the one you start with), **Slate** (cool grey), **Plum** (dusk violet) and **Cocoa** (warm brown).
+
+A device keeps one light and one dark theme; the switch at the top decides which of the two you see. The choice holds for this device only and changes nothing for anyone else: the family's phones need not agree. It is not a setting for parents only.
+
+A personal phone (not the family tablet and not the wall) shows this sheet by itself the first time it reaches the home screen, titled "How should WuselWall look?". You can close it without choosing; it does not come back, and everything stays changeable under **Settings → Appearance**. A phone that already had the app sees it once after the update. The tablet and the wall are not asked; parents change the theme there in the same place in Settings.
+
+The family members' own colours are the same in every theme. And the wall still switches to its night view at night (from 21:00 by default), whatever is chosen.

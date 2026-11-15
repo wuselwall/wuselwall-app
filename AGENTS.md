@@ -72,6 +72,13 @@ by `api.events` and the `occurrences` function (migration `20261114120000_event_
 `310_event_reminder.test.sql`, feature flag `event-reminder`); the editor's *Erinnerung vorher*
 (15 minutes to 1 week, whole days for an all-day event), planned on each concerned person's phone
 as a local notification in place of their `notify.event_reminder`.
+Colour themes (2026-11-15, issue #280, [specs/17](specs/17-design-system.md#themes) "Themes"): the
+neutrals are themes a device chooses from, two light (Frisch, Sonnig) and four dark (Blaue Stunde,
+Schiefer, Pflaume, Kakao); `Look` and `Palette.look` in `app/lib/app/theme/palette.dart`,
+`looksProvider` beside the appearance, one sheet for Settings and for a personal device's first
+arrival at home (`features/settings/ui/look_chooser.dart`, specs/20 "The first look"). Member inks
+did not change; `test/app/theme_test.dart` runs every contrast check for every theme; the dark
+Today header is a twilight. The demo takes `&light=`, `&dark=` and `&firstlook=1`.
 Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the

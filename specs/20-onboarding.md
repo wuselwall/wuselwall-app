@@ -515,6 +515,35 @@ anyway.
 Google Play additionally requires a **web page** explaining how to request deletion. It
 lives on the same small site as the invitation landing page.
 
+## The first look
+
+*Added 2026-11-15 (issue #280).* Testers judged the app by its colours before anything else,
+so a personal device is offered its colours once: light, dark or as the device says, and the
+theme of each ([17, Themes](17-design-system.md#themes)).
+
+- **A sheet, not a screen.** It opens by itself over the home screen on the device's first
+  arrival there, after J1 or J2 has ended. Rule 4 holds: the path ends inside the household,
+  and the sheet stands in front of it. It is not a route, so no journey gets a screen longer
+  and the screen counts of J1 and J2 are unchanged.
+- **Its own preview.** A tap applies at once, to the sheet and to the home screen behind it.
+  There is no carousel and nothing to read through (rule 6): the themes' names and small
+  pictures are the whole content.
+- **Skippable, and once.** Closing it in any way keeps the standard themes. The device
+  records that the choice was offered, in its secure storage beside the appearance, at the
+  moment the sheet opens, so an interrupted start does not ask twice. A device whose storage
+  cannot be read is not asked at all. The same sheet stays under Einstellungen → Geräte →
+  Dieses Gerät → Darstellung.
+- **Personal devices only.** The family tablet and the wall are not asked: nobody answers a
+  question on a shared device (rule 3), and one child would answer for everyone. A guardian
+  changes their themes in the settings.
+- **Installations from before the themes are asked once too**, on the first start after the
+  update, because the update changes their colours anyway.
+- This is deferred, not asked (rule 2): the standard themes apply until then, and on every
+  screen before the household exists.
+
+*Built 2026-11-15:* `FirstLookPrompt` around the adult home and `showLookSheet`
+(`features/settings/ui/look_chooser.dart`), `looksProvider` (`app/theme/appearance.dart`).
+
 ## The getting-started card
 
 > **Built 2026-10-15.** The items lead to their flows: "Partner:in einladen" opens the invitation flow; "Familien-Tablet verbinden" and "Wandanzeige einrichten" open pairing with the kind preset; "Kalender abonnieren" and "Stundenplan eintragen" their screens. The reminders row ("Erinnerungen einschalten") is local to the phone and shown only on personal devices (Q47).
