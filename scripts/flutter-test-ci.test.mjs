@@ -132,7 +132,7 @@ test('any other error or an unseen file keeps the run failed', () => {
 // End to end with a stand-in `flutter` that plays one scripted run per call: it writes the
 // report and output, optionally leaves a core file, then exits with `status` or is killed by
 // `signal`. With `gdb`, a stand-in gdb prints that text and records its arguments.
-function run(runs, { gdb, concurrency, unlimitedStack } = {}) {
+function run(runs, { gdb, concurrency, stack: stackLimit } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'flutter-test-ci-'));
   try {
     const fake = join(dir, 'flutter');
@@ -164,9 +164,10 @@ process.stdout.write(${JSON.stringify(gdb)});
     const env = { ...process.env, PATH: `${dir}:${process.env.PATH}` };
     if (concurrency === undefined) delete env.FLUTTER_TEST_CONCURRENCY;
     else env.FLUTTER_TEST_CONCURRENCY = concurrency;
-    // With unlimitedStack the wrapper itself starts the way the self-hosted runners start it.
-    const result = unlimitedStack
-      ? spawnSync('sh', ['-c', 'ulimit -S -s unlimited && exec node "$0"', script], { cwd: dir, encoding: 'utf8', env })
+    // With a stack limit the wrapper itself starts under it: 'unlimited' is how the
+    // self-hosted runners start it, whatever limit the machine running this test has.
+    const result = stackLimit
+      ? spawnSync('sh', ['-c', `ulimit -S -s ${stackLimit} && exec node "$0"`, script], { cwd: dir, encoding: 'utf8', env })
       : spawnSync('node', [script], { cwd: dir, encoding: 'utf8', env });
     const stack = existsSync(join(dir, 'stack')) ? readFileSync(join(dir, 'stack'), 'utf8') : undefined;
     const gdbArgs = existsSync(join(dir, 'gdb-args')) ? JSON.parse(readFileSync(join(dir, 'gdb-args'), 'utf8')) : undefined;
@@ -201,7 +202,7 @@ test('a clean run runs once and passes', () => {
 const canUnlimit = spawnSync('sh', ['-c', 'ulimit -S -s unlimited']).status === 0;
 
 test('flutter never starts with an unlimited stack limit, in the first run or a rerun', { skip: !canUnlimit }, () => {
-  const result = run([crashed, passed], { unlimitedStack: true });
+  const result = run([crashed, passed], { stack: 'unlimited' });
   assert.equal(result.status, 0, result.stderr);
   assert.equal(result.calls.length, 2);
   assert.equal(result.stack, '8192');
@@ -209,9 +210,10 @@ test('flutter never starts with an unlimited stack limit, in the first run or a 
 });
 
 test('a stack limit somebody set is left alone', () => {
-  const result = run([passed]);
+  const result = run([passed], { stack: '4096' });
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(result.stack, spawnSync('sh', ['-c', 'ulimit -S -s'], { encoding: 'utf8' }).stdout.trim());
+  assert.equal(result.stack, '4096');
+  assert.match(result.stdout, /stack limit 4096 \(hard \w+\); flutter test runs with 4096/);
 });
 
 test('finite-stack.sh lowers only an unlimited stack limit and runs the command with its arguments', { skip: !canUnlimit }, () => {
