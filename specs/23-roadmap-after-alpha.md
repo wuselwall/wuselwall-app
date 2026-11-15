@@ -117,12 +117,13 @@ household is expected to need them, and that order changes with the Alpha's find
 
 ## Only when a family asks
 
-Each of these is a decision card, not a build. The decision records the case that prompted
-it, and the answer goes into [14](14-open-questions.md).
+These start as decision cards. The decision records the case that prompted it, and the
+answer goes into [14](14-open-questions.md). R4.1 has met that condition and moved to
+implementation; the remaining cards still wait for a case.
 
 | Item | The question | What would make it a yes |
 |---|---|---|
-| **R4.1** A push relay | Do local reminders and the Today notices miss something that matters ([Q47](14-open-questions.md), Q38)? | A real missed event. The relay would be the one service the project runs: stateless, a device token and an end-to-end-encrypted payload, no household data |
+| **R4.1** A push relay — approved 2026-11-15 | Q47/Q38 answered by [ADR-022](adr/ADR-022-encrypted-push-relay.md): optional encrypted relay, APNs direct for iOS, FCM for Android | The shopping-trip request (#242) and the owner's yes in #243 meet the real-use condition. Implementation is [#274](https://github.com/wuselwall/wuselwall-app/issues/274), v1.12.0; no persistent relay registry/history. Approved does not mean delivered |
 | **R4.2** One account in two households | Separated parents and a child with two homes ([Q43](14-open-questions.md)) | A real family with that case, and a design that keeps every read inside one household |
 | **R4.3** CalDAV for the phones | Is the read-only feed too limiting on the move ([05](05-module-calendar.md#later-two-way-for-the-phones))? | Entering events in WuselWall proves to be the reason they are not entered. Never Outlook two-way (P8) |
 | **R4.4** A school portal import | Does a family's school publish substitutions (Q20, FR-7.14)? | A school with a documented feed; manual entry stays the default. *2026-10-22: the pilot's schools publish paper and closed platforms; structured text and photo import serve that case ([24](24-school-import.md)). 2026-10-24: assistant proposals are on hold.* |

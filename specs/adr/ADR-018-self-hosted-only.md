@@ -1,5 +1,11 @@
 # ADR-018 — Self-hosted only: the app connects to any WuselWall server, and there is no WuselWall Cloud
 
+**Amended 2026-11-15 by [ADR-022](ADR-022-encrypted-push-relay.md):** decision 10 is
+answered: an optional project-operated encrypted push relay, APNs direct for iOS and
+FCM for Android. Decisions 1 and the 2026-10-21 no-service rule gain only this transport
+exception. Household backends remain self-hosted; the relay is approved, not built.
+The original record below preserves the earlier open decision.
+
 **Status:** Accepted · 2026-10-13 · Built 2026-10-14, see the [amendment](#amendment-2026-10-14-built) (decision 8's links and decision 10 are open) · Supersedes [ADR-015](ADR-015-saas-and-self-hosted-flavours.md)
 except its decisions 6 (public store listings) and 7 (no captcha), which stand; amends
 [ADR-013](ADR-013-self-hosted-compose-stack.md) (one landscape per server),

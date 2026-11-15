@@ -60,7 +60,12 @@ the others"): tapping *Einkaufen gehen* records a trip (`app.shopping_run`, `api
 `305_shopping_start.test.sql`, feature flag `shopping-start`) and the other adults with
 `notify.shopping_start` on (default on) get a notice `shopping` on Heute, a banner and, on a
 personal phone, a local notification, for a running app only (Q47; a closed app sees the notice when
-opened; the relay is issue #243).
+opened). The owner approved a relay in #243 on 2026-11-15: [ADR-022](specs/adr/ADR-022-encrypted-push-relay.md)
+answers Q47/Q38 with optional project-operated encrypted transport, APNs direct for iOS
+and FCM for Android. This is the sole transport exception to ADR-018, with no persistent
+relay device registry or message history; household backends remain self-hosted.
+Approved, not built: #274 owns shopping push implementation, relay operations and physical
+closed-phone evidence. Current app behaviour remains local/Realtime until that ships.
 A reminder for one event (2026-11-14, issue #256, [specs/05](specs/05-module-calendar.md) "A
 reminder for one event", FR-1.22): `app.event.reminder_minutes`, taken by `api.event_save` and shown
 by `api.events` and the `occurrences` function (migration `20261114120000_event_reminder.sql`, pgTAP
@@ -198,9 +203,12 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 [ADR-010](specs/adr/ADR-010-flutter-and-self-hosted-supabase.md) and
 [ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md).
 
-- **The project runs no hosted service** ([ADR-018](specs/adr/ADR-018-self-hosted-only.md)):
+- **Household backends are self-hosted** ([ADR-018](specs/adr/ADR-018-self-hosted-only.md)):
   every family runs its own server, and the store app connects to whichever server a
-  household chooses. A live server holds a family's data: before any migration back it up;
+  household chooses. [ADR-022](specs/adr/ADR-022-encrypted-push-relay.md) approves only an
+  optional encrypted push transport run by the project (not built, #274), with provider
+  credentials there and no persistent relay registry/history. It does not host households.
+  A live server holds a family's data: before any migration back it up;
   never run `supabase db reset` against it; never run the Dart integration test against it
   (it creates households and revokes devices — CI and throwaway stacks only). Keys come
   from the git-ignored `supabase/.env`.

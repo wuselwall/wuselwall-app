@@ -29,6 +29,16 @@ website progress update is tracked in
 [website #18](https://github.com/wuselwall/wuselwall-website/issues/18); publication remains
 a separate follow-up.
 
+Push is approved, not built (2026-11-15, #243): a family asked for shopping-trip alerts
+on a closed phone, and the owner approved the optional encrypted relay in
+[ADR-022](adr/ADR-022-encrypted-push-relay.md). APNs directly for iOS and FCM for Android;
+household backends stay self-hosted. Shopping delivery, relay operations and native proof
+are the next implementation slice in
+[#274](https://github.com/wuselwall/wuselwall-app/issues/274), planned for v1.12.0.
+Existing guides keep the running-app limitation until delivery is built; public-progress
+and privacy changes are tracked separately in
+[website #19](https://github.com/wuselwall/wuselwall-website/issues/19) before activation.
+
 Member, family, device and shopping-structure editing (old step 10.1–10.3) and Today’s
 guardian approvals (10.5, #127/#149) are built.
 Cache qualification fixes followed on 2026-10-25: discovery and household recovery after
@@ -182,8 +192,9 @@ Website progress and legacy-link redirects remain a separate operator handoff; s
 automation-origin markers, recipe import and desktop tools are candidates, without a
 promised release or due date. MCP/AI assistant setup, consent, scopes and proposals are
 parked together in [23's on-hold section](23-roadmap-after-alpha.md#on-hold--mcp-and-ai-assistants).
-Push relay, multiple households and
-school-portal imports require a real case first. Birthdays are already in milestone 2;
+Multiple households and school-portal imports require a real case first. The push relay
+met that condition and is now approved for implementation (#274, ADR-022).
+Birthdays are already in milestone 2;
 Shortcuts is already built; the retained MCP implementation is deferred.
 
 ## Effort
