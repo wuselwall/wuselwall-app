@@ -12,9 +12,16 @@ treatments and accessibility rules were never part of the choice.*
 (direction A+, [ADR-020](adr/ADR-020-a-lighter-day.md)): module bands, decoration, the wall's
 day phases, the kid register's sticker skin, springs and sound. Nothing below changes.*
 
+*Extended 2026-11-15 (issue #280): testers found the colours dire, the dark ones most of all.
+The neutrals became **themes** a device chooses from, two light and four dark
+([Themes](#themes)); the dark tints, bands and decoration gained colour; the light brand green
+became fresher. The member inks, the presence treatments, the rules below and the night theme
+did not change.*
+
 **Mockup:** [`specs/mockups/design-system.html`](mockups/design-system.html). Switch
 between the directions, the light, dark and night themes, and four simulated kinds of
-colour vision.
+colour vision. It is the record of the 2026-10-11 choice and shows the neutrals of that
+day, not the themes of 2026-11-15; the member inks in it are today's.
 
 ## What the palette has to do
 
@@ -33,7 +40,7 @@ The palette was derived from five constraints, not from taste:
 4. **Colour-vision-safe in the order it is handed out.** Each member colour was checked
    against the others under normal vision, protanopia, deuteranopia and tritanopia, in
    light and dark. The method is described in the [method](#method) section.
-5. **AA everywhere, in all three themes.** Every text and ink token reaches 4.5:1 on
+5. **AA everywhere, in every theme.** Every text and ink token reaches 4.5:1 on
    every surface it can appear on: paper, surface, sunken surface and its own tint.
 
 ## Member colours
@@ -46,14 +53,14 @@ No migration was needed.
 
 | # | Key | Name (de) | Light ink | Dark ink | Light tint | Dark tint | Reference household |
 |---|---|---|---|---|---|---|---|
-| 1 | `violet` | Violett | `#7B3FE4` | `#C3A6FF` | `#EDE4FB` | `#3D3B50` | Olivia |
-| 2 | `petrol` | Petrol | `#08737F` | `#4FCBD6` | `#DCEBED` | `#264248` | Jack |
-| 3 | `amber` | Bernstein | `#9A5300` | `#F0A84E` | `#F1E7DB` | `#463B2C` | Sarah |
-| 4 | `raspberry` | Himbeere | `#C2255C` | `#FF85AE` | `#F6E0E8` | `#493440` | David |
-| 5 | `cocoa` | Kakao | `#7A4A2A` | `#D9A684` | `#ECE6E1` | `#423B37` | a fifth member or guests |
-| 6 | `ocean` | Ozean | `#1A4FA8` | `#86B4FF` | `#DFE6F3` | `#313E50` | — |
-| 7 | `mustard` | Senf | `#736200` | `#E3C83A` | `#EBE9DB` | `#444228` | — |
-| 8 | `orchid` | Orchidee | `#A0309E` | `#F08AE8` | `#F2E2F1` | `#46354B` | — |
+| 1 | `violet` | Violett | `#7B3FE4` | `#C3A6FF` | `#EDE4FB` | `#433959` | Olivia |
+| 2 | `petrol` | Petrol | `#08737F` | `#4FCBD6` | `#DCEBED` | `#12484D` | Jack |
+| 3 | `amber` | Bernstein | `#9A5300` | `#F0A84E` | `#F1E7DB` | `#533A1D` | Sarah |
+| 4 | `raspberry` | Himbeere | `#C2255C` | `#FF85AE` | `#F6E0E8` | `#58333E` | David |
+| 5 | `cocoa` | Kakao | `#7A4A2A` | `#D9A684` | `#ECE6E1` | `#4A3C33` | a fifth member or guests |
+| 6 | `ocean` | Ozean | `#1A4FA8` | `#86B4FF` | `#DFE6F3` | `#2E405D` | — |
+| 7 | `mustard` | Senf | `#736200` | `#E3C83A` | `#EBE9DB` | `#47401B` | — |
+| 8 | `orchid` | Orchidee | `#A0309E` | `#F08AE8` | `#F2E2F1` | `#50354E` | — |
 
 - New members get the swatches in this order as they are added, so every household starts
   with the most separable set. The first four are the colours the kiosk mockup already uses, kept because they are
@@ -63,30 +70,99 @@ No migration was needed.
   member on, some pairs merge for a colour-blind viewer (violet and ocean, under
   protanopia). The picker says so in a single line under the swatches, and the initial
   or avatar does the identifying. That is required anyway by FR-1.8.
-- Light inks take white text (≥ 5.1:1); dark inks take the dark ground `#14171A`
-  (≥ 7.9:1). Ink on its own tint is ≥ 4.5:1 in both themes.
+- Light inks take white text (≥ 5.1:1); dark inks take the theme's ground (≥ 7.3:1 on
+  each of the four). Ink on its own tint is ≥ 4.5:1 in light and in dark.
+- The dark tints were recoloured on 2026-11-15 (lightness 0.37, chroma 0.055 in OKLCH, at
+  the ink's hue) so they read as the member's colour and not as grey. The inks did not move,
+  so the colour-vision search below still holds.
 - **Night** (kiosk, 21:00–06:00): the dark ink mixed 72 % over the night ground. Every
   value stays ≥ 4.9:1 but loses its glow.
 
+## Themes
+
+A **theme** is the set of neutrals of one shade. A device chooses one light and one dark
+theme (Settings → Appearance, and once on a personal device's first arrival at home:
+[20](20-onboarding.md#the-first-look)); which of the two is on screen follows the device's
+appearance (light, dark or as the OS says). The choice is per device, like the appearance.
+
+| Theme | Shade | Idea |
+|---|---|---|
+| **Frisch** *(standard)* | light | Cool, minty white paper |
+| **Sonnig** | light | Sunny cream paper, warm brown-black ink |
+| **Blaue Stunde** *(standard)* | dark | An evening-blue ground with warm, lamp-lit ink |
+| **Schiefer** | dark | A cool grey ground, the quietest |
+| **Pflaume** | dark | A dusk-violet ground |
+| **Kakao** | dark | A warm brown ground: the kitchen table by lamp light |
+| Night | night | The kiosk's own, not a choice |
+
+Three rules keep six themes as safe as two were:
+
+1. **A theme changes the neutrals only**: ground, surface, sunken, line, outline, the three
+   inks, and the two tints without a hue of their own (`stone` paper and the Settings band,
+   which lean toward the ground). Member inks and tints, paper tints, module bands,
+   decoration, brand and semantics belong to the *shade* and are the same in each of its
+   themes. So the colour-vision checks of the member palette hold for all of them.
+2. **Every theme passes every check.** `test/app/theme_test.dart` runs the whole contrast
+   list for each theme: text, member inks, brand, controls, tints, bands, decoration, skies.
+   A theme that fails one is not offered.
+3. **No theme competes with a meaning.** No ground is green (done) or red (danger).
+
+The standard themes are what a device shows until someone chooses, what the splash screen
+takes, and what the guide's screenshots show. Today's values before 2026-11-15 (ground
+`#F7F4EE` / `#14171A`, brand `#2D6A4F` / `#6CC79A`) are not kept as a theme.
+
 ## Neutrals, brand and semantics (direction A)
+
+The light themes:
+
+| Token | Frisch | Sonnig | Use |
+|---|---|---|---|
+| `bg` | `#F5F9F5` | `#FFF6DA` | Page ground |
+| `surface` | `#FFFFFF` | `#FFFFFF` | Cards, sheets, the board's today column |
+| `sunken` | `#E9F0E9` | `#FCECC1` | Bands, wells, past days |
+| `line` | `#D4DCD4` | `#E4D4AC` | Hairlines, card borders |
+| `outline` | `#7E828A` | `#8B7D73` | A control's resting edge, ≥ 3:1 (WCAG 1.4.11) |
+| `ink` | `#1C1F23` | `#2A1F17` | Text |
+| `ink-2` | `#4A5058` | `#5C4C40` | Secondary text |
+| `ink-3` | `#656B75` | `#77675A` | Captions, "aktualisiert vor 4 s" — still ≥ 4.5:1 |
+| `stone` paper | `#E0E7E0` | `#F0E5CC` | The paper tint without a hue |
+| Settings band | `#E5ECE5` | `#F6EACD` | The `stein` band |
+
+The dark themes and night:
+
+| Token | Blaue Stunde | Schiefer | Pflaume | Kakao | Night |
+|---|---|---|---|---|---|
+| `bg` | `#151D33` | `#191F25` | `#251929` | `#271B15` | `#0B0A09` |
+| `surface` | `#1E2841` | `#232A30` | `#312335` | `#33261E` | `#15130F` |
+| `sunken` | `#0E1528` | `#12171C` | `#1C111F` | `#1D130E` | `#080706` |
+| `line` | `#333F5D` | `#394148` | `#49394E` | `#4C3C33` | `#2B261F` |
+| `outline` | `#75809C` | `#7A8188` | `#897A8E` | `#8C7D75` | `#71654F` |
+| `ink` | `#F2EEE6` | `#F2EEE6` | `#F2EEE6` | `#F4EEE1` | `#CDB994` |
+| `ink-2` | `#C8C4BC` | `#C8C4BC` | `#C8C4BC` | `#C9C3B7` | `#A8977A` |
+| `ink-3` | `#A39F98` | `#A39F98` | `#A39F98` | `#A59F94` | `#938366` |
+| `stone` paper | `#303A52` | `#353B42` | `#423547` | `#443730` | `#2C2A26` |
+| Settings band | `#273352` | `#2D353D` | `#3E2D43` | `#403027` | none |
+
+The dark grounds sit at OKLCH lightness 0.235 with a visible hue, the surface 0.045 above
+and the sunken 0.035 below, so nothing is black and a card stands off the page; the old
+dark ground was 0.20 with next to no hue.
+
+Brand and semantics, per shade:
 
 | Token | Light | Dark | Night | Use |
 |---|---|---|---|---|
-| `bg` | `#F7F4EE` | `#14171A` | `#0B0A09` | Page ground |
-| `surface` | `#FFFFFF` | `#1C2024` | `#15130F` | Cards, sheets, the board's today column |
-| `sunken` | `#EFEBE3` | `#101315` | `#080706` | Bands, wells, past days |
-| `line` | `#DDD8CF` | `#2E343A` | `#26221C` | Hairlines, card borders |
-| `ink` | `#1C1F23` | `#ECE8E1` | `#CDB994` | Text |
-| `ink-2` | `#4A5058` | `#B5B2AB` | `#A8977A` | Secondary text |
-| `ink-3` | `#656B75` | `#8E8B85` | `#938366` | Captions, "aktualisiert vor 4 s" — still ≥ 4.5:1 |
-| `brand` ("Tanne") | `#2D6A4F` | `#6CC79A` | `#E0A458` | No-profile accent, primary buttons, success |
-| `on-brand` | `#FFFFFF` | `#0C2A1D` | `#1E1406` | |
-| `brand-tint` | `#DCEBE2` | `#1D3A2C` | `#2A2013` | Selected rows, success containers |
+| `brand` ("Tanne") | `#177148` | `#6DD6A2` | `#E0A458` | No-profile accent, primary buttons, success |
+| `on-brand` | `#FFFFFF` | `#09281B` | `#1E1406` | |
+| `brand-tint` | `#D1F3DF` | `#1B4A34` | `#2A2013` | Selected rows, success containers |
+| `on-brand-tint` | `#0B3A27` | `#C0EED4` | `#E8C590` | |
 | `danger` | `#B3261E` | `#FF8A80` | — | Destructive actions, errors. Adult register only |
-| `warning` | `#8A5A00` on `#FCEFD2` | `#E9B949` | — | Always with an icon; amber is also a member hue |
+| `warning` | `#8A5A00` on `#FCEFD2` | `#E9B949` on `#4E3D16` | — | Always with an icon; amber is also a member hue |
 | `points` ("Punkte-Gold") | `#F2B705` / text `#3E2A00` | same | same | Point coins, the balance, badges |
 
-- The neutrals lean warm, toward the kitchen, and match the existing mockups.
+- The light brand is a fresher green than the brand mark's Tanne `#2D6A4F`, which the
+  icon, the logo, Wusel's body and the mails keep. It is as dark as it is because brand
+  text also stands on tinted tiles: `#177148` reaches 4.6:1 on the darkest of them (the
+  lilac paper), and a lighter green did not.
 - There is no *info* blue. Neutral `ink-2` with an icon does that job, which keeps blue
   free for the member palette.
 - The night theme is not a dimmed dark theme: it switches to warm amber on near-black,
@@ -97,20 +173,23 @@ No migration was needed.
 
 ### Subject and category tints ("paper")
 
-| Key | Light | Dark | Typical subject |
-|---|---|---|---|
-| `blue` | `#DCE8FA` | `#1D2A3D` | Mathe |
-| `rose` | `#F9DDE3` | `#3A1F26` | Deutsch |
-| `lilac` | `#E6DEFA` | `#2A2140` | Englisch |
-| `leaf` | `#DCEFD8` | `#1F3220` | Sachunterricht |
-| `peach` | `#FCE2CA` | `#3D2817` | Sport |
-| `lemon` | `#F6ECB6` | `#373011` | Musik |
-| `mint` | `#D2EEEA` | `#173431` | Kunst |
-| `stone` | `#E8E4DC` | `#2C2A26` | Religion / Ethik |
+| Key | Light | Dark | Night | Typical subject |
+|---|---|---|---|---|
+| `blue` | `#DCE8FA` | `#283B57` | `#1D2A3D` | Mathe |
+| `rose` | `#F9DDE3` | `#562B37` | `#3A1F26` | Deutsch |
+| `lilac` | `#E6DEFA` | `#3D3454` | `#2A2140` | Englisch |
+| `leaf` | `#DCEFD8` | `#274229` | `#1F3220` | Sachunterricht |
+| `peach` | `#FCE2CA` | `#54301C` | `#3D2817` | Sport |
+| `lemon` | `#F6ECB6` | `#4D3603` | `#373011` | Musik |
+| `mint` | `#D2EEEA` | `#0D443F` | `#173431` | Kunst |
+| `stone` | per theme | per theme | `#2C2A26` | Religion / Ethik |
 
-Text on every tint is `ink` (≥ 12.7:1 light, ≥ 10.8:1 dark). The dark tints sit only
-about 1.2:1 from the surface, so tiles also get a 1 px `line` border. The tint is
-decoration; the subject is identified by its **icon** (FR-7.3).
+Text on every tint is `ink` (≥ 12.4:1 light, ≥ 9.5:1 dark). The dark tints sit only
+about 1.25:1 from the surface, so tiles also get a 1 px `line` border. The tint is
+decoration; the subject is identified by its **icon** (FR-7.3). The night values are the
+dark tints of before 2026-11-15: quieter, so a tile does not glow on the wall at night.
+The warm dark tints lean toward amber and rust (`lemon` at hue 82, `peach` at 48): a dark
+yellow at its own hue reads as olive.
 
 ## Presence treatments
 
@@ -265,25 +344,34 @@ register only ([26](26-colour-and-ambience.md#the-kid-registers-sticker-skin)).*
 
 As implemented:
 
-- `AppTheme.build(register, shade)` builds the `ColorScheme` **explicitly** from
+- `AppTheme.look(register, look)` builds the `ColorScheme` **explicitly** from
   `palette.dart` rather than with `ColorScheme.fromSeed`, because the seed's tonal
-  algorithm would not reproduce the values verified here. The old seed `#2E7D6B` was
-  4.49:1 on paper, just below AA; `brand` is `#2D6A4F`. `surface` is the paper ground,
-  and cards use `surfaceContainerLow`, which is white.
+  algorithm would not reproduce the values verified here. `AppTheme.build(register,
+  shade)` is the same for the shade's standard theme. `surface` is the paper ground,
+  and cards use `surfaceContainerLow`, which is white in light.
+- `Look` is a theme: `frisch | sonnig | blaueStunde | schiefer | pflaume | kakao | night`,
+  each with its `shade`. `Palette.look(look)` gives its neutrals; `Look.standard(shade)`
+  the theme a device starts with. `looksProvider` (`app/theme/appearance.dart`) keeps the
+  device's light and dark theme in its secure storage beside the appearance, and whether
+  the choice was offered once.
 - `WwColors` (a `ThemeExtension`, read with `context.ww`) carries what Material has no
   slot for: `ink2`/`ink3`, `sunken`, `line`, success, warning, points, member colours
   (`context.ww.member(member.color)` → ink, onInk, tint), paper tints, and `qrInk` /
-  `qrPaper` for QR codes (`core/ui/qr_code_view.dart`): the shade's own text pair with
+  `qrPaper` for QR codes (`core/ui/qr_code_view.dart`): the theme's own text pair with
   the darker side as ink, since scanners need dark on light — `ink` on `surface` in
-  light, `bg` on `ink` in dark and night, so a code never glares at night.
+  light, `bg` on `ink` in dark and night, so a code never glares at night. It carries the
+  device's `look`, and painters that need a theme's colours (the sky, the module
+  pictures, Wusel's mouth) take that.
 - `Shade` is `light | dark | night`. Night is a third `ThemeData`, used by the kiosk
   register from 21:00 to 06:00 (`nightProvider`, which rebuilds at each boundary)
   regardless of the OS setting or the device's appearance.
 - Light or dark follows the OS by default. Each device can fix it to light or dark under
   Settings → Appearance (`appearanceProvider` in `app/theme/appearance.dart`, kept in
   the device's secure storage, not on the server: it is a per-device preference like
-  the OS setting it overrides). Further colour schemes are not offered; the palette's
-  contrast and colour-vision checks hold for the light, dark and night values only.
+  the OS setting it overrides). The same sheet offers the themes of light and of dark
+  (`features/settings/ui/look_chooser.dart`); a tap applies at once, to the page behind
+  the sheet too. A free colour choice is still not offered: a theme is in the list only
+  because it passes every check.
 - On shared and kiosk devices, `AppTheme.forMember` swaps `primary` to the acting
   member's ink. This happens in one `Theme` wrapper in `MaterialApp.builder`, not in
   widgets.

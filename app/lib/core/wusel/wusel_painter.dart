@@ -20,8 +20,10 @@ class WuselColors {
   });
 
   /// [tufts] are the members' stored colours in board order; they resolve to the
-  /// shade's inks here. Empty (before a household exists): swatches 1–4.
-  factory WuselColors.of(Shade shade, List<Color> tufts) {
+  /// shade's inks here. Empty (before a household exists): swatches 1–4. The body
+  /// keeps the brand mark's green in every theme; the mouth is the theme's ground.
+  factory WuselColors.of(Look look, List<Color> tufts) {
+    final shade = look.shade;
     final inks = [
       for (final c in tufts.isEmpty ? _defaultTufts : tufts)
         MemberPalette.resolve(c).ink(shade),
@@ -31,16 +33,16 @@ class WuselColors {
         body: const Color(0xFF2D6A4F),
         limb: const Color(0xFF245A42),
         sclera: const Color(0xFFFFFFFF),
-        pupil: Palette.light.ink,
-        mouth: Palette.light.bg,
+        pupil: const Color(0xFF1C1F23),
+        mouth: Palette.look(look).bg,
         tufts: inks,
       ),
       Shade.dark => WuselColors(
         body: const Color(0xFF6CC79A),
         limb: const Color(0xFF57B086),
         sclera: const Color(0xFFFFFFFF),
-        pupil: Palette.light.ink,
-        mouth: Palette.dark.bg,
+        pupil: const Color(0xFF1C1F23),
+        mouth: Palette.look(look).bg,
         tufts: inks,
       ),
       Shade.night => WuselColors(

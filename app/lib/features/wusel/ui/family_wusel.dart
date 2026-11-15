@@ -65,7 +65,7 @@ class FamilyWusel extends ConsumerWidget {
         : null;
     final kid = register == UiRegister.kid;
     final appearance = WuselAppearance(
-      colors: WuselColors.of(context.ww.shade, ref.watch(wuselTuftsProvider)),
+      colors: WuselColors.of(context.ww.look, ref.watch(wuselTuftsProvider)),
       outfit: outfit ?? day.outfit,
       frontTuft: ref.watch(wuselFrontTuftProvider),
     );

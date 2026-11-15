@@ -24,6 +24,7 @@ import 'package:wuselwall/features/kid/ui/kid_home.dart';
 import 'package:wuselwall/features/meals/ui/meals_section.dart';
 import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/settings/application/settings_access.dart';
+import 'package:wuselwall/features/settings/ui/look_chooser.dart';
 import 'package:wuselwall/features/settings/ui/open_settings.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_section.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
@@ -180,7 +181,8 @@ class RegisterHomePage extends ConsumerWidget {
             : null,
       ),
     );
-    return PixelShift(child: home);
+    // A personal device is offered its colours once, here (specs/20).
+    return FirstLookPrompt(child: PixelShift(child: home));
   }
 }
 
