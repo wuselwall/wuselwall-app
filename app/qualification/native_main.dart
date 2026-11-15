@@ -23,7 +23,10 @@ var _busy = false;
 var _textScale = 1.0;
 late List<Map<String, dynamic>> _cases;
 
-Map<String, dynamic> _state() => {
+/// The report. [results] grows with every audited case: an auditor that only asks how far
+/// the run is leaves it out (`/progress`), so that it does not parse every earlier case's
+/// findings and semantics again on each poll.
+Map<String, dynamic> _state({bool results = true}) => {
   'schemaVersion': 1,
   'candidateSha': const String.fromEnvironment('QUALIFY_CANDIDATE_SHA'),
   'index': _index,
@@ -45,7 +48,7 @@ Map<String, dynamic> _state() => {
   'devicePixelRatio':
       WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio,
   'frameworkErrors': [..._errors],
-  'results': _results,
+  if (results) 'results': _results,
 };
 
 Future<void> main() async {
@@ -88,6 +91,8 @@ Future<void> main() async {
     try {
       if (request.method == 'GET' && request.uri.path == '/state') {
         request.response.write(jsonEncode(_state()));
+      } else if (request.method == 'GET' && request.uri.path == '/progress') {
+        request.response.write(jsonEncode(_state(results: false)));
       } else if (request.method == 'POST' &&
           request.uri.path == '/next' &&
           !_busy) {

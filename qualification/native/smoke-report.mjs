@@ -3,13 +3,13 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
-import {expectedCases} from './report.mjs';
-import {nativeEvidence} from './report.mjs';
+import {expectedCases, nativeEvidence, profiles as nativeProfiles} from './report.mjs';
 
+// What a diagnostic runs when nothing else is selected; any native profile may be selected.
 export const diagnosticProfiles = ['ios-phone', 'android-phone'];
 
-async function renderEvidence(root, profile, candidateSha) {
-  const expected = expectedCases(profile, true);
+async function renderEvidence(root, profile, candidateSha, smoke) {
+  const expected = expectedCases(profile, smoke);
   const directory = path.join(root, profile);
   try {
     const render = JSON.parse(await fs.readFile(path.join(directory, 'results.json'), 'utf8'));
@@ -36,20 +36,26 @@ async function renderEvidence(root, profile, candidateSha) {
   }
 }
 
-export async function diagnosticReport(root, candidateSha, selectedProfiles = diagnosticProfiles) {
-  const evidence = await nativeEvidence(root, candidateSha, true);
+const blocking = issue => !['INFO', 'WARNING', 'NOT_RUN'].includes(issue?.type);
+
+export async function diagnosticReport(root, candidateSha, selectedProfiles = diagnosticProfiles, smoke = true) {
+  const evidence = await nativeEvidence(root, candidateSha, smoke);
   const validSelection = Array.isArray(selectedProfiles) && selectedProfiles.length > 0 &&
     new Set(selectedProfiles).size === selectedProfiles.length &&
-    selectedProfiles.every(profile => diagnosticProfiles.includes(profile)) &&
-    JSON.stringify(selectedProfiles) === JSON.stringify(diagnosticProfiles.filter(profile => selectedProfiles.includes(profile)));
+    selectedProfiles.every(profile => nativeProfiles.includes(profile)) &&
+    JSON.stringify(selectedProfiles) === JSON.stringify(nativeProfiles.filter(profile => selectedProfiles.includes(profile)));
   const profiles = (validSelection ? selectedProfiles : []).map(profile => {
     const result = evidence.results.find(entry => entry.profile === profile);
+    // A complete report with findings is not a failed collection: keep the two apart.
     return {profile, passed: Boolean(result?.passed), detectorsPassed: Boolean(result?.detectorsPassed),
       captures: 0, cases: result?.supported ? result.cases : 0, renderingPassed: false,
-      nativeAudit: result?.supported ? 'complete' : 'incomplete', error: result?.error};
+      nativeAudit: result?.supported ? 'complete' : 'incomplete',
+      collectionPassed: Boolean(result?.collectionPassed), frameworkErrors: result?.frameworkErrors ?? null,
+      findings: result?.supported ? result.unresolvedIssues.filter(item => blocking(item.issue)).length : null,
+      error: result?.error, origin: result?.origin};
   });
   for (const profile of profiles) {
-    const rendering = await renderEvidence(root, profile.profile, candidateSha);
+    const rendering = await renderEvidence(root, profile.profile, candidateSha, smoke);
     profile.captures = rendering.captures;
     profile.renderingPassed = rendering.passed;
     profile.passed = profile.passed && rendering.passed;
@@ -62,18 +68,19 @@ export async function diagnosticReport(root, candidateSha, selectedProfiles = di
   return {
     schemaVersion: 1,
     candidateSha,
+    cases: smoke ? 'smoke' : 'full',
     captureOnly: true,
     diagnosticPassed,
     qualification: {status: 'INCOMPLETE', qualified: false},
     selectedProfiles: profiles,
-    message: 'Phone smoke evidence is diagnostic only. Full candidate qualification remains incomplete.',
+    message: 'Evidence of selected native profiles is diagnostic only. Full candidate qualification remains incomplete.',
   };
 }
 
 export async function writeDiagnosticReport(root, candidateSha) {
   const selection = process.env.QUALIFY_NATIVE_PROFILES === undefined ? diagnosticProfiles :
     process.env.QUALIFY_NATIVE_PROFILES.split(',');
-  const report = await diagnosticReport(root, candidateSha, selection);
+  const report = await diagnosticReport(root, candidateSha, selection, process.env.QUALIFY_NATIVE_SMOKE !== 'false');
   await fs.mkdir(root, {recursive: true});
   await fs.writeFile(path.join(root, 'diagnostic.json'), `${JSON.stringify(report, null, 2)}\n`);
   return report;

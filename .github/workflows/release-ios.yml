@@ -10,7 +10,7 @@ on:
         type: boolean
         default: false
       native_smoke_only:
-        description: Capture diagnostic phone smoke evidence; skips qualification and release
+        description: Capture diagnostic native evidence; skips qualification and release
         type: boolean
         default: false
       native_smoke_platform:
@@ -18,6 +18,15 @@ on:
         type: choice
         options: [both, ios, android]
         default: both
+      native_smoke_profiles:
+        description: Profiles for native_smoke_only, comma-separated in matrix order (empty runs the platform's phone)
+        type: string
+        default: ''
+      native_smoke_cases:
+        description: Cases per profile for native_smoke_only
+        type: choice
+        options: [smoke, full]
+        default: smoke
       renew_profile:
         description: Renew the App Store profile (once, after a capability changed on the App ID)
         type: boolean
@@ -123,33 +132,39 @@ jobs:
       - name: Install locked Ruby tools for the iOS XCTest project setup
         if: inputs.native_smoke_platform != 'android'
         run: bash qualification/native/ruby-tools.sh
-      - name: Run the selected diagnostic phone profiles
+      - name: Run the selected diagnostic profiles
         env:
           QUALIFY_CANDIDATE_SHA: ${{ github.sha }}
-          QUALIFY_NATIVE_SMOKE: 'true'
+          QUALIFY_NATIVE_SMOKE: ${{ inputs.native_smoke_cases == 'full' && 'false' || 'true' }}
           QUALIFICATION_IOS_DIAGNOSTIC_RUNTIME_FALLBACK: 'true'
           QUALIFY_MODE: capture
           NATIVE_SMOKE_PLATFORM: ${{ inputs.native_smoke_platform }}
-          QUALIFY_NATIVE_PROFILES: ${{ inputs.native_smoke_platform == 'ios' && 'ios-phone' || inputs.native_smoke_platform == 'android' && 'android-phone' || 'ios-phone,android-phone' }}
+          QUALIFY_NATIVE_PROFILES: ${{ inputs.native_smoke_profiles != '' && inputs.native_smoke_profiles || inputs.native_smoke_platform == 'ios' && 'ios-phone' || inputs.native_smoke_platform == 'android' && 'android-phone' || 'ios-phone,android-phone' }}
           QUALIFICATION_IOS_PHONE_TYPE: ${{ vars.QUALIFICATION_IOS_PHONE_TYPE }}
           QUALIFICATION_IOS_TABLET_TYPE: ${{ vars.QUALIFICATION_IOS_TABLET_TYPE }}
         shell: bash
         run: |
           set -uo pipefail
           mkdir -p build/qualification/native
-          rm -rf build/qualification/native/ios-phone build/qualification/native/android-phone
           : > build/qualification/native/profiles.txt
           failed=0
           case "$NATIVE_SMOKE_PLATFORM" in
-            both) profiles=(ios-phone android-phone) ;;
-            ios) profiles=(ios-phone) ;;
-            android) profiles=(android-phone) ;;
+            both) allowed='ios|android' ;;
+            ios) allowed='ios' ;;
+            android) allowed='android' ;;
             *) echo 'Unknown native smoke platform.' >&2; exit 1 ;;
           esac
-          selected=$(IFS=,; echo "${profiles[*]}")
-          [[ "$selected" == "$QUALIFY_NATIVE_PROFILES" ]] || { echo 'Native smoke profile selection differs from its platform.' >&2; exit 1; }
+          IFS=, read -r -a profiles <<< "$QUALIFY_NATIVE_PROFILES"
+          [[ "${#profiles[@]}" -gt 0 ]] || { echo 'No native profile selected.' >&2; exit 1; }
           for profile in "${profiles[@]}"; do
-            if bash qualification/native.sh "$profile"; then
+            # The selected platform decided which tools this job installed.
+            [[ "$profile" =~ ^($allowed)-(phone|tablet)(-large)?$ || ( "$allowed" == *android* && "$profile" == android-min-phone ) ]] ||
+              { echo 'Native profile selection differs from its platform.' >&2; exit 1; }
+            rm -rf "build/qualification/native/$profile"
+          done
+          for profile in "${profiles[@]}"; do
+            mkdir -p "build/qualification/native/$profile"
+            if bash qualification/native.sh "$profile" 2>&1 | tee "build/qualification/native/$profile/run.log"; then
               printf '%s: PASS\n' "$profile" >> build/qualification/native/profiles.txt
             else
               printf '%s: FAIL\n' "$profile" >> build/qualification/native/profiles.txt
