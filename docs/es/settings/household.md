@@ -64,3 +64,20 @@ Estos ajustes están en **Dispositivos → Este dispositivo** y valen solo para 
 | **Sonidos en este dispositivo** | silencia todo el dispositivo; de noche nunca hay sonido | Automático: apagados en la pantalla de pared, encendidos en los demás |
 | **Cielo en la cabecera** | el cielo que cambia con la hora del día | activado |
 | **Proteger la pantalla de quemaduras** | mueve todo hasta 2 píxeles cada 10 minutos, para pantallas OLED | Automático: activado en la pantalla de pared, desactivado en los demás |
+
+### Apariencia {#appearance}
+
+En **Apariencia** eliges qué aspecto tiene WuselWall en este dispositivo. La fila muestra la elección actual, por ejemplo «Automático · Fresco, Hora azul», y abre una hoja desde abajo. Arriba cambias entre **Automático** (claro u oscuro, según lo ajustado en el dispositivo), **Claro** y **Oscuro**. Debajo vienen el **Tema claro** y el **Tema oscuro**.
+
+<Shot name="first-look" alt="La hoja para elegir claro, oscuro o automático y los temas de colores" />
+
+Cada tema es una pequeña imagen de la app con sus colores. Un toque se aplica al instante, también a la página que queda detrás de la hoja, así que ves enseguida cómo queda. **Listo** cierra la hoja.
+
+- **Tema claro**: **Fresco** (blanco frío y mentolado, el del principio) y **Soleado** (crema soleada).
+- **Tema oscuro**: **Hora azul** (azul de la tarde, el del principio), **Pizarra** (gris frío), **Ciruela** (violeta del atardecer) y **Cacao** (marrón cálido).
+
+Un dispositivo guarda un tema claro y uno oscuro; el selector de arriba decide cuál de los dos se ve. La elección vale solo para este dispositivo y no cambia nada para los demás: los móviles de la familia no tienen que coincidir. No es un ajuste solo para padres.
+
+Un móvil personal (no la tableta familiar ni la pantalla de pared) muestra esta hoja por sí solo la primera vez que llega a la pantalla de inicio, con el título «¿Qué aspecto quieres para WuselWall?». Puedes cerrarla sin elegir; no vuelve, y todo se puede cambiar en **Ajustes → Apariencia**. Un móvil que ya tenía la app la ve una vez tras la actualización. La tableta y la pantalla de pared no reciben la pregunta; los padres cambian allí el tema en el mismo sitio de los ajustes.
+
+Los colores de los miembros de la familia son los mismos en todos los temas. Y la pantalla de pared sigue pasando a su vista nocturna de noche (por defecto desde las 21:00), sea cual sea la elección.

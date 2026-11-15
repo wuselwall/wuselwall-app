@@ -4905,6 +4905,40 @@ class AppLocalizationsDe extends AppLocalizations {
       'Nachts zeigt das Wanddisplay immer seine Nachtansicht.';
 
   @override
+  String get appearanceLookLight => 'Helles Design';
+
+  @override
+  String get appearanceLookDark => 'Dunkles Design';
+
+  @override
+  String get lookFrisch => 'Frisch';
+
+  @override
+  String get lookSonnig => 'Sonnig';
+
+  @override
+  String get lookBlaueStunde => 'Blaue Stunde';
+
+  @override
+  String get lookSchiefer => 'Schiefer';
+
+  @override
+  String get lookPflaume => 'Pflaume';
+
+  @override
+  String get lookKakao => 'Kakao';
+
+  @override
+  String get firstLookTitle => 'Wie soll WuselWall aussehen?';
+
+  @override
+  String get firstLookHelp =>
+      'Nur auf diesem Gerät. Du kannst es jederzeit unter Einstellungen, Darstellung ändern.';
+
+  @override
+  String get firstLookDone => 'Fertig';
+
+  @override
   String get languageTitle => 'Sprache';
 
   @override

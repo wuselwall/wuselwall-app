@@ -8293,6 +8293,72 @@ abstract class AppLocalizations {
   /// **'At night the wall display always shows its night view.'**
   String get appearanceNightNote;
 
+  /// No description provided for @appearanceLookLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light theme'**
+  String get appearanceLookLight;
+
+  /// No description provided for @appearanceLookDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark theme'**
+  String get appearanceLookDark;
+
+  /// No description provided for @lookFrisch.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh'**
+  String get lookFrisch;
+
+  /// No description provided for @lookSonnig.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunny'**
+  String get lookSonnig;
+
+  /// No description provided for @lookBlaueStunde.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue hour'**
+  String get lookBlaueStunde;
+
+  /// No description provided for @lookSchiefer.
+  ///
+  /// In en, this message translates to:
+  /// **'Slate'**
+  String get lookSchiefer;
+
+  /// No description provided for @lookPflaume.
+  ///
+  /// In en, this message translates to:
+  /// **'Plum'**
+  String get lookPflaume;
+
+  /// No description provided for @lookKakao.
+  ///
+  /// In en, this message translates to:
+  /// **'Cocoa'**
+  String get lookKakao;
+
+  /// No description provided for @firstLookTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How should WuselWall look?'**
+  String get firstLookTitle;
+
+  /// No description provided for @firstLookHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only on this device. You can change it at any time under Settings, Appearance.'**
+  String get firstLookHelp;
+
+  /// No description provided for @firstLookDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get firstLookDone;
+
   /// No description provided for @languageTitle.
   ///
   /// In en, this message translates to:

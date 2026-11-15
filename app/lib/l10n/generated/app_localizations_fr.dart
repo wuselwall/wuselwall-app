@@ -4934,6 +4934,40 @@ class AppLocalizationsFr extends AppLocalizations {
       'La nuit, l’écran mural affiche toujours sa vue de nuit.';
 
   @override
+  String get appearanceLookLight => 'Thème clair';
+
+  @override
+  String get appearanceLookDark => 'Thème sombre';
+
+  @override
+  String get lookFrisch => 'Frais';
+
+  @override
+  String get lookSonnig => 'Ensoleillé';
+
+  @override
+  String get lookBlaueStunde => 'Heure bleue';
+
+  @override
+  String get lookSchiefer => 'Ardoise';
+
+  @override
+  String get lookPflaume => 'Prune';
+
+  @override
+  String get lookKakao => 'Cacao';
+
+  @override
+  String get firstLookTitle => 'Quelle allure pour WuselWall ?';
+
+  @override
+  String get firstLookHelp =>
+      'Sur cet appareil seulement. Vous pouvez le modifier à tout moment dans Paramètres, Apparence.';
+
+  @override
+  String get firstLookDone => 'Terminé';
+
+  @override
   String get languageTitle => 'Langue';
 
   @override

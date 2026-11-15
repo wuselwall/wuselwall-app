@@ -25,7 +25,7 @@ class WuselOutfitPicker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
     final colors = WuselColors.of(
-      context.ww.shade,
+      context.ww.look,
       ref.watch(wuselTuftsProvider),
     );
     return Wrap(

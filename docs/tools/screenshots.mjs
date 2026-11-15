@@ -75,12 +75,12 @@ for (const [lang, labels] of Object.entries(SETTINGS_GROUPS)) Object.assign(T[la
 const CALENDAR_VIEW = { de: 'Kalenderansicht', en: 'Calendar view', fr: 'Vue du calendrier', es: 'Vista del calendario' };
 for (const [lang, chooseView] of Object.entries(CALENDAR_VIEW)) T[lang].chooseView = chooseView;
 
-async function open(page, scenario, route = '') {
+async function open(page, scenario, route = '', query = '') {
   // still=1: nothing moves and Wusel's words are fixed, so every run gives the same picture.
   // A hash-only navigation can leave the previous modal open. Recreate the document
   // before reopening for dark mode, so its actions start from the underlying page.
   if (page.url() !== 'about:blank') await page.goto('about:blank');
-  await page.goto(`${base}/?scenario=${scenario}&still=1${route ? `#${route}` : ''}`);
+  await page.goto(`${base}/?scenario=${scenario}&still=1${query ? `&${query}` : ''}${route ? `#${route}` : ''}`);
   await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
   await page.locator('flt-semantics-placeholder').evaluate((e) => e.click()).catch(() => {});
   await page.waitForSelector('flt-semantics', { state: 'attached', timeout: 30000 });
@@ -343,6 +343,9 @@ const shots = [
   // The board has no avatars: open the footer's shopping list first, then tap the name in its bar.
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await p.getByRole('button', { name: t.shopping }).first().click(); await settle(p); await p.getByRole('button', { name: t.daughter, exact: true }).last().click(); await settle(p); } },
   { name: 'settings-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.settings) },
+  // The colours a personal phone is offered once on its first arrival at home (specs/20 "The first look"):
+  // the sheet opens by itself, and it follows the browser's scheme like the page behind it.
+  { name: 'first-look', scenario: 'adult', viewport: PHONE, query: 'firstlook=1' },
   // A member's page (Family, Members, the daughter's row) and the family profile, the latter in the Advanced view.
   { name: 'settings-member', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await openGroup(p, t.gFamily); await tapAny(p, t.members, { exact: false }); await scrollUntil(p, t.daughter, { any: true }); await tapAny(p, t.daughter, { exact: false }); } },
   { name: 'settings-family', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await showAdvanced(p, t); await openGroup(p, t.gFamily); await tapAny(p, t.familyProfile, { exact: false }); } },
@@ -479,7 +482,7 @@ for (const lang of langs) {
     });
     const page = await ctx.newPage();
     try {
-      await open(page, shot.scenario, shot.route);
+      await open(page, shot.scenario, shot.route, shot.query);
       if (shot.steps) await shot.steps(page, T[lang]);
     } catch (e) {
       failed++;
@@ -492,7 +495,7 @@ for (const lang of langs) {
     await page.emulateMedia({ colorScheme: 'dark' });
     // Modal sheets capture their opening theme. Reopen these after the scheme change.
     if (shot.reopenForDark) {
-      await open(page, shot.scenario, shot.route);
+      await open(page, shot.scenario, shot.route, shot.query);
       if (shot.steps) await shot.steps(page, T[lang]);
     }
     await settle(page, 1000);

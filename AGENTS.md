@@ -97,6 +97,13 @@ which no device role reads, and never in the export, the audit or the cache (`ap
 holds answers without a household). Migration `20261115100000_services.sql`, pgTAP
 `315_services.test.sql`, feature flag `services`, Edge Function `services`. A new provider needs
 no app release: the app reads the catalogue from the server.
+Colour themes (2026-11-15, issue #280, [specs/17](specs/17-design-system.md#themes) "Themes"): the
+neutrals are themes a device chooses from, two light (Frisch, Sonnig) and four dark (Blaue Stunde,
+Schiefer, Pflaume, Kakao); `Look` and `Palette.look` in `app/lib/app/theme/palette.dart`,
+`looksProvider` beside the appearance, one sheet for Settings and for a personal device's first
+arrival at home (`features/settings/ui/look_chooser.dart`, specs/20 "The first look"). Member inks
+did not change; `test/app/theme_test.dart` runs every contrast check for every theme; the dark
+Today header is a twilight. The demo takes `&light=`, `&dark=` and `&firstlook=1`.
 Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the

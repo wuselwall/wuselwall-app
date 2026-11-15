@@ -49,8 +49,8 @@ class ModuleIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shade = context.ww.shade;
-    if (shade == Shade.night || module == AppModule.today) {
+    final look = context.ww.look;
+    if (look.shade == Shade.night || module == AppModule.today) {
       return const SizedBox.shrink();
     }
     return ExcludeSemantics(
@@ -62,7 +62,7 @@ class ModuleIllustration extends StatelessWidget {
         child: ClipRect(
           child: RepaintBoundary(
             child: CustomPaint(
-              painter: ModuleIllustrationPainter(module: module, shade: shade),
+              painter: ModuleIllustrationPainter(module: module, look: look),
             ),
           ),
         ),
@@ -71,14 +71,16 @@ class ModuleIllustration extends StatelessWidget {
   }
 }
 
-/// Paints [module]'s picture for [shade], centred and standing on the lower edge. The
+/// Paints [module]'s picture for [look], centred and standing on the lower edge. The
 /// shapes are laid out in units of the height, so a taller bar draws a larger picture.
 /// Details are cut out in the band's own colour.
 class ModuleIllustrationPainter extends CustomPainter {
-  const ModuleIllustrationPainter({required this.module, required this.shade});
+  const ModuleIllustrationPainter({required this.module, required this.look});
 
   final AppModule module;
-  final Shade shade;
+  final Look look;
+
+  Shade get shade => look.shade;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -87,7 +89,7 @@ class ModuleIllustrationPainter extends CustomPainter {
       ..save()
       ..translate(size.width / 2, 0)
       ..scale(s);
-    final band = ModuleBands.of(module).of(shade);
+    final band = ModuleBands.of(module).of(look);
     switch (module) {
       case AppModule.shopping:
         _basket(canvas, band);
@@ -326,5 +328,5 @@ class ModuleIllustrationPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(ModuleIllustrationPainter old) =>
-      old.module != module || old.shade != shade;
+      old.module != module || old.look != look;
 }
