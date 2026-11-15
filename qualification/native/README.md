@@ -133,13 +133,63 @@ checks remain a separate required layer.
 Native findings retain the issue element's label, type and bounds where supplied;
 iOS also retains its debug description. Both semantic snapshots record bounds;
 Android coordinates explicitly use physical pixels. Inspect those before changing a target
-or assigning a label. With the pinned Flutter version, a label around a scroll
-view labels a separate parent, and a label inside `buildViewport` can attach to
-the first row instead of the generated native scroll container. These findings
-remain open. Do not merge an entire list to quiet an audit: its controls must
+or assigning a label. Do not merge an entire list to quiet an audit: its controls must
 remain independently discoverable and actionable. Merge a checkbox row only when
 its name, state and action belong to that one control. See Flutter's
 [Semantics API](https://api.flutter.dev/flutter/widgets/Semantics-class.html).
+
+### Unnamed scroll views on iOS
+
+"Element has no description" for a `ScrollView` (`FlutterSemanticsScrollView`, audit type
+`sufficientElementDescription`) is the framework's own element, not a control of the app.
+
+- Flutter's iOS embedder gives every scrollable (the semantics node with
+  `hasImplicitScrolling`) a hidden `UIScrollView`, so that iOS knows the content scrolls
+  ([`FlutterSemanticsScrollView`](https://github.com/flutter/flutter/blob/3.47.7/engine/src/flutter/shell/platform/darwin/ios/framework/Source/FlutterSemanticsScrollView.mm#L32-L51),
+  created by [`FlutterScrollableSemanticsObject`](https://github.com/flutter/flutter/blob/3.47.7/engine/src/flutter/shell/platform/darwin/ios/framework/Source/SemanticsObject.mm#L148-L187)).
+  With VoiceOver running it is an accessibility element only if it has a label, so
+  VoiceOver never stops on an unnamed one. Without VoiceOver it is one whenever its
+  content is larger than its frame: Switch Control and Voice Control need that to scroll.
+  The audit runs without VoiceOver, so it meets one unnamed element for every scroll view
+  that has something to scroll. A page that fits is not reported, which is why the server
+  and claim pages appear only with enlarged text.
+- The app cannot name it. Its label is the label of the scroll node itself, and
+  `Scrollable` builds that node privately (`_RenderScrollSemantics`, a semantic boundary
+  whose children are explicit nodes): a `Semantics` label around a list names a separate
+  parent, one inside names a child. `app/test/core/scroll_semantics_test.dart` pins both.
+  Taking the scrollable out of the semantics tree, or its implicit scrolling away, would
+  silence the audit and take scrolling from assistive technology: never do that.
+- Upstream, [flutter/flutter#195731](https://github.com/flutter/flutter/pull/195731)
+  (merged 2026-11-07, after the pinned 3.47.7) makes a scroll view with children no
+  accessibility element at all. Once the pinned Flutter contains it, expect these findings
+  to end; check that with a run instead of assuming it.
+
+Until then each of them is a candidate for the review below, and nothing else is.
+
+### Hit areas cut by a scroll view
+
+Flutter reports to iOS the part of a control that is in sight: a semantics rectangle is
+clipped to its viewport
+([`rendering/object.dart`](https://github.com/flutter/flutter/blob/3.47.7/packages/flutter/lib/src/rendering/object.dart#L6772-L6782)),
+and the embedder passes it on as the accessibility frame. Where a scroll view's edge
+leaves a sliver of a full-size control, XCTest reports "Hit area is too small" (`hitRegion`)
+for the sliver. In capture run 43642368205 all 76 such findings that named their element
+were that: the frame ended exactly at the bottom or the trailing edge of a scroll view and
+was at most 18.5 pt thin, while no frame of 21 pt or more was reported (Apple documents no
+limit). The other two named no element; both cases hold one chip cut to 13 pt. Flutter's
+own target guideline skips a control that touches the edge of its scrollable, and the web
+lane scrolls a clipped target into view before it judges it, which is why those layers
+pass the same screens.
+
+To tell a cut control from one that is too small, compare the finding's frame with the
+`ScrollView` frames of the same case's semantic snapshot and look at the PNG. A frame that
+does not end at a scroll view's edge is a real target-size defect.
+
+Where the app lays out the scrolling area itself it leaves no sliver: the catalogue tiles
+of the shopping list end in a row that is cut to 44 pt on purpose (`RowPeek`). A page that
+continues below the fold, or a row of chips that scrolls sideways, cuts whatever lies at
+its edge; the device, the text size and the language decide what that is. Such a finding
+stays blocking: no review kind covers it.
 
 ## Explicitly reviewed framework findings
 
