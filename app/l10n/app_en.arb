@@ -2827,6 +2827,17 @@
   "appearanceLight": "Light",
   "appearanceDark": "Dark",
   "appearanceNightNote": "At night the wall display always shows its night view.",
+  "appearanceLookLight": "Light theme",
+  "appearanceLookDark": "Dark theme",
+  "lookFrisch": "Fresh",
+  "lookSonnig": "Sunny",
+  "lookBlaueStunde": "Blue hour",
+  "lookSchiefer": "Slate",
+  "lookPflaume": "Plum",
+  "lookKakao": "Cocoa",
+  "firstLookTitle": "How should WuselWall look?",
+  "firstLookHelp": "Only on this device. You can change it at any time under Settings, Appearance.",
+  "firstLookDone": "Done",
   "languageTitle": "Language",
   "languageSystem": "Automatic",
   "languageSystemCurrent": "Automatic: {name}",
@@ -3991,26 +4002,44 @@
     "description": "Built-in event template (specs/28); also the title it fills in."
   },
   "eventStarterGuestDinner": "Guests for dinner",
-  "eventStarterKidsParty": "Children's party",
-  "eventStarterSportsEvent": "Sports event",
+  "eventStarterPlaydate": "Playdate",
+  "@eventStarterPlaydate": {
+    "description": "Children meeting friends to play, not a birthday celebration."
+  },
+  "eventStarterSportsPractice": "Sports practice",
+  "@eventStarterSportsPractice": {
+    "description": "A regular sports training session, distinct from a school sports day."
+  },
   "eventStarterDoctor": "Doctor’s appointment",
-  "eventStarterPerformance": "Performance",
-  "eventStarterDayOut": "Day out",
-  "eventStarterHoliday": "Holiday / trip",
-  "eventStarterCleaning": "Cleaner",
-  "eventStarterParentsEvening": "Parents’ evening",
+  "eventStarterCinema": "Cinema trip",
+  "@eventStarterCinema": {
+    "description": "A family outing to a cinema, distinct from a film night at home."
+  },
+  "eventStarterDayOut": "Family day out",
+  "@eventStarterDayOut": {
+    "description": "A one-day family outing, distinct from a school trip and a multi-day holiday."
+  },
+  "eventStarterHoliday": "Family holiday",
+  "@eventStarterHoliday": {
+    "description": "A multi-day family holiday, distinct from a day out."
+  },
+  "eventStarterCleaning": "Cleaner visit",
+  "@eventStarterCleaning": {
+    "description": "A visit from someone who helps with cleaning; not a family chore."
+  },
+  "eventStarterParentsEvening": "Class meeting for parents",
   "@eventStarterParentsEvening": {
-    "description": "Built-in school event template (specs/28): the evening a school invites the parents; also the title it fills in."
+    "description": "A group meeting for the parents of a class, not an individual teacher appointment."
   },
   "eventStarterParentTeacherTalk": "Parent–teacher meeting",
   "@eventStarterParentTeacherTalk": {
-    "description": "Built-in school event template (specs/28): a talk with a child's teacher; also the title it fills in."
+    "description": "An individual appointment with a teacher, not a group meeting for parents."
   },
   "eventStarterSchoolTrip": "School trip",
   "@eventStarterSchoolTrip": {
     "description": "Built-in school event template (specs/28): a class outing for the children; also the title it fills in."
   },
-  "eventStarterSchoolTest": "Test",
+  "eventStarterSchoolTest": "School test",
   "@eventStarterSchoolTest": {
     "description": "Built-in school event template (specs/28): a test or exam at school; also the title it fills in."
   },
@@ -4018,9 +4047,9 @@
   "@eventStarterSchoolParty": {
     "description": "Built-in school event template (specs/28): a school fair or party; also the title it fills in."
   },
-  "eventStarterSportsDay": "Sports day",
+  "eventStarterSportsDay": "School sports day",
   "@eventStarterSportsDay": {
-    "description": "Built-in school event template (specs/28): the school's sports day; also the title it fills in."
+    "description": "The school sports day for children, distinct from regular sports practice."
   },
   "eventTemplateAllDay": "All day",
   "@eventTemplateAllDay": {

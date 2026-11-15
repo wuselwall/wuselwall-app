@@ -6,6 +6,8 @@
 //   ?scenario=kidshopping   kid, with the family's Shopping tab switched on
 //   ?scenario=server   the store app's first question: which server (ADR-018)
 //   &still=1           nothing moves and Wusel's words are fixed, for screenshots
+//   &light=sonnig&dark=kakao   the device's colour themes (specs/17 "Themes")
+//   &firstlook=1       the themes are still to be offered: the sheet of the first arrival
 // On a device (no URL): flutter run -t lib/main_demo.dart --dart-define=DEMO_SCENARIO=kid
 // Language and light/dark follow the browser, as on a real device.
 import 'package:flutter/foundation.dart';
@@ -15,6 +17,8 @@ import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/bootstrap.dart';
 import 'package:wuselwall/app/licenses.dart';
 import 'package:wuselwall/app/link_source.dart';
+import 'package:wuselwall/app/theme/appearance.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/core/files/opened_file.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/ui/motion.dart';
@@ -62,12 +66,26 @@ void main() {
   runApp(
     ProviderScope(
       overrides: [
-        ...demoOverrides(scenario: scenario),
+        ...demoOverrides(scenario: scenario, appearance: _appearance()),
         notificationSchedulerProvider.overrideWithValue(
           const DemoNotificationScheduler(),
         ),
       ],
       child: const WuselWallApp(),
+    ),
+  );
+}
+
+/// The demo's appearance: the standard themes, already offered, unless the URL says
+/// otherwise.
+MemoryAppearanceStore _appearance() {
+  final query = Uri.base.queryParameters;
+  return MemoryAppearanceStore(
+    ThemeMode.system,
+    Looks(
+      light: Look.named(query['light'], Shade.light) ?? Look.frisch,
+      dark: Look.named(query['dark'], Shade.dark) ?? Look.blaueStunde,
+      asked: query['firstlook'] != '1',
     ),
   );
 }

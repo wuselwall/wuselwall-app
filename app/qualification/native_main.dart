@@ -139,8 +139,9 @@ Future<void> main() async {
   }
 }
 
-/// Completes when the session has a value or an error, which is what the router's
-/// redirect waits for. A session that never loads fails the case as a framework error.
+/// Completes when the session has a value or an error, which is exactly what the
+/// router's redirect waits for. A session that never loads fails the case as a
+/// framework error instead of navigating into a redirect.
 Future<void> _sessionLoaded(ProviderContainer container) {
   final loaded = Completer<void>();
   final subscription = container.listen(sessionStateProvider, (_, session) {
@@ -223,9 +224,9 @@ Future<void> _showCase() async {
       }
 
       (_mountKey.currentContext! as Element).visitChildren(visit);
-      // Until the fixture's session has loaded, the router answers every location with
-      // the splash and then goes home: a route asked for before that is lost, and the
-      // case would show the home page instead of its destination.
+      // Until the fixture's session has loaded, the router answers every location
+      // with the splash and then goes home: a route asked for before that is lost,
+      // and the case would audit the home page instead of its destination.
       await _sessionLoaded(container!);
       container!.read(routerProvider).go(sample['route'] as String);
     }

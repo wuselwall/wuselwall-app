@@ -61,8 +61,8 @@ class AmbienceSky extends ConsumerWidget {
                   children: [...previous, ?current],
                 ),
                 child: CustomPaint(
-                  key: ValueKey((ambience.phase, ww.shade)),
-                  painter: SkyPainter(ambience: ambience, shade: ww.shade),
+                  key: ValueKey((ambience.phase, ww.look)),
+                  painter: SkyPainter(ambience: ambience, look: ww.look),
                 ),
               ),
             ),
@@ -93,13 +93,17 @@ class AmbienceSky extends ConsumerWidget {
   static const skyFade = Duration(seconds: 30);
 }
 
-/// Paints [ambience] for [shade]. In light the phase's gradient; in dark the sun band
-/// with the same shapes and no gradient; at night the night sky with dim stars.
+/// Paints [ambience] for [look]. In light the phase's gradient; in dark a twilight
+/// with the same shapes; at night the night sky with dim stars.
 class SkyPainter extends CustomPainter {
-  const SkyPainter({required this.ambience, required this.shade});
+  const SkyPainter({required this.ambience, required this.look});
 
   final Ambience ambience;
-  final Shade shade;
+  final Look look;
+
+  Shade get shade => look.shade;
+
+  ShadeColors get _c => Palette.look(look);
 
   bool get _night => shade == Shade.night;
 
@@ -123,9 +127,15 @@ class SkyPainter extends CustomPainter {
           ).createShader(rect),
       );
     } else {
+      // The dark themes have one sky for every hour: a twilight (specs/26).
       canvas.drawRect(
         rect,
-        Paint()..color = ModuleBands.of(AppModule.today).dark,
+        Paint()
+          ..shader = const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Twilight.top, Twilight.bottom],
+          ).createShader(rect),
       );
     }
 
@@ -233,8 +243,8 @@ class SkyPainter extends CustomPainter {
         ),
         Paint()
           ..color = shade == Shade.light
-              ? Palette.light.surface
-              : Palette.dark.ink.withValues(alpha: 0.8),
+              ? _c.surface
+              : _c.ink.withValues(alpha: 0.8),
       );
     _star(canvas, Offset(x + 2, base - 28), 3.5, Decor.sun.light);
     canvas.restore();
@@ -250,7 +260,7 @@ class SkyPainter extends CustomPainter {
       Offset(x, base),
       Offset(x, poleTop),
       Paint()
-        ..color = shade == Shade.light ? Palette.light.ink2 : Palette.dark.ink2
+        ..color = _c.ink2
         ..strokeWidth = 1.5,
     );
     final design = NationalFlags.designs[country];
@@ -352,9 +362,7 @@ class SkyPainter extends CustomPainter {
       _ => (0.985, 0.92 + 0.42 * ambience.sunset),
     };
     final r = size.height * 0.32;
-    final colour = shade == Shade.light
-        ? phase.orb
-        : Decor.sun.dark.withValues(alpha: 0.7);
+    final colour = shade == Shade.light ? phase.orb : Decor.sun.dark;
     canvas.drawCircle(
       Offset(size.width * x, size.height * y),
       r,
@@ -367,8 +375,8 @@ class SkyPainter extends CustomPainter {
   void _clouds(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = shade == Shade.light
-          ? Palette.light.surface.withValues(alpha: 0.9)
-          : Palette.dark.ink.withValues(alpha: 0.12);
+          ? _c.surface.withValues(alpha: 0.9)
+          : _c.ink.withValues(alpha: 0.12);
     for (final (x, y, scale) in const [(0.44, 0.3, 1.0), (0.8, 0.52, 0.75)]) {
       final r = size.height * 0.11 * scale;
       final c = Offset(size.width * x, size.height * y);
@@ -428,7 +436,7 @@ class SkyPainter extends CustomPainter {
   void _hill(Canvas canvas, Size size) {
     final colour = shade == Shade.light
         ? ModuleBands.of(AppModule.today).light.withValues(alpha: 0.9)
-        : Palette.dark.surface.withValues(alpha: 0.5);
+        : _c.surface.withValues(alpha: 0.5);
     canvas.drawOval(
       Rect.fromLTWH(
         -size.width * 0.05,
@@ -563,7 +571,7 @@ class SkyPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(SkyPainter old) =>
-      old.ambience != ambience || old.shade != shade;
+      old.ambience != ambience || old.look != look;
 }
 
 /// The ribbon of the Ferien's first and last day (specs/26 "Seasons and occasions"):
@@ -597,7 +605,7 @@ class FerienRibbon extends ConsumerWidget {
           overflow: TextOverflow.ellipsis,
           // Text on decoration: ink in light, the dark ground in dark (specs/26).
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: Decor.onDecor(shade),
+            color: Decor.onDecor(context.ww.look),
             fontWeight: FontWeight.w800,
           ),
         ),

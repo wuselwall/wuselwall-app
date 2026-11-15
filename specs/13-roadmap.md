@@ -1,11 +1,17 @@
 # 13 — Roadmap
 
-Updated 2026-10-26. One build order, four milestones. This replaces the overlapping
+Updated 2026-11-15. One build order, four milestones. This replaces the overlapping
 M1/M2 and R1–R4 schedules; the old identifiers remain only to keep specification links
 and decisions readable. [16 — Build plan](16-setup-plan.md) describes the next slices;
 [23 — After the Alpha](23-roadmap-after-alpha.md) holds the later candidates and cut lines.
 
 ## Current qualification status
+
+**Release stage: alpha.** Routine builds use the shared app/security/backend CI gate
+with exact-commit reuse. Exhaustive native/UI qualification remains available for diagnosis
+and becomes a required gate in beta/live; its open findings remain open. See the
+[release runbook](releasing.md). The two-week trial and public-readiness work are milestone
+evidence, not a checklist to repeat for every alpha patch.
 
 **Core features and “A lighter day” are built; the family Alpha is next after the
 remaining journeys.** Shopping with an offline outbox, tasks and points, calendar and
@@ -14,6 +20,24 @@ week board exist in code. Shortcuts, ICS subscriptions, local reminders and the 
 reminder are also built. They are not new milestones. **MCP and AI assistants are on hold**
 (2026-10-24), removed from the app UI, with their backend and design retained in the
 [deferred-work record](deferred/mcp-and-ai-assistants.md). They are not Alpha or release gates.
+
+Event templates were reviewed for everyday family life on 2026-11-15 (#271): distinct
+playdate, sports practice and cinema starters, clearer school meetings and natural
+DE/EN/FR/ES names, including regional German (see [28](28-event-templates.md)). This is an
+app content refinement in v1.12.0; no new milestone or server change. A separate localized
+website progress update is tracked in
+[website #18](https://github.com/wuselwall/wuselwall-website/issues/18); publication remains
+a separate follow-up.
+
+Push is approved, not built (2026-11-15, #243): a family asked for shopping-trip alerts
+on a closed phone, and the owner approved the optional encrypted relay in
+[ADR-022](adr/ADR-022-encrypted-push-relay.md). APNs directly for iOS and FCM for Android;
+household backends stay self-hosted. Shopping delivery, relay operations and native proof
+are the next implementation slice in
+[#274](https://github.com/wuselwall/wuselwall-app/issues/274), planned for v1.12.0.
+Existing guides keep the running-app limitation until delivery is built; public-progress
+and privacy changes are tracked separately in
+[website #19](https://github.com/wuselwall/wuselwall-website/issues/19) before activation.
 
 Member, family, device and shopping-structure editing (old step 10.1–10.3) and Today’s
 guardian approvals (10.5, #127/#149) are built.
@@ -126,10 +150,10 @@ It has two steps:
    adds a manually triggered whole-app regression matrix and exact-commit promotion gate;
    the [implemented suite](../qualification/README.md) accounts for all release routes in
    77 states, with Flutter/web comparisons, native ATF/XCTest adapters and an enforced
-   exact-commit gate for Android, iOS and server publishing. Native runtime validation,
+   exact-commit gate for beta/live Android, iOS and server publishing. Native runtime validation,
    resolution of accessibility findings, approved baselines and physical-device acceptance
    remain open. Automation produces `READY_FOR_REVIEW`; protected human approval is still
-   required before publishing.
+   required before beta/live publishing.
 2. **Use it for two weeks, then act on the findings.** Gather feedback directly from the
    household, fix blockers, recalibrate defaults without overwriting overrides, and judge
    Wusel, colour and each ritual against [25](25-wusel.md#how-the-trial-judges-wusel),
@@ -168,8 +192,9 @@ Website progress and legacy-link redirects remain a separate operator handoff; s
 automation-origin markers, recipe import and desktop tools are candidates, without a
 promised release or due date. MCP/AI assistant setup, consent, scopes and proposals are
 parked together in [23's on-hold section](23-roadmap-after-alpha.md#on-hold--mcp-and-ai-assistants).
-Push relay, multiple households and
-school-portal imports require a real case first. Birthdays are already in milestone 2;
+Multiple households and school-portal imports require a real case first. The push relay
+met that condition and is now approved for implementation (#274, ADR-022).
+Birthdays are already in milestone 2;
 Shortcuts is already built; the retained MCP implementation is deferred.
 
 ## Effort

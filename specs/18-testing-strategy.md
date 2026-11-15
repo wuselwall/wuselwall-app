@@ -4,7 +4,12 @@ How WuselWall is tested, from the database up to the family's real devices, and 
 each kind of test runs. Extends the CI notes in [16](16-setup-plan.md#step-4--continuous-integration-m00) and
 the distribution decisions in [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md).
 
-**Candidate qualification implementation (2026-10-26):**
+**Release-stage update (2026-11-15):** Alpha releases use the shared exact-commit
+ordinary app/security/backend gate, with CI reuse. Exhaustive candidate qualification is
+optional during alpha and required for beta/live. See [Releasing](releasing.md) for cadence.
+The full suite and strict validators remain unchanged.
+
+**Candidate qualification implementation (2026-10-26; mandatory in beta/live):**
 [Accessibility and UI qualification](accessibility-and-ui-qualification.md) and the
 [runbook](../qualification/README.md) describe the manual candidate-only suite. Its
 72-state inventory accounts for every release route, with verified redirect/developer-only
@@ -12,7 +17,7 @@ exclusions. Expanded Flutter guidelines, Playwright pixel/semantic comparisons, 
 ATF/XCTest adapters, large-text/keyboard controls and production web-entry smoke are built.
 Approved web/native baselines and physical-device review are required; native runtime
 execution and existing accessibility findings still need resolution. Android, iOS and server
-publishing enforce successful full comparison evidence for the exact commit, then protected
+publishing in beta/live enforce successful full comparison evidence for the exact commit, then protected
 human approval. Capture/partial/skipped runs cannot promote. Existing fast CI retains its
 schedule. This supersedes the older nightly/per-PR expansion proposals below.
 
@@ -214,11 +219,12 @@ build is promoted to the family, run [`specs/release-checklist.md`](release-chec
 | When | Where | What |
 |---|---|---|
 | Every PR | Existing `ci.yml` app/audit jobs on the build fleet | Ordinary Dart/widget tests, existing focused accessibility tests and illustration goldens |
-| Backend-sensitive PR, backend tag or manual run | Existing `backend-ci.yml` jobs and required aggregate | pgTAP, Edge Functions and backend-connected Dart tests on disposable data; skipped backend jobs are not execution evidence |
+| Backend-sensitive PR; main, manual run or release call | Existing `backend-ci.yml` jobs and required aggregate | pgTAP, Edge Functions and backend-connected Dart tests on disposable data; skipped backend jobs are not execution evidence |
 | Explicit candidate dispatch | `qualify-candidate.yml` on Linux | Ordinary checks, expanded Flutter matrix, browser comparison, production release-entry smoke and aggregate report; no changed-path selection |
 | Same explicit candidate dispatch | Native macOS, serialized device use | Android ATF and iOS XCTest, native rendering/semantics, required phone/tablet, enlarged-text and compatibility profiles |
-| Tag or manual app/server publication | Release workflow qualification guard, then protected `release-promotion` environment | Exact-commit full comparison and integrity-checked evidence, followed by human acceptance before publishing/signing |
-| Before protected release acceptance | Physical devices, by hand | VoiceOver/TalkBack, native display settings, signed-build smoke and the remaining release checklist |
+| Alpha tag or manual app/server publication | Shared `release-checks.yml`, then `alpha-release` environment | Reuse exact-commit ordinary CI/backend results, or run missing checks; no exhaustive qualification prerequisite |
+| Beta/live tag or manual app/server publication | Shared release gate plus promotion guard, then protected `release-promotion` environment | Ordinary CI/backend success and exact-commit full comparison with integrity-checked evidence, followed by human acceptance before publishing/signing |
+| Before protected beta/live release acceptance | Physical devices, by hand | VoiceOver/TalkBack, native display settings, signed-build smoke and the remaining release checklist |
 
 The expanded suite has no nightly, ordinary push or PR trigger. Device provisioning and
 read-only preflight have separate manual runbooks. Compilation and an available runner do

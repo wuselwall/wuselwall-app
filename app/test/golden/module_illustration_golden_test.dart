@@ -27,7 +27,7 @@ Widget _sheet(Shade shade) => Directionality(
         children: [
           for (final module in _modules)
             ColoredBox(
-              color: ModuleBands.of(module).of(shade),
+              color: ModuleBands.of(module).of(Look.standard(shade)),
               child: SizedBox(
                 width: ModuleIllustration.width,
                 height: 64,
@@ -35,7 +35,7 @@ Widget _sheet(Shade shade) => Directionality(
                   child: CustomPaint(
                     painter: ModuleIllustrationPainter(
                       module: module,
-                      shade: shade,
+                      look: Look.standard(shade),
                     ),
                   ),
                 ),

@@ -147,9 +147,11 @@ jobs:
         working-directory: app
       # Candidate evidence requires a clean first run. Ordinary CI's bounded
       # tester-crash recovery is diagnostic and cannot qualify a release.
-      - run: flutter test --no-pub --concurrency=1
+      # The tester runs with a finite stack limit: with an unlimited one the Dart VM's
+      # profiler crashes it at random (scripts/finite-stack.sh).
+      - run: bash ../scripts/finite-stack.sh flutter test --no-pub --concurrency=1
         working-directory: app
-      - run: flutter test --no-pub --concurrency=1 qualification_test --dart-define=QUALIFY_MATRIX="$MATRIX" --reporter expanded
+      - run: bash ../scripts/finite-stack.sh flutter test --no-pub --concurrency=1 qualification_test --dart-define=QUALIFY_MATRIX="$MATRIX" --reporter expanded
         working-directory: app
         env: { MATRIX: '${{ inputs.matrix }}' }
       - name: Group contrast findings for review

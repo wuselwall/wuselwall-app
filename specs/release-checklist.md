@@ -1,4 +1,4 @@
-# Release checklist — pilot household and first builds
+# Release checklist — evidence inventory and milestone readiness
 
 This checklist decides whether a candidate build and server are fit for the pilot household
 (M1.6, [13 — Roadmap](13-roadmap.md)), and which checks have only been planned. It is
@@ -16,19 +16,21 @@ from that commit's CI run, not from this file.
 Testing layers and where they run: [18 — Testing strategy](18-testing-strategy.md). Operator
 commands and the server stack: [10 — Deployment and operations](10-deployment-and-ops.md).
 
-**Implemented candidate gate (2026-10-26):**
-[Accessibility and UI qualification](accessibility-and-ui-qualification.md) and its
-[runbook](../qualification/README.md) define the manually selected default-branch commit,
-72-state inventory, complete expected case accounting, web/native baseline comparisons,
-native ATF/XCTest adapters and production web-entry smoke. Android, iOS and server
-publishing require successful full comparison evidence for that exact commit and approval
-of the protected `release-promotion` environment. Capture, partial, skipped and failing
-runs cannot promote. `READY_FOR_REVIEW` is automatic evidence; the summary retains
-`qualified: false`. A person accepts the baseline and physical-device checks through the
-protected release environment; approval is recorded separately from the immutable summary. Configure required reviewers and disable administrator bypass before
-publishing. Native runtime execution and approved baselines remain evidence requirements;
-APK compilation or an implemented adapter does not mark them PASS. Operator-run deployment
-utilities remain independent of the publishing workflow guard.
+**Release-stage policy (2026-11-15):** WuselWall is in **alpha**. Use the
+[release runbook](releasing.md) for routine builds. The shared app/server release gate
+requires exact-commit ordinary CI, security/web-smoke checks and disposable-backend CI,
+reusing passing default-branch runs or running missing workflows. The exhaustive
+[UI/native qualification](accessibility-and-ui-qualification.md) remains optional during
+alpha and becomes mandatory when the checked-in policy changes to `beta` or `live`.
+Its full-comparison, baseline, evidence-integrity and protected-review requirements are
+retained. Alpha distribution does not establish a qualified candidate or public readiness.
+
+**Cadence:** section 2 supplies recurring automated gates; section 3 applies when migrating
+or operating a live server. Sections 4–11 are pilot acceptance and affected-journey evidence,
+section 12 is the two-week trial, and section 13 is first-publication/ongoing operational
+readiness. Do not repeat the whole trial, store setup or every device audit for each alpha
+patch. Record a focused signed-build smoke and findings for the changed journey. A local
+rerun of pgTAP is useful diagnosis, not a second release requirement after backend CI.
 
 ## 0. Rules for this checklist
 
@@ -91,7 +93,7 @@ Fill in before any other section. One record per run.
 
 CI matrix at the candidate (the trigger decides what runs; a skipped job is not a pass):
 
-| Workflow and job | Pull request | Tag/manual/candidate run | Runner |
+| Workflow and job | Pull request | Main/manual/candidate run | Runner |
 |---|---|---|---|
 | `ci.yml` `app-checks` → `app` | Flutter for app inputs; browser smoke for bootstrap/web/storage/auth/shopping inputs; always-reporting aggregate | Full; candidate quality-only reuse uses its strict Flutter/production jobs instead | Build fleet; aggregate on GitHub-hosted Ubuntu |
 | `ci.yml` `scripts`, `audit` | Always | Always | Docker/SMTP on build fleet; audit on GitHub-hosted Ubuntu |
@@ -99,7 +101,7 @@ CI matrix at the candidate (the trigger decides what runs; a skipped job is not 
 | `backend-ci.yml` `edge-functions` | Edge Function/shared dependency inputs | Always | GitHub-hosted Ubuntu |
 | `backend-ci.yml` `backend` | Server/client-contract inputs | Always | Build fleet, serialized disposable stack |
 | `docs.yml` → `docs-validation.yml` | Source/locale/route/shot-definition checks and VitePress build | Full screenshots/browser checks; full main publication | GitHub-hosted Ubuntu |
-| `candidate-evidence` | Manual only | Full quality/backend/docs and existing Flutter/web/native/production evidence for one SHA | Isolated build/native jobs plus read-only reusable validation |
+| `candidate-evidence` | Manual only; optional in alpha, required in beta/live | Full quality/backend/docs and existing Flutter/web/native/production evidence for one SHA | Isolated build/native jobs plus read-only reusable validation |
 | `wuselwall-website` CI | Independent website changes | Separate publication | Separate repository (ADR-019) |
 
 The tested classifier is `scripts/ci-changes.mjs`: UI-only app changes skip backend
@@ -109,19 +111,21 @@ read them. Unknown paths, dependencies, workflow changes and diff failures selec
 The five required names remain `app`, `scripts`, `audit`, `required`, `pr-policy`.
 A selected job must succeed; a skipped selected job does not pass its aggregate.
 
-Schema 3 candidate qualification now requires quality (scripts/audit), full backend and
+Beta/live schema 3 candidate qualification requires quality (scripts/audit), full backend and
 complete guide evidence before promotion/signing. The guide evidence checks every expected
 locale/theme PNG path and checksum on the exact SHA. Older summaries must be regenerated.
-The release orchestrator starts signing only after this preflight, rather than dispatching
-ci/backend in parallel with publication. Manual/tag CI remains available for diagnostics.
+The release orchestrator and every publishing workflow call `release-checks.yml` before
+signing. It reuses exact-SHA ordinary CI or calls missing workflows. Alpha requires ordinary
+app/security/backend checks; beta/live also require schema 3 qualification. Version tags
+start publishing without independently retriggering ordinary CI; main/manual CI stays available.
 
 | ID | Check | Mode | Pass when | Result | Evidence |
 |---|---|---|---|---|---|
 | A1 | `app` job: `flutter analyze --fatal-infos`, `flutter test` (includes the DE/EN/FR/ES ARB, placeholder and native-permission parity tests, the screen-count tests in `app/test/journeys/` and the widget tests) and a format check | CI | The job is green on the candidate SHA | NOT RUN | CI run link |
 | A2 | Website CI in `wuselwall/wuselwall-website` (build, SSR/SEO smoke) | CI | Green on the website commit that is live with the release. Placeholders in the Impressum are allowed here; the website's deploy refuses them | NOT RUN | CI run link |
 | A3 | `audit` job: `osv-scanner` over the lockfiles | CI | Green, or each finding listed in `osv-scanner.toml` with its reason and expiry | NOT RUN | CI run link |
-| A4 | `backend` job in `backend-ci.yml`: `supabase db reset` on a throwaway stack, `supabase test db`, `supabase db lint --level warning`, `flutter test test/integration` | CI. Always on a tag or a manual run. On a pull request only when `changes` finds a backend-sensitive path; a skipped run is not evidence for the migrations | Green on the candidate SHA, with `backend-ci / required` green. Required before a migration goes to any live server | NOT RUN | CI run link |
-| A5 | Local pgTAP over every migration and suite: `cd scripts/local-pgtap && npm ci && node run.mjs` | Local | Exit 0; no `not ok` in the output | NOT RUN | command, exit code, output file |
+| A4 | `backend` job in `backend-ci.yml`: `supabase db reset` on a throwaway stack, `supabase test db`, `supabase db lint --level warning`, `flutter test test/integration` | CI. Always on main, a manual run or a release call. On a pull request only when `changes` finds a backend-sensitive path; a skipped run is not evidence for the migrations | Green on the candidate SHA, with `backend-ci / required` green. Required before a migration goes to any live server | NOT RUN | CI run link |
+| A5 | Optional local diagnosis: pgTAP over every migration and suite: `cd scripts/local-pgtap && npm ci && node run.mjs` | Local, optional after A4 passes | Exit 0; no `not ok` in the output | NOT RUN | command, exit code, output file |
 | A6 | Edge Function unit tests: `deno test supabase/functions/ --allow-env --allow-read --node-modules-dir=none --lock=deno.lock --frozen` | CI, the `edge-functions` job of `backend-ci.yml`, when Edge Function/shared dependency inputs change, always for full qualification (Deno 2.5.6, `--frozen` on `deno.lock`). At base `43ac2e5` no CI step ran them | Green on the candidate SHA. A local run is a second record, not a substitute | NOT RUN | CI run link; or Deno version, command, output file |
 | A7 | Documentation: `npm run docs:check` and `npm run docs:build` in the repository root | Local | Both exit 0. `docs:check` needs the screenshots from `npm run docs:screenshots` present in `docs/public/screenshots/` | NOT RUN | command, exit code |
 | A8 | Website build with legal and link strictness: `LEGAL_STRICT=1 LINKS_STRICT=1 npm run build` in `wuselwall/wuselwall-website` | Local, before a website deploy | Fails while a `TODO` value remains. Record which fields still fail. Do not fill a value in to pass | NOT RUN | command, output of the failing fields |
@@ -299,7 +303,7 @@ complete at `43ac2e5`, and this checklist does not mark them complete.
 | Pilot outcome (section 12) | | |
 | Public-release gates (section 13) | | |
 
-A run is complete when each section has a result for every item, and every PASS has evidence.
+A milestone-readiness run is complete when each applicable section has a result for every item, and every PASS has evidence. Routine alpha builds use the cadence in the release runbook.
 Blocked items stay `NOT RUN` with the reason written next to them.
 
 ## #129 implementation review — 2026-11-10

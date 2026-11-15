@@ -11,7 +11,7 @@ Widget _host(Widget child) => Directionality(
   child: Center(child: child),
 );
 
-final _colors = WuselColors.of(Shade.light, const []);
+final _colors = WuselColors.of(Look.frisch, const []);
 
 WuselLook _look(WidgetTester tester) =>
     (tester

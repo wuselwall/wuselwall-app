@@ -100,11 +100,13 @@ same commit of `main`; the two numbers are independent
 semantic versioning: a minor for features, a patch for fixes only, a major when an older
 app or server stops working with it.
 
-1. **Qualify the candidate**: run `candidate-evidence` on the head of `main`
-   ([qualification/README.md](qualification/README.md)). Evidence schema 3 requires quality,
-   full backend and full guide validation as well as Flutter/web/native/production.
-   Older qualification artifacts must be regenerated; a tag-triggered job running in
-   parallel with signing is not a pre-release gate.
+1. **Use the current release stage**: [release-policy.json](qualification/release-policy.json)
+   selects alpha, beta or live. Alpha requires ordinary app/security/backend CI and web
+   smoke; the shared preflight reuses passing exact-commit runs or runs missing checks.
+   In beta/live, also run `candidate-evidence` on the head of `main`
+   ([qualification/README.md](qualification/README.md)): schema 3 requires quality,
+   backend and guide evidence as well as full Flutter/web/native/production qualification.
+   See the [release runbook](specs/releasing.md) for cadence and signing-environment setup.
 2. **Plan**: Actions → `release` → Run workflow. It is a dry run by default and prints the
    plan: both tags, the milestone it closes and the open issues it would move.
 
@@ -120,15 +122,16 @@ app or server stops working with it.
    The version is the next open milestone's unless `-f version=1.11.1` names one;
    `-f server=patch|minor|major|none` moves the server version (default `minor`).
    The workflow ([scripts/release.mjs](scripts/release.mjs)) then
-   - refuses a commit without a passing qualification,
+   - refuses a commit without passing stage-appropriate checks,
    - creates the two annotated tags,
    - publishes the app's GitHub release with notes generated from the merged pull requests
      ([.github/release.yml](.github/release.yml) sorts them by type label),
-   - starts `release-android`, `release-ios` and `server-release` on the tags after full
-     exact-commit qualification (including backend, scripts/audit and guide evidence),
+   - starts `release-android`, `release-ios` and `server-release` on the tags after
+     exact-commit CI/backend checks (plus full qualification in beta/live),
      and `docs` on `main` (the guide's compatibility table reads the tags),
    - closes the milestone, opens the next one and moves what is still open into it.
-4. **Approve**: the release builds wait for the `release-promotion` environment. After the
+4. **Approve when required**: beta/live builds wait for the protected `release-promotion`
+   environment; alpha uses `alpha-release` without a qualification-review prerequisite. After the
    approval, Android and iOS builds go to the stores' test tracks, the signed APK is attached
    to the app's GitHub release, and the signed server archive is published as its own
    GitHub release with the same generated notes.

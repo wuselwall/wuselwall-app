@@ -28,17 +28,42 @@ export function cases(profile = 'canonical', data = inventory) {
   return result;
 }
 
+const arbs = new Map();
+function arb(lang) {
+  if (!arbs.has(lang)) arbs.set(lang, JSON.parse(fs.readFileSync(path.join(root, `app/l10n/app_${lang}.arb`), 'utf8')));
+  return arbs.get(lang);
+}
+
+/**
+ * What the browser waits for before auditing a state. By default a state is ready once it
+ * exposes an action. A state that by design has none (a refusal notice) names the message
+ * that makes it the state it is: it is ready when that exact message and its title are
+ * exposed, and it must then expose no action at all.
+ */
+export function readiness(state, locale) {
+  if (!state.readOnlyTextKey) return { kind: 'action' };
+  const text = arb(locale)[state.readOnlyTextKey];
+  const title = state.titleKey ? arb(locale)[state.titleKey] : null;
+  if (typeof text !== 'string' || !text.trim() || /[{}]/.test(text) ||
+      (state.titleKey && (typeof title !== 'string' || /[{}]/.test(title)))) {
+    throw new Error(`${state.id}: unusable read-only readiness text for ${locale}`);
+  }
+  return { kind: 'read-only', text, title };
+}
+
 export function checkInventory(data = inventory) {
   const ids = data.states.map(s => s.id);
   if (new Set(ids).size !== ids.length || !ids.length) throw new Error('Duplicate or empty inventory');
   for (const s of data.states) {
     if (!/^[a-z][a-z0-9-]*$/.test(s.id) || !s.widget || !s.widths?.length || !s.route?.startsWith('/') ||
-        !Number.isInteger(s.minimumLabeledNodes ?? 3) || (s.minimumLabeledNodes ?? 3) < 2) {
+        !Number.isInteger(s.minimumLabeledNodes ?? 3) || (s.minimumLabeledNodes ?? 3) < 2 ||
+        (s.readOnlyTextKey !== undefined && (typeof s.readOnlyTextKey !== 'string' ||
+          !/^[a-zA-Z]\w*$/.test(s.readOnlyTextKey) || !s.titleKey))) {
       throw new Error(`Invalid inventory state: ${s.id}`);
     }
     for (const lang of data.locales) {
-      const arb = JSON.parse(fs.readFileSync(path.join(root, `app/l10n/app_${lang}.arb`), 'utf8'));
-      if (s.titleKey && typeof arb[s.titleKey] !== 'string') throw new Error(`${s.id}: missing ${lang}/${s.titleKey}`);
+      if (s.titleKey && typeof arb(lang)[s.titleKey] !== 'string') throw new Error(`${s.id}: missing ${lang}/${s.titleKey}`);
+      readiness(s, lang);
     }
   }
   const routes = [...fs.readFileSync(path.join(root, 'app/lib/app/router.dart'), 'utf8')

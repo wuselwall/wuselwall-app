@@ -8,15 +8,23 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 
 /// Builds the [ThemeData] for a register and shade (specs/17, direction A
 /// "Küchentisch"). Dark is not cosmetic: the kitchen is bright in the morning and dim
-/// at night (specs/09); night is the kiosk's own third shade.
+/// at night (specs/09); night is the kiosk's own third shade. Light and dark each come
+/// in a few looks a device chooses from.
 abstract final class AppTheme {
   // Symbols the UI fonts lack. Not bundled: phones have them in their system fonts,
   // the web app fetches a Noto shard from its own origin only when needed
   // (scripts/web-font-fallback.sh), and widget tests load the file under this name.
   static const _symbolFallback = ['NotoSansSymbols'];
 
-  static ThemeData build(UiRegister register, Shade shade) {
-    final c = Palette.of(shade);
+  /// The theme of [register] in the standard look of [shade].
+  static ThemeData build(UiRegister register, Shade shade) =>
+      look(register, Look.standard(shade));
+
+  /// The theme of [register] in [look], the colours a device chose (specs/17
+  /// "Themes").
+  static ThemeData look(UiRegister register, Look look) {
+    final shade = look.shade;
+    final c = Palette.look(look);
     final brightness = shade == Shade.light
         ? Brightness.light
         : Brightness.dark;
@@ -93,7 +101,7 @@ abstract final class AppTheme {
       fontFamily: Tokens.fontUi,
       fontFamilyFallback: _symbolFallback,
       textTheme: textTheme,
-      extensions: [WwColors(shade: shade)],
+      extensions: [WwColors(look: look)],
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: register == UiRegister.adult
           ? VisualDensity.standard

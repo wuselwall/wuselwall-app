@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/calendar/application/event_template_providers.dart';
@@ -304,27 +306,24 @@ void main() {
       },
     );
 
-    test(
-      "a children's party invites the children, or the actor without any",
-      () {
-        expect(
-          EventStarter.kidsParty
-              .template(title: 'x', members: _family, actor: 'p-1')
-              .attendeeIds,
-          {'p-3'},
-        );
-        expect(
-          EventStarter.kidsParty
-              .template(
-                title: 'x',
-                members: _family.take(2).toList(),
-                actor: 'p-1',
-              )
-              .attendeeIds,
-          {'p-1'},
-        );
-      },
-    );
+    test('a playdate invites the children, or the actor without any', () {
+      expect(
+        EventStarter.playdate
+            .template(title: 'x', members: _family, actor: 'p-1')
+            .attendeeIds,
+        {'p-3'},
+      );
+      expect(
+        EventStarter.playdate
+            .template(
+              title: 'x',
+              members: _family.take(2).toList(),
+              actor: 'p-1',
+            )
+            .attendeeIds,
+        {'p-1'},
+      );
+    });
   });
 
   group('saved templates', () {
@@ -792,30 +791,76 @@ void main() {
       );
     });
 
-    for (final lang in ['en', 'fr', 'es']) {
-      testWidgets('the templates have their own names in $lang', (t) async {
-        final l10n = lookupAppLocalizations(Locale(lang));
-        await _calendarTab(t, locale: Locale(lang));
-        await _newEvent(t, label: l10n.calendarNewEvent);
-        expect(find.text(l10n.eventStarterBirthday), findsOneWidget);
-        expect(find.text(l10n.eventTemplateBlank), findsOneWidget);
-        expect(l10n.eventStarterBirthday, isNot(_de.eventStarterBirthday));
-        for (final (mine, german) in [
-          (l10n.eventTemplatesSchool, _de.eventTemplatesSchool),
-          (l10n.eventStarterParentsEvening, _de.eventStarterParentsEvening),
-          (
-            l10n.eventStarterParentTeacherTalk,
-            _de.eventStarterParentTeacherTalk,
-          ),
-          (l10n.eventStarterSchoolTrip, _de.eventStarterSchoolTrip),
-          (l10n.eventStarterSchoolTest, _de.eventStarterSchoolTest),
-          (l10n.eventStarterSchoolParty, _de.eventStarterSchoolParty),
-          (l10n.eventStarterSportsDay, _de.eventStarterSportsDay),
-        ]) {
-          expect(mine, isNot(german));
+    group('translated phone layouts', () {
+      // Use the app font to measure complete titles, rather than Ahem squares.
+      setUpAll(() async {
+        final loader = FontLoader('AtkinsonHyperlegibleNext');
+        for (final weight in ['Regular', 'SemiBold', 'Bold', 'ExtraBold']) {
+          loader.addFont(
+            rootBundle.load(
+              'assets/fonts/AtkinsonHyperlegibleNext-$weight.ttf',
+            ),
+          );
         }
-        expect(t.takeException(), isNull);
+        await loader.load();
       });
-    }
+
+      for (final lang in ['de', 'en', 'fr', 'es']) {
+        testWidgets('the templates have their own names in $lang', (t) async {
+          final l10n = lookupAppLocalizations(Locale(lang));
+          await _calendarTab(
+            t,
+            locale: Locale(lang),
+            size: const Size(390, 844),
+          );
+          await _newEvent(t, label: l10n.calendarNewEvent);
+          expect(find.text(l10n.eventTemplateBlank), findsOneWidget);
+          if (lang != 'de') {
+            expect(l10n.eventStarterBirthday, isNot(_de.eventStarterBirthday));
+          }
+          for (final (mine, german) in [
+            (l10n.eventTemplatesSchool, _de.eventTemplatesSchool),
+            (l10n.eventStarterParentsEvening, _de.eventStarterParentsEvening),
+            (
+              l10n.eventStarterParentTeacherTalk,
+              _de.eventStarterParentTeacherTalk,
+            ),
+            (l10n.eventStarterSchoolTrip, _de.eventStarterSchoolTrip),
+            (l10n.eventStarterSchoolTest, _de.eventStarterSchoolTest),
+            (l10n.eventStarterSchoolParty, _de.eventStarterSchoolParty),
+            (l10n.eventStarterSportsDay, _de.eventStarterSportsDay),
+          ]) {
+            if (lang != 'de') expect(mine, isNot(german));
+          }
+          // Bring every translated title into view at phone width, including the
+          // longer French and Spanish school labels.
+          for (final starter in EventStarter.values) {
+            final tile = find.byKey(
+              ValueKey('event-template-builtin-${starter.name}'),
+            );
+            await t.scrollUntilVisible(
+              tile,
+              200,
+              scrollable: find.descendant(
+                of: find.byType(EventTemplatePage),
+                matching: find.byType(Scrollable),
+              ),
+            );
+            await t.pumpAndSettle();
+            final title = find.descendant(
+              of: tile,
+              matching: find.text(eventStarterName(l10n, starter)),
+            );
+            expect(title, findsOneWidget);
+            expect(
+              t.renderObject<RenderParagraph>(title).didExceedMaxLines,
+              isFalse,
+              reason: '$lang/${starter.name} should show its full title',
+            );
+            expect(t.takeException(), isNull, reason: '$lang/${starter.name}');
+          }
+        });
+      }
+    });
   });
 }

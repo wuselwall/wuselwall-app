@@ -60,7 +60,10 @@ async function geometry(page, selector, expected = null) {
       // Extent and observed scroll offset are evidence candidates. The wheel
       // movement below proves that the ancestor really scrolls; overflow CSS
       // keywords alone are unreliable for Flutter's rebuilt semantics groups.
-      const canX = scrollRangeX || ancestor.scrollLeft > 1;
+      // A sideways Flutter scroller never reports its position (see the note on the engine
+      // below), so a node at its left edge may be cut by it at any reported offset.
+      const sideways = ancestor.querySelector(':scope > flt-semantics-scroll-overflow')?.style.height === '1px';
+      const canX = scrollRangeX || ancestor.scrollLeft > 1 || sideways;
       const canY = scrollRangeY || ancestor.scrollTop > 1;
       if (canX || canY) {
         const selectorForAncestor = ancestor.id ? `#${CSS.escape(ancestor.id)}` : null;
@@ -70,14 +73,14 @@ async function geometry(page, selector, expected = null) {
             ? { axis: 'y', direction: -1, name: 'top' }
               : scrollRangeX && rect.right >= bounds.right - 1 && ancestor.scrollLeft < ancestor.scrollWidth - ancestor.clientWidth - 1
               ? { axis: 'x', direction: 1, name: 'right' }
-              : canX && rect.left <= bounds.left + 1 && ancestor.scrollLeft > 1
+              : canX && rect.left <= bounds.left + 1 && (ancestor.scrollLeft > 1 || sideways)
                 ? { axis: 'x', direction: -1, name: 'left' }
                 : null;
         scrollables.push({ selector: selectorForAncestor, bounds, canX, canY,
           scrollLeft: ancestor.scrollLeft, scrollTop: ancestor.scrollTop,
           scrollWidth: ancestor.scrollWidth, scrollHeight: ancestor.scrollHeight,
           clientWidth: ancestor.clientWidth, clientHeight: ancestor.clientHeight,
-          edge, tag: ancestor.tagName, id: ancestor.id });
+          edge, sideways, tag: ancestor.tagName, id: ancestor.id });
       }
       ancestor = ancestor.parentElement;
     }
@@ -105,15 +108,117 @@ async function geometry(page, selector, expected = null) {
         width: rect.width, height: rect.height },
       viewport, clips, scrollables, intersection,
       candidate: edgeCandidate ?? null,
+      candidates: scrollables.filter(item => item.edge && item.selector),
     };
   }, { selector, targetHandle: expected?.targetHandle ?? null,
     ancestorHandle: expected?.ancestorHandle ?? null, ancestorSelector: expected?.ancestorSelector ?? null,
     meaning: expected?.meaning ?? null });
 }
 
-function withinBounds(rect, bounds) {
-  return rect.left > bounds.left && rect.top > bounds.top &&
-    rect.right < bounds.right && rect.bottom < bounds.bottom;
+function wheelDelta(edge, viewport) {
+  const size = edge.axis === 'y' ? viewport.bottom - viewport.top : viewport.right - viewport.left;
+  return Math.max(24, Math.min(48, Math.ceil(size * 0.06)));
+}
+
+const scrollOffset = (page, selector) => page.locator(selector).evaluate(element => [element.scrollLeft, element.scrollTop]);
+
+// Flutter's web engine writes the position of a horizontal scroller into scrollTop
+// (engine/semantics/scrollable.dart sets `element.scrollTop = scrollPosition` for both axes;
+// flutter/flutter#195469 mentions it) and never into scrollLeft. Where the scroller's box is
+// shorter than its content the browser then shifts every child up by the sideways position,
+// although Flutter already placed them where they are painted. This puts scrollTop of every
+// such scroller back to 0, so that rectangles and axe see the nodes where the app paints them.
+// Only a Flutter semantics node the engine marks as scrolling sideways (an extent element one
+// pixel high) and whose scrollLeft is 0 is touched. The engine writes again with every update
+// of the node, and the update that follows the end of a scroll comes some frames later, so
+// this waits until the values have stayed put for 400 ms. A page without such a scroller
+// returns at once.
+async function undoSidewaysPositionsOnTheWrongAxis(page) {
+  return page.evaluate(async () => {
+    const frame = () => new Promise(resolve => requestAnimationFrame(resolve));
+    const sideways = () => [...document.querySelectorAll('flt-semantics > flt-semantics-scroll-overflow')]
+      .filter(extent => extent.style.height === '1px').map(extent => extent.parentElement)
+      .filter(element => element.scrollLeft === 0);
+    let corrected = 0;
+    if (!sideways().length) return corrected;
+    for (let quiet = 0, tries = 0; quiet < 24 && tries < 240; tries += 1) {
+      const shifted = sideways().filter(element => element.scrollTop !== 0);
+      for (const element of shifted) element.scrollTop = 0;
+      corrected += shifted.length;
+      quiet = shifted.length ? 0 : quiet + 1;
+      await frame();
+    }
+    return corrected;
+  });
+}
+
+// One wheel step towards the ancestor's edge; true when the ancestor really scrolled: its own
+// scroll offset moved, or, for a sideways Flutter scroller whose offset the engine does not
+// report (see above), the reported node itself moved along the wheel's axis. That the node
+// ends up whole is checked from its own rectangle afterwards, never from this movement.
+async function wheelMoves(page, ancestor, viewport, target) {
+  const { edge, selector } = ancestor;
+  const delta = wheelDelta(edge, viewport);
+  const previous = await page.evaluate(({ selector, target }) => {
+    const element = document.querySelector(selector);
+    return { offset: [element.scrollLeft, element.scrollTop], left: document.querySelector(target).getBoundingClientRect().left };
+  }, { selector, target });
+  await page.mouse.wheel(edge.axis === 'x' ? edge.direction * delta : 0, edge.axis === 'y' ? edge.direction * delta : 0);
+  let moved = true;
+  try {
+    await page.waitForFunction(({ selector, target, previous, sideways }) => {
+      const element = document.querySelector(selector);
+      const node = document.querySelector(target);
+      if (!element || !node) return false;
+      return element.scrollLeft !== previous.offset[0] || element.scrollTop !== previous.offset[1] ||
+        sideways && Math.abs(node.getBoundingClientRect().left - previous.left) >= 1;
+    }, { selector, target, previous, sideways: edge.axis === 'x' && ancestor.sideways }, { timeout: 1500 });
+  } catch {
+    moved = false;
+  }
+  await undoSidewaysPositionsOnTheWrongAxis(page);
+  return moved;
+}
+
+const ownsBefore = page => page.evaluate(() => Object.fromEntries(
+  [...document.querySelectorAll('[aria-owns][id]')].map(element => [element.id, element.getAttribute('aria-owns')])));
+
+// The wheel needs the pointer over the list, and a pointer over a node with a tooltip opens
+// the tooltip. Flutter's web engine links the tooltip's overlay node to its anchor with
+// aria-owns and does not take the reference back when the overlay node is removed
+// (engine/semantics/semantics.dart, _updateTraversalParent cleans up only a node that stays).
+// That reference is a trace of this audit's own pointer, not of the screen it audits: it is
+// removed before the next axe run and listed in the record. Only a reference to a node that
+// no longer exists, and that the element did not have before the first wheel step, is
+// removed; one that was there when the screen was first audited stays a finding.
+async function dropOverlayReferencesLeftByThePointer(page, before) {
+  return page.evaluate(before => {
+    const dropped = [];
+    for (const element of document.querySelectorAll('flt-semantics[aria-owns][id]')) {
+      const had = new Set((before[element.id] ?? '').split(' ').filter(Boolean));
+      const tokens = element.getAttribute('aria-owns').split(' ').filter(Boolean);
+      const kept = tokens.filter(token => had.has(token) || document.getElementById(token));
+      if (kept.length === tokens.length) continue;
+      dropped.push({ selector: `#${element.id}`, removed: tokens.filter(token => !kept.includes(token)) });
+      if (kept.length) element.setAttribute('aria-owns', kept.join(' '));
+      else element.removeAttribute('aria-owns');
+    }
+    return dropped;
+  }, before);
+}
+
+// Flutter reports a node's rectangle already cut by its scroller, so a node that still touches
+// the scroller's edge along the scrolled axis may still be cut: there it must be strictly
+// inside. Across that axis scrolling changes nothing, and a row as wide as its list touches
+// both sides without being cut: there it must only not reach outside.
+function withinBounds(rect, bounds, axis) {
+  const along = axis === 'y'
+    ? rect.top > bounds.top && rect.bottom < bounds.bottom
+    : rect.left > bounds.left && rect.right < bounds.right;
+  const across = axis === 'y'
+    ? rect.left >= bounds.left && rect.right <= bounds.right
+    : rect.top >= bounds.top && rect.bottom <= bounds.bottom;
+  return along && across;
 }
 
 function sameNodeHasTargetSize(audit, selector) {
@@ -139,42 +244,62 @@ export async function auditWithScrollCheckpoints(page, initialAudit, { maxCheckp
   const resolved = new Set();
   const visited = new Set();
   const queue = [];
-  const enqueue = audit => {
+  // Each finding keeps the node and its meaning as they were when axe reported it, so that
+  // a later look at the same selector is proven to be a look at the same node.
+  const enqueue = async audit => {
     for (const node of auditNodes(audit)) {
       if (node.id !== 'target-size' || !node.selector || resolved.has(node.selector) || visited.has(node.selector)) continue;
       visited.add(node.selector);
-      queue.push(node);
+      const locator = page.locator(node.selector);
+      const reportedHandle = await locator.count() === 1 ? await locator.elementHandle() : null;
+      queue.push({ ...node, reportedHandle, reported: reportedHandle ? await geometry(page, node.selector) : null });
     }
   };
-  enqueue(initialAudit);
+  await enqueue(initialAudit);
+  let scrolled = false;
+  const owns = await ownsBefore(page);
 
   while (queue.length && checkpoints.length < maxCheckpoints) {
     const finding = queue.shift();
-    const before = await geometry(page, finding.selector);
-    const record = { selector: finding.selector, target: finding.target, axeNode: finding,
+    const { reportedHandle, reported, ...axeNode } = finding;
+    await undoSidewaysPositionsOnTheWrongAxis(page);
+    const before = await geometry(page, finding.selector, reportedHandle && reported?.count === 1
+      ? { targetHandle: reportedHandle, meaning: reported } : null);
+    const record = { selector: finding.selector, target: finding.target, axeNode,
       before, status: 'unresolved', reason: null };
     checkpoints.push(record);
-    const candidate = before.candidate;
-    if (before.count !== 1 || !candidate) {
+    if (before.count === 1 && before.identity === false) {
+      record.reason = 'target identity or accessible meaning changed since axe reported it';
+      continue;
+    }
+    // An earlier checkpoint's scroll may have brought this node into view with the one it
+    // was scrolling for (the cells of one column). It is the node axe reported (handle and
+    // meaning above); it counts only if it is whole now and axe no longer reports it. Asked
+    // only where no ancestor has anything left to scroll towards the node's edge.
+    const wholeSinceAnEarlierScroll = async () => {
+      if (before.count !== 1 || !scrolled || !reportedHandle) return false;
+      const rect = before.rect;
+      const bounds = [before.viewport, ...before.clips.map(clip => ({
+        left: clip.clipsX ? clip.bounds.left : -Infinity, right: clip.clipsX ? clip.bounds.right : Infinity,
+        top: clip.clipsY ? clip.bounds.top : -Infinity, bottom: clip.clipsY ? clip.bounds.bottom : Infinity,
+      }))];
+      if (rect.width < 24 || rect.height < 24 || !bounds.every(b =>
+        rect.left >= b.left && rect.right <= b.right && rect.top >= b.top && rect.bottom <= b.bottom)) return false;
+      record.pointerTraces = await dropOverlayReferencesLeftByThePointer(page, owns);
+      record.followupAudit = await runAxe(page);
+      await enqueue(record.followupAudit);
+      if (sameNodeHasTargetSize(record.followupAudit, finding.selector)) return false;
+      record.status = 'resolved';
+      record.reason = null;
+      record.resolvedBy = 'an earlier checkpoint scrolled the same node into view';
+      resolved.add(finding.selector);
+      return true;
+    };
+    if (!before.candidate && await wholeSinceAnEarlierScroll()) continue;
+    if (before.count !== 1 || !before.candidate) {
       record.reason = before.count !== 1 ? 'selector did not resolve to exactly one node' : 'no scrollable ancestor edge explains clipping';
       continue;
     }
-    if (!candidate.selector) {
-      record.reason = 'scrollable ancestor has no stable unique selector';
-      continue;
-    }
-    const targetHandle = await page.locator(finding.selector).elementHandle();
-    const ancestorLocator = page.locator(candidate.selector);
-    if (!targetHandle || await ancestorLocator.count() !== 1) {
-      record.reason = 'target or scrollable ancestor selector is not uniquely stable';
-      continue;
-    }
-    const ancestorHandle = await ancestorLocator.elementHandle();
-    if (!ancestorHandle) {
-      record.reason = 'scrollable ancestor handle is missing';
-      continue;
-    }
-    const { edge } = candidate;
     const coordinate = before.intersection;
     if (coordinate.right <= coordinate.left || coordinate.bottom <= coordinate.top) {
       record.reason = 'target has no visible viewport intersection for wheel input';
@@ -183,28 +308,53 @@ export async function auditWithScrollCheckpoints(page, initialAudit, { maxCheckp
     const mouseX = Math.max(1, Math.min(before.viewport.right - 1, (coordinate.left + coordinate.right) / 2));
     const mouseY = Math.max(1, Math.min(before.viewport.bottom - 1, (coordinate.top + coordinate.bottom) / 2));
     await page.mouse.move(mouseX, mouseY);
+    // Flutter wraps a clipped node in groups whose content is larger than their box without
+    // being scrollers. The qualifying ancestor is the innermost one a wheel really moves;
+    // the ones tried in vain stay in the record.
+    // Both handles are taken before the first wheel step, so that the node measured after
+    // scrolling is proven to be the one axe reported.
+    const targetHandle = reportedHandle ?? await page.locator(finding.selector).elementHandle();
+    if (!targetHandle) {
+      record.reason = 'target selector is not uniquely stable';
+      continue;
+    }
+    record.skippedAncestors = [];
     record.wheelSteps = [];
-    const viewportSize = edge.axis === 'y'
-      ? before.viewport.bottom - before.viewport.top
-      : before.viewport.right - before.viewport.left;
-    const delta = Math.max(24, Math.min(48, Math.ceil(viewportSize * 0.06)));
-    let moved = false;
+    let candidate = null;
+    let ancestorHandle = null;
+    for (const option of before.candidates) {
+      const locator = page.locator(option.selector);
+      const handle = await locator.count() === 1 ? await locator.elementHandle() : null;
+      if (!handle) {
+        record.skippedAncestors.push({ selector: option.selector, reason: 'selector is not unique' });
+        continue;
+      }
+      if (await wheelMoves(page, option, before.viewport, finding.selector)) {
+        candidate = option;
+        ancestorHandle = handle;
+        break;
+      }
+      record.skippedAncestors.push({ selector: option.selector, reason: 'wheel produced no scroll movement' });
+    }
+    if (!candidate) {
+      if (await wholeSinceAnEarlierScroll()) continue;
+      record.reason = 'wheel produced no scroll movement on any ancestor with a scroll edge';
+      continue;
+    }
+    const { edge } = candidate;
+    scrolled = true;
+    record.qualifyingAncestor = candidate.selector;
+    const delta = wheelDelta(edge, before.viewport);
+    // The search above already moved this ancestor by one step.
+    let moved = true;
     for (let step = 0; step < 16; step += 1) {
-      const current = await page.locator(candidate.selector).evaluate((element, axis) => axis === 'y' ? element.scrollTop : element.scrollLeft, edge.axis);
-      await page.mouse.wheel(edge.axis === 'x' ? edge.direction * delta : 0,
-        edge.axis === 'y' ? edge.direction * delta : 0);
-      try {
-        await page.waitForFunction(({ selector, axis, previous }) => {
-          const element = document.querySelector(selector);
-          return element && (axis === 'y' ? element.scrollTop : element.scrollLeft) !== previous;
-        }, { selector: candidate.selector, axis: edge.axis, previous: current }, { timeout: 1500 });
-        moved = true;
-      } catch {
+      const current = await scrollOffset(page, candidate.selector);
+      if (step > 0 && !await wheelMoves(page, candidate, before.viewport, finding.selector)) {
         record.reason = 'wheel produced no scroll movement on the qualifying ancestor';
         break;
       }
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const position = await page.locator(candidate.selector).evaluate((element, axis) => axis === 'y' ? element.scrollTop : element.scrollLeft, edge.axis);
+      const position = await scrollOffset(page, candidate.selector);
       record.wheelSteps.push({ axis: edge.axis, direction: edge.direction, delta, from: current, to: position });
       record.after = await geometry(page, finding.selector, {
         targetHandle, ancestorHandle, ancestorSelector: candidate.selector, meaning: record.before,
@@ -224,15 +374,17 @@ export async function auditWithScrollCheckpoints(page, initialAudit, { maxCheckp
         top: clip.clipsY ? clip.bounds.top : -Infinity,
         bottom: clip.clipsY ? clip.bounds.bottom : Infinity,
       }));
-      if (withinBounds(rect, record.after.viewport) && currentClipBounds.every(bounds => withinBounds(rect, bounds))) break;
+      if (withinBounds(rect, record.after.viewport, edge.axis) && currentClipBounds.every(bounds => withinBounds(rect, bounds, edge.axis))) break;
     }
     if (record.reason) continue;
     if (!moved || !record.after) {
       record.reason ??= 'scroll checkpoint did not produce a measurable position';
       continue;
     }
+    await undoSidewaysPositionsOnTheWrongAxis(page);
+    record.pointerTraces = await dropOverlayReferencesLeftByThePointer(page, owns);
     record.followupAudit = await runAxe(page);
-    enqueue(record.followupAudit);
+    await enqueue(record.followupAudit);
     record.afterAuditGeometry = await geometry(page, finding.selector, {
       targetHandle, ancestorHandle, ancestorSelector: candidate.selector, meaning: record.before,
     });
@@ -255,8 +407,8 @@ export async function auditWithScrollCheckpoints(page, initialAudit, { maxCheckp
       top: clip.clipsY ? clip.bounds.top : -Infinity,
       bottom: clip.clipsY ? clip.bounds.bottom : Infinity,
     }));
-    if (!withinBounds(rect, record.afterAuditGeometry.viewport) || clippedBounds.some(bounds => !withinBounds(rect, bounds))) {
-      record.reason = 'target rectangle is not strictly inside the viewport and all clipping ancestors';
+    if (!withinBounds(rect, record.afterAuditGeometry.viewport, edge.axis) || clippedBounds.some(bounds => !withinBounds(rect, bounds, edge.axis))) {
+      record.reason = 'target rectangle is not strictly inside the viewport and all clipping ancestors along the scrolled axis, or reaches outside them across it';
       continue;
     }
     if (sameNodeHasTargetSize(record.followupAudit, finding.selector)) {

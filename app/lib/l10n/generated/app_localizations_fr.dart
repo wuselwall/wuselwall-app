@@ -4934,6 +4934,40 @@ class AppLocalizationsFr extends AppLocalizations {
       'La nuit, l’écran mural affiche toujours sa vue de nuit.';
 
   @override
+  String get appearanceLookLight => 'Thème clair';
+
+  @override
+  String get appearanceLookDark => 'Thème sombre';
+
+  @override
+  String get lookFrisch => 'Frais';
+
+  @override
+  String get lookSonnig => 'Ensoleillé';
+
+  @override
+  String get lookBlaueStunde => 'Heure bleue';
+
+  @override
+  String get lookSchiefer => 'Ardoise';
+
+  @override
+  String get lookPflaume => 'Prune';
+
+  @override
+  String get lookKakao => 'Cacao';
+
+  @override
+  String get firstLookTitle => 'Quelle allure pour WuselWall ?';
+
+  @override
+  String get firstLookHelp =>
+      'Sur cet appareil seulement. Vous pouvez le modifier à tout moment dans Paramètres, Apparence.';
+
+  @override
+  String get firstLookDone => 'Terminé';
+
+  @override
   String get languageTitle => 'Langue';
 
   @override
@@ -6688,31 +6722,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventStarterGuestDinner => 'Invités à dîner';
 
   @override
-  String get eventStarterKidsParty => 'Goûter d’anniversaire';
+  String get eventStarterPlaydate => 'Jeux avec les copains';
 
   @override
-  String get eventStarterSportsEvent => 'Événement sportif';
+  String get eventStarterSportsPractice => 'Entraînement sportif';
 
   @override
   String get eventStarterDoctor => 'Rendez-vous médical';
 
   @override
-  String get eventStarterPerformance => 'Spectacle';
+  String get eventStarterCinema => 'Sortie au cinéma';
 
   @override
-  String get eventStarterDayOut => 'Sortie';
+  String get eventStarterDayOut => 'Sortie en famille';
 
   @override
-  String get eventStarterHoliday => 'Vacances / voyage';
+  String get eventStarterHoliday => 'Vacances en famille';
 
   @override
-  String get eventStarterCleaning => 'Ménage';
+  String get eventStarterCleaning => 'Venue de l’aide ménagère';
 
   @override
-  String get eventStarterParentsEvening => 'Réunion de parents';
+  String get eventStarterParentsEvening => 'Réunion de classe';
 
   @override
-  String get eventStarterParentTeacherTalk => 'Entretien avec l’école';
+  String get eventStarterParentTeacherTalk => 'Entretien avec l’enseignant';
 
   @override
   String get eventStarterSchoolTrip => 'Sortie scolaire';
@@ -6724,7 +6758,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventStarterSchoolParty => 'Fête de l’école';
 
   @override
-  String get eventStarterSportsDay => 'Journée sportive';
+  String get eventStarterSportsDay => 'Journée sportive scolaire';
 
   @override
   String get eventTemplateAllDay => 'Toute la journée';
