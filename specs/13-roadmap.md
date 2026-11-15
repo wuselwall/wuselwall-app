@@ -21,6 +21,14 @@ reminder are also built. They are not new milestones. **MCP and AI assistants ar
 (2026-10-24), removed from the app UI, with their backend and design retained in the
 [deferred-work record](deferred/mcp-and-ai-assistants.md). They are not Alpha or release gates.
 
+Event templates were reviewed for everyday family life on 2026-11-15 (#271): distinct
+playdate, sports practice and cinema starters, clearer school meetings and natural
+DE/EN/FR/ES names, including regional German (see [28](28-event-templates.md)). This is an
+app content refinement in v1.12.0; no new milestone or server change. A separate localized
+website progress update is tracked in
+[website #18](https://github.com/wuselwall/wuselwall-website/issues/18); publication remains
+a separate follow-up.
+
 Member, family, device and shopping-structure editing (old step 10.1–10.3) and Today’s
 guardian approvals (10.5, #127/#149) are built.
 Cache qualification fixes followed on 2026-10-25: discovery and household recovery after

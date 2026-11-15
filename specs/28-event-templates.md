@@ -44,8 +44,8 @@ weekly series with rules of its own, not a one-off.
 ## Built-in templates
 
 Each language names them itself (ARB keys `eventStarter*`), regional German included
-([09](09-clients-and-ux.md#regional-german)): *Sportveranstaltung* and *Urlaub / Reise* in
-Germany and Austria, *Sportanlass*, *Ferien / Reise* and *Gäste zum Znacht* in Switzerland.
+([09](09-clients-and-ux.md#regional-german)): *Familienurlaub* in Germany and Austria,
+*Familienferien* and *Gäste zum Znacht* in Switzerland.
 Every value is only a suggestion
 the editor shows before anything is saved.
 
@@ -54,15 +54,28 @@ last (*reordered 2026-11-01*, when Putzhilfe was added).
 
 | Template | Picture | When | Length | Who | Also |
 |---|---|---|---|---|---|
-| Putzhilfe | broom | 09:00 | 3 h | the person creating it | weekly on the day's weekday |
-| Sportveranstaltung | football | 10:00 | 2 h | the person creating it | |
+| Putzhilfe kommt | broom | 09:00 | 3 h | the person creating it | weekly on the day's weekday |
+| Sporttraining | football | 17:00 | 1 h | the person creating it | |
 | Arzttermin | — | next full hour | 1 h | the person creating it | |
 | Gäste zum Essen | house | 18:30 | 3 h | whole family | |
-| Ausflug | hiking | all day | 1 day | whole family | Darauf freuen wir uns |
-| Kindergeburtstag | gift | 14:00 | 3 h | the children | |
-| Aufführung | music | 19:00 | 2 h | whole family | |
-| Urlaub / Reise | plane | all day | 7 days | whole family | Darauf freuen wir uns |
+| Familienausflug | hiking | all day | 1 day | whole family | Darauf freuen wir uns |
+| Spielen mit Freunden | game_die | 15:00 | 2 h | the children | |
+| Kinobesuch | cinema | 16:00 | 2 h | whole family | |
+| Familienurlaub | plane | all day | 7 days | whole family | Darauf freuen wir uns |
 | Geburtstag | cake | all day | 1 day | whole family | yearly, Darauf freuen wir uns |
+
+*Reviewed 2026-11-15, issue #271.* Each general tile now names a distinct family occasion:
+sports practice instead of a generic sporting event, a playdate instead of a second birthday
+tile, and a cinema trip instead of an unspecified performance. Their times, lengths and
+pictures match those occasions. The cinema trip is an outing; the tradition starter Film
+night is at home. A cleaner visit is help coming to the home, not a chore assigned to the
+family. The family day out lasts one day; the family holiday starts with seven.
+
+The school group meeting and individual teacher appointment have distinct local names:
+*Class meeting for parents* / *Parent–teacher meeting*, *Réunion de classe* / *Entretien avec
+l’enseignant*, and *Reunión de clase* / *Tutoría individual*. German uses *Elternabend* /
+*Elterngespräch*, including Austria: a 30-minute appointment is not the whole
+*Elternsprechtag*. School sports day stays separate from sports practice.
 
 "Whole family" selects every active member; "the children" every active child (the person
 creating it when there is none). Members' own birthdays need no template: they come from the
@@ -83,11 +96,11 @@ children never sees it. The general section lists only the nine above. The tiles
 | Schulausflug | backpack | all day | 1 day | the children | Darauf freuen wir uns |
 | Klassenarbeit | book | 08:00 | 1 h | the children | |
 | Schulfest | balloon | 16:00 | 3 h | whole family | |
-| Sportfest | — (a running icon) | all day | 1 day | the children | |
+| Sporttag der Schule | — (a running icon) | all day | 1 day | the children | |
 
 Regional German names them as the school does: *Schulreise*, *Prüfung* and *Sporttag* in
-Switzerland, *Elternsprechtag* (for *Elterngespräch*), *Wandertag* and *Schularbeit* in
-Austria; *Elternabend*, *Schulfest* and the rest stay as in German.
+Switzerland, *Wandertag* and *Schularbeit* in
+Austria; *Elternabend*, *Elterngespräch*, *Schulfest* and the rest stay as in German.
 
 Built-in templates live in the app (`EventStarter`, beside `TraditionStarter`) and work with
 every server.

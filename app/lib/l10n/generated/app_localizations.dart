@@ -11154,17 +11154,17 @@ abstract class AppLocalizations {
   /// **'Guests for dinner'**
   String get eventStarterGuestDinner;
 
-  /// No description provided for @eventStarterKidsParty.
+  /// Children meeting friends to play, not a birthday celebration.
   ///
   /// In en, this message translates to:
-  /// **'Children\'s party'**
-  String get eventStarterKidsParty;
+  /// **'Playdate'**
+  String get eventStarterPlaydate;
 
-  /// No description provided for @eventStarterSportsEvent.
+  /// A regular sports training session, distinct from a school sports day.
   ///
   /// In en, this message translates to:
-  /// **'Sports event'**
-  String get eventStarterSportsEvent;
+  /// **'Sports practice'**
+  String get eventStarterSportsPractice;
 
   /// No description provided for @eventStarterDoctor.
   ///
@@ -11172,37 +11172,37 @@ abstract class AppLocalizations {
   /// **'Doctor’s appointment'**
   String get eventStarterDoctor;
 
-  /// No description provided for @eventStarterPerformance.
+  /// A family outing to a cinema, distinct from a film night at home.
   ///
   /// In en, this message translates to:
-  /// **'Performance'**
-  String get eventStarterPerformance;
+  /// **'Cinema trip'**
+  String get eventStarterCinema;
 
-  /// No description provided for @eventStarterDayOut.
+  /// A one-day family outing, distinct from a school trip and a multi-day holiday.
   ///
   /// In en, this message translates to:
-  /// **'Day out'**
+  /// **'Family day out'**
   String get eventStarterDayOut;
 
-  /// No description provided for @eventStarterHoliday.
+  /// A multi-day family holiday, distinct from a day out.
   ///
   /// In en, this message translates to:
-  /// **'Holiday / trip'**
+  /// **'Family holiday'**
   String get eventStarterHoliday;
 
-  /// No description provided for @eventStarterCleaning.
+  /// A visit from someone who helps with cleaning; not a family chore.
   ///
   /// In en, this message translates to:
-  /// **'Cleaner'**
+  /// **'Cleaner visit'**
   String get eventStarterCleaning;
 
-  /// Built-in school event template (specs/28): the evening a school invites the parents; also the title it fills in.
+  /// A group meeting for the parents of a class, not an individual teacher appointment.
   ///
   /// In en, this message translates to:
-  /// **'Parents’ evening'**
+  /// **'Class meeting for parents'**
   String get eventStarterParentsEvening;
 
-  /// Built-in school event template (specs/28): a talk with a child's teacher; also the title it fills in.
+  /// An individual appointment with a teacher, not a group meeting for parents.
   ///
   /// In en, this message translates to:
   /// **'Parent–teacher meeting'**
@@ -11217,7 +11217,7 @@ abstract class AppLocalizations {
   /// Built-in school event template (specs/28): a test or exam at school; also the title it fills in.
   ///
   /// In en, this message translates to:
-  /// **'Test'**
+  /// **'School test'**
   String get eventStarterSchoolTest;
 
   /// Built-in school event template (specs/28): a school fair or party; also the title it fills in.
@@ -11226,10 +11226,10 @@ abstract class AppLocalizations {
   /// **'School fair'**
   String get eventStarterSchoolParty;
 
-  /// Built-in school event template (specs/28): the school's sports day; also the title it fills in.
+  /// The school sports day for children, distinct from regular sports practice.
   ///
   /// In en, this message translates to:
-  /// **'Sports day'**
+  /// **'School sports day'**
   String get eventStarterSportsDay;
 
   /// Part of a template tile's line: an all-day event.
