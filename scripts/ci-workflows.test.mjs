@@ -71,7 +71,13 @@ test('exact-commit qualification requires quality, backend and complete guide ev
   assert.match(job(source, 'evidence'), /needs: \[prepare, review_approval, flutter, web, native, production, quality, backend, docs\]/);
   assert.match(job(source, 'evidence'), /path: build\/qualification\/downloaded\/docs/);
   // Strict candidate Flutter and production checks own the work quality-only reuse skips.
-  assert.match(job(source, 'flutter'), /run: flutter test --no-pub --concurrency=1/);
+  assert.match(job(source, 'flutter'), /run: bash \.\.\/scripts\/finite-stack\.sh flutter test --no-pub --concurrency=1\n/);
+  // No tester of a candidate or backend run starts with the runner's unlimited stack limit.
+  for (const file of ['qualify-candidate', 'backend-ci']) {
+    for (const line of workflow(file).split('\n').filter((l) => /\bflutter test\b/.test(l) && !l.trim().startsWith('#'))) {
+      assert.match(line, /bash \.\.\/scripts\/finite-stack\.sh flutter test /, line);
+    }
+  }
   const production = read('qualification/production-smoke.mjs');
   for (const smoke of ['shopping-quick-add', 'web-server-discovery']) assert.ok(production.includes(`scripts/${smoke}.browser.mjs`));
 });

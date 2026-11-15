@@ -72,6 +72,15 @@ paragraph check while cropping blank capture space; 144 captures allocated about
 fewer image bytes. This reduces resource use without establishing the cause of an engine
 crash. A process crash remains failed evidence.
 
+One cause of the tester's crashes is established: an unlimited stack limit. `flutter test`
+runs the tester with the Dart VM's profiler, which walks the main thread's native stack by
+frame pointers and accepts only pointers inside the stack. With `ulimit -s unlimited` glibc
+reports that stack as reaching down to the end of the heap, so an arbitrary register value
+passes the check and is read. The ten tester crashes the build fleet's kernel log held
+when this was found were all a read in that walker, terabytes below the stack pointer, in
+a process without a stack limit. `scripts/finite-stack.sh` gives the candidate, backend and ordinary CI test commands
+a finite limit; it changes no test and no verdict.
+
 Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)
 wherever paint is unambiguous, and by the raw Flutter SDK guideline everywhere else. The SDK
 guideline estimates both colours from a histogram of the text's box inflated by four pixels and
