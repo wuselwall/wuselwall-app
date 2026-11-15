@@ -20,10 +20,10 @@ enum EventStarter {
     people: StarterPeople.actor,
     weekly: true,
   ),
-  sportsEvent(
+  sportsPractice(
     iconKey: 'football',
-    startMinute: 10 * 60,
-    minutes: 120,
+    startMinute: 17 * 60,
+    minutes: 60,
     people: StarterPeople.actor,
   ),
   doctor(people: StarterPeople.actor),
@@ -39,15 +39,15 @@ enum EventStarter {
     people: StarterPeople.family,
     countdown: true,
   ),
-  kidsParty(
-    iconKey: 'gift',
-    startMinute: 14 * 60,
-    minutes: 180,
+  playdate(
+    iconKey: 'game_die',
+    startMinute: 15 * 60,
+    minutes: 120,
     people: StarterPeople.children,
   ),
-  performance(
-    iconKey: 'music',
-    startMinute: 19 * 60,
+  cinema(
+    iconKey: 'cinema',
+    startMinute: 16 * 60,
     minutes: 120,
     people: StarterPeople.family,
   ),

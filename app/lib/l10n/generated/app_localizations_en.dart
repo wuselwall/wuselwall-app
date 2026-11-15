@@ -6613,28 +6613,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventStarterGuestDinner => 'Guests for dinner';
 
   @override
-  String get eventStarterKidsParty => 'Children\'s party';
+  String get eventStarterPlaydate => 'Playdate';
 
   @override
-  String get eventStarterSportsEvent => 'Sports event';
+  String get eventStarterSportsPractice => 'Sports practice';
 
   @override
   String get eventStarterDoctor => 'Doctor’s appointment';
 
   @override
-  String get eventStarterPerformance => 'Performance';
+  String get eventStarterCinema => 'Cinema trip';
 
   @override
-  String get eventStarterDayOut => 'Day out';
+  String get eventStarterDayOut => 'Family day out';
 
   @override
-  String get eventStarterHoliday => 'Holiday / trip';
+  String get eventStarterHoliday => 'Family holiday';
 
   @override
-  String get eventStarterCleaning => 'Cleaner';
+  String get eventStarterCleaning => 'Cleaner visit';
 
   @override
-  String get eventStarterParentsEvening => 'Parents’ evening';
+  String get eventStarterParentsEvening => 'Class meeting for parents';
 
   @override
   String get eventStarterParentTeacherTalk => 'Parent–teacher meeting';
@@ -6643,13 +6643,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventStarterSchoolTrip => 'School trip';
 
   @override
-  String get eventStarterSchoolTest => 'Test';
+  String get eventStarterSchoolTest => 'School test';
 
   @override
   String get eventStarterSchoolParty => 'School fair';
 
   @override
-  String get eventStarterSportsDay => 'Sports day';
+  String get eventStarterSportsDay => 'School sports day';
 
   @override
   String get eventTemplateAllDay => 'All day';

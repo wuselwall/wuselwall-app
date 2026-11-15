@@ -72,8 +72,10 @@ void main() {
     expect(at.tasksTitle, 'Aufgaben');
     expect(ch.close, 'Schliessen');
     expect(at.close, 'Schließen');
-    expect(de.eventStarterSportsEvent, 'Sportveranstaltung');
-    expect(ch.eventStarterSportsEvent, 'Sportanlass');
+    expect(de.eventStarterSportsPractice, 'Sporttraining');
+    expect(ch.eventStarterSportsPractice, 'Sporttraining');
+    expect(de.eventStarterHoliday, 'Familienurlaub');
+    expect(ch.eventStarterHoliday, 'Familienferien');
     expect(at.mealsSlotSnack, 'Jause');
     expect(ch.mealsSlotSnack, 'Zvieri');
   });
@@ -89,7 +91,12 @@ void main() {
         de.eventStarterSportsDay,
         de.eventStarterParentTeacherTalk,
       ],
-      ['Schulausflug', 'Klassenarbeit', 'Sportfest', 'Elterngespräch'],
+      [
+        'Schulausflug',
+        'Klassenarbeit',
+        'Sporttag der Schule',
+        'Elterngespräch',
+      ],
     );
     expect(
       [
@@ -107,7 +114,7 @@ void main() {
         at.eventStarterSportsDay,
         at.eventStarterParentTeacherTalk,
       ],
-      ['Wandertag', 'Schularbeit', 'Sportfest', 'Elternsprechtag'],
+      ['Wandertag', 'Schularbeit', 'Sporttag der Schule', 'Elterngespräch'],
     );
     // What no country words differently stays the German one.
     for (final l in [ch, at]) {

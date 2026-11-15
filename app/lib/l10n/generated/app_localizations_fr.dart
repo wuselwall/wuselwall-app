@@ -6688,31 +6688,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventStarterGuestDinner => 'Invités à dîner';
 
   @override
-  String get eventStarterKidsParty => 'Goûter d’anniversaire';
+  String get eventStarterPlaydate => 'Jeux avec les copains';
 
   @override
-  String get eventStarterSportsEvent => 'Événement sportif';
+  String get eventStarterSportsPractice => 'Entraînement sportif';
 
   @override
   String get eventStarterDoctor => 'Rendez-vous médical';
 
   @override
-  String get eventStarterPerformance => 'Spectacle';
+  String get eventStarterCinema => 'Sortie au cinéma';
 
   @override
-  String get eventStarterDayOut => 'Sortie';
+  String get eventStarterDayOut => 'Sortie en famille';
 
   @override
-  String get eventStarterHoliday => 'Vacances / voyage';
+  String get eventStarterHoliday => 'Vacances en famille';
 
   @override
-  String get eventStarterCleaning => 'Ménage';
+  String get eventStarterCleaning => 'Venue de l’aide ménagère';
 
   @override
-  String get eventStarterParentsEvening => 'Réunion de parents';
+  String get eventStarterParentsEvening => 'Réunion de classe';
 
   @override
-  String get eventStarterParentTeacherTalk => 'Entretien avec l’école';
+  String get eventStarterParentTeacherTalk => 'Entretien avec l’enseignant';
 
   @override
   String get eventStarterSchoolTrip => 'Sortie scolaire';
@@ -6724,7 +6724,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventStarterSchoolParty => 'Fête de l’école';
 
   @override
-  String get eventStarterSportsDay => 'Journée sportive';
+  String get eventStarterSportsDay => 'Journée sportive scolaire';
 
   @override
   String get eventTemplateAllDay => 'Toute la journée';
