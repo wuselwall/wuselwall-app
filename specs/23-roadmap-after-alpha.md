@@ -82,7 +82,7 @@ decision already taken, linked so it is not argued again.
 | # | Test | Comes from |
 |---|---|---|
 | P1 | **No service run by the project holds a family's data.** Anything new runs on the family's own server or on the device | [ADR-018](adr/ADR-018-self-hosted-only.md) |
-| P2 | **Every outbound connection justifies itself.** No analytics, no crash-reporting SaaS, no tracking SDK. A third party is contacted by the server, never by the apps, and the privacy policy names it in all shipped website languages in the same change | [01, principle 5](01-vision-and-scope.md#principles), [11](11-security-and-privacy.md) |
+| P2 | **Every outbound connection justifies itself.** No analytics, no crash-reporting SaaS, no tracking SDK. A third party is contacted by the server, never by the apps, and the privacy policy names it in all shipped website languages in the same change *Since 2026-11-15 ([ADR-022](adr/ADR-022-opt-in-services.md)):* a provider a household switched on itself is that household's choice; the settings name what it receives, and the policy describes the mechanism | [01, principle 5](01-vision-and-scope.md#principles), [11](11-security-and-privacy.md) |
 | P3 | **Never punish a child in software.** No negative points, no leaderboard, no public failure, no money for points | [01, principle 3](01-vision-and-scope.md#principles), [06](06-module-tasks.md), Q6 |
 | P4 | **Every mutation is attributable.** One `api` function per write, `app.actor()` first, an audit row in the same transaction | [01, principle 4](01-vision-and-scope.md#principles), [03](03-architecture.md) |
 | P5 | **No household is hard-coded.** What one family would answer differently is a setting with a curated default | [21](21-household-settings.md) |
@@ -141,7 +141,7 @@ Recorded so that they are not proposed again every few weeks.
 | Crash reporting or analytics services | P2 | R1.1's feedback the member sends by hand |
 | An AI meal planner or chatbot run by the project | P1, P2 | Meal planning by the family; MCP/AI assistants remain on hold |
 | A hosted WuselWall, paid plans, ads | ADR-018, [01](01-vision-and-scope.md#explicitly-out-of-scope) | The self-hosting kit (R2) |
-| Weather or traffic on the wall | P2: a third party for something every phone already shows | Reopen only through R3.8 with a server-side, coarse-location, opt-in design |
+| Weather or traffic on the wall | P2 by default: a third party for something every phone already shows. *2026-11-15:* [ADR-022](adr/ADR-022-opt-in-services.md) allows a household to switch a forecast provider on for trips ([30](30-trips.md#services)); the wall still shows none (P6) | A consumer of the `forecast` capability, with its own decision through R3.8 |
 | Homework, grades, absence reporting | [15](15-module-school-timetable.md#v1-scope-cut): the school already has one | — |
 | Per-item privacy between family members | [01](01-vision-and-scope.md#explicitly-out-of-scope) | Guardian-only settings, as today |
 

@@ -401,7 +401,7 @@ existing `kiosk_forbidden`, `guardian_required`, `device_revoked`.
 | `{action: 'route', from: {lat, lon}, to: {lat, lon}, actor_profile_id?}` | `{km, minutes, provider, attribution}` |
 | `{action: 'map', lat, lon, zoom?, width, height, actor_profile_id?}` | `{image_base64, mime, provider, attribution}` |
 
-Errors are `{error: code}` with a status: `service_off` (409, no enabled provider offers the
+Errors have the Edge Functions' usual shape (`{code, message, hint}`) with a status: `service_off` (409, no enabled provider offers the
 capability), `service_key_missing` (409), `service_limit` (429), `service_failed` (502, every
 provider failed), `invalid_request` (400), and the database's refusals passed through (403).
 
@@ -412,7 +412,11 @@ provider failed), `invalid_request` (400), and the database's refusals passed th
 | `{action: 'windows', from?, to?, min_days?, member_ids?}` | `{windows: [{from, to, days, name?, kind: 'holidays'|'long_weekend', leave_days, partial: [{profile_id, from, to}], conflicts: [{date, title, event_id, kind, presence_state?, profile_ids}]}]}` |
 | `{action: 'discover', from, to, lang?, filters: {temp_min?, temp_max?, dry?, sea_min?, tags?, effort?}, actor_profile_id?}` | `{places: [{key?, trip_id?, name, country, lat, lon, tags, km?, effort?, climate?: {tmax, tmin, rain_days?, sun_hours?, sea?}, fits: 'yes'|'no'|'unknown'}], pending, provider?, attribution?}` sorted: fits first, then nearer |
 
-`windows` reads as the caller (RLS) and contacts nobody. `discover` contacts a provider only
+`fits: 'no'` places are left out of the answer. `pending` counts the filtered places without
+climate values, including those a provider had nothing for. A provider's budget is counted a
+minute, an hour and a day (Open-Meteo: 3, 20 and 48 places), so the page asks again every half
+minute while places are pending and gives up, with a note, when the number has not fallen for
+five minutes. `windows` reads as the caller (RLS) and contacts nobody. `discover` contacts a provider only
 through the services runner, so every rule above holds for it.
 
 ## Considered and not chosen

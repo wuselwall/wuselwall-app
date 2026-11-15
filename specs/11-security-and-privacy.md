@@ -240,11 +240,41 @@ household reads (`api.external_calendars`) carries the host name only (`url_host
 comes from `api.external_calendar_url`, which refuses children's devices, kiosks, revoked devices and
 other households, and writes no audit row. The household export, which is guardian-only, includes it.
 
+### Opt-in services
+
+Added 2026-11-15 with [ADR-022](adr/ADR-022-opt-in-services.md) and [30](30-trips.md#services).
+A guardian may switch on providers for weather, place search, routes and map pictures. What
+holds:
+
+- **Off by default**, per household; switching a provider off stops its calls at once.
+- **The server calls, never an app.** The plug-in's hosts are constants of its file; the
+  runner refuses any other host, any redirect to another host and anything but https, with a
+  timeout and a size cap. No household types a host.
+- **What a provider receives**: coordinates rounded to two decimals (about a kilometre) or the
+  text of a place search, the server's IP address and the request time. For a route also the
+  home place, rounded the same way. Nothing else; the settings page says so per provider
+  before it is switched on.
+- **Keys** are stored in `app.service_secret`, which no device role can select; the service
+  role reads them inside the Edge Function only after `api.service_request` ran as the caller
+  (live device, adult profile, not the wall). They are not in the export, the audit rows, the
+  cache or the logs, and are shown as their last four characters. They are in the database
+  backup, like the feed addresses of subscribed calendars.
+- **Who can cause a call**: adults. A child's device and the wall hold a household session
+  too, so the database refuses them, and each provider has a daily ceiling per household.
+- **The cache** (`app.service_cache`) holds answers as public facts, without the household
+  that asked.
+
+Residual risk, stated plainly: a provider can correlate a server's address with the places a
+family looks at, and a destination's coordinates with the dates of a forecast. A family that
+does not want that leaves the services off; everything in [30](30-trips.md) except climate,
+forecast, place search, driving time and the map picture works without them.
+
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
 mirrors, and since ADR-014 the SMTP provider. Added
 2026-10-14: the calendar addresses that guardians subscribe to (see above), chosen by the family,
-and `openholidaysapi.org` for the holiday cache.
+and `openholidaysapi.org` for the holiday cache. Added 2026-11-15: the hosts of the service
+providers a household switched on (see "Opt-in services"), none by default.
 
 Added 2026-10-14: `openholidaysapi.org` (OpenHolidays, the public holiday dataset). The server
 calls it weekly (`holidays-sync`) and when a member picks a country in the app. The request

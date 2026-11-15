@@ -1,0 +1,56 @@
+{
+ "type": "FeatureCollection",
+ "metadata": {
+  "service": "routing",
+  "engine": {
+   "version": "9.0.0"
+  }
+ },
+ "bbox": [
+  8.6,
+  49.3,
+  8.7,
+  49.5
+ ],
+ "features": [
+  {
+   "bbox": [
+    8.6,
+    49.3,
+    8.7,
+    49.5
+   ],
+   "type": "Feature",
+   "properties": {
+    "segments": [
+     {
+      "distance": 24500.6,
+      "duration": 1751.2,
+      "steps": []
+     }
+    ],
+    "way_points": [
+     0,
+     3
+    ],
+    "summary": {
+     "distance": 24500.6,
+     "duration": 1751.2
+    }
+   },
+   "geometry": {
+    "coordinates": [
+     [
+      8.6,
+      49.4
+     ],
+     [
+      8.7,
+      49.3
+     ]
+    ],
+    "type": "LineString"
+   }
+  }
+ ]
+}

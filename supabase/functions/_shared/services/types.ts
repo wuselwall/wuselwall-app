@@ -123,8 +123,16 @@ export type Provider = {
   attribution: string;
   /** Every host this file contacts. Https only. The runner refuses any other. */
   hosts: string[];
-  /** Polite ceilings the runner enforces: calls a day per household, climate fetches an hour per server. */
-  budget: { per_day: number; climate_per_hour?: number };
+  /**
+   * Polite ceilings the runner enforces: calls a day per household, and climate fetches per
+   * server (a climate fetch can weigh many calls at the provider) a minute, an hour and a day.
+   */
+  budget: {
+    per_day: number;
+    climate_per_minute?: number;
+    climate_per_hour?: number;
+    climate_per_day?: number;
+  };
   /** The documentation pages this file was written from, with the date they were read. */
   docs: string[];
 
@@ -182,8 +190,8 @@ export type Services = {
    */
   cached<C extends Capability>(capability: C, queries: QueryOf[C][]): Promise<(Answer<C> | null)[]>;
   /**
-   * How many more climate fetches the first offering provider's hourly budget allows now;
-   * 0 when no provider offers climate.
+   * How many more climate fetches the first offering provider's budgets (a minute, an hour, a
+   * day) allow now; 0 when no provider offers climate.
    */
   climateBudget(): Promise<number>;
 };

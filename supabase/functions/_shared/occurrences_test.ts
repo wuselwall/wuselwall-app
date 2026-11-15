@@ -121,6 +121,28 @@ Deno.test("an event's reminder travels with every occurrence, null without one",
   );
 });
 
+Deno.test("a trip's calendar entry names its trip, any other row null", () => {
+  const occ = expand(
+    [
+      allDay(
+        { id: "trip-entry", trip_id: "trip-1" },
+        "2026-10-14",
+        "2026-10-16",
+      ),
+      // A row from a server before trips has no such column.
+      timed({ id: "plain" }, "2026-10-15T14:00:00Z", "2026-10-15T15:00:00Z"),
+    ],
+    [],
+    "2026-10-14",
+    "2026-10-21",
+    HOUSEHOLD,
+  );
+  assertEquals(
+    occ.map((o) => [o.event_id, o.trip_id]),
+    [["trip-entry", "trip-1"], ["plain", null]],
+  );
+});
+
 Deno.test("single timed event outside the window is not emitted", () => {
   const occ = expand(
     [timed({}, "2026-10-14T14:00:00Z", "2026-10-14T15:00:00Z")],

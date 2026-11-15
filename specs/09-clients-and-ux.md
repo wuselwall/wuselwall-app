@@ -47,6 +47,11 @@ on the parent's phone gives `kid` or `kiosk`.
   end of the trip). It is the one place the home navigation is hidden on purpose, so the thumb
   has the store to itself; the children's register has the same page
   ([07](07-module-meals-shopping.md#two-modes-2026-10-31-reworked-the-same-day)).
+- Trips (*added 2026-11-15*, [30](30-trips.md)): not a tab. *Reisen* opens from the Calendar
+  tab and from the trip card on Today: the list of ideas and trips, a trip with its plan,
+  packing list and to-dos, the comparison of options with combinations, the time windows and
+  discovery. Adults only; the kid register and the wall see the calendar entry and the
+  countdown.
 - Settings: account and sign-in methods; members (edit, order, invite) and invitations;
   devices (connect, rename, revoke); the family (name, timezone, export, delete); household
   settings, presence baselines, feed tokens, subscribed calendars, reminders, getting
