@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { test, expect } from 'playwright/test';
-import { cases, checkInventory, root } from '../matrix.mjs';
+import { cases, checkInventory, readiness, root } from '../matrix.mjs';
 import { auditWithScrollCheckpoints, runAxe } from './scroll-audit.mjs';
 
 const require = createRequire(import.meta.url);
@@ -32,7 +32,15 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
     // The test entry point enables semantics before autofocus fields connect.
     await expect(page.locator('flt-semantics').first()).toBeAttached({ timeout: 60_000 });
     await expect(page.locator(`body[data-qualification-ready="${sample.id}"]`)).toBeAttached();
-    await expect(page.getByRole('button').first()).toBeAttached();
+    const ready = readiness(sample, sample.locale);
+    if (ready.kind === 'read-only') {
+      // A refusal has nothing to act on: wait for its own message and title, never an action.
+      await expect(page.getByRole('heading', { name: ready.title, exact: true })).toBeAttached();
+      await expect(page.getByText(ready.text, { exact: true })).toBeAttached();
+      await expect(page.getByRole('button'), 'A read-only state exposes no action').toHaveCount(0);
+    } else {
+      await expect(page.getByRole('button').first()).toBeAttached();
+    }
     const semantics = await page.locator('flt-semantics-host').ariaSnapshot();
     expect(semantics.trim().length, 'The audit must inspect a populated semantics tree').toBeGreaterThan(50);
     if (capture) {
