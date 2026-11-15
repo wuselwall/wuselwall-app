@@ -113,6 +113,18 @@ jobs:
         with: { ruby-version: '3.3', bundler-cache: false, working-directory: app/android }
         env:
           XDG_CACHE_HOME: ${{ runner.temp }}/cache
+      # setup-ruby installs no gems here (bundler-cache would use the Actions cache, which
+      # release workflows keep away from). Exactly the gems of Gemfile.lock, into the job's
+      # temporary directory, before the Play key comes near the job.
+      - name: Install the locked gems
+        run: |
+          printf 'BUNDLE_PATH=%s\nBUNDLE_FROZEN=true\n' "$BUNDLE_PATH" >> "$GITHUB_ENV"
+          bundle install
+          bundle exec fastlane --version
+        env:
+          BUNDLE_PATH: ${{ runner.temp }}/bundle
+          BUNDLE_FROZEN: 'true'
+          XDG_CACHE_HOME: ${{ runner.temp }}/cache
       - run: bundle exec fastlane android internal
         env:
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
