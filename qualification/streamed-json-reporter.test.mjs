@@ -109,3 +109,25 @@ test('reporter requires an outputFile (stdio mode is not used by the qualificati
   assert.equal(reporter.printsToStdio(), true);
   assert.equal(reporter.version(), 'v2');
 });
+
+test('streamed reporter records health ok:true on success and ok:false with the error on failure', async (t) => {
+  const dir = tmp();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const health = path.join(dir, 'health.json');
+  const out = path.join(dir, 'results.json');
+  const reporter = new StreamedJsonReporter({ outputFile: out, healthFile: health });
+  reporter.onConfigure({ rootDir: '/r', projects: [] });
+  reporter.onBegin(fakeSuite(3, 0));
+  await reporter.onEnd({ startTime: new Date(0), duration: 10 });
+  assert.equal(JSON.parse(fs.readFileSync(health, 'utf8')).ok, true);
+
+  const blocker = path.join(dir, 'blocker');
+  fs.writeFileSync(blocker, 'not a directory');
+  const bad = new StreamedJsonReporter({ outputFile: path.join(blocker, 'results.json'), healthFile: health });
+  bad.onConfigure({ rootDir: '/r', projects: [] });
+  bad.onBegin(fakeSuite(1, 0));
+  await assert.rejects(() => bad.onEnd({ startTime: new Date(0), duration: 1 }));
+  const record = JSON.parse(fs.readFileSync(health, 'utf8'));
+  assert.equal(record.ok, false);
+  assert.ok(record.error.length > 0);
+});

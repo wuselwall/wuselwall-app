@@ -12,11 +12,14 @@ export default defineConfig({
   updateSnapshots: 'none',
   forbidOnly: true, workers: 1, retries: 0, timeout: 90_000,
   expect: { timeout: 15_000, toHaveScreenshot: visualPolicy },
-  reporter: [['list'], ['html', { outputFolder: path.join(root, 'build/qualification/web/html'), open: 'never' }],
-    // The built-in JSON reporter stringifies the whole report (all attachments
-    // base64-embedded) into one string; on the full matrix that exceeds V8's
-    // string limit and the run dies with RangeError after the tests finish.
-    ['./streamed-json-reporter.mjs', { outputFile: path.join(root, 'build/qualification/web/results.json') }]],
+  reporter: [['list'],
+    // The built-in HTML and JSON reporters each stringify a whole spec file (or
+    // the entire report, all attachments base64-embedded) into one string; on the
+    // full matrix that exceeds V8's string limit and the run dies with RangeError
+    // after the tests finish. The streamed replacements write the same artifacts
+    // with bounded memory.
+    ['./streamed-html-reporter.mjs', { outputFolder: path.join(root, 'build/qualification/web/html'), healthFile: path.join(root, 'build/qualification/web/reporter-html.health.json') }],
+    ['./streamed-json-reporter.mjs', { outputFile: path.join(root, 'build/qualification/web/results.json'), healthFile: path.join(root, 'build/qualification/web/reporter-json.health.json') }]],
   use: { baseURL, timezoneId: 'Europe/Berlin', deviceScaleFactor: 1,
     reducedMotion: 'reduce', trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   webServer: { command: 'node qualification/serve.mjs', cwd: root, url: baseURL, reuseExistingServer: false },

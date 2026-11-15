@@ -22,6 +22,7 @@ const sha1 = (buffer) => crypto.createHash('sha1').update(buffer).digest('hex');
 export default class StreamedJsonReporter {
   constructor(options = {}) {
     this._outputFile = options.outputFile ? path.resolve(options.outputFile) : null;
+    this._healthFile = options.healthFile ? path.resolve(options.healthFile) : null;
     this._errors = [];
   }
 
@@ -31,7 +32,28 @@ export default class StreamedJsonReporter {
   onBegin(suite) { this._suite = suite; }
   onError(error) { this._errors.push(error); }
 
+  _writeHealth(ok, error) {
+    if (!this._healthFile) return;
+    try {
+      fs.writeFileSync(this._healthFile, JSON.stringify({
+        reporter: 'streamed-json', ok,
+        error: error ? String(error?.message ?? error) : null,
+        at: new Date().toISOString(),
+      }));
+    } catch { /* health reporting must never mask the real outcome */ }
+  }
+
   async onEnd(result) {
+    try {
+      await this._write(result);
+      this._writeHealth(true, null);
+    } catch (error) {
+      this._writeHealth(false, error);
+      throw error;
+    }
+  }
+
+  async _write(result) {
     if (!this._outputFile) throw new Error('StreamedJsonReporter requires an outputFile');
     const dir = path.dirname(this._outputFile);
     fs.rmSync(path.join(dir, 'report-data'), { recursive: true, force: true });
