@@ -13,7 +13,10 @@ export default defineConfig({
   forbidOnly: true, workers: 1, retries: 0, timeout: 90_000,
   expect: { timeout: 15_000, toHaveScreenshot: visualPolicy },
   reporter: [['list'], ['html', { outputFolder: path.join(root, 'build/qualification/web/html'), open: 'never' }],
-    ['json', { outputFile: path.join(root, 'build/qualification/web/results.json') }]],
+    // The built-in JSON reporter stringifies the whole report (all attachments
+    // base64-embedded) into one string; on the full matrix that exceeds V8's
+    // string limit and the run dies with RangeError after the tests finish.
+    ['./streamed-json-reporter.mjs', { outputFile: path.join(root, 'build/qualification/web/results.json') }]],
   use: { baseURL, timezoneId: 'Europe/Berlin', deviceScaleFactor: 1,
     reducedMotion: 'reduce', trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   webServer: { command: 'node qualification/serve.mjs', cwd: root, url: baseURL, reuseExistingServer: false },

@@ -4,6 +4,7 @@ import net from 'node:net';
 import { spawn } from 'node:child_process';
 import { cases, checkInventory, inventory, root } from './matrix.mjs';
 import { environment, verify } from './baseline.mjs';
+import { readReportStats } from './report-stats.mjs';
 
 checkInventory();
 const mode = process.env.QUALIFY_MODE || 'compare';
@@ -42,11 +43,17 @@ const samples = cases(process.env.QUALIFY_MATRIX || 'canonical');
 const browsers = (process.env.QUALIFY_BROWSERS || 'chromium').split(',');
 const expected = browsers.reduce((count, browser) => count + 1 + samples.filter(s => browser === 'chromium' || s.native && s.tier === 'canonical').length, 0);
 const reportPath = path.join(out, 'results.json');
-const stats = fs.existsSync(reportPath) ? JSON.parse(fs.readFileSync(reportPath, 'utf8')).stats : null;
+// The full-matrix report can be hundreds of MB; never parse it whole (that is
+// what threw RangeError: Invalid string length). readReportStats reads a bounded
+// tail; `stats` is the report's last key in both the built-in and the streamed
+// reporter.
+const reportGenerated = fs.existsSync(reportPath);
+const stats = reportGenerated ? readReportStats(reportPath) : null;
 const executionPassed = result.status === 0 && stats?.expected === expected && !stats?.unexpected && !stats?.flaky;
 fs.writeFileSync(path.join(out, 'evidence.json'), JSON.stringify({ schema: 1, mode,
   candidateSha: process.env.QUALIFY_CANDIDATE_SHA || null, environment: environment(),
   matrix: process.env.QUALIFY_MATRIX || 'canonical', expected, stats, selection: args, executionPassed,
+  childStatus: result.status, childSignal: result.signal, reportGenerated,
   qualification: 'INCOMPLETE', baselineVerified: mode === 'compare', openGates: inventory.openGates,
 }, null, 2));
 process.exitCode = executionPassed ? 0 : 1;
