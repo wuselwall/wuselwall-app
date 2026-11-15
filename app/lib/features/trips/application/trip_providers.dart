@@ -149,6 +149,15 @@ final upcomingTripsProvider = Provider.autoDispose<List<Trip>>((ref) {
   ]..sort((a, b) => daysBetween(b.startsOn!, a.startsOn!));
 });
 
+/// The compact line of Today for trips being planned: null on every device but an adult's, on
+/// a server without the trips, while the full [tripTodayProvider] card is shown, while nothing
+/// has loaded and when there is no planned (or far-off fixed) trip with dates. Never an error.
+final tripPlanningProvider = Provider.autoDispose<TripPlanningLine?>((ref) {
+  if (!ref.watch(tripsOfferedProvider)) return null;
+  if (ref.watch(tripTodayProvider) != null) return null;
+  return TripPlanningLine.of(ref.watch(upcomingTripsProvider));
+});
+
 /// When the family could travel (`trips` function, action `windows`); refreshed when
 /// the calendar or the school's holidays change.
 final tripWindowsProvider = FutureProvider.autoDispose

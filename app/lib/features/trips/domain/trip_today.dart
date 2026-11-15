@@ -124,3 +124,23 @@ class TripToday {
 
   bool get running => phase == TripTodayPhase.running;
 }
+
+/// The quiet line on Today for trips that are being planned (specs/30 "In the calendar and
+/// on the wall"): the nearest of them and how many more there are. Shown only while there is
+/// no [TripToday] card; ideas never make one (the wish list is permanent).
+class TripPlanningLine {
+  const TripPlanningLine({required this.trip, required this.more});
+
+  /// The line for [upcoming], the planned and fixed trips with dates that are not over,
+  /// soonest first; null when there are none.
+  static TripPlanningLine? of(List<Trip> upcoming) {
+    final first = upcoming.firstOrNull;
+    if (first == null) return null;
+    return TripPlanningLine(trip: first, more: upcoming.length - 1);
+  }
+
+  final Trip trip;
+
+  /// How many other trips are being planned.
+  final int more;
+}

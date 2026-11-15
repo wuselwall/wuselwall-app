@@ -3013,6 +3013,7 @@
   "tripTodayCall": "Llamar",
   "tripTodayMap": "Ver en el mapa",
   "tripTodayCannotOpen": "No se puede abrir aquí.",
+  "tripTodayAllTrips": "Todos los viajes",
   "tripImportAction": "Añadir al viaje",
   "tripImportTitle": "¿A qué viaje?",
   "tripImportIntro": "Cada evento del archivo pasa a ser una entrada del viaje, como reservada.",

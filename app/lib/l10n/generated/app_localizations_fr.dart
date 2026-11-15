@@ -6004,10 +6004,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tripTodayCheckOut => 'Check-out';
 
   @override
-  String get tripTodayPickUp => 'Prise en charge';
+  String get tripTodayPickUp => 'Retrait';
 
   @override
-  String get tripTodayReturn => 'Retour';
+  String get tripTodayReturn => 'Restitution';
 
   @override
   String get tripTodayDeparture => 'Départ';
@@ -6028,6 +6028,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tripTodayCannotOpen => 'Impossible d\'ouvrir ici.';
+
+  @override
+  String get tripTodayAllTrips => 'Tous les voyages';
 
   @override
   String get tripImportAction => 'Ajouter au voyage';

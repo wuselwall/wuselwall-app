@@ -9985,6 +9985,12 @@ abstract class AppLocalizations {
   /// **'This can\'t be opened here.'**
   String get tripTodayCannotOpen;
 
+  /// No description provided for @tripTodayAllTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'All trips'**
+  String get tripTodayAllTrips;
+
   /// No description provided for @tripImportAction.
   ///
   /// In en, this message translates to:

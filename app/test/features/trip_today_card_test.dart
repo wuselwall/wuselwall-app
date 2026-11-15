@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/server/server_info.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
 import 'package:wuselwall/features/trips/domain/trip_models.dart';
 import 'package:wuselwall/features/trips/domain/trip_plan.dart';
+import 'package:wuselwall/features/trips/domain/trip_today.dart';
 import 'package:wuselwall/features/trips/ui/trip_page.dart';
 import 'package:wuselwall/features/trips/ui/trip_today_card.dart';
+import 'package:wuselwall/features/trips/ui/trips_page.dart';
 import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 
 import '../support/fake_trips.dart';
@@ -218,6 +223,232 @@ void main() {
       );
       expect(_card, findsNothing);
     });
+  });
+
+  group('the line for trips being planned', () {
+    final line = find.byKey(const ValueKey('trip-planning-line'));
+    final all = find.byKey(const ValueKey('trip-planning-all'));
+
+    Trip planned(
+      String id,
+      String title,
+      DateTime from,
+      DateTime to, {
+      TripStage stage = TripStage.planned,
+    }) => Trip(id: id, title: title, stage: stage, startsOn: from, endsOn: to);
+
+    final soon = planned(
+      'p1',
+      'Wien',
+      DateTime(2027, 1, 8),
+      DateTime(2027, 1, 10),
+    );
+    final later = planned(
+      'p2',
+      'Lissabon',
+      DateTime(2027, 5, 1),
+      DateTime(2027, 5, 9),
+    );
+
+    testWidgets('names the nearest trip, its dates and its stage', (t) async {
+      // Listed out of order: the nearest is Wien.
+      await _today(t, FakeTripsRepository(trips: [later, soon]));
+      expect(_card, findsNothing);
+      expect(line, findsOneWidget);
+      expect(find.text('Wien'), findsOneWidget);
+      final details = t.widget<Text>(
+        find.byKey(const ValueKey('trip-planning-details')),
+      );
+      final text = details.data!;
+      expect(text, contains('8. Jan.'));
+      expect(text, contains('10. Jan. 2027'));
+      expect(text, contains(_de.tripStagePlanned));
+      expect(text, contains(_de.tripTodayMore(1)));
+      expect(find.text(_de.tripTodayAllTrips), findsOneWidget);
+    });
+
+    testWidgets('has no "more" for a single trip', (t) async {
+      await _today(t, FakeTripsRepository(trips: [soon]));
+      final text = t
+          .widget<Text>(find.byKey(const ValueKey('trip-planning-details')))
+          .data!;
+      expect(text, isNot(contains('+')));
+    });
+
+    testWidgets('counts a fixed trip that is further away than 30 days', (
+      t,
+    ) async {
+      await _today(
+        t,
+        FakeTripsRepository(
+          trips: [
+            planned(
+              'far',
+              'Weit weg',
+              DateTime(2027, 3, 1),
+              DateTime(2027, 3, 8),
+              stage: TripStage.fixed,
+            ),
+          ],
+        ),
+      );
+      expect(_card, findsNothing);
+      expect(line, findsOneWidget);
+      expect(find.text('Weit weg'), findsOneWidget);
+    });
+
+    testWidgets('opens the trip, and the list from its button', (t) async {
+      await _today(t, FakeTripsRepository(trips: [later, soon]));
+      await t.tap(find.text('Wien'));
+      await t.pumpAndSettle();
+      expect(find.byType(TripPage), findsOneWidget);
+
+      t.state<NavigatorState>(find.byType(Navigator).first).maybePop();
+      await t.pumpAndSettle();
+      await t.tap(all);
+      await t.pumpAndSettle();
+      expect(find.byType(TripsPage), findsOneWidget);
+    });
+
+    testWidgets(
+      'is replaced by the full card for a fixed trip within 30 days',
+      (t) async {
+        await _today(t, FakeTripsRepository(trips: [_trip(), soon]));
+        expect(_card, findsOneWidget);
+        expect(line, findsNothing);
+      },
+    );
+
+    testWidgets('stays away for ideas alone, for past trips and with none', (
+      t,
+    ) async {
+      await _today(
+        t,
+        FakeTripsRepository(
+          trips: [
+            const Trip(id: 'i', title: 'Irgendwann', stage: TripStage.idea),
+            _trip(stage: TripStage.idea),
+            planned(
+              'old',
+              'Vorbei',
+              DateTime(2026, 10, 1),
+              DateTime(2026, 10, 8),
+            ),
+          ],
+        ),
+      );
+      expect(line, findsNothing);
+      expect(_card, findsNothing);
+    });
+
+    testWidgets('stays away on a server without trips', (t) async {
+      await _today(
+        t,
+        FakeTripsRepository(trips: [soon]),
+        config: AppConfig(
+          environment: 'test',
+          supabaseUrl: 'https://example.org',
+          supabasePublishableKey: 'demo',
+          server: ServerInfo(
+            supabaseUrl: Uri.parse('https://example.org'),
+            publishableKey: 'demo',
+            apiVersion: 1,
+            minAppVersion: '1.0.0',
+          ),
+        ),
+      );
+      expect(line, findsNothing);
+    });
+
+    test('is not offered to a child\'s device or the wall', () async {
+      for (final register in [UiRegister.kid, UiRegister.kiosk]) {
+        final container = ProviderContainer(
+          retry: (_, _) => null,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(
+              current: device(register: register),
+            ),
+            trips: FakeTripsRepository(trips: [soon]),
+            now: DateTime(2026, 11, 15, 9),
+          ),
+        );
+        addTearDown(container.dispose);
+        await container.read(sessionStateProvider.future);
+        await container.read(tripsProvider.future);
+        expect(
+          container.read(tripPlanningProvider),
+          isNull,
+          reason: '$register',
+        );
+      }
+    });
+
+    test('the domain line is the first trip and the count of the rest', () {
+      expect(TripPlanningLine.of(const []), isNull);
+      final one = TripPlanningLine.of([soon])!;
+      expect((one.trip.id, one.more), ('p1', 0));
+      final two = TripPlanningLine.of([soon, later, later])!;
+      expect((two.trip.id, two.more), ('p1', 2));
+    });
+  });
+
+  group('at a phone width and a large text', () {
+    final soon = Trip(
+      id: 'p1',
+      title: 'Ein sehr langer Reisename für die Sommerferien in Sardinien',
+      iconKey: 'beach',
+      stage: TripStage.planned,
+      startsOn: DateTime(2027, 7, 8),
+      endsOn: DateTime(2027, 7, 21),
+    );
+
+    for (final (name, trips, now) in [
+      (
+        'the compact line',
+        [
+          soon,
+          Trip(
+            id: 'p2',
+            title: 'Lissabon',
+            stage: TripStage.planned,
+            startsOn: DateTime(2027, 9, 1),
+            endsOn: DateTime(2027, 9, 9),
+          ),
+        ],
+        DateTime(2026, 11, 15, 9),
+      ),
+      (
+        'the full card',
+        [
+          Trip(
+            id: 't1',
+            title: soon.title,
+            iconKey: 'beach',
+            stage: TripStage.fixed,
+            startsOn: DateTime(2026, 11, 27),
+            endsOn: DateTime(2026, 12, 6),
+          ),
+        ],
+        DateTime(2026, 11, 15, 9),
+      ),
+    ]) {
+      testWidgets('$name does not overflow', (t) async {
+        t.platformDispatcher.textScaleFactorTestValue = 2;
+        addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+        await _today(
+          t,
+          FakeTripsRepository(trips: trips),
+          now: now,
+          size: const Size(360, 800),
+        );
+        expect(
+          find.byKey(const ValueKey('trip-planning-line')).evaluate().length +
+              _card.evaluate().length,
+          1,
+        );
+        expect(t.takeException(), isNull);
+      });
+    }
   });
 
   group('during the trip', () {

@@ -5958,6 +5958,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tripTodayCannotOpen => 'This can\'t be opened here.';
 
   @override
+  String get tripTodayAllTrips => 'All trips';
+
+  @override
   String get tripImportAction => 'Add to trip';
 
   @override

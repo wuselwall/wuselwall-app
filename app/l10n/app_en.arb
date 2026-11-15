@@ -3579,6 +3579,7 @@
   "tripTodayCall": "Call",
   "tripTodayMap": "Show on map",
   "tripTodayCannotOpen": "This can't be opened here.",
+  "tripTodayAllTrips": "All trips",
   "tripImportAction": "Add to trip",
   "tripImportTitle": "Which trip?",
   "tripImportIntro": "Every event in the file becomes an entry of the trip, as booked.",

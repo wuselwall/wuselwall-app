@@ -2291,6 +2291,7 @@
   "tripTodayCall": "Anrufen",
   "tripTodayMap": "Auf der Karte zeigen",
   "tripTodayCannotOpen": "Das lässt sich hier nicht öffnen.",
+  "tripTodayAllTrips": "Alle Reisen",
   "tripImportAction": "Zur Reise hinzufügen",
   "tripImportTitle": "Zu welcher Reise?",
   "tripImportIntro": "Jedes Ereignis der Datei wird ein Eintrag der Reise, als gebucht.",

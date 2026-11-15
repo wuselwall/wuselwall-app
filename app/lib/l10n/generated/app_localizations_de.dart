@@ -6000,6 +6000,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tripTodayCannotOpen => 'Das lässt sich hier nicht öffnen.';
 
   @override
+  String get tripTodayAllTrips => 'Alle Reisen';
+
+  @override
   String get tripImportAction => 'Zur Reise hinzufügen';
 
   @override

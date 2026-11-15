@@ -22,15 +22,21 @@ const tripTodayTodoLimit = 3;
 /// The trip card on Today (specs/30 "During the trip"): before a fixed trip the days
 /// left, the to-dos that are due and the packing progress; during it the day, today's
 /// plan, where the family sleeps tonight and tomorrow's first entry. The whole card
-/// opens the trip. It stays away (never an error) when there is nothing to show; the
-/// providers read through the cache, so it also works without a network.
+/// opens the trip. Without such a trip it is one quiet line for the trips being planned
+/// (see [TripPlanningLine]). It stays away (never an error) when there is nothing to show;
+/// the providers read through the cache, so it also works without a network.
 class TripTodayCard extends ConsumerWidget {
   const TripTodayCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final today = ref.watch(tripTodayProvider);
-    if (today == null) return const SizedBox.shrink();
+    if (today == null) {
+      final planning = ref.watch(tripPlanningProvider);
+      return planning == null
+          ? const SizedBox.shrink()
+          : _PlanningLine(line: planning);
+    }
     final l10n = context.l10n;
     return Card(
       key: const ValueKey('trip-today-card'),
@@ -43,6 +49,92 @@ class TripTodayCard extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(Tokens.space3),
             child: _Content(today: today),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The compact form: the nearest trip being planned, its dates and stage, "+N more", and the
+/// way to all trips. The title and the details wrap under each other at large text.
+class _PlanningLine extends StatelessWidget {
+  const _PlanningLine({required this.line});
+
+  final TripPlanningLine line;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final trip = line.trip;
+    final asset = eventIconAsset(trip.iconKey);
+    final details = [
+      formatTripDates(context, trip.startsOn!, trip.endsOn!),
+      tripStageLabel(l10n, trip.stage),
+      if (line.more > 0) l10n.tripTodayMore(line.more),
+    ].join(' · ');
+    return Card(
+      key: const ValueKey('trip-planning-line'),
+      margin: const EdgeInsets.only(bottom: Tokens.space3),
+      clipBehavior: Clip.antiAlias,
+      child: Semantics(
+        hint: l10n.tripTodayOpen(trip.title),
+        child: InkWell(
+          onTap: () => unawaited(context.push(Routes.tripPath(trip.id))),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Tokens.space3,
+              vertical: Tokens.space2,
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: asset != null
+                      ? EmojiPicture(asset, size: 32)
+                      : Icon(
+                          Icons.luggage_outlined,
+                          size: 28,
+                          color: theme.colorScheme.primary,
+                        ),
+                ),
+                const SizedBox(width: Tokens.space3),
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: Tokens.space2,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            trip.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleSmall,
+                          ),
+                          Text(
+                            details,
+                            key: const ValueKey('trip-planning-details'),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextButton(
+                        key: const ValueKey('trip-planning-all'),
+                        onPressed: () => unawaited(context.push(Routes.trips)),
+                        child: Text(l10n.tripTodayAllTrips),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
