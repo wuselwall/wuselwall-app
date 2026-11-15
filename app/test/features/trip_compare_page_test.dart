@@ -183,7 +183,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.descendant(of: cheapCard, matching: find.text('ZRH → OLB')),
+        find.descendant(of: cheapCard, matching: find.text('ZRH – OLB')),
         findsOneWidget,
       );
       expect(

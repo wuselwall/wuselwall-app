@@ -417,7 +417,7 @@ void main() {
       expect(find.textContaining('Tag 6 ·'), findsOneWidget);
       // The flight is only there on day 1, with its times.
       expect(find.textContaining('10:40–12:15'), findsOneWidget);
-      expect(find.text('ZRH → OLB'), findsOneWidget);
+      expect(find.text('ZRH – OLB'), findsOneWidget);
       // Check-in and check-out of the hotel; the return flight with its time.
       expect(find.textContaining(_de.tripPlanRoleCheckIn), findsOneWidget);
       expect(find.textContaining(_de.tripPlanRoleCheckOut), findsOneWidget);

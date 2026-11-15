@@ -7802,7 +7802,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String tripCompareFromTo(String from, String to) {
-    return '$from → $to';
+    return '$from – $to';
   }
 
   @override

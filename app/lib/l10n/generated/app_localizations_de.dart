@@ -6991,16 +6991,16 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get tripPageChooseDates => 'Daten wählen';
+  String get tripPageChooseDates => 'Zeitraum wählen';
 
   @override
   String get tripPageFindWindow => 'Zeitfenster suchen';
 
   @override
-  String get tripPageEnterDates => 'Daten eingeben';
+  String get tripPageEnterDates => 'Zeitraum eingeben';
 
   @override
-  String get tripPageChangeDates => 'Daten ändern';
+  String get tripPageChangeDates => 'Zeitraum ändern';
 
   @override
   String get tripPageDatesTooLong =>
@@ -7010,7 +7010,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tripPageFix => 'Das machen wir';
 
   @override
-  String get tripPagePencil => 'Diese Daten vormerken';
+  String get tripPagePencil => 'Diesen Zeitraum vormerken';
 
   @override
   String get tripPageDecided =>
@@ -7125,7 +7125,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tripPlanNoDatesHint =>
-      'Wählt Daten, dann erscheinen hier die Tage der Reise mit allem, was ihr ausgesucht habt.';
+      'Wählt einen Zeitraum, dann erscheinen hier die Tage der Reise mit allem, was ihr ausgesucht habt.';
 
   @override
   String get tripPlanChosen => 'Ausgewählt und gebucht';
@@ -7790,7 +7790,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String tripCompareFromTo(String from, String to) {
-    return '$from → $to';
+    return '$from – $to';
   }
 
   @override
@@ -7867,7 +7867,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get tripComboNoDates => 'Noch keine Daten';
+  String get tripComboNoDates => 'Noch kein Zeitraum';
 
   @override
   String get tripComboFits => 'Passt zusammen';

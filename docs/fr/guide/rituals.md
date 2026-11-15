@@ -29,6 +29,7 @@ Dans un [abonnement au calendrier familial](/fr/calendar/feeds), chaque annivers
 - le **premier jour des vacances scolaires**
 - le **retour d’un adulte** après un voyage de deux nuits ou plus (« Thomas rentre à la maison »)
 - tout événement pour lequel **On a hâte** est activé dans l’éditeur, comme une sortie au zoo (voir [Calendrier](/fr/calendar/#creating-an-appointment))
+- un **voyage décidé** (voir [Voyages](/fr/trips/#from-idea-to-fixed))
 
 Il s’affiche sur le **mur** en pied de page (autant qu’il en tient), dans **Ma journée** sous **Ce qui m’attend** (les comptes à rebours de l’enfant et ceux de toute la famille) et dans **Aujourd’hui** sur une ligne avec le plus proche.
 

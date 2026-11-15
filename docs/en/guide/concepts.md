@@ -17,7 +17,7 @@ The adults' view has these areas:
 
 ## Today and getting started
 
-**Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open. The small [rituals](/en/guide/rituals) join in: the nearest countdown under **Looking forward**, the children's meal wishes, the question at the table during the meal, **Our week** on Sunday evening, and on a birthday a card with [Wusel](/en/guide/wusel). Appointment times appear above their titles, so they stay readable with larger text.
+**Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open. The small [rituals](/en/guide/rituals) join in: the nearest countdown under **Looking forward**, the children's meal wishes, the question at the table during the meal, **Our week** on Sunday evening, and on a birthday a card with [Wusel](/en/guide/wusel). Appointment times appear above their titles, so they stay readable with larger text. If a decided [trip](/en/trips/#during) is coming up within the next 30 days, a card for it appears too.
 
 On a wide screen, the six areas appear in a navigation rail on the left; on a phone, they appear at the bottom. Rotating the device or resizing the window keeps the same area selected. Both the Settings back arrow and your device’s Back action return to that area.
 

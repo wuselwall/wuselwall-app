@@ -13034,7 +13034,7 @@ abstract class AppLocalizations {
   /// No description provided for @tripCompareFromTo.
   ///
   /// In en, this message translates to:
-  /// **'{from} → {to}'**
+  /// **'{from} – {to}'**
   String tripCompareFromTo(String from, String to);
 
   /// No description provided for @tripCompareRange.

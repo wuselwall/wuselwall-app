@@ -50,6 +50,8 @@ Zuerst siehst du Kacheln, damit du nicht alles von vorn eintippen musst:
 
 Was die Kachel ausfüllt, ist nur ein Anfang: Du änderst im Editor, was anders ist, und speicherst. Mit **Zurück** kommst du wieder zu den Kacheln.
 
+Neben **Urlaub / Reise** steht die Kachel **Reise planen**: Sie öffnet [Reisen](/trips/#find), wo ihr Optionen vergleicht, Zeitfenster sucht und die Packliste anlegt. **Urlaub / Reise** legt dagegen nur einen einzelnen Termin an.
+
 <Shot name="calendar-templates" alt="Neuer Termin mit Kacheln: Häufig bei euch, Eure Vorlagen und Vorlagen wie Geburtstag und Gäste zum Essen" />
 
 ### Im Editor
@@ -150,6 +152,8 @@ WuselWall zeigt den Termin zuerst an: Titel, Zeit, Ort und Notizen. Wähle, wer 
 Der Termin ist danach eure eigene Kopie: Ihr könnt ihn ändern oder löschen wie jeden anderen. Der Absender erfährt nichts.
 
 Kommt derselbe Termin nach einer Änderung noch einmal, erkennt WuselWall ihn und bietet **Termin aktualisieren** an, statt ihn doppelt einzutragen. Eine Datei mit mehreren Terminen wird hier nicht angenommen; ein ganzer Kalender gehört unter [Kalender von außen](#kalender-von-aussen).
+
+Gehört die Datei zu einer Buchung und habt ihr eine geplante oder feste Reise, bietet WuselWall auch **Zur Reise hinzufügen** an: Dann wird sie ein Eintrag der Reise statt eines Kalendertermins (siehe [Die Kalenderdatei einer Buchung](/trips/#booking-file)).
 
 ## Termine in Outlook oder auf dem iPhone
 

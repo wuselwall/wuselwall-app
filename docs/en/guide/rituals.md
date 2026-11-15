@@ -29,6 +29,7 @@ In a [subscription to the family calendar](/en/calendar/feeds) each birthday is 
 - the **first day of the school holidays**
 - an **adult coming home** from a trip of two nights or more ("David comes home")
 - any event with **We are looking forward to it** switched on in the editor, such as the trip to the zoo (see [Calendar](/en/calendar/#creating-an-appointment))
+- a **decided trip** (see [Trips](/en/trips/#from-idea-to-fixed))
 
 You see it on the **wall** in the footer, as many as fit; on **My day** under **Looking forward to** (the child's own countdowns and the whole family's); and on **Today** as one line with the nearest countdown.
 

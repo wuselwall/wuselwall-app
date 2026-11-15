@@ -400,7 +400,31 @@ const shots = [
   { name: 'settings-wusel', scenario: 'adult', viewport: PHONE, steps: async (p, t) => {
     await press(p, t.settings); await showAdvanced(p, t); await openGroup(p, t.gPersonal);
   } },
+  // Trips (specs/30): the demo family's Sardinia holiday is fixed and starts in twelve days; the Skiwoche
+  // is planned, three ideas wait. Pushed pages open by their route, like the settings pages above.
+  { name: 'trips-list', scenario: 'adult', viewport: PHONE, route: '/trips' },
+  // The trip page opens on its Plan tab; the packing list is the second tab.
+  { name: 'trip-plan', scenario: 'adult', viewport: PHONE, route: '/trips/trip-sardinia' },
+  { name: 'trip-packing', scenario: 'adult', viewport: PHONE, route: '/trips/trip-sardinia', steps: async (p, t) => { await tapAny(p, t.tripTabPack); await p.mouse.move(0, 0); await settle(p); } },
+  // The comparison scrolls to the section of the kind in the route: the stays, with a tick bar underneath.
+  { name: 'trip-compare', scenario: 'adult', viewport: PHONE, route: '/trips/trip-sardinia/compare?kind=stay', steps: async (p) => { await p.mouse.move(0, 0); await settle(p, 1200); } },
+  { name: 'trip-compare-wide', scenario: 'adult', viewport: TABLET, route: '/trips/trip-sardinia/compare?kind=stay', steps: async (p) => { await p.mouse.move(0, 0); await settle(p, 1200); } },
+  // Without a kind the page starts at the top: the kept combinations come first.
+  { name: 'trip-combinations', scenario: 'adult', viewport: PHONE, route: '/trips/trip-sardinia/compare', steps: async (p) => { await p.mouse.move(0, 0); await settle(p, 1200); } },
+  { name: 'trip-windows', scenario: 'adult', viewport: PHONE, route: '/trips/windows' },
+  // Wohin? asks for the window itself: the next school holidays the demo proposes.
+  { name: 'trip-discover', scenario: 'adult', viewport: PHONE, route: '/trips/discover', steps: async (p) => { await settle(p, 2500); } },
+  // Today: the adult home's first destination, with the card of the fixed trip.
+  // The card sits below the first steps card: scroll until its "still to do" label is near the top.
+  { name: 'today-trip', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.today); await scrollToHeading(p, t.tripTodayTodos, 200); await p.mouse.move(0, 0); await settle(p); } },
+  { name: 'settings-services', scenario: 'adult', viewport: PHONE, route: '/settings/services' },
 ];
+// The tab name and the card label the trip shots look for, from the app's own texts.
+for (const lang of Object.keys(T)) {
+  const arb = JSON.parse(fs.readFileSync(`app/l10n/app_${lang}.arb`, 'utf8'));
+  T[lang].tripTabPack = arb.tripPageTabPack;
+  T[lang].tripTodayTodos = arb.tripTodayTodos;
+}
 const RITUALS = {
   de: { tradition: 'Familientradition', newTradition: 'Neue Tradition', wishTitle: 'Dein Wunschessen', blankEvent: 'Ohne Vorlage' },
   en: { tradition: 'Family tradition', newTradition: 'New tradition', wishTitle: 'Your meal wish', blankEvent: 'Start blank' },

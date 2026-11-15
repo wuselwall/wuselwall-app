@@ -234,9 +234,9 @@ class DemoServicesRepository implements ServicesRepository {
   /// Mean day temperature of [month] at [lat]: warm in the south, cold in the north, and
   /// a cosine through the year (mirrored south of the equator).
   double _tmax(double lat, int month) {
-    final mean = 28 - lat.abs() * 0.38;
-    final amp = 2 + lat.abs() * 0.17;
-    final phase = lat >= 0 ? 7 : 1;
+    final mean = 33 - lat.abs() * 0.35;
+    final amp = 1 + lat.abs() * 0.23;
+    final phase = lat >= 0 ? 7.5 : 1.5;
     return mean + amp * math.cos((month - phase) / 12 * 2 * math.pi);
   }
 

@@ -46,6 +46,41 @@ class DemoTripsRepository implements TripsRepository {
   DateTime get _today => dayOf(_clock());
   DateTime _in(int days) => addDays(_today, days);
 
+  /// The school holidays a demo window lies in, named after the season of its first day, so
+  /// the name fits whenever the demo is opened.
+  String _holidayName(DateTime from) => switch (from.month) {
+    12 || 1 => _t(
+      'Weihnachtsferien',
+      'Christmas holidays',
+      'Vacances de Noël',
+      'Vacaciones de Navidad',
+    ),
+    2 || 3 => _t(
+      'Sportferien',
+      'Winter break',
+      'Vacances d’hiver',
+      'Vacaciones de invierno',
+    ),
+    4 || 5 || 6 => _t(
+      'Frühlingsferien',
+      'Spring holidays',
+      'Vacances de printemps',
+      'Vacaciones de primavera',
+    ),
+    7 || 8 => _t(
+      'Sommerferien',
+      'Summer holidays',
+      'Vacances d’été',
+      'Vacaciones de verano',
+    ),
+    _ => _t(
+      'Herbstferien',
+      'Autumn holidays',
+      'Vacances d’automne',
+      'Vacaciones de otoño',
+    ),
+  };
+
   var _next = 100;
   String _id(String prefix) => '$prefix-${++_next}';
 
@@ -981,12 +1016,7 @@ class DemoTripsRepository implements TripsRepository {
       to: _in(54),
       days: 15,
       kind: WindowKind.holidays,
-      name: _t(
-        'Herbstferien',
-        'Autumn holidays',
-        'Vacances d’automne',
-        'Vacaciones de otoño',
-      ),
+      name: _holidayName(_in(40)),
       leaveDays: 10,
       partial: [
         WindowPartial(profileId: DemoData.son, from: _in(40), to: _in(41)),
@@ -997,12 +1027,7 @@ class DemoTripsRepository implements TripsRepository {
       to: _in(114),
       days: 15,
       kind: WindowKind.holidays,
-      name: _t(
-        'Weihnachtsferien',
-        'Christmas holidays',
-        'Vacances de Noël',
-        'Vacaciones de Navidad',
-      ),
+      name: _holidayName(_in(100)),
       leaveDays: 9,
       conflicts: [
         WindowConflict(
@@ -1057,7 +1082,7 @@ class DemoTripsRepository implements TripsRepository {
         ('crete', 'GR', 35.2, 24.9, ['sea', 'island'], 31, 15, 0, 25),
         ('north-sea', 'DE', 54.9, 8.3, ['sea', 'north'], 20, 3, 10, 17),
         ('davos', 'CH', 46.8, 9.84, ['mountains'], 20, -2, 11, null),
-        ('lake-garda', 'IT', 45.6, 10.7, ['lake'], 29, 8, 6, 24),
+        ('lake-garda', 'IT', 45.6, 10.7, ['lake'], 29, 8, 6, null),
         ('lisbon', 'PT', 38.7, -9.14, ['city', 'sea'], 29, 15, 1, 20),
         (
           'canary',

@@ -45,6 +45,8 @@ Des tuiles s’affichent d’abord, pour ne pas tout saisir depuis le début :
 
 Ce que la tuile remplit n’est qu’un point de départ : modifiez ce qui change, puis enregistrez. **Retour** ramène aux tuiles.
 
+À côté de **Vacances / voyage** se trouve la tuile **Planifier un voyage** : elle ouvre [Voyages](/fr/trips/#find), où vous comparez des options, cherchez des périodes libres et préparez la liste de valise. **Vacances / voyage** ne crée en revanche qu’un simple rendez-vous.
+
 <Shot name="calendar-templates" alt="Nouvel événement avec des tuiles : Souvent chez vous, Vos modèles et des modèles comme Anniversaire et Invités à dîner" />
 
 ### Dans l’éditeur {#in-the-editor}
@@ -147,6 +149,8 @@ WuselWall affiche d’abord l’événement : titre, heure, lieu et notes. Chois
 L’événement est ensuite votre propre copie : vous pouvez le modifier ou le supprimer comme n’importe quel autre. L’expéditeur n’est informé de rien.
 
 Si le même événement est envoyé de nouveau après un changement, WuselWall le reconnaît et propose **Mettre à jour l’événement** au lieu de l’ajouter deux fois. Un fichier contenant plusieurs événements n’est pas accepté ici ; un calendrier entier se place sous [Calendriers externes](#outside-calendars).
+
+Si le fichier appartient à une réservation et que vous avez un voyage prévu ou décidé, WuselWall propose aussi **Ajouter au voyage** : il devient alors une entrée du voyage au lieu d’un événement du calendrier (voir [Le fichier de calendrier d’une réservation](/fr/trips/#booking-file)).
 
 ## Outlook et iPhone {#appointments-in-outlook-or-on-an-iphone}
 

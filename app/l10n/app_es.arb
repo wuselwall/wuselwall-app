@@ -3536,7 +3536,7 @@
   "tripComparePerNight": "{price} por noche",
   "tripComparePerDay": "{price} por día",
   "tripCompareNoPrice": "Aún sin precio",
-  "tripCompareFromTo": "{from} → {to}",
+  "tripCompareFromTo": "{from} – {to}",
   "tripCompareRange": "{start} – {end}",
   "tripCompareFreeCancel": "Cancelación gratuita hasta el {date}",
   "tripCompareCancelPassed": "La cancelación gratuita ya pasó",

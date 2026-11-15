@@ -45,6 +45,8 @@ Primero ves unas fichas, para no escribirlo todo desde cero:
 
 Lo que rellena la ficha es solo un comienzo: cambia lo que sea distinto y guarda. **Atrás** vuelve a las fichas.
 
+Junto a **Vacaciones / viaje** está la ficha **Planear un viaje**: abre [Viajes](/es/trips/#find), donde comparáis opciones, buscáis fechas libres y hacéis la lista del equipaje. **Vacaciones / viaje**, en cambio, solo crea un único evento.
+
 <Shot name="calendar-templates" alt="Nuevo evento con fichas: Lo habitual en casa, Vuestras plantillas y plantillas como Cumpleaños e Invitados a cenar" />
 
 ### En el editor {#in-the-editor}
@@ -145,6 +147,8 @@ WuselWall muestra primero el evento: título, hora, lugar y notas. Elige quién 
 Después el evento es vuestra propia copia: podéis cambiarlo o eliminarlo como cualquier otro. El remitente no recibe ningún aviso.
 
 Si el mismo evento llega otra vez tras un cambio, WuselWall lo reconoce y ofrece **Actualizar el evento** en lugar de añadirlo dos veces. Aquí no se acepta un archivo con varios eventos; un calendario entero va en [Calendarios externos](#outside-calendars).
+
+Si el archivo pertenece a una reserva y tenéis un viaje planeado o decidido, WuselWall ofrece también **Añadir al viaje**: entonces pasa a ser una entrada del viaje en lugar de un evento del calendario (ver [El archivo de calendario de una reserva](/es/trips/#booking-file)).
 
 ## Outlook y iPhone {#appointments-in-outlook-or-on-an-iphone}
 

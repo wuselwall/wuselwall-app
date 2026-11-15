@@ -118,7 +118,7 @@ class TripEntryRow extends StatelessWidget {
     final route = [
       for (final p in [entry.fromPlace, entry.toPlace])
         if (p?.isNotEmpty ?? false) p!,
-    ].join(' → ');
+    ].join(' – ');
     final details = entry.details?.trim() ?? '';
     final price = entry.priceCents == null
         ? null
