@@ -9,8 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 Future<bool> openTripLink(String url) async {
   final uri = Uri.tryParse(url.trim());
-  if (uri == null || !(uri.isScheme('https') || uri.isScheme('http')))
+  if (uri == null || !(uri.isScheme('https') || uri.isScheme('http'))) {
     return false;
+  }
   return _launch(uri);
 }
 
