@@ -468,6 +468,11 @@ home network.
 
 ## Step 7 — Mobile release pipeline (M0.4)
 
+**2026-11-15:** The stage-aware [release runbook](releasing.md) supersedes the historical
+trigger and release-gate descriptions below. Alpha requires ordinary app/security/backend
+CI, reused by exact SHA; exhaustive UI/native qualification and protected promotion remain
+required for beta/live.
+
 *New with the move to native apps.* A PWA reached the iPhones by URL; native builds have
 to be signed and distributed, and without a Mac this pipeline is the **only** way onto
 the iPhones and iPads. That is why it comes before production rather than after it.

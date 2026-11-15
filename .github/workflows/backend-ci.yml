@@ -1,6 +1,6 @@
 # Conservative job-level selection preserves the required context on every PR.
 # Server/client-contract changes get the disposable stack; Edge Function changes get
-# Deno as well. Reusable/manual/tag runs are always full, regardless of paths.
+# Deno as well. Main/reusable/manual runs are always full, regardless of paths.
 # Build runners use a CI-only Docker daemon, with the shared stack serialized and
 # removed after each run. Detectors, Deno and aggregates use GitHub-hosted runners.
 name: backend-ci
@@ -14,7 +14,7 @@ on:
         default: true
   pull_request:
   push:
-    tags: ['v*.*.*']
+    branches: [main]
 concurrency:
   group: ${{ github.workflow }}-backend-ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}

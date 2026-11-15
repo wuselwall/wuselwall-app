@@ -94,6 +94,7 @@ test('reusable validation never persists repository credentials for candidate co
 test('release orchestration starts signing after preflight instead of duplicate CI', () => {
   assert.deepEqual(appWorkflows, ['release-android.yml', 'release-ios.yml']);
   const release = workflow('release');
-  assert.match(job(release, 'plan'), /run: node qualification\/promotion.mjs/);
-  assert.match(job(release, 'tag'), /needs: plan/);
+  assert.match(job(release, 'preflight'), /uses: \.\/\.github\/workflows\/release-checks.yml/);
+  assert.match(job(release, 'preflight'), /needs: plan/);
+  assert.match(job(release, 'tag'), /needs: \[plan, preflight\]/);
 });

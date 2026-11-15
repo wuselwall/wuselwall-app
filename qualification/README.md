@@ -1,7 +1,9 @@
 # Candidate accessibility and UI qualification
 
 The [qualification design](../specs/accessibility-and-ui-qualification.md) is implemented
-as a manually dispatched evidence suite and an enforced app/server release gate. The shared
+as a manually dispatched evidence suite and an enforced beta/live app/server release gate.
+During alpha it is optional; [release policy and routine steps](../specs/releasing.md)
+require ordinary app/security/backend checks without the exhaustive matrix. The shared
 inventory contains 77 states and accounts for every release route. Two exclusions are
 checked against the production router: the legacy settings redirect and the developer-only
 diagnostics page. Route coverage does not mean every dialog, permission state or backend
@@ -41,11 +43,12 @@ from a recognized engine crash does not establish a clean release-candidate run.
   results, screenshots or required profiles fail the native report.
 
 Expanded tests live outside `app/test/`; ordinary `flutter test` does not discover them.
-`candidate-evidence` has only `workflow_dispatch`. Existing fast CI checks retain their
-schedule. Android, iOS and server releases containing the web archive now require successful
-qualification for that exact commit and protected human approval before publishing/signing.
-Separate backend/recovery checks remain part of the release checklist; operator-run local
-deployment utilities are independent.
+`candidate-evidence` has only `workflow_dispatch`. Ordinary CI runs on PRs, main pushes
+and manual dispatch; release workflows reuse its exact-commit results or call missing checks.
+In beta/live, Android, iOS and server releases containing the web archive also require
+successful qualification for that exact commit and protected human approval before
+publishing/signing. Backend CI is part of the shared release gate; recovery checks remain
+part of the release checklist. Operator-run local deployment utilities are independent.
 
 Current fixture checks render 200 destination/locale pairs. The full Flutter matrix
 executed all 9,272 cases: 8,836 passed and 436 retained contrast findings. No label,
@@ -355,6 +358,10 @@ A complete run uses `bash qualification/native.sh` with `QUALIFY_CANDIDATE_SHA` 
 Android acceleration needs proven `/dev/kvm` access and its own baseline environment.
 
 ## Configure and use release promotion
+
+This section is required for **beta/live**. During alpha, the shared release gate uses
+`alpha-release` and ordinary CI; the exhaustive workflow remains available for diagnosis.
+Changing the stage requires a reviewed edit to `release-policy.json`, not a dispatch toggle.
 
 Confirmed native framework false positives have an optional
 [explicit review procedure](native/README.md#explicitly-reviewed-framework-findings).
