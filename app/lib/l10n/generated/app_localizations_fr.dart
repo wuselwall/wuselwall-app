@@ -6927,6 +6927,569 @@ class AppLocalizationsFr extends AppLocalizations {
       'Votre famille a déjà 50 modèles. Supprimez-en un d’abord.';
 
   @override
+  String get tripListWindows => 'Périodes libres';
+
+  @override
+  String get tripListWindowsHelp => 'Quand pouvons-nous tous partir ?';
+
+  @override
+  String get tripListDiscover => 'Où aller ?';
+
+  @override
+  String get tripListDiscoverHelp => 'Où fait-il chaud et sec à ce moment-là ?';
+
+  @override
+  String get tripListNewIdea => 'Nouvelle idée';
+
+  @override
+  String get tripListUpcoming => 'En route et à venir';
+
+  @override
+  String get tripListIdeas => 'Idées';
+
+  @override
+  String tripListPast(int count) {
+    return 'Voyages passés ($count)';
+  }
+
+  @override
+  String get tripListEmptyTitle => 'Pas encore de voyages';
+
+  @override
+  String get tripListEmpty =>
+      'Commencez par une idée : un endroit où vous aimeriez aller, sans dates pour l’instant.';
+
+  @override
+  String tripListInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Dans $count jours',
+      one: 'Demain',
+      zero: 'Aujourd’hui',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripListDayOf(int day, int total) {
+    return 'Jour $day sur $total';
+  }
+
+  @override
+  String get tripListNoDates => 'Pas encore de dates';
+
+  @override
+  String get tripPageUnavailable => 'Les voyages ne sont pas disponibles ici.';
+
+  @override
+  String get tripPageNotFound => 'Ce voyage n’existe plus.';
+
+  @override
+  String get tripPageToList => 'Vers tous les voyages';
+
+  @override
+  String get tripPageMore => 'Plus';
+
+  @override
+  String get tripPageEdit => 'Modifier';
+
+  @override
+  String get tripPageBackToIdea => 'Redevenir une idée';
+
+  @override
+  String get tripPageDelete => 'Supprimer le voyage';
+
+  @override
+  String tripPageDeleteConfirm(String title) {
+    return 'Supprimer « $title » avec ses options, son plan et ses listes ?';
+  }
+
+  @override
+  String get tripPageWholeFamily => 'Toute la famille';
+
+  @override
+  String tripPageDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripPageChooseDates => 'Choisir des dates';
+
+  @override
+  String get tripPageFindWindow => 'Trouver une période';
+
+  @override
+  String get tripPageEnterDates => 'Saisir des dates';
+
+  @override
+  String get tripPageChangeDates => 'Modifier les dates';
+
+  @override
+  String get tripPageDatesTooLong => 'Un voyage dure 366 jours au maximum.';
+
+  @override
+  String get tripPageFix => 'On le fait';
+
+  @override
+  String get tripPagePencil => 'Prévoir ces dates';
+
+  @override
+  String get tripPageDecided => 'C’est décidé. La famille peut s’en réjouir.';
+
+  @override
+  String get tripPageUnfix => 'Revenir à planifié';
+
+  @override
+  String get tripPageCalPlanned => 'Dans le calendrier en pointillé.';
+
+  @override
+  String get tripPageCalFixed =>
+      'Dans le calendrier avec un compte à rebours, aussi sur l’écran mural.';
+
+  @override
+  String get tripPageTabPlan => 'Plan';
+
+  @override
+  String get tripPageTabPack => 'Valises';
+
+  @override
+  String get tripPageTabPrepare => 'Préparer';
+
+  @override
+  String get tripEditTitle => 'Modifier le voyage';
+
+  @override
+  String get tripEditName => 'Nom du voyage';
+
+  @override
+  String get tripEditNameHint => 'p. ex. Sardaigne en été';
+
+  @override
+  String get tripEditNameRequired => 'Donnez un nom au voyage.';
+
+  @override
+  String get tripEditDestination => 'Destination (facultatif)';
+
+  @override
+  String get tripEditFindPlace => 'Chercher le lieu';
+
+  @override
+  String get tripEditNoPlaces => 'Aucun lieu trouvé.';
+
+  @override
+  String get tripEditPlaceFound => 'Lieu trouvé';
+
+  @override
+  String get tripEditWho => 'Qui voyage ?';
+
+  @override
+  String get tripEditWholeFamily =>
+      'Personne n’est sélectionné : toute la famille voyage.';
+
+  @override
+  String get tripEditCurrency => 'Devise';
+
+  @override
+  String get tripEditCurrencyHelp => 'Trois lettres, p. ex. CHF ou EUR';
+
+  @override
+  String get tripEditCurrencyInvalid => 'Trois lettres, s’il vous plaît.';
+
+  @override
+  String get tripEditNote => 'Note';
+
+  @override
+  String tripPlanDay(int number, String date) {
+    return 'Jour $number · $date';
+  }
+
+  @override
+  String get tripPlanToday => 'Aujourd’hui';
+
+  @override
+  String get tripPlanDayEmpty => 'Rien de prévu';
+
+  @override
+  String tripPlanStayTonight(String title) {
+    return 'Nuit : $title';
+  }
+
+  @override
+  String get tripPlanRoleCheckIn => 'Check-in';
+
+  @override
+  String get tripPlanRoleCheckOut => 'Check-out';
+
+  @override
+  String get tripPlanRolePickUp => 'Retrait';
+
+  @override
+  String get tripPlanRoleReturn => 'Restitution';
+
+  @override
+  String get tripPlanRoleDeparture => 'Départ';
+
+  @override
+  String get tripPlanRoleArrival => 'Arrivée';
+
+  @override
+  String get tripPlanRoleStart => 'Début';
+
+  @override
+  String get tripPlanRoleEnd => 'Fin';
+
+  @override
+  String get tripPlanUndated => 'Sans date';
+
+  @override
+  String get tripPlanOutside => 'Hors des dates du voyage';
+
+  @override
+  String get tripPlanNoDatesHint =>
+      'Choisissez des dates : les jours du voyage apparaîtront ici, avec tout ce que vous avez retenu.';
+
+  @override
+  String get tripPlanChosen => 'Retenu et réservé';
+
+  @override
+  String get tripPlanOptions => 'Options';
+
+  @override
+  String tripPlanOptionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count options',
+      one: '1 option',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripPlanPriceRange(String low, String high) {
+    return 'de $low à $high';
+  }
+
+  @override
+  String tripPlanPriceChecked(String date) {
+    return 'Prix du $date';
+  }
+
+  @override
+  String tripPlanBookingRef(String ref) {
+    return 'Réservation $ref';
+  }
+
+  @override
+  String get tripPlanCompare => 'Comparer';
+
+  @override
+  String get tripPlanAddOption => 'Ajouter une option';
+
+  @override
+  String get tripPlanOpenLink => 'Ouvrir le lien';
+
+  @override
+  String get tripPlanCall => 'Appeler';
+
+  @override
+  String get tripPlanOpenMap => 'Voir sur la carte';
+
+  @override
+  String get tripPlanOpenFailed => 'Impossible d’ouvrir cela.';
+
+  @override
+  String tripInfoSum(String amount) {
+    return 'Retenu et réservé : $amount';
+  }
+
+  @override
+  String tripInfoSumAtLeast(String amount) {
+    return 'Retenu et réservé : au moins $amount';
+  }
+
+  @override
+  String get tripInfoForecast => 'Prévisions';
+
+  @override
+  String get tripInfoClimate => 'Typique pour cette période';
+
+  @override
+  String tripInfoClimateMonth(String month, String tmax, String tmin) {
+    return '$month : $tmax° / $tmin°';
+  }
+
+  @override
+  String tripInfoRainDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours de pluie',
+      one: '1 jour de pluie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripInfoSea(String temp) {
+    return 'Mer $temp°';
+  }
+
+  @override
+  String tripInfoRoute(String time, String km) {
+    return 'En voiture depuis chez vous : $time, $km km';
+  }
+
+  @override
+  String tripInfoDurationHM(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String tripInfoDurationM(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get tripInfoMap => 'Carte de la destination';
+
+  @override
+  String tripInfoForecastDay(
+    String date,
+    String weather,
+    String tmax,
+    String tmin,
+  ) {
+    return '$date : $weather, $tmax° / $tmin°';
+  }
+
+  @override
+  String get tripInfoWeatherClear => 'Dégagé';
+
+  @override
+  String get tripInfoWeatherPartly => 'Éclaircies';
+
+  @override
+  String get tripInfoWeatherCloudy => 'Nuageux';
+
+  @override
+  String get tripInfoWeatherFog => 'Brouillard';
+
+  @override
+  String get tripInfoWeatherRain => 'Pluie';
+
+  @override
+  String get tripInfoWeatherSnow => 'Neige';
+
+  @override
+  String get tripInfoWeatherStorm => 'Orage';
+
+  @override
+  String tripPackProgress(int done, int total) {
+    return '$done sur $total';
+  }
+
+  @override
+  String get tripPackForAll => 'Pour tous';
+
+  @override
+  String get tripPackAddHint => 'Ajouter un élément';
+
+  @override
+  String get tripPackAdd => 'Ajouter';
+
+  @override
+  String get tripPackItem => 'Élément';
+
+  @override
+  String get tripPackEmpty => 'Rien sur la liste pour l’instant.';
+
+  @override
+  String get tripPackRename => 'Renommer';
+
+  @override
+  String get tripPackRemove => 'Retirer';
+
+  @override
+  String get tripPackSuggestions => 'Suggestions';
+
+  @override
+  String get tripPackSuggestionsHelp =>
+      'Choisissez ce qu’il faut ajouter. Ce dont chacun a besoin est ajouté pour tous les voyageurs.';
+
+  @override
+  String get tripPackSuggestionsAdd => 'Ajouter à la liste';
+
+  @override
+  String get tripPackLastTime => 'Comme la dernière fois';
+
+  @override
+  String get tripPackLastTimeChoose => 'Copier la liste de quel voyage ?';
+
+  @override
+  String get tripPackLastTimeNone => 'Aucun autre voyage n’a encore de liste.';
+
+  @override
+  String tripPackAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count éléments ajoutés.',
+      one: '1 élément ajouté.',
+      zero: 'Tout était déjà sur la liste.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripPackGroupDocuments => 'Documents';
+
+  @override
+  String get tripPackGroupHealth => 'Santé';
+
+  @override
+  String get tripPackGroupElectronics => 'Électronique';
+
+  @override
+  String get tripPackGroupClothes => 'Vêtements';
+
+  @override
+  String get tripPackGroupBeach => 'Plage et soleil';
+
+  @override
+  String get tripPackGroupKids => 'Pour les enfants';
+
+  @override
+  String get tripPackStarterPassports => 'Passeport ou carte d’identité';
+
+  @override
+  String get tripPackStarterHealthInsuranceCard => 'Carte d’assurance maladie';
+
+  @override
+  String get tripPackStarterBookingConfirmations =>
+      'Confirmations de réservation';
+
+  @override
+  String get tripPackStarterCashAndCards => 'Espèces et cartes bancaires';
+
+  @override
+  String get tripPackStarterPharmacyBag => 'Trousse à pharmacie';
+
+  @override
+  String get tripPackStarterRegularMedication => 'Médicaments';
+
+  @override
+  String get tripPackStarterSunscreen => 'Crème solaire';
+
+  @override
+  String get tripPackStarterInsectRepellent => 'Anti-moustiques';
+
+  @override
+  String get tripPackStarterChargers => 'Chargeurs de téléphone';
+
+  @override
+  String get tripPackStarterPowerAdapter => 'Adaptateur de prise';
+
+  @override
+  String get tripPackStarterPowerBank => 'Batterie externe';
+
+  @override
+  String get tripPackStarterHeadphones => 'Écouteurs';
+
+  @override
+  String get tripPackStarterUnderwearSocks => 'Sous-vêtements et chaussettes';
+
+  @override
+  String get tripPackStarterTshirts => 'T-shirts';
+
+  @override
+  String get tripPackStarterTrousersShorts => 'Pantalons et shorts';
+
+  @override
+  String get tripPackStarterWarmJumper => 'Pull chaud';
+
+  @override
+  String get tripPackStarterRainJacket => 'Veste de pluie';
+
+  @override
+  String get tripPackStarterWalkingShoes => 'Chaussures confortables';
+
+  @override
+  String get tripPackStarterSleepwear => 'Pyjama';
+
+  @override
+  String get tripPackStarterSwimwear => 'Maillot de bain';
+
+  @override
+  String get tripPackStarterBeachTowels => 'Serviette de plage';
+
+  @override
+  String get tripPackStarterSunHat => 'Chapeau de soleil';
+
+  @override
+  String get tripPackStarterSunglasses => 'Lunettes de soleil';
+
+  @override
+  String get tripPackStarterCuddlyToy => 'Doudou';
+
+  @override
+  String get tripPackStarterKidsGames => 'Jeux et livres pour le trajet';
+
+  @override
+  String get tripPackStarterNappiesWipes => 'Couches et lingettes';
+
+  @override
+  String get tripPackStarterJourneySnacks => 'En-cas pour le trajet';
+
+  @override
+  String get tripTodoAdd => 'Ajouter une chose à faire';
+
+  @override
+  String get tripTodoEdit => 'Modifier';
+
+  @override
+  String get tripTodoTitleLabel => 'Que faut-il faire ?';
+
+  @override
+  String get tripTodoDaysLabel => 'Jours avant le voyage (facultatif)';
+
+  @override
+  String tripTodoDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours avant',
+      one: '1 jour avant',
+      zero: 'Le premier jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripTodoDue(String date) {
+    return 'D’ici le $date';
+  }
+
+  @override
+  String tripTodoWasDue(String date) {
+    return 'Prévu avant le $date';
+  }
+
+  @override
+  String get tripTodoEmpty =>
+      'Rien à préparer pour l’instant. Passeports, voisins, le chat : notez ce qui doit se faire avant le départ.';
+
+  @override
+  String get tripTodoDone => 'Fait';
+
+  @override
   String get passwordSignUpTab => 'Nouveau compte';
 
   @override

@@ -101,20 +101,28 @@ class _Content extends StatelessWidget {
                     ),
             ),
             const SizedBox(width: Tokens.space3),
+            // The title and the count share the width and wrap under each other when they do
+            // not fit side by side (large text, a long title): never a fixed-width count.
             Expanded(
-              child: Text(
-                trip.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(width: Tokens.space2),
-            Text(
-              when,
-              key: const ValueKey('trip-today-when'),
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: theme.colorScheme.primary,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: Tokens.space2,
+                children: [
+                  Text(
+                    trip.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  Text(
+                    when,
+                    key: const ValueKey('trip-today-when'),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

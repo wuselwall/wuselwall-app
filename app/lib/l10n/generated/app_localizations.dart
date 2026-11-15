@@ -11526,6 +11526,935 @@ abstract class AppLocalizations {
   /// **'Your family already has 50 templates. Delete one first.'**
   String get eventTemplateErrLimit;
 
+  /// No description provided for @tripListWindows.
+  ///
+  /// In en, this message translates to:
+  /// **'Time windows'**
+  String get tripListWindows;
+
+  /// No description provided for @tripListWindowsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'When can all of us get away?'**
+  String get tripListWindowsHelp;
+
+  /// No description provided for @tripListDiscover.
+  ///
+  /// In en, this message translates to:
+  /// **'Where to?'**
+  String get tripListDiscover;
+
+  /// No description provided for @tripListDiscoverHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is it warm and dry then?'**
+  String get tripListDiscoverHelp;
+
+  /// No description provided for @tripListNewIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'New idea'**
+  String get tripListNewIdea;
+
+  /// No description provided for @tripListUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Under way and coming up'**
+  String get tripListUpcoming;
+
+  /// No description provided for @tripListIdeas.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas'**
+  String get tripListIdeas;
+
+  /// No description provided for @tripListPast.
+  ///
+  /// In en, this message translates to:
+  /// **'Past trips ({count})'**
+  String tripListPast(int count);
+
+  /// No description provided for @tripListEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No trips yet'**
+  String get tripListEmptyTitle;
+
+  /// No description provided for @tripListEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with an idea: a place you would like to go, with no dates yet.'**
+  String get tripListEmpty;
+
+  /// No description provided for @tripListInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Today} =1{Tomorrow} other{In {count} days}}'**
+  String tripListInDays(int count);
+
+  /// No description provided for @tripListDayOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} of {total}'**
+  String tripListDayOf(int day, int total);
+
+  /// No description provided for @tripListNoDates.
+  ///
+  /// In en, this message translates to:
+  /// **'No dates yet'**
+  String get tripListNoDates;
+
+  /// No description provided for @tripPageUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips are not available here.'**
+  String get tripPageUnavailable;
+
+  /// No description provided for @tripPageNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip no longer exists.'**
+  String get tripPageNotFound;
+
+  /// No description provided for @tripPageToList.
+  ///
+  /// In en, this message translates to:
+  /// **'To all trips'**
+  String get tripPageToList;
+
+  /// No description provided for @tripPageMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get tripPageMore;
+
+  /// No description provided for @tripPageEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get tripPageEdit;
+
+  /// No description provided for @tripPageBackToIdea.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to idea'**
+  String get tripPageBackToIdea;
+
+  /// No description provided for @tripPageDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete trip'**
+  String get tripPageDelete;
+
+  /// No description provided for @tripPageDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{title}” with its options, plan and lists?'**
+  String tripPageDeleteConfirm(String title);
+
+  /// No description provided for @tripPageWholeFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'The whole family'**
+  String get tripPageWholeFamily;
+
+  /// No description provided for @tripPageDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String tripPageDays(int count);
+
+  /// No description provided for @tripPageChooseDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose dates'**
+  String get tripPageChooseDates;
+
+  /// No description provided for @tripPageFindWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a time window'**
+  String get tripPageFindWindow;
+
+  /// No description provided for @tripPageEnterDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter dates'**
+  String get tripPageEnterDates;
+
+  /// No description provided for @tripPageChangeDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Change dates'**
+  String get tripPageChangeDates;
+
+  /// No description provided for @tripPageDatesTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'A trip can last 366 days at most.'**
+  String get tripPageDatesTooLong;
+
+  /// No description provided for @tripPageFix.
+  ///
+  /// In en, this message translates to:
+  /// **'We’re doing this'**
+  String get tripPageFix;
+
+  /// No description provided for @tripPagePencil.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil in these dates'**
+  String get tripPagePencil;
+
+  /// No description provided for @tripPageDecided.
+  ///
+  /// In en, this message translates to:
+  /// **'Decided. The family can look forward to it.'**
+  String get tripPageDecided;
+
+  /// No description provided for @tripPageUnfix.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to planned'**
+  String get tripPageUnfix;
+
+  /// No description provided for @tripPageCalPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'In the calendar as a dashed entry.'**
+  String get tripPageCalPlanned;
+
+  /// No description provided for @tripPageCalFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'In the calendar with a countdown, also on the wall.'**
+  String get tripPageCalFixed;
+
+  /// No description provided for @tripPageTabPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get tripPageTabPlan;
+
+  /// No description provided for @tripPageTabPack.
+  ///
+  /// In en, this message translates to:
+  /// **'Pack'**
+  String get tripPageTabPack;
+
+  /// No description provided for @tripPageTabPrepare.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare'**
+  String get tripPageTabPrepare;
+
+  /// No description provided for @tripEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit trip'**
+  String get tripEditTitle;
+
+  /// No description provided for @tripEditName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name of the trip'**
+  String get tripEditName;
+
+  /// No description provided for @tripEditNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Sardinia in summer'**
+  String get tripEditNameHint;
+
+  /// No description provided for @tripEditNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please give the trip a name.'**
+  String get tripEditNameRequired;
+
+  /// No description provided for @tripEditDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination (optional)'**
+  String get tripEditDestination;
+
+  /// No description provided for @tripEditFindPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Find place'**
+  String get tripEditFindPlace;
+
+  /// No description provided for @tripEditNoPlaces.
+  ///
+  /// In en, this message translates to:
+  /// **'No place found.'**
+  String get tripEditNoPlaces;
+
+  /// No description provided for @tripEditPlaceFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Place found'**
+  String get tripEditPlaceFound;
+
+  /// No description provided for @tripEditWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is travelling?'**
+  String get tripEditWho;
+
+  /// No description provided for @tripEditWholeFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody selected: the whole family travels.'**
+  String get tripEditWholeFamily;
+
+  /// No description provided for @tripEditCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get tripEditCurrency;
+
+  /// No description provided for @tripEditCurrencyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Three letters, e.g. CHF or EUR'**
+  String get tripEditCurrencyHelp;
+
+  /// No description provided for @tripEditCurrencyInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Three letters, please.'**
+  String get tripEditCurrencyInvalid;
+
+  /// No description provided for @tripEditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get tripEditNote;
+
+  /// No description provided for @tripPlanDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {number} · {date}'**
+  String tripPlanDay(int number, String date);
+
+  /// No description provided for @tripPlanToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get tripPlanToday;
+
+  /// No description provided for @tripPlanDayEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned yet'**
+  String get tripPlanDayEmpty;
+
+  /// No description provided for @tripPlanStayTonight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night: {title}'**
+  String tripPlanStayTonight(String title);
+
+  /// No description provided for @tripPlanRoleCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get tripPlanRoleCheckIn;
+
+  /// No description provided for @tripPlanRoleCheckOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get tripPlanRoleCheckOut;
+
+  /// No description provided for @tripPlanRolePickUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick-up'**
+  String get tripPlanRolePickUp;
+
+  /// No description provided for @tripPlanRoleReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Return'**
+  String get tripPlanRoleReturn;
+
+  /// No description provided for @tripPlanRoleDeparture.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
+  String get tripPlanRoleDeparture;
+
+  /// No description provided for @tripPlanRoleArrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival'**
+  String get tripPlanRoleArrival;
+
+  /// No description provided for @tripPlanRoleStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get tripPlanRoleStart;
+
+  /// No description provided for @tripPlanRoleEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get tripPlanRoleEnd;
+
+  /// No description provided for @tripPlanUndated.
+  ///
+  /// In en, this message translates to:
+  /// **'Without a date'**
+  String get tripPlanUndated;
+
+  /// No description provided for @tripPlanOutside.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the trip’s dates'**
+  String get tripPlanOutside;
+
+  /// No description provided for @tripPlanNoDatesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose dates and the days of the trip appear here, with everything you have chosen.'**
+  String get tripPlanNoDatesHint;
+
+  /// No description provided for @tripPlanChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen and booked'**
+  String get tripPlanChosen;
+
+  /// No description provided for @tripPlanOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get tripPlanOptions;
+
+  /// No description provided for @tripPlanOptionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 option} other{{count} options}}'**
+  String tripPlanOptionCount(int count);
+
+  /// No description provided for @tripPlanPriceRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{low} to {high}'**
+  String tripPlanPriceRange(String low, String high);
+
+  /// No description provided for @tripPlanPriceChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Price from {date}'**
+  String tripPlanPriceChecked(String date);
+
+  /// No description provided for @tripPlanBookingRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking {ref}'**
+  String tripPlanBookingRef(String ref);
+
+  /// No description provided for @tripPlanCompare.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get tripPlanCompare;
+
+  /// No description provided for @tripPlanAddOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Add option'**
+  String get tripPlanAddOption;
+
+  /// No description provided for @tripPlanOpenLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Open link'**
+  String get tripPlanOpenLink;
+
+  /// No description provided for @tripPlanCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get tripPlanCall;
+
+  /// No description provided for @tripPlanOpenMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on map'**
+  String get tripPlanOpenMap;
+
+  /// No description provided for @tripPlanOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That could not be opened.'**
+  String get tripPlanOpenFailed;
+
+  /// No description provided for @tripInfoSum.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen and booked: {amount}'**
+  String tripInfoSum(String amount);
+
+  /// No description provided for @tripInfoSumAtLeast.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen and booked: at least {amount}'**
+  String tripInfoSumAtLeast(String amount);
+
+  /// No description provided for @tripInfoForecast.
+  ///
+  /// In en, this message translates to:
+  /// **'Forecast'**
+  String get tripInfoForecast;
+
+  /// No description provided for @tripInfoClimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Typical at this time of year'**
+  String get tripInfoClimate;
+
+  /// No description provided for @tripInfoClimateMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{month}: {tmax}° / {tmin}°'**
+  String tripInfoClimateMonth(String month, String tmax, String tmin);
+
+  /// No description provided for @tripInfoRainDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 rain day} other{{count} rain days}}'**
+  String tripInfoRainDays(int count);
+
+  /// No description provided for @tripInfoSea.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea {temp}°'**
+  String tripInfoSea(String temp);
+
+  /// No description provided for @tripInfoRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'By car from home: {time}, {km} km'**
+  String tripInfoRoute(String time, String km);
+
+  /// No description provided for @tripInfoDurationHM.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes} min'**
+  String tripInfoDurationHM(int hours, int minutes);
+
+  /// No description provided for @tripInfoDurationM.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String tripInfoDurationM(int minutes);
+
+  /// No description provided for @tripInfoMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Map of the destination'**
+  String get tripInfoMap;
+
+  /// No description provided for @tripInfoForecastDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}: {weather}, {tmax}° / {tmin}°'**
+  String tripInfoForecastDay(
+    String date,
+    String weather,
+    String tmax,
+    String tmin,
+  );
+
+  /// No description provided for @tripInfoWeatherClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get tripInfoWeatherClear;
+
+  /// No description provided for @tripInfoWeatherPartly.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly cloudy'**
+  String get tripInfoWeatherPartly;
+
+  /// No description provided for @tripInfoWeatherCloudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloudy'**
+  String get tripInfoWeatherCloudy;
+
+  /// No description provided for @tripInfoWeatherFog.
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get tripInfoWeatherFog;
+
+  /// No description provided for @tripInfoWeatherRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get tripInfoWeatherRain;
+
+  /// No description provided for @tripInfoWeatherSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get tripInfoWeatherSnow;
+
+  /// No description provided for @tripInfoWeatherStorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm'**
+  String get tripInfoWeatherStorm;
+
+  /// No description provided for @tripPackProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String tripPackProgress(int done, int total);
+
+  /// No description provided for @tripPackForAll.
+  ///
+  /// In en, this message translates to:
+  /// **'For everyone'**
+  String get tripPackForAll;
+
+  /// No description provided for @tripPackAddHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an item'**
+  String get tripPackAddHint;
+
+  /// No description provided for @tripPackAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get tripPackAdd;
+
+  /// No description provided for @tripPackItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Item'**
+  String get tripPackItem;
+
+  /// No description provided for @tripPackEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the list yet.'**
+  String get tripPackEmpty;
+
+  /// No description provided for @tripPackRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get tripPackRename;
+
+  /// No description provided for @tripPackRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get tripPackRemove;
+
+  /// No description provided for @tripPackSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get tripPackSuggestions;
+
+  /// No description provided for @tripPackSuggestionsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what to add. What each person needs is added for everyone who travels.'**
+  String get tripPackSuggestionsHelp;
+
+  /// No description provided for @tripPackSuggestionsAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to list'**
+  String get tripPackSuggestionsAdd;
+
+  /// No description provided for @tripPackLastTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Like last time'**
+  String get tripPackLastTime;
+
+  /// No description provided for @tripPackLastTimeChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the list of which trip?'**
+  String get tripPackLastTimeChoose;
+
+  /// No description provided for @tripPackLastTimeNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No other trip has a packing list yet.'**
+  String get tripPackLastTimeNone;
+
+  /// No description provided for @tripPackAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Everything was already on the list.} =1{1 item added.} other{{count} items added.}}'**
+  String tripPackAdded(int count);
+
+  /// No description provided for @tripPackGroupDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get tripPackGroupDocuments;
+
+  /// No description provided for @tripPackGroupHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get tripPackGroupHealth;
+
+  /// No description provided for @tripPackGroupElectronics.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get tripPackGroupElectronics;
+
+  /// No description provided for @tripPackGroupClothes.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothes'**
+  String get tripPackGroupClothes;
+
+  /// No description provided for @tripPackGroupBeach.
+  ///
+  /// In en, this message translates to:
+  /// **'Beach and sun'**
+  String get tripPackGroupBeach;
+
+  /// No description provided for @tripPackGroupKids.
+  ///
+  /// In en, this message translates to:
+  /// **'For the children'**
+  String get tripPackGroupKids;
+
+  /// No description provided for @tripPackStarterPassports.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport or ID'**
+  String get tripPackStarterPassports;
+
+  /// No description provided for @tripPackStarterHealthInsuranceCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Health insurance card'**
+  String get tripPackStarterHealthInsuranceCard;
+
+  /// No description provided for @tripPackStarterBookingConfirmations.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking confirmations'**
+  String get tripPackStarterBookingConfirmations;
+
+  /// No description provided for @tripPackStarterCashAndCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash and bank cards'**
+  String get tripPackStarterCashAndCards;
+
+  /// No description provided for @tripPackStarterPharmacyBag.
+  ///
+  /// In en, this message translates to:
+  /// **'First-aid kit'**
+  String get tripPackStarterPharmacyBag;
+
+  /// No description provided for @tripPackStarterRegularMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication'**
+  String get tripPackStarterRegularMedication;
+
+  /// No description provided for @tripPackStarterSunscreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunscreen'**
+  String get tripPackStarterSunscreen;
+
+  /// No description provided for @tripPackStarterInsectRepellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Insect repellent'**
+  String get tripPackStarterInsectRepellent;
+
+  /// No description provided for @tripPackStarterChargers.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone chargers'**
+  String get tripPackStarterChargers;
+
+  /// No description provided for @tripPackStarterPowerAdapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel plug adapter'**
+  String get tripPackStarterPowerAdapter;
+
+  /// No description provided for @tripPackStarterPowerBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Power bank'**
+  String get tripPackStarterPowerBank;
+
+  /// No description provided for @tripPackStarterHeadphones.
+  ///
+  /// In en, this message translates to:
+  /// **'Headphones'**
+  String get tripPackStarterHeadphones;
+
+  /// No description provided for @tripPackStarterUnderwearSocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Underwear and socks'**
+  String get tripPackStarterUnderwearSocks;
+
+  /// No description provided for @tripPackStarterTshirts.
+  ///
+  /// In en, this message translates to:
+  /// **'T-shirts'**
+  String get tripPackStarterTshirts;
+
+  /// No description provided for @tripPackStarterTrousersShorts.
+  ///
+  /// In en, this message translates to:
+  /// **'Trousers and shorts'**
+  String get tripPackStarterTrousersShorts;
+
+  /// No description provided for @tripPackStarterWarmJumper.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm jumper'**
+  String get tripPackStarterWarmJumper;
+
+  /// No description provided for @tripPackStarterRainJacket.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain jacket'**
+  String get tripPackStarterRainJacket;
+
+  /// No description provided for @tripPackStarterWalkingShoes.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfortable shoes'**
+  String get tripPackStarterWalkingShoes;
+
+  /// No description provided for @tripPackStarterSleepwear.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleepwear'**
+  String get tripPackStarterSleepwear;
+
+  /// No description provided for @tripPackStarterSwimwear.
+  ///
+  /// In en, this message translates to:
+  /// **'Swimwear'**
+  String get tripPackStarterSwimwear;
+
+  /// No description provided for @tripPackStarterBeachTowels.
+  ///
+  /// In en, this message translates to:
+  /// **'Beach towel'**
+  String get tripPackStarterBeachTowels;
+
+  /// No description provided for @tripPackStarterSunHat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun hat'**
+  String get tripPackStarterSunHat;
+
+  /// No description provided for @tripPackStarterSunglasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunglasses'**
+  String get tripPackStarterSunglasses;
+
+  /// No description provided for @tripPackStarterCuddlyToy.
+  ///
+  /// In en, this message translates to:
+  /// **'Cuddly toy'**
+  String get tripPackStarterCuddlyToy;
+
+  /// No description provided for @tripPackStarterKidsGames.
+  ///
+  /// In en, this message translates to:
+  /// **'Games and books for the journey'**
+  String get tripPackStarterKidsGames;
+
+  /// No description provided for @tripPackStarterNappiesWipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Nappies and wipes'**
+  String get tripPackStarterNappiesWipes;
+
+  /// No description provided for @tripPackStarterJourneySnacks.
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks for the journey'**
+  String get tripPackStarterJourneySnacks;
+
+  /// No description provided for @tripTodoAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to-do'**
+  String get tripTodoAdd;
+
+  /// No description provided for @tripTodoEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit to-do'**
+  String get tripTodoEdit;
+
+  /// No description provided for @tripTodoTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs to happen?'**
+  String get tripTodoTitleLabel;
+
+  /// No description provided for @tripTodoDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Days before the trip (optional)'**
+  String get tripTodoDaysLabel;
+
+  /// No description provided for @tripTodoDaysBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{On the first day} =1{1 day before} other{{count} days before}}'**
+  String tripTodoDaysBefore(int count);
+
+  /// No description provided for @tripTodoDue.
+  ///
+  /// In en, this message translates to:
+  /// **'By {date}'**
+  String tripTodoDue(String date);
+
+  /// No description provided for @tripTodoWasDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Was due {date}'**
+  String tripTodoWasDue(String date);
+
+  /// No description provided for @tripTodoEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to prepare yet. Passports, neighbours, the cat: note what has to happen before you leave.'**
+  String get tripTodoEmpty;
+
+  /// No description provided for @tripTodoDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get tripTodoDone;
+
   /// No description provided for @passwordSignUpTab.
   ///
   /// In en, this message translates to:
