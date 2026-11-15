@@ -117,6 +117,8 @@ Diagnostics load the saved tool settings when the tools-directory variable is co
 An invalid saved configuration still fails the job, and the read-only probes and their
 artifact run so the failure remains inspectable.
 
-The release gate separately requires a GitHub environment named `release-promotion`,
+For beta/live, the release gate separately requires a GitHub environment named `release-promotion`,
 at least one required reviewer, and administrator bypass disabled. The reviewer accepts
 baseline changes and the physical-device checklist for the exact candidate commit.
+Alpha uses ordinary CI and the `alpha-release` environment; full native evidence remains
+optional diagnostic work. See the [release runbook](../../specs/releasing.md).

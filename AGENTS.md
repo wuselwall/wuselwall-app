@@ -167,7 +167,7 @@ follows without being asked.
   GitHub-hosted runners; Flutter and Docker/SMTP jobs stay on the build fleet.
   Guide PRs run `npm run docs:check:source` and build without screenshots; main/manual
   docs and candidate qualification run the complete four-language/light-dark matrix.
-  Schema 3 qualification requires quality, backend and guide evidence for the exact
+  Beta/live schema 3 qualification requires quality, backend and guide evidence for the exact
   SHA before signing; regenerate older artifacts. Candidate quality-only reuse skips
   duplicate app work because strict Flutter and production jobs already own it.
 - **A release is cut by the `release` workflow**, never by pushing tags by hand:
@@ -178,6 +178,17 @@ follows without being asked.
 - A new workflow pins its actions to commits, declares `permissions`, and keeps write tokens
   and secrets away from jobs that run a pull request's code. Repository settings change in
   `scripts/github-settings.sh` and `.github/rulesets/`, then on GitHub by running the script.
+
+## Release stage
+
+WuselWall is in alpha. `qualification/release-policy.json` selects the release stage;
+see [the release runbook](specs/releasing.md). App/server publishing shares a gate for
+ordinary app/security/web-smoke and disposable-backend CI, reusing passing default-branch
+runs for the exact commit. Full UI/native qualification and protected promotion are
+optional during alpha and required in beta/live. Keep the exhaustive suite and its strict
+validators. The two-week trial and public-readiness checklist are milestone evidence,
+not prerequisites to repeat for every alpha patch. Backup-first live migrations and
+signing safeguards still apply.
 
 ## Architecture rules
 

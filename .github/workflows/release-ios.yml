@@ -1,6 +1,6 @@
 # Signed iOS builds for TestFlight (specs/16, step 7); release-android.yml is its Android
-# twin. Tags and manual runs require passing qualification for that exact commit,
-# followed by approval of the protected release-promotion environment.
+# twin. Tags and manual runs use the shared stage-aware release gate: ordinary CI
+# during alpha, plus full qualification and protected review for beta/live.
 name: release-ios
 on:
   workflow_dispatch:
@@ -171,19 +171,11 @@ jobs:
   qualification:
     if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.diagnostics_only != true && inputs.native_smoke_only != true)) && needs.validate_modes.result != 'failure'
     needs: validate_modes
-    runs-on: [self-hosted, Linux, build]
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { ref: '${{ github.sha }}', persist-credentials: false }
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22, package-manager-cache: false }
-      - run: node qualification/promotion.mjs
-        env: { GH_TOKEN: '${{ github.token }}' }
+    uses: ./.github/workflows/release-checks.yml
 
   ios:
     if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.diagnostics_only != true && inputs.native_smoke_only != true)) && needs.qualification.result == 'success'
-    environment: release-promotion
+    environment: ${{ needs.qualification.outputs.environment }}
     needs: qualification
     # Xcode 26: App Store Connect accepts only builds made with the iOS 26 SDK or later,
     # so the self-hosted Mac behind the "macOS" label must have Xcode 26 installed.
