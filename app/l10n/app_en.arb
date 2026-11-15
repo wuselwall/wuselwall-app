@@ -3528,6 +3528,97 @@
   "countdownToday": "Today!",
   "kidLookingForward": "Looking forward to",
   "todayLookingForward": "Looking forward",
+  "tripTodayDayOf": "Day {day} of {count}",
+  "@tripTodayDayOf": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodayMore": "+{count} more",
+  "@tripTodayMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodayPacked": "{packed} of {total} packed",
+  "@tripTodayPacked": {
+    "placeholders": {
+      "packed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodayTodos": "Still to do",
+  "tripTodayTonight": "Tonight",
+  "tripTodayTomorrow": "Tomorrow",
+  "tripTodayNothing": "Nothing planned today.",
+  "tripTodayCheckIn": "Check-in",
+  "tripTodayCheckOut": "Check-out",
+  "tripTodayPickUp": "Pick-up",
+  "tripTodayReturn": "Return",
+  "tripTodayDeparture": "Departure",
+  "tripTodayArrival": "Arrival",
+  "tripTodayOpen": "Open the trip {title}",
+  "@tripTodayOpen": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripTodayCall": "Call",
+  "tripTodayMap": "Show on map",
+  "tripTodayCannotOpen": "This can't be opened here.",
+  "tripImportAction": "Add to trip",
+  "tripImportTitle": "Which trip?",
+  "tripImportIntro": "Every event in the file becomes an entry of the trip, as booked.",
+  "tripImportEntries": "{count, plural, =1{This entry will be added} other{These {count} entries will be added}}",
+  "@tripImportEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripImportSkipped": "{count, plural, =1{1 event in the file is skipped (cancelled or without a start).} other{{count} events in the file are skipped (cancelled or without a start).}}",
+  "@tripImportSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripImportNothing": "No event in this file could be read.",
+  "tripImportConfirm": "Add",
+  "tripImportDone": "{added} added, {updated} updated",
+  "@tripImportDone": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      }
+    }
+  },
+  "tripImportFallbackTitle": "Booking",
+  "tripImportSeveral": "This file holds several events. They can go into a trip.",
+  "tripCalendarNotice": "This entry belongs to a trip and is changed there.",
+  "tripCalendarOpen": "Open trip",
+  "tripCalendarPlanTitle": "Plan a trip",
+  "tripCalendarPlanLine": "Compare, book, pack",
+  "settingsServicesTitle": "Weather and maps",
+  "settingsServicesSubtitle": "Forecast, places and routes for trips",
   "eventIconNone": "No picture",
   "eventIconLabel": "Picture",
   "eventCountdownTitle": "We are looking forward to it",

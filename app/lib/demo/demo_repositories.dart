@@ -9,6 +9,7 @@ import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/demo/demo_holidays.dart';
+import 'package:wuselwall/demo/demo_trips.dart';
 import 'package:wuselwall/features/account/data/account_admin_repository.dart';
 import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -26,6 +27,9 @@ import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/match_correction.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
+import 'package:wuselwall/features/trips/domain/trip_dates.dart';
+import 'package:wuselwall/features/trips/domain/trip_models.dart'
+    show TripStage;
 
 /// In-memory stand-ins for the backend, used only by `lib/main_demo.dart` to take
 /// the screenshots of the user documentation. The PIN is 123456; nothing leaves the page.
@@ -1320,6 +1324,28 @@ class DemoCalendarRepository implements CalendarRepository {
   /// The usual weeks as saved in this session; the board keeps showing the built-in ones.
   final _usual = demoUsualWeeks();
 
+  /// The built-in one-offs and the appointments of the demo trips (specs/30): a planned
+  /// trip is tentative, a fixed one confirmed, key and counting down.
+  List<_OneOff> get _allOneOffs {
+    final monday = _monday(_clock());
+    return [
+      ..._oneOffs,
+      for (final t in demoCalendarTrips(clock: _clock))
+        _OneOff(
+          id: t.eventId!,
+          title: t.title,
+          firstDay: daysBetween(monday, t.startsOn!),
+          lastDay: daysBetween(monday, t.endsOn!),
+          attendees: _allFour,
+          tentative: t.stage == TripStage.planned,
+          countdown: t.stage == TripStage.fixed,
+          isKey: t.stage == TripStage.fixed,
+          iconKey: t.iconKey,
+          tripId: t.id,
+        ),
+    ];
+  }
+
   @override
   Future<Result<List<UsualWeek>>> usualWeeks() async => Ok([..._usual]);
 
@@ -1354,7 +1380,7 @@ class DemoCalendarRepository implements CalendarRepository {
         out.addAll(_visible(item.occurrence(d, recurring: true)));
       }
     }
-    for (final item in _oneOffs) {
+    for (final item in _allOneOffs) {
       if (savedIds.contains(item.id) || _deleted.contains(item.id)) continue;
       final start = _addDays(monday, item.firstDay);
       final end = _addDays(monday, item.lastDay);
@@ -1383,7 +1409,7 @@ class DemoCalendarRepository implements CalendarRepository {
     for (final item in _weekly) {
       if (item.id == id) return Ok(item.event(_monday(_clock())));
     }
-    for (final item in _oneOffs) {
+    for (final item in _allOneOffs) {
       if (item.id == id) return Ok(item.event(_monday(_clock())));
     }
     return const Err(NotFoundFailure(code: 'event_not_found'));
@@ -1402,7 +1428,7 @@ class DemoCalendarRepository implements CalendarRepository {
       for (final item in _weekly)
         if (!savedIds.contains(item.id) && !_deleted.contains(item.id))
           item.event(monday),
-      for (final item in _oneOffs)
+      for (final item in _allOneOffs)
         if (!savedIds.contains(item.id) && !_deleted.contains(item.id))
           item.event(monday),
     ];
@@ -1790,12 +1816,20 @@ class _OneOff {
     this.countdown = false,
     this.iconKey,
     this.reminderMinutes,
+    this.isKey = false,
+    this.tripId,
   });
 
   final String id;
   final String title;
   final int firstDay;
   final bool countdown;
+
+  /// Importance `key`: on the wall on every day it covers.
+  final bool isKey;
+
+  /// The trip this appointment belongs to (specs/30).
+  final String? tripId;
 
   /// The event's own reminder, in minutes before its start.
   final int? reminderMinutes;
@@ -1819,7 +1853,7 @@ class _OneOff {
       kind: presence == null ? EventKind.appointment : EventKind.presence,
       presenceState: presence,
       status: tentative ? EventStatus.tentative : EventStatus.confirmed,
-      importance: Importance.normal,
+      importance: isKey ? Importance.key : Importance.normal,
       allDay: !timed,
       start: timed
           ? DateTime(
@@ -1841,6 +1875,7 @@ class _OneOff {
       countdown: countdown,
       iconKey: iconKey,
       reminderMinutes: reminderMinutes,
+      tripId: tripId,
     );
   }
 
@@ -1870,9 +1905,11 @@ class _OneOff {
       startDate: timed ? null : first,
       endDate: timed ? null : last,
       attendeeIds: attendees,
+      importance: isKey ? Importance.key : Importance.normal,
       countdown: countdown,
       iconKey: iconKey,
       reminderMinutes: reminderMinutes,
+      tripId: tripId,
     );
   }
 }

@@ -65,6 +65,7 @@ enum SettingsTile {
   devices,
   feedTokens,
   externalCalendars,
+  services,
   learnedWords,
   signInMethods,
   security,
@@ -92,6 +93,8 @@ enum SettingsTile {
     leaveFamily ||
     deleteAccount => env.personalPhone,
     server => env.hasServer,
+    // Weather and maps of the trips (ADR-022): only where the server has them.
+    services => env.services,
     // What the family taught the app is for its guardians to read and forget.
     learnedWords => env.guardian && env.localMatching,
     _ => true,
@@ -177,6 +180,7 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
     SettingsSection(SettingsSectionId.connections, [
       SettingTileItem(SettingsTile.feedTokens),
       SettingTileItem(SettingsTile.externalCalendars),
+      SettingTileItem(SettingsTile.services),
     ]),
   ],
   SettingsGroup.meals: [
@@ -355,6 +359,7 @@ class SettingsEnv {
     this.ownOnly = false,
     this.guardian = false,
     this.localMatching = true,
+    this.services = false,
   });
 
   final List<SettingEntry> entries;
@@ -372,6 +377,9 @@ class SettingsEnv {
   /// The server keeps the family's learned words (`local-matching`, specs/29). True when
   /// built by hand, as a server that does not say counts as current.
   final bool localMatching;
+
+  /// The server has the opt-in services of the trips (ADR-022): weather and maps.
+  final bool services;
 
   /// A non-guardian at a shared or kiosk device: only the settings the server lets a
   /// member change for themselves (`self_service`, member scope), no tiles.
@@ -408,6 +416,7 @@ class SettingsEnv {
     ownOnly: ownOnly,
     guardian: guardian,
     localMatching: localMatching,
+    services: services,
   );
 
   /// The definition of [key] in the catalogue, or null on a server without it.
@@ -528,5 +537,6 @@ final settingsEnvProvider = Provider.autoDispose<SettingsEnv>((ref) {
     hasServer: ref.watch(appConfigProvider).server != null,
     guardian: acting != null && guardians.contains(acting),
     localMatching: ref.watch(serverSupportsProvider(featureLocalMatching)),
+    services: ref.watch(servicesSupportedProvider),
   );
 });
