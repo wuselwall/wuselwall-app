@@ -65,6 +65,31 @@ by `api.events` and the `occurrences` function (migration `20261114120000_event_
 `310_event_reminder.test.sql`, feature flag `event-reminder`); the editor's *Erinnerung vorher*
 (15 minutes to 1 week, whole days for an all-day event), planned on each concerned person's phone
 as a local notification in place of their `notify.event_reminder`.
+Trips (2026-11-15, issue #265, [specs/30](specs/30-trips.md), FR-9): adults plan a vacation in one
+place. A trip is an idea, planned or fixed (`app.trip`, `trip_member`); what the family finds are
+entries (`trip_entry`: transport, stay, rental, activity, note; option, chosen or booked; prices
+with their date, times as written on the ticket), compared side by side and tried in combinations
+(`trip_combo`, `api.trip_combo_choose`; the checks in `trips/domain/combination.dart`), with packing
+lists and to-dos (`trip_check`). A planned or fixed trip owns one all-day calendar entry
+(`app.event.trip_id`, tentative, then confirmed with a countdown) that only the trip's functions
+change (`trip_event`). Migration `20261115110000_trips.sql`, pgTAP `320_trips.test.sql`, feature flag
+`trips`; the `trips` Edge Function proposes time windows from the children's school-free days and
+the calendar (`_shared/trips/windows.ts`, read as the caller) and ranks a bundled catalogue of
+destinations (`_shared/trips/destinations.ts`) for discovery. The pages live in
+`app/lib/features/trips/` and open from the Calendar tab and a card on Today, in the adult
+register only; children and the wall see the calendar entry and the countdown. Reads go through
+the read cache, so a trip is readable without network.
+Opt-in services ([ADR-022](specs/adr/ADR-022-opt-in-services.md), the same day): weather, place
+search, routes and map pictures come from providers a guardian switches on per household under
+Einstellungen → Wetter und Karten; none is on by default. A provider is one plug-in file in
+`supabase/functions/_shared/services/providers/` (contract in `types.ts`; `open-meteo`, `met-no`,
+`nominatim`, `openweathermap`, `meteostat`, `openrouteservice`, `google`); only the server calls
+it, through the runner's guarded fetch (declared hosts, https, no redirects), after
+`api.service_request` ran as the caller (adults, no kiosk). Keys are in `app.service_secret`,
+which no device role reads, and never in the export, the audit or the cache (`app.service_cache`
+holds answers without a household). Migration `20261115100000_services.sql`, pgTAP
+`315_services.test.sql`, feature flag `services`, Edge Function `services`. A new provider needs
+no app release: the app reads the catalogue from the server.
 Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the
