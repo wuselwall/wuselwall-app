@@ -11,6 +11,7 @@ import 'package:wuselwall/core/matching/matcher.dart' as matching;
 import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
+import 'package:wuselwall/core/ui/row_peek.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
@@ -468,23 +469,18 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
                     ),
                   )
                 else
-                  ConstrainedBox(
-                    // 30% of the screen, between a row and a half (112) and two and a
-                    // half rows (240): a short phone still shows more than one item under
-                    // the tiles (round-3 review L-1), a tall one more tiles. The half row
-                    // says the tiles scroll.
-                    constraints: BoxConstraints(
-                      maxHeight: tileGridHeight(
-                        MediaQuery.sizeOf(context).height,
-                      ),
+                  RowPeek(
+                    // At most 30% of the screen, between 112 and 240 px: a short phone
+                    // still shows more than one item under the tiles (round-3 review
+                    // L-1), a tall one more tiles. Within that the grid ends in a cut
+                    // row, which says the tiles scroll: its pictures show, never a
+                    // sliver too thin to tap (the tiles' height follows the text size).
+                    maxHeight: tileGridHeight(
+                      MediaQuery.sizeOf(context).height,
                     ),
-                    child: SingleChildScrollView(
-                      child: Wrap(
-                        spacing: Tokens.space2,
-                        runSpacing: Tokens.space2,
-                        children: tileWidgets,
-                      ),
-                    ),
+                    spacing: Tokens.space2,
+                    runSpacing: Tokens.space2,
+                    children: tileWidgets,
                   ),
               ],
             ),
@@ -496,7 +492,8 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
 }
 
 /// The tallest the tile grid gets on a screen [screenHeight] high: 30% of it, but at
-/// least 112 and at most 240 logical pixels.
+/// least 112 and at most 240 logical pixels. Within it, [RowPeek] ends the grid in a
+/// cut row.
 double tileGridHeight(double screenHeight) =>
     (screenHeight * 0.3).clamp(112.0, 240.0);
 

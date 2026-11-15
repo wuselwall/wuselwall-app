@@ -10,6 +10,7 @@ import 'package:wuselwall/core/matching/dictionary.dart';
 import 'package:wuselwall/core/matching/matcher.dart';
 import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
+import 'package:wuselwall/core/ui/row_peek.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
@@ -207,6 +208,85 @@ void main() {
             t.getRect(find.byWidget(e.widget).first),
     ].where((r) => r.bottom <= finish);
     expect(whole.length, greaterThanOrEqualTo(2));
+  });
+
+  // iOS's accessibility audit measures what is in sight of a control: a row of which
+  // the grid's edge leaves 9 px is a hit area too small, and no sign that tiles follow.
+  for (final (device, size, textScale) in [
+    ('a phone', const Size(393, 852), 1.0),
+    ('a phone with large text', const Size(393, 852), 2.0),
+    ('a phone with the largest text', const Size(393, 852), 3.12),
+    ('a short phone', const Size(360, 640), 1.0),
+    ('a tablet', const Size(834, 1210), 1.0),
+    ('a tablet with the largest text', const Size(834, 1210), 3.12),
+  ]) {
+    testWidgets('on $device the tile grid ends in a row cut on purpose', (
+      t,
+    ) async {
+      t.platformDispatcher.textScaleFactorTestValue = textScale;
+      addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+      final semantics = t.ensureSemantics();
+      await pumpBody(
+        t,
+        [
+          for (var i = 0; i < 40; i++)
+            entry(i.isEven ? 'Ding$i' : 'Ding $i von vielen', 40 - i),
+        ],
+        register: UiRegister.adult,
+        size: size,
+      );
+
+      final scroller = find
+          .ancestor(
+            of: find.byType(Wrap),
+            matching: find.byType(SingleChildScrollView),
+          )
+          .first;
+      final grid = t.getRect(scroller);
+      expect(
+        grid.height,
+        lessThanOrEqualTo(tileGridHeight(size.height) + kRowPeek),
+      );
+      var whole = 0;
+      var cut = 0;
+      for (final tile in find.byType(ShoppingTile).evaluate()) {
+        final rect = t.getRect(find.byWidget(tile.widget));
+        final inSight = rect.intersect(grid).height;
+        if (inSight <= 0) continue;
+        if (inSight >= rect.height) {
+          whole++;
+          continue;
+        }
+        cut++;
+        expect(inSight, greaterThanOrEqualTo(kRowPeek));
+        // The same, as a screen reader and the audit get it.
+        final node = t.getSemantics(find.byWidget(tile.widget));
+        expect(node.rect.height, greaterThanOrEqualTo(kRowPeek));
+      }
+      expect(whole, greaterThan(0));
+      expect(cut, greaterThan(0), reason: 'the cut row says the tiles scroll');
+      semantics.dispose();
+    });
+  }
+
+  testWidgets('tiles that fit are all shown, and the grid does not scroll', (
+    t,
+  ) async {
+    await pumpBody(
+      t,
+      [
+        for (final n in ['Milch', 'Brot', 'Eier']) entry(n, 3),
+      ],
+      register: UiRegister.adult,
+      size: const Size(393, 852),
+    );
+    final scroller = find
+        .ancestor(
+          of: find.byType(Wrap),
+          matching: find.byType(SingleChildScrollView),
+        )
+        .first;
+    expect(t.getSize(scroller).height, t.getSize(find.byType(Wrap)).height);
   });
 
   test('the tile grid is 30% of the screen, between 112 and 240', () {
