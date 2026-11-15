@@ -241,6 +241,23 @@ ancestor before accepting its size. Initial and follow-up audits and geometry ar
 Unreachable, replaced or genuinely undersized controls remain failures, as do all other axe
 findings. `qualify:scroll-controls` checks those boundaries independently.
 
+Flutter's web engine needs four allowances in that audit, each with a control that keeps the
+boundary. A wrapper group that is smaller than its content but is no scroller is tried and
+skipped; the innermost ancestor the wheel really moves is the checkpoint. A sideways scroller
+never reports its position in `scrollLeft` (the engine writes it to `scrollTop` of both axes),
+so the audit puts those `scrollTop` values back to 0 where the engine itself placed the
+children, and counts a node that moved along the wheel's axis as scrolled. A row as wide as its
+list touches both sides of it without being cut, so across the scrolled axis it must only not
+reach outside; along it, it must still be strictly inside. And a pointer left over a node
+with a tooltip leaves an `aria-owns` reference to the closed overlay behind: a reference to a
+node that is gone, and that the element did not have before the first wheel step, is removed
+and listed (`pointerTraces`); one present before stays a finding. A node that an earlier
+checkpoint's scroll brought into view with its neighbour counts only if it is the node axe
+reported, is whole, and a fresh axe run no longer reports it.
+
+The JSON reporter writes every attachment's body into `results.json`, so the axe reports are
+attached as files: the full matrix's reports together exceed the length of a string.
+
 Rules fail their tests; existing findings are not suppressed. Flutter's histogram-based
 contrast checker can misread image/text regions: review the rendered pixels and fix actual
 problems instead of lowering the global threshold. axe's DOM colour rule is explicitly
