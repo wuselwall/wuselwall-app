@@ -27,7 +27,8 @@ const fonts = `
   @font-face { font-family: Atkinson; font-weight: 600; src: url(data:font/ttf;base64,${await font('AtkinsonHyperlegibleNext-SemiBold.ttf')}); }
   @font-face { font-family: Atkinson; font-weight: 800; src: url(data:font/ttf;base64,${await font('AtkinsonHyperlegibleNext-ExtraBold.ttf')}); }`;
 const logo = (await readFile(path.join(root, 'docs/public/logo.svg'))).toString('base64');
-const paper = '#f7f4ee', ink = '#1c1f23', tanne = '#2d6a4f';
+// The ground, ink and accent of the app's standard light theme (Palette.frisch, specs/17).
+const paper = '#f5f9f5', ink = '#1c1f23', tanne = '#177148';
 
 /** Captions per locale; the shot names are those of docs/tools/screenshots.mjs. */
 const copy = {
