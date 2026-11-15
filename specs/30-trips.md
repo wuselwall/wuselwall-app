@@ -235,8 +235,8 @@ it". The server (`trips` function, action `discover`) ranks:
 Filters: the window (or a month), the day temperature wanted (at least / at most), "little
 rain", the sea temperature (at least), tags, and the travel effort.
 
-- **Travel effort** needs the home place (a guardian sets it once: picked from the catalogue's
-  places or looked up with a geocoding service; stored rounded to two decimals). It is an
+- **Travel effort** needs the home place (a guardian sets it once: looked up by name with a geocoding
+  service, or typed as coordinates; stored rounded to two decimals). It is an
   estimate from the great-circle distance: up to 300 km *nah*, up to 800 km *eine lange
   Autofahrt*, up to 1,500 km *Kurzstrecke*, up to 4,000 km *Mittelstrecke*, beyond
   *Langstrecke*. It is labelled as an estimate and names no connection. With a route service
