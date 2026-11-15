@@ -133,6 +133,20 @@ test('absent Android evidence fails closed with its own originating phase and no
   assert.deepEqual(tablet.origin.markers, ['NATIVE REPORT INVALID android-tablet-large: JSONDecodeError']);
   const unrun = await profileOrigin(root, 'android-min-phone', '');
   assert.deepEqual(unrun, {status: 'not run', log: null, markers: []});
+  // A run whose instrumentation died names that, and the report it never wrote, in order.
+  await fs.rm(path.join(root, 'android-tablet-large/audit.json'));
+  await fs.writeFile(path.join(root, 'android-tablet-large/run.log'), [
+    'NATIVE LOGGED PHASE END android-instrumentation-tablet-large exit=0 log=audits.log',
+    'NATIVE INSTRUMENTATION FAILED android-tablet-large: java.lang.OutOfMemoryError: no stack trace available',
+    'NATIVE PHASE END android-report-probe-tablet-large exit=1',
+    'NATIVE REPORT MISSING android-tablet-large: no audit report on the device',
+  ].join('\n'));
+  const died = (await nativeEvidence(root, sha, true)).results.find(r => r.profile === 'android-tablet-large');
+  assert.equal(died.passed, false);
+  assert.match(died.error, /ENOENT/);
+  assert.deepEqual(died.origin.markers, [
+    'NATIVE INSTRUMENTATION FAILED android-tablet-large: java.lang.OutOfMemoryError: no stack trace available',
+    'NATIVE REPORT MISSING android-tablet-large: no audit report on the device']);
 });
 
 test('native evidence rejects unsuccessful subprocesses, ineffective font changes and detector misses', async t => {

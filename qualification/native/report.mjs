@@ -11,7 +11,7 @@ export const profiles = ['ios-phone', 'ios-tablet', 'android-phone', 'android-ta
   'ios-phone-large', 'ios-tablet-large', 'android-phone-large', 'android-tablet-large', 'android-min-phone'];
 // Evidence is uploaded; never record the runner's absolute checkout path in it.
 export const sanitize = (root, value) => String(value).split(`${path.resolve(root)}${path.sep}`).join('');
-const failureMarker = /^NATIVE (?:PHASE (?:TIMEOUT|START FAILED|CLEANUP INCOMPLETE) |LOGGED PHASE END \S+ exit=[1-9]|REPORT INVALID )/;
+const failureMarker = /^NATIVE (?:PHASE (?:TIMEOUT|START FAILED|CLEANUP INCOMPLETE) |LOGGED PHASE END \S+ exit=[1-9]|INSTRUMENTATION FAILED |REPORT (?:INVALID|MISSING) )/;
 // Where a profile's evidence went missing: its execution status and failure markers from its own log.
 export async function profileOrigin(root, profile, statuses) {
   const lines = statuses.split('\n');
