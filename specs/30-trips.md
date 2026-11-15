@@ -201,7 +201,12 @@ A check is ticked and unticked by any adult; nothing counts, ranks or earns poin
 - **Heute** (adult register) shows a trip card: before the trip (from 30 days before a fixed
   trip) the days left, the open to-dos that are due and the packing progress; during the trip
   "Tag 3 von 10", today's entries in time order, where the family sleeps tonight (address,
-  phone) and tomorrow's first entry.
+  phone) and tomorrow's first entry. While that card shows, Today's Vorfreude line leaves the
+  trip's countdown to it (the wall and the kid home keep theirs).
+- **While a trip is being planned** (a planned trip, or a fixed one further away, not past)
+  the card is one line: the nearest such trip, its dates and stage, "+N" for more, and *Alle
+  Reisen*. Ideas alone show nothing: the wish list is permanent and Today carries no
+  permanent line.
 - **Without network.** The trips, their entries and checks are read through the read cache
   ([ADR-006](adr/ADR-006-offline-strategy.md), `cacheKey`), so the last state is readable in a
   plane or abroad without roaming. Writing still needs the server.
@@ -372,7 +377,7 @@ rows gain `trip_id`.
 | `api.trip_check_tick(p_actor, p_id, p_done boolean)` | adult, no kiosk | |
 | `api.trip_check_delete(p_actor, p_id)` | adult, no kiosk | |
 | `api.trip_home_set(p_actor, p_home jsonb)` | guardian, no kiosk | `{name, lat, lon}` or `null` to forget it |
-| `api.service_provider_set(p_actor, p_provider, p_config jsonb)` | guardian, no kiosk | keys `enabled`, `capabilities`, `position`, `key` (a string stores it, `''` removes it, absent keeps it). The audit row never holds the key |
+| `api.service_provider_set(p_actor, p_provider, p_config jsonb)` | guardian, no kiosk | keys `enabled`, `capabilities`, `position`, `key` (a string stores it, `''` removes it, absent keeps it). A provider serves only the capabilities listed, so the app sends them when it switches one on. The audit row never holds the key |
 | `api.service_request(p_actor, p_capability)` → `{household_id, providers: [{provider, has_key, calls_today}]}` | adult, no kiosk (a null capability, for the test and catalogue actions: guardian) | the door of the Edge Functions: run as the caller before any provider is contacted |
 
 Service role only (`service_role_required` otherwise): `api.service_secrets(p_household)` →
@@ -418,6 +423,41 @@ minute, an hour and a day (Open-Meteo: 3, 20 and 48 places), so the page asks ag
 minute while places are pending and gives up, with a note, when the number has not fallen for
 five minutes. `windows` reads as the caller (RLS) and contacts nobody. `discover` contacts a provider only
 through the services runner, so every rule above holds for it.
+
+## Where it opens
+
+Trips are not a tab (a seventh destination does not fit a phone's bar, [09](09-clients-and-ux.md)).
+The ways in, all in the adult register and only on a server that announces `trips`:
+
+- the trip card or line on **Heute**;
+- the trip's own entry in the calendar (tapping it opens the trip, not the event editor; the
+  editor reached another way says the entry belongs to a trip);
+- *Reise planen* beside the template *Urlaub / Reise* under **Neuer Termin**;
+- from 600 logical pixels a small luggage button above the calendar's *Neuer Termin*, like
+  the tradition button (an app-bar action did not fit a 320-pixel toolbar);
+- *Wetter und Karten* in Einstellungen → Kalender und Schule, among the connections.
+
+## As built (2026-11-15)
+
+- The pages: `trips_page.dart` (list), `trip_page.dart` (header with the stage, tabs Plan,
+  Packen, Vorbereiten), `trip_entry_page.dart` (quick capture: kind, name and price),
+  `trip_compare_page.dart` (option cards, ticks, the combination bar, stored combinations,
+  *Diese nehmen*), `trip_windows_page.dart`, `trip_discover_page.dart`,
+  `services/ui/services_page.dart`; shared words and formats in `trip_labels.dart`, the
+  hand-over to the phone's own apps in `trip_links.dart`.
+- The starter packing list has 27 items in six groups (`packing_starters.dart`); the family
+  chooses the groups.
+- The provider budgets are counted a minute, an hour and a day. Open-Meteo's climate values
+  are built from four years of daily archive values and two years of sea temperature, about
+  158 weighted calls a place, hence 3 places a minute, 20 an hour and 48 a day.
+- A provider's *test* needs the provider switched on (and its key stored): the secrets of
+  switched-off providers are not read.
+- Checked against live answers: `open-meteo`, `met-no`, `nominatim`. Written from the
+  provider's documentation and tested against recorded examples only, because the project
+  holds no keys: `openweathermap`, `meteostat`, `openrouteservice`, `google`.
+- Not exercised yet: a phone or tablet (widget tests and the web demo only), a real provider
+  key, and booking files of real airlines and railways (the mapping is tested on synthetic
+  files in four languages).
 
 ## Considered and not chosen
 
