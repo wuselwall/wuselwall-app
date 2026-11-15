@@ -4328,6 +4328,333 @@
   "@shoppingTileStarter": {
     "description": "Shopping list tile: tooltip and hint of a tile the starter catalogue suggests, not yet one of the family's own"
   },
+  "tripEntryNewTitle": "Add option",
+  "tripEntryEditTitle": "Edit entry",
+  "tripEntryName": "Name",
+  "tripEntryNameRequired": "Please give it a name.",
+  "tripEntryMode": "Type of transport",
+  "tripEntryPrice": "Price ({currency})",
+  "@tripEntryPrice": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "tripEntryPriceFrom": "Price from {date}",
+  "@tripEntryPriceFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripEntryPriceInvalid": "Enter an amount such as 840 or 1249.50.",
+  "tripEntryLink": "Link",
+  "tripEntryLinkInvalid": "Use a web address that starts with http:// or https://.",
+  "tripEntryPasteLink": "Paste link",
+  "tripEntryPasteNone": "There is no web address on the clipboard.",
+  "tripEntryOpenLink": "Open link",
+  "tripEntryOpenFailed": "That could not be opened.",
+  "tripEntryMore": "More details",
+  "tripEntryLess": "Fewer details",
+  "tripEntryDetails": "Details",
+  "tripEntryDetailsHint": "1 stop, baggage included",
+  "tripEntryFrom": "From",
+  "tripEntryTo": "To",
+  "tripEntryPickUpPlace": "Pick-up place",
+  "tripEntryReturnPlace": "Return place",
+  "tripEntryStartTransport": "Departure",
+  "tripEntryEndTransport": "Arrival",
+  "tripEntryStartStay": "Check-in",
+  "tripEntryEndStay": "Check-out",
+  "tripEntryStartRental": "Pick-up",
+  "tripEntryEndRental": "Return",
+  "tripEntryStartPlain": "Start",
+  "tripEntryEndPlain": "End",
+  "tripEntryAddDate": "Add date",
+  "tripEntryAddTime": "Add time",
+  "tripEntryClearDate": "Remove date",
+  "tripEntryClearTime": "Remove time",
+  "tripEntryEndBeforeStart": "The end is before the start.",
+  "tripEntryCancelUntil": "Free cancellation until",
+  "tripEntryAddress": "Address",
+  "tripEntryOpenAddress": "Show on map",
+  "tripEntryPhone": "Phone",
+  "tripEntryCallPhone": "Call",
+  "tripEntryBookingRef": "Booking reference",
+  "tripEntryNote": "Note",
+  "tripEntryState": "State",
+  "tripEntryCopy": "Copy as another option",
+  "tripEntryCopied": "Copied. This is the copy.",
+  "tripEntryDelete": "Delete entry",
+  "tripEntryDeleteTitle": "Delete this entry?",
+  "tripEntryDeleteBody": "“{title}” is removed from the trip and from kept combinations.",
+  "@tripEntryDeleteBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripEntryGone": "This trip no longer exists.",
+  "tripEntryUnavailable": "Trips are not available on this device.",
+  "tripCompareTitle": "Compare",
+  "tripCompareUnavailable": "Comparing is not available on this device.",
+  "tripCompareGone": "This trip no longer exists.",
+  "tripCompareSection": "{kind} · {count}",
+  "@tripCompareSection": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripCompareStripLabel": "{kind}, options side by side",
+  "@tripCompareStripLabel": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareCheapest": "Cheapest",
+  "tripComparePerNight": "{price} per night",
+  "@tripComparePerNight": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComparePerDay": "{price} per day",
+  "@tripComparePerDay": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareNoPrice": "No price yet",
+  "tripCompareFromTo": "{from} → {to}",
+  "@tripCompareFromTo": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareRange": "{start} – {end}",
+  "@tripCompareRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareFreeCancel": "Free cancellation until {date}",
+  "@tripCompareFreeCancel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareCancelPassed": "Free cancellation has passed",
+  "tripCompareTick": "Try “{title}” in the combination",
+  "@tripCompareTick": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareEdit": "Edit",
+  "tripCompareAdd": "Add option",
+  "tripCompareAddTransport": "Add transport",
+  "tripCompareAddStay": "Add accommodation",
+  "tripCompareAddRental": "Add rental car",
+  "tripCompareEmptyTitle": "No options yet",
+  "tripCompareEmptyMessage": "Collect flights, accommodation and rental cars here, compare them and try out combinations.",
+  "tripCompareHint": "Tick one option of each kind, then keep the combination.",
+  "tripComboSection": "Kept combinations",
+  "tripComboTotal": "Total {amount}",
+  "@tripComboTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboTotalAtLeast": "At least {amount}",
+  "@tripComboTotalAtLeast": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboNights": "{count, plural, =1{1 night} other{{count} nights}}",
+  "@tripComboNights": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboDates": "{dates} · {nights}",
+  "@tripComboDates": {
+    "placeholders": {
+      "dates": {
+        "type": "String"
+      },
+      "nights": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboNoDates": "No dates yet",
+  "tripComboFits": "Fits together",
+  "tripComboWarningsCount": "{count, plural, =1{1 thing does not fit} other{{count} things do not fit}}",
+  "@tripComboWarningsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboShowAll": "Show all",
+  "tripComboShowLess": "Show less",
+  "tripComboKeep": "Keep as combination",
+  "tripComboWarnNights": "{count, plural, =1{1 night without accommodation: {dates}} other{{count} nights without accommodation: {dates}}}",
+  "@tripComboWarnNights": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "dates": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnRentalNoTransport": "{name}: rental car without any transport",
+  "@tripComboWarnRentalNoTransport": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnRentalBefore": "{name} starts before the arrival",
+  "@tripComboWarnRentalBefore": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnRentalAfter": "{name} ends after the departure",
+  "@tripComboWarnRentalAfter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnOverlap": "{first} and {second} overlap: {dates}",
+  "@tripComboWarnOverlap": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "dates": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnPrice": "{count, plural, =1{1 option has no price, the total is a minimum} other{{count} options have no price, the total is a minimum}}",
+  "@tripComboWarnPrice": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboKeepTitle": "Keep this combination",
+  "tripComboName": "Name of the combination",
+  "tripComboKept": "Combination kept.",
+  "tripComboRename": "Rename",
+  "tripComboLoad": "Load into the ticks",
+  "tripComboLoaded": "“{name}” is loaded. Change the ticks and keep it again.",
+  "@tripComboLoaded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboDelete": "Delete combination",
+  "tripComboDeleteTitle": "Delete “{name}”?",
+  "@tripComboDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboDeleteBody": "The options themselves stay.",
+  "tripComboTake": "Take this one",
+  "tripComboTakeTitle": "Take “{name}”?",
+  "@tripComboTakeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboTakeBody": "These become the chosen ones. Other chosen transport, accommodation and rental cars go back to options. Booked ones stay as they are.",
+  "tripComboSetDates": "Also set the trip's dates to {dates}",
+  "@tripComboSetDates": {
+    "placeholders": {
+      "dates": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboTaken": "Chosen: {chosen}. Back to options: {released}.",
+  "@tripComboTaken": {
+    "placeholders": {
+      "chosen": {
+        "type": "int"
+      },
+      "released": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboTakenDates": "Chosen: {chosen}. Back to options: {released}. The trip's dates are set.",
+  "@tripComboTakenDates": {
+    "placeholders": {
+      "chosen": {
+        "type": "int"
+      },
+      "released": {
+        "type": "int"
+      }
+    }
+  },
   "settingsGroupShoppingTitle": "Shopping",
   "settingsGroupShoppingSubtitle": "Learned words",
   "settingsSectionLearnedWords": "Learned words",
