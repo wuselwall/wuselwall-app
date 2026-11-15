@@ -64,6 +64,12 @@ errors. iOS retains seven unnamed scroll-container findings and four clipped hit
 findings in Today/shopping; none is approved or waived. This phone smoke does not
 establish full nine-profile coverage. No native baseline or reviewed exception is approved.
 
+Capture run 43642368205 (`3631f0c7`) collected all four iOS profiles: 224 unnamed scroll
+views and 78 hit areas, every one of them a full-size control cut by a scroll view's edge,
+68 of them catalogue tiles of the shopping list. With the tile grid ending in a row cut on
+purpose, phone diagnostic 43711510549 reports the seven scroll views and one list row at
+the fold. The [native runbook](native/README.md#unnamed-scroll-views-on-ios) has the causes.
+
 The ordinary CI workflow and candidate commands serialize Flutter test files while
 engine finalization failures are investigated. The wrapper defaults to four outside
 that workflow; `FLUTTER_TEST_CONCURRENCY` accepts 1–16. Candidate commands never

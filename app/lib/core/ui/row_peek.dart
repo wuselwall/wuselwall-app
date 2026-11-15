@@ -179,4 +179,22 @@ class _RenderRowPeekBox extends RenderProxyBox {
     }
     size = constraints.constrain(child.size);
   }
+
+  // Asked before the rows are laid out, the strip answers with its budget, as the
+  // `ConstrainedBox` it stands for would.
+  @override
+  double computeMinIntrinsicHeight(double width) =>
+      super.computeMinIntrinsicHeight(width).clamp(0, maxHeight);
+
+  @override
+  double computeMaxIntrinsicHeight(double width) =>
+      super.computeMaxIntrinsicHeight(width).clamp(0, maxHeight);
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) => super.computeDryLayout(
+    constraints.copyWith(
+      minHeight: 0,
+      maxHeight: maxHeight.clamp(0, constraints.maxHeight),
+    ),
+  );
 }

@@ -188,8 +188,11 @@ does not end at a scroll view's edge is a real target-size defect.
 Where the app lays out the scrolling area itself it leaves no sliver: the catalogue tiles
 of the shopping list end in a row that is cut to 44 pt on purpose (`RowPeek`). A page that
 continues below the fold, or a row of chips that scrolls sideways, cuts whatever lies at
-its edge; the device, the text size and the language decide what that is. Such a finding
-stays blocking: no review kind covers it.
+its edge; the device, the text size and the language decide what that is, and so does
+every change to a layout above it. Diagnostic run 43711510549 showed it: with the tile
+grid 42 pt shorter, the list below moved up, and the fold that had cut a category heading
+now left 16 pt of the row "Brot". Such a finding stays blocking: no review kind covers it,
+and the app cannot lay out a page so that nothing is ever cut.
 
 ## Explicitly reviewed framework findings
 

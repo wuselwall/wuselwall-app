@@ -35,8 +35,11 @@ semantic comparisons are implemented. The dedicated native toolchain is provisio
 runner preflight passed. The current phone diagnostic captures seven screens and
 records nine audit entries per platform, including server claim and shopping trip.
 Both platforms pass detector/keyboard checks with no framework errors. Android passes
-after enlarging the calendar date-header target. iOS's scroll-container and clipped
-Today/shopping hit-area findings remain blocking.
+after enlarging the calendar date-header target. iOS's scroll-container findings and
+its hit-area findings remain blocking: the first are the embedder's own unnamed scroll
+view, the second full-size controls of which a scroll view's edge leaves a sliver (the
+[native runbook](../qualification/native/README.md#unnamed-scroll-views-on-ios) has both
+causes). The shopping list's tile grid no longer leaves one; a page's fold still can.
 These diagnostics do not establish complete native coverage or an approved baseline.
 Native platform interaction uses dedicated adapters and a test-only Flutter checkpoint
 bridge; Patrol is not a current dependency.
