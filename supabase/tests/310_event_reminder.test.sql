@@ -73,8 +73,8 @@ insert into devs
 select has_column('app', 'event', 'reminder_minutes', 'app.event carries the reminder');
 select has_column('api', 'events', 'reminder_minutes', 'api.events shows it');
 select is((select column_name::text from information_schema.columns
-            where table_schema = 'api' and table_name = 'events' order by ordinal_position desc limit 1),
-  'reminder_minutes', 'as the view''s last column: the ones before it keep their place');
+            where table_schema = 'api' and table_name = 'events' order by ordinal_position desc limit 1 offset 1),
+  'reminder_minutes', 'right after the columns before it, which keep their place (20261115110000 appends trip_id)');
 
 -- ---- saving, keeping and clearing ------------------------------------------------------------------------
 select pg_temp.act_as_dev('papa');
