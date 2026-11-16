@@ -97,12 +97,22 @@ void main() {
                 find.byKey(const ValueKey('import-event-save')),
                 findsOneWidget,
               );
+              // The demo family has upcoming trips: the file can go into one.
+              expect(
+                find.byKey(const ValueKey('import-event-to-trip')),
+                findsOneWidget,
+              );
             } else if (state['id'] == 'event-import-refused') {
-              // The refusal, not the parents-only note or a preview.
+              // The refusal, not the parents-only note or a preview. The demo family
+              // has upcoming trips, so the several events are offered to one of them.
               expect(
                 find.text(
-                  lookupAppLocalizations(Locale(locale)).eventImportSeveral,
+                  lookupAppLocalizations(Locale(locale)).tripImportSeveral,
                 ),
+                findsOneWidget,
+              );
+              expect(
+                find.byKey(const ValueKey('import-event-to-trip')),
                 findsOneWidget,
               );
               expect(

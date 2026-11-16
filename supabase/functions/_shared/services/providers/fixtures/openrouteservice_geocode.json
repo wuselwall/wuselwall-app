@@ -1,0 +1,54 @@
+{
+ "geocoding": {
+  "version": "0.2"
+ },
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -9.1365919,
+     38.7077507
+    ]
+   },
+   "properties": {
+    "id": "101748081",
+    "gid": "whosonfirst:locality:101748081",
+    "layer": "locality",
+    "source": "whosonfirst",
+    "name": "Lisbon",
+    "confidence": 0.95,
+    "country": "Portugal",
+    "country_gid": "whosonfirst:country:85633739",
+    "country_a": "PRT",
+    "region": "Lisbon",
+    "region_gid": "whosonfirst:region:85682375",
+    "locality": "Lisbon",
+    "label": "Lisbon, Lisbon, Portugal"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -97.6812,
+     46.4416
+    ]
+   },
+   "properties": {
+    "id": "1",
+    "layer": "locality",
+    "source": "whosonfirst",
+    "name": "Lisbon",
+    "country": "United States",
+    "country_a": "USA",
+    "region": "North Dakota",
+    "macroregion": "Midwest",
+    "label": "Lisbon, ND, USA"
+   }
+  }
+ ]
+}

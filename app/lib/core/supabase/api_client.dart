@@ -101,7 +101,8 @@ class ApiClient {
 /// network error. A JSON reply carrying `code` (SQLSTATE) and `hint` keeps them; without
 /// them the HTTP status stands in for the SQLSTATE the `api` functions would raise
 /// (401 auth, 403 permission, 404 not found, 400 and 422 invalid input). A function that
-/// is not deployed at all is "not found" too.
+/// is not deployed at all is "not found" too. A reply that names its refusal as
+/// `{error: 'service_off'}` and has no hint keeps that word as the failure's `code`.
 Object functionError(String name, FunctionException error) {
   if (error.status == 0) {
     return http.ClientException('Edge Function $name unreachable');
@@ -122,10 +123,16 @@ Object functionError(String name, FunctionException error) {
         422 => '22023', // invalid parameter value: input the function rejected
         _ => '${error.status}',
       };
+  final named = details['error'];
   return PostgrestException(
     message: 'Edge Function $name failed with status ${error.status}',
     code: sqlState,
-    hint: details['hint'] as String?,
+    hint:
+        details['hint'] as String? ??
+        (named is String && _errorCode.hasMatch(named) ? named : null),
     details: error.details,
   );
 }
+
+/// The shape of an Edge Function's own error word (`service_off`, `invalid_request`).
+final _errorCode = RegExp(r'^[a-z][a-z0-9_]{2,40}$');

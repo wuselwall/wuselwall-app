@@ -42,6 +42,41 @@ void main() {
       expect(failure.code, 'rrule_invalid');
     });
 
+    test('an error word of the function becomes the failure code', () {
+      final off = mapError(
+        functionError(
+          'services',
+          const FunctionException(
+            status: 409,
+            details: {'error': 'service_off'},
+          ),
+        ),
+      );
+      expect(off.code, 'service_off');
+      final limit = mapError(
+        functionError(
+          'services',
+          const FunctionException(
+            status: 429,
+            details: {'error': 'service_limit'},
+          ),
+        ),
+      );
+      expect(limit.code, 'service_limit');
+      // A hint still wins over the word.
+      final hinted = mapError(
+        functionError(
+          'trips',
+          const FunctionException(
+            status: 403,
+            details: {'code': '42501', 'hint': 'adults_only', 'error': 'x_y'},
+          ),
+        ),
+      );
+      expect(hinted, isA<PermissionFailure>());
+      expect(hinted.code, 'adults_only');
+    });
+
     test('a function the server does not have is not found', () {
       final failure = mapError(
         functionError(

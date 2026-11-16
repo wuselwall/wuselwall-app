@@ -4,6 +4,7 @@ import net from 'node:net';
 import { spawn } from 'node:child_process';
 import { cases, checkInventory, inventory, root } from './matrix.mjs';
 import { environment, verify } from './baseline.mjs';
+import { readReportStats } from './report-stats.mjs';
 
 checkInventory();
 const mode = process.env.QUALIFY_MODE || 'compare';
@@ -20,6 +21,7 @@ const out = path.join(root, 'build/qualification/web');
 fs.mkdirSync(out, { recursive: true });
 fs.rmSync(path.join(out, 'results.json'), { force: true });
 fs.rmSync(path.join(out, 'evidence.json'), { force: true });
+for (const health of ['reporter-html.health.json', 'reporter-json.health.json']) fs.rmSync(path.join(out, health), { force: true });
 // Never let a partial rerun inherit snapshots from a previous capture.
 if (mode === 'capture') fs.rmSync(path.join(root, 'build/qualification/capture'), { recursive: true, force: true });
 const reservation = net.createServer();
@@ -42,11 +44,23 @@ const samples = cases(process.env.QUALIFY_MATRIX || 'canonical');
 const browsers = (process.env.QUALIFY_BROWSERS || 'chromium').split(',');
 const expected = browsers.reduce((count, browser) => count + 1 + samples.filter(s => browser === 'chromium' || s.native && s.tier === 'canonical').length, 0);
 const reportPath = path.join(out, 'results.json');
-const stats = fs.existsSync(reportPath) ? JSON.parse(fs.readFileSync(reportPath, 'utf8')).stats : null;
-const executionPassed = result.status === 0 && stats?.expected === expected && !stats?.unexpected && !stats?.flaky;
+// The full-matrix report can be hundreds of MB; never parse it whole (that is
+// what threw RangeError: Invalid string length). readReportStats reads a bounded
+// tail; `stats` is the report's last key in both the built-in and the streamed
+// reporter.
+const reportGenerated = fs.existsSync(reportPath);
+const stats = reportGenerated ? readReportStats(reportPath) : null;
+const readHealth = (name) => {
+  try { return JSON.parse(fs.readFileSync(path.join(out, name), 'utf8')); }
+  catch { return { reporter: name.replace(/^reporter-|\.health\.json$/g, ''), ok: false, error: 'missing (reporter did not finish)' }; }
+};
+const reporters = { html: readHealth('reporter-html.health.json'), json: readHealth('reporter-json.health.json') };
+const reportersHealthy = Object.values(reporters).every((r) => r.ok === true);
+const executionPassed = result.status === 0 && stats?.expected === expected && !stats?.unexpected && !stats?.flaky && reportersHealthy;
 fs.writeFileSync(path.join(out, 'evidence.json'), JSON.stringify({ schema: 1, mode,
   candidateSha: process.env.QUALIFY_CANDIDATE_SHA || null, environment: environment(),
   matrix: process.env.QUALIFY_MATRIX || 'canonical', expected, stats, selection: args, executionPassed,
+  childStatus: result.status, childSignal: result.signal, reportGenerated, reporters,
   qualification: 'INCOMPLETE', baselineVerified: mode === 'compare', openGates: inventory.openGates,
 }, null, 2));
 process.exitCode = executionPassed ? 0 : 1;

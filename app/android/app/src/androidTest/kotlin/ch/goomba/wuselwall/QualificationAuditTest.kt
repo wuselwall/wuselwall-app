@@ -27,10 +27,15 @@ class QualificationAuditTest {
     private val automation = instrumentation.uiAutomation
     private val context = instrumentation.targetContext
 
-    private fun request(path: String, payload: JSONObject? = null): JSONObject {
+    private fun open(path: String): HttpURLConnection {
         val connection = URL("http://127.0.0.1:18765/$path").openConnection() as HttpURLConnection
         connection.connectTimeout = 2000
         connection.readTimeout = 5000
+        return connection
+    }
+
+    private fun request(path: String, payload: JSONObject? = null): JSONObject {
+        val connection = open(path)
         if (payload != null) {
             connection.requestMethod = "POST"
             connection.doOutput = true
@@ -41,9 +46,12 @@ class QualificationAuditTest {
         finally { connection.disconnect() }
     }
 
+    // `progress` is the bridge's state without the results collected so far. The whole
+    // report grows by every case's findings and semantics; parsing it on each poll fills
+    // the app's Java heap, which this instrumentation shares (48 MB on the API 24 image).
     private fun ready(): JSONObject {
         repeat(180) {
-            try { val state = request("state"); if (state.optBoolean("ready") || state.optBoolean("done")) return state }
+            try { val state = request("progress"); if (state.optBoolean("ready") || state.optBoolean("done")) return state }
             catch (_: java.io.IOException) { }
             Thread.sleep(500)
         }
@@ -76,6 +84,12 @@ class QualificationAuditTest {
     private fun shell(command: String): String =
         ParcelFileDescriptor.AutoCloseInputStream(automation.executeShellCommand(command))
             .bufferedReader().use { it.readText() }
+
+    /** Every interactive window with its owner, for the failure that names a foreign one. */
+    private fun windows(): String = automation.windows.joinToString { window ->
+        "${window.title ?: "untitled"} (${window.root?.packageName ?: "no root"}, type ${window.type}" +
+            "${if (window.isActive) ", active" else ""}${if (window.isFocused) ", focused" else ""})"
+    }
 
     private fun semantics(node: AccessibilityNodeInfo): JSONObject {
         val children = JSONArray()
@@ -114,7 +128,7 @@ class QualificationAuditTest {
         context.startActivity(Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
         var state: JSONObject? = null
         repeat(120) {
-            if (state == null) try { state = request("state") } catch (_: java.io.IOException) { Thread.sleep(500) }
+            if (state == null) try { state = request("progress") } catch (_: java.io.IOException) { Thread.sleep(500) }
         }
         assertNotNull("Audit bridge never started", state)
         var detector = false
@@ -126,8 +140,10 @@ class QualificationAuditTest {
             val sample = ready()
             if (sample.optBoolean("done")) break
             val id = sample.getString("id")
-            val root = automation.rootInActiveWindow ?: error("No Android accessibility window")
-            assertEquals(context.packageName, root.packageName.toString())
+            val root = automation.rootInActiveWindow ?: error("No Android accessibility window for $id")
+            // The audit inspects the app's own window, never one that covers it.
+            val owner = root.packageName?.toString()
+            if (owner != context.packageName) fail("Active window of $id belongs to $owner, not to the app; windows: ${windows()}")
             val issues = JSONArray()
             if (id == "detector-keyboard") {
                 val field = find(root, "native-keyboard-field") ?: error("Flutter text input is absent from Android semantics")
@@ -147,13 +163,13 @@ class QualificationAuditTest {
                     // wait for Android's input process to deliver its events.
                     shell("input text qualification")
                     for (attempt in 0 until 50) {
-                        keyboard = request("state").getString("input") == "qualification"
+                        keyboard = request("progress").getString("input") == "qualification"
                         if (keyboard) break
                         Thread.sleep(100)
                     }
                 }
                 if (!keyboard) issues.put(JSONObject().put("check", "nativeTextInput").put("type", "ERROR")
-                    .put("clicked", clicked).put("focused", focused).put("input", request("state").optString("input")))
+                    .put("clicked", clicked).put("focused", focused).put("input", request("progress").optString("input")))
             } else {
                 val hierarchy = AccessibilityHierarchyAndroid.newBuilder(root, context).build()
                 // A Flutter host with no virtual tree would make a vacuous ATF pass.
@@ -188,9 +204,15 @@ class QualificationAuditTest {
                 .put("passed", if (id == "detector-bad") detector else !failed).put("nodesSource", "UiAutomation.AccessibilityNodeInfo").put("semantics", semantics(root)))
             cases++
         }
-        val report = request("state")
-        context.openFileOutput("qualification-native-audit.json", 0).use { it.write(report.toString(2).toByteArray()) }
-        assertEquals(report.getInt("expected"), cases)
+        // Copy the finished report as the bridge sends it, without building it in memory.
+        val report = open("state")
+        try {
+            assertEquals("Audit report request", HttpURLConnection.HTTP_OK, report.responseCode)
+            report.inputStream.use { body ->
+                context.openFileOutput("qualification-native-audit.json", 0).use { body.copyTo(it) }
+            }
+        } finally { report.disconnect() }
+        assertEquals(request("progress").getInt("expected"), cases)
         assertTrue("Bad control was not rejected by ATF", detector)
         assertTrue("Native editable semantics did not update Flutter", keyboard)
         assertEquals("Flutter framework errors", 0, frameworkErrorCount)

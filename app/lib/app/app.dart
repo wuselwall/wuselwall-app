@@ -47,6 +47,8 @@ class WuselWallApp extends ConsumerWidget {
     // (`device.night_hours`) whatever the OS or the device's appearance says;
     // otherwise the appearance picks light or dark, by default as the OS does.
     final night = register == UiRegister.kiosk && ref.watch(nightProvider);
+    // Each device shows the light and the dark theme it chose (specs/17 "Themes").
+    final looks = ref.watch(looksProvider).value ?? const Looks();
 
     return MaterialApp.router(
       onGenerateTitle: (context) => context.l10n.appTitle,
@@ -57,8 +59,8 @@ class WuselWallApp extends ConsumerWidget {
       locale: ref.watch(appLocaleProvider),
       supportedLocales: appLocales,
       localizationsDelegates: localizationsDelegates,
-      theme: AppTheme.build(register, night ? Shade.night : Shade.light),
-      darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),
+      theme: AppTheme.look(register, night ? Look.night : looks.light),
+      darkTheme: AppTheme.look(register, night ? Look.night : looks.dark),
       themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
       builder: (context, child) {
         // Wusel's stage sits above the navigator, so a trip can cross a dialog

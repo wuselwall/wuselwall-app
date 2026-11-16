@@ -45,7 +45,7 @@ Future<({Uint8List rgba, int width})> _render(
 
 void main() {
   for (final shade in Shade.values) {
-    final ww = WwColors(shade: shade);
+    final ww = WwColors(look: Look.standard(shade));
     final ink = _rgb(ww.qrInk), paper = _rgb(ww.qrPaper);
 
     for (final (name, data, logical, dpr) in [
@@ -124,7 +124,7 @@ void main() {
   });
 
   test('refuses an inverted (light on dark) code', () {
-    final ww = WwColors(shade: Shade.dark);
+    final ww = WwColors(look: Look.standard(Shade.dark));
     expect(
       () => QrMatrixPainter(
         image: _matrix(_enrolment),

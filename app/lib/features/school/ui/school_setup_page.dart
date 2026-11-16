@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -1126,11 +1127,7 @@ class _Subjects extends ConsumerWidget {
                   color: PaperTints.tints
                       .where((t) => t.key == s.tint)
                       .firstOrNull
-                      ?.of(
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Shade.dark
-                            : Shade.light,
-                      ),
+                      ?.of(context.ww.look),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(schoolIcon(s.iconKey), size: 20),
@@ -1207,9 +1204,7 @@ class _SubjectDialogState extends State<_SubjectDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final shade = Theme.of(context).brightness == Brightness.dark
-        ? Shade.dark
-        : Shade.light;
+    final look = context.ww.look;
     return AlertDialog(
       title: Text(l10n.schoolSubjectEdit),
       content: SingleChildScrollView(
@@ -1236,8 +1231,8 @@ class _SubjectDialogState extends State<_SubjectDialog> {
                   ChoiceChip(
                     label: const SizedBox(width: 14, height: 14),
                     selected: _tint == t.key,
-                    selectedColor: t.of(shade),
-                    backgroundColor: t.of(shade),
+                    selectedColor: t.of(look),
+                    backgroundColor: t.of(look),
                     onSelected: (_) => setState(() => _tint = t.key),
                   ),
               ],

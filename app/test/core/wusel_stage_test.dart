@@ -8,7 +8,7 @@ import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 
 final _appearance = WuselAppearance(
-  colors: WuselColors.of(Shade.light, const []),
+  colors: WuselColors.of(Look.frisch, const []),
 );
 
 /// A screen with Wusel's home at the top and a card further down.

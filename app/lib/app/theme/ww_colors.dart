@@ -5,11 +5,14 @@ import 'package:wuselwall/app/theme/palette.dart';
 /// points gold. Read it with `context.ww`.
 @immutable
 class WwColors extends ThemeExtension<WwColors> {
-  const WwColors({required this.shade});
+  const WwColors({required this.look});
 
-  final Shade shade;
+  /// The theme this device shows (specs/17 "Themes").
+  final Look look;
 
-  ShadeColors get _c => Palette.of(shade);
+  Shade get shade => look.shade;
+
+  ShadeColors get _c => Palette.look(look);
 
   Color get sunken => _c.sunken;
   Color get line => _c.line;
@@ -34,24 +37,24 @@ class WwColors extends ThemeExtension<WwColors> {
     final s = MemberPalette.resolve(stored);
     return MemberColors(
       ink: s.ink(shade),
-      onInk: s.onInk(shade),
+      onInk: s.onInk(look),
       tint: s.tint(shade),
     );
   }
 
-  Color paper(PaperTint tint) => tint.of(shade);
+  Color paper(PaperTint tint) => tint.of(look);
 
   /// A module's pale band (specs/26): headers, the selected navigation item.
-  Color band(AppModule module) => ModuleBands.of(module).of(shade);
+  Color band(AppModule module) => ModuleBands.of(module).of(look);
 
   /// An illustration colour (specs/26 "Decoration"), and the text that may sit on it.
   Color decor(Decor decor) => decor.of(shade);
-  Color get onDecor => Decor.onDecor(shade);
+  Color get onDecor => Decor.onDecor(look);
 
   @override
-  WwColors copyWith({Shade? shade}) => WwColors(shade: shade ?? this.shade);
+  WwColors copyWith({Look? look}) => WwColors(look: look ?? this.look);
 
-  // Shades switch, they do not blend.
+  // Themes switch, they do not blend.
   @override
   WwColors lerp(WwColors? other, double t) =>
       t < 0.5 || other == null ? this : other;

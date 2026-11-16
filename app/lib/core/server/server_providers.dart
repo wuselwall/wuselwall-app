@@ -42,6 +42,15 @@ const featureShoppingStart = 'shopping-start';
 /// event"). Announced by the migration 20261114120000.
 const featureEventReminder = 'event-reminder';
 
+/// The server plans family trips: ideas, time windows, options and their comparison,
+/// packing and to-dos, discovery (specs/30). Announced by the migration
+/// 20261115110000.
+const featureTrips = 'trips';
+
+/// The server offers opt-in weather and map services through the family's own server
+/// (ADR-023, specs/30 "Services"). Announced by the migration 20261115100000.
+const featureServices = 'services';
+
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
 /// signs in with a password, and a forgotten password is reset with a guardian's code
 /// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.
@@ -70,4 +79,15 @@ final serverSupportsProvider = Provider.family<bool, String>((ref, feature) {
 /// in the demo.
 final appVersionProvider = FutureProvider<String>(
   (ref) async => (await PackageInfo.fromPlatform()).version,
+);
+
+/// Whether the server has the trips (specs/30); without, every entry point is hidden.
+final tripsSupportedProvider = Provider<bool>(
+  (ref) => ref.watch(serverSupportsProvider(featureTrips)),
+);
+
+/// Whether the server has the opt-in services (ADR-023); without, the settings page and
+/// every weather, place and route line are hidden.
+final servicesSupportedProvider = Provider<bool>(
+  (ref) => ref.watch(serverSupportsProvider(featureServices)),
 );

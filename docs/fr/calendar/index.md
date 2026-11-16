@@ -39,11 +39,13 @@ Touchez **Nouvel événement** : il commence le jour affiché par le calendrier 
 
 Des tuiles s’affichent d’abord, pour ne pas tout saisir depuis le début :
 
-- **Modèles** : **Ménage**, **Événement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie**, **Goûter d’anniversaire**, **Spectacle**, **Vacances / voyage** et **Anniversaire** (toute la journée, tous les ans) ; ce que vous utilisez souvent vient en premier, les modèles annuels en dernier. **Ménage** est le seul modèle hebdomadaire : il se répète chaque semaine le jour choisi, à 09:00 pour trois heures, avec un balai comme image, pour la personne qui le saisit. Chacun remplit le titre, l’image, l’heure, la durée et les personnes. Une famille avec un enfant voit en dessous une section **École** : **Réunion de parents**, **Entretien avec l’école**, **Sortie scolaire**, **Contrôle**, **Fête de l’école** et **Journée sportive**. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
+- **Modèles** : **Venue de l’aide ménagère**, **Entraînement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie en famille**, **Jeux avec les copains**, **Sortie au cinéma**, **Vacances en famille** et **Anniversaire** (toute la journée, tous les ans). Chacun remplit le titre, l’image, l’heure, la durée et les personnes. L’entraînement commence à 17:00 pour une heure, les jeux avec les copains à 15:00 pour deux heures avec les enfants, et la sortie au cinéma à 16:00 pour deux heures avec la famille. Une sortie en famille dure une journée ; les vacances en famille sont prévues sur sept jours au départ. **Venue de l’aide ménagère** se répète chaque semaine le jour choisi, à 09:00 pour trois heures, pour la personne qui saisit la visite. Une famille avec un enfant voit aussi **École** : **Réunion de classe** pour l’ensemble des parents, **Entretien avec l’enseignant** pour un rendez-vous individuel, **Sortie scolaire**, **Contrôle**, **Fête de l’école** et **Journée sportive scolaire**. Tu peux modifier toutes ces valeurs. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
 - **Vos modèles** : ceux que vous avez enregistrés. Dans l’éditeur, touchez **Enregistrer comme modèle** en haut ; le titre, l’image, l’heure, la durée, les personnes, le lieu et les notes sont gardés, ni la date ni la répétition.
 - **Souvent chez vous** : les événements saisis au moins trois fois, comme « Mamie et papi viennent ». WuselWall ne compte que vos propres événements, sur votre serveur ; rien n’en sort. Avec **⋮**, choisissez **Garder comme modèle** ou **Ne plus proposer**.
 
 Ce que la tuile remplit n’est qu’un point de départ : modifiez ce qui change, puis enregistrez. **Retour** ramène aux tuiles.
+
+À côté de **Vacances / voyage** se trouve la tuile **Planifier un voyage** : elle ouvre [Voyages](/fr/trips/#find), où vous comparez des options, cherchez des périodes libres et préparez la liste de valise. **Vacances / voyage** ne crée en revanche qu’un simple rendez-vous.
 
 <Shot name="calendar-templates" alt="Nouvel événement avec des tuiles : Souvent chez vous, Vos modèles et des modèles comme Anniversaire et Invités à dîner" />
 
@@ -137,6 +139,8 @@ Le fichier est une copie. Si l’événement change plus tard, partagez-le de no
 
 ## Ajouter un événement qu’on vous a envoyé {#receive-event}
 
+Si WuselWall ne peut pas ajouter le fichier, la page explique pourquoi. Touchez **Fermer** pour revenir en arrière ; rien n’est enregistré.
+
 Une autre famille vous a envoyé un fichier de calendrier (il se termine par **.ics**) ? Un parent peut l’ajouter au calendrier familial, sur son propre téléphone ou sa tablette.
 
 - **Depuis le message :** touchez le fichier et choisissez **WuselWall** sous « Ouvrir avec ».
@@ -147,6 +151,8 @@ WuselWall affiche d’abord l’événement : titre, heure, lieu et notes. Chois
 L’événement est ensuite votre propre copie : vous pouvez le modifier ou le supprimer comme n’importe quel autre. L’expéditeur n’est informé de rien.
 
 Si le même événement est envoyé de nouveau après un changement, WuselWall le reconnaît et propose **Mettre à jour l’événement** au lieu de l’ajouter deux fois. Un fichier contenant plusieurs événements n’est pas accepté ici ; un calendrier entier se place sous [Calendriers externes](#outside-calendars).
+
+Si le fichier appartient à une réservation et que vous avez un voyage prévu ou décidé, WuselWall propose aussi **Ajouter au voyage** : il devient alors une entrée du voyage au lieu d’un événement du calendrier (voir [Le fichier de calendrier d’une réservation](/fr/trips/#booking-file)).
 
 ## Outlook et iPhone {#appointments-in-outlook-or-on-an-iphone}
 

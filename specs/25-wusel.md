@@ -36,7 +36,7 @@ The reference drawing is [`specs/brand/wusel.svg`](brand/) on a 100 × 100 grid,
 
 | Part | Drawn as | Colour |
 |---|---|---|
-| Body | The rounded drop of the reference path, squashed or stretched by the pose | `brand` of the shade. Light: Tanne `#2D6A4F`; dark: `#6CC79A`; night: the dark value mixed 72 % over the night ground, as member inks are ([17](17-design-system.md#member-colours)) |
+| Body | The rounded drop of the reference path, squashed or stretched by the pose | The brand mark's green in every theme, like the icon: Tanne `#2D6A4F` in light, `#6CC79A` in dark (the app's own `brand` moved to a fresher green on 2026-11-15, [17](17-design-system.md#neutrals-brand-and-semantics-direction-a)); night: the dark value mixed 72 % over the night ground, as member inks are ([17](17-design-system.md#member-colours)) |
 | Tufts | One stroke per member, in board order, 1–6 tufts; more members show the first six | Each member's ink in the current shade. Before a household exists (the front door), swatches 1–4 |
 | Eyes | White sclera, ink pupils; or a happy arc; or a closed arc | `#FFFFFF` and `ink`; at night the sclera is `#CDB994` |
 | Cheeks | Two soft ellipses | `#FF85AE` at 60 % (the dark raspberry ink), in every shade |

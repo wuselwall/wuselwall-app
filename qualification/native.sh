@@ -31,6 +31,29 @@ if not isinstance(report, dict) or report.get('schemaVersion') != 1 or report.ge
     sys.exit(f'NATIVE REPORT INVALID {sys.argv[1].rsplit("/", 2)[-2]}: not a finished audit report')
 PY
 }
+# `am instrument` exits 0 whatever its tests did: its output carries the verdict.
+instrumentation_passed() {
+  python3 - "$1" "$2" <<'PY'
+import re, sys
+try:
+    with open(sys.argv[1], errors='replace') as handle:
+        lines = handle.read().splitlines()
+except OSError:
+    lines = []
+passed = any(re.fullmatch(r'OK \(\d+ tests?\)', line) for line in lines)
+failure = next((line.split('=', 1)[1] for line in lines
+                if re.match(r'INSTRUMENTATION_(STATUS: stack|RESULT: shortMsg|RESULT: longMsg)=', line)), None)
+if passed and failure is None and 'FAILURES!!!' not in lines:
+    sys.exit(0)
+sys.exit(f'NATIVE INSTRUMENTATION FAILED {sys.argv[2]}: {(failure or "no test verdict in its output")[:300]}')
+PY
+}
+# `adb` prints a missing file's error with exit status 0 on older devices: only the exact listing counts.
+android_report_present() {
+  [[ "$2" == files/qualification-native-audit.json ]] && return 0
+  printf 'NATIVE REPORT MISSING %s: no audit report on the device\n' "$1" >&2
+  return 1
+}
 mkdir -p "$output"
 # A runner that falls asleep stops answering the server and the job is lost: keep the machine
 # awake for as long as this script runs. A closed lid on battery still sleeps.
@@ -216,6 +239,13 @@ PY
     run_deadline 30 android-large-density adb -s emulator-5580 shell wm density "$((physical_density * 125 / 100))"
   fi
   run_deadline 30 android-keyboard-config adb -s emulator-5580 shell settings put secure show_ime_with_hard_keyboard 1
+  # A device that has never shown an app in full screen explains it once ("Viewing full
+  # screen"), in a System UI window that takes the focus. The wall display is full screen,
+  # and the audit only accepts the app's own window: record the explanation as seen.
+  run_deadline 30 android-immersive-confirmation adb -s emulator-5580 shell settings put secure immersive_mode_confirmations confirmed
+  local immersive
+  immersive=$(run_deadline 30 android-immersive-confirmation-probe adb -s emulator-5580 shell settings get secure immersive_mode_confirmations | tr -d '\r')
+  [[ "$immersive" == confirmed ]] || { echo 'The full-screen explanation could not be marked as seen.' >&2; return 1; }
   run_deadline 30 android-demo-config adb -s emulator-5580 shell settings put global sysui_demo_allowed 1
   run_deadline 30 android-demo-clock adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0941 >/dev/null
   run_deadline 30 android-demo-battery adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged true >/dev/null
@@ -235,12 +265,23 @@ PY
   run_logged_deadline "$audit_timeout" "android-instrumentation-$kind" "$output/android-$kind/audits.log" adb -s emulator-5580 shell am instrument -w -r \
     -e class ch.goomba.wuselwall.QualificationAuditTest \
     ch.goomba.wuselwall.test/androidx.test.runner.AndroidJUnitRunner || failed=1
-  # Instrumentation may exit zero with failures; the report parser fails closed.
-  # The instrumentation writes this complete report before its detector assertions.
-  # Dart's systemTemp location is platform-defined; do not assume app/cache.
-  run_deadline 60 "android-report-pull-$kind" adb -s emulator-5580 exec-out run-as ch.goomba.wuselwall cat files/qualification-native-audit.json \
-    > "$output/android-$kind/audit.json" || failed=1
-  report_complete "$output/android-$kind/audit.json" || failed=1
+  if ! instrumentation_passed "$output/android-$kind/audits.log" "android-$kind"; then
+    failed=1
+    # The device's own account of a crash (an exception without a stack trace, a killed process).
+    run_deadline 60 "android-logcat-$kind" adb -s emulator-5580 logcat -d -v threadtime '*:W' > "$output/android-$kind/logcat.txt" || true
+  fi
+  # The instrumentation writes the complete report before its detector assertions, so a
+  # failed run may still have one. Dart's systemTemp location is platform-defined; do not
+  # assume app/cache.
+  local report_listing
+  report_listing=$(run_deadline 30 "android-report-probe-$kind" adb -s emulator-5580 shell run-as ch.goomba.wuselwall ls files/qualification-native-audit.json | tr -d '\r') || true
+  if android_report_present "android-$kind" "$report_listing"; then
+    run_deadline 60 "android-report-pull-$kind" adb -s emulator-5580 exec-out run-as ch.goomba.wuselwall cat files/qualification-native-audit.json \
+      > "$output/android-$kind/audit.json" || failed=1
+    report_complete "$output/android-$kind/audit.json" || failed=1
+  else
+    failed=1
+  fi
   [[ "$failed" == 0 ]] || return 1
   kill "$emulator_pid"
   wait "$emulator_pid" || true

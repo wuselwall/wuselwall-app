@@ -71,7 +71,13 @@ test('exact-commit qualification requires quality, backend and complete guide ev
   assert.match(job(source, 'evidence'), /needs: \[prepare, review_approval, flutter, web, native, production, quality, backend, docs\]/);
   assert.match(job(source, 'evidence'), /path: build\/qualification\/downloaded\/docs/);
   // Strict candidate Flutter and production checks own the work quality-only reuse skips.
-  assert.match(job(source, 'flutter'), /run: flutter test --no-pub --concurrency=1/);
+  assert.match(job(source, 'flutter'), /run: bash \.\.\/scripts\/finite-stack\.sh flutter test --no-pub --concurrency=1\n/);
+  // No tester of a candidate or backend run starts with the runner's unlimited stack limit.
+  for (const file of ['qualify-candidate', 'backend-ci']) {
+    for (const line of workflow(file).split('\n').filter((l) => /\bflutter test\b/.test(l) && !l.trim().startsWith('#'))) {
+      assert.match(line, /bash \.\.\/scripts\/finite-stack\.sh flutter test /, line);
+    }
+  }
   const production = read('qualification/production-smoke.mjs');
   for (const smoke of ['shopping-quick-add', 'web-server-discovery']) assert.ok(production.includes(`scripts/${smoke}.browser.mjs`));
 });
@@ -88,6 +94,25 @@ test('reusable validation never persists repository credentials for candidate co
 test('release orchestration starts signing after preflight instead of duplicate CI', () => {
   assert.deepEqual(appWorkflows, ['release-android.yml', 'release-ios.yml']);
   const release = workflow('release');
-  assert.match(job(release, 'plan'), /run: node qualification\/promotion.mjs/);
-  assert.match(job(release, 'tag'), /needs: plan/);
+  assert.match(job(release, 'preflight'), /uses: \.\/\.github\/workflows\/release-checks.yml/);
+  assert.match(job(release, 'preflight'), /needs: plan/);
+  assert.match(job(release, 'tag'), /needs: \[plan, preflight\]/);
+});
+
+// v1.12.0's Play upload died of "fastlane: command not found": the job had switched
+// setup-ruby's gem installation off and nothing installed the gems.
+test('a job that runs a gem through Bundler has installed the gems first', () => {
+  for (const file of ['release-android', 'release-ios', 'store-listing']) {
+    const source = workflow(file);
+    const jobs = source.split(/\n(?=  [\w-]+:\n)/).filter((body) => /bundle exec /.test(body));
+    assert.ok(jobs.length > 0, `${file} runs no gem`);
+    for (const body of jobs) {
+      const name = body.match(/^  ([\w-]+):/)[1];
+      const uses = body.indexOf('bundle exec ');
+      const cached = body.search(/bundler-cache: true/);
+      const installed = body.search(/\bbundle install\b/);
+      assert.ok((cached !== -1 && cached < uses) || (installed !== -1 && installed < uses),
+        `${file}/${name} runs bundle exec without bundler-cache: true or bundle install before it`);
+    }
+  }
 });

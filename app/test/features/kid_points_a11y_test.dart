@@ -244,7 +244,7 @@ void main() {
   test('every member colour has 4.5:1 for its onInk text, in every shade', () {
     for (final shade in Shade.values) {
       for (final s in MemberPalette.swatches) {
-        final m = WwColors(shade: shade).member(s.light);
+        final m = WwColors(look: Look.standard(shade)).member(s.light);
         expect(
           _contrast(m.onInk, m.ink),
           greaterThanOrEqualTo(4.5),

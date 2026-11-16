@@ -39,11 +39,13 @@ Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras 
 
 Primero ves unas fichas, para no escribirlo todo desde cero:
 
-- **Plantillas**: **Limpieza**, **Evento deportivo**, **Cita médica**, **Invitados a cenar**, **Excursión**, **Cumpleaños infantil**, **Actuación**, **Vacaciones / viaje** y **Cumpleaños** (todo el día, cada año); lo que usáis a menudo va primero y las anuales al final. **Limpieza** es la única plantilla semanal: se repite cada semana el día elegido, a las 09:00 durante tres horas, con una escoba como imagen, para la persona que la crea. Cada una rellena el título, la imagen, la hora, la duración y las personas. Una familia con hijos ve debajo una sección propia, **Colegio**: **Reunión de familias**, **Tutoría**, **Excursión escolar**, **Examen**, **Fiesta del colegio** y **Jornada deportiva**. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
+- **Plantillas**: **Servicio de limpieza**, **Entrenamiento deportivo**, **Cita médica**, **Invitados a cenar**, **Excursión en familia**, **Jugar con amigos**, **Ir al cine**, **Vacaciones en familia** y **Cumpleaños** (todo el día, cada año). Cada una rellena el título, la imagen, la hora, la duración y las personas. El entrenamiento empieza a las 17:00 y dura una hora; jugar con amigos, a las 15:00 durante dos horas con los niños; e ir al cine, a las 16:00 durante dos horas con la familia. Una excursión en familia dura un día; las vacaciones en familia tienen siete días como punto de partida. **Servicio de limpieza** se repite cada semana el día elegido, a las 09:00 durante tres horas, para quien registra la visita. Una familia con niños también ve **Colegio**: **Reunión de clase** para todas las familias, **Tutoría individual** para una cita con el docente, **Excursión escolar**, **Examen**, **Fiesta del colegio** y **Día del deporte escolar**. Puedes cambiar todos estos valores. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
 - **Vuestras plantillas**: las que habéis guardado. En el editor, toca **Guardar como plantilla** arriba; se guardan el título, la imagen, la hora, la duración, las personas, el lugar y las notas, pero no la fecha ni la repetición.
 - **Lo habitual en casa**: eventos que ya habéis apuntado al menos tres veces, como «Vienen los abuelos». WuselWall solo cuenta vuestros propios eventos en vuestro servidor; nada sale de él. Con **⋮** eliges **Guardar como plantilla** o **No volver a sugerir**.
 
 Lo que rellena la ficha es solo un comienzo: cambia lo que sea distinto y guarda. **Atrás** vuelve a las fichas.
+
+Junto a **Vacaciones / viaje** está la ficha **Planear un viaje**: abre [Viajes](/es/trips/#find), donde comparáis opciones, buscáis fechas libres y hacéis la lista del equipaje. **Vacaciones / viaje**, en cambio, solo crea un único evento.
 
 <Shot name="calendar-templates" alt="Nuevo evento con fichas: Lo habitual en casa, Vuestras plantillas y plantillas como Cumpleaños e Invitados a cenar" />
 
@@ -135,6 +137,8 @@ El archivo es una copia. Si el evento cambia más tarde, compártelo otra vez; l
 
 ## Añadir un evento que os han enviado {#receive-event}
 
+Si WuselWall no puede añadir el archivo, la página explica el motivo. Toca **Cerrar** para volver; no se guarda nada.
+
 ¿Otra familia os ha enviado un archivo de calendario (termina en **.ics**)? Una madre o un padre puede añadirlo al calendario familiar, en su propio teléfono o tableta.
 
 - **Desde el mensaje:** toca el archivo y elige **WuselWall** en «Abrir con».
@@ -145,6 +149,8 @@ WuselWall muestra primero el evento: título, hora, lugar y notas. Elige quién 
 Después el evento es vuestra propia copia: podéis cambiarlo o eliminarlo como cualquier otro. El remitente no recibe ningún aviso.
 
 Si el mismo evento llega otra vez tras un cambio, WuselWall lo reconoce y ofrece **Actualizar el evento** en lugar de añadirlo dos veces. Aquí no se acepta un archivo con varios eventos; un calendario entero va en [Calendarios externos](#outside-calendars).
+
+Si el archivo pertenece a una reserva y tenéis un viaje planeado o decidido, WuselWall ofrece también **Añadir al viaje**: entonces pasa a ser una entrada del viaje en lugar de un evento del calendario (ver [El archivo de calendario de una reserva](/es/trips/#booking-file)).
 
 ## Outlook y iPhone {#appointments-in-outlook-or-on-an-iphone}
 

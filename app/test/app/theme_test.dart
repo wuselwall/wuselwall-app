@@ -66,10 +66,11 @@ void main() {
     }
   });
 
-  group('WCAG AA in every shade (specs/17)', () {
-    for (final shade in Shade.values) {
-      test(shade.name, () {
-        final c = Palette.of(shade);
+  group('WCAG AA in every theme (specs/17)', () {
+    for (final look in Look.values) {
+      test(look.name, () {
+        final shade = look.shade;
+        final c = Palette.look(look);
         for (final ground in {
           'bg': c.bg,
           'surface': c.surface,
@@ -86,6 +87,19 @@ void main() {
           );
         }
         expectAA(c.brand, c.bg, 'brand on bg');
+        expectAA(c.brand, c.surface, 'brand on surface');
+        // Brand text also stands on wells, tiles and bands (the wall's
+        // "Vertretung" on a subject's paper).
+        expectAA(c.brand, c.sunken, 'brand on sunken');
+        for (final t in PaperTints.tints) {
+          expectAA(c.brand, t.of(look), 'brand on ${t.key} paper');
+        }
+        for (final band in ModuleBands.bands) {
+          expectAA(c.brand, band.of(look), 'brand on ${band.module.name}');
+        }
+        for (final m in MemberPalette.swatches) {
+          expectAA(c.brand, m.tint(shade), 'brand on ${m.key} tint');
+        }
         expectAA(c.onBrand, c.brand, 'onBrand on brand');
         expectAA(c.onBrandTint, c.brandTint, 'onBrandTint on brandTint');
         expectAA(c.danger, c.bg, 'danger on bg');
@@ -101,7 +115,7 @@ void main() {
           final ink = m.ink(shade);
           expectAA(ink, c.bg, '${m.key} on bg');
           expectAA(ink, c.surface, '${m.key} on surface');
-          expectAA(m.onInk(shade), ink, 'text on ${m.key}');
+          expectAA(m.onInk(look), ink, 'text on ${m.key}');
           expectAA(c.ink, m.tint(shade), 'ink on ${m.key} tint');
           if (shade != Shade.night) {
             expectAA(ink, c.sunken, '${m.key} on sunken');
@@ -109,7 +123,7 @@ void main() {
           }
         }
         for (final t in PaperTints.tints) {
-          expectAA(c.ink, t.of(shade), 'ink on ${t.key} paper');
+          expectAA(c.ink, t.of(look), 'ink on ${t.key} paper');
         }
       });
     }
@@ -148,18 +162,69 @@ void main() {
     });
   });
 
+  group('themes (specs/17 "Themes")', () {
+    test('each shade has its standard theme first among its choices', () {
+      expect(Look.choices(Shade.light), [Look.frisch, Look.sonnig]);
+      expect(Look.choices(Shade.dark), [
+        Look.blaueStunde,
+        Look.schiefer,
+        Look.pflaume,
+        Look.kakao,
+      ]);
+      for (final shade in Shade.values) {
+        expect(Look.standard(shade).shade, shade);
+        expect(
+          AppTheme.build(UiRegister.adult, shade).extension<WwColors>()!.look,
+          Look.standard(shade),
+        );
+      }
+    });
+
+    test('a stored name resolves within its shade only', () {
+      expect(Look.named('kakao', Shade.dark), Look.kakao);
+      expect(Look.named('kakao', Shade.light), isNull);
+      expect(Look.named('night', Shade.dark), isNull);
+      expect(Look.named(null, Shade.light), isNull);
+      expect(Look.named('teal', Shade.dark), isNull);
+    });
+
+    test('a theme carries its own ground, stone paper and settings band', () {
+      for (final look in Look.values) {
+        final theme = AppTheme.look(UiRegister.adult, look);
+        final ww = theme.extension<WwColors>()!;
+        final c = Palette.look(look);
+        expect(theme.scaffoldBackgroundColor, c.bg, reason: look.name);
+        expect(ww.band(AppModule.settings), c.settingsBand, reason: look.name);
+        expect(
+          ww.paper(PaperTints.tints.firstWhere((t) => t.key == 'stone')),
+          c.stone,
+          reason: look.name,
+        );
+      }
+    });
+
+    test('the themes of a shade differ in their ground', () {
+      for (final shade in [Shade.light, Shade.dark]) {
+        final grounds = {
+          for (final look in Look.choices(shade)) Palette.look(look).bg,
+        };
+        expect(grounds, hasLength(Look.choices(shade).length));
+      }
+    });
+  });
+
   test('QR codes are dark on light with strong contrast in every shade', () {
-    for (final shade in Shade.values) {
-      final ww = WwColors(shade: shade);
+    for (final look in Look.values) {
+      final ww = WwColors(look: look);
       expect(
         ww.qrInk.computeLuminance(),
         lessThan(ww.qrPaper.computeLuminance()),
-        reason: shade.name,
+        reason: look.name,
       );
       expect(
         contrast(ww.qrInk, ww.qrPaper),
         greaterThanOrEqualTo(7),
-        reason: '${shade.name}: ${contrast(ww.qrInk, ww.qrPaper)} : 1',
+        reason: '${look.name}: ${contrast(ww.qrInk, ww.qrPaper)} : 1',
       );
     }
   });
@@ -225,14 +290,19 @@ void main() {
   });
 
   group('a lighter day (specs/26)', () {
+    final themes = [
+      for (final look in Look.values)
+        if (look != Look.night) look,
+    ];
+
     test(
       'ink and ink2 reach AA on every module band, ink3 is not used there',
       () {
-        for (final shade in [Shade.light, Shade.dark]) {
-          final c = Palette.of(shade);
+        for (final look in themes) {
+          final c = Palette.look(look);
           for (final band in ModuleBands.bands) {
-            final ground = band.of(shade);
-            final where = '${band.module.name} (${shade.name})';
+            final ground = band.of(look);
+            final where = '${band.module.name} (${look.name})';
             expectAA(c.ink, ground, 'ink on $where');
             expectAA(c.ink2, ground, 'ink2 on $where');
           }
@@ -243,13 +313,13 @@ void main() {
     test(
       'every member ink reaches AA on every band, so a chip may sit on one',
       () {
-        for (final shade in [Shade.light, Shade.dark]) {
+        for (final look in themes) {
           for (final band in ModuleBands.bands) {
             for (final m in MemberPalette.swatches) {
               expectAA(
-                m.ink(shade),
-                band.of(shade),
-                '${m.key} on ${band.module.name} (${shade.name})',
+                m.ink(look.shade),
+                band.of(look),
+                '${m.key} on ${band.module.name} (${look.name})',
               );
             }
           }
@@ -258,22 +328,37 @@ void main() {
     );
 
     test('text on decoration reaches AA', () {
-      for (final shade in [Shade.light, Shade.dark]) {
+      for (final look in themes) {
         for (final d in Decor.values) {
           expectAA(
-            Decor.onDecor(shade),
-            d.of(shade),
-            'text on ${d.name} (${shade.name})',
+            Decor.onDecor(look),
+            d.of(look.shade),
+            'text on ${d.name} (${look.name})',
           );
         }
       }
     });
 
-    test('ink and ink2 reach AA on every stop of the daytime skies', () {
-      for (final phase in [SkyPhase.morning, SkyPhase.day, SkyPhase.evening]) {
-        for (final stop in [phase.top, phase.bottom]) {
-          expectAA(Palette.light.ink, stop, 'ink on ${phase.name}');
-          expectAA(Palette.light.ink2, stop, 'ink2 on ${phase.name}');
+    test('ink and ink2 reach AA on every stop of the skies', () {
+      for (final look in Look.choices(Shade.light)) {
+        final c = Palette.look(look);
+        for (final phase in [
+          SkyPhase.morning,
+          SkyPhase.day,
+          SkyPhase.evening,
+        ]) {
+          for (final stop in [phase.top, phase.bottom]) {
+            expectAA(c.ink, stop, '${look.name} ink on ${phase.name}');
+            expectAA(c.ink2, stop, '${look.name} ink2 on ${phase.name}');
+          }
+        }
+      }
+      // The dark themes share one twilight.
+      for (final look in Look.choices(Shade.dark)) {
+        final c = Palette.look(look);
+        for (final stop in [Twilight.top, Twilight.bottom]) {
+          expectAA(c.ink, stop, '${look.name} ink on the twilight');
+          expectAA(c.ink2, stop, '${look.name} ink2 on the twilight');
         }
       }
       for (final stop in [SkyPhase.night.top, SkyPhase.night.bottom]) {

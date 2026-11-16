@@ -15,7 +15,7 @@ Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er pass
 - **Persönlich** (sobald jemand ausgewählt ist; auf dem eigenen Handy immer): **Wusel** und **Was Wusel trägt**, der **Ton** beim Abhaken und auf dem eigenen Handy die **Benachrichtigungen**: **Erinnerungen** auf diesem Handy, Morgenübersicht, Erinnerung vor Terminen, Einpack-Erinnerung und wann unsichere Termine nachgefragt werden. Sie gelten nur für die ausgewählte Person (siehe [Wusel und Farben](/guide/wusel#how-lively))
 - **Familie**: das **Familienprofil** (Name, Zeitzone, Datenexport, Löschen), die **Region** (Land, Kanton oder Bundesland, Gemeinde), nach der Feiertage und Schulferien gelten, die **Mitglieder**, die **übliche Woche** und **Einkaufen in der Kinder-Ansicht** (ob Kinder den Reiter Einkaufen haben; in einer neuen Familie aus). Die Region wählst du beim Anlegen der ersten Schule; hier kannst du sie später ändern
 - **Aufgaben & Belohnungen**: Punkte für eine Pflicht und für eine Extra-Aufgabe, ob neue Aufgaben Pflicht oder Extra sind, ob Eltern Aufgaben prüfen, wie viele **Serien-Joker** es pro Monat gibt und ob **Belohnungen Freigabe brauchen**
-- **Kalender & Schule**: ob Kinder ihre eigenen Termine ändern, welche neuen Termine auf der Küchenwand erscheinen, ob Kinder Plan-Änderungen melden und ob der Hinweis **Sachen für morgen** erscheint. In der Ansicht **Erweitert** kommt **Teilen und Verbindungen** dazu: Familienkalender teilen und Kalender von außen
+- **Kalender & Schule**: ob Kinder ihre eigenen Termine ändern, welche neuen Termine auf der Küchenwand erscheinen, ob Kinder Plan-Änderungen melden und ob der Hinweis **Sachen für morgen** erscheint. In der Ansicht **Erweitert** kommt **Teilen und Verbindungen** dazu: Familienkalender teilen und Kalender von außen. Auch in dieser Gruppe steht [Wetter und Karten](/settings/services) für die Reisen.
 - **Essen**: welche Mahlzeit an **Schultagen** und an **freien Tagen** (Wochenende, Feiertage, Ferien) die warme ist, mit zwei Schaltern, **Mittagessen** und **Abendessen** (Standard: abends an Schultagen, mittags an freien Tagen). Sind beide an, gibt es zwei warme Mahlzeiten: Mittag- und Abendessen stehen auf der Wand, im Essensplan und auf **Heute** beide als Hauptmahlzeiten, und die Tischfrage fragt zu beiden. Sind beide aus, gibt es keine warme Mahlzeit: Dann bleibt die Mahlzeitenzeile der Wand für den Tag leer, die Tischfrage geht zum Abendessen und ein Wunschessen landet auf dem Abendessen. Außerdem: dass **abwesend heißt nicht essen**, bis wann Betreuung mittags zählt und das Wunschessen
 - **Rituale**: Tischfrage, Wochenrückblick und Vorfreude, siehe [unten](#rituals)
 - **Feste & Jahreszeiten**: der Schmuck am Himmel, zuerst **Durchs Jahr** (Jahreszeiten, Ferien, Geburtstage), dann die **Feiertage** (Ostern, Orthodoxes Ostern, Nationalfeiertag, Nikolaus, Advent, Weihnachten, Silvester)
@@ -65,3 +65,19 @@ Diese Einstellungen stehen unter **Geräte → Dieses Gerät** und gelten nur f�
 | **Himmel in der Kopfzeile** | der Himmel, der sich mit der Tageszeit ändert | an |
 | **Bildschirm vor Einbrennen schützen** | verschiebt alles alle 10 Minuten um bis zu 2 Pixel, für OLED-Bildschirme | Automatisch: an der Wand an, sonst aus |
 
+### Darstellung {#appearance}
+
+Unter **Darstellung** wählst du, wie WuselWall auf diesem Gerät aussieht. Die Zeile zeigt die aktuelle Wahl, zum Beispiel „Automatisch · Frisch, Blaue Stunde“, und öffnet ein Blatt von unten. Oben schaltest du zwischen **Automatisch** (hell oder dunkel, wie es am Gerät eingestellt ist), **Hell** und **Dunkel** um. Darunter folgen das **Helle Design** und das **Dunkle Design**.
+
+<Shot name="first-look" alt="Das Blatt zur Wahl von Hell, Dunkel oder Automatisch und der Farb-Designs" />
+
+Jedes Design ist ein kleines Bild der App in seinen Farben. Ein Tippen gilt sofort, auch für die Seite hinter dem Blatt, du siehst also gleich, wie es wirkt. **Fertig** schließt das Blatt.
+
+- **Helles Design**: **Frisch** (kühles, mintiges Weiß, so ist es am Anfang) und **Sonnig** (sonniges Creme).
+- **Dunkles Design**: **Blaue Stunde** (abendliches Blau, so ist es am Anfang), **Schiefer** (kühles Grau), **Pflaume** (Dämmerungsviolett) und **Kakao** (warmes Braun).
+
+Ein Gerät merkt sich ein helles und ein dunkles Design; welches davon zu sehen ist, bestimmt der Schalter oben. Die Wahl gilt nur für dieses Gerät und ändert für niemanden sonst etwas: Die Handys der Familie müssen nicht zusammenpassen. Es ist auch keine Einstellung nur für Eltern.
+
+Ein persönliches Handy (nicht das Familien-Tablet und nicht die Wand) zeigt dieses Blatt beim ersten Mal auf dem Startbildschirm von selbst, mit dem Titel „Wie soll WuselWall aussehen?“. Du kannst es schließen, ohne zu wählen; es kommt nicht wieder, und alles bleibt unter **Einstellungen → Darstellung** änderbar. Ein Handy, auf dem die App schon war, zeigt es nach dem Update einmal. Tablet und Wand werden nicht gefragt; Eltern ändern dort das Design am selben Ort in den Einstellungen.
+
+Die Farben der Familienmitglieder sind in jedem Design gleich. Und die Wand wechselt nachts weiterhin in ihre Nachtansicht (standardmäßig ab 21 Uhr), was auch gewählt ist.
