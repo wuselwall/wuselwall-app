@@ -29,6 +29,13 @@ website progress update is tracked in
 [website #18](https://github.com/wuselwall/wuselwall-website/issues/18); publication remains
 a separate follow-up.
 
+Shopping catalogue accessibility (#267/#288, 2026-11-16): the tile grid now leaves a
+tappable preview of the next row, including enlarged text. The four-language guide and
+layout/semantics tests cover the change. This completes the app layout slice only;
+the broader iOS audit findings remain in #263 and are not waived.
+Public progress is coordinated separately in
+[website #21](https://github.com/wuselwall/wuselwall-website/issues/21).
+
 Push is approved, not built (2026-11-15, #243): a family asked for shopping-trip alerts
 on a closed phone, and the owner approved the optional encrypted relay in
 [ADR-022](adr/ADR-022-encrypted-push-relay.md). APNs directly for iOS and FCM for Android;

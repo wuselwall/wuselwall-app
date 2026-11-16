@@ -8,6 +8,8 @@ Zuhause planst du die Liste: Suchfeld und Kacheln oben, darunter die Artikel nac
 
 ## Kacheln
 
+Sind mehr Kacheln da, als oben Platz haben, bleibt die nächste Reihe mit ihren Bildern sichtbar. Wische in den Kacheln nach oben, um weitere Artikel zu sehen. Bei größerer Schrift passt sich der Ausschnitt an.
+
 Die Kacheln sind der **Katalog** dessen, was ihr gekauft habt: zuerst die **8 zuletzt** gekauften Artikel, danach die **am häufigsten** gekauften, insgesamt bis zu 24. Niemand pflegt diese Liste: Sie entsteht von selbst, wenn ihr einen Einkauf beendet.
 
 Jede Kachel zeigt ein Bild dazu: WuselWall erkennt gängige Artikel am Namen, etwa Milch, Brot oder Äpfel. Für einen Artikel, den es nicht kennt, steht das Symbol seiner Kategorie.

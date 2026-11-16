@@ -54,6 +54,10 @@ navigation, the last mode kept on the device, the item sheet with a count steppe
 a seeded `snacks` category, and a category inferred from a new item's name by the server's word
 list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
 grow in issue #197).
+The catalogue grid now ends in a row with a tappable picture preview instead of a thin
+sliver (#267/#288, 2026-11-16): `RowPeek` sizes the viewport from the laid-out rows,
+including enlarged text. This addresses only the catalogue layout; the remaining native
+iOS scroll-container and clipped-page findings stay in #263, with no audit waiver.
 Telling the others (2026-11-14, issue #242, [specs/07](specs/07-module-meals-shopping.md) "Telling
 the others"): tapping *Einkaufen gehen* records a trip (`app.shopping_run`, `api.shopping_start` /
 `api.shopping_leave`, migration `20261114100000_shopping_start_notice.sql`, pgTAP

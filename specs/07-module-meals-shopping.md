@@ -216,7 +216,8 @@ trip is a page of its own.
 
 - **Plan** ("Planen") is the normal shopping tab inside the home shell (app bar and bottom
   navigation stay). The list chips, the search field and the tile grid (at most 30% of the
-  screen height, between 112 and 240 px), and the items by category in walking order as
+  screen height, between 112 and 240 px, ending in a row cut to its pictures so that it
+  reads as "more below" and is still a target), and the items by category in walking order as
   plain rows with the item's picture instead of a checkbox. A tap opens the item sheet
   (below), a swipe removes it (adults), "−" lowers a count. Ticked items stay in the
   collapsed trolley, where a tap un-ticks, so nothing is hidden from someone planning
