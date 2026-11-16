@@ -50,6 +50,8 @@ First you see tiles, so you don't have to type everything from scratch:
 
 What a tile fills in is only a start: change what differs in the editor and save. **Back** takes you to the tiles again.
 
+Next to **Holiday / trip** there is the tile **Plan a trip**: it opens [Trips](/en/trips/#find), where you compare options, look for time windows and make the packing list. **Holiday / trip**, by contrast, only creates a single appointment.
+
 <Shot name="calendar-templates" alt="New event with tiles: Often in your family, Your templates and templates such as Birthday and Guests for dinner" />
 
 ### In the editor
@@ -150,6 +152,8 @@ WuselWall shows the appointment first: title, time, place and notes. Choose who 
 The appointment is then your own copy: you can change or delete it like any other. The sender is not told anything.
 
 If the same appointment is sent again after a change, WuselWall recognises it and offers **Update the appointment** instead of adding it twice. A file with several appointments is not accepted here; a whole calendar belongs under [Outside calendars](#outside-calendars).
+
+If the file belongs to a booking and you have a planned or decided trip, WuselWall also offers **Add to trip**: it then becomes an entry of the trip instead of a calendar appointment (see [A booking's calendar file](/en/trips/#booking-file)).
 
 ## Appointments in Outlook or on an iPhone
 

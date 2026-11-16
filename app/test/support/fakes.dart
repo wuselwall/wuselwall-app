@@ -44,6 +44,7 @@ import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart'
 import 'package:wuselwall/features/school/data/proposals_repository.dart';
 import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/services/data/services_repository.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
@@ -54,6 +55,7 @@ import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
+import 'package:wuselwall/features/trips/data/trips_repository.dart';
 
 import 'fake_event_templates.dart';
 import 'fake_external_calendars.dart';
@@ -66,6 +68,7 @@ import 'fake_pairing.dart';
 import 'fake_region.dart';
 import 'fake_school.dart';
 import 'fake_tasks.dart';
+import 'fake_trips.dart';
 
 const guardianId = 'p-guardian';
 const kidId = 'p-kid';
@@ -1116,6 +1119,10 @@ List<Override> baseOverrides({
   FakeHouseholdLeaveRepository? leave,
   FakeAccountAdminRepository? accountAdmin,
   FakeInvitationRepository? invitations,
+
+  /// The trips and the opt-in services (specs/30); empty unless seeded.
+  FakeTripsRepository? trips,
+  FakeServicesRepository? services,
   MemoryInvitationStore? invitationStore,
   SetupStore? setupStore,
   NewFamilyDraftStore? draftStore,
@@ -1156,6 +1163,10 @@ List<Override> baseOverrides({
   ),
   invitationStoreProvider.overrideWithValue(
     invitationStore ?? MemoryInvitationStore(),
+  ),
+  tripsRepositoryProvider.overrideWithValue(trips ?? FakeTripsRepository()),
+  servicesRepositoryProvider.overrideWithValue(
+    services ?? FakeServicesRepository(),
   ),
   householdOnboardingRepositoryProvider.overrideWithValue(
     household ?? FakeHouseholdOnboardingRepository(identity: identity),

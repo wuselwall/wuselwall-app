@@ -23,6 +23,7 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/rituals/domain/event_icons.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// A built-in template's name in the household's language.
@@ -218,7 +219,20 @@ class EventTemplatePage extends ConsumerWidget {
                         openNewTradition(context, inView: day, now: now),
                       ),
                     ),
-                  for (final s in EventStarter.general) starterTile(s),
+                  for (final s in EventStarter.general) ...[
+                    starterTile(s),
+                    // Beside the holiday tile, which keeps working as before: planning
+                    // the whole trip (specs/30).
+                    if (s == EventStarter.holiday &&
+                        ref.watch(tripsOfferedProvider))
+                      _TemplateTile(
+                        key: const ValueKey('event-template-trip'),
+                        title: l10n.tripCalendarPlanTitle,
+                        line: l10n.tripCalendarPlanLine,
+                        icon: Icons.luggage_outlined,
+                        onTap: () => unawaited(context.push(Routes.trips)),
+                      ),
+                  ],
                 ],
               ),
               // School events: only a family with a child has any use for them.

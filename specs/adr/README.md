@@ -29,5 +29,6 @@ editing it. The value is in the trail.
 | [020](ADR-020-a-lighter-day.md) | A lighter day: joy as a product goal; the mascot Wusel, colour layers (A+) and five family rituals, built before M1.6 | Accepted; implemented, family-trial evidence pending |
 | [021](ADR-021-local-matching.md) | Local matching: one bundled dictionary, a layered matcher on device and server, corrections per household; models only bundled, never a service | Accepted; dictionary, matcher and shopping integration built 2026-10-31; other integrations follow |
 | [022](ADR-022-encrypted-push-relay.md) | Optional project-operated encrypted push relay; APNs direct for iOS, FCM for Android | Accepted 2026-11-15; implementation pending (#274) |
+| [023](ADR-023-opt-in-services.md) | Opt-in services: weather, place search, routes and map pictures from providers a household switches on, called by the family's server with the family's keys; off by default | Accepted 2026-11-15 |
 
 Format: Context · Decision · Alternatives considered · Consequences.

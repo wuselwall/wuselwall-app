@@ -72,6 +72,8 @@ Plus the cross-cutting essentials: per-person identity, four device classes, a s
 self-hosted deployment, an MCP endpoint for assistants, *(since 2026-10-11)*
 **self-service onboarding**: adults sign up with email, create or join a
 household, and connect shared devices from their phone ([20](20-onboarding.md)), and
+*(since 2026-11-15, [30](30-trips.md))* **trips**: planning a vacation in one place, with
+weather and map services a household may switch on ([ADR-023](adr/ADR-023-opt-in-services.md)), and
 *(since 2026-10-24, [ADR-020](adr/ADR-020-a-lighter-day.md))* **a lighter day**: Wusel,
 colour and ambience, and five small family rituals ([25](25-wusel.md)–[27](27-family-rituals.md)).
 

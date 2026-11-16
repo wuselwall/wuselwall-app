@@ -3539,6 +3539,98 @@
   "countdownToday": "Today!",
   "kidLookingForward": "Looking forward to",
   "todayLookingForward": "Looking forward",
+  "tripTodayDayOf": "Day {day} of {count}",
+  "@tripTodayDayOf": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodayMore": "+{count} more",
+  "@tripTodayMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodayPacked": "{packed} of {total} packed",
+  "@tripTodayPacked": {
+    "placeholders": {
+      "packed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodayTodos": "Still to do",
+  "tripTodayTonight": "Tonight",
+  "tripTodayTomorrow": "Tomorrow",
+  "tripTodayNothing": "Nothing planned today.",
+  "tripTodayCheckIn": "Check-in",
+  "tripTodayCheckOut": "Check-out",
+  "tripTodayPickUp": "Pick-up",
+  "tripTodayReturn": "Return",
+  "tripTodayDeparture": "Departure",
+  "tripTodayArrival": "Arrival",
+  "tripTodayOpen": "Open the trip {title}",
+  "@tripTodayOpen": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripTodayCall": "Call",
+  "tripTodayMap": "Show on map",
+  "tripTodayCannotOpen": "This can't be opened here.",
+  "tripTodayAllTrips": "All trips",
+  "tripImportAction": "Add to trip",
+  "tripImportTitle": "Which trip?",
+  "tripImportIntro": "Every event in the file becomes an entry of the trip, as booked.",
+  "tripImportEntries": "{count, plural, =1{This entry will be added} other{These {count} entries will be added}}",
+  "@tripImportEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripImportSkipped": "{count, plural, =1{1 event in the file is skipped (cancelled or without a start).} other{{count} events in the file are skipped (cancelled or without a start).}}",
+  "@tripImportSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripImportNothing": "No event in this file could be read.",
+  "tripImportConfirm": "Add",
+  "tripImportDone": "{added} added, {updated} updated",
+  "@tripImportDone": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      }
+    }
+  },
+  "tripImportFallbackTitle": "Booking",
+  "tripImportSeveral": "This file holds several events. They can go into a trip.",
+  "tripCalendarNotice": "This entry belongs to a trip and is changed there.",
+  "tripCalendarOpen": "Open trip",
+  "tripCalendarPlanTitle": "Plan a trip",
+  "tripCalendarPlanLine": "Compare, book, pack",
+  "settingsServicesTitle": "Weather and maps",
+  "settingsServicesSubtitle": "Forecast, places and routes for trips",
   "eventIconNone": "No picture",
   "eventIconLabel": "Picture",
   "eventCountdownTitle": "We are looking forward to it",
@@ -4134,6 +4226,368 @@
   },
   "eventTemplateSavedNote": "Saved as a template.",
   "eventTemplateErrLimit": "Your family already has 50 templates. Delete one first.",
+  "tripListWindows": "Time windows",
+  "tripListWindowsHelp": "When can all of us get away?",
+  "tripListDiscover": "Where to?",
+  "tripListDiscoverHelp": "Where is it warm and dry then?",
+  "tripListNewIdea": "New idea",
+  "tripListUpcoming": "Under way and coming up",
+  "tripListIdeas": "Ideas",
+  "tripListPast": "Past trips ({count})",
+  "@tripListPast": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripListEmptyTitle": "No trips yet",
+  "tripListEmpty": "Start with an idea: a place you would like to go, with no dates yet.",
+  "tripListInDays": "{count, plural, =0{Today} =1{Tomorrow} other{In {count} days}}",
+  "@tripListInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripListDayOf": "Day {day} of {total}",
+  "@tripListDayOf": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tripListNoDates": "No dates yet",
+  "tripPageUnavailable": "Trips are not available here.",
+  "tripPageNotFound": "This trip no longer exists.",
+  "tripPageToList": "To all trips",
+  "tripPageMore": "More",
+  "tripPageEdit": "Edit",
+  "tripPageBackToIdea": "Back to idea",
+  "tripPageDelete": "Delete trip",
+  "tripPageDeleteConfirm": "Delete “{title}” with its options, plan and lists?",
+  "@tripPageDeleteConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPageWholeFamily": "The whole family",
+  "tripPageDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@tripPageDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPageChooseDates": "Choose dates",
+  "tripPageFindWindow": "Find a time window",
+  "tripPageEnterDates": "Enter dates",
+  "tripPageChangeDates": "Change dates",
+  "tripPageDatesTooLong": "A trip can last 366 days at most.",
+  "tripPageFix": "We’re doing this",
+  "tripPagePencil": "Pencil in these dates",
+  "tripPageDecided": "Decided. The family can look forward to it.",
+  "tripPageUnfix": "Back to planned",
+  "tripPageCalPlanned": "In the calendar as a dashed entry.",
+  "tripPageCalFixed": "In the calendar with a countdown, also on the wall.",
+  "tripPageTabPlan": "Plan",
+  "tripPageTabPack": "Pack",
+  "tripPageTabPrepare": "Prepare",
+  "tripEditTitle": "Edit trip",
+  "tripEditName": "Name of the trip",
+  "tripEditNameHint": "e.g. Sardinia in summer",
+  "tripEditNameRequired": "Please give the trip a name.",
+  "tripEditDestination": "Destination (optional)",
+  "tripEditFindPlace": "Find place",
+  "tripEditNoPlaces": "No place found.",
+  "tripEditPlaceFound": "Place found",
+  "tripEditWho": "Who is travelling?",
+  "tripEditWholeFamily": "Nobody selected: the whole family travels.",
+  "tripEditCurrency": "Currency",
+  "tripEditCurrencyHelp": "Three letters, e.g. CHF or EUR",
+  "tripEditCurrencyInvalid": "Three letters, please.",
+  "tripEditNote": "Note",
+  "tripPlanDay": "Day {number} · {date}",
+  "@tripPlanDay": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanToday": "Today",
+  "tripPlanDayEmpty": "Nothing planned yet",
+  "tripPlanStayTonight": "Night: {title}",
+  "@tripPlanStayTonight": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanRoleCheckIn": "Check-in",
+  "tripPlanRoleCheckOut": "Check-out",
+  "tripPlanRolePickUp": "Pick-up",
+  "tripPlanRoleReturn": "Return",
+  "tripPlanRoleDeparture": "Departure",
+  "tripPlanRoleArrival": "Arrival",
+  "tripPlanRoleStart": "Start",
+  "tripPlanRoleEnd": "End",
+  "tripPlanUndated": "Without a date",
+  "tripPlanOutside": "Outside the trip’s dates",
+  "tripPlanNoDatesHint": "Choose dates and the days of the trip appear here, with everything you have chosen.",
+  "tripPlanChosen": "Chosen and booked",
+  "tripPlanOptions": "Options",
+  "tripPlanOptionCount": "{count, plural, =1{1 option} other{{count} options}}",
+  "@tripPlanOptionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPlanPriceRange": "{low} to {high}",
+  "@tripPlanPriceRange": {
+    "placeholders": {
+      "low": {
+        "type": "String"
+      },
+      "high": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanPriceChecked": "Price from {date}",
+  "@tripPlanPriceChecked": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanBookingRef": "Booking {ref}",
+  "@tripPlanBookingRef": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "tripPlanCompare": "Compare",
+  "tripPlanAddOption": "Add option",
+  "tripPlanOpenLink": "Open link",
+  "tripPlanCall": "Call",
+  "tripPlanOpenMap": "Show on map",
+  "tripPlanOpenFailed": "That could not be opened.",
+  "tripInfoSum": "Chosen and booked: {amount}",
+  "@tripInfoSum": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoSumAtLeast": "Chosen and booked: at least {amount}",
+  "@tripInfoSumAtLeast": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoForecast": "Forecast",
+  "tripInfoClimate": "Typical at this time of year",
+  "tripInfoClimateMonth": "{month}: {tmax}° / {tmin}°",
+  "@tripInfoClimateMonth": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "tmax": {
+        "type": "String"
+      },
+      "tmin": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoRainDays": "{count, plural, =1{1 rain day} other{{count} rain days}}",
+  "@tripInfoRainDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripInfoSea": "Sea {temp}°",
+  "@tripInfoSea": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoRoute": "By car from home: {time}, {km} km",
+  "@tripInfoRoute": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoDurationHM": "{hours} h {minutes} min",
+  "@tripInfoDurationHM": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tripInfoDurationM": "{minutes} min",
+  "@tripInfoDurationM": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "tripInfoMap": "Map of the destination",
+  "tripInfoForecastDay": "{date}: {weather}, {tmax}° / {tmin}°",
+  "@tripInfoForecastDay": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "weather": {
+        "type": "String"
+      },
+      "tmax": {
+        "type": "String"
+      },
+      "tmin": {
+        "type": "String"
+      }
+    }
+  },
+  "tripInfoWeatherClear": "Clear",
+  "tripInfoWeatherPartly": "Partly cloudy",
+  "tripInfoWeatherCloudy": "Cloudy",
+  "tripInfoWeatherFog": "Fog",
+  "tripInfoWeatherRain": "Rain",
+  "tripInfoWeatherSnow": "Snow",
+  "tripInfoWeatherStorm": "Thunderstorm",
+  "tripPackProgress": "{done} of {total}",
+  "@tripPackProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPackForAll": "For everyone",
+  "tripPackAddHint": "Add an item",
+  "tripPackAdd": "Add",
+  "tripPackItem": "Item",
+  "tripPackEmpty": "Nothing on the list yet.",
+  "tripPackRename": "Rename",
+  "tripPackRemove": "Remove",
+  "tripPackSuggestions": "Suggestions",
+  "tripPackSuggestionsHelp": "Choose what to add. What each person needs is added for everyone who travels.",
+  "tripPackSuggestionsAdd": "Add to list",
+  "tripPackLastTime": "Like last time",
+  "tripPackLastTimeChoose": "Copy the list of which trip?",
+  "tripPackLastTimeNone": "No other trip has a packing list yet.",
+  "tripPackAdded": "{count, plural, =0{Everything was already on the list.} =1{1 item added.} other{{count} items added.}}",
+  "@tripPackAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPackGroupDocuments": "Documents",
+  "tripPackGroupHealth": "Health",
+  "tripPackGroupElectronics": "Electronics",
+  "tripPackGroupClothes": "Clothes",
+  "tripPackGroupBeach": "Beach and sun",
+  "tripPackGroupKids": "For the children",
+  "tripPackStarterPassports": "Passport or ID",
+  "tripPackStarterHealthInsuranceCard": "Health insurance card",
+  "tripPackStarterBookingConfirmations": "Booking confirmations",
+  "tripPackStarterCashAndCards": "Cash and bank cards",
+  "tripPackStarterPharmacyBag": "First-aid kit",
+  "tripPackStarterRegularMedication": "Medication",
+  "tripPackStarterSunscreen": "Sunscreen",
+  "tripPackStarterInsectRepellent": "Insect repellent",
+  "tripPackStarterChargers": "Phone chargers",
+  "tripPackStarterPowerAdapter": "Travel plug adapter",
+  "tripPackStarterPowerBank": "Power bank",
+  "tripPackStarterHeadphones": "Headphones",
+  "tripPackStarterUnderwearSocks": "Underwear and socks",
+  "tripPackStarterTshirts": "T-shirts",
+  "tripPackStarterTrousersShorts": "Trousers and shorts",
+  "tripPackStarterWarmJumper": "Warm jumper",
+  "tripPackStarterRainJacket": "Rain jacket",
+  "tripPackStarterWalkingShoes": "Comfortable shoes",
+  "tripPackStarterSleepwear": "Sleepwear",
+  "tripPackStarterSwimwear": "Swimwear",
+  "tripPackStarterBeachTowels": "Beach towel",
+  "tripPackStarterSunHat": "Sun hat",
+  "tripPackStarterSunglasses": "Sunglasses",
+  "tripPackStarterCuddlyToy": "Cuddly toy",
+  "tripPackStarterKidsGames": "Games and books for the journey",
+  "tripPackStarterNappiesWipes": "Nappies and wipes",
+  "tripPackStarterJourneySnacks": "Snacks for the journey",
+  "tripTodoAdd": "Add to-do",
+  "tripTodoEdit": "Edit to-do",
+  "tripTodoTitleLabel": "What needs to happen?",
+  "tripTodoDaysLabel": "Days before the trip (optional)",
+  "tripTodoDaysBefore": "{count, plural, =0{On the first day} =1{1 day before} other{{count} days before}}",
+  "@tripTodoDaysBefore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripTodoDue": "By {date}",
+  "@tripTodoDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripTodoWasDue": "Was due {date}",
+  "@tripTodoWasDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripTodoEmpty": "Nothing to prepare yet. Passports, neighbours, the cat: note what has to happen before you leave.",
+  "tripTodoDone": "Done",
   "passwordSignUpTab": "New account",
   "passwordSignInTab": "Sign in",
   "passwordSignUpAction": "Create account",
@@ -4266,9 +4720,604 @@
   "@shoppingTileStarter": {
     "description": "Shopping list tile: tooltip and hint of a tile the starter catalogue suggests, not yet one of the family's own"
   },
+  "tripEntryNewTitle": "Add option",
+  "tripEntryEditTitle": "Edit entry",
+  "tripEntryName": "Name",
+  "tripEntryNameRequired": "Please give it a name.",
+  "tripEntryMode": "Type of transport",
+  "tripEntryPrice": "Price ({currency})",
+  "@tripEntryPrice": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "tripEntryPriceFrom": "Price from {date}",
+  "@tripEntryPriceFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripEntryPriceInvalid": "Enter an amount such as 840 or 1249.50.",
+  "tripEntryLink": "Link",
+  "tripEntryLinkInvalid": "Use a web address that starts with http:// or https://.",
+  "tripEntryPasteLink": "Paste link",
+  "tripEntryPasteNone": "There is no web address on the clipboard.",
+  "tripEntryOpenLink": "Open link",
+  "tripEntryOpenFailed": "That could not be opened.",
+  "tripEntryMore": "More details",
+  "tripEntryLess": "Fewer details",
+  "tripEntryDetails": "Details",
+  "tripEntryDetailsHint": "1 stop, baggage included",
+  "tripEntryFrom": "From",
+  "tripEntryTo": "To",
+  "tripEntryPickUpPlace": "Pick-up place",
+  "tripEntryReturnPlace": "Return place",
+  "tripEntryStartTransport": "Departure",
+  "tripEntryEndTransport": "Arrival",
+  "tripEntryStartStay": "Check-in",
+  "tripEntryEndStay": "Check-out",
+  "tripEntryStartRental": "Pick-up",
+  "tripEntryEndRental": "Return",
+  "tripEntryStartPlain": "Start",
+  "tripEntryEndPlain": "End",
+  "tripEntryAddDate": "Add date",
+  "tripEntryAddTime": "Add time",
+  "tripEntryClearDate": "Remove date",
+  "tripEntryClearTime": "Remove time",
+  "tripEntryEndBeforeStart": "The end is before the start.",
+  "tripEntryCancelUntil": "Free cancellation until",
+  "tripEntryAddress": "Address",
+  "tripEntryOpenAddress": "Show on map",
+  "tripEntryPhone": "Phone",
+  "tripEntryCallPhone": "Call",
+  "tripEntryBookingRef": "Booking reference",
+  "tripEntryNote": "Note",
+  "tripEntryState": "State",
+  "tripEntryCopy": "Copy as another option",
+  "tripEntryCopied": "Copied. This is the copy.",
+  "tripEntryDelete": "Delete entry",
+  "tripEntryDeleteTitle": "Delete this entry?",
+  "tripEntryDeleteBody": "“{title}” is removed from the trip and from kept combinations.",
+  "@tripEntryDeleteBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripEntryGone": "This trip no longer exists.",
+  "tripEntryUnavailable": "Trips are not available on this device.",
+  "tripCompareTitle": "Compare",
+  "tripCompareUnavailable": "Comparing is not available on this device.",
+  "tripCompareGone": "This trip no longer exists.",
+  "tripCompareSection": "{kind} · {count}",
+  "@tripCompareSection": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripCompareStripLabel": "{kind}, options side by side",
+  "@tripCompareStripLabel": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareCheapest": "Cheapest",
+  "tripComparePerNight": "{price} per night",
+  "@tripComparePerNight": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComparePerDay": "{price} per day",
+  "@tripComparePerDay": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareNoPrice": "No price yet",
+  "tripCompareFromTo": "{from} – {to}",
+  "@tripCompareFromTo": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareRange": "{start} – {end}",
+  "@tripCompareRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareFreeCancel": "Free cancellation until {date}",
+  "@tripCompareFreeCancel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareCancelPassed": "Free cancellation has passed",
+  "tripCompareTick": "Try “{title}” in the combination",
+  "@tripCompareTick": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tripCompareEdit": "Edit",
+  "tripCompareAdd": "Add option",
+  "tripCompareAddTransport": "Add transport",
+  "tripCompareAddStay": "Add accommodation",
+  "tripCompareAddRental": "Add rental car",
+  "tripCompareEmptyTitle": "No options yet",
+  "tripCompareEmptyMessage": "Collect flights, accommodation and rental cars here, compare them and try out combinations.",
+  "tripCompareHint": "Tick one option of each kind, then keep the combination.",
+  "tripComboSection": "Kept combinations",
+  "tripComboTotal": "Total {amount}",
+  "@tripComboTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboTotalAtLeast": "At least {amount}",
+  "@tripComboTotalAtLeast": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboNights": "{count, plural, =1{1 night} other{{count} nights}}",
+  "@tripComboNights": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboDates": "{dates} · {nights}",
+  "@tripComboDates": {
+    "placeholders": {
+      "dates": {
+        "type": "String"
+      },
+      "nights": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboNoDates": "No dates yet",
+  "tripComboFits": "Fits together",
+  "tripComboWarningsCount": "{count, plural, =1{1 thing does not fit} other{{count} things do not fit}}",
+  "@tripComboWarningsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboShowAll": "Show all",
+  "tripComboShowLess": "Show less",
+  "tripComboKeep": "Keep as combination",
+  "tripComboWarnNights": "{count, plural, =1{1 night without accommodation: {dates}} other{{count} nights without accommodation: {dates}}}",
+  "@tripComboWarnNights": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "dates": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnRentalNoTransport": "{name}: rental car without any transport",
+  "@tripComboWarnRentalNoTransport": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnRentalBefore": "{name} starts before the arrival",
+  "@tripComboWarnRentalBefore": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnRentalAfter": "{name} ends after the departure",
+  "@tripComboWarnRentalAfter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnOverlap": "{first} and {second} overlap: {dates}",
+  "@tripComboWarnOverlap": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "dates": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboWarnPrice": "{count, plural, =1{1 option has no price, the total is a minimum} other{{count} options have no price, the total is a minimum}}",
+  "@tripComboWarnPrice": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboKeepTitle": "Keep this combination",
+  "tripComboName": "Name of the combination",
+  "tripComboKept": "Combination kept.",
+  "tripComboRename": "Rename",
+  "tripComboLoad": "Load into the ticks",
+  "tripComboLoaded": "“{name}” is loaded. Change the ticks and keep it again.",
+  "@tripComboLoaded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboDelete": "Delete combination",
+  "tripComboDeleteTitle": "Delete “{name}”?",
+  "@tripComboDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboDeleteBody": "The options themselves stay.",
+  "tripComboTake": "Take this one",
+  "tripComboTakeTitle": "Take “{name}”?",
+  "@tripComboTakeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboTakeBody": "These become the chosen ones. Other chosen transport, accommodation and rental cars go back to options. Booked ones stay as they are.",
+  "tripComboSetDates": "Also set the trip's dates to {dates}",
+  "@tripComboSetDates": {
+    "placeholders": {
+      "dates": {
+        "type": "String"
+      }
+    }
+  },
+  "tripComboTaken": "Chosen: {chosen}. Back to options: {released}.",
+  "@tripComboTaken": {
+    "placeholders": {
+      "chosen": {
+        "type": "int"
+      },
+      "released": {
+        "type": "int"
+      }
+    }
+  },
+  "tripComboTakenDates": "Chosen: {chosen}. Back to options: {released}. The trip's dates are set.",
+  "@tripComboTakenDates": {
+    "placeholders": {
+      "chosen": {
+        "type": "int"
+      },
+      "released": {
+        "type": "int"
+      }
+    }
+  },
   "settingsGroupShoppingTitle": "Shopping",
   "settingsGroupShoppingSubtitle": "Learned words",
   "settingsSectionLearnedWords": "Learned words",
+  "tripWindowsTitle": "Time windows",
+  "tripWindowsUnavailable": "Trips are not available here.",
+  "tripWindowsIntro": "When could we travel? These are the stretches when everyone who comes along is free.",
+  "tripWindowsLengthLabel": "Shortest stay",
+  "tripWindowsWhoLabel": "Who travels?",
+  "tripWindowsWhoHint": "Nobody selected means everyone.",
+  "tripWindowDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@tripWindowDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripWindowKindLongWeekend": "Long weekend",
+  "tripWindowHolidaysFallback": "Holidays",
+  "tripWindowLeave": "{count, plural, =0{No leave days needed} =1{1 leave day for the adults} other{{count} leave days for the adults}}",
+  "@tripWindowLeave": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripWindowPartialBefore": "{name} is free from {date} already",
+  "@tripWindowPartialBefore": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripWindowPartialAfter": "{name} is still free until {date}",
+  "@tripWindowPartialAfter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tripWindowFree": "Nothing in the way",
+  "tripWindowConflicts": "In the way",
+  "tripWindowTake": "Take these dates",
+  "tripWindowTakeHelp": "Dates of the trip",
+  "tripWindowTaken": "The dates are in the trip now.",
+  "tripWindowWhere": "Where is it nice then?",
+  "tripWindowNewTrip": "New trip in this window",
+  "tripWindowNewTripTitle": "New trip",
+  "tripWindowNewTripLabel": "Name of the trip",
+  "tripWindowEmpty": "No free stretch found yet. School holidays come from the region and school settings, and dates can always be entered by hand on a trip.",
+  "tripWindowEmptyAction": "Region and school settings",
+  "tripDiscoverTitle": "Where to?",
+  "tripDiscoverUnavailable": "Trips are not available here.",
+  "tripDiscoverWhen": "Time away",
+  "tripDiscoverChange": "Change",
+  "tripDiscoverPickHelp": "When do you want to go?",
+  "tripDiscoverWishes": "Wishes",
+  "tripDiscoverWishesNone": "No wishes yet",
+  "tripDiscoverWishesCount": "{count, plural, =1{1 wish} other{{count} wishes}}",
+  "@tripDiscoverWishesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverAny": "any",
+  "tripDiscoverDegrees": "{degrees} °C",
+  "@tripDiscoverDegrees": {
+    "placeholders": {
+      "degrees": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverTempMinLabel": "Days at least",
+  "tripDiscoverTempMaxLabel": "Days at most",
+  "tripDiscoverDry": "Little rain",
+  "tripDiscoverSeaLabel": "Sea at least",
+  "tripDiscoverTagsLabel": "Kind of place",
+  "tripDiscoverTagSea": "Sea",
+  "tripDiscoverTagIsland": "Island",
+  "tripDiscoverTagMountains": "Mountains",
+  "tripDiscoverTagLake": "Lake",
+  "tripDiscoverTagCity": "City",
+  "tripDiscoverTagCountryside": "Countryside",
+  "tripDiscoverTagNorth": "The North",
+  "tripDiscoverTagLongHaul": "Far away",
+  "tripDiscoverEffortLabel": "Getting there, at most",
+  "tripDiscoverEffortNear": "close by",
+  "tripDiscoverEffortCar": "a long drive",
+  "tripDiscoverEffortShort": "a short flight",
+  "tripDiscoverEffortMedium": "a medium flight",
+  "tripDiscoverEffortLong": "far away",
+  "tripDiscoverNeedsClimate": "With a weather service, WuselWall shows how warm it is. A parent can switch one on.",
+  "tripDiscoverNeedsHome": "Distances need a home place. A parent can set one.",
+  "tripDiscoverOpenServices": "Weather and maps settings",
+  "tripDiscoverIdea": "Your idea",
+  "tripDiscoverKeep": "Keep as idea",
+  "tripDiscoverKept": "Kept as an idea: {name}",
+  "@tripDiscoverKept": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tripDiscoverOpen": "Open",
+  "tripDiscoverDistance": "about {km} km · {effort}",
+  "@tripDiscoverDistance": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      },
+      "effort": {
+        "type": "String"
+      }
+    }
+  },
+  "tripDiscoverTemps": "{max}° by day, {min}° at night",
+  "@tripDiscoverTemps": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverRain": "{count, plural, =1{1 rain day} other{{count} rain days}}",
+  "@tripDiscoverRain": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverSun": "{hours} h of sun a day",
+  "@tripDiscoverSun": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverSea": "Sea {temp}°",
+  "@tripDiscoverSea": {
+    "placeholders": {
+      "temp": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverNoClimate": "No climate values yet",
+  "tripDiscoverMisses": "Misses a wish",
+  "tripDiscoverPending": "Climate values are being loaded: {count, plural, =1{1 place to go} other{{count} places to go}}",
+  "@tripDiscoverPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripDiscoverPendingLater": "More values will follow later; the provider only allows a few places a minute.",
+  "tripDiscoverEmpty": "No place fits these wishes. Loosen one or two.",
+  "tripDiscoverNote": "These are typical values for the time of year, not a forecast. WuselWall names no hotel, price or connection, and distances are estimates.",
+  "tripHomeTitle": "Home",
+  "tripHomeNotSet": "Not set",
+  "tripHomeExplain": "Stored rounded to about a kilometre. It is used for distances and, with a route service, sent to that service.",
+  "tripHomeSet": "Set",
+  "tripHomeChange": "Change",
+  "tripHomeForget": "Forget",
+  "tripHomeForgetAsk": "Forget the home place? Distances disappear until a new one is set.",
+  "tripHomeDialogTitle": "Home place",
+  "tripHomeName": "Name of the place",
+  "tripHomeSearch": "Search",
+  "tripHomeNoResults": "No place found.",
+  "tripHomeCoordsHint": "Or type the coordinates yourself, with two decimals.",
+  "tripHomeNoGeocode": "No place search is switched on, so type the coordinates yourself.",
+  "tripHomeLat": "Latitude",
+  "tripHomeLon": "Longitude",
+  "tripHomeInvalid": "Between -90 and 90 for latitude, -180 and 180 for longitude.",
+  "serviceTitle": "Weather and maps",
+  "serviceUnavailable": "Weather and maps are not available here.",
+  "serviceNoProviders": "This server offers no providers.",
+  "serviceIntro": "Everything here is off until you switch it on. Only your server asks a provider, never a phone or the wall. A provider gets the place you look at or search for and your server’s address, nothing about your family.",
+  "serviceReadOnly": "A parent can change this.",
+  "serviceProvidersHeading": "Providers",
+  "serviceCostFree": "Free, no key",
+  "serviceCostFreeKey": "Free with your own key",
+  "serviceCostPaidKey": "Your own key, may cost",
+  "serviceCapClimate": "Typical climate",
+  "serviceCapForecast": "Forecast",
+  "serviceCapGeocode": "Place search",
+  "serviceCapRoute": "Driving time",
+  "serviceCapMap": "Map picture",
+  "serviceReceivesCoordinates": "the coordinates of a place",
+  "serviceReceivesSearchText": "the text you search",
+  "serviceReceivesHome": "your home place, rounded",
+  "serviceReceivesLine": "It receives: {what}",
+  "@serviceReceivesLine": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceWebsite": "Website",
+  "serviceGetKey": "Get a key",
+  "serviceSwitch": "Switched on",
+  "serviceNeedsKeyFirst": "Needs a key first",
+  "serviceKeyLabel": "Key",
+  "serviceKeyHelp": "Typed once, stored on your server and never shown again.",
+  "serviceKeySaveOn": "Save key and switch on",
+  "serviceKeySave": "Save key",
+  "serviceKeyStored": "Key stored {hint}",
+  "@serviceKeyStored": {
+    "placeholders": {
+      "hint": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceKeyReplace": "Replace",
+  "serviceKeyRemove": "Remove",
+  "serviceKeyRemoveAsk": "Remove the key of {name}? The provider is switched off then.",
+  "@serviceKeyRemoveAsk": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceTest": "Test",
+  "serviceTestOk": "Works",
+  "serviceErrorKeyMissing": "This provider needs a key.",
+  "serviceErrorUnauthorized": "The provider refused the key.",
+  "serviceErrorQuota": "The provider’s allowance is used up for now.",
+  "serviceErrorTimeout": "The provider did not answer in time.",
+  "serviceErrorGeneric": "The provider did not work this time.",
+  "serviceLastError": "Last call: {reason}",
+  "@serviceLastError": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceUsedFor": "Used for",
+  "serviceMoveUp": "Ask earlier",
+  "serviceMoveDown": "Ask later",
+  "serviceOrderHint": "Where several providers offer the same thing, the first one in this order that answers wins.",
+  "serviceCallsToday": "{count, plural, =1{1 call today} other{{count} calls today}}",
+  "@serviceCallsToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceClosing": "A provider’s terms are yours to accept; some free offers are for private use only. Switching a provider off stops every call to it at once.",
   "learnedWordsHelp": "The family learned these words: from now on the item goes into this category. Forget takes a word away again.",
   "learnedWordsEmpty": "Nothing learned yet. When someone changes the category of an item, the family remembers the word here.",
   "learnedWordsMeta": "{category} · {date}",
@@ -4400,6 +5449,45 @@
     }
   },
   "errInvitationRequired": "This server takes only invited people. Ask a parent in the family for an invitation.",
+  "errTripInvalid": "This trip is not valid. Check the name and the dates.",
+  "errTripNotFound": "This trip no longer exists.",
+  "errTripEntryInvalid": "This entry is not valid. Check the name, the dates and the price.",
+  "errTripEntryNotFound": "This entry no longer exists.",
+  "errTripComboInvalid": "This combination is not valid. Check its name and its entries.",
+  "errTripComboNotFound": "This combination no longer exists.",
+  "errTripCheckInvalid": "This list item is not valid.",
+  "errTripCheckNotFound": "This list item no longer exists.",
+  "errTripEvent": "The calendar entry of a trip is changed in the trip, not in the calendar.",
+  "errTripHomeInvalid": "That home place is not valid.",
+  "errAdultsOnly": "Only adults can do that.",
+  "errServiceInvalid": "That service setting is not valid.",
+  "errServiceOff": "This needs a weather or map service. A parent can switch one on in the settings.",
+  "errServiceKeyMissing": "This service needs a key. A parent can add it in the settings.",
+  "errServiceLimit": "This service has been asked too often for now. Try again later.",
+  "errServiceFailed": "The service did not answer. Try again later.",
+  "tripsTitle": "Trips",
+  "tripStageIdea": "Idea",
+  "tripStagePlanned": "Planned",
+  "tripStageFixed": "Decided",
+  "tripKindTransport": "Transport",
+  "tripKindStay": "Accommodation",
+  "tripKindRental": "Rental car",
+  "tripKindActivity": "Activity",
+  "tripKindNote": "Note",
+  "tripKindTransportPlural": "Transport",
+  "tripKindStayPlural": "Accommodation",
+  "tripKindRentalPlural": "Rental cars",
+  "tripKindActivityPlural": "Activities",
+  "tripKindNotePlural": "Notes",
+  "tripModeFlight": "Flight",
+  "tripModeTrain": "Train",
+  "tripModeCar": "Car",
+  "tripModeFerry": "Ferry",
+  "tripModeBus": "Bus",
+  "tripModeOther": "Other",
+  "tripStateOption": "Option",
+  "tripStateChosen": "Chosen",
+  "tripStateBooked": "Booked",
   "accountNoticeMfaResetYou": "{name} reset your two-factor sign-in",
   "@accountNoticeMfaResetYou": {
     "placeholders": {

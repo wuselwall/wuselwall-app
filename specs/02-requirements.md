@@ -168,6 +168,24 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | FR-8.11 | A night variant after 21:00, and a "alle Termine zeigen" tap for the case where a key flag was forgotten | S | late |
 | FR-8.12 | The footer's shopping count opens the same tile capture as the phone — larger tiles, categories, and **no search field**, because nobody types on a wall. It always writes to the default list (FR-4.8) | M | late |
 
+## FR-9 Trips
+
+Added 2026-11-15 (issue #265). Specified in [30](30-trips.md); the services in
+[ADR-023](adr/ADR-023-opt-in-services.md).
+
+| ID | Requirement | Prio | Origin |
+|---|---|---|---|
+| FR-9.1 | Adults keep trip ideas and move one through *planned* to *fixed*; children and the wall change nothing | M | late |
+| FR-9.2 | Time windows are proposed from the travelling children's school-free days, public holidays and the calendar, with leave days and conflicts named | M | late |
+| FR-9.3 | Options for transport, stay, rental and activities are captured with link, price (and its date), details and dates, and compared side by side within a kind | M | late |
+| FR-9.4 | Combinations of options can be tried (total, dates, what does not fit), kept by name, compared, and one taken | M | late |
+| FR-9.5 | A planned trip is a tentative all-day entry in the calendar, a fixed one a confirmed key entry with a countdown; the entry is changed only through the trip | M | late |
+| FR-9.6 | Packing lists per person and to-dos before the trip, with a starter list and a copy of an earlier trip's | S | late |
+| FR-9.7 | The day plan of a trip, a trip card on Today before and during the trip, and all of it readable without network | M | late, NFR-6 |
+| FR-9.8 | A booking's calendar file becomes entries of a trip, updated when opened again | S | late, FR-1.21 |
+| FR-9.9 | Discovery ranks a bundled catalogue and the family's ideas by travel effort from home and, with a climate service on, by what is typical in the window | S | late |
+| FR-9.10 | Weather, place search, route and map providers are plug-ins on the server, off by default, switched on per household by a guardian, with keys no device can read; only the server contacts them | M | late, NFR-9 |
+
 ---
 
 ## Non-functional requirements
@@ -182,7 +200,7 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | NFR-6 | **Availability** — self-hosted, single node, no HA | ~99% is fine; scheduled downtime acceptable | B3 |
 | NFR-7 | **Cost** — total recurring spend | Hosting ≤ €13 / month, plus the Apple Developer Program (€99 / year). *Proposed 2026-10-11 — the native apps and a larger server for Supabase break the original ≤ €10 target; confirm in [Q36](14-open-questions.md)* *Since [ADR-018](adr/ADR-018-self-hosted-only.md) (2026-10-13): no hosted flavour, so ≈ €8–12/month is the whole cost ([10](10-deployment-and-ops.md#costs)); every other household's server is its operator's cost* | B3 |
 | NFR-8 | **Data residency** — all data stored in Germany or the EU | Hard requirement for what the project ships and recommends (EU regions, EU mail providers). Each household's data lives wherever its operator runs the server ([ADR-018](adr/ADR-018-self-hosted-only.md)) | B3 |
-| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Distribution via Apple/Google and push transport are accepted exceptions. [ADR-022](adr/ADR-022-encrypted-push-relay.md) approves an optional project relay with APNs direct for iOS and FCM for Android: authenticated encrypted household content, no relay registry/history, but exposed routing/network/timing metadata disclosed before activation. **Not built:** current reminders remain local ([Q47](14-open-questions.md), #274). *Since 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)):* one SMTP provider for sign-in codes is also accepted (Sign in with Apple/Google was too, until 2026-10-17). No deferred-deep-link, attribution or captcha service | B3 |
+| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Distribution via Apple/Google and push transport are accepted exceptions. [ADR-022](adr/ADR-022-encrypted-push-relay.md) approves an optional project relay with APNs direct for iOS and FCM for Android: authenticated encrypted household content, no relay registry/history, but exposed routing/network/timing metadata disclosed before activation. **Not built:** current reminders remain local ([Q47](14-open-questions.md), #274). *Since 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)):* one SMTP provider for sign-in codes is also accepted (Sign in with Apple/Google was too, until 2026-10-17). No deferred-deep-link, attribution or captcha service. *Since 2026-11-15 ([ADR-023](adr/ADR-023-opt-in-services.md)):* weather and map providers a household switched on itself are contacted by its server, never by an app, and none is on by default | B3 |
 | NFR-10 | **Transport security** — HTTPS everywhere, HSTS, modern TLS only | Enforced by the reverse proxy | B3 |
 | NFR-11 | **Backups** — nightly, encrypted, off-site, with a tested restore | RPO 24 h, RTO 4 h | D |
 | NFR-12 | **Patching** — OS and dependency updates | Unattended OS security updates; dependency review monthly | B3 |

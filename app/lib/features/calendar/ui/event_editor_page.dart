@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/suggest.dart';
@@ -34,6 +35,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/rituals/ui/event_ritual_fields.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// How wide the event form gets on a laptop or a wall display.
@@ -53,7 +55,10 @@ class EventEditorPage extends ConsumerWidget {
     if (id == null) return _EventEditorForm(args: args);
     final loaded = ref.watch(calendarEventProvider(id));
     return loaded.when(
-      data: (event) => _EventEditorForm(args: args, initial: event),
+      // A trip's appointment is changed on the trip, not here (specs/30).
+      data: (event) => event.tripId == null
+          ? _EventEditorForm(args: args, initial: event)
+          : _TripEventNotice(tripId: event.tripId!),
       loading: () => _Frame(
         title: context.l10n.eventEditTitle,
         child: const Center(child: CircularProgressIndicator()),
@@ -63,6 +68,46 @@ class EventEditorPage extends ConsumerWidget {
         child: ErrorView(
           error: error,
           onRetry: () => ref.invalidate(calendarEventProvider(id)),
+        ),
+      ),
+    );
+  }
+}
+
+/// What the editor shows for the appointment of a trip: the trip owns it, so it is read
+/// and changed there.
+class _TripEventNotice extends ConsumerWidget {
+  const _TripEventNotice({required this.tripId});
+
+  final String tripId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return _Frame(
+      title: l10n.eventEditTitle,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.tripCalendarNotice,
+                key: const ValueKey('trip-event-notice'),
+                textAlign: TextAlign.center,
+              ),
+              if (ref.watch(tripsOfferedProvider)) ...[
+                const SizedBox(height: 16),
+                FilledButton(
+                  key: const ValueKey('trip-event-open'),
+                  onPressed: () =>
+                      context.pushReplacement(Routes.tripPath(tripId)),
+                  child: Text(l10n.tripCalendarOpen),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
