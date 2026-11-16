@@ -124,6 +124,12 @@ Proposals while typing (2026-11-14, issue #239, specs/05 "Proposals while typing
 title and place and a chore's title propose what the family entered before (`SuggestField` in
 `core/ui`, ranked by `core/text/suggest.dart` from `api.events` and `api.task_definitions`; no
 server change).
+Web accessibility completion (#268/#261, 2026-11-16): refused calendar imports offer the
+existing localized Close action alongside any trip-import action; settings row actions
+are separate accessible controls. The original full Chromium capture passed all 2,693
+cases; current qualification still keeps genuinely undersized and nested controls blocking.
+Its refusal fixture now has no events (multiple events can go into a trip), and browser
+readiness requires the exact refusal text/title plus only the localized Close action.
 A restart without network (step 10.6, issue #128, 2026-11-10): reads given a `cacheKey` in
 `ApiClient` keep their last good JSON answer in a second drift database
 (`app/lib/core/cache/`, ADR-006's read cache) and fall back to it on a network failure only:

@@ -48,6 +48,12 @@ and privacy changes are tracked separately in
 
 Member, family, device and shopping-structure editing (old step 10.1–10.3) and Today’s
 guardian approvals (10.5, #127/#149) are built.
+The remaining web accessibility fixes (#268/#261, 2026-11-16) add a Close action to
+refused calendar imports and keep settings row actions individually reachable. The
+original full Chromium capture completed with 2,693 passes and a written JSON report;
+this is capture evidence, not a reviewed baseline or native qualification.
+Public progress is coordinated separately in
+[website #21](https://github.com/wuselwall/wuselwall-website/issues/21).
 Cache qualification fixes followed on 2026-10-25: discovery and household recovery after
 reconnect/resume, late-response guards, member/holiday invalidations, Today refresh and
 midnight rollover, and subscribed-calendar horizon/timezone re-expansion. These do not

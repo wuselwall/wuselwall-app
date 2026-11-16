@@ -460,7 +460,7 @@ void main() {
       expect(find.byKey(const ValueKey('import-event-open')), findsOneWidget);
     });
 
-    testWidgets('a file that is no event says why and offers nothing', (
+    testWidgets('a file that is no event says why and offers only to close', (
       t,
     ) async {
       final (:container, :calendar) = await open(
@@ -469,7 +469,13 @@ void main() {
       );
       expect(find.text(_de.eventImportNotAnEvent), findsOneWidget);
       expect(save, findsNothing);
+      final close = find.widgetWithText(OutlinedButton, _de.close);
+      expect(close, findsOneWidget);
       expect(calendar.imported, isEmpty);
+
+      await t.tap(close);
+      await t.pumpAndSettle();
+      expect(find.text(_de.eventImportNotAnEvent), findsNothing);
       container.dispose();
     });
 
@@ -481,6 +487,7 @@ void main() {
       );
       expect(find.text(_de.eventImportParentsOnly), findsOneWidget);
       expect(save, findsNothing);
+      expect(find.widgetWithText(OutlinedButton, _de.close), findsOneWidget);
       expect(calendar.imported, isEmpty);
       container.dispose();
     });

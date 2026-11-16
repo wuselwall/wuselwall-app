@@ -142,6 +142,8 @@ The file is a copy. If the appointment changes later, share it again; most calen
 
 ## Adding an appointment somebody sent you {#receive-event}
 
+If WuselWall cannot add the file, the page explains why. Choose **Close** to go back; nothing is saved.
+
 Another family sent you a calendar file (it ends in **.ics**)? A parent can add it to the family calendar, on their own phone or tablet.
 
 - **From the message:** tap the file and choose **WuselWall** under "Open with".

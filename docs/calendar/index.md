@@ -142,6 +142,8 @@ Die Datei ist eine Kopie. Ändert sich der Termin später, teile ihn noch einmal
 
 ## Einen Termin übernehmen, den euch jemand geschickt hat {#receive-event}
 
+Kann WuselWall die Datei nicht übernehmen, erklärt die Seite den Grund. Mit **Schließen** kommst du zurück; es wird nichts gespeichert.
+
 Eine andere Familie hat euch eine Kalenderdatei geschickt (sie endet auf **.ics**)? Eltern können sie in den Familienkalender übernehmen, auf ihrem eigenen Handy oder Tablet.
 
 - **Aus der Nachricht:** Tippe auf die Datei und wähle unter „Öffnen mit“ **WuselWall**.

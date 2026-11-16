@@ -137,6 +137,8 @@ El archivo es una copia. Si el evento cambia más tarde, compártelo otra vez; l
 
 ## Añadir un evento que os han enviado {#receive-event}
 
+Si WuselWall no puede añadir el archivo, la página explica el motivo. Toca **Cerrar** para volver; no se guarda nada.
+
 ¿Otra familia os ha enviado un archivo de calendario (termina en **.ics**)? Una madre o un padre puede añadirlo al calendario familiar, en su propio teléfono o tableta.
 
 - **Desde el mensaje:** toca el archivo y elige **WuselWall** en «Abrir con».
