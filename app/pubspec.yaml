@@ -119,5 +119,6 @@ flutter_launcher_icons:
   web:
     generate: true
     image_path: assets/icon/icon.png
-    background_color: "#F7F4EE"
-    theme_color: "#2D6A4F"
+    # The ground and the accent of the standard light theme (Palette.frisch).
+    background_color: "#F5F9F5"
+    theme_color: "#177148"
