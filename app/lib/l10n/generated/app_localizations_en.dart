@@ -5933,6 +5933,139 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayLookingForward => 'Looking forward';
 
   @override
+  String tripTodayDayOf(int day, int count) {
+    return 'Day $day of $count';
+  }
+
+  @override
+  String tripTodayMore(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String tripTodayPacked(int packed, int total) {
+    return '$packed of $total packed';
+  }
+
+  @override
+  String get tripTodayTodos => 'Still to do';
+
+  @override
+  String get tripTodayTonight => 'Tonight';
+
+  @override
+  String get tripTodayTomorrow => 'Tomorrow';
+
+  @override
+  String get tripTodayNothing => 'Nothing planned today.';
+
+  @override
+  String get tripTodayCheckIn => 'Check-in';
+
+  @override
+  String get tripTodayCheckOut => 'Check-out';
+
+  @override
+  String get tripTodayPickUp => 'Pick-up';
+
+  @override
+  String get tripTodayReturn => 'Return';
+
+  @override
+  String get tripTodayDeparture => 'Departure';
+
+  @override
+  String get tripTodayArrival => 'Arrival';
+
+  @override
+  String tripTodayOpen(String title) {
+    return 'Open the trip $title';
+  }
+
+  @override
+  String get tripTodayCall => 'Call';
+
+  @override
+  String get tripTodayMap => 'Show on map';
+
+  @override
+  String get tripTodayCannotOpen => 'This can\'t be opened here.';
+
+  @override
+  String get tripTodayAllTrips => 'All trips';
+
+  @override
+  String get tripImportAction => 'Add to trip';
+
+  @override
+  String get tripImportTitle => 'Which trip?';
+
+  @override
+  String get tripImportIntro =>
+      'Every event in the file becomes an entry of the trip, as booked.';
+
+  @override
+  String tripImportEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'These $count entries will be added',
+      one: 'This entry will be added',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripImportSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count events in the file are skipped (cancelled or without a start).',
+      one: '1 event in the file is skipped (cancelled or without a start).',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripImportNothing => 'No event in this file could be read.';
+
+  @override
+  String get tripImportConfirm => 'Add';
+
+  @override
+  String tripImportDone(int added, int updated) {
+    return '$added added, $updated updated';
+  }
+
+  @override
+  String get tripImportFallbackTitle => 'Booking';
+
+  @override
+  String get tripImportSeveral =>
+      'This file holds several events. They can go into a trip.';
+
+  @override
+  String get tripCalendarNotice =>
+      'This entry belongs to a trip and is changed there.';
+
+  @override
+  String get tripCalendarOpen => 'Open trip';
+
+  @override
+  String get tripCalendarPlanTitle => 'Plan a trip';
+
+  @override
+  String get tripCalendarPlanLine => 'Compare, book, pack';
+
+  @override
+  String get settingsServicesTitle => 'Weather and maps';
+
+  @override
+  String get settingsServicesSubtitle =>
+      'Forecast, places and routes for trips';
+
+  @override
   String get eventIconNone => 'No picture';
 
   @override
@@ -6755,6 +6888,568 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your family already has 50 templates. Delete one first.';
 
   @override
+  String get tripListWindows => 'Time windows';
+
+  @override
+  String get tripListWindowsHelp => 'When can all of us get away?';
+
+  @override
+  String get tripListDiscover => 'Where to?';
+
+  @override
+  String get tripListDiscoverHelp => 'Where is it warm and dry then?';
+
+  @override
+  String get tripListNewIdea => 'New idea';
+
+  @override
+  String get tripListUpcoming => 'Under way and coming up';
+
+  @override
+  String get tripListIdeas => 'Ideas';
+
+  @override
+  String tripListPast(int count) {
+    return 'Past trips ($count)';
+  }
+
+  @override
+  String get tripListEmptyTitle => 'No trips yet';
+
+  @override
+  String get tripListEmpty =>
+      'Start with an idea: a place you would like to go, with no dates yet.';
+
+  @override
+  String tripListInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'In $count days',
+      one: 'Tomorrow',
+      zero: 'Today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripListDayOf(int day, int total) {
+    return 'Day $day of $total';
+  }
+
+  @override
+  String get tripListNoDates => 'No dates yet';
+
+  @override
+  String get tripPageUnavailable => 'Trips are not available here.';
+
+  @override
+  String get tripPageNotFound => 'This trip no longer exists.';
+
+  @override
+  String get tripPageToList => 'To all trips';
+
+  @override
+  String get tripPageMore => 'More';
+
+  @override
+  String get tripPageEdit => 'Edit';
+
+  @override
+  String get tripPageBackToIdea => 'Back to idea';
+
+  @override
+  String get tripPageDelete => 'Delete trip';
+
+  @override
+  String tripPageDeleteConfirm(String title) {
+    return 'Delete “$title” with its options, plan and lists?';
+  }
+
+  @override
+  String get tripPageWholeFamily => 'The whole family';
+
+  @override
+  String tripPageDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripPageChooseDates => 'Choose dates';
+
+  @override
+  String get tripPageFindWindow => 'Find a time window';
+
+  @override
+  String get tripPageEnterDates => 'Enter dates';
+
+  @override
+  String get tripPageChangeDates => 'Change dates';
+
+  @override
+  String get tripPageDatesTooLong => 'A trip can last 366 days at most.';
+
+  @override
+  String get tripPageFix => 'We’re doing this';
+
+  @override
+  String get tripPagePencil => 'Pencil in these dates';
+
+  @override
+  String get tripPageDecided => 'Decided. The family can look forward to it.';
+
+  @override
+  String get tripPageUnfix => 'Back to planned';
+
+  @override
+  String get tripPageCalPlanned => 'In the calendar as a dashed entry.';
+
+  @override
+  String get tripPageCalFixed =>
+      'In the calendar with a countdown, also on the wall.';
+
+  @override
+  String get tripPageTabPlan => 'Plan';
+
+  @override
+  String get tripPageTabPack => 'Pack';
+
+  @override
+  String get tripPageTabPrepare => 'Prepare';
+
+  @override
+  String get tripEditTitle => 'Edit trip';
+
+  @override
+  String get tripEditName => 'Name of the trip';
+
+  @override
+  String get tripEditNameHint => 'e.g. Sardinia in summer';
+
+  @override
+  String get tripEditNameRequired => 'Please give the trip a name.';
+
+  @override
+  String get tripEditDestination => 'Destination (optional)';
+
+  @override
+  String get tripEditFindPlace => 'Find place';
+
+  @override
+  String get tripEditNoPlaces => 'No place found.';
+
+  @override
+  String get tripEditPlaceFound => 'Place found';
+
+  @override
+  String get tripEditWho => 'Who is travelling?';
+
+  @override
+  String get tripEditWholeFamily =>
+      'Nobody selected: the whole family travels.';
+
+  @override
+  String get tripEditCurrency => 'Currency';
+
+  @override
+  String get tripEditCurrencyHelp => 'Three letters, e.g. CHF or EUR';
+
+  @override
+  String get tripEditCurrencyInvalid => 'Three letters, please.';
+
+  @override
+  String get tripEditNote => 'Note';
+
+  @override
+  String tripPlanDay(int number, String date) {
+    return 'Day $number · $date';
+  }
+
+  @override
+  String get tripPlanToday => 'Today';
+
+  @override
+  String get tripPlanDayEmpty => 'Nothing planned yet';
+
+  @override
+  String tripPlanStayTonight(String title) {
+    return 'Night: $title';
+  }
+
+  @override
+  String get tripPlanRoleCheckIn => 'Check-in';
+
+  @override
+  String get tripPlanRoleCheckOut => 'Check-out';
+
+  @override
+  String get tripPlanRolePickUp => 'Pick-up';
+
+  @override
+  String get tripPlanRoleReturn => 'Return';
+
+  @override
+  String get tripPlanRoleDeparture => 'Departure';
+
+  @override
+  String get tripPlanRoleArrival => 'Arrival';
+
+  @override
+  String get tripPlanRoleStart => 'Start';
+
+  @override
+  String get tripPlanRoleEnd => 'End';
+
+  @override
+  String get tripPlanUndated => 'Without a date';
+
+  @override
+  String get tripPlanOutside => 'Outside the trip’s dates';
+
+  @override
+  String get tripPlanNoDatesHint =>
+      'Choose dates and the days of the trip appear here, with everything you have chosen.';
+
+  @override
+  String get tripPlanChosen => 'Chosen and booked';
+
+  @override
+  String get tripPlanOptions => 'Options';
+
+  @override
+  String tripPlanOptionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count options',
+      one: '1 option',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripPlanPriceRange(String low, String high) {
+    return '$low to $high';
+  }
+
+  @override
+  String tripPlanPriceChecked(String date) {
+    return 'Price from $date';
+  }
+
+  @override
+  String tripPlanBookingRef(String ref) {
+    return 'Booking $ref';
+  }
+
+  @override
+  String get tripPlanCompare => 'Compare';
+
+  @override
+  String get tripPlanAddOption => 'Add option';
+
+  @override
+  String get tripPlanOpenLink => 'Open link';
+
+  @override
+  String get tripPlanCall => 'Call';
+
+  @override
+  String get tripPlanOpenMap => 'Show on map';
+
+  @override
+  String get tripPlanOpenFailed => 'That could not be opened.';
+
+  @override
+  String tripInfoSum(String amount) {
+    return 'Chosen and booked: $amount';
+  }
+
+  @override
+  String tripInfoSumAtLeast(String amount) {
+    return 'Chosen and booked: at least $amount';
+  }
+
+  @override
+  String get tripInfoForecast => 'Forecast';
+
+  @override
+  String get tripInfoClimate => 'Typical at this time of year';
+
+  @override
+  String tripInfoClimateMonth(String month, String tmax, String tmin) {
+    return '$month: $tmax° / $tmin°';
+  }
+
+  @override
+  String tripInfoRainDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rain days',
+      one: '1 rain day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripInfoSea(String temp) {
+    return 'Sea $temp°';
+  }
+
+  @override
+  String tripInfoRoute(String time, String km) {
+    return 'By car from home: $time, $km km';
+  }
+
+  @override
+  String tripInfoDurationHM(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String tripInfoDurationM(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get tripInfoMap => 'Map of the destination';
+
+  @override
+  String tripInfoForecastDay(
+    String date,
+    String weather,
+    String tmax,
+    String tmin,
+  ) {
+    return '$date: $weather, $tmax° / $tmin°';
+  }
+
+  @override
+  String get tripInfoWeatherClear => 'Clear';
+
+  @override
+  String get tripInfoWeatherPartly => 'Partly cloudy';
+
+  @override
+  String get tripInfoWeatherCloudy => 'Cloudy';
+
+  @override
+  String get tripInfoWeatherFog => 'Fog';
+
+  @override
+  String get tripInfoWeatherRain => 'Rain';
+
+  @override
+  String get tripInfoWeatherSnow => 'Snow';
+
+  @override
+  String get tripInfoWeatherStorm => 'Thunderstorm';
+
+  @override
+  String tripPackProgress(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get tripPackForAll => 'For everyone';
+
+  @override
+  String get tripPackAddHint => 'Add an item';
+
+  @override
+  String get tripPackAdd => 'Add';
+
+  @override
+  String get tripPackItem => 'Item';
+
+  @override
+  String get tripPackEmpty => 'Nothing on the list yet.';
+
+  @override
+  String get tripPackRename => 'Rename';
+
+  @override
+  String get tripPackRemove => 'Remove';
+
+  @override
+  String get tripPackSuggestions => 'Suggestions';
+
+  @override
+  String get tripPackSuggestionsHelp =>
+      'Choose what to add. What each person needs is added for everyone who travels.';
+
+  @override
+  String get tripPackSuggestionsAdd => 'Add to list';
+
+  @override
+  String get tripPackLastTime => 'Like last time';
+
+  @override
+  String get tripPackLastTimeChoose => 'Copy the list of which trip?';
+
+  @override
+  String get tripPackLastTimeNone => 'No other trip has a packing list yet.';
+
+  @override
+  String tripPackAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items added.',
+      one: '1 item added.',
+      zero: 'Everything was already on the list.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripPackGroupDocuments => 'Documents';
+
+  @override
+  String get tripPackGroupHealth => 'Health';
+
+  @override
+  String get tripPackGroupElectronics => 'Electronics';
+
+  @override
+  String get tripPackGroupClothes => 'Clothes';
+
+  @override
+  String get tripPackGroupBeach => 'Beach and sun';
+
+  @override
+  String get tripPackGroupKids => 'For the children';
+
+  @override
+  String get tripPackStarterPassports => 'Passport or ID';
+
+  @override
+  String get tripPackStarterHealthInsuranceCard => 'Health insurance card';
+
+  @override
+  String get tripPackStarterBookingConfirmations => 'Booking confirmations';
+
+  @override
+  String get tripPackStarterCashAndCards => 'Cash and bank cards';
+
+  @override
+  String get tripPackStarterPharmacyBag => 'First-aid kit';
+
+  @override
+  String get tripPackStarterRegularMedication => 'Medication';
+
+  @override
+  String get tripPackStarterSunscreen => 'Sunscreen';
+
+  @override
+  String get tripPackStarterInsectRepellent => 'Insect repellent';
+
+  @override
+  String get tripPackStarterChargers => 'Phone chargers';
+
+  @override
+  String get tripPackStarterPowerAdapter => 'Travel plug adapter';
+
+  @override
+  String get tripPackStarterPowerBank => 'Power bank';
+
+  @override
+  String get tripPackStarterHeadphones => 'Headphones';
+
+  @override
+  String get tripPackStarterUnderwearSocks => 'Underwear and socks';
+
+  @override
+  String get tripPackStarterTshirts => 'T-shirts';
+
+  @override
+  String get tripPackStarterTrousersShorts => 'Trousers and shorts';
+
+  @override
+  String get tripPackStarterWarmJumper => 'Warm jumper';
+
+  @override
+  String get tripPackStarterRainJacket => 'Rain jacket';
+
+  @override
+  String get tripPackStarterWalkingShoes => 'Comfortable shoes';
+
+  @override
+  String get tripPackStarterSleepwear => 'Sleepwear';
+
+  @override
+  String get tripPackStarterSwimwear => 'Swimwear';
+
+  @override
+  String get tripPackStarterBeachTowels => 'Beach towel';
+
+  @override
+  String get tripPackStarterSunHat => 'Sun hat';
+
+  @override
+  String get tripPackStarterSunglasses => 'Sunglasses';
+
+  @override
+  String get tripPackStarterCuddlyToy => 'Cuddly toy';
+
+  @override
+  String get tripPackStarterKidsGames => 'Games and books for the journey';
+
+  @override
+  String get tripPackStarterNappiesWipes => 'Nappies and wipes';
+
+  @override
+  String get tripPackStarterJourneySnacks => 'Snacks for the journey';
+
+  @override
+  String get tripTodoAdd => 'Add to-do';
+
+  @override
+  String get tripTodoEdit => 'Edit to-do';
+
+  @override
+  String get tripTodoTitleLabel => 'What needs to happen?';
+
+  @override
+  String get tripTodoDaysLabel => 'Days before the trip (optional)';
+
+  @override
+  String tripTodoDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days before',
+      one: '1 day before',
+      zero: 'On the first day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripTodoDue(String date) {
+    return 'By $date';
+  }
+
+  @override
+  String tripTodoWasDue(String date) {
+    return 'Was due $date';
+  }
+
+  @override
+  String get tripTodoEmpty =>
+      'Nothing to prepare yet. Passports, neighbours, the cat: note what has to happen before you leave.';
+
+  @override
+  String get tripTodoDone => 'Done';
+
+  @override
   String get passwordSignUpTab => 'New account';
 
   @override
@@ -6884,6 +7579,403 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shoppingTileStarter => 'Suggested';
 
   @override
+  String get tripEntryNewTitle => 'Add option';
+
+  @override
+  String get tripEntryEditTitle => 'Edit entry';
+
+  @override
+  String get tripEntryName => 'Name';
+
+  @override
+  String get tripEntryNameRequired => 'Please give it a name.';
+
+  @override
+  String get tripEntryMode => 'Type of transport';
+
+  @override
+  String tripEntryPrice(String currency) {
+    return 'Price ($currency)';
+  }
+
+  @override
+  String tripEntryPriceFrom(String date) {
+    return 'Price from $date';
+  }
+
+  @override
+  String get tripEntryPriceInvalid => 'Enter an amount such as 840 or 1249.50.';
+
+  @override
+  String get tripEntryLink => 'Link';
+
+  @override
+  String get tripEntryLinkInvalid =>
+      'Use a web address that starts with http:// or https://.';
+
+  @override
+  String get tripEntryPasteLink => 'Paste link';
+
+  @override
+  String get tripEntryPasteNone => 'There is no web address on the clipboard.';
+
+  @override
+  String get tripEntryOpenLink => 'Open link';
+
+  @override
+  String get tripEntryOpenFailed => 'That could not be opened.';
+
+  @override
+  String get tripEntryMore => 'More details';
+
+  @override
+  String get tripEntryLess => 'Fewer details';
+
+  @override
+  String get tripEntryDetails => 'Details';
+
+  @override
+  String get tripEntryDetailsHint => '1 stop, baggage included';
+
+  @override
+  String get tripEntryFrom => 'From';
+
+  @override
+  String get tripEntryTo => 'To';
+
+  @override
+  String get tripEntryPickUpPlace => 'Pick-up place';
+
+  @override
+  String get tripEntryReturnPlace => 'Return place';
+
+  @override
+  String get tripEntryStartTransport => 'Departure';
+
+  @override
+  String get tripEntryEndTransport => 'Arrival';
+
+  @override
+  String get tripEntryStartStay => 'Check-in';
+
+  @override
+  String get tripEntryEndStay => 'Check-out';
+
+  @override
+  String get tripEntryStartRental => 'Pick-up';
+
+  @override
+  String get tripEntryEndRental => 'Return';
+
+  @override
+  String get tripEntryStartPlain => 'Start';
+
+  @override
+  String get tripEntryEndPlain => 'End';
+
+  @override
+  String get tripEntryAddDate => 'Add date';
+
+  @override
+  String get tripEntryAddTime => 'Add time';
+
+  @override
+  String get tripEntryClearDate => 'Remove date';
+
+  @override
+  String get tripEntryClearTime => 'Remove time';
+
+  @override
+  String get tripEntryEndBeforeStart => 'The end is before the start.';
+
+  @override
+  String get tripEntryCancelUntil => 'Free cancellation until';
+
+  @override
+  String get tripEntryAddress => 'Address';
+
+  @override
+  String get tripEntryOpenAddress => 'Show on map';
+
+  @override
+  String get tripEntryPhone => 'Phone';
+
+  @override
+  String get tripEntryCallPhone => 'Call';
+
+  @override
+  String get tripEntryBookingRef => 'Booking reference';
+
+  @override
+  String get tripEntryNote => 'Note';
+
+  @override
+  String get tripEntryState => 'State';
+
+  @override
+  String get tripEntryCopy => 'Copy as another option';
+
+  @override
+  String get tripEntryCopied => 'Copied. This is the copy.';
+
+  @override
+  String get tripEntryDelete => 'Delete entry';
+
+  @override
+  String get tripEntryDeleteTitle => 'Delete this entry?';
+
+  @override
+  String tripEntryDeleteBody(String title) {
+    return '“$title” is removed from the trip and from kept combinations.';
+  }
+
+  @override
+  String get tripEntryGone => 'This trip no longer exists.';
+
+  @override
+  String get tripEntryUnavailable => 'Trips are not available on this device.';
+
+  @override
+  String get tripCompareTitle => 'Compare';
+
+  @override
+  String get tripCompareUnavailable =>
+      'Comparing is not available on this device.';
+
+  @override
+  String get tripCompareGone => 'This trip no longer exists.';
+
+  @override
+  String tripCompareSection(String kind, int count) {
+    return '$kind · $count';
+  }
+
+  @override
+  String tripCompareStripLabel(String kind) {
+    return '$kind, options side by side';
+  }
+
+  @override
+  String get tripCompareCheapest => 'Cheapest';
+
+  @override
+  String tripComparePerNight(String price) {
+    return '$price per night';
+  }
+
+  @override
+  String tripComparePerDay(String price) {
+    return '$price per day';
+  }
+
+  @override
+  String get tripCompareNoPrice => 'No price yet';
+
+  @override
+  String tripCompareFromTo(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String tripCompareRange(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String tripCompareFreeCancel(String date) {
+    return 'Free cancellation until $date';
+  }
+
+  @override
+  String get tripCompareCancelPassed => 'Free cancellation has passed';
+
+  @override
+  String tripCompareTick(String title) {
+    return 'Try “$title” in the combination';
+  }
+
+  @override
+  String get tripCompareEdit => 'Edit';
+
+  @override
+  String get tripCompareAdd => 'Add option';
+
+  @override
+  String get tripCompareAddTransport => 'Add transport';
+
+  @override
+  String get tripCompareAddStay => 'Add accommodation';
+
+  @override
+  String get tripCompareAddRental => 'Add rental car';
+
+  @override
+  String get tripCompareEmptyTitle => 'No options yet';
+
+  @override
+  String get tripCompareEmptyMessage =>
+      'Collect flights, accommodation and rental cars here, compare them and try out combinations.';
+
+  @override
+  String get tripCompareHint =>
+      'Tick one option of each kind, then keep the combination.';
+
+  @override
+  String get tripComboSection => 'Kept combinations';
+
+  @override
+  String tripComboTotal(String amount) {
+    return 'Total $amount';
+  }
+
+  @override
+  String tripComboTotalAtLeast(String amount) {
+    return 'At least $amount';
+  }
+
+  @override
+  String tripComboNights(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nights',
+      one: '1 night',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripComboDates(String dates, String nights) {
+    return '$dates · $nights';
+  }
+
+  @override
+  String get tripComboNoDates => 'No dates yet';
+
+  @override
+  String get tripComboFits => 'Fits together';
+
+  @override
+  String tripComboWarningsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things do not fit',
+      one: '1 thing does not fit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripComboShowAll => 'Show all';
+
+  @override
+  String get tripComboShowLess => 'Show less';
+
+  @override
+  String get tripComboKeep => 'Keep as combination';
+
+  @override
+  String tripComboWarnNights(int count, String dates) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nights without accommodation: $dates',
+      one: '1 night without accommodation: $dates',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripComboWarnRentalNoTransport(String name) {
+    return '$name: rental car without any transport';
+  }
+
+  @override
+  String tripComboWarnRentalBefore(String name) {
+    return '$name starts before the arrival';
+  }
+
+  @override
+  String tripComboWarnRentalAfter(String name) {
+    return '$name ends after the departure';
+  }
+
+  @override
+  String tripComboWarnOverlap(String first, String second, String dates) {
+    return '$first and $second overlap: $dates';
+  }
+
+  @override
+  String tripComboWarnPrice(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count options have no price, the total is a minimum',
+      one: '1 option has no price, the total is a minimum',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripComboKeepTitle => 'Keep this combination';
+
+  @override
+  String get tripComboName => 'Name of the combination';
+
+  @override
+  String get tripComboKept => 'Combination kept.';
+
+  @override
+  String get tripComboRename => 'Rename';
+
+  @override
+  String get tripComboLoad => 'Load into the ticks';
+
+  @override
+  String tripComboLoaded(String name) {
+    return '“$name” is loaded. Change the ticks and keep it again.';
+  }
+
+  @override
+  String get tripComboDelete => 'Delete combination';
+
+  @override
+  String tripComboDeleteTitle(String name) {
+    return 'Delete “$name”?';
+  }
+
+  @override
+  String get tripComboDeleteBody => 'The options themselves stay.';
+
+  @override
+  String get tripComboTake => 'Take this one';
+
+  @override
+  String tripComboTakeTitle(String name) {
+    return 'Take “$name”?';
+  }
+
+  @override
+  String get tripComboTakeBody =>
+      'These become the chosen ones. Other chosen transport, accommodation and rental cars go back to options. Booked ones stay as they are.';
+
+  @override
+  String tripComboSetDates(String dates) {
+    return 'Also set the trip\'s dates to $dates';
+  }
+
+  @override
+  String tripComboTaken(int chosen, int released) {
+    return 'Chosen: $chosen. Back to options: $released.';
+  }
+
+  @override
+  String tripComboTakenDates(int chosen, int released) {
+    return 'Chosen: $chosen. Back to options: $released. The trip\'s dates are set.';
+  }
+
+  @override
   String get settingsGroupShoppingTitle => 'Shopping';
 
   @override
@@ -6891,6 +7983,486 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsSectionLearnedWords => 'Learned words';
+
+  @override
+  String get tripWindowsTitle => 'Time windows';
+
+  @override
+  String get tripWindowsUnavailable => 'Trips are not available here.';
+
+  @override
+  String get tripWindowsIntro =>
+      'When could we travel? These are the stretches when everyone who comes along is free.';
+
+  @override
+  String get tripWindowsLengthLabel => 'Shortest stay';
+
+  @override
+  String get tripWindowsWhoLabel => 'Who travels?';
+
+  @override
+  String get tripWindowsWhoHint => 'Nobody selected means everyone.';
+
+  @override
+  String tripWindowDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripWindowKindLongWeekend => 'Long weekend';
+
+  @override
+  String get tripWindowHolidaysFallback => 'Holidays';
+
+  @override
+  String tripWindowLeave(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count leave days for the adults',
+      one: '1 leave day for the adults',
+      zero: 'No leave days needed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripWindowPartialBefore(String name, String date) {
+    return '$name is free from $date already';
+  }
+
+  @override
+  String tripWindowPartialAfter(String name, String date) {
+    return '$name is still free until $date';
+  }
+
+  @override
+  String get tripWindowFree => 'Nothing in the way';
+
+  @override
+  String get tripWindowConflicts => 'In the way';
+
+  @override
+  String get tripWindowTake => 'Take these dates';
+
+  @override
+  String get tripWindowTakeHelp => 'Dates of the trip';
+
+  @override
+  String get tripWindowTaken => 'The dates are in the trip now.';
+
+  @override
+  String get tripWindowWhere => 'Where is it nice then?';
+
+  @override
+  String get tripWindowNewTrip => 'New trip in this window';
+
+  @override
+  String get tripWindowNewTripTitle => 'New trip';
+
+  @override
+  String get tripWindowNewTripLabel => 'Name of the trip';
+
+  @override
+  String get tripWindowEmpty =>
+      'No free stretch found yet. School holidays come from the region and school settings, and dates can always be entered by hand on a trip.';
+
+  @override
+  String get tripWindowEmptyAction => 'Region and school settings';
+
+  @override
+  String get tripDiscoverTitle => 'Where to?';
+
+  @override
+  String get tripDiscoverUnavailable => 'Trips are not available here.';
+
+  @override
+  String get tripDiscoverWhen => 'Time away';
+
+  @override
+  String get tripDiscoverChange => 'Change';
+
+  @override
+  String get tripDiscoverPickHelp => 'When do you want to go?';
+
+  @override
+  String get tripDiscoverWishes => 'Wishes';
+
+  @override
+  String get tripDiscoverWishesNone => 'No wishes yet';
+
+  @override
+  String tripDiscoverWishesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count wishes',
+      one: '1 wish',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tripDiscoverAny => 'any';
+
+  @override
+  String tripDiscoverDegrees(int degrees) {
+    return '$degrees °C';
+  }
+
+  @override
+  String get tripDiscoverTempMinLabel => 'Days at least';
+
+  @override
+  String get tripDiscoverTempMaxLabel => 'Days at most';
+
+  @override
+  String get tripDiscoverDry => 'Little rain';
+
+  @override
+  String get tripDiscoverSeaLabel => 'Sea at least';
+
+  @override
+  String get tripDiscoverTagsLabel => 'Kind of place';
+
+  @override
+  String get tripDiscoverTagSea => 'Sea';
+
+  @override
+  String get tripDiscoverTagIsland => 'Island';
+
+  @override
+  String get tripDiscoverTagMountains => 'Mountains';
+
+  @override
+  String get tripDiscoverTagLake => 'Lake';
+
+  @override
+  String get tripDiscoverTagCity => 'City';
+
+  @override
+  String get tripDiscoverTagCountryside => 'Countryside';
+
+  @override
+  String get tripDiscoverTagNorth => 'The North';
+
+  @override
+  String get tripDiscoverTagLongHaul => 'Far away';
+
+  @override
+  String get tripDiscoverEffortLabel => 'Getting there, at most';
+
+  @override
+  String get tripDiscoverEffortNear => 'close by';
+
+  @override
+  String get tripDiscoverEffortCar => 'a long drive';
+
+  @override
+  String get tripDiscoverEffortShort => 'a short flight';
+
+  @override
+  String get tripDiscoverEffortMedium => 'a medium flight';
+
+  @override
+  String get tripDiscoverEffortLong => 'far away';
+
+  @override
+  String get tripDiscoverNeedsClimate =>
+      'With a weather service, WuselWall shows how warm it is. A parent can switch one on.';
+
+  @override
+  String get tripDiscoverNeedsHome =>
+      'Distances need a home place. A parent can set one.';
+
+  @override
+  String get tripDiscoverOpenServices => 'Weather and maps settings';
+
+  @override
+  String get tripDiscoverIdea => 'Your idea';
+
+  @override
+  String get tripDiscoverKeep => 'Keep as idea';
+
+  @override
+  String tripDiscoverKept(String name) {
+    return 'Kept as an idea: $name';
+  }
+
+  @override
+  String get tripDiscoverOpen => 'Open';
+
+  @override
+  String tripDiscoverDistance(String km, String effort) {
+    return 'about $km km · $effort';
+  }
+
+  @override
+  String tripDiscoverTemps(int max, int min) {
+    return '$max° by day, $min° at night';
+  }
+
+  @override
+  String tripDiscoverRain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rain days',
+      one: '1 rain day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripDiscoverSun(int hours) {
+    return '$hours h of sun a day';
+  }
+
+  @override
+  String tripDiscoverSea(int temp) {
+    return 'Sea $temp°';
+  }
+
+  @override
+  String get tripDiscoverNoClimate => 'No climate values yet';
+
+  @override
+  String get tripDiscoverMisses => 'Misses a wish';
+
+  @override
+  String tripDiscoverPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count places to go',
+      one: '1 place to go',
+    );
+    return 'Climate values are being loaded: $_temp0';
+  }
+
+  @override
+  String get tripDiscoverPendingLater =>
+      'More values will follow later; the provider only allows a few places a minute.';
+
+  @override
+  String get tripDiscoverEmpty =>
+      'No place fits these wishes. Loosen one or two.';
+
+  @override
+  String get tripDiscoverNote =>
+      'These are typical values for the time of year, not a forecast. WuselWall names no hotel, price or connection, and distances are estimates.';
+
+  @override
+  String get tripHomeTitle => 'Home';
+
+  @override
+  String get tripHomeNotSet => 'Not set';
+
+  @override
+  String get tripHomeExplain =>
+      'Stored rounded to about a kilometre. It is used for distances and, with a route service, sent to that service.';
+
+  @override
+  String get tripHomeSet => 'Set';
+
+  @override
+  String get tripHomeChange => 'Change';
+
+  @override
+  String get tripHomeForget => 'Forget';
+
+  @override
+  String get tripHomeForgetAsk =>
+      'Forget the home place? Distances disappear until a new one is set.';
+
+  @override
+  String get tripHomeDialogTitle => 'Home place';
+
+  @override
+  String get tripHomeName => 'Name of the place';
+
+  @override
+  String get tripHomeSearch => 'Search';
+
+  @override
+  String get tripHomeNoResults => 'No place found.';
+
+  @override
+  String get tripHomeCoordsHint =>
+      'Or type the coordinates yourself, with two decimals.';
+
+  @override
+  String get tripHomeNoGeocode =>
+      'No place search is switched on, so type the coordinates yourself.';
+
+  @override
+  String get tripHomeLat => 'Latitude';
+
+  @override
+  String get tripHomeLon => 'Longitude';
+
+  @override
+  String get tripHomeInvalid =>
+      'Between -90 and 90 for latitude, -180 and 180 for longitude.';
+
+  @override
+  String get serviceTitle => 'Weather and maps';
+
+  @override
+  String get serviceUnavailable => 'Weather and maps are not available here.';
+
+  @override
+  String get serviceNoProviders => 'This server offers no providers.';
+
+  @override
+  String get serviceIntro =>
+      'Everything here is off until you switch it on. Only your server asks a provider, never a phone or the wall. A provider gets the place you look at or search for and your server’s address, nothing about your family.';
+
+  @override
+  String get serviceReadOnly => 'A parent can change this.';
+
+  @override
+  String get serviceProvidersHeading => 'Providers';
+
+  @override
+  String get serviceCostFree => 'Free, no key';
+
+  @override
+  String get serviceCostFreeKey => 'Free with your own key';
+
+  @override
+  String get serviceCostPaidKey => 'Your own key, may cost';
+
+  @override
+  String get serviceCapClimate => 'Typical climate';
+
+  @override
+  String get serviceCapForecast => 'Forecast';
+
+  @override
+  String get serviceCapGeocode => 'Place search';
+
+  @override
+  String get serviceCapRoute => 'Driving time';
+
+  @override
+  String get serviceCapMap => 'Map picture';
+
+  @override
+  String get serviceReceivesCoordinates => 'the coordinates of a place';
+
+  @override
+  String get serviceReceivesSearchText => 'the text you search';
+
+  @override
+  String get serviceReceivesHome => 'your home place, rounded';
+
+  @override
+  String serviceReceivesLine(String what) {
+    return 'It receives: $what';
+  }
+
+  @override
+  String get serviceWebsite => 'Website';
+
+  @override
+  String get serviceGetKey => 'Get a key';
+
+  @override
+  String get serviceSwitch => 'Switched on';
+
+  @override
+  String get serviceNeedsKeyFirst => 'Needs a key first';
+
+  @override
+  String get serviceKeyLabel => 'Key';
+
+  @override
+  String get serviceKeyHelp =>
+      'Typed once, stored on your server and never shown again.';
+
+  @override
+  String get serviceKeySaveOn => 'Save key and switch on';
+
+  @override
+  String get serviceKeySave => 'Save key';
+
+  @override
+  String serviceKeyStored(String hint) {
+    return 'Key stored $hint';
+  }
+
+  @override
+  String get serviceKeyReplace => 'Replace';
+
+  @override
+  String get serviceKeyRemove => 'Remove';
+
+  @override
+  String serviceKeyRemoveAsk(String name) {
+    return 'Remove the key of $name? The provider is switched off then.';
+  }
+
+  @override
+  String get serviceTest => 'Test';
+
+  @override
+  String get serviceTestOk => 'Works';
+
+  @override
+  String get serviceErrorKeyMissing => 'This provider needs a key.';
+
+  @override
+  String get serviceErrorUnauthorized => 'The provider refused the key.';
+
+  @override
+  String get serviceErrorQuota =>
+      'The provider’s allowance is used up for now.';
+
+  @override
+  String get serviceErrorTimeout => 'The provider did not answer in time.';
+
+  @override
+  String get serviceErrorGeneric => 'The provider did not work this time.';
+
+  @override
+  String serviceLastError(String reason) {
+    return 'Last call: $reason';
+  }
+
+  @override
+  String get serviceUsedFor => 'Used for';
+
+  @override
+  String get serviceMoveUp => 'Ask earlier';
+
+  @override
+  String get serviceMoveDown => 'Ask later';
+
+  @override
+  String get serviceOrderHint =>
+      'Where several providers offer the same thing, the first one in this order that answers wins.';
+
+  @override
+  String serviceCallsToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count calls today',
+      one: '1 call today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get serviceClosing =>
+      'A provider’s terms are yours to accept; some free offers are for private use only. Switching a provider off stops every call to it at once.';
 
   @override
   String get learnedWordsHelp =>
@@ -6998,6 +8570,130 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errInvitationRequired =>
       'This server takes only invited people. Ask a parent in the family for an invitation.';
+
+  @override
+  String get errTripInvalid =>
+      'This trip is not valid. Check the name and the dates.';
+
+  @override
+  String get errTripNotFound => 'This trip no longer exists.';
+
+  @override
+  String get errTripEntryInvalid =>
+      'This entry is not valid. Check the name, the dates and the price.';
+
+  @override
+  String get errTripEntryNotFound => 'This entry no longer exists.';
+
+  @override
+  String get errTripComboInvalid =>
+      'This combination is not valid. Check its name and its entries.';
+
+  @override
+  String get errTripComboNotFound => 'This combination no longer exists.';
+
+  @override
+  String get errTripCheckInvalid => 'This list item is not valid.';
+
+  @override
+  String get errTripCheckNotFound => 'This list item no longer exists.';
+
+  @override
+  String get errTripEvent =>
+      'The calendar entry of a trip is changed in the trip, not in the calendar.';
+
+  @override
+  String get errTripHomeInvalid => 'That home place is not valid.';
+
+  @override
+  String get errAdultsOnly => 'Only adults can do that.';
+
+  @override
+  String get errServiceInvalid => 'That service setting is not valid.';
+
+  @override
+  String get errServiceOff =>
+      'This needs a weather or map service. A parent can switch one on in the settings.';
+
+  @override
+  String get errServiceKeyMissing =>
+      'This service needs a key. A parent can add it in the settings.';
+
+  @override
+  String get errServiceLimit =>
+      'This service has been asked too often for now. Try again later.';
+
+  @override
+  String get errServiceFailed => 'The service did not answer. Try again later.';
+
+  @override
+  String get tripsTitle => 'Trips';
+
+  @override
+  String get tripStageIdea => 'Idea';
+
+  @override
+  String get tripStagePlanned => 'Planned';
+
+  @override
+  String get tripStageFixed => 'Decided';
+
+  @override
+  String get tripKindTransport => 'Transport';
+
+  @override
+  String get tripKindStay => 'Accommodation';
+
+  @override
+  String get tripKindRental => 'Rental car';
+
+  @override
+  String get tripKindActivity => 'Activity';
+
+  @override
+  String get tripKindNote => 'Note';
+
+  @override
+  String get tripKindTransportPlural => 'Transport';
+
+  @override
+  String get tripKindStayPlural => 'Accommodation';
+
+  @override
+  String get tripKindRentalPlural => 'Rental cars';
+
+  @override
+  String get tripKindActivityPlural => 'Activities';
+
+  @override
+  String get tripKindNotePlural => 'Notes';
+
+  @override
+  String get tripModeFlight => 'Flight';
+
+  @override
+  String get tripModeTrain => 'Train';
+
+  @override
+  String get tripModeCar => 'Car';
+
+  @override
+  String get tripModeFerry => 'Ferry';
+
+  @override
+  String get tripModeBus => 'Bus';
+
+  @override
+  String get tripModeOther => 'Other';
+
+  @override
+  String get tripStateOption => 'Option';
+
+  @override
+  String get tripStateChosen => 'Chosen';
+
+  @override
+  String get tripStateBooked => 'Booked';
 
   @override
   String accountNoticeMfaResetYou(String name) {

@@ -46,6 +46,7 @@ Shortcuts and timetable text/photo import remain in scope.
 | 27 | [Family rituals](27-family-rituals.md) | Tischfrage, Wochenrückblick, traditions, Vorfreude and Wunschessen, with birthdays, and how the trial judges each |
 | 28 | [Event templates](28-event-templates.md) | Built-in, saved and history-based event starters |
 | 29 | [Local matching](29-local-matching.md) | Shared dictionary, matching layers and household corrections |
+| 30 | [Trips](30-trips.md) | Planning a vacation in one place: ideas, time windows from the family's calendar, options compared and combined, packing, the day plan, discovery, and the opt-in weather and map services |
 | 24 | [School setup without typing](24-school-import.md) | Fewer required facts, timetable text/photo import and preview; assistant proposals on hold |
 | 16 | [Setup Plan](16-setup-plan.md) | Remaining work in grouped slices; completed setup and CI/signing recipes kept as reference |
 | 19 | [Security & Architecture Review](19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |

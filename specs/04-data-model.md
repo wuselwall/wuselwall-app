@@ -375,6 +375,23 @@ runs across two periods.
 week arithmetic gives the parity of any date. A stored per-week table would need
 maintaining for eternity and would silently drift.
 
+## Trips and services
+
+Added 2026-11-15 ([30](30-trips.md#data-and-contract), migrations `20261115100000_services.sql`
+and `20261115110000_trips.sql`). `trip` (an idea, planned or fixed) with `trip_member`,
+`trip_entry` (transport, stay, rental, activity or note; an option, chosen or booked),
+`trip_combo` with `trip_combo_entry` (a named set of entries), `trip_check` (packing and
+to-dos) and `trip_home` (one row per household). `event.trip_id` marks the one calendar entry
+a planned or fixed trip owns; it is written only by the trip's functions.
+
+`service_provider` (which providers a household switched on, in which order), `service_secret`
+(the API keys; no device role reads it, never exported) and `service_cache` (answers as public
+facts, no household).
+
+Invariants: a trip without dates is an idea; a trip's entry, combination and check belong to
+its household; a combination holds only entries of its own trip; a time needs its date and an
+end is not before its start; at most one live event per trip.
+
 ## Tasks & gamification
 
 ```

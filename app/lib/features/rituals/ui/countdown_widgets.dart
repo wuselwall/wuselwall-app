@@ -10,6 +10,7 @@ import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/domain/countdown.dart';
 import 'package:wuselwall/features/rituals/domain/event_icons.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
 
 /// What a countdown is called on screen: a birthday says the age the member turns
 /// ("Paul wird 8", specs/27), or just whose birthday it is when the age is unknown.
@@ -185,7 +186,13 @@ class TodayCountdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final today = ref.watch(ritualTodayProvider);
-    final c = ref.watch(countdownsProvider).firstOrNull;
+    // The trip card above already says how long until the trip: its own calendar entry is
+    // not shown a second time (the wall and the kids' home still look forward to it).
+    final tripId = ref.watch(tripTodayProvider.select((t) => t?.trip.id));
+    final c = ref
+        .watch(countdownsProvider)
+        .where((c) => tripId == null || c.tripId != tripId)
+        .firstOrNull;
     if (c == null) return const SizedBox.shrink();
     return Card(
       child: ListTile(

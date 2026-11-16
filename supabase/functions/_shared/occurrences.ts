@@ -43,6 +43,8 @@ export type EventRow = {
   tradition?: boolean;
   /** Minutes before the start the event reminds (specs/05): absent before 20261114120000. */
   reminder_minutes?: number | null;
+  /** The trip whose calendar entry this is (specs/30): absent before the trips migration. */
+  trip_id?: string | null;
 };
 
 export type OverrideRow = {
@@ -93,6 +95,8 @@ export type Occurrence = {
    * for one event"). The phone plans the notification; the server sends nothing.
    */
   reminder_minutes?: number | null;
+  /** The trip this is the calendar entry of (specs/30), null for any other row. */
+  trip_id: string | null;
 };
 
 /** A row of api.external_occurrences (migrations/20261014150000_external_calendars.sql). */
@@ -991,6 +995,7 @@ function expandEvent(
       countdown: ev.countdown ?? false,
       tradition: ev.tradition ?? false,
       reminder_minutes: ev.reminder_minutes ?? null,
+      trip_id: ev.trip_id ?? null,
     });
     if (out.length >= MAX_PER_EVENT) break;
   }
@@ -1056,5 +1061,6 @@ export function importedOccurrence(
     is_override: false,
     source: "imported",
     colour_hex: row.colour_hex,
+    trip_id: null,
   };
 }

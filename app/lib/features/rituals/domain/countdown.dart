@@ -31,6 +31,7 @@ class Countdown {
     this.iconKey,
     this.forMembers = const [],
     this.age,
+    this.tripId,
   });
 
   final CountdownKind kind;
@@ -54,6 +55,10 @@ class Countdown {
   /// For a birthday, the age the member turns on [date] ("Paul wird 8"); null for
   /// everything else, and for a birthday whose age is unknown or zero.
   final int? age;
+
+  /// The trip whose calendar entry this is (an event of a fixed trip, specs/30); null for
+  /// everything else. Today's trip card hides the countdown it already says itself.
+  final String? tripId;
 
   /// Whole days from [today] until it happens: 0 today, 1 tomorrow.
   int daysFrom(DateTime today) => DateTime.utc(
@@ -195,6 +200,7 @@ List<Countdown> countdowns({
           title: o.title,
           iconKey: o.iconKey,
           forMembers: o.attendeeIds,
+          tripId: o.tripId,
         ),
       );
     }

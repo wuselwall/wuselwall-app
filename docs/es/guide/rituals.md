@@ -29,6 +29,7 @@ En una [suscripción al calendario familiar](/es/calendar/feeds) cada cumpleaño
 - el **primer día de las vacaciones escolares**
 - la **vuelta de un adulto** de un viaje de dos noches o más («David vuelve a casa»)
 - cualquier evento con **Nos hace ilusión** activado en el editor, como la excursión al zoo (ver [Calendario](/es/calendar/#creating-an-appointment))
+- un **viaje decidido** (ver [Viajes](/es/trips/#from-idea-to-fixed))
 
 Aparece en la **pared**, en el pie (tantas como quepan), en **Mi día** bajo **Lo que me hace ilusión** (las cuentas atrás del niño y las de toda la familia) y en **Hoy** como una línea con la más próxima.
 

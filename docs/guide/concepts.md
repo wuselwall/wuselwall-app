@@ -17,7 +17,7 @@ Die Erwachsenen-Ansicht hat diese Bereiche:
 
 ## Heute und die ersten Schritte
 
-**Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind. Dazu kommen die kleinen [Rituale](/guide/rituals): der nächste Countdown unter **Vorfreude**, die Essenswünsche der Kinder, während des Essens die Tischfrage, am Sonntagabend **Unsere Woche** und an einem Geburtstag eine Karte mit [Wusel](/guide/wusel). Bei Terminen steht die Uhrzeit über dem Titel, damit sie auch mit größerer Schrift gut lesbar bleibt.
+**Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind. Dazu kommen die kleinen [Rituale](/guide/rituals): der nächste Countdown unter **Vorfreude**, die Essenswünsche der Kinder, während des Essens die Tischfrage, am Sonntagabend **Unsere Woche** und an einem Geburtstag eine Karte mit [Wusel](/guide/wusel). Bei Terminen steht die Uhrzeit über dem Titel, damit sie auch mit größerer Schrift gut lesbar bleibt. Steht eine feste [Reise](/trips/#during) in den nächsten 30 Tagen an, erscheint auch dafür eine Karte.
 
 Auf einem breiten Bildschirm stehen die sechs Bereiche links in einer Navigationsleiste; auf dem Telefon stehen sie unten. Beim Drehen oder Ändern der Fenstergröße bleibt derselbe Bereich ausgewählt. Aus den Einstellungen führen der Zurück-Pfeil und die Zurück-Funktion des Geräts zu diesem Bereich zurück.
 
