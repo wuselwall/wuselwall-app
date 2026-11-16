@@ -36,9 +36,9 @@ function arb(lang) {
 
 /**
  * What the browser waits for before auditing a state. By default a state is ready once it
- * exposes an action. A state that by design has none (a refusal notice) names the message
- * that makes it the state it is: it is ready when that exact message and its title are
- * exposed, and it must then expose no action at all.
+ * exposes an action. A message-only state names its exact message and title. It must
+ * expose no action unless the inventory declares one localized exit action, which is
+ * then required instead of accepting any arbitrary button.
  */
 export function readiness(state, locale) {
   if (!state.readOnlyTextKey) return { kind: 'action' };
@@ -48,7 +48,11 @@ export function readiness(state, locale) {
       (state.titleKey && (typeof title !== 'string' || /[{}]/.test(title)))) {
     throw new Error(`${state.id}: unusable read-only readiness text for ${locale}`);
   }
-  return { kind: 'read-only', text, title };
+  const action = state.readOnlyActionKey ? arb(locale)[state.readOnlyActionKey] : undefined;
+  if (state.readOnlyActionKey && (typeof action !== 'string' || !action.trim() || /[{}]/.test(action))) {
+    throw new Error(`${state.id}: unusable read-only action for ${locale}`);
+  }
+  return { kind: 'read-only', text, title, ...(action === undefined ? {} : { action }) };
 }
 
 export function checkInventory(data = inventory) {
@@ -58,7 +62,9 @@ export function checkInventory(data = inventory) {
     if (!/^[a-z][a-z0-9-]*$/.test(s.id) || !s.widget || !s.widths?.length || !s.route?.startsWith('/') ||
         !Number.isInteger(s.minimumLabeledNodes ?? 3) || (s.minimumLabeledNodes ?? 3) < 2 ||
         (s.readOnlyTextKey !== undefined && (typeof s.readOnlyTextKey !== 'string' ||
-          !/^[a-zA-Z]\w*$/.test(s.readOnlyTextKey) || !s.titleKey))) {
+          !/^[a-zA-Z]\w*$/.test(s.readOnlyTextKey) || !s.titleKey)) ||
+        (s.readOnlyActionKey !== undefined && (!s.readOnlyTextKey ||
+          typeof s.readOnlyActionKey !== 'string' || !/^[a-zA-Z]\w*$/.test(s.readOnlyActionKey)))) {
       throw new Error(`Invalid inventory state: ${s.id}`);
     }
     for (const lang of data.locales) {

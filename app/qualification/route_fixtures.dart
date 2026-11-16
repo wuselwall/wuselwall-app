@@ -262,7 +262,9 @@ class _Destination extends ConsumerWidget {
     ),
     'event-import' => ImportEventPage(bytes: qualificationEventFile()),
     'event-import-refused' => ImportEventPage(
-      bytes: qualificationEventFile(events: 2),
+      // A multi-event booking can now go into a trip. A file without events is
+      // refused regardless of the family's upcoming trips.
+      bytes: qualificationEventFile(events: 0),
     ),
     'trips' => const TripsPage(),
     'trip-discover' => const TripDiscoverPage(),

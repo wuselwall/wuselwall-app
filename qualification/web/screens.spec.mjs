@@ -34,10 +34,15 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
     await expect(page.locator(`body[data-qualification-ready="${sample.id}"]`)).toBeAttached();
     const ready = readiness(sample, sample.locale);
     if (ready.kind === 'read-only') {
-      // A refusal has nothing to act on: wait for its own message and title, never an action.
+      // Require the actual refusal message and title, plus only its declared exit action.
       await expect(page.getByRole('heading', { name: ready.title, exact: true })).toBeAttached();
       await expect(page.getByText(ready.text, { exact: true })).toBeAttached();
-      await expect(page.getByRole('button'), 'A read-only state exposes no action').toHaveCount(0);
+      if (ready.action) {
+        await expect(page.getByRole('button', { name: ready.action, exact: true })).toBeVisible();
+        await expect(page.getByRole('button'), 'A refusal exposes only its declared exit action').toHaveCount(1);
+      } else {
+        await expect(page.getByRole('button'), 'A read-only state exposes no action').toHaveCount(0);
+      }
     } else {
       await expect(page.getByRole('button').first()).toBeAttached();
     }

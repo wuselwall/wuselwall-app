@@ -868,8 +868,8 @@
         1280
       ],
       "fixture": true,
-      "minimumLabeledNodes": 2,
-      "readOnlyTextKey": "eventImportSeveral"
+      "readOnlyTextKey": "eventImportNotAnEvent",
+      "readOnlyActionKey": "close"
     },
     {
       "id": "trips",

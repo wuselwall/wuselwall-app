@@ -28,14 +28,14 @@ test('new routes and duplicate or empty states cannot silently disappear', () =>
 });
 
 test('a state without actions must name a real message and title instead of waiting for a button', () => {
-  const refused = inventory.states.find(s => s.id === 'event-import-refused');
+  const { readOnlyActionKey, ...refused } = inventory.states.find(s => s.id === 'event-import-refused');
   assert.deepEqual(readiness(inventory.states.find(s => s.id === 'event-import'), 'de'), { kind: 'action' });
   for (const lang of inventory.locales) {
     const ready = readiness(refused, lang);
     assert.equal(ready.kind, 'read-only');
     assert.ok(ready.text.length > 20 && ready.title.length > 3);
   }
-  assert.match(readiness(refused, 'en').text, /several appointments/);
+  assert.match(readiness(refused, 'en').text, /no appointment/);
   const swap = state => ({ ...inventory, states: inventory.states.map(s => s.id === refused.id ? state : s) });
   assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: 'noSuchKey' })), /unusable read-only readiness/);
   assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: '' })), /Invalid inventory state/);
@@ -43,6 +43,24 @@ test('a state without actions must name a real message and title instead of wait
   assert.throws(() => checkInventory(swap({ ...refused, titleKey: null })), /Invalid inventory state/);
   // A message with placeholders cannot be matched exactly against the rendered text.
   assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: 'configMissing' })), /unusable read-only readiness/);
+});
+
+test('the refused-import state requires its localized Close action and rejects unusable exits', () => {
+  const refused = inventory.states.find(s => s.id === 'event-import-refused');
+  for (const lang of inventory.locales) {
+    const ready = readiness(refused, lang);
+    const strings = JSON.parse(fs.readFileSync(new URL(`../app/l10n/app_${lang}.arb`, import.meta.url), 'utf8'));
+    assert.equal(ready.action, strings.close);
+    assert.equal(ready.text, strings.eventImportNotAnEvent);
+  }
+  const swap = state => ({ ...inventory, states: inventory.states.map(s => s.id === refused.id ? state : s) });
+  for (const readOnlyActionKey of ['', 3]) {
+    assert.throws(() => checkInventory(swap({ ...refused, readOnlyActionKey })), /Invalid inventory state/);
+  }
+  for (const readOnlyActionKey of ['noSuchKey', 'configMissing']) {
+    assert.throws(() => checkInventory(swap({ ...refused, readOnlyActionKey })), /unusable read-only action/);
+  }
+  assert.throws(() => checkInventory(swap({ ...refused, readOnlyTextKey: undefined })), /Invalid inventory state/);
 });
 
 test('reviewed baseline checksum rejects changed, missing, added and cross-environment files', t => {

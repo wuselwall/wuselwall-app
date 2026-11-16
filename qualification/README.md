@@ -233,9 +233,13 @@ node qualification/contrast-report.mjs build/qualification/flutter/full/results.
 
 Browser semantics are enabled from launch; a separate test-only readiness signal is emitted
 after the real destination renders. The browser then waits for an action on the screen. A
-state that by design offers none (a refusal notice) names its message in the inventory
+message-only state names its message in the inventory
 (`readOnlyTextKey`, with its `titleKey`): it is ready when that exact message and the title
-heading are exposed in the test's locale, and it fails if it exposes any button. If axe reports a target clipped by a scroll viewport,
+heading are exposed in the test's locale. It fails if it exposes any button unless
+`readOnlyActionKey` declares its localized exit action; then exactly that one visible
+button is required. The refused-import fixture contains no events, so the trip-import
+alternative for a multi-event booking cannot turn it into a different screen.
+If axe reports a target clipped by a scroll viewport,
 the audit scrolls with real input and checks the same DOM node fully inside every clipping
 ancestor before accepting its size. Initial and follow-up audits and geometry are retained.
 Unreachable, replaced or genuinely undersized controls remain failures, as do all other axe
