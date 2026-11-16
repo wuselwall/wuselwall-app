@@ -868,7 +868,122 @@
         1280
       ],
       "fixture": true,
-      "minimumLabeledNodes": 2
+      "minimumLabeledNodes": 2,
+      "readOnlyTextKey": "eventImportSeveral"
+    },
+    {
+      "id": "trips",
+      "widget": "TripsPage",
+      "scenario": "adult",
+      "route": "/trips",
+      "titleKey": "tripsTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "trip-discover",
+      "widget": "TripDiscoverPage",
+      "scenario": "adult",
+      "route": "/trips/discover",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "trip-windows",
+      "widget": "TripWindowsPage",
+      "scenario": "adult",
+      "route": "/trips/windows",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "trip",
+      "widget": "TripPage",
+      "scenario": "adult",
+      "route": "/trips/:id",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "trip-compare",
+      "widget": "TripComparePage",
+      "scenario": "adult",
+      "route": "/trips/:id/compare",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "trip-entry",
+      "widget": "TripEntryPage",
+      "scenario": "adult",
+      "route": "/trips/:id/entry",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "services-settings",
+      "widget": "ServicesPage",
+      "scenario": "adult",
+      "route": "/settings/services",
+      "titleKey": "settingsServicesTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
     },
     {
       "id": "recipe-create",

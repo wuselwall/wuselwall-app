@@ -37,7 +37,7 @@ void main() {
         _sheet(shade, [
           for (final pose in WuselPose.values)
             Wusel(
-              colors: WuselColors.of(shade, _family),
+              colors: WuselColors.of(Look.standard(shade), _family),
               pose: pose,
               size: 128,
             ),
@@ -59,7 +59,7 @@ void main() {
       _sheet(Shade.light, [
         for (final outfit in WuselOutfit.values.skip(1))
           Wusel(
-            colors: WuselColors.of(Shade.light, _family),
+            colors: WuselColors.of(Look.frisch, _family),
             size: 128,
             outfit: outfit,
           ),
@@ -81,7 +81,7 @@ void main() {
       _sheet(Shade.light, [
         for (var n = 1; n <= 6; n++)
           Wusel(
-            colors: WuselColors.of(Shade.light, six.take(n).toList()),
+            colors: WuselColors.of(Look.frisch, six.take(n).toList()),
             size: 128,
             frontTuft: n - 1,
           ),

@@ -82,7 +82,7 @@ decision already taken, linked so it is not argued again.
 | # | Test | Comes from |
 |---|---|---|
 | P1 | **No service run by the project holds a family's data.** Anything new runs on the family's own server or on the device | [ADR-018](adr/ADR-018-self-hosted-only.md) |
-| P2 | **Every outbound connection justifies itself.** No analytics, no crash-reporting SaaS, no tracking SDK. A third party is contacted by the server, never by the apps, and the privacy policy names it in all shipped website languages in the same change | [01, principle 5](01-vision-and-scope.md#principles), [11](11-security-and-privacy.md) |
+| P2 | **Every outbound connection justifies itself.** No analytics, no crash-reporting SaaS, no tracking SDK. A third party is contacted by the server, never by the apps, and the privacy policy names it in all shipped website languages in the same change *Since 2026-11-15 ([ADR-023](adr/ADR-023-opt-in-services.md)):* a provider a household switched on itself is that household's choice; the settings name what it receives, and the policy describes the mechanism | [01, principle 5](01-vision-and-scope.md#principles), [11](11-security-and-privacy.md) |
 | P3 | **Never punish a child in software.** No negative points, no leaderboard, no public failure, no money for points | [01, principle 3](01-vision-and-scope.md#principles), [06](06-module-tasks.md), Q6 |
 | P4 | **Every mutation is attributable.** One `api` function per write, `app.actor()` first, an audit row in the same transaction | [01, principle 4](01-vision-and-scope.md#principles), [03](03-architecture.md) |
 | P5 | **No household is hard-coded.** What one family would answer differently is a setting with a curated default | [21](21-household-settings.md) |
@@ -117,12 +117,13 @@ household is expected to need them, and that order changes with the Alpha's find
 
 ## Only when a family asks
 
-Each of these is a decision card, not a build. The decision records the case that prompted
-it, and the answer goes into [14](14-open-questions.md).
+These start as decision cards. The decision records the case that prompted it, and the
+answer goes into [14](14-open-questions.md). R4.1 has met that condition and moved to
+implementation; the remaining cards still wait for a case.
 
 | Item | The question | What would make it a yes |
 |---|---|---|
-| **R4.1** A push relay | Do local reminders and the Today notices miss something that matters ([Q47](14-open-questions.md), Q38)? | A real missed event. The relay would be the one service the project runs: stateless, a device token and an end-to-end-encrypted payload, no household data |
+| **R4.1** A push relay — approved 2026-11-15 | Q47/Q38 answered by [ADR-022](adr/ADR-022-encrypted-push-relay.md): optional encrypted relay, APNs direct for iOS, FCM for Android | The shopping-trip request (#242) and the owner's yes in #243 meet the real-use condition. Implementation is [#274](https://github.com/wuselwall/wuselwall-app/issues/274), v1.12.0; no persistent relay registry/history. Approved does not mean delivered |
 | **R4.2** One account in two households | Separated parents and a child with two homes ([Q43](14-open-questions.md)) | A real family with that case, and a design that keeps every read inside one household |
 | **R4.3** CalDAV for the phones | Is the read-only feed too limiting on the move ([05](05-module-calendar.md#later-two-way-for-the-phones))? | Entering events in WuselWall proves to be the reason they are not entered. Never Outlook two-way (P8) |
 | **R4.4** A school portal import | Does a family's school publish substitutions (Q20, FR-7.14)? | A school with a documented feed; manual entry stays the default. *2026-10-22: the pilot's schools publish paper and closed platforms; structured text and photo import serve that case ([24](24-school-import.md)). 2026-10-24: assistant proposals are on hold.* |
@@ -141,7 +142,7 @@ Recorded so that they are not proposed again every few weeks.
 | Crash reporting or analytics services | P2 | R1.1's feedback the member sends by hand |
 | An AI meal planner or chatbot run by the project | P1, P2 | Meal planning by the family; MCP/AI assistants remain on hold |
 | A hosted WuselWall, paid plans, ads | ADR-018, [01](01-vision-and-scope.md#explicitly-out-of-scope) | The self-hosting kit (R2) |
-| Weather or traffic on the wall | P2: a third party for something every phone already shows | Reopen only through R3.8 with a server-side, coarse-location, opt-in design |
+| Weather or traffic on the wall | P2 by default: a third party for something every phone already shows. *2026-11-15:* [ADR-023](adr/ADR-023-opt-in-services.md) allows a household to switch a forecast provider on for trips ([30](30-trips.md#services)); the wall still shows none (P6) | A consumer of the `forecast` capability, with its own decision through R3.8 |
 | Homework, grades, absence reporting | [15](15-module-school-timetable.md#v1-scope-cut): the school already has one | — |
 | Per-item privacy between family members | [01](01-vision-and-scope.md#explicitly-out-of-scope) | Guardian-only settings, as today |
 

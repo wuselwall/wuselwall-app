@@ -44,11 +44,13 @@ Tippe auf **Neuer Termin**. Der Termin beginnt an dem Tag, den der Kalender gera
 
 Zuerst siehst du Kacheln, damit du nicht alles von vorn eintippen musst:
 
-- **Vorlagen**: **Putzhilfe**, **Sportveranstaltung**, **Arzttermin**, **Gäste zum Essen**, **Ausflug**, **Kindergeburtstag**, **Aufführung**, **Urlaub / Reise** und **Geburtstag** (ganztägig, jährlich); was ihr oft braucht, steht vorn, die jährlichen zuletzt. In der Schweiz heißen zwei davon **Sportanlass** und **Ferien / Reise**. **Putzhilfe** ist die einzige wöchentliche Vorlage: Sie wiederholt sich jede Woche am gewählten Tag, um 09:00 Uhr für drei Stunden, mit einem Besen als Bild, für die Person, die sie einträgt. Jede füllt Titel, Bild, Uhrzeit, Dauer und Personen aus. Eine Familie mit Kind sieht darunter einen eigenen Abschnitt **Schule**: **Elternabend**, **Elterngespräch**, **Schulausflug**, **Klassenarbeit**, **Schulfest** und **Sportfest**; in der Schweiz heißen drei davon **Schulreise**, **Prüfung** und **Sporttag**, in Österreich **Wandertag**, **Schularbeit** und **Elternsprechtag**. **Ohne Vorlage** öffnet den leeren Editor zur nächsten vollen Stunde.
+- **Vorlagen**: **Putzhilfe kommt**, **Sporttraining**, **Arzttermin**, **Gäste zum Essen**, **Familienausflug**, **Spielen mit Freunden**, **Kinobesuch**, **Familienurlaub** und **Geburtstag** (ganztägig, jährlich). Jede füllt Titel, Bild, Uhrzeit, Dauer und Personen aus. Das Sporttraining beginnt um 17:00 Uhr für eine Stunde, das Spielen mit Freunden um 15:00 Uhr für zwei Stunden mit den Kindern und der Kinobesuch um 16:00 Uhr für zwei Stunden mit der Familie. Ein Familienausflug dauert einen Tag, ein Familienurlaub zunächst sieben Tage; in der Schweiz heißt er **Familienferien**. **Putzhilfe kommt** wiederholt sich jede Woche am gewählten Tag, um 09:00 Uhr für drei Stunden, für die Person, die den Besuch einträgt. Eine Familie mit Kind sieht darunter **Schule**: **Elternabend** für die ganze Elterngruppe, **Elterngespräch** für einen einzelnen Gesprächstermin, **Schulausflug**, **Klassenarbeit**, **Schulfest** und **Sporttag der Schule**. In der Schweiz heißen drei davon **Schulreise**, **Prüfung** und **Sporttag**, in Österreich **Wandertag** und **Schularbeit**. Alle Vorgaben lassen sich ändern. **Ohne Vorlage** öffnet den leeren Editor zur nächsten vollen Stunde.
 - **Eure Vorlagen**: was ihr selbst gespeichert habt. Im Editor tippst du oben auf **Als Vorlage speichern**; gespeichert werden Titel, Bild, Uhrzeit, Dauer, Personen, Ort und Notizen, nicht das Datum und nicht die Wiederholung.
 - **Häufig bei euch**: Termine, die ihr schon mindestens dreimal eingetragen habt, etwa „Oma & Opa kommen“. WuselWall zählt dafür nur eure eigenen Termine auf eurem Server; nichts verlässt ihn. Über **⋮** wählst du **Als Vorlage behalten** oder **Nicht mehr vorschlagen**.
 
 Was die Kachel ausfüllt, ist nur ein Anfang: Du änderst im Editor, was anders ist, und speicherst. Mit **Zurück** kommst du wieder zu den Kacheln.
+
+Neben **Urlaub / Reise** steht die Kachel **Reise planen**: Sie öffnet [Reisen](/trips/#find), wo ihr Optionen vergleicht, Zeitfenster sucht und die Packliste anlegt. **Urlaub / Reise** legt dagegen nur einen einzelnen Termin an.
 
 <Shot name="calendar-templates" alt="Neuer Termin mit Kacheln: Häufig bei euch, Eure Vorlagen und Vorlagen wie Geburtstag und Gäste zum Essen" />
 
@@ -150,6 +152,8 @@ WuselWall zeigt den Termin zuerst an: Titel, Zeit, Ort und Notizen. Wähle, wer 
 Der Termin ist danach eure eigene Kopie: Ihr könnt ihn ändern oder löschen wie jeden anderen. Der Absender erfährt nichts.
 
 Kommt derselbe Termin nach einer Änderung noch einmal, erkennt WuselWall ihn und bietet **Termin aktualisieren** an, statt ihn doppelt einzutragen. Eine Datei mit mehreren Terminen wird hier nicht angenommen; ein ganzer Kalender gehört unter [Kalender von außen](#kalender-von-aussen).
+
+Gehört die Datei zu einer Buchung und habt ihr eine geplante oder feste Reise, bietet WuselWall auch **Zur Reise hinzufügen** an: Dann wird sie ein Eintrag der Reise statt eines Kalendertermins (siehe [Die Kalenderdatei einer Buchung](/trips/#booking-file)).
 
 ## Termine in Outlook oder auf dem iPhone
 

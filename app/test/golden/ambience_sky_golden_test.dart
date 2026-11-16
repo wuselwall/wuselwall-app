@@ -21,7 +21,7 @@ Widget _sky(Ambience ambience, Shade shade) => SizedBox.fromSize(
   size: _size,
   child: ClipRect(
     child: CustomPaint(
-      painter: SkyPainter(ambience: ambience, shade: shade),
+      painter: SkyPainter(ambience: ambience, look: Look.standard(shade)),
     ),
   ),
 );

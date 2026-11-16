@@ -37,7 +37,9 @@ own tables, optionally in the outbound feed), local reminders (Q47), the QR scan
 in `app.shortcut_token`, the `shortcuts` function),
 the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual week
 (issue #81, specs/15 "The baseline": a usual place per weekday, up to three time slots a
-day and alternating weeks A/B), event templates ([specs/28](specs/28-event-templates.md), 2026-10-25: Neuer Termin opens tiles, built-in, saved and suggested from the family's history by counting in SQL, migration `20261025150000`, pgTAP 245; six school templates for families with a child added 2026-11-14, issue #240), and the school import of [specs/24](specs/24-school-import.md)
+day and alternating weeks A/B), event templates ([specs/28](specs/28-event-templates.md), 2026-10-25: Neuer Termin opens tiles, built-in, saved and suggested from the family's history by counting in SQL, migration `20261025150000`, pgTAP 245; six school templates for families with a child added 2026-11-14, issue #240; reviewed
+2026-11-15, issue #271: playdate, sports practice and cinema replace overlapping generic
+occasions, with natural DE/EN/FR/ES and regional German titles), and the school import of [specs/24](specs/24-school-import.md)
 (2026-10-22): the proposed term, subjects from the cell, the paste import with its preview,
 the retained proposal backend (`app.proposal`, `api.mcp_propose`, `propose_timetable`),
 and the photo scan (`timetable-scan` with the optional `ocr` container, RapidOCR on the CPU),
@@ -52,19 +54,60 @@ navigation, the last mode kept on the device, the item sheet with a count steppe
 a seeded `snacks` category, and a category inferred from a new item's name by the server's word
 list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
 grow in issue #197).
+The catalogue grid now ends in a row with a tappable picture preview instead of a thin
+sliver (#267/#288, 2026-11-16): `RowPeek` sizes the viewport from the laid-out rows,
+including enlarged text. This addresses only the catalogue layout; the remaining native
+iOS scroll-container and clipped-page findings stay in #263, with no audit waiver.
 Telling the others (2026-11-14, issue #242, [specs/07](specs/07-module-meals-shopping.md) "Telling
 the others"): tapping *Einkaufen gehen* records a trip (`app.shopping_run`, `api.shopping_start` /
 `api.shopping_leave`, migration `20261114100000_shopping_start_notice.sql`, pgTAP
 `305_shopping_start.test.sql`, feature flag `shopping-start`) and the other adults with
 `notify.shopping_start` on (default on) get a notice `shopping` on Heute, a banner and, on a
 personal phone, a local notification, for a running app only (Q47; a closed app sees the notice when
-opened; the relay is issue #243).
+opened). The owner approved a relay in #243 on 2026-11-15: [ADR-022](specs/adr/ADR-022-encrypted-push-relay.md)
+answers Q47/Q38 with optional project-operated encrypted transport, APNs direct for iOS
+and FCM for Android. This is the sole transport exception to ADR-018, with no persistent
+relay device registry or message history; household backends remain self-hosted.
+Approved, not built: #274 owns shopping push implementation, relay operations and physical
+closed-phone evidence. Current app behaviour remains local/Realtime until that ships.
 A reminder for one event (2026-11-14, issue #256, [specs/05](specs/05-module-calendar.md) "A
 reminder for one event", FR-1.22): `app.event.reminder_minutes`, taken by `api.event_save` and shown
 by `api.events` and the `occurrences` function (migration `20261114120000_event_reminder.sql`, pgTAP
 `310_event_reminder.test.sql`, feature flag `event-reminder`); the editor's *Erinnerung vorher*
 (15 minutes to 1 week, whole days for an all-day event), planned on each concerned person's phone
 as a local notification in place of their `notify.event_reminder`.
+Trips (2026-11-15, issue #265, [specs/30](specs/30-trips.md), FR-9): adults plan a vacation in one
+place. A trip is an idea, planned or fixed (`app.trip`, `trip_member`); what the family finds are
+entries (`trip_entry`: transport, stay, rental, activity, note; option, chosen or booked; prices
+with their date, times as written on the ticket), compared side by side and tried in combinations
+(`trip_combo`, `api.trip_combo_choose`; the checks in `trips/domain/combination.dart`), with packing
+lists and to-dos (`trip_check`). A planned or fixed trip owns one all-day calendar entry
+(`app.event.trip_id`, tentative, then confirmed with a countdown) that only the trip's functions
+change (`trip_event`). Migration `20261115110000_trips.sql`, pgTAP `320_trips.test.sql`, feature flag
+`trips`; the `trips` Edge Function proposes time windows from the children's school-free days and
+the calendar (`_shared/trips/windows.ts`, read as the caller) and ranks a bundled catalogue of
+destinations (`_shared/trips/destinations.ts`) for discovery. The pages live in
+`app/lib/features/trips/` and open from the Calendar tab and a card on Today, in the adult
+register only; children and the wall see the calendar entry and the countdown. Reads go through
+the read cache, so a trip is readable without network.
+Opt-in services ([ADR-023](specs/adr/ADR-023-opt-in-services.md), the same day): weather, place
+search, routes and map pictures come from providers a guardian switches on per household under
+Einstellungen → Wetter und Karten; none is on by default. A provider is one plug-in file in
+`supabase/functions/_shared/services/providers/` (contract in `types.ts`; `open-meteo`, `met-no`,
+`nominatim`, `openweathermap`, `meteostat`, `openrouteservice`, `google`); only the server calls
+it, through the runner's guarded fetch (declared hosts, https, no redirects), after
+`api.service_request` ran as the caller (adults, no kiosk). Keys are in `app.service_secret`,
+which no device role reads, and never in the export, the audit or the cache (`app.service_cache`
+holds answers without a household). Migration `20261115100000_services.sql`, pgTAP
+`315_services.test.sql`, feature flag `services`, Edge Function `services`. A new provider needs
+no app release: the app reads the catalogue from the server.
+Colour themes (2026-11-15, issue #280, [specs/17](specs/17-design-system.md#themes) "Themes"): the
+neutrals are themes a device chooses from, two light (Frisch, Sonnig) and four dark (Blaue Stunde,
+Schiefer, Pflaume, Kakao); `Look` and `Palette.look` in `app/lib/app/theme/palette.dart`,
+`looksProvider` beside the appearance, one sheet for Settings and for a personal device's first
+arrival at home (`features/settings/ui/look_chooser.dart`, specs/20 "The first look"). Member inks
+did not change; `test/app/theme_test.dart` runs every contrast check for every theme; the dark
+Today header is a twilight. The demo takes `&light=`, `&dark=` and `&firstlook=1`.
 Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
 source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
 into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the
@@ -167,7 +210,7 @@ follows without being asked.
   GitHub-hosted runners; Flutter and Docker/SMTP jobs stay on the build fleet.
   Guide PRs run `npm run docs:check:source` and build without screenshots; main/manual
   docs and candidate qualification run the complete four-language/light-dark matrix.
-  Schema 3 qualification requires quality, backend and guide evidence for the exact
+  Beta/live schema 3 qualification requires quality, backend and guide evidence for the exact
   SHA before signing; regenerate older artifacts. Candidate quality-only reuse skips
   duplicate app work because strict Flutter and production jobs already own it.
 - **A release is cut by the `release` workflow**, never by pushing tags by hand:
@@ -179,15 +222,29 @@ follows without being asked.
   and secrets away from jobs that run a pull request's code. Repository settings change in
   `scripts/github-settings.sh` and `.github/rulesets/`, then on GitHub by running the script.
 
+## Release stage
+
+WuselWall is in alpha. `qualification/release-policy.json` selects the release stage;
+see [the release runbook](specs/releasing.md). App/server publishing shares a gate for
+ordinary app/security/web-smoke and disposable-backend CI, reusing passing default-branch
+runs for the exact commit. Full UI/native qualification and protected promotion are
+optional during alpha and required in beta/live. Keep the exhaustive suite and its strict
+validators. The two-week trial and public-readiness checklist are milestone evidence,
+not prerequisites to repeat for every alpha patch. Backup-first live migrations and
+signing safeguards still apply.
+
 ## Architecture rules
 
 See [specs/03-architecture.md](specs/03-architecture.md),
 [ADR-010](specs/adr/ADR-010-flutter-and-self-hosted-supabase.md) and
 [ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md).
 
-- **The project runs no hosted service** ([ADR-018](specs/adr/ADR-018-self-hosted-only.md)):
+- **Household backends are self-hosted** ([ADR-018](specs/adr/ADR-018-self-hosted-only.md)):
   every family runs its own server, and the store app connects to whichever server a
-  household chooses. A live server holds a family's data: before any migration back it up;
+  household chooses. [ADR-022](specs/adr/ADR-022-encrypted-push-relay.md) approves only an
+  optional encrypted push transport run by the project (not built, #274), with provider
+  credentials there and no persistent relay registry/history. It does not host households.
+  A live server holds a family's data: before any migration back it up;
   never run `supabase db reset` against it; never run the Dart integration test against it
   (it creates households and revokes devices — CI and throwaway stacks only). Keys come
   from the git-ignored `supabase/.env`.

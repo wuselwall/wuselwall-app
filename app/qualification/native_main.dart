@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 
 import 'fixture.dart';
 import 'inventory.g.dart';
@@ -22,7 +23,10 @@ var _busy = false;
 var _textScale = 1.0;
 late List<Map<String, dynamic>> _cases;
 
-Map<String, dynamic> _state() => {
+/// The report. [results] grows with every audited case: an auditor that only asks how far
+/// the run is leaves it out (`/progress`), so that it does not parse every earlier case's
+/// findings and semantics again on each poll.
+Map<String, dynamic> _state({bool results = true}) => {
   'schemaVersion': 1,
   'candidateSha': const String.fromEnvironment('QUALIFY_CANDIDATE_SHA'),
   'index': _index,
@@ -44,7 +48,7 @@ Map<String, dynamic> _state() => {
   'devicePixelRatio':
       WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio,
   'frameworkErrors': [..._errors],
-  'results': _results,
+  if (results) 'results': _results,
 };
 
 Future<void> main() async {
@@ -87,6 +91,8 @@ Future<void> main() async {
     try {
       if (request.method == 'GET' && request.uri.path == '/state') {
         request.response.write(jsonEncode(_state()));
+      } else if (request.method == 'GET' && request.uri.path == '/progress') {
+        request.response.write(jsonEncode(_state(results: false)));
       } else if (request.method == 'POST' &&
           request.uri.path == '/next' &&
           !_busy) {
@@ -131,6 +137,24 @@ Future<void> main() async {
     }
     await request.response.close();
   }
+}
+
+/// Completes when the session has a value or an error, which is exactly what the
+/// router's redirect waits for. A session that never loads fails the case as a
+/// framework error instead of navigating into a redirect.
+Future<void> _sessionLoaded(ProviderContainer container) {
+  final loaded = Completer<void>();
+  final subscription = container.listen(sessionStateProvider, (_, session) {
+    if ((session.hasValue || session.hasError) && !loaded.isCompleted) {
+      loaded.complete();
+    }
+  }, fireImmediately: true);
+  return loaded.future
+      .timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw StateError('Fixture session failed to load'),
+      )
+      .whenComplete(subscription.close);
 }
 
 void _saveReport() {
@@ -200,6 +224,10 @@ Future<void> _showCase() async {
       }
 
       (_mountKey.currentContext! as Element).visitChildren(visit);
+      // Until the fixture's session has loaded, the router answers every location
+      // with the splash and then goes home: a route asked for before that is lost,
+      // and the case would audit the home page instead of its destination.
+      await _sessionLoaded(container!);
       container!.read(routerProvider).go(sample['route'] as String);
     }
   }

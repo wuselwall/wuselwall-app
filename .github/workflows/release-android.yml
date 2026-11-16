@@ -1,8 +1,8 @@
 # Signed Android builds (specs/16, step 7); release-ios.yml is its iOS twin. The App
 # Bundle (.aab) goes to the Play internal testing track; the APK stays the fallback that
 # scripts/deploy-apk.sh publishes at https://wuselwall.app/download/wuselwall.apk. A tag
-# v*.*.* builds both and uploads the bundle. Tags and manual builds require qualification
-# for that exact commit and protected release approval before signing artifacts.
+# v*.*.* builds both and uploads the bundle. Tags and manual builds use the shared
+# stage-aware release gate before signing artifacts (alpha: ordinary CI; beta/live: full qualification).
 name: release-android
 on:
   workflow_dispatch:
@@ -23,18 +23,10 @@ cache-mode: none
 
 jobs:
   qualification:
-    runs-on: [self-hosted, Linux, build]
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { ref: '${{ github.sha }}', persist-credentials: false }
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22, package-manager-cache: false }
-      - run: node qualification/promotion.mjs
-        env: { GH_TOKEN: '${{ github.token }}' }
+    uses: ./.github/workflows/release-checks.yml
 
   apk:
-    environment: release-promotion
+    environment: ${{ needs.qualification.outputs.environment }}
     needs: qualification
     runs-on: [self-hosted, Linux, build]
     defaults: { run: { working-directory: app } }
@@ -120,6 +112,18 @@ jobs:
       - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with: { ruby-version: '3.3', bundler-cache: false, working-directory: app/android }
         env:
+          XDG_CACHE_HOME: ${{ runner.temp }}/cache
+      # setup-ruby installs no gems here (bundler-cache would use the Actions cache, which
+      # release workflows keep away from). Exactly the gems of Gemfile.lock, into the job's
+      # temporary directory, before the Play key comes near the job.
+      - name: Install the locked gems
+        run: |
+          printf 'BUNDLE_PATH=%s\nBUNDLE_FROZEN=true\n' "$BUNDLE_PATH" >> "$GITHUB_ENV"
+          bundle install
+          bundle exec fastlane --version
+        env:
+          BUNDLE_PATH: ${{ runner.temp }}/bundle
+          BUNDLE_FROZEN: 'true'
           XDG_CACHE_HOME: ${{ runner.temp }}/cache
       - run: bundle exec fastlane android internal
         env:

@@ -8,6 +8,8 @@ En casa planificas la lista: arriba la búsqueda y las tarjetas, debajo los prod
 
 ## Tarjetas {#tiles}
 
+Cuando no caben todas las tarjetas arriba, quedan visibles las imágenes de la fila siguiente. Desliza hacia arriba dentro de las tarjetas para ver más artículos. La zona visible se adapta al texto ampliado.
+
 Las tarjetas son el **catálogo** de lo que habéis comprado: primero los **8 productos más recientes**, luego los más **frecuentes**, hasta 24 en total. La lista se forma al terminar la compra, sin mantenimiento manual. Los productos habituales tienen ilustración; los demás muestran el símbolo de su categoría.
 
 - **Un toque** añade el producto y colorea su tarjeta.

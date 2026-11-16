@@ -162,7 +162,7 @@ async function runTag(github, env) {
     started.push(`${workflow} on ${env.GITHUB_REF_NAME}`);
   }
   await summary(['## Tagged and started', ...started.map((line) => `- ${line}`),
-    '', 'The builds wait for the approval of the `release-promotion` environment.'].join('\n'));
+    '', 'The builds use stage-appropriate checks and approval; see specs/releasing.md.'].join('\n'));
 }
 
 async function runRollover(github, env) {

@@ -3,7 +3,14 @@
 // dies of SIGSEGV while a test file runs: flutter_tools prints "unhandled error during
 // finalization of test: <file> TestDeviceException(Shell subprocess crashed with segmentation
 // fault.)" and exits 1. It happens with and without --coverage, on files that differ from run
-// to run, and was never reproduced off those runners; the native cause is unknown.
+// to run.
+//
+// The cause found so far is the stack limit. Those runners start every process with an
+// unlimited one, and then the Dart VM's profiler, which `flutter test` switches on, reads
+// through arbitrary frame pointers on the tester's main thread (scripts/finite-stack.sh tells
+// the whole story). This wrapper therefore starts flutter with a finite stack limit. The
+// reruns below stay as they were: they cost nothing while the tester does not crash, and a
+// crash with another cause must not turn every run red.
 //
 // The crash cuts the file short. package:test completes the test that was running and every
 // later test of that file as soon as the tester's channel closes, without an error event; the
@@ -41,6 +48,9 @@ export const CRASH = 'TestDeviceException(Shell subprocess crashed with segmenta
 export const SINK_ERROR = 'Bad state: Cannot add event while adding stream.';
 const UNHANDLED = /unhandled error during (finalization of )?test:$/;
 export const DEFAULT_CONCURRENCY = 4;
+// The tester must not run with an unlimited stack limit (see the top); sh's form of
+// scripts/finite-stack.sh, kept inline so that the wrapper needs no second file.
+export const FINITE_STACK = '[ "$(ulimit -S -s)" != unlimited ] || ulimit -S -s 8192; ';
 // How often crashed files run again before the crash stands as the job's result.
 export const MAX_RERUNS = 3;
 
@@ -154,6 +164,7 @@ function diagnostics() {
   console.log(`CPUs ${availableParallelism()} usable of ${cpus().length}: ${cpus()[0]?.model ?? 'unknown'}`);
   console.log(`CPU features: ${['sse4_2', 'avx', 'avx2', 'fma', 'avx512f', 'hypervisor'].map((f) => `${f}=${flags.includes(f) ? 'yes' : 'no'}`).join(' ')}`);
   console.log(`memory ${gib(freemem())} free of ${gib(totalmem())}; cgroup cpu.max ${read('/sys/fs/cgroup/cpu.max')}, memory.max ${read('/sys/fs/cgroup/memory.max')}`);
+  console.log(`stack limit ${sh('ulimit -S -s')} (hard ${sh('ulimit -H -s')}); flutter test runs with ${sh(`${FINITE_STACK}ulimit -S -s`)}`);
   console.log(`core dumps: limit ${sh('ulimit -c')} (hard ${sh('ulimit -Hc')}), core_pattern ${read('/proc/sys/kernel/core_pattern')}; gdb ${gdb || 'not installed'}`);
   console.log('::endgroup::');
 }
@@ -161,7 +172,7 @@ function diagnostics() {
 function flutterTest(args, report, concurrency) {
   return new Promise((resolve, reject) => {
     // With gdb at hand, let a crashing tester leave a core to read a backtrace from.
-    const command = `${gdb ? 'ulimit -c unlimited 2>/dev/null; ' : ''}exec flutter test "$@"`;
+    const command = `${FINITE_STACK}${gdb ? 'ulimit -c unlimited 2>/dev/null; ' : ''}exec flutter test "$@"`;
     const child = spawn('sh', ['-c', command, 'sh', `--file-reporter=json:${report}`, `--concurrency=${concurrency}`, ...args], { stdio: ['inherit', 'pipe', 'pipe'] });
     let output = '';
     child.stdout.on('data', (chunk) => { process.stdout.write(chunk); output += chunk; });

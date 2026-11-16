@@ -4,7 +4,7 @@
 # disposable backend (migrations, pgTAP, the Flutter integration test) and the Deno unit
 # tests for Edge Functions live in backend-ci.yml, which runs on every pull request and skips
 # its heavy jobs through its own change detector rather than a workflow-level path filter,
-# and always in full on a tag or "Run workflow" (specs/10).
+# and always in full on main, release calls or "Run workflow" (specs/10).
 #
 # Builds and the Docker SMTP smoke use the isolated build fleet. Small control jobs and
 # audits use GitHub-hosted runners. No PR job receives deployment/signing credentials.
@@ -23,7 +23,7 @@ on:
         default: false
   pull_request:
   push:
-    tags: ['v*.*.*']
+    branches: [main]
 concurrency:
   group: ${{ github.workflow }}-ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -75,9 +75,10 @@ jobs:
       # sometimes segfaults while a file runs, with or without --coverage (upstream
       # flutter/flutter#124145, #151546); flutter_tools reports it either as the crash or, when
       # the file's channel is still piping, as "Bad state: Cannot add event while adding stream."
-      # on the file's loading step. The wrapper prints the runner facts for a diagnosis and
-      # reruns only the crashed files, whole, up to three times while the crash is the sole
-      # problem; every other failure keeps the job red.
+      # on the file's loading step. The wrapper starts the tester with a finite stack limit,
+      # the cause found for that crash (scripts/finite-stack.sh), prints the runner facts for
+      # a diagnosis and still reruns only the crashed files, whole, up to three times while
+      # the crash is the sole problem; every other failure keeps the job red.
       - if: needs.changes.outputs.app == 'true'
         run: node ../scripts/flutter-test-ci.mjs
       # Exercise real encrypted browser storage across a backend/key migration.
@@ -119,7 +120,7 @@ jobs:
         with: { persist-credentials: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, package-manager-cache: false }
-      - run: node --test scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/mail-settings.test.mjs scripts/image-pull.test.mjs scripts/backend-stack-images.test.mjs scripts/flutter-test-ci.test.mjs scripts/no-user-functions.test.mjs scripts/hosted-auth-config.test.mjs scripts/cloud-init.test.mjs scripts/dictionary.test.mjs scripts/starter.test.mjs scripts/make-env.test.mjs scripts/server-release.test.mjs scripts/backup.test.mjs scripts/github-workflow.test.mjs scripts/repository-boundaries.test.mjs scripts/ci-changes.test.mjs scripts/ci-gate.test.mjs scripts/ci-workflows.test.mjs docs/tools/check-shots.test.mjs docs/tools/evidence.test.mjs
+      - run: node --test scripts/release-checks.test.mjs scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/mail-settings.test.mjs scripts/image-pull.test.mjs scripts/backend-stack-images.test.mjs scripts/flutter-test-ci.test.mjs scripts/no-user-functions.test.mjs scripts/hosted-auth-config.test.mjs scripts/cloud-init.test.mjs scripts/dictionary.test.mjs scripts/starter.test.mjs scripts/make-env.test.mjs scripts/server-release.test.mjs scripts/backup.test.mjs scripts/github-workflow.test.mjs scripts/repository-boundaries.test.mjs scripts/ci-changes.test.mjs scripts/ci-gate.test.mjs scripts/ci-workflows.test.mjs docs/tools/check-shots.test.mjs docs/tools/evidence.test.mjs
       - run: node --test qualification/summarize.test.mjs qualification/promotion.test.mjs qualification/review-workflow.test.mjs
       # The committed dictionary asset must be what dictionary/*.txt renders to (specs/29).
       - run: node scripts/dictionary.mjs check

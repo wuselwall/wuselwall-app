@@ -27,6 +27,7 @@ import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/services/ui/services_page.dart';
 import 'package:wuselwall/features/settings/ui/family_members_page.dart';
 import 'package:wuselwall/features/settings/ui/family_page.dart';
 import 'package:wuselwall/features/settings/ui/member_page.dart';
@@ -54,6 +55,12 @@ import 'package:wuselwall/features/shopping/ui/shopping_trip_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_body.dart';
 import 'package:wuselwall/features/today/ui/today_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_compare_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_discover_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_entry_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_page.dart';
+import 'package:wuselwall/features/trips/ui/trip_windows_page.dart';
+import 'package:wuselwall/features/trips/ui/trips_page.dart';
 
 bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'BaselinePage' => widget is BaselinePage,
@@ -92,6 +99,7 @@ bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'ScheduleBody' => widget is ScheduleBody,
   'SchoolSetupPage' => widget is SchoolSetupPage,
   'ServerChoicePage' => widget is ServerChoicePage,
+  'ServicesPage' => widget is ServicesPage,
   'SettingsGroupPage' => widget is SettingsGroupPage,
   'SettingsPage' => widget is SettingsPage,
   'SetupPage' => widget is SetupPage,
@@ -107,6 +115,12 @@ bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'TimetableEditorPage' => widget is TimetableEditorPage,
   'TimetableImportPage' => widget is TimetableImportPage,
   'TodayPage' => widget is TodayPage,
+  'TripComparePage' => widget is TripComparePage,
+  'TripDiscoverPage' => widget is TripDiscoverPage,
+  'TripEntryPage' => widget is TripEntryPage,
+  'TripPage' => widget is TripPage,
+  'TripWindowsPage' => widget is TripWindowsPage,
+  'TripsPage' => widget is TripsPage,
   'WeekBoardPage' => widget is WeekBoardPage,
   'WizardPage' => widget is WizardPage,
   _ => throw ArgumentError.value(name, 'name'),
@@ -139,6 +153,13 @@ const qualificationFixtureRoutes = <String, String>{
   'event-edit': '/calendar/edit',
   'event-import': '/calendar/import',
   'event-import-refused': '/calendar/import',
+  'trips': '/trips',
+  'trip-discover': '/trips/discover',
+  'trip-windows': '/trips/windows',
+  'trip': '/trips/:id',
+  'trip-compare': '/trips/:id/compare',
+  'trip-entry': '/trips/:id/entry',
+  'services-settings': '/settings/services',
   'recipe-create': '/meals/recipes/edit',
   'recipe-edit': '/meals/recipes/edit',
   'recipe-view': '/meals/recipes/view',

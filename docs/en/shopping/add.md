@@ -8,6 +8,8 @@ At home you plan the list: the search field and tiles on top, the items by categ
 
 ## Tiles
 
+When more tiles are available than fit at the top, the next row’s pictures remain visible. Swipe upwards within the tiles to see more items. The visible area adjusts to larger text.
+
 The tiles are the **catalogue** of what you have bought: the **8 most recent** items first, then the **most often** bought ones, up to 24 in all. Nobody maintains this list: it builds itself when you finish a trip.
 
 Each tile shows a picture of the item: WuselWall recognises common items by their name, such as milk, bread or apples. An item it doesn't know shows its category's symbol.

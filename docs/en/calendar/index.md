@@ -44,11 +44,13 @@ Tap **New event**. It starts on the day the calendar is showing (today, while to
 
 First you see tiles, so you don't have to type everything from scratch:
 
-- **Templates**: **Cleaner**, **Sports event**, **Doctor's appointment**, **Guests for dinner**, **Day out**, **Children's party**, **Performance**, **Holiday / trip** and **Birthday** (all day, yearly); what you use often comes first and the yearly ones last. **Cleaner** is the only weekly template: it repeats every week on the day you choose, at 09:00 for three hours, with a broom as its picture, for the person who enters it. Each fills in the title, picture, time, length and people. A family with a child also sees a section of its own, **School**: **Parents’ evening**, **Parent–teacher meeting**, **School trip**, **Test**, **School fair** and **Sports day**. **Start blank** opens the empty editor at the next full hour.
+- **Templates**: **Cleaner visit**, **Sports practice**, **Doctor’s appointment**, **Guests for dinner**, **Family day out**, **Playdate**, **Cinema trip**, **Family holiday** and **Birthday** (all day, yearly). Each fills in the title, picture, time, length and people. Sports practice starts at 17:00 for one hour, a playdate at 15:00 for two hours with the children, and a cinema trip at 16:00 for two hours with the family. A family day out lasts one day; a family holiday starts with seven. **Cleaner visit** repeats weekly on the chosen day at 09:00 for three hours, for the person who enters the visit. A family with a child also sees **School**: **Class meeting for parents** for a group meeting, **Parent–teacher meeting** for an individual appointment, **School trip**, **School test**, **School fair** and **School sports day**. You can change all these defaults. **Start blank** opens the empty editor at the next full hour.
 - **Your templates**: the ones you saved yourselves. In the editor, tap **Save as template** at the top; it keeps the title, picture, time, length, people, location and notes, not the date and not the repeat.
 - **Often in your family**: events you have entered at least three times, such as "Grandma & Grandpa visit". WuselWall only counts your own events on your own server; nothing leaves it. Under **⋮** you choose **Keep as template** or **Don't suggest again**.
 
 What a tile fills in is only a start: change what differs in the editor and save. **Back** takes you to the tiles again.
+
+Next to **Holiday / trip** there is the tile **Plan a trip**: it opens [Trips](/en/trips/#find), where you compare options, look for time windows and make the packing list. **Holiday / trip**, by contrast, only creates a single appointment.
 
 <Shot name="calendar-templates" alt="New event with tiles: Often in your family, Your templates and templates such as Birthday and Guests for dinner" />
 
@@ -150,6 +152,8 @@ WuselWall shows the appointment first: title, time, place and notes. Choose who 
 The appointment is then your own copy: you can change or delete it like any other. The sender is not told anything.
 
 If the same appointment is sent again after a change, WuselWall recognises it and offers **Update the appointment** instead of adding it twice. A file with several appointments is not accepted here; a whole calendar belongs under [Outside calendars](#outside-calendars).
+
+If the file belongs to a booking and you have a planned or decided trip, WuselWall also offers **Add to trip**: it then becomes an entry of the trip instead of a calendar appointment (see [A booking's calendar file](/en/trips/#booking-file)).
 
 ## Appointments in Outlook or on an iPhone
 

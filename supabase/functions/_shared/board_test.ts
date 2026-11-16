@@ -44,6 +44,7 @@ function occ(p: Partial<Occurrence> & { id: string }): Occurrence {
     is_override: false,
     source: "event",
     colour_hex: null,
+    trip_id: null,
     ...p,
   };
 }

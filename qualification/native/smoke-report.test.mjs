@@ -91,9 +91,68 @@ test('a diagnostic may select only the fixed iOS phone profile without Android e
 
 test('diagnostic profile selection rejects unsupported, duplicate and reordered values', async t => {
   const root = await fixture(t);
-  for (const selection of [[], ['android-tablet'], ['ios-phone', 'ios-phone'], ['android-phone', 'ios-phone']]) {
-    assert.equal((await diagnosticReport(root, sha, selection)).diagnosticPassed, false);
+  for (const selection of [[], ['android-watch'], ['ios-phone', 'ios-phone'], ['android-phone', 'ios-phone']]) {
+    const report = await diagnosticReport(root, sha, selection);
+    assert.equal(report.diagnosticPassed, false);
+    assert.deepEqual(report.selectedProfiles, []);
   }
+});
+
+// One profile's evidence as native.sh leaves it, for any profile and either set of cases.
+async function profileEvidence(root, profile, smoke, mutate = () => {}) {
+  const out = path.join(root, profile);
+  await fs.mkdir(out, {recursive: true});
+  const cases = expectedCases(profile, smoke);
+  const report = {schemaVersion: 1, done: true, candidateSha: sha, expected: cases.length + 2,
+    results: [...cases, 'detector-bad', 'detector-keyboard'].map(id => ({id, passed: true, frameworkErrors: [],
+      issues: [], semantics: {type: 1, label: id, children: []}}))};
+  mutate(report);
+  await fs.writeFile(path.join(out, 'audit.json'), JSON.stringify(report));
+  await fs.writeFile(path.join(out, 'results.json'), JSON.stringify({candidateSha: sha, expected: cases.length,
+    captured: cases.length, logicalWidth: profile.includes('tablet') ? 1280 : 390, logicalHeight: 844, devicePixelRatio: 2}));
+  await Promise.all(cases.map(id => fs.writeFile(path.join(out, `${id}.png`), png)));
+}
+
+test('any native profile can be diagnosed, with the full cases, and stays unqualified', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'ww-native-diagnostic-'));
+  t.after(() => fs.rm(root, {recursive: true, force: true}));
+  const selection = ['android-tablet', 'android-min-phone'];
+  await fs.writeFile(path.join(root, 'profiles.txt'), selection.map(profile => `${profile}: PASS`).join('\n'));
+  for (const profile of selection) await profileEvidence(root, profile, false);
+  assert.ok(expectedCases('android-tablet', false).length > expectedCases('android-min-phone', false).length,
+    'the tablet also audits the children\'s home and the wall');
+  const report = await diagnosticReport(root, sha, selection, false);
+  assert.equal(report.cases, 'full');
+  assert.equal(report.diagnosticPassed, true);
+  assert.deepEqual(report.selectedProfiles.map(profile => [profile.profile, profile.nativeAudit, profile.cases, profile.findings]),
+    selection.map(profile => [profile, 'complete', expectedCases(profile, false).length + 2, 0]));
+  assert.deepEqual(report.qualification, {status: 'INCOMPLETE', qualified: false});
+  // The same evidence is not the smoke cases' evidence.
+  assert.equal((await diagnosticReport(root, sha, selection, true)).diagnosticPassed, false);
+});
+
+test('a complete report with a finding is told apart from a report that was never collected', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'ww-native-diagnostic-'));
+  t.after(() => fs.rm(root, {recursive: true, force: true}));
+  const selection = ['android-tablet', 'android-min-phone'];
+  await fs.writeFile(path.join(root, 'profiles.txt'), 'android-tablet: FAIL\nandroid-min-phone: PASS\n');
+  await fs.mkdir(path.join(root, 'android-tablet'));
+  await fs.writeFile(path.join(root, 'android-tablet/run.log'), [
+    'NATIVE INSTRUMENTATION FAILED android-tablet: java.lang.AssertionError: Active window of wall-de-light belongs to com.android.systemui, not to the app',
+    'NATIVE REPORT MISSING android-tablet: no audit report on the device'].join('\n'));
+  await profileEvidence(root, 'android-min-phone', true, report => {
+    const sample = report.results.find(result => result.id === 'shopping-de-light');
+    sample.passed = false;
+    sample.issues = [{check: 'SpeakableTextPresentCheck', type: 'ERROR'}, {check: 'TextContrastCheck', type: 'NOT_RUN'}];
+  });
+  const report = await diagnosticReport(root, sha, selection);
+  assert.equal(report.diagnosticPassed, false);
+  const [tablet, minimum] = report.selectedProfiles;
+  assert.deepEqual([tablet.nativeAudit, tablet.collectionPassed, tablet.findings, tablet.cases], ['incomplete', false, null, 0]);
+  assert.deepEqual(tablet.origin.markers.map(marker => marker.split(':')[0]),
+    ['NATIVE INSTRUMENTATION FAILED android-tablet', 'NATIVE REPORT MISSING android-tablet']);
+  assert.deepEqual([minimum.nativeAudit, minimum.collectionPassed, minimum.frameworkErrors, minimum.findings, minimum.passed],
+    ['complete', true, 0, 1, false]);
 });
 
 test('Android-only diagnostics do not require iOS evidence', async t => {
@@ -123,10 +182,21 @@ test('workflow keeps smoke and runner diagnostics outside promotion and signing'
   assert.match(workflow, /github\.event_name == 'workflow_dispatch' && inputs\.native_smoke_only && !inputs\.diagnostics_only/);
   assert.match(workflow, /inputs\.diagnostics_only != true && inputs\.native_smoke_only != true/);
   assert.match(workflow, /qualification\.result == 'success'/);
-  assert.match(workflow, /environment: release-promotion/);
-  assert.match(workflow, /both\) profiles=\(ios-phone android-phone\)/);
-  assert.match(workflow, /QUALIFY_NATIVE_SMOKE: 'true'/);
+  assert.match(workflow, /uses: \.\/\.github\/workflows\/release-checks.yml/);
+  assert.match(workflow, /environment: \$\{\{ needs.qualification.outputs.environment \}\}/);
+  assert.match(workflow, /inputs\.native_smoke_platform == 'android' && 'android-phone' \|\| 'ios-phone,android-phone'/);
+  assert.match(workflow, /QUALIFY_NATIVE_SMOKE: \$\{\{ inputs\.native_smoke_cases == 'full' && 'false' \|\| 'true' \}\}/);
   assert.match(workflow, /options: \[both, ios, android\]/);
+  assert.match(workflow, /options: \[smoke, full\]\n\s+default: smoke/);
+  // A selected profile is an input: it reaches the script as data, is matched against the
+  // platform whose tools were installed, and only then names a directory.
+  assert.match(workflow, /QUALIFY_NATIVE_PROFILES: \$\{\{ inputs\.native_smoke_profiles != '' && inputs\.native_smoke_profiles \|\| /);
+  const smokeJob = workflow.slice(workflow.indexOf('\n  native_smoke:'), workflow.indexOf('\n  qualification:'));
+  const script = smokeJob.slice(smokeJob.indexOf('Run the selected diagnostic profiles')).match(/\n        run: \|\n([^]*?)\n      - /)[1];
+  assert.match(script, /IFS=, read -r -a profiles <<< "\$QUALIFY_NATIVE_PROFILES"/);
+  assert.equal(script.includes('${{'), false);
+  assert.match(smokeJob, /\{ echo 'Native profile selection differs from its platform\.' >&2; exit 1; \}\n\s+rm -rf "build\/qualification\/native\/\$profile"/);
+  assert.equal(/secrets\.|environment:/.test(smokeJob), false, 'the diagnostic signs nothing and promotes nothing');
   const native = await fs.readFile(new URL('../native.sh', import.meta.url), 'utf8');
   assert.match(native, /platform" == ios && "\$\{QUALIFY_NATIVE_SMOKE:-false\}" == true && "\$\{QUALIFICATION_IOS_DIAGNOSTIC_RUNTIME_FALLBACK:-false\}" == true/);
   const preflight = await fs.readFile(new URL('./preflight.sh', import.meta.url), 'utf8');

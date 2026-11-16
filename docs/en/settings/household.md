@@ -15,7 +15,7 @@ Every setting has a **default**, which WuselWall suggests. It suits most familie
 - **Personal** (as soon as someone is chosen; always on your own phone): **Wusel** and **Wusel's outfit**, the **sound** when a chore is ticked and, on your own phone, the **notifications**: **Reminders** on this phone, the morning summary, the reminder before appointments, the packing reminder and when uncertain appointments are asked about. They apply only to the person chosen (see [Wusel and colours](/en/guide/wusel#how-lively))
 - **Family**: the **family profile** (name, time zone, data export, delete), the **region** (country, canton or state, municipality) that public and school holidays follow, the **members**, the **usual week** and **Shopping in the children's view** (whether children have the Shopping tab; off in a new family). You choose the region when you add the first school; you can change it here later
 - **Tasks & rewards**: points for a duty and for a bonus chore, whether new chores are duties or bonuses, whether parents check chores, how many **streak jokers** there are per month and whether **rewards need approval**
-- **Calendar & school**: whether children change their own appointments, which new appointments appear on the kitchen wall, whether children may report timetable changes and whether the **equipment hint** appears. The **Advanced** view adds **Sharing and connections**: sharing the family calendar and outside calendars
+- **Calendar & school**: whether children change their own appointments, which new appointments appear on the kitchen wall, whether children may report timetable changes and whether the **equipment hint** appears. The **Advanced** view adds **Sharing and connections**: sharing the family calendar and outside calendars. This group also holds [Weather and maps](/en/settings/services) for trips.
 - **Meals**: which meal is the **warm meal** on **school days** and on **free days** (weekends, public holidays, school holidays): two toggle buttons, **Lunch** and **Dinner** (default: dinner on school days, lunch on free days). With both on, there are two warm meals: lunch and dinner appear together as the day's main meals on the wall, in the meal plan and on **Today**, and the table question asks at both. With both off there is no warm meal: the wall's meal row stays empty for that day, the table question goes with dinner and a meal wish lands on dinner. Also: that **away means not eating**, until when care counts as lunch, and meal wishes
 - **Rituals**: the question at the table, our week and looking forward, see [below](#rituals)
 - **Celebrations & seasons**: the decorations in the sky, first **Through the year** (seasons, school holidays, birthdays), then the **Holiday celebrations** (Easter, Orthodox Easter, National day, Saint Nicholas, Advent, Christmas, New Year's Eve)
@@ -64,3 +64,20 @@ These settings are under **Devices → This device** and apply only to the devic
 | **Sounds on this device** | silences the whole device; there is never a sound at night | Automatic: off on the wall, on elsewhere |
 | **Sky in the header** | the sky that changes with the time of day | on |
 | **Protect the screen from burn-in** | moves everything by up to 2 pixels every 10 minutes, for OLED screens | Automatic: on for the wall, off elsewhere |
+
+### Appearance {#appearance}
+
+Under **Appearance** you choose how WuselWall looks on this device. The row shows the current choice, for example "Automatic · Fresh, Blue hour", and opens a sheet from the bottom. At the top you switch between **Automatic** (light or dark, as set on the device), **Light** and **Dark**. Below it come the **Light theme** and the **Dark theme**.
+
+<Shot name="first-look" alt="The sheet for choosing light, dark or automatic and the colour themes" />
+
+Each theme is a small picture of the app in its colours. A tap applies at once, also to the page behind the sheet, so you see straight away how it looks. **Done** closes the sheet.
+
+- **Light theme**: **Fresh** (cool, minty white, the one you start with) and **Sunny** (sunny cream).
+- **Dark theme**: **Blue hour** (evening blue, the one you start with), **Slate** (cool grey), **Plum** (dusk violet) and **Cocoa** (warm brown).
+
+A device keeps one light and one dark theme; the switch at the top decides which of the two you see. The choice holds for this device only and changes nothing for anyone else: the family's phones need not agree. It is not a setting for parents only.
+
+A personal phone (not the family tablet and not the wall) shows this sheet by itself the first time it reaches the home screen, titled "How should WuselWall look?". You can close it without choosing; it does not come back, and everything stays changeable under **Settings → Appearance**. A phone that already had the app sees it once after the update. The tablet and the wall are not asked; parents change the theme there in the same place in Settings.
+
+The family members' own colours are the same in every theme. And the wall still switches to its night view at night (from 21:00 by default), whatever is chosen.

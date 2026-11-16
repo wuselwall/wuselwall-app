@@ -27,9 +27,27 @@ A phase's cleanup signals only its own process group. A process that left the gr
 macOS's EPERM for a group that holds only zombies is handled, and a member that
 refuses signals is reported as `NATIVE PHASE CLEANUP INCOMPLETE` within the grace periods.
 Each profile's output is kept in `<profile>/run.log`, and a failed ADB start keeps
-the server's own log as `adb-server.log`. A collected report that is not a finished
-audit (`adb exec-out` exits 0 after printing an error) fails the profile, and missing
-evidence fails the visual capture with that profile's originating phase in `visual.json`.
+the server's own log as `adb-server.log`. `adb shell am instrument` exits 0 whatever
+its tests did, so the Android instrumentation counts by its own verdict: anything but
+`OK (n tests)` fails the profile with `NATIVE INSTRUMENTATION FAILED <profile>: <cause>`
+and keeps the device's warnings and errors as `logcat.txt`. The report is looked for on
+the device before it is pulled: when the instrumentation wrote none, the profile fails
+with `NATIVE REPORT MISSING <profile>` and no `audit.json` is stored. A collected report
+that is not a finished audit fails the profile with `NATIVE REPORT INVALID <profile>`,
+and missing evidence fails the visual capture with that profile's originating phase in
+`visual.json`.
+
+The Android audit only accepts the app's own window as the active one, and its failure
+names the case and every window on screen. A device that has never shown an app in full
+screen explains it once ("Viewing full screen", a System UI window that takes the
+focus); the wall display is full screen, so `native.sh` records that explanation as
+seen (`immersive_mode_confirmations`) and checks the setting before the capture starts.
+Remove such a cause on the device; never relax the window check.
+
+The instrumentation runs inside the app's process and shares its Java heap, which the
+API 24 image limits to 48 MB. It therefore polls the bridge's `/progress` (the state
+without the results collected so far) and copies the finished report from `/state` to
+the app's files as a stream, instead of parsing a report that grows with every case.
 
 For a complete local setup sequence, use [the copyable setup commands](setup-commands.md).
 
@@ -271,11 +289,15 @@ interaction comfort still require the release checklist's device review.
 
 The `release-ios` workflow's manual `native_smoke_only` mode selects `both`, `ios` or
 `android` and runs only the corresponding phone profiles (`ios-phone` and/or
-`android-phone`) with smoke cases. It uploads a short-lived diagnostic artifact and does
-not run baseline comparison or release promotion. Its
-`diagnostic.json` records `INCOMPLETE` even when both profiles pass; the
-non-selected native profiles and all remaining candidate gates are still required for
-qualification. An iOS-only run needs no Android SDK or JDK. If its configured iOS runtime
+`android-phone`) with smoke cases. To look at another profile, name the profiles in
+`native_smoke_profiles` (comma-separated, in the order of the matrix, all of the selected
+platform, for example `android-tablet,android-min-phone`) and choose `full` in
+`native_smoke_cases` for every language and theme. It uploads a short-lived diagnostic
+artifact and does not run baseline comparison or release promotion. Its
+`diagnostic.json` records `INCOMPLETE` even when every selected profile passes, and for
+each profile whether the report is complete, its framework errors and its blocking
+findings; the non-selected native profiles and all remaining candidate gates are still
+required for qualification. An iOS-only run needs no Android SDK or JDK. If its configured iOS runtime
 does not support the selected device, the diagnostic may use the newest already-installed
 available runtime whose `supportedDeviceTypes` includes it. It records the selected
 device type, runtime identifier, version, build and fallback reason in `diagnostic-runtime.json`.

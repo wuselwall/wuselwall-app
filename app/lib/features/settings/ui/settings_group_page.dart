@@ -197,6 +197,13 @@ Widget _tileWidget(SettingsTile tile) => switch (tile) {
     title: _extCalTitle,
     subtitle: _extCalSubtitle,
   ),
+  SettingsTile.services => const _NavTile(
+    tileKey: 'settings-services',
+    icon: Icons.cloud_queue_outlined,
+    route: Routes.servicesSettings,
+    title: _servicesTitle,
+    subtitle: _servicesSubtitle,
+  ),
   SettingsTile.familyQuestions => const FamilyQuestionsTile(),
   SettingsTile.language => const LanguageTile(),
   SettingsTile.appearance => const AppearanceTile(),
@@ -229,6 +236,9 @@ String _feedTitle(AppLocalizations l10n) => l10n.feedTitle;
 String _feedSubtitle(AppLocalizations l10n) => l10n.feedSettingsSubtitle;
 String _extCalTitle(AppLocalizations l10n) => l10n.extCalTitle;
 String _extCalSubtitle(AppLocalizations l10n) => l10n.extCalSettingsSubtitle;
+String _servicesTitle(AppLocalizations l10n) => l10n.settingsServicesTitle;
+String _servicesSubtitle(AppLocalizations l10n) =>
+    l10n.settingsServicesSubtitle;
 
 /// A row that opens another settings page. [basicSubtitle] names what that page shows in
 /// Basic, where it shows less.

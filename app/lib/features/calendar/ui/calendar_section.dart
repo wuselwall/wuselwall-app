@@ -11,6 +11,7 @@ import 'package:wuselwall/features/calendar/ui/calendar_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/new_tradition_sheet.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// The adult home's calendar destination.
@@ -39,9 +40,11 @@ final calendarSection = HomeSection(
 );
 
 /// The calendar's buttons: a new event, and above it a new family tradition (specs/27
-/// "Familientraditionen"), only where the server knows traditions. A phone keeps the
-/// one button, so less of the grid is covered; the tradition starts from a tile on the
-/// *Neuer Termin* page there.
+/// "Familientraditionen"), only where the server knows traditions, and the way to Reisen
+/// (specs/30), only where an adult can plan trips. A phone keeps the one button, so less
+/// of the grid is covered; the tradition and the trips start from tiles on the *Neuer
+/// Termin* page there. (The app bar has no room: a 48 px action there pushes "Heute" and
+/// the date out of a narrow bar.)
 class CalendarFab extends ConsumerWidget {
   const CalendarFab({super.key});
 
@@ -51,6 +54,11 @@ class CalendarFab extends ConsumerWidget {
   /// Whether the small tradition button floats above "Neuer Termin" in this [context].
   static bool showsTradition(BuildContext context, WidgetRef ref) =>
       ref.watch(lighterDaySupportedProvider) &&
+      MediaQuery.sizeOf(context).width >= phoneWidth;
+
+  /// Whether the small trips button floats in this [context].
+  static bool showsTrips(BuildContext context, WidgetRef ref) =>
+      ref.watch(tripsOfferedProvider) &&
       MediaQuery.sizeOf(context).width >= phoneWidth;
 
   @override
@@ -65,24 +73,38 @@ class CalendarFab extends ConsumerWidget {
       icon: const Icon(Icons.add),
       label: Text(l10n.calendarNewEvent),
     );
-    if (!showsTradition(context, ref)) return newEvent;
+    final tradition = showsTradition(context, ref);
+    final trips = showsTrips(context, ref);
+    if (!tradition && !trips) return newEvent;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        FloatingActionButton.small(
-          heroTag: 'calendar-new-tradition',
-          tooltip: l10n.calendarNewTradition,
-          onPressed: () => unawaited(
-            openNewTradition(
-              context,
-              inView: day(),
-              now: ref.read(nowProvider),
-            ),
+        if (trips) ...[
+          FloatingActionButton.small(
+            key: const ValueKey('calendar-trips'),
+            heroTag: 'calendar-trips',
+            tooltip: l10n.tripsTitle,
+            onPressed: () => unawaited(context.push(Routes.trips)),
+            child: const Icon(Icons.luggage_outlined),
           ),
-          child: const Icon(Icons.celebration_outlined),
-        ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
+        ],
+        if (tradition) ...[
+          FloatingActionButton.small(
+            heroTag: 'calendar-new-tradition',
+            tooltip: l10n.calendarNewTradition,
+            onPressed: () => unawaited(
+              openNewTradition(
+                context,
+                inView: day(),
+                now: ref.read(nowProvider),
+              ),
+            ),
+            child: const Icon(Icons.celebration_outlined),
+          ),
+          const SizedBox(height: 12),
+        ],
         newEvent,
       ],
     );

@@ -7,6 +7,10 @@ every household has its own server. The step-by-step guide for families is
 Decision context: [ADR-013](adr/ADR-013-self-hosted-compose-stack.md) (the compose stack)
 and [ADR-018](adr/ADR-018-self-hosted-only.md) (self-hosted only, built 2026-10-14).
 
+For creating app/server releases, use the stage-aware [release runbook](releasing.md).
+Alpha requires ordinary app/security/backend CI; full UI/native qualification is retained
+as a beta/live gate. Installing a release on a live server still requires backup first.
+
 *Rewritten 2026-10-14: this document describes servers in general. Nothing in the
 repository describes a particular operator's server; such notes live outside it.*
 

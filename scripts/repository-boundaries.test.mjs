@@ -66,7 +66,7 @@ test('only explicit build/service jobs use the self-hosted fleet', () => {
     const workflow = readFileSync(new URL(file, dir), 'utf8');
     const runners = [...workflow.matchAll(/^\s+runs-on:\s*(.+)$/gm)];
     assert.ok(runners.length > 0, `${file}: declares job runners`);
-    const hostedOnly = ['deploy-supabase.yml', 'docs.yml', 'docs-validation.yml', 'triage.yml', 'release.yml'];
+    const hostedOnly = ['deploy-supabase.yml', 'docs.yml', 'docs-validation.yml', 'triage.yml', 'release.yml', 'release-checks.yml'];
     for (const [, runner] of runners) {
       if (hostedOnly.includes(file)) assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
       else if (['ci.yml', 'backend-ci.yml'].includes(file)) assert.match(runner, /^(ubuntu-latest|\[self-hosted, Linux, build\])$/, `${file}: ${runner}`);

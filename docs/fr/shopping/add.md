@@ -8,6 +8,8 @@ Les **tuiles** permettent d’ajouter un produit en quelques secondes, même d�
 
 ## Les tuiles {#tiles}
 
+Quand toutes les tuiles ne tiennent pas en haut, les images de la rangée suivante restent visibles. Balayez les tuiles vers le haut pour voir d’autres articles. La zone visible s’adapte aux caractères agrandis.
+
 Les tuiles forment le **catalogue** de vos achats : d’abord les **8 produits achetés le plus récemment**, puis ceux achetés le plus **souvent**, jusqu’à 24 en tout. La liste se construit quand vous terminez les achats, sans entretien manuel. Les produits courants ont une illustration ; sinon, le symbole de la catégorie apparaît.
 
 - **Un toucher** ajoute le produit et colore sa tuile.

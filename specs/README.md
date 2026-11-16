@@ -11,7 +11,8 @@ For a local demo and checks, start with the [app README](../app/README.md).
 2. Read [Architecture](03-architecture.md) before changing code, then the specification
    for the module you are working on.
 3. Check the [roadmap](13-roadmap.md), [build plan](16-setup-plan.md) and
-   [release checklist](release-checklist.md) to distinguish implementation from release evidence.
+   [release runbook](releasing.md) and [release checklist](release-checklist.md) to
+   distinguish routine alpha releases from beta/live qualification and milestone evidence.
 4. Consult the [decision records](adr/README.md) when choices appear to conflict.
    Superseded records preserve history; they do not define current behaviour.
 
@@ -45,12 +46,14 @@ Shortcuts and timetable text/photo import remain in scope.
 | 27 | [Family rituals](27-family-rituals.md) | Tischfrage, Wochenrückblick, traditions, Vorfreude and Wunschessen, with birthdays, and how the trial judges each |
 | 28 | [Event templates](28-event-templates.md) | Built-in, saved and history-based event starters |
 | 29 | [Local matching](29-local-matching.md) | Shared dictionary, matching layers and household corrections |
+| 30 | [Trips](30-trips.md) | Planning a vacation in one place: ideas, time windows from the family's calendar, options compared and combined, packing, the day plan, discovery, and the opt-in weather and map services |
 | 24 | [School setup without typing](24-school-import.md) | Fewer required facts, timetable text/photo import and preview; assistant proposals on hold |
 | 16 | [Setup Plan](16-setup-plan.md) | Remaining work in grouped slices; completed setup and CI/signing recipes kept as reference |
 | 19 | [Security & Architecture Review](19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
 | 17 | [Design System](17-design-system.md) | Colour, type and form: the member palette (colour-blind-checked), presence treatments, night theme, three design directions, A "Küchentisch" chosen |
 | 21 | [Household Settings](21-household-settings.md) | The reference household, the settings model, the setup wizard and every curated default with its reasoning |
 | 18 | [Testing Strategy](18-testing-strategy.md) | The nine test layers from pgTAP to the family's devices: widget and golden matrices, Patrol on device, Playwright for the web build only, the manual release check, and where each runs |
+| — | [Releasing](releasing.md) | Routine alpha builds, exact-commit CI reuse and the retained beta/live qualification gate |
 | — | [Design system mockup](mockups/design-system.html) | The three directions on the same Monday, switchable between light, dark and night, with simulated colour-blindness |
 | — | [Logo proposal](mockups/logo.html) | Logo concepts (Familien-W, Wuselchen, Wuselpunkte) next to the ADR-012 icon, as app icons at real sizes, in dark and themed variants |
 | — | [Wusel and colour mockup](mockups/wusel-and-colour.html) | Wusel's poses and outfits, the module bands, the decoration, the wall's day phases and the kid sticker cards, in light and dark |

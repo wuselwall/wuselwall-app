@@ -15,7 +15,7 @@ Chaque réglage propose une valeur par défaut. Une valeur différente est signa
 - **Personnel** (dès que quelqu’un est choisi ; toujours sur votre propre téléphone) : **Wusel** et **La tenue de Wusel**, le **son** des tâches et, sur votre propre téléphone, les **notifications** : **Rappels** sur ce téléphone, résumé du matin, rappel avant les rendez-vous, rappel du matériel et rappel des événements incertains. Ils concernent seulement la personne choisie (voir [Wusel et les couleurs](/fr/guide/wusel#how-lively)).
 - **Famille** : le **profil de la famille** (nom, fuseau horaire, export, suppression), la **région** des jours fériés et vacances, les **membres**, la **semaine habituelle** et **Courses dans la vue des enfants** (désactivé dans une nouvelle famille). La première école permet de choisir la région, modifiable ici.
 - **Tâches et récompenses** : points des obligations et bonus, type initial, vérification, jokers mensuels et approbation des récompenses.
-- **Calendrier et école** : modifications des enfants, affichage mural des nouveaux événements, signalement des changements de cours et matériel à apporter. La vue **Avancés** ajoute **Partage et connexions** : partager le calendrier familial et calendriers externes.
+- **Calendrier et école** : modifications des enfants, affichage mural des nouveaux événements, signalement des changements de cours et matériel à apporter. La vue **Avancés** ajoute **Partage et connexions** : partager le calendrier familial et calendriers externes. Ce groupe contient aussi [Météo et cartes](/fr/settings/services) pour les voyages.
 - **Repas** : quel repas est le repas chaud les jours d’école et les jours sans école. Deux boutons, **Déjeuner** et **Dîner**, s’activent chacun à leur tour (par défaut : dîner les jours d’école, déjeuner les jours sans école). Avec les deux activés, le déjeuner et le dîner s’affichent ensemble comme repas principaux du jour sur le mur, dans le plan des repas et sur **Aujourd’hui**, et la question à table se pose aux deux ; avec les deux désactivés, il n’y a pas de repas chaud : la ligne des repas du mur reste vide ce jour-là, la question à table suit le dîner et un repas souhaité va au dîner. Aussi : absence signifiant ne pas manger, prise en compte de la garde pour le déjeuner et repas souhaités.
 - **Rituels** : question à table, notre semaine et compte à rebours, voir [plus bas](#rituals).
 - **Fêtes et saisons** : les décorations du ciel, d’abord **Au fil de l’année** (saisons, vacances, anniversaires), puis les **Jours de fête** (Pâques, Pâques orthodoxes, Fête nationale, Saint-Nicolas, Avent, Noël, Nouvel An).
@@ -66,3 +66,20 @@ Ces réglages se trouvent sous **Appareils → Cet appareil** et ne valent que p
 | **Sons sur cet appareil** | coupe le son de tout l’appareil ; jamais de son la nuit | Automatique : coupés sur l’écran mural, actifs ailleurs |
 | **Ciel dans l’en-tête** | le ciel qui change avec l’heure | activé |
 | **Protéger l’écran du marquage** | déplace tout de 2 pixels au plus toutes les 10 minutes, pour les écrans OLED | Automatique : actif sur l’écran mural, désactivé ailleurs |
+
+### Apparence {#appearance}
+
+Sous **Apparence**, vous choisissez l’allure de WuselWall sur cet appareil. La ligne indique le choix actuel, par exemple « Automatique · Frais, Heure bleue », et ouvre une feuille par le bas. En haut, vous passez de **Automatique** (clair ou sombre, selon le réglage de l’appareil) à **Clair** ou **Sombre**. Viennent ensuite le **Thème clair** et le **Thème sombre**.
+
+<Shot name="first-look" alt="La feuille pour choisir clair, sombre ou automatique et les thèmes de couleurs" />
+
+Chaque thème est une petite image de l’appli dans ses couleurs. Un appui s’applique tout de suite, y compris à la page derrière la feuille : vous voyez aussitôt le résultat. **Terminé** ferme la feuille.
+
+- **Thème clair** : **Frais** (blanc frais et mentholé, celui du départ) et **Ensoleillé** (crème ensoleillée).
+- **Thème sombre** : **Heure bleue** (bleu du soir, celui du départ), **Ardoise** (gris froid), **Prune** (violet du crépuscule) et **Cacao** (brun chaud).
+
+Un appareil garde un thème clair et un thème sombre ; le sélecteur du haut décide lequel des deux s’affiche. Le choix ne vaut que pour cet appareil et ne change rien pour les autres : les téléphones de la famille n’ont pas à s’accorder. Ce n’est pas un réglage réservé aux parents.
+
+Un téléphone personnel (ni la tablette familiale ni l’écran mural) affiche cette feuille de lui-même la première fois qu’il arrive à l’écran d’accueil, sous le titre « Quelle allure pour WuselWall ? ». Vous pouvez la fermer sans choisir ; elle ne revient pas, et tout reste modifiable sous **Paramètres → Apparence**. Un téléphone qui avait déjà l’appli la voit une fois après la mise à jour. La tablette et l’écran mural ne sont pas interrogés ; les parents y changent le thème au même endroit, dans les paramètres.
+
+Les couleurs des membres de la famille sont les mêmes dans tous les thèmes. Et l’écran mural passe toujours à sa vue de nuit la nuit (à partir de 21 h par défaut), quel que soit le choix.

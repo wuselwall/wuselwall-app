@@ -29,6 +29,7 @@ In einem [Abo des Familienkalenders](/calendar/feeds) steht jeder Geburtstag als
 - den **ersten Ferientag**
 - die **Rückkehr eines Erwachsenen** von einer Reise mit zwei Nächten oder mehr („Papa kommt nach Hause“)
 - jeden Termin, bei dem im Editor **Darauf freuen wir uns** eingeschaltet ist, etwa den Zoobesuch (siehe [Kalender](/calendar/#termin-anlegen))
+- eine **feste Reise** (siehe [Reisen](/trips/#from-idea-to-fixed))
 
 Zu sehen ist er auf der **Wand** in der Fußzeile, so viele wie hineinpassen, auf **Mein Tag** unter **Worauf ich mich freue** (die Countdowns des Kindes und die der ganzen Familie) und auf **Heute** als eine Zeile mit dem nächsten Countdown.
 

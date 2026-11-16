@@ -3,13 +3,9 @@
 # workflows on those tags, and the milestone's close and rollover. scripts/release.mjs holds
 # the steps.
 #
-# A dry run (the default) only prints the plan. Nothing here builds or signs: the release
-# workflows it starts keep their own qualification check and the release-promotion approval.
-# The qualification is checked here first all the same, so that no tag is made for a commit
-# the builds would refuse.
-#
-# GitHub's runners: the jobs call the API and run no build; the signing secrets stay with
-# the release workflows.
+# A dry run only prints the plan. A real release passes the shared stage-aware gate
+# before tags are created; publishing workflows repeat its read-only authorization.
+# Signing secrets stay with the publishing workflows.
 name: release
 run-name: release ${{ inputs.version || '(next milestone)' }}${{ inputs.dry_run && ' (dry run)' || '' }}
 on:
@@ -61,14 +57,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_VERSION: ${{ inputs.version }}
           RELEASE_SERVER: ${{ inputs.server }}
-      # The same check the release workflows make. A dry run reports it without failing.
-      - name: Qualification of this commit
-        continue-on-error: ${{ inputs.dry_run }}
-        run: node qualification/promotion.mjs
-        env: { GH_TOKEN: '${{ github.token }}' }
+
+  preflight:
+    needs: plan
+    if: ${{ !inputs.dry_run }}
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/release-checks.yml
 
   tag:
-    needs: plan
+    needs: [plan, preflight]
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     timeout-minutes: 10

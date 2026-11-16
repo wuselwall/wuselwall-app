@@ -1,12 +1,14 @@
 # Accessibility and UI qualification for release candidates
 
-*Updated 2026-11-01. The candidate workflow, broad Flutter/web inventory, native audit
+*Updated 2026-11-15. Full promotion enforcement applies to beta/live;
+alpha uses the lighter [release policy](releasing.md). The candidate workflow, broad
+Flutter/web inventory, native audit
 adapters, reviewed-baseline comparison and release-promotion enforcement are implemented.
 Complete native runtime validation, successful qualification and human acceptance remain open.*
 
 The candidate must preserve the usability and appearance of the whole app, including
 screens whose source did not change. Qualification runs on an explicitly selected commit,
-on local runners, before that commit can be promoted. This extends
+on local runners, before that commit can be promoted in beta/live. This extends
 [18 — Testing strategy](18-testing-strategy.md) and supplies the implementation plan for
 the accessibility portion of the [release checklist](release-checklist.md).
 
@@ -367,14 +369,14 @@ signing, rather than running independently alongside publication. It rejects par
 cases, missing native profiles, unexpected result IDs and pending routes. Artifact names
 include the workflow run attempt so evidence from a rerun cannot mix with an earlier attempt.
 
-Android, iOS and server publishing workflows containing the web archive now depend on a
+In beta/live, Android, iOS and server publishing workflows containing the web archive depend on a
 read-only promotion guard. It verifies the exact release SHA, qualification workflow source,
 repository/default branch, explicit dispatch event, successful full comparison and
 `READY_FOR_REVIEW` summary. It checks the summary artifact's run/attempt, expiration and
 SHA-256 before accepting its contents. A green check with an arbitrary matching job name
 cannot authorize release. Both tag and manual publishing paths use the guard.
 
-Publishing additionally requires the `release-promotion` GitHub environment, at least one
+Beta/live publishing additionally requires the `release-promotion` GitHub environment, at least one
 required reviewer and administrator bypass disabled. The guard rejects absent or weaker
 protection. The protected publishing/signing job waits for human review of baseline changes
 and physical-device evidence. `summary.json` retains `qualified: false` even when automatic
@@ -402,13 +404,15 @@ device evidence remains part of the promotion checklist.
 | Slice | Implemented result | Remaining completion evidence |
 |---|---|---|
 | 1 | Shared inventory/clock, real-widget fixtures, Flutter/web detectors; Android/iOS smoke node and detector evidence | Full current native inventory and repeatability measurements |
-| 2 | 77 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
+| 2 | 84 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
 | 3 | Nine native phone/tablet, enlarged-text and Android minimum-API profiles; keyboard checkpoint and native report checks | Successful Android/iOS runtime runs, platform logs and physical-device behavior |
 | 4 | Manual exact-commit workflow, strict evidence aggregation, verified artifact provenance and protected app/server promotion dependencies | Successful full comparison followed by protected reviewer acceptance; implementation rejects missing evidence now |
 | 5 | Baseline review/runbook and fail-closed promotion protocol | Initial acceptance, VoiceOver/TalkBack and signed-device checklist; measured duration, resource use and flake rate |
 
-The publishing gate is blocking now: missing native execution or reviewed baselines prevent
-promotion. Capture runs remain useful diagnostic evidence but cannot authorize a release.
+The exhaustive publishing gate is blocking in beta/live: missing native execution or reviewed
+baselines prevent promotion. Alpha distribution instead requires the shared ordinary CI/backend
+gate; it does not establish full qualification. Capture runs remain useful diagnostic
+evidence but cannot authorize a beta/live release.
 Complete baseline review, native runtime validation and physical-device acceptance before
 describing any candidate as qualified.
 Do not retry away application failures. A narrow infrastructure retry preserves the first

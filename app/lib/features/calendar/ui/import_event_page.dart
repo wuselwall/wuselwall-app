@@ -25,6 +25,8 @@ import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/trips/application/trip_providers.dart';
+import 'package:wuselwall/features/trips/ui/trip_import_sheet.dart';
 
 /// "Termin übernehmen" (specs/05 "Sharing one event", the receiving side): shows the one
 /// event of a calendar file somebody sent, and adds it to the family calendar as the
@@ -178,6 +180,10 @@ class _ImportEventPageState extends ConsumerState<ImportEventPage> {
     final event = _event;
     final problem = _problem;
     final copy = _copy;
+    // Upcoming trips this file's events can be added to (specs/30).
+    final toTrip =
+        ref.watch(tripsOfferedProvider) &&
+        ref.watch(upcomingTripsProvider).isNotEmpty;
 
     Widget body;
     final known =
@@ -188,6 +194,12 @@ class _ImportEventPageState extends ConsumerState<ImportEventPage> {
       body = const Center(child: CircularProgressIndicator());
     } else if (!ref.watch(canImportEventProvider)) {
       body = _Note(text: l10n.eventImportParentsOnly);
+    } else if (problem == IcsImportProblem.severalEvents && toTrip) {
+      // A booking's file often holds several events: they can go into a trip (specs/30).
+      body = _Note(
+        text: l10n.tripImportSeveral,
+        action: _TripImportButton(bytes: widget.bytes, filled: true),
+      );
     } else if (problem != null) {
       body = _Note(text: _problemText(context, problem));
     } else if (_loadError != null) {
@@ -316,6 +328,10 @@ class _ImportEventPageState extends ConsumerState<ImportEventPage> {
                 copy == null ? l10n.eventImportAdd : l10n.eventImportUpdate,
               ),
             ),
+            if (toTrip) ...[
+              const SizedBox(height: Tokens.space2),
+              _TripImportButton(bytes: widget.bytes),
+            ],
           ],
         ],
       );
@@ -329,15 +345,50 @@ class _ImportEventPageState extends ConsumerState<ImportEventPage> {
 }
 
 class _Note extends StatelessWidget {
-  const _Note({required this.text});
+  const _Note({required this.text, this.action});
 
   final String text;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) => Center(
     child: Padding(
       padding: const EdgeInsets.all(Tokens.space6),
-      child: Text(text, textAlign: TextAlign.center),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(text, textAlign: TextAlign.center),
+          if (action != null) ...[
+            const SizedBox(height: Tokens.space4),
+            action!,
+          ],
+        ],
+      ),
     ),
   );
+}
+
+/// "Zur Reise hinzufügen": the file's events become entries of an upcoming trip.
+class _TripImportButton extends StatelessWidget {
+  const _TripImportButton({required this.bytes, this.filled = false});
+
+  final Uint8List bytes;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    void open() => unawaited(addCalendarFileToTrip(context, bytes));
+    final label = Text(context.l10n.tripImportAction);
+    return filled
+        ? FilledButton(
+            key: const ValueKey('import-event-to-trip'),
+            onPressed: open,
+            child: label,
+          )
+        : OutlinedButton(
+            key: const ValueKey('import-event-to-trip'),
+            onPressed: open,
+            child: label,
+          );
+  }
 }

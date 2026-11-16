@@ -15,7 +15,7 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 - **Personal** (en cuanto hay alguien elegido; siempre en tu propio teléfono): **Wusel** y **La ropa de Wusel**, el **sonido** de las tareas y, en tu propio teléfono, las **notificaciones**: **Recordatorios** en este teléfono, resumen matinal, recordatorio antes de las citas, recordatorio de material y aviso de eventos inciertos. Solo afectan a la persona elegida (ver [Wusel y los colores](/es/guide/wusel#how-lively)).
 - **Familia**: el **perfil de la familia** (nombre, zona horaria, exportación, eliminar), la **región** de festivos y vacaciones, los **miembros**, la **semana habitual** y **Compra en la vista infantil** (desactivada en una familia nueva). Se elige al añadir el primer colegio y se cambia aquí.
 - **Tareas y recompensas**: puntos de obligaciones y bonus, tipo inicial, revisión, comodines mensuales y aprobación de recompensas.
-- **Calendario y colegio**: cambios de niños, eventos nuevos en la pared, avisos de cambios escolares y material. La vista **Avanzados** añade **Compartir y conexiones**: compartir el calendario familiar y calendarios externos.
+- **Calendario y colegio**: cambios de niños, eventos nuevos en la pared, avisos de cambios escolares y material. La vista **Avanzados** añade **Compartir y conexiones**: compartir el calendario familiar y calendarios externos. Este grupo contiene también [Tiempo y mapas](/es/settings/services) para los viajes.
 - **Comidas**: qué comida es la caliente en días lectivos y en días libres, con dos botones: **Almuerzo** y **Cena** (predeterminado: cena en días lectivos, almuerzo en días libres). Con uno activado, esa es la comida caliente. Con los dos activados hay dos comidas calientes: el almuerzo y la cena aparecen juntos como comidas principales del día en la pared, en el plan de comidas y en **Hoy**, y la pregunta en la mesa se hace en las dos. Con los dos desactivados no hay comida caliente: la fila de comidas de la pared queda vacía ese día, la pregunta en la mesa va con la cena y una comida deseada se planifica en la cena. Además: ausencia como no comer, cuidado extraescolar para el almuerzo y comida deseada.
 - **Rituales**: pregunta en la mesa, nuestra semana y cuentas atrás, ver [más abajo](#rituals).
 - **Celebraciones y estaciones**: las decoraciones del cielo, primero **A lo largo del año** (estaciones, vacaciones, cumpleaños) y luego las **Fiestas** (Pascua, Pascua ortodoxa, Fiesta nacional, San Nicolás, Adviento, Navidad, Nochevieja).
@@ -64,3 +64,20 @@ Estos ajustes están en **Dispositivos → Este dispositivo** y valen solo para 
 | **Sonidos en este dispositivo** | silencia todo el dispositivo; de noche nunca hay sonido | Automático: apagados en la pantalla de pared, encendidos en los demás |
 | **Cielo en la cabecera** | el cielo que cambia con la hora del día | activado |
 | **Proteger la pantalla de quemaduras** | mueve todo hasta 2 píxeles cada 10 minutos, para pantallas OLED | Automático: activado en la pantalla de pared, desactivado en los demás |
+
+### Apariencia {#appearance}
+
+En **Apariencia** eliges qué aspecto tiene WuselWall en este dispositivo. La fila muestra la elección actual, por ejemplo «Automático · Fresco, Hora azul», y abre una hoja desde abajo. Arriba cambias entre **Automático** (claro u oscuro, según lo ajustado en el dispositivo), **Claro** y **Oscuro**. Debajo vienen el **Tema claro** y el **Tema oscuro**.
+
+<Shot name="first-look" alt="La hoja para elegir claro, oscuro o automático y los temas de colores" />
+
+Cada tema es una pequeña imagen de la app con sus colores. Un toque se aplica al instante, también a la página que queda detrás de la hoja, así que ves enseguida cómo queda. **Listo** cierra la hoja.
+
+- **Tema claro**: **Fresco** (blanco frío y mentolado, el del principio) y **Soleado** (crema soleada).
+- **Tema oscuro**: **Hora azul** (azul de la tarde, el del principio), **Pizarra** (gris frío), **Ciruela** (violeta del atardecer) y **Cacao** (marrón cálido).
+
+Un dispositivo guarda un tema claro y uno oscuro; el selector de arriba decide cuál de los dos se ve. La elección vale solo para este dispositivo y no cambia nada para los demás: los móviles de la familia no tienen que coincidir. No es un ajuste solo para padres.
+
+Un móvil personal (no la tableta familiar ni la pantalla de pared) muestra esta hoja por sí solo la primera vez que llega a la pantalla de inicio, con el título «¿Qué aspecto quieres para WuselWall?». Puedes cerrarla sin elegir; no vuelve, y todo se puede cambiar en **Ajustes → Apariencia**. Un móvil que ya tenía la app la ve una vez tras la actualización. La tableta y la pantalla de pared no reciben la pregunta; los padres cambian allí el tema en el mismo sitio de los ajustes.
+
+Los colores de los miembros de la familia son los mismos en todos los temas. Y la pantalla de pared sigue pasando a su vista nocturna de noche (por defecto desde las 21:00), sea cual sea la elección.
