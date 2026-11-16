@@ -25,7 +25,11 @@ import '../support/fakes.dart';
 
 final _de = AppLocalizationsDe();
 
-final _now = DateTime(2026, 11, 11, 9, 30);
+/// Today, because the calendar opens on the day of the device's own clock
+/// (`CalendarViewNotifier`), whatever `nowProvider` says: an appointment on a fixed
+/// date leaves the week in view when that week is over.
+final _today = DateUtils.dateOnly(DateTime.now());
+final _now = DateTime(_today.year, _today.month, _today.day, 9, 30);
 
 /// A server that answers and lists no trips.
 AppConfig _noTrips() => AppConfig(
@@ -41,7 +45,7 @@ AppConfig _noTrips() => AppConfig(
 );
 
 Occurrence _occurrence(String title, {String? tripId}) => Occurrence(
-  id: '$title|2026-11-11',
+  id: '$title|${_today.toIso8601String().substring(0, 10)}',
   eventId: 'e-$title',
   calendarId: 'cal',
   title: title,
@@ -49,10 +53,10 @@ Occurrence _occurrence(String title, {String? tripId}) => Occurrence(
   status: EventStatus.confirmed,
   importance: Importance.normal,
   allDay: true,
-  start: DateTime(2026, 11, 11),
-  end: DateTime(2026, 11, 12),
-  localStartDate: DateTime(2026, 11, 11),
-  localEndDate: DateTime(2026, 11, 11),
+  start: _today,
+  end: DateTime(_today.year, _today.month, _today.day + 1),
+  localStartDate: _today,
+  localEndDate: _today,
   tripId: tripId,
 );
 
@@ -120,8 +124,8 @@ void main() {
             title: 'Zahnarzt',
             kind: EventKind.appointment,
             isAllDay: true,
-            startDate: DateTime(2026, 11, 11),
-            endDate: DateTime(2026, 11, 11),
+            startDate: _today,
+            endDate: _today,
           ),
         },
       );
