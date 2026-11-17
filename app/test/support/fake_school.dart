@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/school/data/proposals_repository.dart';
 import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
@@ -349,6 +350,13 @@ class FakeSchoolRepository implements SchoolRepository {
       <({String? id, String name, String? regionCode, String? timezone})>[];
   final actors = <String?>[];
 
+  /// The one-off things to bring, as `school-week` sends them (`id`, `member_id`, `date`,
+  /// `title`); [savePackItem] and [deletePackItem] change them.
+  final packItems = <Map<String, String>>[];
+  final packSaves =
+      <({String? id, String profileId, DateTime date, String title})>[];
+  final packDeletes = <String>[];
+
   /// Saved schools join [data], as the server would return them on the refetch.
   @override
   Future<Result<String>> saveSchool({
@@ -389,11 +397,51 @@ class FakeSchoolRepository implements SchoolRepository {
     required DateTime to,
   }) async {
     final json = _weekJson(from, to);
+    json['pack'] = [
+      for (final p in packItems)
+        if (!parseDate(p['date']!)
+                .isBefore(DateTime(from.year, from.month, from.day)) &&
+            !parseDate(p['date']!).isAfter(DateTime(to.year, to.month, to.day)))
+          p,
+    ];
     // A child without a timetable gets none in the reply, as the projection would.
     if (!data.timetables.any((t) => t.profileId == kidId)) {
       json['timetables'] = <Map<String, dynamic>>[];
     }
     return Ok(SchoolWeek.fromJson(json));
+  }
+
+  @override
+  Future<Result<String>> savePackItem({
+    required String? actor,
+    String? id,
+    required String profileId,
+    required DateTime date,
+    required String title,
+  }) async {
+    actors.add(actor);
+    packSaves.add((id: id, profileId: profileId, date: date, title: title));
+    final newId = id ?? 'pack-${packSaves.length}';
+    packItems
+      ..removeWhere((p) => p['id'] == newId)
+      ..add({
+        'id': newId,
+        'member_id': profileId,
+        'date': ymd(date),
+        'title': title,
+      });
+    return Ok(newId);
+  }
+
+  @override
+  Future<Result<void>> deletePackItem({
+    required String? actor,
+    required String id,
+  }) async {
+    actors.add(actor);
+    packDeletes.add(id);
+    packItems.removeWhere((p) => p['id'] == id);
+    return const Ok(null);
   }
 
   @override

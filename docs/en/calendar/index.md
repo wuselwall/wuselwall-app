@@ -50,6 +50,8 @@ First you see tiles, so you don't have to type everything from scratch:
 
 What a tile fills in is only a start: change what differs in the editor and save. **Back** takes you to the tiles again.
 
+Under **School** there is also **Something to bring** ("For one child, on one day"). It is not an event: you note a one-off thing for one child, such as a gym bag, and it joins that child's packing list (see [Note something to bring once](/en/school/#one-off)).
+
 Next to **Holiday / trip** there is the tile **Plan a trip**: it opens [Trips](/en/trips/#find), where you compare options, look for time windows and make the packing list. **Holiday / trip**, by contrast, only creates a single appointment.
 
 <Shot name="calendar-templates" alt="New event with tiles: Often in your family, Your templates and templates such as Birthday and Guests for dinner" />

@@ -29,7 +29,7 @@ Arriba aparecen hora, fecha, número de semana y próxima cita del día con cuen
 
 La letra sigue el tamaño configurado en el dispositivo. Los resúmenes se abrevian sin encogerla y los detalles siguen completos. Si no caben tres partes del día, una fila resume las citas. Se mantienen visibles los siete días y todas las zonas.
 
-Toca la cabecera de día para su detalle, el nombre de un niño para su horario, el de un adulto para su semana o las comidas para el menú. La fila compacta completa es un botón. Con teclado, **Tab** mueve el foco visible; **Intro** o **Espacio** abre.
+Toca la cabecera de día para su detalle, el nombre de un niño para su horario (con el material de mañana; quien esté elegido puede [anotar o quitar algo para llevar](/es/school/#one-off)), el de un adulto para su semana o las comidas para el menú. La fila compacta completa es un botón. Con teclado, **Tab** mueve el foco visible; **Intro** o **Espacio** abre.
 
 El detalle vuelve a la semana tras un minuto. Los textos largos continúan en otra línea y los eventos pasados o clases canceladas siguen legibles sobre un fondo atenuado. El horario marca suplencias, cancelaciones y material para mañana.
 

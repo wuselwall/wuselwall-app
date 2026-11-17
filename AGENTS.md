@@ -76,6 +76,17 @@ by `api.events` and the `occurrences` function (migration `20261114120000_event_
 `310_event_reminder.test.sql`, feature flag `event-reminder`); the editor's *Erinnerung vorher*
 (15 minutes to 1 week, whole days for an all-day event), planned on each concerned person's phone
 as a local notification in place of their `notify.event_reminder`.
+One-off things to bring (2026-11-17, issue #289, [specs/15](specs/15-module-school-timetable.md) "One-off
+things to bring", FR-7.15): `app.pack_item` (a title of 1–80 characters for one child on one day,
+at most 20 a day, the same title kept once), written by `api.pack_item_save` and
+`api.pack_item_delete`, read through `api.pack_items` (migration `20261117100000_pack_items.sql`,
+pgTAP `325_pack_items.test.sql`, feature flag `pack-items`); every adult may note for any child, a
+child only for itself. The things join a day's packing list after the subjects' equipment (`toBring()`,
+`school-week` and `board-week` answer `pack`) on the child's Today, in the Stundenplan section, on the
+wall's pack strip, in `notify.packing_reminder` and in Siri's school answer, also for a child without a
+timetable; `school.equipment_hint` switches off only the subjects' equipment. Three entry points: the
+*Mitbringen* tile in *Neuer Termin* → *Schule*, the chips in the Stundenplan section, and the chips in
+the wall's child detail while someone is acting (`pack_item_sheet.dart`).
 Trips (2026-11-15, issue #265, [specs/30](specs/30-trips.md), FR-9): adults plan a vacation in one
 place. A trip is an idea, planned or fixed (`app.trip`, `trip_member`); what the family finds are
 entries (`trip_entry`: transport, stay, rental, activity, note; option, chosen or booked; prices
