@@ -5526,5 +5526,47 @@
       }
     }
   },
-  "totpSingleGuardianWarning": "You are the only parent with a signed-in account. If you lose access to your authenticator, another parent cannot reset your second factor. Invite a second parent and have them sign in first, or keep a separate backup of your authenticator. Otherwise you will need help from whoever runs your server. Turn on anyway?"
+  "totpSingleGuardianWarning": "You are the only parent with a signed-in account. If you lose access to your authenticator, another parent cannot reset your second factor. Invite a second parent and have them sign in first, or keep a separate backup of your authenticator. Otherwise you will need help from whoever runs your server. Turn on anyway?",
+  "packItemTile": "Something to bring",
+  "packItemTileHelp": "For one child, on one day",
+  "packItemAdd": "Something to bring",
+  "packItemWho": "Who brings it",
+  "packItemWhen": "When",
+  "packItemToday": "Today",
+  "packItemTomorrow": "Tomorrow",
+  "packItemDayAfter": "Day after tomorrow",
+  "packItemOtherDay": "Another day …",
+  "packItemWhat": "What",
+  "packItemWhatHint": "e.g. gym bag, signed form",
+  "packItemSave": "Add",
+  "packItemSaved": "Noted for {name}: {title}",
+  "@packItemSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "packItemRemove": "Remove {title}",
+  "@packItemRemove": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "packItemRemoved": "{title} removed",
+  "@packItemRemoved": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "errPackItemInvalid": "That can’t be noted: up to 80 characters, for a child of the family, at most 20 things a day.",
+  "errPackItemNotFound": "This thing to bring is no longer on the list.",
+  "errPackItemNotYours": "You can note things only for yourself."
 }

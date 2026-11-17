@@ -107,6 +107,8 @@ export type ShortcutContext = {
   overrides?: OverrideRow[];
   external?: ExternalOccurrenceRow[];
   school?: SchoolRows;
+  /** The one-off things to bring of the window, with `school` (absent before them). */
+  pack?: { member_id: string; date: string; title: string }[];
   meals?: MealRow[];
   tasks?: TaskRow[];
 };
@@ -1006,9 +1008,22 @@ function equipmentOf(day: SchoolDayJson): string[] {
   ];
 }
 
+/** The one-off things to bring a person noted for the member on the date (specs/15). */
+function packOf(ctx: ShortcutContext, memberId: string, date: string): string[] {
+  return (ctx.pack ?? [])
+    .filter((p) => p.member_id === memberId && p.date === date)
+    .map((p) => p.title);
+}
+
+/** The day's equipment and the noted things, each once, the equipment first. */
+function toBring(equipment: string[], pack: string[]): string[] {
+  return [...new Set([...equipment, ...pack])];
+}
+
 /**
  * "Hat Mia morgen Sport?" (with a subject) or "Was hat Mia morgen?" (without): the member's
- * projected school day. Weekends, holidays and days without a timetable are answered as such.
+ * projected school day. Weekends, holidays and days without a timetable are answered as such;
+ * the one-off things to bring of the day are named on any of them.
  */
 export function answerSchool(
   ctx: ShortcutContext,
@@ -1023,16 +1038,30 @@ export function answerSchool(
     d.member_id === member.id && d.date === date
   );
   const base = { member: name, date };
+  const pack = packOf(ctx, member.id, date);
+  const withPack = (text: string) =>
+    pack.length > 0 ? `${text} ${m.equipment(pack)}` : text;
   if (!day) {
-    return { text: m.noTimetable(name), data: { ...base, school: false } };
+    return {
+      text: withPack(m.noTimetable(name)),
+      data: { ...base, school: false, equipment: pack },
+    };
   }
   if (day.free === "weekend") {
-    return { text: m.weekend(name, when), data: { ...base, free: "weekend" } };
+    return {
+      text: withPack(m.weekend(name, when)),
+      data: { ...base, free: "weekend", equipment: pack },
+    };
   }
   if (day.free === "holiday") {
     return {
-      text: m.holiday(name, when, day.holiday_name),
-      data: { ...base, free: "holiday", holiday: day.holiday_name },
+      text: withPack(m.holiday(name, when, day.holiday_name)),
+      data: {
+        ...base,
+        free: "holiday",
+        holiday: day.holiday_name,
+        equipment: pack,
+      },
     };
   }
 
@@ -1049,7 +1078,7 @@ export function answerSchool(
       status: l.status,
       room: l.room,
     })),
-    equipment: ctx.equipment_hint ? equipmentOf(day) : [],
+    equipment: toBring(ctx.equipment_hint ? equipmentOf(day) : [], pack),
   };
 
   if (subject !== null) {
@@ -1087,7 +1116,7 @@ export function answerSchool(
 
   const held = lessons.filter((l) => l.status !== "cancelled");
   if (held.length === 0 || day.starts === null || day.ends === null) {
-    return { text: m.noLessons(name, when), data };
+    return { text: withPack(m.noLessons(name, when)), data };
   }
   const subjects = [...new Set(held.map((l) => l.subject))];
   const sentences = [m.schoolDay(name, when, day.starts, day.ends, subjects)];

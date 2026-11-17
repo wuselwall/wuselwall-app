@@ -1,6 +1,7 @@
 // POST {from, to} → the school days of the caller's children for a window of local
-// dates (at most 62), and the timetables valid on `from` (specs/15, contract "Edge
-// Functions"). Acts as the caller, so RLS applies (ADR-010).
+// dates (at most 62), the timetables valid on `from` and the one-off things to bring
+// dated in the window (`pack`, specs/15; also for a child without a timetable). Acts as
+// the caller, so RLS applies (ADR-010).
 import {
   errorResponse,
   json,
@@ -24,6 +25,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return json({
       timetables: timetablesJson(data, from),
       days: projectSchoolDays(data, from, to),
+      pack: data.packItems,
     });
   } catch (err) {
     return errorResponse(err);
