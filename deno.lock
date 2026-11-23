@@ -130,9 +130,9 @@
     "packageJson": {
       "dependencies": [
         "npm:axe-core@4.14.0",
-        "npm:playwright@^1.65.0",
+        "npm:playwright@^1.65.1",
         "npm:sharp@~0.35.5",
-        "npm:supabase@^3.0.0",
+        "npm:supabase@^3.1.0",
         "npm:vitepress@^1.6.4"
       ],
       "overrides": {
