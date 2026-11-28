@@ -11,6 +11,7 @@ import 'package:wuselwall/features/calendar/ui/calendar_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/new_tradition_sheet.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
+import 'package:wuselwall/features/kid/application/child_view.dart';
 import 'package:wuselwall/features/trips/application/trip_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -64,8 +65,10 @@ class CalendarFab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    // A new event starts on the day in view, not always today.
+    // A new event starts on the day in view, not always today. A child's calendar
+    // starts today, whatever week an adult left the calendar on.
     DateTime day() =>
+        ref.read(childCalendarProvider)?.from ??
         ref.read(calendarViewProvider).newEventDay(ref.read(nowProvider));
     final newEvent = FloatingActionButton.extended(
       onPressed: () =>

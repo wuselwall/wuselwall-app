@@ -6,7 +6,7 @@ Für alle gilt:
 
 - **Ein Ritual ist nie eine Pflicht.** Es bringt keine Punkte, hat keine Serie und kann nicht „verpasst“ werden. Lasst ihr es aus, bleibt keine Spur.
 - **Niemand wird verglichen.** Nichts zählt eine Person gegen eine andere.
-- **Keine Benachrichtigungen.** Rituale erscheinen dort, wo ihr ohnehin hinschaut: an der Wand, auf **Heute** und auf **Mein Tag** der Kinder.
+- **Keine Benachrichtigungen.** Rituale erscheinen dort, wo ihr ohnehin hinschaut: an der Wand, auf **Heute** und in der Ansicht der Kinder (bei Kindern ab 12 auf **Mein Tag**).
 - **Alles ist abschaltbar**, jedes für sich, unter **Einstellungen → Rituale** (siehe [Alle Einstellungen](/settings/household#rituals)). Am Anfang ist alles an.
 
 <Shot name="wall-board" alt="Wandanzeige mit Wusel in der Kopfzeile, einer Familientradition am Freitag, einem Wunschessen mit Stern und dem Geburtstags-Countdown in der Fußzeile" wide />
@@ -31,7 +31,7 @@ In einem [Abo des Familienkalenders](/calendar/feeds) steht jeder Geburtstag als
 - jeden Termin, bei dem im Editor **Darauf freuen wir uns** eingeschaltet ist, etwa den Zoobesuch (siehe [Kalender](/calendar/#termin-anlegen))
 - eine **feste Reise** (siehe [Reisen](/trips/#from-idea-to-fixed))
 
-Zu sehen ist er auf der **Wand** in der Fußzeile, so viele wie hineinpassen, auf **Mein Tag** unter **Worauf ich mich freue** (die Countdowns des Kindes und die der ganzen Familie) und auf **Heute** als eine Zeile mit dem nächsten Countdown.
+Zu sehen ist er auf der **Wand** in der Fußzeile, so viele wie hineinpassen, bei Kindern ab 12 auf **Mein Tag** unter **Worauf ich mich freue** (die Countdowns des Kindes und die der ganzen Familie) und auf **Heute** als eine Zeile mit dem nächsten Countdown.
 
 Kinder und Wand zählen bis zu einer Woche vorher in Nächten („noch 3× schlafen“), davor in Tagen („noch 9 Tage“). Erwachsene lesen „in 3 Tagen“. Am Vortag steht dort **Morgen!**, am Tag selbst **Heute!**, und Wusel winkt oben in der Kopfzeile der Wand dazu. Danach verschwindet der Countdown.
 
@@ -49,12 +49,12 @@ Fällt eine Tradition einmal aus, löschst du **Nur dieser Termin**. Nichts merk
 
 Jedes Kind darf sich ein Essen wünschen; wie viele Wünsche gleichzeitig offen sein dürfen, legt ihr fest (Standard: einer). So reden die Kinder beim Essensplan mit.
 
-- **Auf Mein Tag** steht die Karte **Dein Wunschessen**. **Wünschen** öffnet die Auswahl: zuerst **Oft bei uns**, die Essen, die ihr in letzter Zeit am häufigsten gekocht habt, dann **Unsere Rezepte**, alle mit Bild (bei vielen Rezepten hilft **Rezept suchen**), und unten **Etwas anderes** mit ein paar Worten, etwa „Pfannkuchen“, und einem Bild dazu (**Such dir ein Bild aus**). Mit **Das wünsche ich mir** ist der Wunsch unterwegs. Bis er geplant ist, lässt er sich **ändern**.
+- In der Ansicht der Kinder steht auf **Heute** die Karte **Dein Wunschessen** (bei Kindern ab 12 auf **Mein Tag**). **Wünschen** öffnet die Auswahl: zuerst **Oft bei uns**, die Essen, die ihr in letzter Zeit am häufigsten gekocht habt, dann **Unsere Rezepte**, alle mit Bild (bei vielen Rezepten hilft **Rezept suchen**), und unten **Etwas anderes** mit ein paar Worten, etwa „Pfannkuchen“, und einem Bild dazu (**Such dir ein Bild aus**). Mit **Das wünsche ich mir** ist der Wunsch unterwegs. Bis er geplant ist, lässt er sich **ändern**.
 - **Die Erwachsenen** sehen die Wünsche oben im [Essensplan](/meals/#wishes) unter **Wünsche**, jeden mit seinem Bild, und als ruhige Karte auf **Heute**. Ein Tipp auf einen Wunsch, dann Tag und Mahlzeit wählen, und er ist eingeplant.
 - **Wünschen alle**, wünschen sich die Erwachsenen im Essensplan selbst etwas: **Selbst wünschen** in der Zeile **Wünsche** öffnet dieselbe Auswahl, **Meinen Wunsch ändern** ändert den offenen.
 - **Geplant** trägt das Essen im Plan und an der Wand einen Stern und „Wunsch von Paul“. Auf der Karte des Kindes steht dann zum Beispiel „Dein Wunsch Pfannkuchen gibt es am Donnerstag!“.
 
-<Shot name="kid-wish" alt="Mein Tag auf dem Kinder-Tablet mit der Karte Dein Wunschessen" wide />
+<Shot name="kid-wish" alt="Die einfache Ansicht eines Kindes mit der Karte Dein Wunschessen" wide />
 
 Ein Wunsch wird in der App **nie abgelehnt**. Ein nicht geplanter Wunsch wartet einfach weiter, in der nächsten Woche mit dem Zusatz **von letzter Woche**. Nach vier Wochen verschwindet ein Wunsch, der nie geplant wurde, still aus der Liste und zählt nicht mehr mit; das Kind kann sich einfach Neues wünschen. Eltern können einen Wunsch entfernen; warum, besprecht ihr miteinander.
 
@@ -64,7 +64,7 @@ Wer wünschen darf, legt **Wunschessen** fest: **Kinder** (Standard), **Alle** o
 
 Eine Frage für den Tisch, laut beantwortet. Gespeichert wird nichts: nicht, wer geantwortet hat, nicht was, und nicht einmal, ob die Frage gestellt wurde.
 
-Die Frage erscheint während des Essens: oben in der Kopfzeile der Wand, auf **Mein Tag** und auf **Heute**. Alle Geräte zeigen dieselbe Frage, und keine kommt wieder, bevor alle einmal dran waren.
+Die Frage erscheint während des Essens: oben in der Kopfzeile der Wand, in der Ansicht der Kinder und auf **Heute**. Alle Geräte zeigen dieselbe Frage, und keine kommt wieder, bevor alle einmal dran waren.
 
 - **Andere Frage** zeigt die nächste, aber nur auf diesem Gerät. Sagt einfach „nimm die nächste“.
 - Bei einem Rätsel zeigt **Antwort zeigen** die Lösung.
@@ -79,7 +79,7 @@ Jedes Gerät zeigt die Fragen in seiner Sprache: rund 300 auf Deutsch und Englis
 
 ## Wochenrückblick {#week-review}
 
-Am Sonntag schaut ihr zusammen auf **Unsere Woche**: was *wir* gemacht haben. Ab Sonntag 16 Uhr bis Montag 10 Uhr steht auf **Heute** und **Mein Tag** eine Karte, an der Wand eine Kachel in der Fußzeile. Ein Tipp öffnet eine Geschichte aus bis zu fünf Karten, eine nach der anderen, bildschirmfüllend:
+Am Sonntag schaut ihr zusammen auf **Unsere Woche**: was *wir* gemacht haben. Ab Sonntag 16 Uhr bis Montag 10 Uhr steht auf **Heute** und in der Ansicht der Kinder eine Karte, an der Wand eine Kachel in der Fußzeile. Ein Tipp öffnet eine Geschichte aus bis zu fünf Karten, eine nach der anderen, bildschirmfüllend:
 
 - **Weiter** mit einem Tipp auf die rechte Seite, einem Wisch nach links oder der Pfeiltaste; **zurück** mit einem Tipp auf das linke Drittel, einem Wisch nach rechts oder der anderen Pfeiltaste. Die Pfeile unten tun dasselbe.
 - Die Striche oben zeigen, wie viele Karten es sind und wo ihr steht. Nach der letzten Karte, mit **Schließen** oder mit Esc ist der Rückblick zu.

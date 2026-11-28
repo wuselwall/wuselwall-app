@@ -124,10 +124,10 @@ editor is built, not after.*
 | # | Question | Answer |
 |---|---|---|
 | Q29 | Tiles with pictures, or a text list, for capture? | **Decided 2026-09-02: tiles**, with a self-hosted icon set. See [07](07-module-meals-shopping.md#settled-on-2026-09-02) |
-| Q30 | May the children add shopping items? | **Decided 2026-09-02: yes**, same screen as everyone else, with the adder's colour on each row. Since 2026-11-04 the kid register's tab for it is a guardian's switch, off for a new family (`household.kid_shopping`); the wall's tiles stay |
+| Q30 | May the children add shopping items? | **Decided 2026-09-02: yes**, same screen as everyone else, with the adder's colour on each row. Since 2026-11-04 the kid register's tab for it is a guardian's switch, off for a new family (`household.kid_shopping`). Since 2026-11-28 the switch covers every place a child meets the list: the simple view, the tablet for everyone and the wall while nobody or a child is chosen ([09](09-clients-and-ux.md#screens-by-register)) |
 | Q31 | One shopping list or several? | **Decided 2026-09-02: several**, with Supermarkt as the default and the only one on the wall |
 | Q32 | How is quantity captured without a numeric field? | **Decided 2026-09-02:** tap counts up; long press opens one free-text field ("Bio", "500 g", "Dose") |
-| Q33 | Should the kiosk be able to add to the shopping list? | **Decided 2026-09-02: yes**, tiles only, no search field, default list only (FR-8.12) |
+| Q33 | Should the kiosk be able to add to the shopping list? | **Decided 2026-09-02: yes**, tiles only, no search field, default list only (FR-8.12). Since 2026-11-28, where `household.kid_shopping` is off, only once an adult has tapped their name |
 | Q34 | Merge "wer ist wo" and "Termine" on the week board? | **Decided 2026-09-02: no** — see the rejected layouts in [09](09-clients-and-ux.md#considered-and-rejected-merging-the-zones) |
 
 ## Later questions (former M2)

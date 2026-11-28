@@ -81,7 +81,7 @@ class KidHome extends ConsumerWidget {
             ).style,
             fits: false,
           );
-    return _KidChrome(
+    return KidChrome(
       child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -256,16 +256,16 @@ class KidHome extends ConsumerWidget {
 /// 2026-10-26: held sideways the bars left no room for the page), and a page's
 /// message, such as a tick's "Rückgängig", goes when the child switches tab or
 /// person, so nobody undoes someone else's chore.
-class _KidChrome extends ConsumerStatefulWidget {
-  const _KidChrome({required this.child});
+class KidChrome extends ConsumerStatefulWidget {
+  const KidChrome({required this.child, super.key});
 
   final Widget child;
 
   @override
-  ConsumerState<_KidChrome> createState() => _KidChromeState();
+  ConsumerState<KidChrome> createState() => _ChromeState();
 }
 
-class _KidChromeState extends ConsumerState<_KidChrome> {
+class _ChromeState extends ConsumerState<KidChrome> {
   bool? _phone;
 
   @override

@@ -1,6 +1,7 @@
 {
   "@@locale": "de_CH",
   "close": "Schliessen",
+  "boardShoppingAskAdult": "Die Einkaufsliste ist für die Grossen. Tipp auf deinen Namen.",
   "boardPeriod": "{index}. Lektion",
   "boardTasksOf": "Ämtli von {name}",
   "tripPlanOutside": "Ausserhalb der Reisedaten",

@@ -7,6 +7,16 @@ Auf **geteilten Geräten** und an der **Wandanzeige** benutzen mehrere Personen 
 - Ohne Namen kann man nichts ändern. Das Gerät fordert dazu auf: „Tippe zuerst auf deinen Namen.“
 - An der **Wandanzeige** springt das Gerät nach **einer Minute ohne Berührung** auf „niemand“ zurück, damit die nächste Person nicht aus Versehen als du handelt.
 
+## Was Kinder sehen {#what-children-see}
+
+Tippt ein **Kind unter 12** auf seinen Namen, öffnet sich auf jedem geteilten Gerät seine **einfache Ansicht**: eine Seite ohne Reiter mit nur seinen eigenen Dingen (siehe [Kinder-Tablet](/guide/wall#simple-view)). Unten bleibt die Reihe der Namen stehen, damit das Gerät weitergereicht werden kann. Ein Kind ab 12 behält auf dem Kinder-Tablet seine Reiter und auf dem Tablet für alle die Reiter der Erwachsenen, ohne **Kalender** und **Einkaufen**, wo diese für Kinder ausgeschaltet sind.
+
+Solange niemand seinen Namen getippt hat, zeigt ein **Tablet für alle** die Reiter, die auch ein Kind sehen darf, denn es könnte ein Kind davorstehen. Dort fehlen dann **Einkaufen** und **Kalender**, wo die Eltern sie unter [Einstellungen → Familie](/settings/household#the-areas) für Kinder ausgeschaltet haben (**Einkaufen für Kinder**, **Kalender für Kinder**). Sobald ein Erwachsener auf seinen Namen tippt, ist alles wieder da.
+
+<Shot name="tablet-nobody" alt="Tablet für alle ohne ausgewählte Person und mit ausgeschaltetem Einkaufen für Kinder: fünf Reiter, unten die Reihe der Namen" wide />
+
+Die Namen sind eine Verabredung, kein Schloss: Tippt ein Kind auf den Namen eines Elternteils, sieht es die Ansicht dieses Elternteils. Was wirklich zählt, bleibt hinter der PIN (siehe den Abschnitt zur PIN unten).
+
 ## Einstellungen auf dem Tablet und an der Wand {#settings-on-shared-devices}
 
 Auf einem **Tablet für alle** gibt es das Zahnrad für die **Einstellungen** erst, wenn jemand seinen Namen getippt hat. Was du dann findest, hängt davon ab, wer du bist:

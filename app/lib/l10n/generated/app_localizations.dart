@@ -1508,6 +1508,12 @@ abstract class AppLocalizations {
   /// **'Back to the week'**
   String get boardBackToWeek;
 
+  /// No description provided for @boardShoppingAskAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'The shopping list is for the grown-ups. Tap your name.'**
+  String get boardShoppingAskAdult;
+
   /// No description provided for @boardTentative.
   ///
   /// In en, this message translates to:
@@ -2233,6 +2239,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today'**
   String get calendarToday;
+
+  /// No description provided for @calendarChildDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Today and the next three days'**
+  String get calendarChildDays;
 
   /// No description provided for @calendarRange.
   ///
@@ -4927,6 +4939,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hi! Tap your name.'**
   String get kidWhoAreYou;
+
+  /// No description provided for @kidSimpleBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get kidSimpleBack;
+
+  /// No description provided for @kidSimpleTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get kidSimpleTomorrow;
+
+  /// No description provided for @kidSimpleAppointments.
+  ///
+  /// In en, this message translates to:
+  /// **'My appointments'**
+  String get kidSimpleAppointments;
+
+  /// No description provided for @kidSimpleNoSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'No school.'**
+  String get kidSimpleNoSchool;
+
+  /// No description provided for @kidSimpleNeeds.
+  ///
+  /// In en, this message translates to:
+  /// **'You need: {items}'**
+  String kidSimpleNeeds(String items);
+
+  /// No description provided for @kidSimpleNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is planned yet.'**
+  String get kidSimpleNothing;
 
   /// No description provided for @kidGreeting.
   ///
@@ -9352,14 +9400,26 @@ abstract class AppLocalizations {
   /// No description provided for @settingHouseholdKidShoppingTitle.
   ///
   /// In en, this message translates to:
-  /// **'Shopping in the children\'s view'**
+  /// **'Shopping for children'**
   String get settingHouseholdKidShoppingTitle;
 
   /// No description provided for @settingHouseholdKidShoppingHelp.
   ///
   /// In en, this message translates to:
-  /// **'Adds the Shopping tab to the children\'s view, where they add and tick items. On the wall display they can add items either way.'**
+  /// **'Children add and tick items on the shopping list. Off: children have no shopping list, and on the tablet for everyone and the wall display it opens only once an adult has tapped their name.'**
   String get settingHouseholdKidShoppingHelp;
+
+  /// No description provided for @settingHouseholdKidCalendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar for children'**
+  String get settingHouseholdKidCalendarTitle;
+
+  /// No description provided for @settingHouseholdKidCalendarHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Children see their own appointments for today and the next three days. Off: only today. Until an adult taps their name, the tablet for everyone then has no Calendar tab.'**
+  String get settingHouseholdKidCalendarHelp;
 
   /// No description provided for @settingRitualsCountdownDaysTitle.
   ///

@@ -2,7 +2,7 @@
 
 WuselWall should not only keep order but also make the day a little lighter. That is what **Wusel** is for, a small round creature that is pleased by what the family gets done, and the **colours**, which follow the time of day and the year.
 
-<Shot name="kid-today" alt="My day on the children's tablet: Wusel greets Olivia, her chores below" wide />
+<Shot name="kid-today" alt="The simple view of a child under 12: Wusel greets Olivia, her points beside it, the buttons Today and Tomorrow and her chores below" wide />
 
 ## Who Wusel is {#who}
 
@@ -12,7 +12,7 @@ Wusel praises what happened, not the person: "All done. That went well!" rather 
 
 ## Where Wusel appears {#where}
 
-- **My day** on the children's tablet: Wusel waves and greets the child by name, with one useful thing about today: their own birthday, a new badge, a family tradition ("Today is Pizza Friday!"), the first lesson ("Today you start with maths."), the warm meal, or what the child is looking forward to.
+- **My day** and the simple view of children under 12: Wusel waves and greets the child by name, with one useful thing about today: their own birthday, a new badge, a family tradition ("Today is Pizza Friday!"), the first lesson ("Today you start with maths."), the warm meal, or what the child is looking forward to.
 - **The child's own birthday**: the first time **My day** opens that day, Wusel in the party hat fills the whole screen with confetti for two seconds (a tap closes it sooner). Once a day per device, not during the night hours, and only while the **Birthdays** occasion is on.
 - **Waiting and no connection**: if **My day** takes longer than two seconds to load, or the tablet has no connection, Wusel thinks: "Just a moment…" or "Hang on, looking for the internet…".
 - **The last chore of the day**: Wusel cheers, with confetti and a short sound.

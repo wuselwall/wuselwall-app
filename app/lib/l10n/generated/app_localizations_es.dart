@@ -813,6 +813,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get boardBackToWeek => 'Volver a la semana';
 
   @override
+  String get boardShoppingAskAdult =>
+      'La lista de la compra es para los mayores. Toca tu nombre.';
+
+  @override
   String get boardTentative => 'aún sin confirmar';
 
   @override
@@ -1241,6 +1245,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get calendarToday => 'Hoy';
+
+  @override
+  String get calendarChildDays => 'Hoy y los tres días siguientes';
 
   @override
   String calendarRange(String from, String to) {
@@ -2802,6 +2809,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => '¡Hola! Toca tu nombre.';
+
+  @override
+  String get kidSimpleBack => 'Atrás';
+
+  @override
+  String get kidSimpleTomorrow => 'Mañana';
+
+  @override
+  String get kidSimpleAppointments => 'Mis citas';
+
+  @override
+  String get kidSimpleNoSchool => 'No hay colegio.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'Necesitas: $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Todavía no hay nada previsto.';
 
   @override
   String kidGreeting(String name) {
@@ -5579,11 +5606,18 @@ class AppLocalizationsEs extends AppLocalizations {
       'La bandera de vuestro país en la colina en su fiesta nacional, como el 1 de agosto en Suiza. El país sale de vuestra región.';
 
   @override
-  String get settingHouseholdKidShoppingTitle => 'Compra en la vista infantil';
+  String get settingHouseholdKidShoppingTitle => 'Compra para los niños';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Añade la pestaña Compra a la vista infantil, donde añaden y marcan artículos. En la pantalla de pared pueden añadirlos de todos modos.';
+      'Los niños añaden y marcan artículos en la lista de la compra. Desactivado: los niños no tienen lista de la compra, y en la tableta compartida y la pantalla de pared solo se abre cuando un adulto ha tocado su nombre.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Calendario para los niños';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Los niños ven sus propias citas de hoy y de los tres días siguientes. Desactivado: solo hoy. La tableta compartida no tiene entonces la pestaña Calendario hasta que un adulto toque su nombre.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'La cuenta atrás empieza';

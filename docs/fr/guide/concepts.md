@@ -36,7 +36,7 @@ Tout appartient à un **foyer**, votre famille. Il comprend des **membres**, ave
 | Rôle | Droits |
 |---|---|
 | **Parent** | Administrer les membres, les appareils et la sécurité, confirmer les récompenses |
-| **Autre adulte**, par exemple un grand-parent, ou **enfant** | Ajouter et cocher des courses, terminer les achats et utiliser les fonctions autorisées |
+| **Autre adulte**, par exemple un grand-parent, ou **enfant** | Ajouter et cocher des courses, terminer les achats et utiliser les fonctions autorisées ; pour les enfants, seulement là où la famille a activé **Courses pour les enfants** |
 
 ## Trois types d’appareils {#three-kinds-of-devices}
 

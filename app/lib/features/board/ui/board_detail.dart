@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/board/ui/kiosk_canvas.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 
 /// Opens a tap-through detail over the week board (specs/09 "Touch behaviour"). It
 /// fills the screen but for a margin that keeps the board visible behind it, and it
@@ -50,7 +52,7 @@ Future<void> showBoardDetail(
   },
 );
 
-class _BoardDetail extends StatefulWidget {
+class _BoardDetail extends ConsumerStatefulWidget {
   const _BoardDetail({
     required this.title,
     required this.subtitle,
@@ -64,10 +66,10 @@ class _BoardDetail extends StatefulWidget {
   final Widget body;
 
   @override
-  State<_BoardDetail> createState() => _BoardDetailState();
+  ConsumerState<_BoardDetail> createState() => _BoardDetailState();
 }
 
-class _BoardDetailState extends State<_BoardDetail> {
+class _BoardDetailState extends ConsumerState<_BoardDetail> {
   Timer? _timer;
 
   void _touch() {
@@ -93,6 +95,12 @@ class _BoardDetailState extends State<_BoardDetail> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ww = context.ww;
+    // A child under twelve who taps their name in a detail (the chore board, the
+    // shopping list) gets their simple view, which takes the wall: the detail makes
+    // way for it (specs/09 "The simple view").
+    ref.listen(youngChildActingProvider, (_, young) {
+      if (young) unawaited(Navigator.of(context).maybePop());
+    });
     return Listener(
       behavior: HitTestBehavior.translucent,
       onPointerDown: (_) => _touch(),

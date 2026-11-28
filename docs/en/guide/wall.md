@@ -2,11 +2,49 @@
 
 ## Children's tablet {#childrens-tablet}
 
-A children's device shows everything **larger and simpler**. Children tap their name and see their own day.
+A children's device shows everything **larger and simpler**. Children tap their name and see their own day. What they see depends on their age.
+
+### Children under 12: the simple view {#simple-view}
+
+A child under 12 gets the simple view as soon as they have tapped their name, on every device: on the children's tablet, on the tablet for everyone, on the wall display and on the child's own phone. What counts is the birthday on the child's page; if none is entered, the child counts as under 12. The simple view is **one page without tabs** and shows only what concerns this child.
+
+At the top, [Wusel](/en/guide/wusel) greets the child, with their points beside it. A tap on the points opens the page with rewards and badges; **Back** at the top returns to the page.
+
+Below are four day buttons: **Today**, **Tomorrow** and the two following weekdays by name. The child can look at today and the next three days, and no further. There is no other calendar for them.
+
+<Shot name="kid-days" alt="A child's simple view with the Tomorrow button chosen and the things for tomorrow below it" wide />
+
+For the chosen day the page shows:
+
+- Only on **Today**: the chores to tick (**My chores**).
+- A school card with the day's times. A tap shows the lessons, and **Back** returns to the page.
+- What to pack: on today, what tomorrow needs; on another day, what that day needs.
+- The appointments the child takes part in, and only those (on a day other than today under **My appointments**).
+- The warm meal.
+- Only on **Today**, also the card **Your meal wish** and, at their time, the [question at the table](/en/guide/rituals#table-question) and **Our week** (see [Rituals](/en/guide/rituals)).
+
+A day ahead with nothing on it says: "Nothing is planned yet."
+
+At the end is a **Shopping** card, but only if the family has switched on shopping for children (see [below](#kids-switches)). It opens the tiles; **Back** returns to the page.
+
+On a shared device the row of names stays at the bottom, so the device can be handed to someone else (see [Who are you?](/en/guide/who-are-you)).
+
+### Children aged 12 and older {#older-children}
+
+Children aged 12 and older keep the view with tabs. On the **children's tablet** these are **My day**, **Timetable**, **Points** and **Family**, and **Shopping** when it is switched on.
 
 On **My day**, [Wusel](/en/guide/wusel) greets the child. Below are their chores, **Looking forward to**, today's school in one card (a tap opens the timetable), the meal, the card **Your meal wish** and, on a day that has them, the appointments; during the meal the [question at the table](/en/guide/rituals#table-question), and on Sunday evening **Our week** (see [Rituals](/en/guide/rituals)).
 
-The **Shopping** tab is off in a new family; families that were already using WuselWall keep it. A parent switches it with **Shopping in the children's view** under [Settings → Family](/en/settings/household#the-areas). With it, children add and tick items like everyone else — even before they can spell, because the tiles need no keyboard. On the wall display they can add items either way.
+On the **tablet for everyone**, children aged 12 and older have the same tabs as the adults, but without **Calendar** and **Shopping** where the family has switched them off for children. Their **Calendar** tab shows only their own appointments for today and the next three days (the bar says "Today and the next three days"). There is no week or month view and no one else's appointments.
+
+### Shopping and calendar for children {#kids-switches}
+
+Two switches under [Settings → Family](/en/settings/household#the-areas) decide what children see of the shopping list and the calendar:
+
+- **Shopping for children**: off in a new family; families that were already using WuselWall keep it on. When it is on, children add and tick items like everyone else, even before they can spell, because the tiles need no keyboard. When it is off, children have no shopping list anywhere. On the tablet for everyone the **Shopping** tab is then missing while nobody is chosen or a child is chosen. On the wall display the shopping list in the footer opens only once an adult has tapped their name; until then it says: "The shopping list is for the grown-ups. Tap your name." An adult who taps their name gets everything back.
+- **Calendar for children**: on from the start. Children then see their own appointments for today and the next three days. When it is off, they see only today: the day buttons disappear, and the tablet for everyone has no **Calendar** tab while nobody is chosen or a child is chosen. The wall's week board always stays. On an older server the calendar for children is simply always on.
+
+Both switches also apply on the tablet for everyone while nobody has tapped a name yet, because a child may be standing there. Names are an agreement, not a lock: if a child taps a parent's name, they see that parent's view. What really matters still asks for the PIN (see [Who are you?](/en/guide/who-are-you)).
 
 <Shot name="kid-shopping" alt="Children's view of the shopping list" wide />
 
@@ -39,13 +77,14 @@ On the chore board Wusel cheers at the top of a person's column as soon as they 
 
 The text follows the device's text-size setting. At larger sizes the wall uses shorter summaries with ellipses instead of shrinking letters. Dates, school notes, care, further appointments and meals remain available in the details. A short counter such as **+2** means two further appointments. When three day parts cannot fit vertically, the appointment area summarises each day's appointments in one row. Day names, all seven columns and every area stay visible.
 
-In compact rows the **whole member row** is one large button: it opens a child's weekly timetable or an adult's week. For a particular school day or care, tap the day header. With a keyboard, use **Tab** to move between buttons; a visible outline shows focus, and **Enter** or **Space** opens the details.
+In compact rows the **whole member row** is one large button: it opens the simple view for a child under 12, the weekly timetable for an older child and the week for an adult. For a particular school day or care, tap the day header. With a keyboard, use **Tab** to move between buttons; a visible outline shows focus, and **Enter** or **Space** opens the details.
 
 A tap shows more, and after a minute the display returns to the week by itself:
 
 - on a **day header**: that whole day
-- on a **child's name**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown.
-- on a **school time in a compact row**: the child's weekly timetable; use the day header for an individual school day
+- on the **name of a child under 12**: the child's [simple view](#simple-view), filling the screen. **Back to the week** at the top left returns to the week board, and after a minute without a touch the wall goes back to it by itself.
+- on the **name of a child aged 12 or older**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown.
+- on a **school time in a compact row**: for a child aged 12 or older, the weekly timetable; use the day header for an individual school day
 - on an **adult's name**: their week
 - on the **meal area**: the meals of the week
 
@@ -53,11 +92,15 @@ The details show everything in full, also at large text sizes: long names, place
 
 <Shot name="wall-day" alt="Wall display: details of one day" wide />
 
-<Shot name="wall-child-week" alt="Wall display: a child's timetable for the week" wide />
+<Shot name="wall-child-week" alt="Wall display: an older child's timetable for the week" wide />
+
+<Shot name="wall-child" alt="Wall display: the simple view of a child under 12, with Back to the week at the top left" wide />
 
 ### Shopping list
 
 Tap the shopping list in the footer to open the tiles. Tap your name first: the wall always writes to the **default list**.
+
+If **Shopping for children** is switched off, the list opens only once an adult has tapped their name. Before that, and for children, it says: "The shopping list is for the grown-ups. Tap your name." Where the family has switched it on, a child under 12 finds the list as a **Shopping** card at the end of their simple view.
 
 <Shot name="wall-shopping" alt="Wall display with the shopping list" wide />
 
@@ -71,7 +114,7 @@ The wall can do no more than that: it adds items to the shopping list and correc
 - If the tablet restarts while the network or the server is down, the wall shows the week it last stored and the children's tablet the day it last stored, each marked **last updated** with the time, and with the date once it is a day old. As soon as the connection is back, everything reloads by itself. Without a connection only the shopping list can be changed.
 
 ::: tip Children's tablet
-The children's view has the tabs **My day**, **Timetable**, **Points** and **Family**, and **Shopping** when it is switched on.
+Children under 12 have one simple page without tabs everywhere. The tabs **My day**, **Timetable**, **Points** and **Family** (and **Shopping** when it is switched on) belong to children aged 12 and older on the children's tablet.
 :::
 
 ## Connecting

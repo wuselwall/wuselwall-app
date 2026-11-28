@@ -14,13 +14,17 @@ import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/core/ui/nav_labels.dart';
 import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
+import 'package:wuselwall/features/board/ui/kiosk_canvas.dart';
+import 'package:wuselwall/features/board/ui/kiosk_display.dart';
 import 'package:wuselwall/features/board/ui/last_updated.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
 import 'package:wuselwall/features/kid/ui/kid_home.dart';
+import 'package:wuselwall/features/kid/ui/kid_simple_home.dart';
 import 'package:wuselwall/features/meals/ui/meals_section.dart';
 import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/settings/application/settings_access.dart';
@@ -45,27 +49,57 @@ class RegisterHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (register == UiRegister.kiosk) {
+    // A child under twelve has their simple view on every device (specs/09 "The simple
+    // view"); [register] is the kid register for them, whatever the device is.
+    final young = ref.watch(youngChildActingProvider)
+        ? ref.watch(actingMemberProvider)
+        : null;
+    // The wall stays the wall while it shows a child's simple view: the device's own
+    // register decides, and [register] alone where a caller names the kiosk.
+    if (register == UiRegister.kiosk ||
+        ref.watch(deviceRegisterProvider) == UiRegister.kiosk) {
       return IdleReverter(
         // The board goes back to key appointments (FR-8.11) and to this week when
-        // nobody touches it.
+        // nobody touches it; a child's simple view goes with the child.
         onIdle: () {
           ref.read(boardAllEventsProvider.notifier).set(false);
           ref.read(boardNextWeekProvider.notifier).set(false);
         },
-        child: const Scaffold(
-          body: SafeArea(child: PixelShift(child: WeekBoardPage())),
-        ),
+        child: young != null
+            // On the board's canvas, so a large panel shows it at the board's scale.
+            ? KioskDisplay(
+                child: PixelShift(
+                  child: KioskCanvas(
+                    child: KidSimpleHome(
+                      key: ValueKey('simple-${young.id}'),
+                      member: young,
+                      onWall: true,
+                    ),
+                  ),
+                ),
+              )
+            : const Scaffold(
+                body: SafeArea(child: PixelShift(child: WeekBoardPage())),
+              ),
       );
     }
     // `device.pixel_shift` may be on for any device (specs/26); PixelShift does
     // nothing while it is off.
-    if (register == UiRegister.kid) return const PixelShift(child: KidHome());
+    if (register == UiRegister.kid) {
+      return PixelShift(
+        child: young != null
+            ? KidSimpleHome(key: ValueKey('simple-${young.id}'), member: young)
+            : const KidHome(),
+      );
+    }
 
     final l10n = context.l10n;
     final adult = register == UiRegister.adult;
     final rail = adult && MediaQuery.sizeOf(context).width >= 840;
-    final tab = adult ? ref.watch(homeTabProvider) : HomeTab.shopping;
+    final tabs = ref.watch(homeTabsProvider);
+    final chosen = adult ? ref.watch(homeTabProvider) : HomeTab.shopping;
+    // A tab switched off for whoever is here now (a child took the tablet): Today.
+    final tab = tabs.contains(chosen) ? chosen : HomeTab.today;
     final section = homeSections[tab]!;
     // What waits for the acting guardian, on the Tasks destination (specs/16 step 10.5).
     final approvals = adult ? ref.watch(guardianApprovalsProvider).total : 0;
@@ -153,6 +187,7 @@ class RegisterHomePage extends ConsumerWidget {
             children: [
               if (rail) ...[
                 _AdultNavRail(
+                  tabs: tabs,
                   tab: tab,
                   approvals: approvals,
                   onSelect: (t) => ref.read(homeTabProvider.notifier).select(t),
@@ -174,6 +209,7 @@ class RegisterHomePage extends ConsumerWidget {
         floatingActionButton: section.fab?.call(context),
         bottomNavigationBar: adult && !rail
             ? _AdultNavBar(
+                tabs: tabs,
                 tab: tab,
                 approvals: approvals,
                 onSelect: (t) => ref.read(homeTabProvider.notifier).select(t),
@@ -190,11 +226,14 @@ class RegisterHomePage extends ConsumerWidget {
 /// keeps every destination reachable in short landscape windows and at large text sizes.
 class _AdultNavRail extends StatelessWidget {
   const _AdultNavRail({
+    required this.tabs,
     required this.tab,
     required this.approvals,
     required this.onSelect,
   });
 
+  /// The destinations offered to whoever is at the device ([homeTabsProvider]).
+  final List<HomeTab> tabs;
   final HomeTab tab;
   final int approvals;
   final ValueChanged<HomeTab> onSelect;
@@ -206,11 +245,11 @@ class _AdultNavRail extends StatelessWidget {
         constraints: BoxConstraints(minHeight: box.maxHeight),
         child: IntrinsicHeight(
           child: NavigationRail(
-            selectedIndex: tab.index,
-            onDestinationSelected: (i) => onSelect(HomeTab.values[i]),
+            selectedIndex: tabs.indexOf(tab),
+            onDestinationSelected: (i) => onSelect(tabs[i]),
             labelType: NavigationRailLabelType.all,
             destinations: [
-              for (final t in HomeTab.values)
+              for (final t in tabs)
                 NavigationRailDestination(
                   icon: Badge.count(
                     count: approvals,
@@ -236,11 +275,14 @@ class _AdultNavRail extends StatelessWidget {
 /// even that is not enough, and the text scale grows only to 1.3 here.
 class _AdultNavBar extends StatelessWidget {
   const _AdultNavBar({
+    required this.tabs,
     required this.tab,
     required this.approvals,
     required this.onSelect,
   });
 
+  /// The destinations offered to whoever is at the device ([homeTabsProvider]).
+  final List<HomeTab> tabs;
   final HomeTab tab;
   final int approvals;
   final ValueChanged<HomeTab> onSelect;
@@ -256,13 +298,13 @@ class _AdultNavBar extends StatelessWidget {
     final theme = Theme.of(context);
     final base = theme.textTheme.labelMedium ?? const TextStyle(fontSize: 12);
     final full = fitNavLabels(context, [
-      for (final t in HomeTab.values) _label(l10n, t),
+      for (final t in tabs) _label(l10n, t),
     ], base: base);
     final short = !full.fits;
     final style = short
         ? fitNavLabels(
             context,
-            [for (final t in HomeTab.values) _label(l10n, t, short: true)],
+            [for (final t in tabs) _label(l10n, t, short: true)],
             base: base,
             // A very small phone: smaller still rather than a broken word.
             minSize: 9,
@@ -289,8 +331,8 @@ class _AdultNavBar extends StatelessWidget {
             softWrap: false,
             overflow: TextOverflow.ellipsis,
             child: NavigationBar(
-              selectedIndex: tab.index,
-              onDestinationSelected: (i) => onSelect(HomeTab.values[i]),
+              selectedIndex: tabs.indexOf(tab),
+              onDestinationSelected: (i) => onSelect(tabs[i]),
               // A phone's bar is lower than Material's (specs/09 "the bottom bar").
               height: navBarHeight(context),
               // Six destinations do not fit a phone with their labels: there only
@@ -299,7 +341,7 @@ class _AdultNavBar extends StatelessWidget {
                   ? NavigationDestinationLabelBehavior.onlyShowSelected
                   : null,
               destinations: [
-                for (final t in HomeTab.values)
+                for (final t in tabs)
                   NavigationDestination(
                     icon: Badge.count(
                       count: approvals,

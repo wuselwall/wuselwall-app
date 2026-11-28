@@ -31,6 +31,7 @@ import 'package:wuselwall/features/kid/ui/kid_new_badge.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/application/today_tradition_provider.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
@@ -97,7 +98,7 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
         Tokens.space8,
       ),
       children: [
-        _KidGreeting(
+        KidGreeting(
           member: member,
           tint: colors.tint,
           ink: colors.ink,
@@ -120,7 +121,7 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
         const WeekReviewCard(kid: true),
         const TableQuestionCard(kid: true),
         KidSectionTitle(l10n.kidTasksTitle),
-        _TasksSection(
+        KidTasksSection(
           actor: member.id,
           balanceKey: _balanceKey,
           cheers: _cheers,
@@ -130,9 +131,9 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
         KidCountdowns(actor: member.id),
         _SchoolSection(actor: member.id),
         const SizedBox(height: Tokens.space4),
-        _MealSection(actor: member.id),
+        KidMealCard(day: ref.watch(kidTodayProvider)),
         KidWishCard(member: member),
-        _EventsSection(actor: member.id),
+        KidEventsSection(actor: member.id, day: ref.watch(kidTodayProvider)),
       ],
     );
   }
@@ -141,13 +142,14 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
 /// The chores of the day, the acting child's and the open ones. Ticking is optimistic:
 /// the tick shows at once, the coin flies when the server has credited the points, and
 /// "Rückgängig" stays on screen for five seconds.
-class _TasksSection extends ConsumerStatefulWidget {
-  const _TasksSection({
+class KidTasksSection extends ConsumerStatefulWidget {
+  const KidTasksSection({
     required this.actor,
     required this.balanceKey,
     required this.cheers,
     required this.heldBalance,
     required this.balance,
+    super.key,
   });
 
   final String actor;
@@ -159,10 +161,10 @@ class _TasksSection extends ConsumerStatefulWidget {
   final int balance;
 
   @override
-  ConsumerState<_TasksSection> createState() => _TasksSectionState();
+  ConsumerState<KidTasksSection> createState() => _KidTasksSectionState();
 }
 
-class _TasksSectionState extends ConsumerState<_TasksSection> {
+class _KidTasksSectionState extends ConsumerState<KidTasksSection> {
   /// Ticked by the child but not yet confirmed by the list.
   final _pending = <String>{};
 
@@ -763,20 +765,18 @@ class _SchoolSection extends ConsumerWidget {
   }
 }
 
-/// Today's warm meals from the week board, and whether the child eats them.
-class _MealSection extends ConsumerWidget {
-  const _MealSection({required this.actor});
+/// The warm meals of [day], and on another day than today plainly "Dinner: …". The
+/// week board has this week; a day of the next one comes from that week's board.
+class KidMealCard extends ConsumerWidget {
+  const KidMealCard({required this.day, super.key});
 
-  final String actor;
+  final DateTime day;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final today = ref.watch(kidTodayProvider);
-    final board = ref.watch(boardProvider).board;
-    final meals =
-        board?.days.where((d) => d.date == today).firstOrNull?.meals ??
-        const <BoardMeal>[];
+    final isToday = day == ref.watch(kidTodayProvider);
+    final meals = ref.watch(kidMealsProvider(day));
     if (meals.isEmpty) return const SizedBox.shrink();
     final theme = Theme.of(context);
     return KidCard(
@@ -792,9 +792,14 @@ class _MealSection extends ConsumerWidget {
                 for (final meal in meals)
                   Text(
                     switch ((meal.slot, meal.title)) {
-                      (MealSlot.dinner, final String dish) =>
+                      (MealSlot.dinner, final String dish) when isToday =>
                         l10n.kidMealDinner(dish),
-                      (MealSlot.lunch, final String dish) => l10n.kidMealLunch(
+                      (MealSlot.lunch, final String dish) when isToday =>
+                        l10n.kidMealLunch(dish),
+                      (MealSlot.dinner, final String dish) =>
+                        l10n.todayMealLine(l10n.mealsSlotDinner, dish),
+                      (MealSlot.lunch, final String dish) => l10n.todayMealLine(
+                        l10n.mealsSlotLunch,
                         dish,
                       ),
                       (MealSlot.dinner, null) => l10n.kidMealNoneDinner,
@@ -813,71 +818,40 @@ class _MealSection extends ConsumerWidget {
   }
 }
 
-/// The appointments the child attends today, under their title. Presence (who is at
+/// The appointments the child attends on [day], under their title. Presence (who is at
 /// work) is not one. A day without appointments shows nothing, not an empty card.
-class _EventsSection extends ConsumerWidget {
-  const _EventsSection({required this.actor});
+class KidEventsSection extends ConsumerWidget {
+  const KidEventsSection({
+    required this.actor,
+    required this.day,
+    this.title,
+    super.key,
+  });
 
   final String actor;
+  final DateTime day;
+
+  /// The heading; "Meine Termine heute" unless the page names the day itself.
+  final String? title;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final today = ref.watch(kidTodayProvider);
-    final window = ref.watch(occurrencesProvider((from: today, to: today)));
+    final window = ref.watch(occurrencesProvider((from: day, to: day)));
     return AsyncValueView<OccurrenceWindow>(
       value: window,
-      onRetry: () =>
-          ref.invalidate(occurrencesProvider((from: today, to: today))),
+      onRetry: () => ref.invalidate(occurrencesProvider((from: day, to: day))),
       data: (w) {
-        final list = kidEventsFor(w.occurrences, actor, today);
+        final list = kidEventsFor(w.occurrences, actor, day);
         if (list.isEmpty) return const SizedBox.shrink();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            KidSectionTitle(l10n.kidEventsTitle),
+            KidSectionTitle(title ?? l10n.kidEventsTitle),
             for (final o in list)
               Padding(
                 padding: const EdgeInsets.only(bottom: Tokens.space2),
-                child: KidCard(
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 104,
-                        child: Text(
-                          o.localStarts == null
-                              ? l10n.kidAllDay
-                              : context.time(o.localStarts!),
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(
-                                fontFamily: Tokens.fontNumeric,
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
-                                fontWeight: FontWeight.w800,
-                              ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              o.title,
-                              style: Theme.of(context).textTheme.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                            if (o.location != null)
-                              Text(
-                                o.location!,
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                child: KidEventCard(occurrence: o),
               ),
           ],
         );
@@ -886,11 +860,65 @@ class _EventsSection extends ConsumerWidget {
   }
 }
 
+/// One appointment as a kid card: its picture where it has one, the time, the title
+/// and the place.
+class KidEventCard extends StatelessWidget {
+  const KidEventCard({required this.occurrence, super.key});
+
+  final Occurrence occurrence;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final o = occurrence;
+    final picture = eventIconAsset(o.iconKey);
+    return KidCard(
+      child: Row(
+        children: [
+          if (picture != null) ...[
+            ExcludeSemantics(child: EmojiPicture(picture, size: 40)),
+            const SizedBox(width: Tokens.space3),
+          ],
+          SizedBox(
+            width: 104,
+            child: Text(
+              o.localStarts == null
+                  ? l10n.kidAllDay
+                  : context.time(o.localStarts!),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontFamily: Tokens.fontNumeric,
+                fontFeatures: const [FontFeature.tabularFigures()],
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  o.title,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (o.location != null)
+                  Text(o.location!, style: theme.textTheme.bodyLarge),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// The top of "Mein Tag": Wusel waves and greets the child by name, with the points
 /// beside it (specs/25 "Where Wusel appears"). At night Wusel sleeps. Without Wusel
 /// (switched off) it is the child's initial and the plain greeting, as before.
-class _KidGreeting extends ConsumerStatefulWidget {
-  const _KidGreeting({
+class KidGreeting extends ConsumerStatefulWidget {
+  const KidGreeting({
     required this.member,
     required this.tint,
     required this.ink,
@@ -898,6 +926,7 @@ class _KidGreeting extends ConsumerStatefulWidget {
     required this.balance,
     required this.cheers,
     this.enter = false,
+    super.key,
   });
 
   final Member member;
@@ -913,10 +942,10 @@ class _KidGreeting extends ConsumerStatefulWidget {
   final bool enter;
 
   @override
-  ConsumerState<_KidGreeting> createState() => _KidGreetingState();
+  ConsumerState<KidGreeting> createState() => _KidGreetingState();
 }
 
-class _KidGreetingState extends ConsumerState<_KidGreeting> {
+class _KidGreetingState extends ConsumerState<KidGreeting> {
   /// The hello, picked once per visit so a rebuild does not change its words.
   String? _hello;
 

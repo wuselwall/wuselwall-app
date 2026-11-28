@@ -60,6 +60,9 @@ class DeviceInfo {
   final DateTime? guardianVerifiedUntil;
 }
 
+/// A child younger than this gets the simple view (specs/09 "The simple view").
+const simpleViewBelowAge = 12;
+
 class Member {
   const Member({
     required this.id,
@@ -115,6 +118,21 @@ class Member {
   final DateTime? birthday;
 
   bool get isGuardian => role == Role.guardian;
+
+  /// Whether this is a child who gets the simple view on [today] (specs/09 "The simple
+  /// view"): of kind child and not yet [simpleViewBelowAge]. A child without a
+  /// birthday counts as young, so a family that never entered one gets the simple
+  /// view and can leave it by entering the birthday.
+  bool isYoungChildOn(DateTime today) {
+    if (!isChild) return false;
+    final born = birthday;
+    if (born == null) return true;
+    final hadBirthday =
+        today.month > born.month ||
+        (today.month == born.month && today.day >= born.day);
+    final age = today.year - born.year - (hadBirthday ? 0 : 1);
+    return age < simpleViewBelowAge;
+  }
 
   String get initial =>
       displayName.isEmpty ? '?' : displayName.characters.first.toUpperCase();

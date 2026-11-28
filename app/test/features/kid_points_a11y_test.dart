@@ -19,21 +19,23 @@ const _emma = 'p-emma';
 /// A violet child on a shared kid device: the member colour is the accent, so the
 /// Redeem button is the violet ink with the member's onInk on it.
 final _members = [
-  const Member(
+  Member(
     id: _mia,
     displayName: 'Mia',
     color: Color(0xFF7B3FE4),
     role: Role.member,
     active: true,
     isChild: true,
+    birthday: olderChildBirthday(),
   ),
-  const Member(
+  Member(
     id: _emma,
     displayName: 'Emma',
     color: Color(0xFFB5306B),
     role: Role.member,
     active: true,
     isChild: true,
+    birthday: olderChildBirthday(),
   ),
 ];
 

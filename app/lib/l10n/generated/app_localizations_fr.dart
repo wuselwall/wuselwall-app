@@ -816,6 +816,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get boardBackToWeek => 'Revenir à la semaine';
 
   @override
+  String get boardShoppingAskAdult =>
+      'La liste de courses est pour les grands. Appuie sur ton prénom.';
+
+  @override
   String get boardTentative => 'pas encore confirmé';
 
   @override
@@ -1245,6 +1249,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get calendarToday => 'Aujourd’hui';
+
+  @override
+  String get calendarChildDays => 'Aujourd’hui et les trois jours suivants';
 
   @override
   String calendarRange(String from, String to) {
@@ -2816,6 +2823,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => 'Salut ! Appuie sur ton prénom.';
+
+  @override
+  String get kidSimpleBack => 'Retour';
+
+  @override
+  String get kidSimpleTomorrow => 'Demain';
+
+  @override
+  String get kidSimpleAppointments => 'Mes rendez-vous';
+
+  @override
+  String get kidSimpleNoSchool => 'Pas d’école.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'Tu auras besoin de : $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Rien n’est encore prévu.';
 
   @override
   String kidGreeting(String name) {
@@ -5594,12 +5621,18 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le drapeau de votre pays sur la colline le jour de sa fête nationale, par exemple le 1er août en Suisse. Le pays vient de votre région.';
 
   @override
-  String get settingHouseholdKidShoppingTitle =>
-      'Courses dans la vue des enfants';
+  String get settingHouseholdKidShoppingTitle => 'Courses pour les enfants';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Ajoute l’onglet Courses à la vue des enfants, où ils ajoutent et cochent des articles. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.';
+      'Les enfants ajoutent et cochent des articles sur la liste de courses. Désactivé : les enfants n’ont pas de liste de courses, et sur la tablette commune et l’écran mural elle ne s’ouvre qu’une fois qu’un adulte a appuyé sur son prénom.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Calendrier pour les enfants';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Les enfants voient leurs propres rendez-vous d’aujourd’hui et des trois jours suivants. Désactivé : seulement aujourd’hui. La tablette commune n’a alors pas d’onglet Calendrier tant qu’un adulte n’a pas appuyé sur son prénom.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Le compte à rebours commence';

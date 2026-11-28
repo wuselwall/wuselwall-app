@@ -2,11 +2,49 @@
 
 ## Tableta infantil {#kids-tablet}
 
-La vista infantil es más grande y sencilla. Cada niño toca su nombre y ve su día. Los niños no administran miembros ni dispositivos.
+La vista infantil es más grande y sencilla. Cada niño toca su nombre y ve su día. Lo que ve depende de su edad. Los niños no administran miembros ni dispositivos.
+
+### Niños menores de 12 años: la vista sencilla {#simple-view}
+
+Un niño menor de 12 años recibe la vista sencilla en cuanto toca su nombre, en cualquier dispositivo: en la tableta infantil, en la tableta para todos, en la pantalla de pared y en el móvil del niño. Cuenta el cumpleaños que figura en la página del niño; si no hay ninguno, el niño cuenta como menor de 12 años. La vista sencilla es **una sola página sin pestañas** y muestra solo lo que afecta a ese niño.
+
+Arriba, [Wusel](/es/guide/wusel) saluda al niño, con sus puntos al lado. Un toque en los puntos abre la página de recompensas e insignias; **Atrás**, arriba, vuelve a la página.
+
+Debajo hay cuatro botones de día: **Hoy**, **Mañana** y los dos días siguientes con su nombre. El niño puede mirar hoy y los tres días siguientes, y no más allá. No tiene otro calendario.
+
+<Shot name="kid-days" alt="La vista sencilla de un niño con el botón Mañana elegido y, debajo, lo que hay para mañana" wide />
+
+Para el día elegido, la página muestra:
+
+- Solo en **Hoy**: las tareas para marcar (**Mis tareas**).
+- Una tarjeta del colegio con las horas del día. Un toque abre las clases, y **Atrás** vuelve a la página.
+- Qué llevar: hoy, lo que hace falta para mañana; otro día, lo que hace falta ese día.
+- Las citas en las que participa el niño, y solo esas (en un día que no es hoy, bajo **Mis citas**).
+- La comida caliente.
+- Solo en **Hoy**, además, la tarjeta **Tu comida favorita** y, a su hora, la [pregunta en la mesa](/es/guide/rituals#table-question) y **Nuestra semana** (ver [Rituales](/es/guide/rituals)).
+
+Un día por venir en el que no hay nada lo dice: «Todavía no hay nada previsto.»
+
+Al final hay una tarjeta **Compra**, pero solo si la familia ha activado la compra para los niños (ver [más abajo](#kids-switches)). Abre las tarjetas; **Atrás** vuelve a la página.
+
+En un dispositivo compartido, la fila de nombres se queda abajo para pasar el dispositivo a otra persona (ver [¿Quién eres?](/es/guide/who-are-you)).
+
+### Niños de 12 años o más {#older-children}
+
+Los niños de 12 años o más conservan la vista con pestañas. En la **tableta infantil** son **Mi día**, **Horario**, **Puntos** y **Familia**, y **Compra** si está activada.
 
 En **Mi día**, [Wusel](/es/guide/wusel) saluda al niño. Debajo están sus tareas, **Lo que me hace ilusión**, el colegio de hoy en una sola tarjeta (un toque abre el horario), la comida, la tarjeta **Tu comida favorita** y, los días que las hay, las citas; durante la comida, la [pregunta en la mesa](/es/guide/rituals#table-question), y el domingo por la tarde **Nuestra semana** (ver [Rituales](/es/guide/rituals)).
 
-La pestaña **Compra** está desactivada en una familia nueva; las familias que ya usaban WuselWall la conservan. Una madre o un padre la cambia con **Compra en la vista infantil** en [Ajustes → Familia](/es/settings/household#the-areas). Con ella, los niños añaden y marcan productos; las tarjetas permiten participar sin saber escribir. En la pantalla de pared pueden añadirlos de todos modos.
+En la **tableta para todos**, los niños de 12 años o más tienen las mismas pestañas que los adultos, pero sin **Calendario** ni **Compra** donde la familia las ha desactivado para los niños. Su pestaña **Calendario** muestra solo sus propias citas de hoy y de los tres días siguientes (la barra dice «Hoy y los tres días siguientes»). No hay vista de semana ni de mes, ni las citas de los demás.
+
+### Compra y calendario para los niños {#kids-switches}
+
+Dos ajustes en [Ajustes → Familia](/es/settings/household#the-areas) deciden lo que los niños ven de la lista de la compra y del calendario:
+
+- **Compra para los niños**: desactivado en una familia nueva; las familias que ya usaban WuselWall lo conservan activado. Activado, los niños añaden y marcan productos; las tarjetas permiten participar sin saber escribir. Desactivado, los niños no tienen lista de la compra en ninguna parte. En la tableta para todos falta entonces la pestaña **Compra** mientras no haya nadie elegido o haya un niño elegido. En la pantalla de pared, la lista de la compra del pie solo se abre cuando un adulto ha tocado su nombre; hasta entonces dice: «La lista de la compra es para los mayores. Toca tu nombre.» Un adulto que toca su nombre lo recupera todo.
+- **Calendario para los niños**: activado desde el principio. Los niños ven entonces sus propias citas de hoy y de los tres días siguientes. Desactivado, solo ven hoy: los botones de día desaparecen, y la tableta para todos no tiene pestaña **Calendario** mientras no haya nadie elegido o haya un niño elegido. El panel semanal de la pared se queda siempre. En un servidor más antiguo, el calendario para los niños está simplemente siempre activado.
+
+Los dos ajustes valen también en la tableta para todos mientras nadie haya tocado su nombre, porque puede haber un niño delante. Los nombres son un acuerdo, no una cerradura: si un niño toca el nombre de un padre, ve la vista de ese padre. Lo que de verdad importa sigue pidiendo el PIN (ver [¿Quién eres?](/es/guide/who-are-you)).
 
 <Shot name="kid-shopping" alt="La compra en la vista infantil" wide />
 
@@ -29,17 +67,19 @@ Arriba aparecen hora, fecha, número de semana y próxima cita del día con cuen
 
 La letra sigue el tamaño configurado en el dispositivo. Los resúmenes se abrevian sin encogerla y los detalles siguen completos. Si no caben tres partes del día, una fila resume las citas. Se mantienen visibles los siete días y todas las zonas.
 
-Toca la cabecera de día para su detalle, el nombre de un niño para su horario, el de un adulto para su semana o las comidas para el menú. La fila compacta completa es un botón. Con teclado, **Tab** mueve el foco visible; **Intro** o **Espacio** abre.
+Toca la cabecera de día para su detalle, el nombre de un niño menor de 12 años para su [vista sencilla](#simple-view) a pantalla completa (**Volver a la semana**, arriba a la izquierda, devuelve al panel, y tras un minuto sin tocar la pared vuelve sola), el nombre de un niño de 12 años o más para su horario, el de un adulto para su semana o las comidas para el menú. La fila compacta completa es un botón: abre la vista sencilla en un niño menor de 12 años, el horario semanal en un niño mayor y la semana de un adulto. Con teclado, **Tab** mueve el foco visible; **Intro** o **Espacio** abre.
 
 El detalle vuelve a la semana tras un minuto. Los textos largos continúan en otra línea y los eventos pasados o clases canceladas siguen legibles sobre un fondo atenuado. El horario marca suplencias, cancelaciones y material para mañana.
 
 <Shot name="wall-day" alt="El detalle de un día en la pantalla de pared" wide />
 
-<Shot name="wall-child-week" alt="El horario semanal de un niño en la pared" wide />
+<Shot name="wall-child-week" alt="El horario semanal de un niño mayor en la pared" wide />
+
+<Shot name="wall-child" alt="La vista sencilla de un niño menor de 12 años en la pantalla de pared, con Volver a la semana arriba a la izquierda" wide />
 
 ### Compra {#shopping-list}
 
-Abre la compra desde el pie y toca tu nombre. La pared añade solo a la **lista predeterminada**. También permite corregir quién come, tocando comidas y después un punto. Las acciones están limitadas para evitar cambios accidentales.
+Abre la compra desde el pie y toca tu nombre. La pared añade solo a la **lista predeterminada**. Si **Compra para los niños** está desactivado, la lista solo se abre cuando un adulto ha tocado su nombre; antes, y para los niños, dice: «La lista de la compra es para los mayores. Toca tu nombre.» Donde la familia la ha activado, un niño menor de 12 años encuentra la lista como tarjeta **Compra** al final de su vista sencilla. También permite corregir quién come, tocando comidas y después un punto. Las acciones están limitadas para evitar cambios accidentales.
 
 <Shot name="wall-shopping" alt="La compra en la pantalla de pared" wide />
 
@@ -49,7 +89,7 @@ Desde las 21:00 (o el horario nocturno de este dispositivo) aparece el tema noct
 
 Si la tableta se reinicia mientras falla la red o el servidor, la pared muestra la última semana guardada y la tableta infantil el último día guardado, con la indicación **última actualización** y la hora, y también la fecha cuando es de otro día. En cuanto vuelve la conexión, todo se recarga solo. Sin conexión solo se puede cambiar la lista de la compra.
 
-La vista infantil tiene las pestañas **Mi día**, **Horario escolar**, **Puntos** y **Familia**, y **Compra** si está activada.
+Los niños menores de 12 años tienen en todas partes una página sencilla sin pestañas. Las pestañas **Mi día**, **Horario**, **Puntos** y **Familia** (y **Compra** si está activada) son las de los niños de 12 años o más en la tableta infantil.
 
 ## Conectar y preparar {#connecting}
 

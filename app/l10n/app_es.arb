@@ -426,6 +426,7 @@
   "boardShoppingList": "Lista de la compra",
   "boardNightMode": "Vista nocturna",
   "boardBackToWeek": "Volver a la semana",
+  "boardShoppingAskAdult": "La lista de la compra es para los mayores. Toca tu nombre.",
   "boardTentative": "aún sin confirmar",
   "boardNoAppointments": "Sin citas",
   "boardSchool": "Colegio",
@@ -648,6 +649,7 @@
   "@calendarNext": {},
   "calendarChooseView": "Vista del calendario",
   "calendarToday": "Hoy",
+  "calendarChildDays": "Hoy y los tres días siguientes",
   "@calendarToday": {},
   "calendarRange": "{from} – {to}",
   "@calendarRange": {
@@ -1475,6 +1477,19 @@
   "kidTabShopping": "Compra",
   "kidTabFamily": "Familia",
   "kidWhoAreYou": "¡Hola! Toca tu nombre.",
+  "kidSimpleBack": "Atrás",
+  "kidSimpleTomorrow": "Mañana",
+  "kidSimpleAppointments": "Mis citas",
+  "kidSimpleNoSchool": "No hay colegio.",
+  "kidSimpleNeeds": "Necesitas: {items}",
+  "@kidSimpleNeeds": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSimpleNothing": "Todavía no hay nada previsto.",
   "kidGreeting": "¡Hola, {name}!",
   "@kidGreeting": {
     "placeholders": {
@@ -2907,8 +2922,10 @@
   "settingAmbienceStNicholasHelp": "Una bota llena el 6 de diciembre (el 5 en los Países Bajos).",
   "settingAmbienceNationalDayTitle": "Fiesta nacional",
   "settingAmbienceNationalDayHelp": "La bandera de vuestro país en la colina en su fiesta nacional, como el 1 de agosto en Suiza. El país sale de vuestra región.",
-  "settingHouseholdKidShoppingTitle": "Compra en la vista infantil",
-  "settingHouseholdKidShoppingHelp": "Añade la pestaña Compra a la vista infantil, donde añaden y marcan artículos. En la pantalla de pared pueden añadirlos de todos modos.",
+  "settingHouseholdKidShoppingTitle": "Compra para los niños",
+  "settingHouseholdKidShoppingHelp": "Los niños añaden y marcan artículos en la lista de la compra. Desactivado: los niños no tienen lista de la compra, y en la tableta compartida y la pantalla de pared solo se abre cuando un adulto ha tocado su nombre.",
+  "settingHouseholdKidCalendarTitle": "Calendario para los niños",
+  "settingHouseholdKidCalendarHelp": "Los niños ven sus propias citas de hoy y de los tres días siguientes. Desactivado: solo hoy. La tableta compartida no tiene entonces la pestaña Calendario hasta que un adulto toque su nombre.",
   "settingRitualsCountdownDaysTitle": "La cuenta atrás empieza",
   "settingRitualsCountdownDaysHelp": "Cuántos días antes de un cumpleaños, las vacaciones o una cita marcada aparece la cuenta atrás.",
   "settingRitualsCountdownReturnTitle": "Cuenta atrás hasta una vuelta",

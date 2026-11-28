@@ -107,8 +107,61 @@ counts); when the acting person becomes nobody, the open settings page leaves fo
   decided 2026-11-04): a new family's children have the other four tabs, so the bar and the
   day stay about them. One switch for the family, not per child or by age: on a shared tablet
   every child has the same tab bar, Shopping opens before anyone is picked, and a birthday is
-  optional. Every family that existed then keeps the tab. Children can still add on the wall.
+  optional. Every family that existed then keeps the tab. Since 2026-11-28 the switch covers
+  every place a child meets the list, the wall included (below, "What a child sees").
 - Family (who is doing what today)
+
+These tabs are what a child of twelve or older has. A younger child has the simple view.
+
+**The simple view** (*decided 2026-11-28*, issue #298). Choosing a child changed almost
+nothing on the wall and on the tablet for everyone, and the kid register's five tabs are more
+than a young child needs. A child **under twelve** therefore gets one page, on every device:
+
+- **Who:** a member of kind `child` whose birthday makes them younger than twelve, and a child
+  without a birthday, which is optional (`Member.isYoungChildOn`). A family that never entered
+  one gets the simple view and leaves it by entering the birthday. There is no switch per
+  child: the age is the rule.
+- **Where:** everywhere the child is the acting person. The kid register shows it in place of
+  the tabs; the tablet for everyone and the wall turn into the kid register for as long as the
+  child is chosen (`uiRegisterProvider` is the register on screen, `deviceRegisterProvider`
+  the device's own). On the wall a tap on the child's name on the week board chooses them,
+  and so does their avatar in a detail (the chore board, the shopping list), which then
+  closes; *Zurück zur Woche* in the band and the 60 s idle return bring the board back.
+- **What:** Wusel's greeting with the points (a tap opens the points page), the day buttons,
+  and the chosen day: on today the child's chores, then school as one card (a tap shows that
+  day's lessons), what to pack, the appointments the child attends, the warm meal, and on
+  today the meal wish; the Tischfrage and the Wochenrückblick appear at their time. No tab
+  bar, no Family page, no week timetable, no countdown list. What a card opens (lessons,
+  points, shopping) opens inside the page with one *Zurück*, not as a route, so the wall's
+  idle timer and the avatar bar stay with it.
+- **Only their own:** every appointment shown is one the child attends. Nothing of a sibling
+  or a parent appears.
+
+**What a child sees** (*decided 2026-11-28*). Three limits hold for every child, whatever the
+age and the device (`features/kid/application/child_view.dart`):
+
+- **Today and the next three days.** The simple view has four day buttons (*Heute*, *Morgen*,
+  two weekdays) and no way to another day. A child of twelve or older in the adult register
+  has a Calendar tab of the same four days with only their own appointments, without the
+  week and month views (`CalendarMode.nextDays`). The kid register's *Mein Tag* shows today.
+- **Two switches for guardians**, `household.kid_shopping` and `household.kid_calendar`
+  ([21](21-household-settings.md#household-and-members)). Shopping off: no Shopping tab or card
+  for a child. Calendar off: a child sees only today (no day buttons, no Calendar tab).
+- **A shared device with nobody chosen counts as a child's**, because a child may be standing
+  there: the tablet for everyone hides the Calendar and Shopping tabs the switches turn off
+  until an adult taps their name, and the wall's shopping list says it is for the grown-ups
+  until an adult has done so. The wall's week board itself always stays: it is the wall.
+
+Attribution on a shared device is cooperative ([08](08-users-auth-permissions.md)), so these
+limits decide what the app offers, not what the server allows: a child who taps a parent's
+name sees the parent's view. What needs a guardian still asks for the PIN.
+
+| Who is at the device | Kids' tablet | Tablet for everyone | Wall |
+|---|---|---|---|
+| nobody | the picker (Shopping and Family open, as before) | adult tabs without the switched-off ones | the week board; shopping opens for an adult |
+| a child under twelve | simple view | simple view | simple view, back to the week after 60 s |
+| a child of twelve or older | the kid tabs | adult tabs without the switched-off ones, own four days in the calendar | the week board, as for an adult |
+| an adult | the kid tabs, as before | everything | everything |
 
 How the kid register fits its screen (decided 2026-10-26, after layout checks on phones,
 tablets and the web from 320 to 1920 px):

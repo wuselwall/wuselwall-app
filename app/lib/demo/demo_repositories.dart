@@ -754,6 +754,14 @@ const _catalogue = <_Definition>[
     selfService: false,
   ),
   (
+    key: 'household.kid_calendar',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
+    selfService: false,
+  ),
+  (
     key: 'board.member_label',
     scope: SettingScope.household,
     type: SettingType.enumeration,
@@ -1237,24 +1245,35 @@ List<SettingEntry> demoSettingCatalogue() => [
 
 /// In-memory household settings: a set or reset changes the rows the page shows.
 class DemoHouseholdSettingsRepository implements HouseholdSettingsRepository {
-  /// [kidShopping]: the family has switched on the children's Shopping tab.
-  DemoHouseholdSettingsRepository({bool kidShopping = false})
-    : _rows = [
-        for (final e in demoSettingCatalogue())
-          if (kidShopping && e.key == 'household.kid_shopping')
-            SettingEntry(
-              key: e.key,
-              scope: e.scope,
-              type: e.type,
-              constraints: e.constraints,
-              selfService: e.selfService,
-              defaultValue: e.defaultValue,
-              value: true,
-              isDefault: false,
-            )
-          else
-            e,
-      ];
+  /// [kidShopping]: the family has switched on the shopping list for children.
+  /// [kidCalendar]: false when it has switched off their look ahead.
+  DemoHouseholdSettingsRepository({
+    bool kidShopping = false,
+    bool kidCalendar = true,
+  }) : _rows = [
+         for (final e in demoSettingCatalogue())
+           if (_changed(e.key, kidShopping, kidCalendar) case final value?)
+             SettingEntry(
+               key: e.key,
+               scope: e.scope,
+               type: e.type,
+               constraints: e.constraints,
+               selfService: e.selfService,
+               defaultValue: e.defaultValue,
+               value: value,
+               isDefault: false,
+             )
+           else
+             e,
+       ];
+
+  /// The value a scenario sets for [key], null where it keeps the default.
+  static bool? _changed(String key, bool kidShopping, bool kidCalendar) =>
+      switch (key) {
+        'household.kid_shopping' when kidShopping => true,
+        'household.kid_calendar' when !kidCalendar => false,
+        _ => null,
+      };
 
   final List<SettingEntry> _rows;
 

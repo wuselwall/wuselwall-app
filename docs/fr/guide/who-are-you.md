@@ -6,6 +6,16 @@ Sur une tablette partagée ou l’écran mural, touchez **votre prénom et votre
 
 Sans prénom sélectionné, aucune modification n’est possible. Sur l’écran mural, la sélection est effacée après **une minute sans interaction**, pour que la personne suivante n’agisse pas sous votre nom.
 
+## Ce que voient les enfants {#what-children-see}
+
+Quand un **enfant de moins de 12 ans** touche son prénom, sa **vue simple** s’ouvre sur chaque appareil partagé : une page sans onglets, avec seulement ses propres affaires (voir [Tablette des enfants](/fr/guide/wall#simple-view)). La rangée des prénoms reste en bas, pour passer l’appareil à quelqu’un d’autre. Un enfant de 12 ans et plus garde ses onglets sur la tablette des enfants, et sur la tablette pour tous les onglets des adultes, sans **Calendrier** ni **Courses** là où ils sont désactivés pour les enfants.
+
+Tant que personne n’a touché son prénom, une **tablette pour tous** montre les onglets qu’un enfant peut voir, car un enfant peut se trouver devant. **Courses** et **Calendrier** manquent alors partout où les parents les ont désactivés pour les enfants dans [Paramètres → Famille](/fr/settings/household#the-areas) (**Courses pour les enfants**, **Calendrier pour les enfants**). Dès qu’un adulte touche son prénom, tout est de retour.
+
+<Shot name="tablet-nobody" alt="Tablette pour tous sans personne de choisi et avec les courses désactivées pour les enfants : cinq onglets, la rangée des prénoms en bas" wide />
+
+Les prénoms sont un accord, pas une serrure : si un enfant touche le prénom d’un parent, il voit la vue de ce parent. Les actions de parents qui comptent demandent toujours le PIN (voir la section sur le PIN plus bas).
+
 ## Les paramètres sur la tablette et au mur {#settings-on-shared-devices}
 
 Sur une **tablette pour tous**, la roue dentée des **Paramètres** n’apparaît que lorsque quelqu’un a touché son prénom. Ce que vous y trouvez dépend de qui vous êtes :

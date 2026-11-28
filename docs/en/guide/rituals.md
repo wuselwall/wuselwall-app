@@ -6,7 +6,7 @@ For all of them:
 
 - **A ritual is never a chore.** It earns no points, keeps no streak and cannot be "missed". If you skip it, nothing is left behind.
 - **Nobody is compared.** Nothing counts one person against another.
-- **No notifications.** Rituals show up where you look anyway: on the wall, on **Today** and on the children's **My day**.
+- **No notifications.** Rituals show up where you look anyway: on the wall, on **Today** and in the children's view (on **My day** for children aged 12 and older).
 - **Everything can be switched off**, each one on its own, under **Settings → Rituals** (see [All settings](/en/settings/household#rituals)). At the start everything is on.
 
 <Shot name="wall-board" alt="Wall display with Wusel in the header, a family tradition on Friday, a wished-for meal with a star and the birthday countdown in the footer" wide />
@@ -31,7 +31,7 @@ In a [subscription to the family calendar](/en/calendar/feeds) each birthday is 
 - any event with **We are looking forward to it** switched on in the editor, such as the trip to the zoo (see [Calendar](/en/calendar/#creating-an-appointment))
 - a **decided trip** (see [Trips](/en/trips/#from-idea-to-fixed))
 
-You see it on the **wall** in the footer, as many as fit; on **My day** under **Looking forward to** (the child's own countdowns and the whole family's); and on **Today** as one line with the nearest countdown.
+You see it on the **wall** in the footer, as many as fit; for children aged 12 and older on **My day** under **Looking forward to** (the child's own countdowns and the whole family's); and on **Today** as one line with the nearest countdown.
 
 Children and the wall count in nights up to a week ahead ("3 more sleeps"), and in days before that ("9 more days"). Adults read "in 3 days". The day before says **Tomorrow!**, the day itself **Today!**, and Wusel waves at the top of the wall. Then the countdown is gone.
 
@@ -49,12 +49,12 @@ If a tradition doesn't happen one week, delete **Only this event**. Nothing reme
 
 Each child may wish for a meal; you decide how many wishes may be open at once (one by default). That way the children have a say in the meal plan.
 
-- **On My day** there is the card **Your meal wish**. **Wish** opens the choice: first **Family favourites**, the meals you have cooked most often lately, then **Our recipes**, each with a picture (with many recipes, **Find a recipe** helps), and at the bottom **Something else** with a few words, such as "pancakes", and a picture to go with them (**Pick a picture**). With **Wish for this** the wish is on its way. Until it is planned it can be **changed**.
+- In the children's view, **Today** has the card **Your meal wish** (on **My day** for children aged 12 and older). **Wish** opens the choice: first **Family favourites**, the meals you have cooked most often lately, then **Our recipes**, each with a picture (with many recipes, **Find a recipe** helps), and at the bottom **Something else** with a few words, such as "pancakes", and a picture to go with them (**Pick a picture**). With **Wish for this** the wish is on its way. Until it is planned it can be **changed**.
 - **The parents** see the wishes at the top of the [meal plan](/en/meals/#wishes) under **Wishes**, each with its picture, and as a quiet card on **Today**. Tap a wish, pick a day and a meal, and it is planned.
 - **When everyone may wish**, the adults wish for themselves in the meal plan: **Make a wish** in the **Wishes** row opens the same choice, and **Change my wish** changes the open one.
 - **Once planned**, the meal carries a star and "Jack's wish" in the plan and on the wall. The child's card then says, for example, "Your wish Pancakes is on Thursday!".
 
-<Shot name="kid-wish" alt="My day on the children's tablet with the card Your meal wish" wide />
+<Shot name="kid-wish" alt="A child's simple view with the card Your meal wish" wide />
 
 A wish is **never turned down** in the app. A wish that isn't planned simply keeps waiting, the next week marked **from last week**. After four weeks a wish that was never planned quietly leaves the list and no longer counts; the child can simply wish for something new. Parents can remove a wish; why is something you talk about together.
 
@@ -64,7 +64,7 @@ Who may wish is set by **Meal wishes**: **Children** (default), **Everyone** or 
 
 A question for the table, answered aloud. Nothing is recorded: not who answered, not what, not even whether the question was asked.
 
-The question appears during the meal: at the top of the wall's header, on **My day** and on **Today**. No question comes back before all the others have had their turn.
+The question appears during the meal: at the top of the wall's header, in the children's view and on **Today**. No question comes back before all the others have had their turn.
 
 - **Another question** shows the next one, but only on that device. Just say "take the next one".
 - For a riddle, **Show the answer** reveals it.
@@ -79,7 +79,7 @@ Each device shows the questions in its own language: about 150 in German and Eng
 
 ## Our week {#week-review}
 
-On Sunday you look back together at **Our week**: what *we* did. From Sunday 16:00 until Monday 10:00 there is a card on **Today** and **My day**, and a tile in the wall's footer. A tap opens a story of up to five cards, one at a time, filling the screen:
+On Sunday you look back together at **Our week**: what *we* did. From Sunday 16:00 until Monday 10:00 there is a card on **Today** and in the children's view, and a tile in the wall's footer. A tap opens a story of up to five cards, one at a time, filling the screen:
 
 - **On** with a tap on the right, a swipe to the left or the arrow key; **back** with a tap on the left third, a swipe to the right or the other arrow key. The arrows at the bottom do the same.
 - The bars at the top show how many cards there are and where you are. After the last card, with **Close** or with Esc, the look back closes.

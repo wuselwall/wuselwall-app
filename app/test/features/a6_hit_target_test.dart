@@ -37,6 +37,7 @@ Future<void> _pumpShopping(
     ProviderScope(
       overrides: [
         uiRegisterProvider.overrideWithValue(register),
+        deviceRegisterProvider.overrideWithValue(register),
         shoppingViewProvider.overrideWithValue(
           AsyncData(
             ShoppingView(

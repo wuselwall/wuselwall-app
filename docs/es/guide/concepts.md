@@ -36,7 +36,7 @@ Todo pertenece a un **hogar**, tu familia, con **miembros** (nombre y color prop
 | Rol | Permisos |
 |---|---|
 | **Madre o padre** | Administrar miembros, dispositivos y seguridad; aprobar recompensas |
-| **Otro adulto** (por ejemplo, los abuelos o una au pair) o **niño** | Añadir y marcar productos, terminar la compra y usar las funciones autorizadas |
+| **Otro adulto** (por ejemplo, los abuelos o una au pair) o **niño** | Añadir y marcar productos, terminar la compra y usar las funciones autorizadas; los niños, solo donde la familia ha activado **Compra para los niños** |
 
 ## Tres tipos de dispositivo {#three-kinds-of-devices}
 
