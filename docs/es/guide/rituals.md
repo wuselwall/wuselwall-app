@@ -6,7 +6,7 @@ Para todos vale:
 
 - **Un ritual nunca es una obligación.** No da puntos, no tiene racha y no se puede «perder». Si os lo saltáis, no queda rastro.
 - **Nadie se compara.** Nada cuenta a una persona frente a otra.
-- **Sin notificaciones.** Los rituales aparecen donde ya miráis: en la pared, en **Hoy** y en **Mi día** de los niños.
+- **Sin notificaciones.** Los rituales aparecen donde ya miráis: en la pared, en **Hoy** y en la vista de los niños (en **Mi día** para los niños de 12 años o más).
 - **Todo se puede desactivar**, cada uno por separado, en **Ajustes → Rituales** (ver [Todos los ajustes](/es/settings/household#rituals)). Al principio todo está activado.
 
 <Shot name="wall-board" alt="La pantalla de pared con Wusel en la cabecera, una tradición familiar el viernes, una comida deseada con estrella y la cuenta atrás de un cumpleaños en el pie" wide />
@@ -31,7 +31,7 @@ En una [suscripción al calendario familiar](/es/calendar/feeds) cada cumpleaño
 - cualquier evento con **Nos hace ilusión** activado en el editor, como la excursión al zoo (ver [Calendario](/es/calendar/#creating-an-appointment))
 - un **viaje decidido** (ver [Viajes](/es/trips/#from-idea-to-fixed))
 
-Aparece en la **pared**, en el pie (tantas como quepan), en **Mi día** bajo **Lo que me hace ilusión** (las cuentas atrás del niño y las de toda la familia) y en **Hoy** como una línea con la más próxima.
+Aparece en la **pared**, en el pie (tantas como quepan), para los niños de 12 años o más en **Mi día** bajo **Lo que me hace ilusión** (las cuentas atrás del niño y las de toda la familia) y en **Hoy** como una línea con la más próxima.
 
 Los niños y la pared cuentan en noches hasta una semana antes («3 noches más») y en días antes de eso («faltan 9 días»). Los adultos leen «en 3 días». La víspera dice **¡Mañana!**, el mismo día **¡Hoy!**, y Wusel saluda arriba en la pared. Después la cuenta atrás desaparece.
 
@@ -49,12 +49,12 @@ Si una semana no se hace, elimina **Solo este evento**. Nada recuerda que no se 
 
 Cada niño puede pedir una comida; vosotros decidís cuántos deseos pueden esperar a la vez (uno por defecto). Así los niños opinan sobre el menú.
 
-- **En Mi día** aparece la tarjeta **Tu comida favorita**. **Pedir** abre la elección: primero **Favoritos de la familia**, las comidas que más habéis cocinado últimamente, después **Nuestras recetas**, cada una con su imagen (con muchas recetas ayuda **Buscar una receta**), y abajo **Otra cosa** con unas pocas palabras, como «tortitas», y una imagen (**Elige una imagen**). Con **Pido esto**, el deseo va de camino. Hasta que se planifique, se puede **cambiar**.
+- En la vista de los niños aparece en **Hoy** la tarjeta **Tu comida favorita** (en **Mi día** para los niños de 12 años o más). **Pedir** abre la elección: primero **Favoritos de la familia**, las comidas que más habéis cocinado últimamente, después **Nuestras recetas**, cada una con su imagen (con muchas recetas ayuda **Buscar una receta**), y abajo **Otra cosa** con unas pocas palabras, como «tortitas», y una imagen (**Elige una imagen**). Con **Pido esto**, el deseo va de camino. Hasta que se planifique, se puede **cambiar**.
 - **Los padres** ven los deseos arriba del [menú](/es/meals/#wishes) bajo **Deseos**, cada uno con su imagen, y en una tarjeta discreta en **Hoy**. Toca un deseo, elige día y comida, y queda planificado.
 - **Cuando todos pueden pedir**, los adultos también piden en el menú: **Pedir algo** en la fila **Deseos** abre la misma elección, y **Cambiar mi deseo** cambia el pendiente.
 - **Una vez planificado**, la comida lleva una estrella y «Deseo de Pablo» en el menú y en la pared. La tarjeta del niño dice entonces, por ejemplo: «¡Tu deseo, Tortitas, será el jueves!».
 
-<Shot name="kid-wish" alt="Mi día en la tableta infantil con la tarjeta Tu comida favorita" wide />
+<Shot name="kid-wish" alt="La vista sencilla de un niño con la tarjeta Tu comida favorita" wide />
 
 La app **nunca rechaza** un deseo. Un deseo sin planificar simplemente espera, la semana siguiente con la marca **de la semana pasada**. A las cuatro semanas, un deseo que nunca se planificó sale sin ruido de la lista y ya no cuenta; el niño puede pedir otra cosa. Los padres pueden quitar un deseo; el porqué se habla en familia.
 
@@ -64,7 +64,7 @@ Quién puede pedir lo decide **Comida deseada**: **Niños** (predeterminado), **
 
 Una pregunta para conversar en la mesa, que se responde en voz alta. No se guarda nada: ni quién respondió, ni qué, ni siquiera si se hizo la pregunta.
 
-La pregunta aparece durante la comida: arriba en la cabecera de la pared, en **Mi día** y en **Hoy**. Todos los dispositivos muestran la misma pregunta, y ninguna se repite antes de que hayan salido las demás.
+La pregunta aparece durante la comida: arriba en la cabecera de la pared, en la vista de los niños y en **Hoy**. Todos los dispositivos muestran la misma pregunta, y ninguna se repite antes de que hayan salido las demás.
 
 - **Otra pregunta** muestra la siguiente, pero solo en ese dispositivo. Basta con decir «la siguiente».
 - En una adivinanza, **Ver la respuesta** muestra la solución.
@@ -81,7 +81,7 @@ Cada dispositivo muestra las preguntas en su idioma: unas 150 en alemán e ingl�
 
 ## Nuestra semana {#week-review}
 
-El domingo repasáis juntos **Nuestra semana**: lo que *hemos* hecho. Desde el domingo a las 16:00 hasta el lunes a las 10:00 hay una tarjeta en **Hoy** y **Mi día**, y una tarjeta en el pie de la pared. Un toque abre una historia de hasta cinco tarjetas, una cada vez, a pantalla completa:
+El domingo repasáis juntos **Nuestra semana**: lo que *hemos* hecho. Desde el domingo a las 16:00 hasta el lunes a las 10:00 hay una tarjeta en **Hoy** y en la vista de los niños, y una tarjeta en el pie de la pared. Un toque abre una historia de hasta cinco tarjetas, una cada vez, a pantalla completa:
 
 - **Siguiente** con un toque a la derecha, deslizando a la izquierda o con la tecla de flecha; **anterior** con un toque en el tercio izquierdo, deslizando a la derecha o con la otra flecha. Las flechas de abajo hacen lo mismo.
 - Las rayas de arriba muestran cuántas tarjetas hay y dónde estáis. Tras la última tarjeta, con **Cerrar** o con Esc, el repaso se cierra.

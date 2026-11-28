@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 
 /// Title and one-line explanation of a catalogue setting (specs/21, the Context column).
 typedef SettingText = ({String title, String help});
@@ -186,6 +187,10 @@ SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
     title: l10n.settingHouseholdKidShoppingTitle,
     help: l10n.settingHouseholdKidShoppingHelp,
   ),
+  'household.kid_calendar' => (
+    title: l10n.settingHouseholdKidCalendarTitle,
+    help: l10n.settingHouseholdKidCalendarHelp,
+  ),
   'rituals.countdown_days' => (
     title: l10n.settingRitualsCountdownDaysTitle,
     help: l10n.settingRitualsCountdownDaysHelp,
@@ -262,3 +267,87 @@ String settingIntegerLabel(AppLocalizations l10n, String key, int n) =>
       'rituals.table_question_age_limit' => l10n.settingUnitFromAge(n),
       _ => '$n',
     };
+
+/// Title and one line about a row that is not a catalogue setting: what its tile says, or
+/// for a row without a tile of its own (the devices, the sign-in, the security) the
+/// heading it stands under and the words on it. The search reads both ([SettingsHit]), so
+/// "PIN" finds Security.
+SettingText settingsTileText(AppLocalizations l10n, SettingsTile tile) =>
+    switch (tile) {
+      SettingsTile.familyProfile => (
+        title: l10n.familyProfileTitle,
+        help: l10n.familySettingsSubtitle,
+      ),
+      SettingsTile.members => (
+        title: l10n.settingsMembers,
+        help: l10n.settingsMembersSubtitle,
+      ),
+      SettingsTile.baselines => (
+        title: l10n.baselineTitle,
+        help: l10n.baselineSettingsSubtitle,
+      ),
+      SettingsTile.reminders => (
+        title: l10n.reminderSettingsTitle,
+        help: l10n.reminderSettingsSubtitle,
+      ),
+      SettingsTile.familyQuestions => (
+        title: l10n.tableQuestionsManage,
+        help: l10n.settingsSectionTableQuestion,
+      ),
+      SettingsTile.language => (
+        title: l10n.languageTitle,
+        help: l10n.languageSystemHelp,
+      ),
+      SettingsTile.appearance => (
+        title: l10n.appearanceTitle,
+        help: _words([l10n.appearanceLight, l10n.appearanceDark]),
+      ),
+      SettingsTile.devices => (
+        title: l10n.settingsSectionAllDevices,
+        help: _words([l10n.addDevice, l10n.deviceRename, l10n.revoke]),
+      ),
+      SettingsTile.feedTokens => (
+        title: l10n.feedTitle,
+        help: l10n.feedSettingsSubtitle,
+      ),
+      SettingsTile.externalCalendars => (
+        title: l10n.extCalTitle,
+        help: l10n.extCalSettingsSubtitle,
+      ),
+      SettingsTile.services => (
+        title: l10n.settingsServicesTitle,
+        help: l10n.settingsServicesSubtitle,
+      ),
+      SettingsTile.learnedWords => (
+        title: l10n.settingsSectionLearnedWords,
+        help: l10n.learnedWordsHelp,
+      ),
+      SettingsTile.signInMethods => (
+        title: l10n.signInMethodsTitle,
+        help: _words([l10n.signInMethodEmail, l10n.settingsPasswordTitle]),
+      ),
+      SettingsTile.security => (
+        title: l10n.settingsSecurity,
+        help: _words([l10n.totpTitle, l10n.pinChangeTitle, l10n.passkeyTitle]),
+      ),
+      SettingsTile.leaveFamily => (
+        title: l10n.leaveLeaveTile,
+        help: l10n.leaveLeaveExplain,
+      ),
+      SettingsTile.deleteAccount => (title: l10n.accountDeleteTile, help: ''),
+      SettingsTile.server => (
+        title: l10n.settingsServer,
+        help: l10n.settingsServerSwitch,
+      ),
+      SettingsTile.gettingStarted => (
+        title: l10n.settingsGettingStarted,
+        help: l10n.settingsGettingStartedSubtitle,
+      ),
+      SettingsTile.versions => (title: l10n.settingsVersions, help: ''),
+      SettingsTile.licences => (
+        title: l10n.settingsLicenses,
+        help: l10n.settingsLicensesSubtitle,
+      ),
+    };
+
+String _words(List<String> words) => words.join(', ');

@@ -10,10 +10,18 @@ La vista solo cambia lo que ves: los ajustes ocultos siguen activos. Una nota al
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 
+## Buscar en los ajustes {#search}
+
+Arriba de la página está el campo **Buscar en los ajustes**. En cuanto escribes, una lista de resultados sustituye a los grupos: muestra cada ajuste y cada fila que encaja, de todos los grupos. Cada resultado indica su nombre, el grupo (y la sección) donde está y su explicación. Mayúsculas, minúsculas, diéresis y tildes no importan.
+
+La búsqueda también encuentra ajustes que solo muestra la vista **Avanzados**; llevan la marca **Avanzados**. Si eliges uno, este dispositivo pasa a la vista **Avanzados**, abre la página del grupo y resalta un momento la fila.
+
+Los mismos resultados aparecen en la [búsqueda general](/es/guide/concepts#search), en la barra superior de las pestañas (en el Calendario: **Buscar eventos**).
+
 ## Los grupos {#the-areas}
 
 - **Personal** (en cuanto hay alguien elegido; siempre en tu propio teléfono): **Wusel** y **La ropa de Wusel**, el **sonido** de las tareas y, en tu propio teléfono, las **notificaciones**: **Recordatorios** en este teléfono, resumen matinal, recordatorio antes de las citas, recordatorio de material y aviso de eventos inciertos. Solo afectan a la persona elegida (ver [Wusel y los colores](/es/guide/wusel#how-lively)).
-- **Familia**: el **perfil de la familia** (nombre, zona horaria, exportación, eliminar), la **región** de festivos y vacaciones, los **miembros**, la **semana habitual** y **Compra en la vista infantil** (desactivada en una familia nueva). Se elige al añadir el primer colegio y se cambia aquí.
+- **Familia**: el **perfil de la familia** (nombre, zona horaria, exportación, eliminar), la **región** de festivos y vacaciones, los **miembros**, la **semana habitual** y dos ajustes para los niños (también en la vista básica): **Compra para los niños** (si los niños tienen lista de la compra; desactivado en una familia nueva, y las familias que ya usaban WuselWall lo conservan activado) y **Calendario para los niños** (si los niños ven sus propias citas de hoy y de los tres días siguientes; activado, y desactivado solo ven hoy). Los dos valen también en la tableta para todos mientras nadie haya tocado su nombre; lo que cambian allí y en la pared se explica en [Compra y calendario para los niños](/es/guide/wall#kids-switches). Se elige al añadir el primer colegio y se cambia aquí.
 - **Tareas y recompensas**: puntos de obligaciones y bonus, tipo inicial, revisión, comodines mensuales y aprobación de recompensas.
 - **Calendario y colegio**: cambios de niños, eventos nuevos en la pared, avisos de cambios escolares y material. La vista **Avanzados** añade **Compartir y conexiones**: compartir el calendario familiar y calendarios externos. Este grupo contiene también [Tiempo y mapas](/es/settings/services) para los viajes.
 - **Comidas**: qué comida es la caliente en días lectivos y en días libres, con dos botones: **Almuerzo** y **Cena** (predeterminado: cena en días lectivos, almuerzo en días libres). Con uno activado, esa es la comida caliente. Con los dos activados hay dos comidas calientes: el almuerzo y la cena aparecen juntos como comidas principales del día en la pared, en el plan de comidas y en **Hoy**, y la pregunta en la mesa se hace en las dos. Con los dos desactivados no hay comida caliente: la fila de comidas de la pared queda vacía ese día, la pregunta en la mesa va con la cena y una comida deseada se planifica en la cena. Además: ausencia como no comer, cuidado extraescolar para el almuerzo y comida deseada.

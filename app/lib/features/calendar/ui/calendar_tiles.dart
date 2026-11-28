@@ -145,8 +145,21 @@ class OccurrenceTile extends StatelessWidget {
       ],
     );
 
-    // A narrow tile's picture, when the appointment has one.
+    // The appointment's picture, when it has one: before the title, or alone on a
+    // narrow tile.
     final asset = eventIconAsset(occurrence.iconKey);
+    Widget withPicture(Widget title, {required double size}) => asset == null
+        ? title
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1, right: 3),
+                child: EmojiPicture(asset, size: size),
+              ),
+              Expanded(child: title),
+            ],
+          );
     final scale = MediaQuery.textScalerOf(context).scale(1);
     final narrow = (width ?? double.infinity) / scale < narrowColumn;
     final Widget content;
@@ -167,7 +180,12 @@ class OccurrenceTile extends StatelessWidget {
     } else if (compact) {
       content = Row(
         children: [
-          Expanded(child: titleText(maxLines: 1, softWrap: false)),
+          Expanded(
+            child: withPicture(
+              titleText(maxLines: 1, softWrap: false),
+              size: 14,
+            ),
+          ),
           if (attendees.isNotEmpty) ...[const SizedBox(width: 4), dots],
         ],
       );
@@ -204,6 +222,14 @@ class OccurrenceTile extends StatelessWidget {
             children: [
               if (startText != null)
                 TextSpan(text: '$startText ', style: timeStyle),
+              if (asset != null)
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 3),
+                    child: EmojiPicture(asset, size: 14),
+                  ),
+                ),
               if (imported)
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
@@ -225,7 +251,10 @@ class OccurrenceTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            titleText(maxLines: titleLines, softWrap: titleLines > 1),
+            withPicture(
+              titleText(maxLines: titleLines, softWrap: titleLines > 1),
+              size: 16,
+            ),
             if (spanText != null)
               Text(
                 spanText,

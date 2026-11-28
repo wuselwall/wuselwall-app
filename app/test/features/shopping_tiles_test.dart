@@ -80,6 +80,7 @@ Future<void> pumpBody(
       overrides: [
         ...overrides,
         uiRegisterProvider.overrideWithValue(register),
+        deviceRegisterProvider.overrideWithValue(register),
         shoppingViewProvider.overrideWithValue(
           AsyncData(
             ShoppingView(

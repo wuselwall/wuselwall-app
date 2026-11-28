@@ -27,6 +27,22 @@ La tarjeta **Primeros pasos** aparece mientras falte configurar algo: invitar a 
 
 **Activar recordatorios** también forma parte de los primeros pasos en tu teléfono personal. Dar permiso para las notificaciones marca este paso como completado y lo mantiene en el total. Rechazarlo lo deja pendiente. **No lo necesitamos** oculta el paso en este dispositivo sin conceder permiso. Si cambias el permiso en los ajustes del sistema, el progreso se actualiza al volver a la aplicación.
 
+## Buscar {#search}
+
+Para encontrar algo concreto sin abrir cada pestaña: en la vista de los adultos, la barra superior de cada pestaña, salvo el Calendario, tiene una lupa, **Buscar**, junto al engranaje de los ajustes. En el Calendario, **Buscar eventos** tiene su propia entrada y empieza por los eventos (véase [Buscar citas](/es/calendar/#search)). No hay búsqueda en la pantalla de pared de la cocina ni en la vista de los niños.
+
+<Shot name="search" alt="Búsqueda de «pasta»: una receta bajo Recetas y artículos bajo Lista de la compra" />
+
+Escribe una palabra y la búsqueda muestra bajo títulos lo que encaja:
+
+- **Eventos**: por título, lugar y nota. Primero van los próximos y después los pasados, bajo **Eventos pasados**. Una cita que se repite aparece una sola vez, con su próxima fecha. Se incluyen las citas de los [calendarios externos](/es/calendar/#outside-calendars).
+- **Tareas y recompensas**
+- **Recetas**: por título y etiquetas
+- los artículos pendientes de vuestras **listas de la compra**
+- los **ajustes**
+
+Cada grupo muestra cinco resultados; **Mostrar los 12** abre el resto. Mayúsculas, minúsculas, diéresis y tildes no importan. Al tocar un resultado vas a su sitio: un evento abre su día en el calendario, una tarea o recompensa su editor, una receta la receta, un artículo su lista de la compra y un ajuste su página. Más detalles en [Buscar citas](/es/calendar/#search) y [Buscar en los ajustes](/es/settings/household#search).
+
 ## El hogar {#the-household}
 
 Todo pertenece a un **hogar**, tu familia, con **miembros** (nombre y color propios) y **dispositivos**: móviles, tabletas y pantalla de cocina.
@@ -36,7 +52,7 @@ Todo pertenece a un **hogar**, tu familia, con **miembros** (nombre y color prop
 | Rol | Permisos |
 |---|---|
 | **Madre o padre** | Administrar miembros, dispositivos y seguridad; aprobar recompensas |
-| **Otro adulto** (por ejemplo, los abuelos o una au pair) o **niño** | Añadir y marcar productos, terminar la compra y usar las funciones autorizadas |
+| **Otro adulto** (por ejemplo, los abuelos o una au pair) o **niño** | Añadir y marcar productos, terminar la compra y usar las funciones autorizadas; los niños, solo donde la familia ha activado **Compra para los niños** |
 
 ## Tres tipos de dispositivo {#three-kinds-of-devices}
 

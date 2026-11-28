@@ -44,12 +44,15 @@ export type DiscoveryDocument = {
 };
 
 /** What the running stack adds to the database's features: abilities that depend on its
- * configuration, not on its migrations. `timetable-scan` needs the optional OCR service
- * (OCR_URL, specs/24): an app hides the scan where it is missing. */
+ * functions or its configuration, not on its migrations. `timetable-scan` needs the
+ * optional OCR service (OCR_URL, specs/24): an app hides the scan where it is missing. */
 export function runtimeFeatures(
   env: (name: string) => string | undefined,
 ): string[] {
-  const features: string[] = [];
+  // `search`: appointments are found by the `search` function (FR-10.2). It needs no
+  // migration, so the functions announce it themselves; an app hides the appointment
+  // search on a server whose functions are older.
+  const features: string[] = ["search"];
   if (env("OCR_URL")?.trim()) features.push("timetable-scan");
   return features;
 }

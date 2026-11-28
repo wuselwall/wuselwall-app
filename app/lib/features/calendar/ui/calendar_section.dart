@@ -11,6 +11,7 @@ import 'package:wuselwall/features/calendar/ui/calendar_page.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/new_tradition_sheet.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
+import 'package:wuselwall/features/kid/application/child_view.dart';
 import 'package:wuselwall/features/trips/application/trip_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -44,7 +45,8 @@ final calendarSection = HomeSection(
 /// (specs/30), only where an adult can plan trips. A phone keeps the one button, so less
 /// of the grid is covered; the tradition and the trips start from tiles on the *Neuer
 /// Termin* page there. (The app bar has no room: a 48 px action there pushes "Heute" and
-/// the date out of a narrow bar.)
+/// the date out of a narrow bar.) A child's calendar, their own four days, has the one
+/// button as well.
 class CalendarFab extends ConsumerWidget {
   const CalendarFab({super.key});
 
@@ -53,19 +55,23 @@ class CalendarFab extends ConsumerWidget {
 
   /// Whether the small tradition button floats above "Neuer Termin" in this [context].
   static bool showsTradition(BuildContext context, WidgetRef ref) =>
+      ref.watch(childCalendarProvider) == null &&
       ref.watch(lighterDaySupportedProvider) &&
       MediaQuery.sizeOf(context).width >= phoneWidth;
 
   /// Whether the small trips button floats in this [context].
   static bool showsTrips(BuildContext context, WidgetRef ref) =>
+      ref.watch(childCalendarProvider) == null &&
       ref.watch(tripsOfferedProvider) &&
       MediaQuery.sizeOf(context).width >= phoneWidth;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    // A new event starts on the day in view, not always today.
+    // A new event starts on the day in view, not always today. A child's calendar
+    // starts today, whatever week an adult left the calendar on.
     DateTime day() =>
+        ref.read(childCalendarProvider)?.from ??
         ref.read(calendarViewProvider).newEventDay(ref.read(nowProvider));
     final newEvent = FloatingActionButton.extended(
       onPressed: () =>

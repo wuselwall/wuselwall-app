@@ -254,6 +254,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get actingWho => '¿Quién eres?';
 
   @override
+  String actingDone(String name) {
+    return '$name ha terminado';
+  }
+
+  @override
   String get pinTitle => 'PIN de los padres';
 
   @override
@@ -813,6 +818,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get boardBackToWeek => 'Volver a la semana';
 
   @override
+  String get boardShoppingAskAdult =>
+      'La lista de la compra es para los mayores. Toca tu nombre.';
+
+  @override
   String get boardTentative => 'aún sin confirmar';
 
   @override
@@ -1241,6 +1250,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get calendarToday => 'Hoy';
+
+  @override
+  String get calendarChildDays => 'Hoy y los tres días siguientes';
 
   @override
   String calendarRange(String from, String to) {
@@ -2802,6 +2814,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => '¡Hola! Toca tu nombre.';
+
+  @override
+  String get kidSimpleBack => 'Atrás';
+
+  @override
+  String get kidSimpleTomorrow => 'Mañana';
+
+  @override
+  String get kidSimpleAppointments => 'Mis citas';
+
+  @override
+  String get kidSimpleNoSchool => 'No hay colegio.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'Necesitas: $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Todavía no hay nada previsto.';
 
   @override
   String kidGreeting(String name) {
@@ -5579,11 +5611,18 @@ class AppLocalizationsEs extends AppLocalizations {
       'La bandera de vuestro país en la colina en su fiesta nacional, como el 1 de agosto en Suiza. El país sale de vuestra región.';
 
   @override
-  String get settingHouseholdKidShoppingTitle => 'Compra en la vista infantil';
+  String get settingHouseholdKidShoppingTitle => 'Compra para los niños';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Añade la pestaña Compra a la vista infantil, donde añaden y marcan artículos. En la pantalla de pared pueden añadirlos de todos modos.';
+      'Los niños añaden y marcan artículos en la lista de la compra. Desactivado: los niños no tienen lista de la compra, y en la tableta compartida y la pantalla de pared solo se abre cuando un adulto ha tocado su nombre.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Calendario para los niños';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Los niños ven sus propias citas de hoy y de los tres días siguientes. Desactivado: solo hoy. La tableta compartida no tiene entonces la pestaña Calendario hasta que un adulto toque su nombre.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'La cuenta atrás empieza';
@@ -6250,7 +6289,59 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventIcon_broom => 'Limpieza';
 
   @override
+  String get eventIcon_cleaner => 'Viene la limpieza';
+
+  @override
+  String get eventIcon_doctor => 'Médico';
+
+  @override
+  String get eventIcon_dentist => 'Dentista';
+
+  @override
+  String get eventIcon_haircut => 'Peluquería';
+
+  @override
+  String get eventIcon_vet => 'Veterinario';
+
+  @override
+  String get eventIcon_bicycle => 'Bici';
+
+  @override
+  String get eventIcon_ski => 'Esquí';
+
+  @override
+  String get eventIcon_dance => 'Baile';
+
+  @override
+  String get eventIcon_riding => 'Equitación';
+
+  @override
+  String get eventIcon_tennis => 'Tenis';
+
+  @override
+  String get eventIcon_guitar => 'Instrumento';
+
+  @override
+  String get eventIcon_laundry => 'Colada';
+
+  @override
+  String get eventIcon_garden => 'Jardín';
+
+  @override
+  String get eventIcon_car => 'Coche';
+
+  @override
+  String get eventIcon_work => 'Trabajo';
+
+  @override
+  String get eventIcon_shopping => 'Compras';
+
+  @override
   String get eventIcon_star => 'Especial';
+
+  @override
+  String get iconProposedFromTitle =>
+      'Sugerida por el título. Toca una imagen para elegir otra.';
 
   @override
   String get kidWishTitle => 'Tu comida favorita';
@@ -8843,4 +8934,75 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errPackItemNotYours => 'Solo puedes anotar cosas para ti.';
+
+  @override
+  String get searchTitle => 'Buscar';
+
+  @override
+  String get searchHint => '¿Qué buscas?';
+
+  @override
+  String get searchIntro =>
+      'Encuentra eventos, tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.';
+
+  @override
+  String get searchIntroLocal =>
+      'Encuentra tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.';
+
+  @override
+  String get searchEventsTitle => 'Buscar eventos';
+
+  @override
+  String get searchEventsHint => 'Título, lugar o nota';
+
+  @override
+  String get searchEventsIntro =>
+      'Encuentra eventos por título, lugar y nota: próximos y pasados, también los de calendarios externos.';
+
+  @override
+  String get searchClear => 'Borrar';
+
+  @override
+  String get searchNothingFound => 'No se ha encontrado nada.';
+
+  @override
+  String get searchSectionEvents => 'Eventos';
+
+  @override
+  String get searchSectionPast => 'Eventos pasados';
+
+  @override
+  String get searchSectionTasks => 'Tareas y recompensas';
+
+  @override
+  String get searchKindChore => 'Tarea';
+
+  @override
+  String get searchKindReward => 'Recompensa';
+
+  @override
+  String get searchEventRepeats => 'Se repite';
+
+  @override
+  String get searchMore => 'Hay más. Otra palabra acota la búsqueda.';
+
+  @override
+  String get settingsSearchHint => 'Buscar en los ajustes';
+
+  @override
+  String get tasksFilterChores => 'Filtrar tareas';
+
+  @override
+  String get tasksFilterRewards => 'Filtrar recompensas';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mostrar los $count',
+      one: 'Mostrar 1',
+    );
+    return '$_temp0';
+  }
 }

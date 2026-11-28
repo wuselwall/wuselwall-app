@@ -256,6 +256,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get actingWho => 'Qui es-tu ?';
 
   @override
+  String actingDone(String name) {
+    return '$name a terminé';
+  }
+
+  @override
   String get pinTitle => 'Code PIN parental';
 
   @override
@@ -816,6 +821,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get boardBackToWeek => 'Revenir à la semaine';
 
   @override
+  String get boardShoppingAskAdult =>
+      'La liste de courses est pour les grands. Appuie sur ton prénom.';
+
+  @override
   String get boardTentative => 'pas encore confirmé';
 
   @override
@@ -1245,6 +1254,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get calendarToday => 'Aujourd’hui';
+
+  @override
+  String get calendarChildDays => 'Aujourd’hui et les trois jours suivants';
 
   @override
   String calendarRange(String from, String to) {
@@ -2816,6 +2828,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => 'Salut ! Appuie sur ton prénom.';
+
+  @override
+  String get kidSimpleBack => 'Retour';
+
+  @override
+  String get kidSimpleTomorrow => 'Demain';
+
+  @override
+  String get kidSimpleAppointments => 'Mes rendez-vous';
+
+  @override
+  String get kidSimpleNoSchool => 'Pas d’école.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'Tu auras besoin de : $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Rien n’est encore prévu.';
 
   @override
   String kidGreeting(String name) {
@@ -5594,12 +5626,18 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le drapeau de votre pays sur la colline le jour de sa fête nationale, par exemple le 1er août en Suisse. Le pays vient de votre région.';
 
   @override
-  String get settingHouseholdKidShoppingTitle =>
-      'Courses dans la vue des enfants';
+  String get settingHouseholdKidShoppingTitle => 'Courses pour les enfants';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Ajoute l’onglet Courses à la vue des enfants, où ils ajoutent et cochent des articles. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.';
+      'Les enfants ajoutent et cochent des articles sur la liste de courses. Désactivé : les enfants n’ont pas de liste de courses, et sur la tablette commune et l’écran mural elle ne s’ouvre qu’une fois qu’un adulte a appuyé sur son prénom.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Calendrier pour les enfants';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Les enfants voient leurs propres rendez-vous d’aujourd’hui et des trois jours suivants. Désactivé : seulement aujourd’hui. La tablette commune n’a alors pas d’onglet Calendrier tant qu’un adulte n’a pas appuyé sur son prénom.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Le compte à rebours commence';
@@ -6270,7 +6308,59 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventIcon_broom => 'Ménage';
 
   @override
+  String get eventIcon_cleaner => 'Aide ménagère';
+
+  @override
+  String get eventIcon_doctor => 'Médecin';
+
+  @override
+  String get eventIcon_dentist => 'Dentiste';
+
+  @override
+  String get eventIcon_haircut => 'Coiffeur';
+
+  @override
+  String get eventIcon_vet => 'Vétérinaire';
+
+  @override
+  String get eventIcon_bicycle => 'Vélo';
+
+  @override
+  String get eventIcon_ski => 'Ski';
+
+  @override
+  String get eventIcon_dance => 'Danse';
+
+  @override
+  String get eventIcon_riding => 'Équitation';
+
+  @override
+  String get eventIcon_tennis => 'Tennis';
+
+  @override
+  String get eventIcon_guitar => 'Instrument';
+
+  @override
+  String get eventIcon_laundry => 'Lessive';
+
+  @override
+  String get eventIcon_garden => 'Jardin';
+
+  @override
+  String get eventIcon_car => 'Voiture';
+
+  @override
+  String get eventIcon_work => 'Travail';
+
+  @override
+  String get eventIcon_shopping => 'Shopping';
+
+  @override
   String get eventIcon_star => 'Spécial';
+
+  @override
+  String get iconProposedFromTitle =>
+      'Suggérée d’après le titre. Touche une image pour en choisir une autre.';
 
   @override
   String get kidWishTitle => 'Ton repas préféré';
@@ -8866,4 +8956,76 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errPackItemNotYours => 'Tu ne peux noter que pour toi.';
+
+  @override
+  String get searchTitle => 'Rechercher';
+
+  @override
+  String get searchHint => 'Que cherches-tu ?';
+
+  @override
+  String get searchIntro =>
+      'Trouve les événements, les tâches et récompenses, les recettes, les articles de vos listes de courses et les paramètres.';
+
+  @override
+  String get searchIntroLocal =>
+      'Trouve les tâches et récompenses, les recettes, les articles de vos listes de courses et les paramètres.';
+
+  @override
+  String get searchEventsTitle => 'Rechercher des événements';
+
+  @override
+  String get searchEventsHint => 'Titre, lieu ou note';
+
+  @override
+  String get searchEventsIntro =>
+      'Trouve les événements par titre, lieu et note : à venir et passés, y compris ceux des calendriers externes.';
+
+  @override
+  String get searchClear => 'Effacer';
+
+  @override
+  String get searchNothingFound => 'Aucun résultat.';
+
+  @override
+  String get searchSectionEvents => 'Événements';
+
+  @override
+  String get searchSectionPast => 'Événements passés';
+
+  @override
+  String get searchSectionTasks => 'Tâches et récompenses';
+
+  @override
+  String get searchKindChore => 'Tâche';
+
+  @override
+  String get searchKindReward => 'Récompense';
+
+  @override
+  String get searchEventRepeats => 'Se répète';
+
+  @override
+  String get searchMore =>
+      'Il y en a d’autres. Un mot de plus précise la recherche.';
+
+  @override
+  String get settingsSearchHint => 'Rechercher dans les paramètres';
+
+  @override
+  String get tasksFilterChores => 'Filtrer les tâches';
+
+  @override
+  String get tasksFilterRewards => 'Filtrer les récompenses';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Afficher les $count',
+      one: 'Afficher 1',
+    );
+    return '$_temp0';
+  }
 }

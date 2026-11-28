@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/text/suggest.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
@@ -63,6 +64,13 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
   late final TextEditingController _title;
   late final TextEditingController _points;
   late String? _icon;
+
+  /// [_icon] was proposed from the title (specs/29 feature 3), not chosen: the next
+  /// title change may replace it, and the picture row marks it until one is tapped.
+  bool _iconProposed = false;
+
+  /// A picture, or none, was chosen in the picture row: the title proposes no more.
+  bool _iconChosen = false;
   late TaskKind _kind;
   late TaskRepeat _repeat;
   late Set<int> _weekdays;
@@ -135,12 +143,32 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
     ]);
   }
 
-  /// A title was taken over: its picture comes along while none is chosen.
+  /// A title was taken over: its picture comes along while none is chosen (a proposed
+  /// one gives way to it). Without a picture of its own the title proposes one.
   void _titlePicked(TextSuggestion picked) {
     final icon = picked.iconKey;
-    if (_icon == null && icon != null && _iconChoices.contains(icon)) {
-      setState(() => _icon = icon);
+    if (icon == null || !_iconChoices.contains(icon)) {
+      _proposeIcon(picked.text);
+      return;
     }
+    if (!_iconChosen && (_icon == null || _iconProposed)) {
+      setState(() {
+        _icon = icon;
+        _iconProposed = false;
+      });
+    }
+  }
+
+  /// Proposes the picture the matcher finds for [title] while none was chosen by
+  /// hand; a title that matches nothing takes the proposal back.
+  void _proposeIcon(String title) {
+    if (_iconChosen || (_icon != null && !_iconProposed)) return;
+    final key = ref.read(tasksMatcherProvider)?.match(title)?.iconKey;
+    final known = key != null && taskIconKeys.contains(key);
+    setState(() {
+      _icon = known ? key : null;
+      _iconProposed = known;
+    });
   }
 
   /// Validates the form, marking what is wrong. Null when it can be sent.
@@ -310,6 +338,8 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // Loads the dictionary while the form opens, so the first typed title can propose.
+    ref.watch(tasksMatcherProvider);
     final active = widget.members.where((m) => m.active).toList();
     // Full screen on a phone and a laptop alike: the form scrolls inside its frame,
     // and the save bar stays in reach.
@@ -361,13 +391,26 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
                 onPicked: _titlePicked,
                 autofocus: !_editing,
                 maxLength: 80,
-                onChanged: (_) => setState(() => _titleError = false),
+                onChanged: (text) {
+                  setState(() => _titleError = false);
+                  _proposeIcon(text);
+                },
                 decoration: InputDecoration(
                   labelText: l10n.tasksFieldTitle,
                   errorText: _titleError ? l10n.tasksTitleRequired : null,
                 ),
               ),
               _Label(l10n.tasksFieldIcon),
+              if (_iconProposed && _icon != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: Tokens.space2),
+                  child: Text(
+                    l10n.iconProposedFromTitle,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
               Wrap(
                 spacing: Tokens.space2,
                 runSpacing: Tokens.space2,
@@ -376,10 +419,15 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
                     _IconChoice(
                       asset: taskIconAsset(key),
                       selected: _icon == key,
+                      proposed: _iconProposed,
                       tooltip: key == null
                           ? l10n.tasksNoIcon
                           : taskIconName(l10n, key),
-                      onTap: () => setState(() => _icon = key),
+                      onTap: () => setState(() {
+                        _icon = key;
+                        _iconProposed = false;
+                        _iconChosen = true;
+                      }),
                     ),
                 ],
               ),
@@ -590,10 +638,14 @@ class _IconChoice extends StatelessWidget {
     required this.selected,
     required this.tooltip,
     required this.onTap,
+    this.proposed = false,
   });
 
   final String? asset;
   final bool selected;
+
+  /// Selected by the title's proposal: a lighter frame.
+  final bool proposed;
   final String tooltip;
   final VoidCallback onTap;
 
@@ -619,7 +671,11 @@ class _IconChoice extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: selected ? scheme.primary : Colors.transparent,
+                color: !selected
+                    ? Colors.transparent
+                    : proposed
+                    ? scheme.primary.withValues(alpha: 0.5)
+                    : scheme.primary,
                 width: 2,
               ),
             ),

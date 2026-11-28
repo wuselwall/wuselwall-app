@@ -29,6 +29,22 @@ As long as something from the setup is missing, the **Getting started** card is 
 
 **Turn on reminders** is also a first step on your personal phone. Granting notification permission marks it done and keeps it in the progress total. Declining leaves it open. **Not needed** hides the step on this device; it does not grant permission. If you change permission in system settings, the progress updates when you return to the app.
 
+## Search {#search}
+
+To find something specific without opening each tab: in the adults' view, the bar at the top of every tab except the Calendar has a magnifier, **Search**, next to the settings gear. In the Calendar, **Search events** has its own entry and starts with events (see [Searching for appointments](/en/calendar/#search)). There is no search on the kitchen wall or in the children's view.
+
+<Shot name="search" alt="Search for “pasta”: a recipe under Recipes and an item under Shopping list" />
+
+Type a word, and the search shows what fits under headings:
+
+- **Events**: by title, place and note. Coming ones come first, past ones follow under **Past events**. A repeating appointment appears once, with its next date. Appointments from [outside calendars](/en/calendar/#outside-calendars) are included.
+- **Chores and rewards**
+- **Recipes**: by title and tags
+- open items on your **shopping lists**
+- **Settings**
+
+Each group shows five results; **Show all 12** opens the rest. Upper and lower case, umlauts and accents do not matter. Tap a result to go to it: an event opens its day in the calendar, a chore or reward its editor, a recipe the recipe, an item its shopping list and a setting its page. More under [Searching for appointments](/en/calendar/#search) and [Searching the settings](/en/settings/household#search).
+
 ## The household
 
 Everything belongs to one **household**: your family. A household has **members** (each person has a name and a colour of their own) and **devices** (phones, tablets, the screen in the kitchen).
@@ -38,7 +54,7 @@ Everything belongs to one **household**: your family. A household has **members*
 | | May |
 |---|---|
 | **Parents** | everything: add members, connect and block devices, manage security |
-| **Children and other adults** | use the shopping list: add items, tick them, finish the trip |
+| **Children and other adults** | use the shopping list: add items, tick them, finish the trip. For children this holds only where the family has switched on **Shopping for children** |
 
 ## Three kinds of devices
 

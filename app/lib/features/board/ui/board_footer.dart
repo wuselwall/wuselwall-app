@@ -11,6 +11,7 @@ import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
 import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
+import 'package:wuselwall/features/kid/application/child_view.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/week_review_widgets.dart';
@@ -123,12 +124,7 @@ class BoardFooter extends StatelessWidget {
                     showBoardDetail(
                       context,
                       title: l10n.boardShoppingList,
-                      body: const Column(
-                        children: [
-                          Expanded(child: ShoppingBody()),
-                          ActingProfileBar(),
-                        ],
-                      ),
+                      body: const _WallShopping(),
                     ),
                   ),
                   child: Row(
@@ -270,6 +266,40 @@ class _OpenTasks extends StatelessWidget {
             child: chip(m, count),
           ),
       ],
+    );
+  }
+}
+
+/// The wall's shopping list, with the avatars under it: the wall writes as whoever
+/// tapped their name. Where the family keeps the list from the children
+/// (`household.kid_shopping` off) it opens only once an adult has done so; until
+/// then, and for a child, it says who it is for (specs/09 "What a child sees").
+class _WallShopping extends ConsumerWidget {
+  const _WallShopping();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // A child under twelve who taps their name here gets their simple view, which has
+    // the list where the family offers it (the detail closes itself, board_detail.dart).
+    // The bar floats over the list, as on every page with it (#311).
+    return WithActingProfileBar(
+      child: ref.watch(shoppingOfferedProvider)
+          ? const ShoppingBody()
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  context.l10n.boardShoppingAskAdult,
+                  key: const ValueKey('wall-shopping-adults'),
+                  style: boardUi(
+                    28,
+                    weight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
     );
   }
 }

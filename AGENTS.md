@@ -101,6 +101,17 @@ destinations (`_shared/trips/destinations.ts`) for discovery. The pages live in
 `app/lib/features/trips/` and open from the Calendar tab and a card on Today, in the adult
 register only; children and the wall see the calendar entry and the countdown. Reads go through
 the read cache, so a trip is readable without network.
+Search (2026-11-28, issue #299, FR-10): one matching rule (`app/lib/core/text/search.dart`: folded
+words, all of them, title first; `SearchField` in `core/ui`). Einstellungen has a field on its top
+page that finds every row of every group, Advanced ones included: choosing one switches the device
+to Advanced and opens the group's page with the row in view (`?row=`, specs/21 "Finding a
+setting"; the index is `features/settings/ui/settings_search.dart`, built from the groups' map).
+Appointments are found by the `search` Edge Function (`_shared/search.ts`, specs/05 "Finding an
+appointment": acts as the caller, no migration, feature `search` announced by the functions; one
+answer per event, a series with its next date). The search page (`features/search`, `/search`,
+specs/09 "Search") opens from the adult home's bar and from the calendar's toolbar and also finds
+chores, rewards, recipes and open shopping items on the device. The chores and rewards lists
+filter from seven entries on.
 Opt-in services ([ADR-023](specs/adr/ADR-023-opt-in-services.md), the same day): weather, place
 search, routes and map pictures come from providers a guardian switches on per household under
 Einstellungen → Wetter und Karten; none is on by default. A provider is one plug-in file in
@@ -131,6 +142,12 @@ by the node test), `app.match_dictionary` runs the same layers in plpgsql and fe
 `rankTiles` falls back to the matcher and the "Neu" tile shows the matched picture; a person's
 category choice is remembered per household in `app.match_correction` (Einstellungen > Einkaufen >
 Gelernte Wörter, Advanced, guardians forget).
+Who is here (2026-11-28, issue #306, [specs/09](specs/09-clients-and-ux.md#who-is-here) "Who is
+here"): on a shared device and the wall the avatars no longer sit in a band under the page.
+`ActingProfileBar` floats, placed by `WithActingProfileBar`: a soft-edged dock asks while nobody is
+chosen, then leaves, and a button at the bottom end (avatar, name, a door; `actingDone`) gives the
+device back to nobody. The page reads the covered room as `MediaQuery` bottom padding. The demo has
+`?scenario=tablet` (a shared tablet in the adult register).
 Proposals while typing (2026-11-14, issue #239, specs/05 "Proposals while typing"): an event's
 title and place and a chore's title propose what the family entered before (`SuggestField` in
 `core/ui`, ranked by `core/text/suggest.dart` from `api.events` and `api.task_definitions`; no
@@ -141,6 +158,14 @@ are separate accessible controls. The original full Chromium capture passed all 
 cases; current qualification still keeps genuinely undersized and nested controls blocking.
 Its refusal fixture now has no events (multiple events can go into a trip), and browser
 readiness requires the exact refusal text/title plus only the localized Close action.
+The simple view (2026-11-28, issue #298, [specs/09](specs/09-clients-and-ux.md) "The simple
+view" and "What a child sees", FR-5.21/5.22): a child under twelve, or without a birthday, gets
+`KidSimpleHome` on every device once chosen (the wall and the tablet for everyone turn into the kid
+register for them: `uiRegisterProvider` is the register on screen, `deviceRegisterProvider` the
+device's own); every child sees only their own appointments for today and the next three days;
+`household.kid_shopping` and the new `household.kid_calendar` (migration
+`20261128100000_kid_calendar.sql`, on by default, a server without the row counts as on) also apply
+to a shared device with nobody chosen (`features/kid/application/child_view.dart`).
 A restart without network (step 10.6, issue #128, 2026-11-10): reads given a `cacheKey` in
 `ApiClient` keep their last good JSON answer in a second drift database
 (`app/lib/core/cache/`, ADR-006's read cache) and fall back to it on a network failure only:

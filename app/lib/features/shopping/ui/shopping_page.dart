@@ -100,7 +100,8 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final register = ref.watch(uiRegisterProvider);
-    final kiosk = register == UiRegister.kiosk;
+    // The wall stays the wall for a child too: no typing, one combined view.
+    final kiosk = ref.watch(deviceRegisterProvider) == UiRegister.kiosk;
     // The children add and tick (specs/09): making, editing and the history of lists
     // are for the grown-ups' registers.
     final kid = register == UiRegister.kid;

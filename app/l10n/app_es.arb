@@ -95,6 +95,14 @@
     }
   },
   "actingWho": "¿Quién eres?",
+  "actingDone": "{name} ha terminado",
+  "@actingDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "pinTitle": "PIN de los padres",
   "pinPrompt": "Introduce el PIN de {name}",
   "@pinPrompt": {
@@ -426,6 +434,7 @@
   "boardShoppingList": "Lista de la compra",
   "boardNightMode": "Vista nocturna",
   "boardBackToWeek": "Volver a la semana",
+  "boardShoppingAskAdult": "La lista de la compra es para los mayores. Toca tu nombre.",
   "boardTentative": "aún sin confirmar",
   "boardNoAppointments": "Sin citas",
   "boardSchool": "Colegio",
@@ -648,6 +657,7 @@
   "@calendarNext": {},
   "calendarChooseView": "Vista del calendario",
   "calendarToday": "Hoy",
+  "calendarChildDays": "Hoy y los tres días siguientes",
   "@calendarToday": {},
   "calendarRange": "{from} – {to}",
   "@calendarRange": {
@@ -1475,6 +1485,19 @@
   "kidTabShopping": "Compra",
   "kidTabFamily": "Familia",
   "kidWhoAreYou": "¡Hola! Toca tu nombre.",
+  "kidSimpleBack": "Atrás",
+  "kidSimpleTomorrow": "Mañana",
+  "kidSimpleAppointments": "Mis citas",
+  "kidSimpleNoSchool": "No hay colegio.",
+  "kidSimpleNeeds": "Necesitas: {items}",
+  "@kidSimpleNeeds": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSimpleNothing": "Todavía no hay nada previsto.",
   "kidGreeting": "¡Hola, {name}!",
   "@kidGreeting": {
     "placeholders": {
@@ -2907,8 +2930,10 @@
   "settingAmbienceStNicholasHelp": "Una bota llena el 6 de diciembre (el 5 en los Países Bajos).",
   "settingAmbienceNationalDayTitle": "Fiesta nacional",
   "settingAmbienceNationalDayHelp": "La bandera de vuestro país en la colina en su fiesta nacional, como el 1 de agosto en Suiza. El país sale de vuestra región.",
-  "settingHouseholdKidShoppingTitle": "Compra en la vista infantil",
-  "settingHouseholdKidShoppingHelp": "Añade la pestaña Compra a la vista infantil, donde añaden y marcan artículos. En la pantalla de pared pueden añadirlos de todos modos.",
+  "settingHouseholdKidShoppingTitle": "Compra para los niños",
+  "settingHouseholdKidShoppingHelp": "Los niños añaden y marcan artículos en la lista de la compra. Desactivado: los niños no tienen lista de la compra, y en la tableta compartida y la pantalla de pared solo se abre cuando un adulto ha tocado su nombre.",
+  "settingHouseholdKidCalendarTitle": "Calendario para los niños",
+  "settingHouseholdKidCalendarHelp": "Los niños ven sus propias citas de hoy y de los tres días siguientes. Desactivado: solo hoy. La tableta compartida no tiene entonces la pestaña Calendario hasta que un adulto toque su nombre.",
   "settingRitualsCountdownDaysTitle": "La cuenta atrás empieza",
   "settingRitualsCountdownDaysHelp": "Cuántos días antes de un cumpleaños, las vacaciones o una cita marcada aparece la cuenta atrás.",
   "settingRitualsCountdownReturnTitle": "Cuenta atrás hasta una vuelta",
@@ -3082,7 +3107,24 @@
   "eventIcon_ferris": "Feria",
   "eventIcon_house": "Casa",
   "eventIcon_broom": "Limpieza",
+  "eventIcon_cleaner": "Viene la limpieza",
+  "eventIcon_doctor": "Médico",
+  "eventIcon_dentist": "Dentista",
+  "eventIcon_haircut": "Peluquería",
+  "eventIcon_vet": "Veterinario",
+  "eventIcon_bicycle": "Bici",
+  "eventIcon_ski": "Esquí",
+  "eventIcon_dance": "Baile",
+  "eventIcon_riding": "Equitación",
+  "eventIcon_tennis": "Tenis",
+  "eventIcon_guitar": "Instrumento",
+  "eventIcon_laundry": "Colada",
+  "eventIcon_garden": "Jardín",
+  "eventIcon_car": "Coche",
+  "eventIcon_work": "Trabajo",
+  "eventIcon_shopping": "Compras",
   "eventIcon_star": "Especial",
+  "iconProposedFromTitle": "Sugerida por el título. Toca una imagen para elegir otra.",
   "kidWishTitle": "Tu comida favorita",
   "kidWishInvite": "¿Qué te apetece comer esta semana?",
   "kidWishWaiting": "Has pedido {title}. Tus padres buscarán un día.",
@@ -3810,5 +3852,25 @@
   "packItemRemoved": "{title} quitado",
   "errPackItemInvalid": "No se puede anotar: como mucho 80 caracteres, para un niño de la familia, como mucho 20 cosas al día.",
   "errPackItemNotFound": "Esto ya no está en la lista.",
-  "errPackItemNotYours": "Solo puedes anotar cosas para ti."
+  "errPackItemNotYours": "Solo puedes anotar cosas para ti.",
+  "searchTitle": "Buscar",
+  "searchHint": "¿Qué buscas?",
+  "searchIntro": "Encuentra eventos, tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.",
+  "searchIntroLocal": "Encuentra tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.",
+  "searchEventsTitle": "Buscar eventos",
+  "searchEventsHint": "Título, lugar o nota",
+  "searchEventsIntro": "Encuentra eventos por título, lugar y nota: próximos y pasados, también los de calendarios externos.",
+  "searchClear": "Borrar",
+  "searchNothingFound": "No se ha encontrado nada.",
+  "searchSectionEvents": "Eventos",
+  "searchSectionPast": "Eventos pasados",
+  "searchSectionTasks": "Tareas y recompensas",
+  "searchKindChore": "Tarea",
+  "searchKindReward": "Recompensa",
+  "searchEventRepeats": "Se repite",
+  "searchMore": "Hay más. Otra palabra acota la búsqueda.",
+  "settingsSearchHint": "Buscar en los ajustes",
+  "tasksFilterChores": "Filtrar tareas",
+  "tasksFilterRewards": "Filtrar recompensas",
+  "searchShowAll": "{count, plural, =1{Mostrar 1} other{Mostrar los {count}}}"
 }

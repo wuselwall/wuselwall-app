@@ -95,6 +95,14 @@
     }
   },
   "actingWho": "Qui es-tu ?",
+  "actingDone": "{name} a terminé",
+  "@actingDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "pinTitle": "Code PIN parental",
   "pinPrompt": "Saisis le code PIN de {name}",
   "@pinPrompt": {
@@ -426,6 +434,7 @@
   "boardShoppingList": "Liste de courses",
   "boardNightMode": "Vue de nuit",
   "boardBackToWeek": "Revenir à la semaine",
+  "boardShoppingAskAdult": "La liste de courses est pour les grands. Appuie sur ton prénom.",
   "boardTentative": "pas encore confirmé",
   "boardNoAppointments": "Aucun rendez-vous",
   "boardSchool": "École",
@@ -648,6 +657,7 @@
   "@calendarNext": {},
   "calendarChooseView": "Vue du calendrier",
   "calendarToday": "Aujourd’hui",
+  "calendarChildDays": "Aujourd’hui et les trois jours suivants",
   "@calendarToday": {},
   "calendarRange": "{from} – {to}",
   "@calendarRange": {
@@ -1475,6 +1485,19 @@
   "kidTabShopping": "Courses",
   "kidTabFamily": "Famille",
   "kidWhoAreYou": "Salut ! Appuie sur ton prénom.",
+  "kidSimpleBack": "Retour",
+  "kidSimpleTomorrow": "Demain",
+  "kidSimpleAppointments": "Mes rendez-vous",
+  "kidSimpleNoSchool": "Pas d’école.",
+  "kidSimpleNeeds": "Tu auras besoin de : {items}",
+  "@kidSimpleNeeds": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSimpleNothing": "Rien n’est encore prévu.",
   "kidGreeting": "Salut, {name} !",
   "@kidGreeting": {
     "placeholders": {
@@ -2907,8 +2930,10 @@
   "settingAmbienceStNicholasHelp": "Une botte remplie le 6 décembre (le 5 aux Pays-Bas).",
   "settingAmbienceNationalDayTitle": "Fête nationale",
   "settingAmbienceNationalDayHelp": "Le drapeau de votre pays sur la colline le jour de sa fête nationale, par exemple le 1er août en Suisse. Le pays vient de votre région.",
-  "settingHouseholdKidShoppingTitle": "Courses dans la vue des enfants",
-  "settingHouseholdKidShoppingHelp": "Ajoute l’onglet Courses à la vue des enfants, où ils ajoutent et cochent des articles. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.",
+  "settingHouseholdKidShoppingTitle": "Courses pour les enfants",
+  "settingHouseholdKidShoppingHelp": "Les enfants ajoutent et cochent des articles sur la liste de courses. Désactivé : les enfants n’ont pas de liste de courses, et sur la tablette commune et l’écran mural elle ne s’ouvre qu’une fois qu’un adulte a appuyé sur son prénom.",
+  "settingHouseholdKidCalendarTitle": "Calendrier pour les enfants",
+  "settingHouseholdKidCalendarHelp": "Les enfants voient leurs propres rendez-vous d’aujourd’hui et des trois jours suivants. Désactivé : seulement aujourd’hui. La tablette commune n’a alors pas d’onglet Calendrier tant qu’un adulte n’a pas appuyé sur son prénom.",
   "settingRitualsCountdownDaysTitle": "Le compte à rebours commence",
   "settingRitualsCountdownDaysHelp": "Combien de jours avant un anniversaire, les vacances ou un évènement marqué le compte à rebours apparaît.",
   "settingRitualsCountdownReturnTitle": "Compte à rebours avant un retour",
@@ -3082,7 +3107,24 @@
   "eventIcon_ferris": "Fête foraine",
   "eventIcon_house": "Maison",
   "eventIcon_broom": "Ménage",
+  "eventIcon_cleaner": "Aide ménagère",
+  "eventIcon_doctor": "Médecin",
+  "eventIcon_dentist": "Dentiste",
+  "eventIcon_haircut": "Coiffeur",
+  "eventIcon_vet": "Vétérinaire",
+  "eventIcon_bicycle": "Vélo",
+  "eventIcon_ski": "Ski",
+  "eventIcon_dance": "Danse",
+  "eventIcon_riding": "Équitation",
+  "eventIcon_tennis": "Tennis",
+  "eventIcon_guitar": "Instrument",
+  "eventIcon_laundry": "Lessive",
+  "eventIcon_garden": "Jardin",
+  "eventIcon_car": "Voiture",
+  "eventIcon_work": "Travail",
+  "eventIcon_shopping": "Shopping",
   "eventIcon_star": "Spécial",
+  "iconProposedFromTitle": "Suggérée d’après le titre. Touche une image pour en choisir une autre.",
   "kidWishTitle": "Ton repas préféré",
   "kidWishInvite": "Qu’aimerais-tu manger cette semaine ?",
   "kidWishWaiting": "Tu as choisi {title}. Tes parents vont trouver un jour pour le préparer.",
@@ -3810,5 +3852,25 @@
   "packItemRemoved": "{title} retiré",
   "errPackItemInvalid": "Impossible de le noter : 80 caractères au plus, pour un enfant de la famille, 20 choses par jour au plus.",
   "errPackItemNotFound": "Cet élément n’est plus sur la liste.",
-  "errPackItemNotYours": "Tu ne peux noter que pour toi."
+  "errPackItemNotYours": "Tu ne peux noter que pour toi.",
+  "searchTitle": "Rechercher",
+  "searchHint": "Que cherches-tu ?",
+  "searchIntro": "Trouve les événements, les tâches et récompenses, les recettes, les articles de vos listes de courses et les paramètres.",
+  "searchIntroLocal": "Trouve les tâches et récompenses, les recettes, les articles de vos listes de courses et les paramètres.",
+  "searchEventsTitle": "Rechercher des événements",
+  "searchEventsHint": "Titre, lieu ou note",
+  "searchEventsIntro": "Trouve les événements par titre, lieu et note : à venir et passés, y compris ceux des calendriers externes.",
+  "searchClear": "Effacer",
+  "searchNothingFound": "Aucun résultat.",
+  "searchSectionEvents": "Événements",
+  "searchSectionPast": "Événements passés",
+  "searchSectionTasks": "Tâches et récompenses",
+  "searchKindChore": "Tâche",
+  "searchKindReward": "Récompense",
+  "searchEventRepeats": "Se répète",
+  "searchMore": "Il y en a d’autres. Un mot de plus précise la recherche.",
+  "settingsSearchHint": "Rechercher dans les paramètres",
+  "tasksFilterChores": "Filtrer les tâches",
+  "tasksFilterRewards": "Filtrer les récompenses",
+  "searchShowAll": "{count, plural, =1{Afficher 1} other{Afficher les {count}}}"
 }

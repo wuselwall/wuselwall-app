@@ -52,6 +52,9 @@ on the parent's phone gives `kid` or `kiosk`.
   packing list and to-dos, the comparison of options with combinations, the time windows and
   discovery. Adults only; the kid register and the wall see the calendar entry and the
   countdown.
+- Search (*added 2026-11-28*, FR-10, [below](#search)): not a tab. A magnifier in the home
+  bar beside the gear opens it; the Calendar tab has its own entry, which starts with the
+  appointments. Adults only.
 - Settings: account and sign-in methods; members (edit, order, invite) and invitations;
   devices (connect, rename, revoke); the family (name, timezone, export, delete); household
   settings, presence baselines, feed tokens, subscribed calendars, reminders, getting
@@ -107,12 +110,65 @@ counts); when the acting person becomes nobody, the open settings page leaves fo
   decided 2026-11-04): a new family's children have the other four tabs, so the bar and the
   day stay about them. One switch for the family, not per child or by age: on a shared tablet
   every child has the same tab bar, Shopping opens before anyone is picked, and a birthday is
-  optional. Every family that existed then keeps the tab. Children can still add on the wall.
+  optional. Every family that existed then keeps the tab. Since 2026-11-28 the switch covers
+  every place a child meets the list, the wall included (below, "What a child sees").
 - Family (who is doing what today)
+
+These tabs are what a child of twelve or older has. A younger child has the simple view.
+
+**The simple view** (*decided 2026-11-28*, issue #298). Choosing a child changed almost
+nothing on the wall and on the tablet for everyone, and the kid register's five tabs are more
+than a young child needs. A child **under twelve** therefore gets one page, on every device:
+
+- **Who:** a member of kind `child` whose birthday makes them younger than twelve, and a child
+  without a birthday, which is optional (`Member.isYoungChildOn`). A family that never entered
+  one gets the simple view and leaves it by entering the birthday. There is no switch per
+  child: the age is the rule.
+- **Where:** everywhere the child is the acting person. The kid register shows it in place of
+  the tabs; the tablet for everyone and the wall turn into the kid register for as long as the
+  child is chosen (`uiRegisterProvider` is the register on screen, `deviceRegisterProvider`
+  the device's own). On the wall a tap on the child's name on the week board chooses them,
+  and so does their avatar in a detail (the chore board, the shopping list), which then
+  closes; *Zurück zur Woche* in the band and the 60 s idle return bring the board back.
+- **What:** Wusel's greeting with the points (a tap opens the points page), the day buttons,
+  and the chosen day: on today the child's chores, then school as one card (a tap shows that
+  day's lessons), what to pack, the appointments the child attends, the warm meal, and on
+  today the meal wish; the Tischfrage and the Wochenrückblick appear at their time. No tab
+  bar, no Family page, no week timetable, no countdown list. What a card opens (lessons,
+  points, shopping) opens inside the page with one *Zurück*, not as a route, so the wall's
+  idle timer and the avatar bar stay with it.
+- **Only their own:** every appointment shown is one the child attends. Nothing of a sibling
+  or a parent appears.
+
+**What a child sees** (*decided 2026-11-28*). Three limits hold for every child, whatever the
+age and the device (`features/kid/application/child_view.dart`):
+
+- **Today and the next three days.** The simple view has four day buttons (*Heute*, *Morgen*,
+  two weekdays) and no way to another day. A child of twelve or older in the adult register
+  has a Calendar tab of the same four days with only their own appointments, without the
+  week and month views (`CalendarMode.nextDays`). The kid register's *Mein Tag* shows today.
+- **Two switches for guardians**, `household.kid_shopping` and `household.kid_calendar`
+  ([21](21-household-settings.md#household-and-members)). Shopping off: no Shopping tab or card
+  for a child. Calendar off: a child sees only today (no day buttons, no Calendar tab).
+- **A shared device with nobody chosen counts as a child's**, because a child may be standing
+  there: the tablet for everyone hides the Calendar and Shopping tabs the switches turn off
+  until an adult taps their name, and the wall's shopping list says it is for the grown-ups
+  until an adult has done so. The wall's week board itself always stays: it is the wall.
+
+Attribution on a shared device is cooperative ([08](08-users-auth-permissions.md)), so these
+limits decide what the app offers, not what the server allows: a child who taps a parent's
+name sees the parent's view. What needs a guardian still asks for the PIN.
+
+| Who is at the device | Kids' tablet | Tablet for everyone | Wall |
+|---|---|---|---|
+| nobody | the picker (Shopping and Family open, as before) | adult tabs without the switched-off ones | the week board; shopping opens for an adult |
+| a child under twelve | simple view | simple view | simple view, back to the week after 60 s |
+| a child of twelve or older | the kid tabs | adult tabs without the switched-off ones, own four days in the calendar | the week board, as for an adult |
+| an adult | the kid tabs, as before | everything | everything |
 
 How the kid register fits its screen (decided 2026-10-26, after layout checks on phones,
 tablets and the web from 320 to 1920 px):
-- **Phones stay upright.** Held sideways, the tabs and the avatar bar left about 115 dp
+- **Phones stay upright.** Held sideways, the tabs left too little height
   for the page, so on a phone (shortest side under 600 dp) the kid home is portrait only;
   tablets turn freely.
 - **Pages are at most 840 px wide**, centred, so a tick stays near its chore's title.
@@ -142,6 +198,63 @@ left out rather than shown as a card.
 - The **week board** (below): the standard screen, seven days at once.
 - Tap-through detail: one day in full, one child's Stundenplan, one member's tasks.
   Everything reverts to the week board after 60 s.
+
+### Who is here
+
+On a shared device and on the wall the question "who is acting" floats over the page
+instead of taking a band from it (2026-11-28, issue #306; before, a row of avatars in its
+own colour cut the page with a hard line):
+
+- **Nobody chosen:** a dock at the bottom centre, as wide as the family, with the
+  question and one avatar per active member (circle, initial, name). It has no outline:
+  its edge fades into the page and a soft shadow lifts it
+  ([17](17-design-system.md#who-is-here)). A large family scrolls sideways inside it.
+- **Someone chosen:** the dock sinks away and a button at the bottom end shows who is
+  acting (avatar, name, a door), at least 48 dp high. A tap gives the device back to
+  nobody; the kiosk also does that after 60 s without a touch.
+- **The page under it** is told the room the bar covers as bottom padding, like a gesture
+  bar's, so its last entry scrolls clear; a page's own floating buttons sit above the bar.
+  A tap beside the dock or the button reaches the page.
+- The kid home's big picker is the one place to say who is here while it is shown: no
+  dock under it.
+- Where motion is off, the dock and the button swap without moving (specs/26 "Motion").
+
+## Search
+
+*Built 2026-11-28 (issue #299), FR-10.* One page (`/search`, `features/search`), one field
+that has the focus when the page opens, and under it what answers, grouped by kind in the
+order of the home's tabs: appointments (then past appointments), chores and rewards, recipes
+(title and tags), open items of the shopping lists, settings.
+
+- **Two sources.** Chores, rewards, recipes, shopping items and settings are what the app
+  already holds; they are searched on the device as each letter is typed and work without
+  network. Appointments are asked of the server ([05](05-module-calendar.md#finding-an-appointment)),
+  350 ms after the last keystroke; their section holds its place with a progress line while
+  the answer is under way, so only its rows move what is below.
+- **One rule** for all of it (`core/text/search.dart`): the folding of the shopping search,
+  every word has to be found, a title match first. The same field widget everywhere
+  (`core/ui/search_field.dart`): a magnifier, a hint that says what is searched, a button
+  that empties it.
+- **Five rows a section**, then *Alle n zeigen*: five kinds share one screen. From the
+  calendar (`/search?scope=events`) the page shows appointments only, all of them.
+- **A result leads to its thing**: an appointment to its day in the calendar, a chore or
+  reward to its editor, a recipe to the recipe, a shopping item to its list in the Shopping
+  tab, a setting to its group's page with the row in view
+  ([21](21-household-settings.md#finding-a-setting)). Settings are among the answers only for
+  someone who may open all of Einstellungen.
+- **Where it opens.** The magnifier stands beside the gear on every adult home tab but the
+  calendar's. That bar is full (a 48 px button there pushes the date or "Heute" out, and the
+  module picture of [26](26-colour-and-ambience.md) keeps its place), so the calendar's
+  toolbar has the entry itself: a button after the four view buttons where the bar shows
+  them, the last entry of the view menu elsewhere.
+- **Not** on the wall (FR-8.12) and not in the kid register.
+- **List filters** (FR-10.4): the chores and the rewards under Tasks get the same field above
+  the list from seven entries on (`listFilterFrom`, the wish picker's rule for recipes); below
+  that the eye is quicker than the keyboard. The recipes page, which had its own field, uses
+  the shared one.
+
+Not built: past meals and shopping history ("when did we last buy it?"), which would ride on
+the same function, and a filter for the family's own table questions.
 
 ## Gestures
 

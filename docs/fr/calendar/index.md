@@ -39,7 +39,7 @@ Touchez **Nouvel événement** : il commence le jour affiché par le calendrier 
 
 Des tuiles s’affichent d’abord, pour ne pas tout saisir depuis le début :
 
-- **Modèles** : **Venue de l’aide ménagère**, **Entraînement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie en famille**, **Jeux avec les copains**, **Sortie au cinéma**, **Vacances en famille** et **Anniversaire** (toute la journée, tous les ans). Chacun remplit le titre, l’image, l’heure, la durée et les personnes. L’entraînement commence à 17:00 pour une heure, les jeux avec les copains à 15:00 pour deux heures avec les enfants, et la sortie au cinéma à 16:00 pour deux heures avec la famille. Une sortie en famille dure une journée ; les vacances en famille sont prévues sur sept jours au départ. **Venue de l’aide ménagère** se répète chaque semaine le jour choisi, à 09:00 pour trois heures, pour la personne qui saisit la visite. Une famille avec un enfant voit aussi **École** : **Réunion de classe** pour l’ensemble des parents, **Entretien avec l’enseignant** pour un rendez-vous individuel, **Sortie scolaire**, **Contrôle**, **Fête de l’école** et **Journée sportive scolaire**. Tu peux modifier toutes ces valeurs. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
+- **Modèles** : **Venue de l’aide ménagère**, **Entraînement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie en famille**, **Jeux avec les copains**, **Sortie au cinéma**, **Vacances en famille** et **Anniversaire** (toute la journée, tous les ans). Chacun remplit le titre, l’image, l’heure, la durée et les personnes. L’entraînement commence à 17:00 pour une heure, les jeux avec les copains à 15:00 pour deux heures avec les enfants, et la sortie au cinéma à 16:00 pour deux heures avec la famille. Une sortie en famille dure une journée ; les vacances en famille sont prévues sur sept jours au départ. **Venue de l’aide ménagère** se répète chaque semaine le jour choisi, à 09:00 pour trois heures, pour la personne qui saisit la visite. Une famille avec un enfant voit aussi **École** : **Réunion de classe** pour l’ensemble des parents, **Entretien avec l’enseignant** pour un rendez-vous individuel, **Sortie scolaire**, **Contrôle**, **Fête de l’école** et **Journée sportive scolaire**. Tu peux modifier toutes ces valeurs. Les modèles dont l’image correspond à ce que vous saisissez souvent passent devant : une famille qui saisit souvent « Entraînement de foot » voit d’abord l’entraînement sportif. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
 - **Vos modèles** : ceux que vous avez enregistrés. Dans l’éditeur, touchez **Enregistrer comme modèle** en haut ; le titre, l’image, l’heure, la durée, les personnes, le lieu et les notes sont gardés, ni la date ni la répétition.
 - **Souvent chez vous** : les événements saisis au moins trois fois, comme « Mamie et papi viennent ». WuselWall ne compte que vos propres événements, sur votre serveur ; rien n’en sort. Avec **⋮**, choisissez **Garder comme modèle** ou **Ne plus proposer**.
 
@@ -86,7 +86,7 @@ Pour ce rendez-vous, il remplace votre réglage personnel **Avant un rendez-vous
 
 En bas de l’éditeur, trois réglages rendent le quotidien plus léger (voir [Rituels](/fr/guide/rituals)) :
 
-- **Image** : une des 20 images, comme un gâteau, une pizza, le zoo ou une tente. Elle accompagne l’événement sur le mur et son compte à rebours. **Pas d’image** par défaut.
+- **Image** : une des 37 images, comme un gâteau, le zoo, le dentiste, un vélo ou l’aide ménagère qui vient. Elle accompagne l’événement dans **Aujourd’hui**, dans le calendrier, sur le mur et son compte à rebours. Pendant que tu tapes le titre, WuselWall propose une image qui convient, par exemple la dent pour « Dentiste ». Elle apparaît alors aussi au début du champ du titre et reste seulement entourée jusqu’à ce que tu touches toi-même une image ou **Pas d’image** ; ensuite ton choix reste. Si rien ne convient, c’est **Pas d’image**.
 - **On a hâte** : l’événement a un compte à rebours sur l’écran mural et la tablette des enfants, par exemple « Sortie au zoo : encore 3 dodos ».
 - **Tradition familiale** : ce que la famille fait encore et encore, comme la soirée jeux. Une tradition est toujours sur le mur, avec un ruban. **Avec un repas** indique le plat qui l’accompagne, au **Déjeuner** ou au **Dîner**.
 
@@ -122,7 +122,7 @@ Vous travaillez habituellement au bureau le mardi. Enregistrez-le une fois dans 
 
 ## Les enfants {#children-and-appointments}
 
-Le groupe [Paramètres → Calendrier et école](/fr/settings/household) détermine si les enfants peuvent créer et modifier leurs rendez-vous. Supprimer le rendez-vous d’une autre personne reste réservé aux parents.
+Le groupe [Paramètres → Calendrier et école](/fr/settings/household) détermine si les enfants peuvent créer et modifier leurs rendez-vous. Supprimer le rendez-vous d’une autre personne reste réservé aux parents. Ce que voient les enfants est décrit sous [Tablette des enfants](/fr/guide/wall#kids-switches) : leurs propres rendez-vous d’aujourd’hui et des trois jours suivants, ou seulement aujourd’hui si **Calendrier pour les enfants** est désactivé.
 
 ## Envoyer un événement à une autre famille {#share-event}
 

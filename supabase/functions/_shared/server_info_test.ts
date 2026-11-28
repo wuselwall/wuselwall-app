@@ -177,10 +177,11 @@ Deno.test("discoveryDocument leaves the address out when it is unknown", () => {
 
 Deno.test("the stack adds the scan where its OCR service is configured", () => {
   assertEquals(runtimeFeatures(env({ OCR_URL: "http://ocr:9003/ocr" })), [
+    "search",
     "timetable-scan",
   ]);
-  assertEquals(runtimeFeatures(env({ OCR_URL: " " })), []);
-  assertEquals(runtimeFeatures(env({})), []);
+  assertEquals(runtimeFeatures(env({ OCR_URL: " " })), ["search"]);
+  assertEquals(runtimeFeatures(env({})), ["search"]);
   const doc = discoveryDocument(row, "k", undefined, {
     features: ["timetable-scan", "calendar"],
   });

@@ -105,7 +105,8 @@ belongs to; *self* means a member may change it for themselves.
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
 | `household.region` | household | asked with the first school, country from the device | region picker: any OpenHolidays subdivision (`DE-BE`, `AT-NÖ`, `CH-ZH-ZH-ZH`, `LI`) | Proposes the timezone; the public holidays of the region apply automatically, and Ferien are imported from it. Changeable under Einstellungen. Hand-entered holidays work in any region. *Decided 2026-10-14* | Q18 |
-| `household.kid_shopping` | household | off (on for families that existed on 2026-11-04) | on · off | Whether the kid register has the Shopping tab. Off so that a child's bar and day stay about the child; a family whose children do help with the list switches it on | [09](09-clients-and-ux.md#screens-by-register) |
+| `household.kid_shopping` | household | off (on for families that existed on 2026-11-04) | on · off | Whether children have the shopping list: the kid register's tab, the simple view's card, and, on the tablet for everyone and the wall, the list while nobody or a child is chosen. Off so that a child's bar and day stay about the child; a family whose children do help with the list switches it on | [09](09-clients-and-ux.md#screens-by-register) |
+| `household.kid_calendar` | household | on | on · off | Whether children look ahead: their own appointments for today and the next three days. Off: only today, and the tablet for everyone has no Calendar tab while nobody or a child is chosen. On by default: the look ahead is the child's own plan. *Decided 2026-11-28* | [09](09-clients-and-ux.md#screens-by-register) |
 | `board.member_label` | household | full name | name · initial | The kitchen is private, and a name is easier to read than an initial at two metres. A household with frequent visitors may prefer initials | Q27 |
 | `member.completion_sound` | member, self | on | on · off | Ticking a chore off makes a short sound. The sound is part of the motivation for a young child; a child may switch it off | [06](06-module-tasks.md#screens) |
 
@@ -229,9 +230,10 @@ Turning any of these on is one deliberate checkbox on that token
 - **Baumarkt:** Werkzeug, Elektro, Garten, Farbe.
 
 Lists can be renamed, added and removed, and any of them can become the default.
-Children may add items (Q30) and the wall may add items by tile (Q33); both are design
-rules, not settings. Whether the kid register has a Shopping tab for it is
-`household.kid_shopping` ([09](09-clients-and-ux.md#screens-by-register)).
+The wall may add items by tile (Q33): a design rule, not a setting. Whether children may
+(Q30) is `household.kid_shopping`, which since 2026-11-28 covers the kid register, the
+simple view and a shared device with nobody chosen
+([09](09-clients-and-ux.md#screens-by-register)).
 
 ### The kitchen display
 
@@ -299,7 +301,7 @@ a test checks that every key with a title is placed in exactly one group.
 | Group | Holds |
 |---|---|
 | Personal (someone must be acting) | Wusel: `member.wusel`, `member.wusel_outfit` · `member.completion_sound` · Notifications (personal phone only): Reminders on this phone, `notify.morning_summary`, `notify.event_reminder`, `notify.packing_reminder`, `notify.shopping_start`, `calendar.tentative_nudge` |
-| Family | family profile (name, time zone, export, delete) · `household.region` · Members (reorder, add, invite) · usual week · `household.kid_shopping` |
+| Family | family profile (name, time zone, export, delete) · `household.region` · Members (reorder, add, invite) · usual week · `household.kid_shopping` · `household.kid_calendar` |
 | Tasks and rewards | `tasks.*` |
 | Calendar and school | `calendar.members_edit_own_events`, `calendar.key_default`, `school.*` · Connections (Advanced): calendar feeds, subscribed calendars |
 | Meals | `meals.*`, including the wishes |
@@ -326,6 +328,32 @@ A setting the app does not know follows its key's prefix into the matching group
 "Other settings" under Help and about; both only under Advanced. Keys the app does not read
 (`unusedSettingKeys`) are not offered. The pages take a parent route and may leave out the
 Basic/Advanced chip, so a shared device can show one group (Personal) on its own.
+
+### Finding a setting
+
+*Built 2026-11-28 (issue #299), FR-10.1.* Thirteen groups and two views answer "what is
+there?"; they do not answer "where is the thing I am looking for?". The top page has a field,
+*Einstellungen durchsuchen*. With a word in it the page lists what answers in place of the
+groups:
+
+- **What is searched**: every group that has a page on this device, and every row its page
+  shows under Advanced, by title, by the heading it stands under, by its group and by its
+  explanation, in that order of weight. The index is built from the same map and the same
+  `visibleSections` as the pages (`features/settings/ui/settings_search.dart`), so what this
+  device or person may not open (another device class, an older server, a non-guardian) is not
+  found either, and a new setting is searchable the moment it is placed in a group.
+- **Rows without a tile of their own** (the devices, the sign-in, the security, the server)
+  are found by the heading they stand under and by the words on them (`settingsTileText`):
+  "PIN" finds Security.
+- **Advanced rows are found from Basic** and marked *Erweitert*. Choosing one switches this
+  device to Advanced, the same kept choice as the chip (decided with the owner 2026-11-28: the
+  search finds everything, and what it finds has to be there when the page opens).
+- **The row is shown**: the group's page opens with `?row=` (a catalogue key, or the row's
+  name), scrolls the row into view and tints it for a moment; where motion is off it is in
+  view at once and the tint stays.
+- A member's own page on a shared device has no field: it is one short page.
+
+The same answers are part of the search over everything ([09](09-clients-and-ux.md#search)).
 
 *On a family tablet or the kitchen wall* ([09](09-clients-and-ux.md#screens-by-register)) a
 guardian sees all of this; a child, or an adult who is not a guardian, sees only the member-scope

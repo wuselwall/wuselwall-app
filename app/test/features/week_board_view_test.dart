@@ -383,6 +383,7 @@ Future<void> _pumpKiosk(WidgetTester t) async {
           deviceClass: DeviceClass.kiosk,
           profileId: null,
         )),
+        deviceRegisterProvider.overrideWithValue(UiRegister.kiosk),
       ],
       child: MaterialApp(
         theme: AppTheme.build(UiRegister.kiosk, Shade.light),

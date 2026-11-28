@@ -81,7 +81,7 @@ class KidHome extends ConsumerWidget {
             ).style,
             fits: false,
           );
-    return _KidChrome(
+    return KidChrome(
       child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -128,12 +128,18 @@ class KidHome extends ConsumerWidget {
                   decor: _decor(tab),
                   // A wide tablet or screen keeps the cards at a readable width:
                   // a tick far from its title is hard to connect.
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: maxContentWidth,
+                  // While the big picker fills the page it is the one place to say
+                  // who is here; the floating bar would only repeat it. The bar spans
+                  // the page, so its button sits beside the cards where there is room.
+                  child: WithActingProfileBar(
+                    show: !picking,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: maxContentWidth,
+                        ),
+                        child: body,
                       ),
-                      child: body,
                     ),
                   ),
                 ),
@@ -168,33 +174,26 @@ class KidHome extends ConsumerWidget {
                   child: DefaultTextStyle.merge(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
-                    child: MediaQuery.removePadding(
-                      context: context,
-                      removeBottom: !picking,
-                      child: NavigationBar(
-                        selectedIndex: tabs.indexOf(tab),
-                        // A phone's bar is lower than Material's (specs/09 "the
-                        // bottom bar"); the kid's larger icon and label need 72.
-                        height: navBarHeight(context, phone: 72),
-                        onDestinationSelected: (i) =>
-                            ref.read(kidTabProvider.notifier).select(tabs[i]),
-                        destinations: [
-                          for (final t in tabs)
-                            NavigationDestination(
-                              icon: Icon(_icon(t)),
-                              label: unbreakable(
-                                _label(l10n, t, short: !labels.fits),
-                              ),
-                              tooltip: _label(l10n, t),
+                    child: NavigationBar(
+                      selectedIndex: tabs.indexOf(tab),
+                      // A phone's bar is lower than Material's (specs/09 "the
+                      // bottom bar"); the kid's larger icon and label need 72.
+                      height: navBarHeight(context, phone: 72),
+                      onDestinationSelected: (i) =>
+                          ref.read(kidTabProvider.notifier).select(tabs[i]),
+                      destinations: [
+                        for (final t in tabs)
+                          NavigationDestination(
+                            icon: Icon(_icon(t)),
+                            label: unbreakable(
+                              _label(l10n, t, short: !labels.fits),
                             ),
-                        ],
-                      ),
+                            tooltip: _label(l10n, t),
+                          ),
+                      ],
                     ),
                   ),
                 ),
-                // While the big picker fills the page it is the one place to say who is
-                // here; the bar below would only repeat it.
-                if (!picking) const ActingProfileBar(),
               ],
             ),
           ),
@@ -256,16 +255,16 @@ class KidHome extends ConsumerWidget {
 /// 2026-10-26: held sideways the bars left no room for the page), and a page's
 /// message, such as a tick's "Rückgängig", goes when the child switches tab or
 /// person, so nobody undoes someone else's chore.
-class _KidChrome extends ConsumerStatefulWidget {
-  const _KidChrome({required this.child});
+class KidChrome extends ConsumerStatefulWidget {
+  const KidChrome({required this.child, super.key});
 
   final Widget child;
 
   @override
-  ConsumerState<_KidChrome> createState() => _KidChromeState();
+  ConsumerState<KidChrome> createState() => _ChromeState();
 }
 
-class _KidChromeState extends ConsumerState<_KidChrome> {
+class _ChromeState extends ConsumerState<KidChrome> {
   bool? _phone;
 
   @override

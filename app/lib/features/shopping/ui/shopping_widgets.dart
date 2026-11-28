@@ -297,7 +297,7 @@ class _ShoppingTilePickerState extends ConsumerState<ShoppingTilePicker> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
+    final kiosk = ref.watch(deviceRegisterProvider) == UiRegister.kiosk;
     final catalog = (ref.watch(shoppingCatalogProvider).value ?? const [])
         .where((c) => c.listId == widget.list.id)
         .toList();

@@ -44,7 +44,7 @@ Tap **New event**. It starts on the day the calendar is showing (today, while to
 
 First you see tiles, so you don't have to type everything from scratch:
 
-- **Templates**: **Cleaner visit**, **Sports practice**, **Doctor’s appointment**, **Guests for dinner**, **Family day out**, **Playdate**, **Cinema trip**, **Family holiday** and **Birthday** (all day, yearly). Each fills in the title, picture, time, length and people. Sports practice starts at 17:00 for one hour, a playdate at 15:00 for two hours with the children, and a cinema trip at 16:00 for two hours with the family. A family day out lasts one day; a family holiday starts with seven. **Cleaner visit** repeats weekly on the chosen day at 09:00 for three hours, for the person who enters the visit. A family with a child also sees **School**: **Class meeting for parents** for a group meeting, **Parent–teacher meeting** for an individual appointment, **School trip**, **School test**, **School fair** and **School sports day**. You can change all these defaults. **Start blank** opens the empty editor at the next full hour.
+- **Templates**: **Cleaner visit**, **Sports practice**, **Doctor’s appointment**, **Guests for dinner**, **Family day out**, **Playdate**, **Cinema trip**, **Family holiday** and **Birthday** (all day, yearly). Each fills in the title, picture, time, length and people. Sports practice starts at 17:00 for one hour, a playdate at 15:00 for two hours with the children, and a cinema trip at 16:00 for two hours with the family. A family day out lasts one day; a family holiday starts with seven. **Cleaner visit** repeats weekly on the chosen day at 09:00 for three hours, for the person who enters the visit. A family with a child also sees **School**: **Class meeting for parents** for a group meeting, **Parent–teacher meeting** for an individual appointment, **School trip**, **School test**, **School fair** and **School sports day**. Templates whose picture fits what you enter often move to the front: a family that often enters “Football practice” sees **Sports practice** first. You can change all these defaults. **Start blank** opens the empty editor at the next full hour.
 - **Your templates**: the ones you saved yourselves. In the editor, tap **Save as template** at the top; it keeps the title, picture, time, length, people, location and notes, not the date and not the repeat.
 - **Often in your family**: events you have entered at least three times, such as "Grandma & Grandpa visit". WuselWall only counts your own events on your own server; nothing leaves it. Under **⋮** you choose **Keep as template** or **Don't suggest again**.
 
@@ -89,7 +89,7 @@ For this appointment it replaces your personal setting **Reminder before appoint
 
 At the bottom of the editor are three things that make the day lighter (see [Rituals](/en/guide/rituals)):
 
-- **Picture**: one of 20 pictures, such as a cake, a pizza, the zoo or a tent. It is shown with the event on the wall and with its countdown. **No picture** is the default.
+- **Picture**: one of 37 pictures, such as a cake, the zoo, the dentist, a bike or the cleaner coming. It is shown with the event on **Today**, in the calendar, on the wall and with its countdown. While you type the title, WuselWall proposes a fitting picture, such as the tooth for “Dentist”. It then also shows at the start of the title field and is only outlined until you tap a picture or **No picture** yourself; after that your choice stays. If nothing fits, it stays **No picture**.
 - **We are looking forward to it**: the event counts down on the wall and on the children's tablet, for example "Trip to the zoo: 3 more sleeps".
 - **Family tradition**: something the family does again and again, such as game night. A tradition is always on the wall, with a ribbon. Under **With a meal** you enter the meal that belongs to it and choose **Lunch** or **Dinner**.
 
@@ -125,7 +125,7 @@ You normally work in the office on Tuesdays. Set that once in your **usual week*
 
 ## Children and appointments
 
-You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the parents.
+You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the parents. What children see is described under [Children's tablet](/en/guide/wall#kids-switches): their own appointments for today and the next three days, or only today with **Calendar for children** off.
 
 ## Sending an appointment to another family {#share-event}
 

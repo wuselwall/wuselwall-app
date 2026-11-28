@@ -105,6 +105,8 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 | FR-5.18 | The guardian PIN is asked for when the first shared or kiosk device is connected, not during household creation | M | D |
 | FR-5.19 | The store app has **no default server**: a household's server is chosen by an invitation or pairing link, the server's QR code or its typed address (discovery via `/.well-known/wuselwall.json`), and a demo mode works without one. Passkeys are offered only by a build that names its own server; the project runs no server (amended 2026-10-21) | M | user 2026-10-13, [ADR-018](adr/ADR-018-self-hosted-only.md) (was: Cloud by default, ADR-015) |
 | FR-5.20 | Every household-specific behaviour is a **setting with a curated default**: guardians change it in Einstellungen, see whether it still is the default, and reset it; household creation asks nothing beyond [20, J1](20-onboarding.md#j1--start-a-family), and its starter examples are the curated starter content ([21](21-household-settings.md)) | M | late, 2026-10-11 |
+| FR-5.21 | A child under twelve (a child without a birthday counts as one) has a **simple view** on every device once chosen: one page without tabs, with only their own chores, school, appointments and the meal | M | user 2026-11-28, #298 |
+| FR-5.22 | A child sees today and the next three days, never more. Guardians can switch the shopping list and this look ahead off for children; both switches also apply on a shared device while nobody is chosen | M | user 2026-11-28, #298 |
 
 ## FR-6 Assistant Integration (B4)
 
@@ -186,6 +188,22 @@ Added 2026-11-15 (issue #265). Specified in [30](30-trips.md); the services in
 | FR-9.8 | A booking's calendar file becomes entries of a trip, updated when opened again | S | late, FR-1.21 |
 | FR-9.9 | Discovery ranks a bundled catalogue and the family's ideas by travel effort from home and, with a climate service on, by what is typical in the window | S | late |
 | FR-9.10 | Weather, place search, route and map providers are plug-ins on the server, off by default, switched on per household by a guardian, with keys no device can read; only the server contacts them | M | late, NFR-9 |
+
+## FR-10 Search
+
+Added 2026-11-28 (issue #299). Finding something by typing a word of it, where until now a
+person had to know its place. Adult register only: nobody types on a wall (FR-8.12), and the
+kid register shows a child's own day, which needs no search. One matching rule everywhere
+(`app/lib/core/text/search.dart`, mirrored in `supabase/functions/_shared/search.ts`): case,
+umlauts and accents fold together as in the shopping search, every typed word has to be found,
+and a match in the title comes before one in a later field.
+
+| ID | Requirement | Prio | Origin |
+|---|---|---|---|
+| FR-10.1 | Settings are searched from their top page: every row of every group this device and person may open, the rows only Advanced shows included and marked. Choosing one of those switches the device to Advanced; the group's page opens with the row in view ([21](21-household-settings.md#finding-a-setting)) | M | late |
+| FR-10.2 | Appointments are found by title, place and note, the family's own and those of subscribed calendars, coming ones before past ones; a series is one answer with its next date. Answered by the server as the caller; an app on a server without it offers no appointment search ([05](05-module-calendar.md#finding-an-appointment)) | M | late |
+| FR-10.3 | One search from the adult home finds appointments, chores and rewards, recipes, open shopping items and settings, grouped by kind, and leads to each ([09](09-clients-and-ux.md#search)) | M | late |
+| FR-10.4 | A list of chores or of rewards has a filter field from seven entries on | S | late |
 
 ---
 

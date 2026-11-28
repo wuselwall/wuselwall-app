@@ -14,6 +14,10 @@ enum CalendarMode {
   threeDays(3),
   week(7),
 
+  /// Today and the next three days: a child's whole calendar (specs/09 "What a child
+  /// sees"). Never offered in the toolbar; a child has no other mode.
+  nextDays(4),
+
   /// The read-only month overview: six weeks from the Monday on or before the first
   /// of the month, so every month fits the same grid.
   month(42);
@@ -183,6 +187,24 @@ final monthOccurrencesProvider = FutureProvider.autoDispose
               .occurrences(window.from, window.to, holidays: true))
           .unwrap();
     });
+
+/// Whether appointments can be searched here: the server has the `search` function
+/// (FR-10.2). The search offers nothing about the calendar where it has not.
+final eventSearchSupportedProvider = Provider.autoDispose<bool>(
+  (ref) => ref.watch(serverSupportsProvider(featureSearch)),
+);
+
+/// The appointments that answer a query, asked of the server once per query.
+///
+/// One try: a provider's usual retries (ten, backing off over half a minute) would keep
+/// the progress line up all that time before the search says that the server did not
+/// answer. The failure row has its own "try again".
+final eventSearchProvider = FutureProvider.autoDispose
+    .family<EventSearchResult, String>((ref, query) async {
+      ref.watch(deviceKeyProvider);
+      return (await ref.watch(calendarRepositoryProvider).search(query))
+          .unwrap();
+    }, retry: (_, _) => null);
 
 /// One event for the editor, loaded when an existing appointment is opened.
 final calendarEventProvider = FutureProvider.autoDispose

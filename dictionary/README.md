@@ -31,8 +31,9 @@ carrot -> produce
 - A regional word is matched for every family. The tag says where the word comes from and
   which review it belongs to; it never gates the match.
 - Within a domain a word may belong to one key only. The renderer stops with both keys named.
-- Words that must stay out: appointments (*Zahnarzt*, *Friseur*, *Termin*), because no event
-  picture fits and *unknown* is the better answer; names of people; anything that is not a thing.
+- Words that must stay out: a bare *Termin* (no event picture fits "an appointment" as such, so
+  *unknown* is the better answer; *Zahnarzt*, *Arzt*, *Friseur* and *Tierarzt* have pictures since
+  #297); *Dienst* (a presence kind in the app); names of people; anything that is not a thing.
 
 ## Workflow
 
@@ -125,8 +126,8 @@ issue #195 deferred (shopping ~150 more pictures), in the order the corpus misse
   `honey`), berries and stone fruit apart from the strawberry, cabbage family (today
   `broccoli`), herbs (today `lettuce`), frozen goods (today `ice_cream`), pet food, stationery,
   clothes
-- events: an appointment (doctor, dentist, hairdresser), a school lesson or exam distinct from
-  the book, a market or shopping trip, a visit to a restaurant distinct from pizza
+- events: a school lesson or exam distinct from the book, a visit to a restaurant distinct from
+  pizza (the appointments, shopping and the hobbies of #297 have pictures now)
 - tasks: the bathroom, vacuuming, the piano or an instrument, feeding the pet distinct from the
   dog, homework distinct from reading
 

@@ -255,6 +255,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get actingWho => 'Wer bist du?';
 
   @override
+  String actingDone(String name) {
+    return '$name ist fertig';
+  }
+
+  @override
   String get pinTitle => 'PIN für Eltern';
 
   @override
@@ -813,6 +818,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get boardBackToWeek => 'Zurück zur Woche';
 
   @override
+  String get boardShoppingAskAdult =>
+      'Die Einkaufsliste ist für die Großen. Tipp auf deinen Namen.';
+
+  @override
   String get boardTentative => 'noch nicht sicher';
 
   @override
@@ -1237,6 +1246,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get calendarToday => 'Heute';
+
+  @override
+  String get calendarChildDays => 'Heute und die nächsten drei Tage';
 
   @override
   String calendarRange(String from, String to) {
@@ -2798,6 +2810,26 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => 'Hallo! Tipp auf deinen Namen.';
+
+  @override
+  String get kidSimpleBack => 'Zurück';
+
+  @override
+  String get kidSimpleTomorrow => 'Morgen';
+
+  @override
+  String get kidSimpleAppointments => 'Meine Termine';
+
+  @override
+  String get kidSimpleNoSchool => 'Keine Schule.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'Du brauchst: $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Noch ist nichts geplant.';
 
   @override
   String kidGreeting(String name) {
@@ -5565,12 +5597,18 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Flagge eures Landes auf dem Hügel an seinem Nationalfeiertag, etwa am 1. August in der Schweiz. Das Land kommt aus eurer Region.';
 
   @override
-  String get settingHouseholdKidShoppingTitle =>
-      'Einkaufen in der Kinder-Ansicht';
+  String get settingHouseholdKidShoppingTitle => 'Einkaufen für Kinder';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Zeigt in der Kinder-Ansicht den Reiter Einkaufen, dort fügen Kinder Artikel hinzu und haken sie ab. Am Wanddisplay können sie in jedem Fall Artikel hinzufügen.';
+      'Kinder fügen auf der Einkaufsliste Artikel hinzu und haken sie ab. Aus: Kinder haben keine Einkaufsliste, und am Tablet für alle und am Wanddisplay öffnet sie sich erst, wenn ein Erwachsener auf seinen Namen getippt hat.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Kalender für Kinder';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Kinder sehen ihre eigenen Termine für heute und die nächsten drei Tage. Aus: nur heute. Das Tablet für alle hat dann keinen Reiter Kalender, bis ein Erwachsener auf seinen Namen tippt.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Vorfreude beginnt';
@@ -6239,7 +6277,59 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventIcon_broom => 'Putzen';
 
   @override
+  String get eventIcon_cleaner => 'Putzhilfe kommt';
+
+  @override
+  String get eventIcon_doctor => 'Arzt';
+
+  @override
+  String get eventIcon_dentist => 'Zahnarzt';
+
+  @override
+  String get eventIcon_haircut => 'Friseur';
+
+  @override
+  String get eventIcon_vet => 'Tierarzt';
+
+  @override
+  String get eventIcon_bicycle => 'Radfahren';
+
+  @override
+  String get eventIcon_ski => 'Skifahren';
+
+  @override
+  String get eventIcon_dance => 'Tanzen';
+
+  @override
+  String get eventIcon_riding => 'Reiten';
+
+  @override
+  String get eventIcon_tennis => 'Tennis';
+
+  @override
+  String get eventIcon_guitar => 'Instrument';
+
+  @override
+  String get eventIcon_laundry => 'Wäsche';
+
+  @override
+  String get eventIcon_garden => 'Garten';
+
+  @override
+  String get eventIcon_car => 'Auto';
+
+  @override
+  String get eventIcon_work => 'Arbeit';
+
+  @override
+  String get eventIcon_shopping => 'Shopping';
+
+  @override
   String get eventIcon_star => 'Besonderes';
+
+  @override
+  String get iconProposedFromTitle =>
+      'Vorschlag zum Titel. Tippe auf ein Bild, um ein anderes zu wählen.';
 
   @override
   String get kidWishTitle => 'Dein Wunschessen';
@@ -8837,6 +8927,78 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get errPackItemNotYours =>
       'Du kannst nur für dich selbst etwas notieren.';
+
+  @override
+  String get searchTitle => 'Suchen';
+
+  @override
+  String get searchHint => 'Wonach suchst du?';
+
+  @override
+  String get searchIntro =>
+      'Findet Termine, Aufgaben und Belohnungen, Rezepte, Artikel auf euren Einkaufslisten und Einstellungen.';
+
+  @override
+  String get searchIntroLocal =>
+      'Findet Aufgaben und Belohnungen, Rezepte, Artikel auf euren Einkaufslisten und Einstellungen.';
+
+  @override
+  String get searchEventsTitle => 'Termine suchen';
+
+  @override
+  String get searchEventsHint => 'Titel, Ort oder Notiz';
+
+  @override
+  String get searchEventsIntro =>
+      'Findet Termine nach Titel, Ort und Notiz: kommende und vergangene, auch die aus externen Kalendern.';
+
+  @override
+  String get searchClear => 'Leeren';
+
+  @override
+  String get searchNothingFound => 'Nichts gefunden.';
+
+  @override
+  String get searchSectionEvents => 'Termine';
+
+  @override
+  String get searchSectionPast => 'Vergangene Termine';
+
+  @override
+  String get searchSectionTasks => 'Aufgaben und Belohnungen';
+
+  @override
+  String get searchKindChore => 'Aufgabe';
+
+  @override
+  String get searchKindReward => 'Belohnung';
+
+  @override
+  String get searchEventRepeats => 'Wiederholt sich';
+
+  @override
+  String get searchMore =>
+      'Es gibt noch mehr. Ein weiteres Wort grenzt die Suche ein.';
+
+  @override
+  String get settingsSearchHint => 'Einstellungen durchsuchen';
+
+  @override
+  String get tasksFilterChores => 'Aufgaben filtern';
+
+  @override
+  String get tasksFilterRewards => 'Belohnungen filtern';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Alle $count zeigen',
+      one: '1 zeigen',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for German, as used in Austria (`de_AT`).
@@ -8909,6 +9071,10 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get close => 'Schliessen';
+
+  @override
+  String get boardShoppingAskAdult =>
+      'Die Einkaufsliste ist für die Grossen. Tipp auf deinen Namen.';
 
   @override
   String boardPeriod(int index) {
@@ -9291,6 +9457,12 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get eventIcon_croissant => 'Zmorge';
+
+  @override
+  String get eventIcon_haircut => 'Coiffeur';
+
+  @override
+  String get eventIcon_bicycle => 'Velofahren';
 
   @override
   String get wishPickerOwnHint => 'z. B. Omeletten';

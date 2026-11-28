@@ -3,7 +3,10 @@
 // The app runs on in-memory data (lib/demo). The scenario comes from the URL:
 //   ?scenario=setup | newfamily | adult | kid | kiosk   (default adult)
 //   ?scenario=noschool   adult, with no school yet
-//   ?scenario=kidshopping   kid, with the family's Shopping tab switched on
+//   ?scenario=kidshopping   kid, with the family's shopping list for children switched on
+//   ?scenario=tablet    the tablet for everyone: the adult register, tap to switch
+//   &kidshopping=on&kidcalendar=off   the family's two switches for children
+//   &daughterturns=13   the daughter is no longer under twelve (no simple view)
 //   ?scenario=server   the store app's first question: which server (ADR-018)
 //   &still=1           nothing moves and Wusel's words are fixed, for screenshots
 //   &light=sonnig&dark=kakao   the device's colour themes (specs/17 "Themes")
@@ -23,6 +26,7 @@ import 'package:wuselwall/core/files/opened_file.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/wusel/wusel_tilt.dart';
+import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_notifications.dart';
 import 'package:wuselwall/demo/demo_overrides.dart';
 import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
@@ -43,6 +47,10 @@ void main() {
       !kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.android);
+
+  DemoData.daughterTurns =
+      int.tryParse(Uri.base.queryParameters['daughterturns'] ?? '') ??
+      DemoData.daughterTurns;
 
   if (scenario == 'server') {
     runApp(
@@ -66,7 +74,12 @@ void main() {
   runApp(
     ProviderScope(
       overrides: [
-        ...demoOverrides(scenario: scenario, appearance: _appearance()),
+        ...demoOverrides(
+          scenario: scenario,
+          kidShopping: _switch('kidshopping'),
+          kidCalendar: _switch('kidcalendar'),
+          appearance: _appearance(),
+        ),
         notificationSchedulerProvider.overrideWithValue(
           const DemoNotificationScheduler(),
         ),
@@ -89,3 +102,11 @@ MemoryAppearanceStore _appearance() {
     ),
   );
 }
+
+/// One of the family's switches from the URL (`on` or `off`); null leaves the
+/// scenario's own.
+bool? _switch(String name) => switch (Uri.base.queryParameters[name]) {
+  'on' => true,
+  'off' => false,
+  _ => null,
+};

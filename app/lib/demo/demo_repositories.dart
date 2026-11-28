@@ -3,6 +3,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/text/fold.dart';
+import 'package:wuselwall/core/text/search.dart';
 import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
@@ -754,6 +755,14 @@ const _catalogue = <_Definition>[
     selfService: false,
   ),
   (
+    key: 'household.kid_calendar',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
+    selfService: false,
+  ),
+  (
     key: 'board.member_label',
     scope: SettingScope.household,
     type: SettingType.enumeration,
@@ -1237,24 +1246,35 @@ List<SettingEntry> demoSettingCatalogue() => [
 
 /// In-memory household settings: a set or reset changes the rows the page shows.
 class DemoHouseholdSettingsRepository implements HouseholdSettingsRepository {
-  /// [kidShopping]: the family has switched on the children's Shopping tab.
-  DemoHouseholdSettingsRepository({bool kidShopping = false})
-    : _rows = [
-        for (final e in demoSettingCatalogue())
-          if (kidShopping && e.key == 'household.kid_shopping')
-            SettingEntry(
-              key: e.key,
-              scope: e.scope,
-              type: e.type,
-              constraints: e.constraints,
-              selfService: e.selfService,
-              defaultValue: e.defaultValue,
-              value: true,
-              isDefault: false,
-            )
-          else
-            e,
-      ];
+  /// [kidShopping]: the family has switched on the shopping list for children.
+  /// [kidCalendar]: false when it has switched off their look ahead.
+  DemoHouseholdSettingsRepository({
+    bool kidShopping = false,
+    bool kidCalendar = true,
+  }) : _rows = [
+         for (final e in demoSettingCatalogue())
+           if (_changed(e.key, kidShopping, kidCalendar) case final value?)
+             SettingEntry(
+               key: e.key,
+               scope: e.scope,
+               type: e.type,
+               constraints: e.constraints,
+               selfService: e.selfService,
+               defaultValue: e.defaultValue,
+               value: value,
+               isDefault: false,
+             )
+           else
+             e,
+       ];
+
+  /// The value a scenario sets for [key], null where it keeps the default.
+  static bool? _changed(String key, bool kidShopping, bool kidCalendar) =>
+      switch (key) {
+        'household.kid_shopping' when kidShopping => true,
+        'household.kid_calendar' when !kidCalendar => false,
+        _ => null,
+      };
 
   final List<SettingEntry> _rows;
 
@@ -1398,6 +1418,45 @@ class DemoCalendarRepository implements CalendarRepository {
         timezone: 'Europe/Berlin',
         occurrences: out,
         publicHolidays: holidays ? demoPublicHolidays(first, last) : null,
+      ),
+    );
+  }
+
+  /// The server's rule on the demo's data: every appointment 400 days either way that
+  /// says [query], one per event, its next date or else its last.
+  @override
+  Future<Result<EventSearchResult>> search(String query, {int? limit}) async {
+    final terms = searchTerms(query);
+    if (terms.isEmpty) return const Ok(EventSearchResult());
+    final today = dateOnly(_clock());
+    final window = await occurrences(
+      _addDays(today, -400),
+      _addDays(today, 400),
+    );
+    final hits = [
+      for (final o in window.unwrap().occurrences)
+        if (searchRank(terms, [o.title, o.location, o.description]) != null) o,
+    ];
+    final next = <String, Occurrence>{};
+    final last = <String, Occurrence>{};
+    for (final o in hits) {
+      if (o.localEndDate.isBefore(today)) {
+        last[o.eventId] = o;
+      } else {
+        next.putIfAbsent(o.eventId, () => o);
+      }
+    }
+    final cap = limit ?? 30;
+    final upcoming = next.values.toList();
+    final past = [
+      for (final o in last.values)
+        if (!next.containsKey(o.eventId)) o,
+    ]..sort((a, b) => b.start.compareTo(a.start));
+    return Ok(
+      EventSearchResult(
+        upcoming: upcoming.take(cap).toList(),
+        past: past.take(cap).toList(),
+        more: upcoming.length > cap || past.length > cap,
       ),
     );
   }
@@ -1939,6 +1998,7 @@ List<_Weekly> get _weekly => [
     start: const TimeOfDay(hour: 15, minute: 30),
     end: const TimeOfDay(hour: 16, minute: 0),
     attendees: const [DemoData.daughter],
+    iconKey: 'music',
   ),
   // A family tradition (specs/27): every Friday, the whole family.
   _Weekly(

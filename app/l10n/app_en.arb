@@ -113,6 +113,15 @@
     }
   },
   "actingWho": "Who are you?",
+  "actingDone": "{name} is done",
+  "@actingDone": {
+    "description": "Label of the button a person taps on a shared device or the wall when they are done: the device belongs to nobody again.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "pinTitle": "Parent PIN",
   "pinPrompt": "Enter the PIN for {name}",
   "@pinPrompt": {
@@ -457,6 +466,7 @@
   "boardShoppingList": "Shopping list",
   "boardNightMode": "Night view",
   "boardBackToWeek": "Back to the week",
+  "boardShoppingAskAdult": "The shopping list is for the grown-ups. Tap your name.",
   "boardTentative": "not certain yet",
   "boardNoAppointments": "No appointments",
   "boardSchool": "School",
@@ -679,6 +689,7 @@
   "@calendarNext": {},
   "calendarChooseView": "Calendar view",
   "calendarToday": "Today",
+  "calendarChildDays": "Today and the next three days",
   "@calendarToday": {},
   "calendarRange": "{from} – {to}",
   "@calendarRange": {
@@ -1526,6 +1537,19 @@
   "kidTabShopping": "Shopping",
   "kidTabFamily": "Family",
   "kidWhoAreYou": "Hi! Tap your name.",
+  "kidSimpleBack": "Back",
+  "kidSimpleTomorrow": "Tomorrow",
+  "kidSimpleAppointments": "My appointments",
+  "kidSimpleNoSchool": "No school.",
+  "kidSimpleNeeds": "You need: {items}",
+  "@kidSimpleNeeds": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSimpleNothing": "Nothing is planned yet.",
   "kidGreeting": "Hi, {name}!",
   "@kidGreeting": {
     "placeholders": {
@@ -3205,8 +3229,10 @@
   "settingAmbienceStNicholasHelp": "A filled boot on 6 December (5 December in the Netherlands).",
   "settingAmbienceNationalDayTitle": "National day",
   "settingAmbienceNationalDayHelp": "Your country's flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.",
-  "settingHouseholdKidShoppingTitle": "Shopping in the children's view",
-  "settingHouseholdKidShoppingHelp": "Adds the Shopping tab to the children's view, where they add and tick items. On the wall display they can add items either way.",
+  "settingHouseholdKidShoppingTitle": "Shopping for children",
+  "settingHouseholdKidShoppingHelp": "Children add and tick items on the shopping list. Off: children have no shopping list, and on the tablet for everyone and the wall display it opens only once an adult has tapped their name.",
+  "settingHouseholdKidCalendarTitle": "Calendar for children",
+  "settingHouseholdKidCalendarHelp": "Children see their own appointments for today and the next three days. Off: only today. Until an adult taps their name, the tablet for everyone then has no Calendar tab.",
   "settingRitualsCountdownDaysTitle": "Start looking forward",
   "settingRitualsCountdownDaysHelp": "How many days before a birthday, the holidays or a marked event the countdown appears.",
   "settingRitualsCountdownReturnTitle": "Count down to a parent's return",
@@ -3699,7 +3725,27 @@
   "eventIcon_ferris": "Fair",
   "eventIcon_house": "Home",
   "eventIcon_broom": "Cleaning",
+  "eventIcon_cleaner": "Cleaner comes",
+  "eventIcon_doctor": "Doctor",
+  "eventIcon_dentist": "Dentist",
+  "eventIcon_haircut": "Hairdresser",
+  "eventIcon_vet": "Vet",
+  "eventIcon_bicycle": "Cycling",
+  "eventIcon_ski": "Skiing",
+  "eventIcon_dance": "Dance",
+  "eventIcon_riding": "Riding",
+  "eventIcon_tennis": "Tennis",
+  "eventIcon_guitar": "Instrument",
+  "eventIcon_laundry": "Laundry",
+  "eventIcon_garden": "Garden",
+  "eventIcon_car": "Car",
+  "eventIcon_work": "Work",
+  "eventIcon_shopping": "Shopping",
   "eventIcon_star": "Special",
+  "iconProposedFromTitle": "Suggested from the title. Tap a picture to choose another.",
+  "@iconProposedFromTitle": {
+    "description": "Under the picture row of the event and task editors, while the picture shown was proposed from the typed title (specs/29) and not chosen by hand."
+  },
   "kidWishTitle": "Your meal wish",
   "kidWishInvite": "What would you like to eat this week?",
   "kidWishWaiting": "You wished for {title}. Your parents will find a day.",
@@ -5568,5 +5614,90 @@
   },
   "errPackItemInvalid": "That can’t be noted: up to 80 characters, for a child of the family, at most 20 things a day.",
   "errPackItemNotFound": "This thing to bring is no longer on the list.",
-  "errPackItemNotYours": "You can note things only for yourself."
+  "errPackItemNotYours": "You can note things only for yourself.",
+  "searchTitle": "Search",
+  "@searchTitle": {
+    "description": "Search for anything the family keeps: title of the search page and tooltip of the search button on the home bar"
+  },
+  "searchHint": "What are you looking for?",
+  "@searchHint": {
+    "description": "Hint in the empty field of the search over everything"
+  },
+  "searchIntro": "Finds events, chores and rewards, recipes, items on your shopping lists and settings.",
+  "@searchIntro": {
+    "description": "Search page before anything is typed: what the search finds"
+  },
+  "searchIntroLocal": "Finds chores and rewards, recipes, items on your shopping lists and settings.",
+  "@searchIntroLocal": {
+    "description": "Search page before anything is typed, on a server that cannot search events yet"
+  },
+  "searchEventsTitle": "Search events",
+  "@searchEventsTitle": {
+    "description": "Title of the search page opened from the calendar, and the calendar's menu entry and button that open it"
+  },
+  "searchEventsHint": "Title, place or note",
+  "@searchEventsHint": {
+    "description": "Hint in the empty field of the event search: what of an event is searched"
+  },
+  "searchEventsIntro": "Finds events by title, place and note: coming and past ones, and those from external calendars.",
+  "@searchEventsIntro": {
+    "description": "Event search before anything is typed: what it finds"
+  },
+  "searchClear": "Clear",
+  "@searchClear": {
+    "description": "Tooltip of the button that empties a search or filter field"
+  },
+  "searchNothingFound": "Nothing found.",
+  "@searchNothingFound": {
+    "description": "Shown when a search or a list filter has no result"
+  },
+  "searchSectionEvents": "Events",
+  "@searchSectionEvents": {
+    "description": "Search results: heading of the events that are running or to come"
+  },
+  "searchSectionPast": "Past events",
+  "@searchSectionPast": {
+    "description": "Search results: heading of the events that are over"
+  },
+  "searchSectionTasks": "Chores and rewards",
+  "@searchSectionTasks": {
+    "description": "Search results: heading of the chores and rewards"
+  },
+  "searchKindChore": "Chore",
+  "@searchKindChore": {
+    "description": "Search results: says that a result is a chore"
+  },
+  "searchKindReward": "Reward",
+  "@searchKindReward": {
+    "description": "Search results: says that a result is a reward"
+  },
+  "searchEventRepeats": "Repeats",
+  "@searchEventRepeats": {
+    "description": "Search results: spoken label of the icon of an event that repeats; the row shows its next date"
+  },
+  "searchMore": "There are more. Another word narrows it down.",
+  "@searchMore": {
+    "description": "Search results: under the events when the server found more than it lists"
+  },
+  "settingsSearchHint": "Search settings",
+  "@settingsSearchHint": {
+    "description": "Hint in the search field on top of the settings page"
+  },
+  "tasksFilterChores": "Filter chores",
+  "@tasksFilterChores": {
+    "description": "Hint in the filter field above a long list of chores"
+  },
+  "tasksFilterRewards": "Filter rewards",
+  "@tasksFilterRewards": {
+    "description": "Hint in the filter field above a long list of rewards"
+  },
+  "searchShowAll": "{count, plural, =1{Show 1} other{Show all {count}}}",
+  "@searchShowAll": {
+    "description": "Search results: button under a section that shows only its first rows, with the number of results",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

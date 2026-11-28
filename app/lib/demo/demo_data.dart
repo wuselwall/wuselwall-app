@@ -56,6 +56,11 @@ abstract final class DemoData {
     _ => "${name(papa)}'s iPhone",
   };
 
+  /// The age the daughter turns in three days. Nine, so the demo's children both get
+  /// the simple view; the docs make her thirteen where they show what an older child
+  /// sees (`&daughterturns=13`).
+  static int daughterTurns = 9;
+
   static List<Member> get members => [
     Member(
       id: papa,
@@ -80,7 +85,7 @@ abstract final class DemoData {
       isChild: true,
       hasAccount: false,
       // Three days away, so the demo counts down to it (specs/27 "Vorfreude").
-      birthday: _inDays(3, yearsAgo: 9),
+      birthday: _inDays(3, yearsAgo: daughterTurns),
     ),
     Member(
       id: son,

@@ -20,6 +20,7 @@ Los padres ven también en **Hoy** lo que espera: la tarjeta **Pendiente de tu a
 
 En la pestaña de tareas, crea una y elige:
 
+- icono: mientras escribes el título, WuselWall propone una imagen adecuada, por ejemplo los platos para «Vaciar el lavavajillas»; va enmarcada en claro hasta que eliges tú;
 - tipo: obligación, esperada de todos con pocos puntos, o bonus opcional;
 - puntos;
 - repetición: una vez, diaria, laborables, semanal, quincenal o mensual;
@@ -36,6 +37,10 @@ Archivar elimina las próximas ocurrencias aún abiertas. El paquete inicial ofr
 Cada recompensa cuesta puntos. Sin existencias indicadas, no hay límite. Si requiere aprobación, una madre o un padre confirma con su PIN; si no, puede canjearse directamente, adecuado para cosas pequeñas.
 
 Las solicitudes aparecen en el historial como pendientes, canjeadas o entregadas. Márcalas cuando las entregues.
+
+## Filtrar {#filter}
+
+Con siete o más entradas, la pestaña de tareas muestra sobre la lista un campo **Filtrar tareas**, y la de recompensas un campo **Filtrar recompensas**. Escribe una palabra y la lista muestra solo lo que encaja. Para buscarlo todo a la vez, usa la [búsqueda](/es/guide/concepts#search).
 
 ## Puntos {#points}
 

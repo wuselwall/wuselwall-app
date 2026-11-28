@@ -20,6 +20,7 @@ Les parents voient aussi ce qui attend sur **Aujourd’hui** : la carte **En att
 
 Dans l’onglet des tâches, créez-en une et choisissez :
 
+- **icône** : pendant que tu tapes le titre, WuselWall propose une image qui convient, par exemple la vaisselle pour « Vider le lave-vaisselle » ; elle reste légèrement entourée jusqu’à ce que tu choisisses toi-même ;
 - **type** : obligation, attendue de tous avec peu de points, ou bonus facultatif ;
 - **points** ;
 - **répétition** : une fois, chaque jour, jours ouvrables, semaine, deux semaines ou mois ;
@@ -36,6 +37,10 @@ Archiver une tâche supprime ses occurrences futures encore ouvertes. Le kit de 
 Chaque récompense coûte des points. Un stock vide signifie illimité. Si l’approbation est nécessaire, un parent confirme l’échange avec son PIN ; sinon, l’enfant peut le faire lui-même, plutôt pour de petites choses.
 
 Une demande rejoint l’historique des récompenses en attente, échangées ou remises. Marquez la récompense une fois remise.
+
+## Filtrer {#filter}
+
+À partir de sept entrées, l’onglet des tâches affiche au-dessus de la liste un champ **Filtrer les tâches**, et l’onglet des récompenses un champ **Filtrer les récompenses**. Saisissez un mot : la liste ne montre que ce qui correspond. Pour tout chercher à la fois, utilisez la [recherche](/fr/guide/concepts#search).
 
 ## Points {#points}
 

@@ -95,6 +95,17 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
     revoked: false,
     guardianVerifiedUntil: null,
   ),
+  // The tablet for everyone: the adult register, and whoever taps their name.
+  'tablet' => DeviceInfo(
+    deviceId: 'd-4',
+    householdId: 'h1',
+    label: DemoData.kidsTablet,
+    deviceClass: DeviceClass.shared,
+    register: UiRegister.adult,
+    profileId: null,
+    revoked: false,
+    guardianVerifiedUntil: null,
+  ),
   _ => DeviceInfo(
     deviceId: 'd-1',
     householdId: 'h1',
@@ -109,11 +120,15 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
 
 /// Every repository and session provider replaced by its in-memory demo.
 /// [scenario]: setup | newfamily (signed in, no family yet) | adult | kid | kidshopping (kid,
-/// with the Shopping tab switched on) | kiosk. Adult variants for the docs: noschool
-/// (no school yet), soloparent (TOTP warning). The family's names follow the device's
-/// language, as the app's own text does.
+/// with the shopping list for children switched on) | tablet (the tablet for everyone) |
+/// kiosk. Adult variants for the docs: noschool (no school yet), soloparent (TOTP
+/// warning). [kidShopping] and [kidCalendar] set the family's two switches for children
+/// in any scenario; null keeps the scenario's own. The family's names follow the
+/// device's language, as the app's own text does.
 List<Override> demoOverrides({
   String scenario = 'adult',
+  bool? kidShopping,
+  bool? kidCalendar,
   List<Locale>? locales,
   AppConfig? config,
   AppearanceStore? appearance,
@@ -124,6 +139,8 @@ List<Override> demoOverrides({
   DemoData.useLanguageOf(locales ?? PlatformDispatcher.instance.locales);
   return _overrides(
     scenario,
+    kidShopping: kidShopping ?? scenario == 'kidshopping',
+    kidCalendar: kidCalendar ?? true,
     config: config,
     appearance: appearance,
     language: language,
@@ -134,6 +151,8 @@ List<Override> demoOverrides({
 
 List<Override> _overrides(
   String scenario, {
+  required bool kidShopping,
+  required bool kidCalendar,
   AppConfig? config,
   AppearanceStore? appearance,
   AppLanguageStore? language,
@@ -184,7 +203,10 @@ List<Override> _overrides(
   // The shots and the first look start at home; the docs go to the store themselves.
   shoppingModeStoreProvider.overrideWithValue(MemoryShoppingModeStore()),
   householdSettingsRepositoryProvider.overrideWithValue(
-    DemoHouseholdSettingsRepository(kidShopping: scenario == 'kidshopping'),
+    DemoHouseholdSettingsRepository(
+      kidShopping: kidShopping,
+      kidCalendar: kidCalendar,
+    ),
   ),
   householdExportRepositoryProvider.overrideWithValue(
     DemoHouseholdExportRepository(),

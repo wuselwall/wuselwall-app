@@ -26,6 +26,7 @@ Eltern sehen auch auf **Heute**, was wartet: die Karte **Wartet auf deine Freiga
 
 Tippe im Tab **Aufgaben** auf **Neue Aufgabe**:
 
+- **Symbol**: Beim Tippen des Titels schlägt WuselWall ein passendes Bild vor, etwa bei „Spülmaschine ausräumen“ das Geschirr. Es ist nur hell umrandet, bis du selbst ein Bild oder **Kein Bild** antippst.
 - **Art**: **Pflicht** wird von allen erwartet und bringt wenig Punkte. **Extra** ist freiwillig und bringt Punkte.
 - **Punkte**
 - **Wiederholung**: einmalig, täglich, an Wochentagen, wöchentlich, alle 2 Wochen oder monatlich
@@ -48,6 +49,10 @@ Jede Belohnung kostet Punkte. Mit **Vorrat** begrenzt du die Anzahl; leer heißt
 - **Vorher freigeben**: Ist das eingeschaltet, muss ein Elternteil die Einlösung mit der PIN bestätigen. Ohne Freigabe löst man selbst ein. Das passt nur zu Kleinigkeiten.
 - Wer eine Belohnung haben möchte, tippt auf **Wünschen**.
 - Im **Verlauf** sieht man, was wartet, eingelöst und schon übergeben ist. Übergeben markierst du mit **Als übergeben markieren**.
+
+## Filtern
+
+Sind es sieben oder mehr Einträge, steht über der Liste im Tab **Aufgaben** das Feld **Aufgaben filtern** und im Tab **Belohnungen** das Feld **Belohnungen filtern**. Tippe ein Wort, und die Liste zeigt nur, was passt. Über alle Bereiche hinweg sucht die [Suche](/guide/concepts#search).
 
 ## Punkte
 

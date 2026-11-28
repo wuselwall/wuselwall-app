@@ -254,6 +254,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actingWho => 'Who are you?';
 
   @override
+  String actingDone(String name) {
+    return '$name is done';
+  }
+
+  @override
   String get pinTitle => 'Parent PIN';
 
   @override
@@ -808,6 +813,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardBackToWeek => 'Back to the week';
 
   @override
+  String get boardShoppingAskAdult =>
+      'The shopping list is for the grown-ups. Tap your name.';
+
+  @override
   String get boardTentative => 'not certain yet';
 
   @override
@@ -1229,6 +1238,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarToday => 'Today';
+
+  @override
+  String get calendarChildDays => 'Today and the next three days';
 
   @override
   String calendarRange(String from, String to) {
@@ -2782,6 +2794,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => 'Hi! Tap your name.';
+
+  @override
+  String get kidSimpleBack => 'Back';
+
+  @override
+  String get kidSimpleTomorrow => 'Tomorrow';
+
+  @override
+  String get kidSimpleAppointments => 'My appointments';
+
+  @override
+  String get kidSimpleNoSchool => 'No school.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'You need: $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Nothing is planned yet.';
 
   @override
   String kidGreeting(String name) {
@@ -5524,12 +5556,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your country\'s flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.';
 
   @override
-  String get settingHouseholdKidShoppingTitle =>
-      'Shopping in the children\'s view';
+  String get settingHouseholdKidShoppingTitle => 'Shopping for children';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Adds the Shopping tab to the children\'s view, where they add and tick items. On the wall display they can add items either way.';
+      'Children add and tick items on the shopping list. Off: children have no shopping list, and on the tablet for everyone and the wall display it opens only once an adult has tapped their name.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Calendar for children';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Children see their own appointments for today and the next three days. Off: only today. Until an adult taps their name, the tablet for everyone then has no Calendar tab.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Start looking forward';
@@ -6196,7 +6234,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventIcon_broom => 'Cleaning';
 
   @override
+  String get eventIcon_cleaner => 'Cleaner comes';
+
+  @override
+  String get eventIcon_doctor => 'Doctor';
+
+  @override
+  String get eventIcon_dentist => 'Dentist';
+
+  @override
+  String get eventIcon_haircut => 'Hairdresser';
+
+  @override
+  String get eventIcon_vet => 'Vet';
+
+  @override
+  String get eventIcon_bicycle => 'Cycling';
+
+  @override
+  String get eventIcon_ski => 'Skiing';
+
+  @override
+  String get eventIcon_dance => 'Dance';
+
+  @override
+  String get eventIcon_riding => 'Riding';
+
+  @override
+  String get eventIcon_tennis => 'Tennis';
+
+  @override
+  String get eventIcon_guitar => 'Instrument';
+
+  @override
+  String get eventIcon_laundry => 'Laundry';
+
+  @override
+  String get eventIcon_garden => 'Garden';
+
+  @override
+  String get eventIcon_car => 'Car';
+
+  @override
+  String get eventIcon_work => 'Work';
+
+  @override
+  String get eventIcon_shopping => 'Shopping';
+
+  @override
   String get eventIcon_star => 'Special';
+
+  @override
+  String get iconProposedFromTitle =>
+      'Suggested from the title. Tap a picture to choose another.';
 
   @override
   String get kidWishTitle => 'Your meal wish';
@@ -8780,4 +8870,75 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errPackItemNotYours => 'You can note things only for yourself.';
+
+  @override
+  String get searchTitle => 'Search';
+
+  @override
+  String get searchHint => 'What are you looking for?';
+
+  @override
+  String get searchIntro =>
+      'Finds events, chores and rewards, recipes, items on your shopping lists and settings.';
+
+  @override
+  String get searchIntroLocal =>
+      'Finds chores and rewards, recipes, items on your shopping lists and settings.';
+
+  @override
+  String get searchEventsTitle => 'Search events';
+
+  @override
+  String get searchEventsHint => 'Title, place or note';
+
+  @override
+  String get searchEventsIntro =>
+      'Finds events by title, place and note: coming and past ones, and those from external calendars.';
+
+  @override
+  String get searchClear => 'Clear';
+
+  @override
+  String get searchNothingFound => 'Nothing found.';
+
+  @override
+  String get searchSectionEvents => 'Events';
+
+  @override
+  String get searchSectionPast => 'Past events';
+
+  @override
+  String get searchSectionTasks => 'Chores and rewards';
+
+  @override
+  String get searchKindChore => 'Chore';
+
+  @override
+  String get searchKindReward => 'Reward';
+
+  @override
+  String get searchEventRepeats => 'Repeats';
+
+  @override
+  String get searchMore => 'There are more. Another word narrows it down.';
+
+  @override
+  String get settingsSearchHint => 'Search settings';
+
+  @override
+  String get tasksFilterChores => 'Filter chores';
+
+  @override
+  String get tasksFilterRewards => 'Filter rewards';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Show all $count',
+      one: 'Show 1',
+    );
+    return '$_temp0';
+  }
 }

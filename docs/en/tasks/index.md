@@ -26,6 +26,7 @@ Parents also see what is waiting on **Today**: the card **Waiting for your appro
 
 In the **Chores** tab, tap **New chore**:
 
+- **Icon**: while you type the title, WuselWall proposes a fitting picture, such as the dishes for “Empty the dishwasher”. It is only lightly outlined until you tap a picture or **No picture** yourself.
 - **Type**: **Duty** is expected of everyone and earns few points. **Bonus** is optional and earns points.
 - **Points**
 - **Repeat**: once, daily, on weekdays, weekly, every 2 weeks or monthly
@@ -48,6 +49,10 @@ Each reward costs points. **Stock** limits the number; empty means unlimited.
 - **Needs approval first**: when on, a parent confirms the redemption with the PIN. When off, you redeem it yourself. That only suits small things.
 - Anyone who wants a reward taps **Ask for it**.
 - The **History** shows what is waiting, redeemed and already handed over. Mark a reward with **Mark as handed over**.
+
+## Filtering
+
+With seven or more entries, the **Chores** tab shows a **Filter chores** field above the list and the **Rewards** tab a **Filter rewards** field. Type a word and the list shows only what fits. To search everything at once, use the [search](/en/guide/concepts#search).
 
 ## Points
 

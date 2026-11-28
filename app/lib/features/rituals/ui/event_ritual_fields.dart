@@ -11,11 +11,20 @@ class EventRitualFields extends StatefulWidget {
   const EventRitualFields({
     required this.draft,
     required this.onChanged,
+    this.iconProposed = false,
+    this.onIconChosen,
     super.key,
   });
 
   final EventDraft draft;
   final VoidCallback onChanged;
+
+  /// The draft's picture was proposed from the title (specs/29 feature 3): it is
+  /// outlined, not filled, and a line says so until a picture is tapped.
+  final bool iconProposed;
+
+  /// A picture (or none) was tapped: the choice is the family's own from now on.
+  final VoidCallback? onIconChosen;
 
   @override
   State<EventRitualFields> createState() => _EventRitualFieldsState();
@@ -35,6 +44,11 @@ class _EventRitualFieldsState extends State<EventRitualFields> {
     widget.onChanged();
   }
 
+  void _pick(String? key) {
+    widget.onIconChosen?.call();
+    _change((d) => d.iconKey = key);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -45,15 +59,23 @@ class _EventRitualFieldsState extends State<EventRitualFields> {
       children: [
         const SizedBox(height: Tokens.space2),
         Text(l10n.eventIconLabel, style: theme.textTheme.labelLarge),
+        if (widget.iconProposed && d.iconKey != null)
+          Text(
+            l10n.iconProposedFromTitle,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
         const SizedBox(height: Tokens.space2),
         Wrap(
           spacing: Tokens.space1,
           runSpacing: Tokens.space1,
           children: [
             _IconChoice(
+              key: const ValueKey('event-icon-none'),
               tooltip: l10n.eventIconNone,
               selected: d.iconKey == null,
-              onTap: () => _change((d) => d.iconKey = null),
+              onTap: () => _pick(null),
               child: const Icon(Icons.block, size: 22),
             ),
             for (final key in eventIconKeys)
@@ -61,7 +83,8 @@ class _EventRitualFieldsState extends State<EventRitualFields> {
                 key: ValueKey('event-icon-$key'),
                 tooltip: eventIconName(l10n, key),
                 selected: d.iconKey == key,
-                onTap: () => _change((d) => d.iconKey = key),
+                proposed: widget.iconProposed,
+                onTap: () => _pick(key),
                 child: EmojiPicture(eventIconAsset(key)!, size: 28),
               ),
           ],
@@ -114,11 +137,15 @@ class _IconChoice extends StatelessWidget {
     required this.selected,
     required this.onTap,
     required this.child,
+    this.proposed = false,
     super.key,
   });
 
   final String tooltip;
   final bool selected;
+
+  /// Selected by the title's proposal: outlined only, not filled.
+  final bool proposed;
   final VoidCallback onTap;
   final Widget child;
 
@@ -140,7 +167,7 @@ class _IconChoice extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: selected ? scheme.primaryContainer : null,
+              color: selected && !proposed ? scheme.primaryContainer : null,
               border: Border.all(
                 color: selected ? scheme.primary : scheme.outlineVariant,
                 width: selected ? 2 : 1,
