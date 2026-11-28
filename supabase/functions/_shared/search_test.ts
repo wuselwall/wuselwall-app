@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertFalse } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals, assertFalse } from "jsr:@std/assert@1.0.19";
 import type {
   EventRow,
   ExternalOccurrenceRow,
