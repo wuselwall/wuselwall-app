@@ -1,3 +1,4 @@
 /* System permission prompts, shown by iOS in the device language. Keep in step with en.lproj. */
 "NSCameraUsageDescription" = "Die Kamera scannt den QR-Code zur Geräteeinrichtung.";
 "NSMotionUsageDescription" = "Wusel lehnt sich zur Seite, wenn das Gerät gekippt wird.";
+"NSPhotoLibraryUsageDescription" = "WuselWall liest den Stundenplan aus einem Foto, das du auswählst.";

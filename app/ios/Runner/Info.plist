@@ -58,6 +58,8 @@
 	<string>Die Kamera scannt den QR-Code zur Geräteeinrichtung.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Wusel lehnt sich zur Seite, wenn das Gerät gekippt wird.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>WuselWall liest den Stundenplan aus einem Foto, das du auswählst.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

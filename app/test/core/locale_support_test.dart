@@ -70,4 +70,36 @@ void main() {
       }
     },
   );
+
+  // App Store Connect refuses a build whose plugins reach for protected data without a
+  // purpose string (ITMS-90683), and says so only by mail after the upload.
+  test('iOS purpose strings cover the plugins and every language', () {
+    final plist = File('ios/Runner/Info.plist').readAsStringSync();
+    final declared = RegExp(
+      r'<key>(NS\w+UsageDescription)</key>\s*<string>([^<]+)</string>',
+    ).allMatches(plist).map((m) => m.group(1)!).toSet();
+    const needed = {
+      'camera': ['NSCameraUsageDescription'],
+      'image_picker': [
+        'NSCameraUsageDescription',
+        'NSPhotoLibraryUsageDescription',
+      ],
+      'sensors_plus': ['NSMotionUsageDescription'],
+    };
+    final pubspec = File('pubspec.yaml').readAsStringSync();
+    for (final MapEntry(key: plugin, value: keys) in needed.entries) {
+      expect(pubspec, contains(RegExp('^  $plugin:', multiLine: true)));
+      expect(declared, containsAll(keys), reason: plugin);
+    }
+    for (final locale in supportedLocales) {
+      final code = locale.languageCode;
+      final strings = File('ios/Runner/$code.lproj/InfoPlist.strings')
+          .readAsStringSync();
+      final translated = RegExp(
+        r'^"(NS\w+UsageDescription)" = ".+";$',
+        multiLine: true,
+      ).allMatches(strings).map((m) => m.group(1)!).toSet();
+      expect(translated, declared, reason: code);
+    }
+  });
 }
