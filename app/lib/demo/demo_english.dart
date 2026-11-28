@@ -75,6 +75,7 @@ const _texts = <String, Map<String, String>>{
     'Schwimmbad': 'Pool',
     'Sportsachen': 'PE kit',
     'Schwimmzeug': 'Swimming kit',
+    'Bastelsachen': 'Craft things',
     'Frau Klein': 'Ms Clarke',
     'fällt aus': 'cancelled',
     // The care label as an English family would type it: short enough for a day column.

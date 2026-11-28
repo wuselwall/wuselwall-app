@@ -162,7 +162,21 @@ Touchez un cours pour le signaler **annulé**, **remplacé** (enseignant et note
 
 ## Préparer le cartable {#pack-for-tomorrow}
 
-Le mur et la journée de l’enfant indiquent le matériel pour le lendemain, par exemple les affaires de sport. Le téléphone peut envoyer un [rappel la veille](/fr/settings/reminders). Désactiver l’indication dans les paramètres du foyer la retire partout.
+Le mur et la journée de l’enfant indiquent le matériel pour le lendemain, par exemple les affaires de sport. Le téléphone peut envoyer un [rappel la veille](/fr/settings/reminders). Désactiver l’indication dans les paramètres du foyer la retire partout. Ce que vous avez [noté une fois](#one-off) n’est pas concerné.
+
+## Noter une chose à apporter une seule fois {#one-off}
+
+Parfois, une chose n’est à apporter qu’une fois : le sac de sport, un papier signé, 5 francs pour la sortie. Vous la notez pour un enfant, pour un jour. Elle apparaît là où apparaît le matériel de l’emploi du temps, après lui, une seule fois.
+
+Il y a trois façons de faire :
+
+- **Calendrier → Nouvel événement → À apporter** (sous **École**, « Pour un enfant, un jour »). Vous écrivez **Quoi** (80 caractères au plus), choisissez **Qui l’apporte** (seulement s’il y a plusieurs enfants) et **Quand** : **Aujourd’hui**, **Demain**, **Après-demain** ou **Un autre jour …**. **Ajouter** la note. Par défaut, c’est demain.
+- **Emploi du temps** : sous la semaine d’un enfant, à côté de « Préparer le cartable », les choses de demain apparaissent en pastilles. Le × en retire une, **Quelque chose à apporter** en ajoute une, aussi pour un autre jour.
+- **Mur de la cuisine** : touchez le nom d’un enfant. Quand quelqu’un est choisi, les mêmes pastilles pour retirer et ajouter y sont.
+
+Cela marche pour tout enfant et tout jour, même pour un enfant sans emploi du temps ou un samedi. Un adulte note pour n’importe quel enfant, un enfant seulement pour lui-même. La même chose le même jour n’est gardée qu’une fois, et il y en a 20 au plus par enfant et par jour.
+
+Le rappel de la veille les nomme aussi, et Siri répond à « Qu’a Mia demain ? » par « À emporter : affaires de sport et sac de sport. » Le réglage **Rappel du matériel pour demain** dans [Paramètres → Calendrier et école](/fr/settings/household) ne concerne que le matériel de l’emploi du temps : ce que vous avez noté vous-mêmes s’affiche toujours. Si votre serveur n’a pas encore la fonction, la tuile et les pastilles manquent et seul le matériel de l’emploi du temps apparaît.
 
 ## Les enfants signalent un changement {#children-report-changes}
 

@@ -131,9 +131,10 @@ Future<int> _approvals(Ref ref, String actor) async {
   }
 }
 
-/// What the children pack for each school day from tomorrow through the plan's last
-/// evening: a child's own phone covers that child, an adult's every child. A server or
-/// household without the school module simply gives none.
+/// What the children pack for each day from tomorrow through the plan's last evening:
+/// the lessons' equipment and the things noted for the day (specs/15), also for a child
+/// without a timetable. A child's own phone covers that child, an adult's every child. A
+/// server or household without the school module simply gives none.
 Future<List<PackList>> _packLists(Ref ref, String actor, DateTime today) async {
   final members = await ref.watch(membersProvider.future);
   final me = members.where((m) => m.id == actor).firstOrNull;
@@ -152,7 +153,7 @@ Future<List<PackList>> _packLists(Ref ref, String actor, DateTime today) async {
         d = DateTime(d.year, d.month, d.day + 1)
       )
         for (final child in children)
-          if (week.dayOf(child.id, d)?.equipment case final items?
+          if (week.toBringOf(child.id, d) case final items
               when items.isNotEmpty)
             PackList(
               day: d,

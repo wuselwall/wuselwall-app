@@ -1,7 +1,7 @@
 # 15 — Module: School Timetable & Presence (A5)
 
 *Added 2026-08-30, after the original four modules were specified. Implements
-FR-7.1 – FR-7.13 and the presence half of FR-1.11 – FR-1.17. Decision context:
+FR-7.1 – FR-7.13, FR-7.15 and the presence half of FR-1.11 – FR-1.17. Decision context:
 [ADR-008](adr/ADR-008-school-timetable-model.md) and
 [ADR-009](adr/ADR-009-event-kinds-and-presence.md).*
 
@@ -180,6 +180,55 @@ names it the evening before; Siri and assistants answer it ([12](12-mcp-and-assi
 The household setting `school.equipment_hint` now switches all of it off: the school loader
 (`_shared/school_data.ts`) leaves the subjects' equipment notes out of the projection, so every
 app version follows.
+
+### One-off things to bring (FR-7.15)
+
+*Built 2026-11-17, issue #289.* Until now the packing list knew only the equipment of
+timetable subjects. A person can now note a one-off thing ("Turnbeutel", "Zettel
+unterschrieben", "5 Fr. für den Ausflug") for **one child on one day**. It joins that day's
+packing list everywhere the equipment shows — the kid's Today ("Morgen brauchst du: …"), the
+Stundenplan section ("Morgen einpacken: …"), the wall's pack strip in a child's detail, the
+evening `notify.packing_reminder` and Siri's school answer ("Einpacken: Sportsachen und
+Turnbeutel.") — after the subjects' equipment, each thing once. The owner's choices of
+2026-11-17: entry from a *Neuer Termin* tile and next to a child's school day, including the
+wall's child detail; any child, any day; adults for any child, a child for itself.
+
+- **Entry points.** (1) Calendar → *Neuer Termin* → *Schule* section → tile **Mitbringen**
+  ("Für ein Kind, an einem Tag"; EN "Something to bring", FR "À apporter", ES "Para llevar"),
+  which opens a small sheet: **Was** (up to 80 characters), **Wer bringt es mit** (only with
+  more than one child), **Wann** (Heute · Morgen · Übermorgen · Anderer Tag …, a date picker up
+  to a year ahead) and **Hinzufügen**; tomorrow is the default, or the calendar day in view
+  when it is ahead. (2) The Stundenplan section under a child's week: tomorrow's noted things
+  as chips with an × to remove, and a chip **Etwas mitbringen** for any day. (3) The wall: a
+  tap on a child's name opens the child's detail with the pack strip and, while someone is
+  acting (has chosen their avatar), the same chips.
+- **Rules.** Any child, any day, also a child without a timetable (kindergarten) or a
+  Saturday: such a child's Today shows the "Morgen brauchst du" card with the noted things and
+  the wall's child detail shows the strip. Who: every adult for any child; a child only for
+  itself (the server refuses otherwise); on a shared tablet or the wall someone must be
+  acting. The same title twice for the same child and day is kept once; at most 20 things per
+  child and day. `school.equipment_hint` ([21](21-household-settings.md)) switches off only
+  the subjects' equipment notes, never the noted things. The evening reminder includes them
+  (also for a child without a timetable); Siri names them, also on a weekend or without a
+  timetable.
+- **Server.** Migration `20261117100000_pack_items.sql`: table `app.pack_item` (`profile_id`,
+  `on_date`, `title` 1–80, `created_by_profile_id`), RLS forced, view `api.pack_items`,
+  `api.pack_item_save(p_actor, p_id, p_profile_id, p_on_date, p_title)` → `{id}` (the same
+  title again answers the existing id; a change into a title the day already has merges) and
+  `api.pack_item_delete(p_actor, p_id)`; audit rows, broadcast topic `school`, export table
+  `pack_item`, feature `pack-items` in `api.server_info`. Errors WW-PACK-001
+  `pack_item_invalid` (22023), `pack_item_not_yours` (42501), `pack_item_not_found` (P0002);
+  the date must be within 400 days of today. `api.shortcut_context` adds `pack` to its
+  `school` part (the MCP/assistant context itself is on hold and untouched). Edge Functions:
+  `school-week` answers `pack: [{id, member_id, date, title}]` for its window; `board-week`
+  puts each day's `pack` on the day (`fillPack` in `_shared/board.ts`); the loader
+  `loadPackItems` in `_shared/school_data.ts` tolerates a server without the view.
+  `api_version` stays 1 (additive). pgTAP `supabase/tests/325_pack_items.test.sql`.
+- **App.** `PackItem` and `toBring()` (equipment first, then the noted things),
+  `BoardDay.toBringOf`, `SchoolWeek.toBringOf` (`week_board.dart`, `school_models.dart`);
+  `pack_item_sheet.dart` with `showPackItemSheet`, `PackItemChips` and
+  `canNotePackItemProvider`; `packItemsSupportedProvider` hides the tile and the chips on an
+  older server, where the packing list shows only the subjects' equipment.
 
 **Week board (kiosk):** the child's row shows the school-day span and only the lessons
 flagged `is_notable` — Sport, Schwimmen, an AG, an excursion. Rendering six subjects per

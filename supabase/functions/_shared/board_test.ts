@@ -5,6 +5,7 @@ import {
   fillBoard,
   fillHolidays,
   fillMeals,
+  fillPack,
   fillSchool,
   fillUsual,
   holidaysBetween,
@@ -935,4 +936,31 @@ Deno.test("fillUsual puts the board members' usual places on their weekdays, non
   ]);
   assertEquals(dayOf(board, "2026-10-15").usual, []);
   assertEquals(withHoliday, input);
+});
+
+// ── one-off things to bring ─────────────────────────────────────────────────────
+
+Deno.test("fillPack puts each day's things on the day, for any child, in the order given", () => {
+  const b = base();
+  const input = structuredClone(b);
+  const item = (id: string, member: string, date: string, title: string) => ({
+    id,
+    member_id: member,
+    date,
+    title,
+  });
+  const board = fillPack(b, [
+    item("p1", "m1", "2026-10-13", "Turnbeutel"),
+    item("p2", "nobody-with-a-timetable", "2026-10-13", "Hausschuhe"),
+    item("p3", "m1", "2026-10-15", "Zettel"),
+    // Outside the week: on no day.
+    item("p4", "m1", "2026-10-30", "Kuchen"),
+  ]);
+  assertEquals(dayOf(board, "2026-10-13").pack, [
+    item("p1", "m1", "2026-10-13", "Turnbeutel"),
+    item("p2", "nobody-with-a-timetable", "2026-10-13", "Hausschuhe"),
+  ]);
+  assertEquals(dayOf(board, "2026-10-14").pack, []);
+  assertEquals(dayOf(board, "2026-10-15").pack?.map((i) => i.id), ["p3"]);
+  assertEquals(b, input);
 });

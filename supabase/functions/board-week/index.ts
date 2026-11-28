@@ -2,8 +2,8 @@
 // api.board_week; presence, the day's appointments and busy_until are filled from the
 // week's occurrences, the timetables and school days from the school projection, the
 // public holiday of each day from the household's region, each member's usual places
-// from api.usual_weeks, and the meal zone from the week's meal plan entries. Acts as the
-// caller, so RLS applies (ADR-010).
+// from api.usual_weeks, the meal zone from the week's meal plan entries, and each day's
+// one-off things to bring from api.pack_items. Acts as the caller, so RLS applies (ADR-010).
 import {
   errorResponse,
   json,
@@ -17,6 +17,7 @@ import {
   fillBoard,
   fillHolidays,
   fillMeals,
+  fillPack,
   fillSchool,
   fillUsual,
   type MealMember,
@@ -76,8 +77,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const withUsual = noUsualWeek
       ? withHolidays
       : fillUsual(withHolidays, usual.data as UsualWeekRow[]);
+    const withPack = fillPack(withUsual, school.packItems);
     return json(
-      fillMeals(withUsual, {
+      fillMeals(withPack, {
         entries: meals.entries,
         settings: meals.settings,
         presence: calendar.occurrences,
