@@ -2,6 +2,8 @@ WuselWall is the family organizer for everything that bustles around your home: 
 
 Good to know first: WuselWall is not an online service. The app connects to a WuselWall server that your family runs itself – on a NAS, a mini PC, a rented server or in your own Supabase project. We never see your data. You can try the app without a server, with a sample family: tap "Try it without a server" on the first screen.
 
+Use search to find events, recipes, chores, shopping items and settings in one place.
+
 WEEK BOARD FOR THE KITCHEN
 • Seven days at a glance, made for a tablet on the wall
 • Who is where, what is coming up, what is for dinner
@@ -13,6 +15,7 @@ SHARED CALENDAR
 • Recurring events and presence such as shifts or trips
 • Subscribe to calendars: clubs, waste collection, school
 • As an ICS feed in Outlook, Apple Calendar or Google Calendar
+• WuselWall suggests a picture as you type the title so you can spot the event on Today and in the calendar
 
 SCHOOL TIMETABLES
 • Each child's timetable, with more than one school if needed
@@ -31,6 +34,7 @@ MEAL PLAN AND SHOPPING LIST
 
 ONE DEVICE PER PERSON OR PER ROOM
 • Own devices for the adults, one shared tablet for the kitchen
+• Children under 12 see their own next four days, with school, appointments and what to pack
 • Children need no account and no email address
 • Connect new devices with a QR code, lock each device on its own
 • Sign in with a code by email, or with a password

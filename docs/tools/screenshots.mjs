@@ -422,11 +422,43 @@ const shots = [
   { name: 'today-trip', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.today); await scrollToHeading(p, t.tripTodayTodos, 200); await p.mouse.move(0, 0); await settle(p); } },
   { name: 'settings-services', scenario: 'adult', viewport: PHONE, route: '/settings/services' },
 ];
-// The tab name and the card label the trip shots look for, from the app's own texts.
+
+// Capture these additional phone views only when explicitly requested.
+const storeShots = [
+  // Pin weekdays with a pictured event and the child's school day in the sample family.
+  { name: 'today-event', scenario: 'adult', viewport: PHONE, fixedTime: '2026-11-27T09:00:00+01:00', steps: async (p, t) => {
+    await tapAny(p, t.today);
+    await scrollToHeading(p, t.todayAgendaTitle, 76);
+    await p.getByText(t.todayAgendaTitle, { exact: true }).first().waitFor({ state: 'visible' });
+    await p.mouse.move(0, 0);
+    await settle(p);
+  } },
+  { name: 'calendar-picture', scenario: 'adult', viewport: PHONE, steps: async (p, t) => {
+    await tapAny(p, t.calendar);
+    await tapAny(p, t.newEvent);
+    await tapAny(p, t.blankEvent, { exact: false });
+    const title = p.getByRole('textbox', { name: t.eventTitleLabel });
+    await title.fill(t.pictureTitle);
+    await title.press('Tab');
+    await p.mouse.move(0, 0);
+    await settle(p);
+  } },
+  { name: 'kid-school-day-phone', scenario: 'kid', viewport: PHONE, fixedTime: '2026-11-25T09:00:00+01:00', steps: async (p, t) => {
+    await press(p, t.daughter);
+    await press(p, new RegExp(`^${t.kidSimpleTomorrow},`));
+    await p.mouse.move(0, 0);
+    await settle(p);
+  } },
+];
+// Use the app’s localized labels when driving the trip and store captures.
 for (const lang of Object.keys(T)) {
   const arb = JSON.parse(fs.readFileSync(`app/l10n/app_${lang}.arb`, 'utf8'));
   T[lang].tripTabPack = arb.tripPageTabPack;
   T[lang].tripTodayTodos = arb.tripTodayTodos;
+  T[lang].todayAgendaTitle = arb.todayAgendaTitle;
+  T[lang].eventTitleLabel = arb.eventTitleLabel;
+  T[lang].kidSimpleTomorrow = arb.kidSimpleTomorrow;
+  T[lang].pictureTitle = { de: 'Kino mit Emma', en: 'Cinema with Olivia', fr: 'Cinéma avec Emma', es: 'Cine con Olivia' }[lang];
 }
 const RITUALS = {
   de: { tradition: 'Familientradition', newTradition: 'Neue Tradition', wishTitle: 'Dein Wunschessen', blankEvent: 'Ohne Vorlage' },
@@ -474,13 +506,14 @@ const browser = await chromium.launch({
 let failed = 0;
 for (const lang of langs) {
   fs.mkdirSync(path.join(out, lang), { recursive: true });
-  for (const shot of shots) {
+  for (const shot of only.length ? [...shots, ...storeShots] : shots) {
     if (only.length && !only.includes(shot.name)) continue;
     const ctx = await browser.newContext({
       viewport: shot.viewport, deviceScaleFactor: 2, locale: LOCALES[lang],
       colorScheme: 'light', timezoneId: 'Europe/Berlin',
     });
     const page = await ctx.newPage();
+    if (shot.fixedTime) await page.clock.setFixedTime(new Date(shot.fixedTime));
     try {
       await open(page, shot.scenario, shot.route, shot.query);
       if (shot.steps) await shot.steps(page, T[lang]);

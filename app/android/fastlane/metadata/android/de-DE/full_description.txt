@@ -2,6 +2,8 @@ WuselWall ist der Familienorganisator für alles, was bei euch zuhause wuselt: g
 
 Wichtig vorab: WuselWall ist kein Online-Dienst. Die App verbindet sich mit einem WuselWall-Server, den eure Familie selbst betreibt – auf einem NAS, einem Mini-PC, einem gemieteten Server oder in einem eigenen Supabase-Projekt. Wir sehen eure Daten nie. Ohne Server könnt ihr die App mit einer Beispielfamilie ausprobieren: „Ohne Server ausprobieren“ auf dem ersten Bildschirm.
 
+Mit der Suche findet ihr Termine, Rezepte, Aufgaben, Einkaufsartikel und Einstellungen.
+
 WOCHENTAFEL FÜR DIE KÜCHE
 • Sieben Tage auf einen Blick, gemacht für ein Tablet an der Wand
 • Wer ist wo, was steht an, was gibt es zu essen
@@ -13,6 +15,7 @@ GEMEINSAMER KALENDER
 • Wiederkehrende Termine und Anwesenheiten wie Schichten oder Reisen
 • Kalender abonnieren: Verein, Abfuhrkalender, Schule
 • Als ICS-Feed in Outlook, Apple Kalender oder Google Kalender
+• Beim Tippen schlägt WuselWall ein Bild vor, damit ihr den Termin in der Heute-Übersicht und im Kalender leichter erkennt
 
 STUNDENPLÄNE
 • Der Stundenplan jedes Kindes, auch mit mehreren Schulen
@@ -31,6 +34,7 @@ ESSENSPLAN UND EINKAUFSLISTE
 
 EIN GERÄT PRO PERSON ODER PRO RAUM
 • Eigene Geräte für die Erwachsenen, ein gemeinsames Tablet für die Küche
+• Kinder unter zwölf sehen ihre eigenen nächsten vier Tage mit Schule, Terminen und Packliste
 • Kinder brauchen kein Konto und keine E-Mail-Adresse
 • Neue Geräte per QR-Code verbinden, jedes Gerät einzeln sperren
 • Anmeldung mit Code per E-Mail oder mit Passwort

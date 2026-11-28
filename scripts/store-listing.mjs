@@ -1,7 +1,9 @@
 // Renders the store listings' images from the app icon and the docs screenshots, into
 // fastlane's layouts next to the listing texts; store-listing.yml uploads them:
-//   npm run docs:screenshots   # the light-theme shots this script frames
-//   node scripts/store-listing.mjs
+//   npm run docs:screenshots   # the guide shots this script frames
+//   node docs/tools/screenshots.mjs today-event calendar-picture kid-school-day-phone
+//   npm run store:listing
+// Set SHOT_OUT to the same directory used by the capture script for exported shots.
 // Google Play (supply, app/android/fastlane/metadata/android/<locale>/images), per locale:
 // icon.png (512×512), featureGraphic.png (1024×500), phone screenshots (1080×1920) and
 // tablet screenshots (1920×1080, used for both 7- and 10-inch).
@@ -12,13 +14,13 @@
 // colour. Screenshots are named <locale>_<device>_<n>_<shot>.png (de_DE_phone_1_today.png),
 // underscores only, so a file is recognisable outside its folder; the number keeps the
 // store's order. icon.png and featureGraphic.png keep the names fastlane supply expects.
-import { mkdir, readFile, rm } from 'node:fs/promises';
+import { access, mkdir, readFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 
 const root = path.resolve('.');
-const shots = path.join(root, 'docs/public/screenshots');
+const shots = path.resolve(process.env.SHOT_OUT || 'docs/public/screenshots');
 const meta = path.join(root, 'app/android/fastlane/metadata/android');
 const appStoreShots = path.join(root, 'app/ios/fastlane/screenshots');
 const font = (f) => readFile(path.join(root, 'app/assets/fonts', f)).then((b) => b.toString('base64'));
@@ -36,11 +38,13 @@ const copy = {
     lang: 'de',
     feature: { title: 'Alles, was bei euch zuhause wuselt – an einer Wand.', sub: 'Open Source · Auf eurem eigenen Server' },
     phone: [
-      ['today', 'Der Tag auf einen Blick', 'Termine, Aufgaben und Essen für die ganze Familie'],
+      ['today-event', 'Der Tag auf einen Blick', 'Termine, Familienpläne und Einkaufsliste'],
+      ['calendar-picture', 'Termine mit Bildern', 'Beim Tippen schlägt WuselWall ein passendes Bild vor'],
+      ['search', 'Schnell gefunden', 'Termine, Rezepte, Aufgaben, Einkäufe und Einstellungen'],
+      ['kid-school-day-phone', 'Meine nächsten Tage', 'Schule, Termine und Packliste für Kinder unter zwölf'],
       ['shopping-phone', 'Eine Einkaufsliste für alle', 'Nach Abteilungen sortiert, auch ohne Netz'],
       ['meals-suggest', 'Was gibt es diese Woche?', 'Vorschläge aus dem, was ihr schon gekocht habt'],
-      ['calendar-editor', 'Ein Kalender für alle', 'Mit Wiederholungen und Anwesenheiten'],
-      ['settings-code', 'Geräte per QR-Code verbinden', 'Das Küchen-Tablet in wenigen Sekunden'],
+      ['settings-code', 'Das Küchen-Tablet verbinden', 'Ein neues Gerät per Kopplungscode hinzufügen'],
       ['setup-server', 'Auf eurem eigenen Server', 'Oder ohne Server mit einer Beispielfamilie ausprobieren'],
     ],
     tablet: [
@@ -56,11 +60,13 @@ const copy = {
     lang: 'en',
     feature: { title: 'Everything that bustles around your home – on one wall.', sub: 'Open source · On your own server' },
     phone: [
-      ['today', 'Your day at a glance', 'Events, chores and meals for the whole family'],
+      ['today-event', 'Your day at a glance', 'Events, family plans and the shopping list'],
+      ['calendar-picture', 'Give events a picture', 'WuselWall suggests a picture as you type a title'],
+      ['search', 'Find it in one search', 'Events, recipes, chores, shopping items and settings'],
+      ['kid-school-day-phone', 'My next few days', 'School, events and what to pack for children under 12'],
       ['shopping-phone', 'One shopping list for everyone', 'Sorted by aisle, works offline'],
       ['meals-suggest', "What's for dinner this week?", "Suggestions from what you've cooked before"],
-      ['calendar-editor', 'One calendar for everyone', 'With recurring events and presence'],
-      ['settings-code', 'Connect devices with a QR code', 'The kitchen tablet in seconds'],
+      ['settings-code', 'Connect the kitchen tablet', 'Add a new device with a pairing code'],
       ['setup-server', 'On your own server', 'Or try it without one, with a sample family'],
     ],
     tablet: [
@@ -76,11 +82,13 @@ const copy = {
     lang: 'fr',
     feature: { title: 'Toute la vie de la maison, sur un seul mur.', sub: 'Open source · Sur votre propre serveur' },
     phone: [
-      ['today', 'La journée d’un coup d’œil', 'Rendez-vous, tâches et repas pour toute la famille'],
+      ['today-event', 'La journée d’un coup d’œil', 'Rendez-vous, projets de famille et liste de courses'],
+      ['calendar-picture', 'Des rendez-vous en images', 'WuselWall propose une image pendant la saisie du titre'],
+      ['search', 'Tout retrouver au même endroit', 'Rendez-vous, recettes, tâches, courses et paramètres'],
+      ['kid-school-day-phone', 'Mes prochains jours', 'École, rendez-vous et affaires à prévoir pour les moins de 12 ans'],
       ['shopping-phone', 'Une liste de courses pour tous', 'Classée par rayon, même sans connexion'],
       ['meals-suggest', 'On mange quoi cette semaine ?', 'Des idées tirées de ce que vous avez déjà cuisiné'],
-      ['calendar-editor', 'Un calendrier pour tous', 'Avec récurrences et présences'],
-      ['settings-code', 'Connecter un appareil par code QR', 'La tablette de la cuisine en quelques secondes'],
+      ['settings-code', 'Connectez la tablette de la cuisine', 'Ajoutez un appareil grâce à un code de jumelage'],
       ['setup-server', 'Sur votre propre serveur', 'Ou essayez sans serveur, avec une famille d’exemple'],
     ],
     tablet: [
@@ -96,11 +104,13 @@ const copy = {
     lang: 'es',
     feature: { title: 'Todo lo que se mueve en casa, en una sola pared.', sub: 'Código abierto · En vuestro propio servidor' },
     phone: [
-      ['today', 'El día de un vistazo', 'Citas, tareas y comidas para toda la familia'],
+      ['today-event', 'El día de un vistazo', 'Citas, planes familiares y lista de la compra'],
+      ['calendar-picture', 'Citas con imágenes', 'WuselWall sugiere una imagen al escribir el título'],
+      ['search', 'Todo en una búsqueda', 'Citas, recetas, tareas, productos de la compra y ajustes'],
+      ['kid-school-day-phone', 'Mis próximos días', 'Colegio, citas y qué llevar para menores de 12 años'],
       ['shopping-phone', 'Una lista de la compra para todos', 'Ordenada por secciones, también sin conexión'],
       ['meals-suggest', '¿Qué comemos esta semana?', 'Sugerencias a partir de lo que ya habéis cocinado'],
-      ['calendar-editor', 'Un calendario para todos', 'Con citas periódicas y presencia'],
-      ['settings-code', 'Conectar dispositivos con un código QR', 'La tableta de la cocina en segundos'],
+      ['settings-code', 'Conectad la tableta de la cocina', 'Añadid un dispositivo con un código de vinculación'],
       ['setup-server', 'En vuestro propio servidor', 'O probadla sin servidor, con una familia de ejemplo'],
     ],
     tablet: [
@@ -114,14 +124,20 @@ const copy = {
   },
 };
 
-const shot = async (lang, name) => {
-  const p = path.join(shots, lang, `${name}.png`);
-  try {
-    return (await readFile(p)).toString('base64');
-  } catch {
-    throw new Error(`${p} is missing: run npm run docs:screenshots first`);
+const shotPath = (lang, name) => path.join(shots, lang, `${name}.png`);
+const shot = async (lang, name) => (await readFile(shotPath(lang, name))).toString('base64');
+
+// Check all inputs before replacing any of the committed store images.
+for (const c of Object.values(copy)) {
+  for (const [name] of [...c.phone, ...c.tablet]) {
+    const input = shotPath(c.lang, name);
+    try {
+      await access(input);
+    } catch (cause) {
+      throw new Error(`Could not read ${input}. Run npm run docs:screenshots or set SHOT_OUT to your capture directory.`, { cause });
+    }
   }
-};
+}
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 const page = (w, h, body) => `<!doctype html><html><head><style>${fonts}
   * { box-sizing: border-box; } body { margin: 0; width: ${w}px; height: ${h}px; overflow: hidden; background: ${paper};
