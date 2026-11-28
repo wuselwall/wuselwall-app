@@ -89,7 +89,7 @@ Für diesen Termin ersetzt sie die persönliche Einstellung **Erinnerung vor Ter
 
 Unten im Editor stehen drei Dinge, die den Alltag leichter machen (siehe [Rituale](/guide/rituals)):
 
-- **Bild**: eines von 37 Bildern, etwa Kuchen, Zoo, Zahnarzt, Fahrrad oder die Putzhilfe, die kommt. Es steht beim Termin an der Wand und beim Countdown. **Kein Bild** ist der Standard.
+- **Bild**: eines von 37 Bildern, etwa Kuchen, Zoo, Zahnarzt, Fahrrad oder die Putzhilfe, die kommt. Es steht beim Termin auf **Heute**, im Kalender, an der Wand und beim Countdown. **Kein Bild** ist der Standard.
 - **Darauf freuen wir uns**: Der Termin zählt an der Wand und auf dem Kinder-Tablet herunter, etwa „Zoo: noch 3× schlafen“.
 - **Familientradition**: etwas, das die Familie immer wieder macht, etwa der Spieleabend. Eine Tradition steht immer an der Wand, mit einem Band. Unter **Mit Essen** trägst du ein, welches Essen dazugehört, und wählst **Mittagessen** oder **Abendessen**.
 
