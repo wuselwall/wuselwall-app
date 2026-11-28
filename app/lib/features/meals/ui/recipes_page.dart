@@ -4,10 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
-import 'package:wuselwall/core/text/fold.dart';
+import 'package:wuselwall/core/text/search.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
+import 'package:wuselwall/core/ui/search_field.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
 
 /// Every recipe, searchable by title and tag. Recipes are optional enrichment, so the
@@ -38,12 +39,9 @@ class _RecipesPageState extends ConsumerState<RecipesPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(Tokens.space4),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: l10n.mealsRecipeSearch,
-                  prefixIcon: const Icon(Icons.search),
-                ),
-                onChanged: (v) => setState(() => _query = fold(v.trim())),
+              child: SearchField(
+                hint: l10n.mealsRecipeSearch,
+                onChanged: (v) => setState(() => _query = v),
               ),
             ),
             Expanded(
@@ -63,13 +61,9 @@ class _RecipesPageState extends ConsumerState<RecipesPage> {
                       ],
                     );
                   }
-                  final shown = [
-                    for (final r in all)
-                      if (_query.isEmpty ||
-                          fold(r.title).contains(_query) ||
-                          r.tags.any((t) => fold(t).contains(_query)))
-                        r,
-                  ];
+                  final shown = searchTerms(_query).isEmpty
+                      ? all
+                      : searchIn(_query, all, (r) => [r.title, ...r.tags]);
                   return ListView.separated(
                     itemCount: shown.length,
                     separatorBuilder: (_, _) => const Divider(height: 1),

@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/swipe_stepper.dart';
@@ -91,6 +95,9 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
 DateTime _toMinute(DateTime t) =>
     DateTime(t.year, t.month, t.day, t.hour, t.minute);
 
+/// The view menu's entry that opens the search instead of choosing a view.
+const _searchEntry = 'search';
+
 /// One row of calendar controls. Narrow screens use a menu for the view selector.
 class CalendarToolbar extends ConsumerWidget {
   const CalendarToolbar({this.compact = false, super.key});
@@ -114,6 +121,12 @@ class CalendarToolbar extends ConsumerWidget {
     }
     final view = ref.watch(calendarViewProvider);
     final nav = ref.read(calendarViewProvider.notifier);
+    // The calendar's way into the search (FR-10.2): for appointments where the server
+    // can search them, else the search over everything else.
+    final searchable = ref.watch(eventSearchSupportedProvider);
+    final searchLabel = searchable ? l10n.searchEventsTitle : l10n.searchTitle;
+    void openSearch() =>
+        unawaited(context.push(Routes.searchPath(events: searchable)));
     // The day view's heading under the bar names the day in full, so the bar keeps
     // it short ("Mo 26.10.") and never cuts it; the tooltip has it whole.
     final label = switch (view.mode) {
@@ -166,7 +179,10 @@ class CalendarToolbar extends ConsumerWidget {
           icon: const Icon(Icons.today_outlined),
           onPressed: nav.today,
         ),
-        PopupMenuButton<CalendarMode>(
+        // The menu's values are the views, and [_searchEntry] for the search: this bar
+        // has no room for a search button of its own (it would push the date out), so
+        // the entry is here, under the views (FR-10.2).
+        PopupMenuButton<Object>(
           tooltip: l10n.calendarChooseView,
           initialValue: view.mode,
           icon: Icon(switch (view.mode) {
@@ -176,14 +192,27 @@ class CalendarToolbar extends ConsumerWidget {
             CalendarMode.week => Icons.view_week_outlined,
             CalendarMode.month => Icons.calendar_view_month_outlined,
           }),
-          onSelected: nav.setMode,
+          onSelected: (choice) => switch (choice) {
+            final CalendarMode mode => nav.setMode(mode),
+            _ => openSearch(),
+          },
           itemBuilder: (_) => [
             for (final mode in modes.entries)
-              CheckedPopupMenuItem(
+              CheckedPopupMenuItem<CalendarMode>(
                 value: mode.key,
                 checked: view.mode == mode.key,
                 child: Text(mode.value),
               ),
+            const PopupMenuDivider(),
+            PopupMenuItem<Object>(
+              key: const ValueKey('calendar-search'),
+              value: _searchEntry,
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.search),
+                title: Text(searchLabel),
+              ),
+            ),
           ],
         ),
       ],
@@ -214,16 +243,22 @@ class CalendarToolbar extends ConsumerWidget {
           selected: {view.mode},
           onSelectionChanged: (modes) => nav.setMode(modes.first),
         ),
+        IconButton(
+          key: const ValueKey('calendar-search'),
+          tooltip: searchLabel,
+          icon: const Icon(Icons.search),
+          onPressed: openSearch,
+        ),
       ],
     );
     if (!compact) {
       // The French and Spanish labels are longer: the four view buttons take up to
-      // 520 px, so a bar with less room than that and the navigation takes the narrow
-      // one, and only a wide one has room for the word beside them.
+      // 520 px, so a bar with less room than that, the navigation and the search button
+      // takes the narrow one, and only a wide one has room for the word beside them.
       return LayoutBuilder(
         builder: (context, box) {
           final room = box.maxWidth / MediaQuery.textScalerOf(context).scale(1);
-          if (room < 760) return narrow();
+          if (room < 808) return narrow();
           return wide(todayWord: room >= 900);
         },
       );

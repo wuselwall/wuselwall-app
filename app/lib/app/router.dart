@@ -39,6 +39,7 @@ import 'package:wuselwall/features/reminders/ui/reminders_page.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/search/ui/search_page.dart';
 import 'package:wuselwall/features/services/ui/services_page.dart';
 import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
@@ -148,6 +149,17 @@ abstract final class Routes {
 
   /// Wetter und Karten: the opt-in services (ADR-023); a guardian's page.
   static const servicesSettings = '/settings/services';
+
+  /// The search (FR-10.3). Query `scope=events`: appointments only ([searchPath]).
+  static const search = '/search';
+
+  /// The search page, over everything or over the [events] only.
+  static String searchPath({bool events = false}) =>
+      events ? '$search?scope=events' : search;
+
+  /// A settings group's page with the row [rowId] in view (`SettingsItem.rowId`).
+  static String settingsRow(String groupRoute, String rowId) =>
+      '$groupRoute?row=${Uri.encodeQueryComponent(rowId)}';
 
   // Trips (specs/30). The static paths come before the `:id` ones in the router.
   static const trips = '/trips';
@@ -466,14 +478,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       for (final group in SettingsGroup.values)
         _materialRoute(
           path: group.route,
-          builder: (_, _) => group == SettingsGroup.personal
-              ? Consumer(
-                  builder: (_, ref, _) =>
-                      ref.watch(settingsAccessProvider) == SettingsAccess.own
-                      ? const OwnSettingsPage()
-                      : SettingsGroupPage(group: group),
-                )
-              : SettingsGroupPage(group: group),
+          // `row`: the row a search result leads to (Routes.settingsRow).
+          builder: (_, state) {
+            final page = SettingsGroupPage(
+              group: group,
+              focusRow: state.uri.queryParameters['row'],
+            );
+            return group == SettingsGroup.personal
+                ? Consumer(
+                    builder: (_, ref, _) =>
+                        ref.watch(settingsAccessProvider) == SettingsAccess.own
+                        ? const OwnSettingsPage()
+                        : page,
+                  )
+                : page;
+          },
         ),
       _materialRoute(
         path: Routes.member,
@@ -539,6 +558,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const ServicesPage(),
       ),
       // Static paths first: `/trips/discover` is not a trip called "discover".
+      _materialRoute(
+        path: Routes.search,
+        builder: (_, state) => SearchPage(
+          scope: state.uri.queryParameters['scope'] == 'events'
+              ? SearchScope.events
+              : SearchScope.all,
+        ),
+      ),
       _materialRoute(path: Routes.trips, builder: (_, _) => const TripsPage()),
       _materialRoute(
         path: Routes.tripDiscover,

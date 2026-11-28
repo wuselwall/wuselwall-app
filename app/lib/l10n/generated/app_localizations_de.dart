@@ -6277,6 +6277,54 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventIcon_broom => 'Putzen';
 
   @override
+  String get eventIcon_cleaner => 'Putzhilfe kommt';
+
+  @override
+  String get eventIcon_doctor => 'Arzt';
+
+  @override
+  String get eventIcon_dentist => 'Zahnarzt';
+
+  @override
+  String get eventIcon_haircut => 'Friseur';
+
+  @override
+  String get eventIcon_vet => 'Tierarzt';
+
+  @override
+  String get eventIcon_bicycle => 'Radfahren';
+
+  @override
+  String get eventIcon_ski => 'Skifahren';
+
+  @override
+  String get eventIcon_dance => 'Tanzen';
+
+  @override
+  String get eventIcon_riding => 'Reiten';
+
+  @override
+  String get eventIcon_tennis => 'Tennis';
+
+  @override
+  String get eventIcon_guitar => 'Instrument';
+
+  @override
+  String get eventIcon_laundry => 'Wäsche';
+
+  @override
+  String get eventIcon_garden => 'Garten';
+
+  @override
+  String get eventIcon_car => 'Auto';
+
+  @override
+  String get eventIcon_work => 'Arbeit';
+
+  @override
+  String get eventIcon_shopping => 'Shopping';
+
+  @override
   String get eventIcon_star => 'Besonderes';
 
   @override
@@ -8875,6 +8923,78 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get errPackItemNotYours =>
       'Du kannst nur für dich selbst etwas notieren.';
+
+  @override
+  String get searchTitle => 'Suchen';
+
+  @override
+  String get searchHint => 'Wonach suchst du?';
+
+  @override
+  String get searchIntro =>
+      'Findet Termine, Aufgaben und Belohnungen, Rezepte, Artikel auf euren Einkaufslisten und Einstellungen.';
+
+  @override
+  String get searchIntroLocal =>
+      'Findet Aufgaben und Belohnungen, Rezepte, Artikel auf euren Einkaufslisten und Einstellungen.';
+
+  @override
+  String get searchEventsTitle => 'Termine suchen';
+
+  @override
+  String get searchEventsHint => 'Titel, Ort oder Notiz';
+
+  @override
+  String get searchEventsIntro =>
+      'Findet Termine nach Titel, Ort und Notiz: kommende und vergangene, auch die aus externen Kalendern.';
+
+  @override
+  String get searchClear => 'Leeren';
+
+  @override
+  String get searchNothingFound => 'Nichts gefunden.';
+
+  @override
+  String get searchSectionEvents => 'Termine';
+
+  @override
+  String get searchSectionPast => 'Vergangene Termine';
+
+  @override
+  String get searchSectionTasks => 'Aufgaben und Belohnungen';
+
+  @override
+  String get searchKindChore => 'Aufgabe';
+
+  @override
+  String get searchKindReward => 'Belohnung';
+
+  @override
+  String get searchEventRepeats => 'Wiederholt sich';
+
+  @override
+  String get searchMore =>
+      'Es gibt noch mehr. Ein weiteres Wort grenzt die Suche ein.';
+
+  @override
+  String get settingsSearchHint => 'Einstellungen durchsuchen';
+
+  @override
+  String get tasksFilterChores => 'Aufgaben filtern';
+
+  @override
+  String get tasksFilterRewards => 'Belohnungen filtern';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Alle $count zeigen',
+      one: '1 zeigen',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for German, as used in Austria (`de_AT`).
@@ -9333,6 +9453,12 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get eventIcon_croissant => 'Zmorge';
+
+  @override
+  String get eventIcon_haircut => 'Coiffeur';
+
+  @override
+  String get eventIcon_bicycle => 'Velofahren';
 
   @override
   String get wishPickerOwnHint => 'z. B. Omeletten';

@@ -89,6 +89,8 @@
   "wuselFerienFirst3": "Erster Ferientag. Geniesst die Zeit zusammen!",
   "traditionStarterSundayBreakfast": "Sonntagszmorge",
   "eventIcon_croissant": "Zmorge",
+  "eventIcon_haircut": "Coiffeur",
+  "eventIcon_bicycle": "Velofahren",
   "wishPickerOwnHint": "z. B. Omeletten",
   "mealIcon_pancakes": "Omeletten",
   "weekReviewChores": "{count, plural, =0{Eine Woche zum Durchatmen} =1{1 Ämtli erledigt} other{{count} Ämtli erledigt}}",

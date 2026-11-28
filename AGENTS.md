@@ -101,6 +101,17 @@ destinations (`_shared/trips/destinations.ts`) for discovery. The pages live in
 `app/lib/features/trips/` and open from the Calendar tab and a card on Today, in the adult
 register only; children and the wall see the calendar entry and the countdown. Reads go through
 the read cache, so a trip is readable without network.
+Search (2026-11-28, issue #299, FR-10): one matching rule (`app/lib/core/text/search.dart`: folded
+words, all of them, title first; `SearchField` in `core/ui`). Einstellungen has a field on its top
+page that finds every row of every group, Advanced ones included: choosing one switches the device
+to Advanced and opens the group's page with the row in view (`?row=`, specs/21 "Finding a
+setting"; the index is `features/settings/ui/settings_search.dart`, built from the groups' map).
+Appointments are found by the `search` Edge Function (`_shared/search.ts`, specs/05 "Finding an
+appointment": acts as the caller, no migration, feature `search` announced by the functions; one
+answer per event, a series with its next date). The search page (`features/search`, `/search`,
+specs/09 "Search") opens from the adult home's bar and from the calendar's toolbar and also finds
+chores, rewards, recipes and open shopping items on the device. The chores and rewards lists
+filter from seven entries on.
 Opt-in services ([ADR-023](specs/adr/ADR-023-opt-in-services.md), the same day): weather, place
 search, routes and map pictures come from providers a guardian switches on per household under
 Einstellungen → Wetter und Karten; none is on by default. A provider is one plug-in file in

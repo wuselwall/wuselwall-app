@@ -19,6 +19,16 @@ Darunter stehen die Termine nach Uhrzeit.
 
 Kurze Termine behalten ihre Beschriftung an der tatsächlichen Uhrzeit; die höheren, gut antippbaren Terminblöcke können deshalb nebeneinander stehen. Die Vorlagenkacheln passen sich der Textgröße deines Geräts an.
 
+## Termine suchen {#search}
+
+Aus dem Kalender beginnt die Suche mit den Terminen: **Termine suchen**. Auf einem breiten Bildschirm, wo die Leiste Tag, 3 Tage, Woche und Monat als Knöpfe nebeneinander zeigt, steht die Lupe gleich nach diesen Knöpfen. Überall sonst, auf dem Handy und auch auf einem Tablet oder in einem Fenster, wo die Ansichten ein Menü sind, ist es der letzte Eintrag im Menü **Kalenderansicht**.
+
+Tippe ein Wort aus dem Titel, dem Ort oder der Notiz. Kommende Termine stehen zuerst, vergangene darunter unter **Vergangene Termine**. Ein Termin, der sich wiederholt, steht einmal, mit seinem nächsten Datum. Auch Termine aus [Kalendern von außen](#kalender-von-aussen) werden gefunden. Ein Tipp öffnet den Tag des Termins im Kalender. Wer auch Aufgaben, Rezepte und Einkäufe sucht, nimmt die [Suche über alles](/guide/concepts#search).
+
+::: tip Verbindung und Server
+Die Terminsuche fragt den Server eurer Familie und braucht deshalb eine Verbindung. Kann der Server sie noch nicht, heißt derselbe Eintrag **Suchen** und öffnet die Suche über alles andere.
+:::
+
 ## Monat {#month}
 
 Der **Monat** zeigt sechs Wochen auf einen Blick, von Montag bis Sonntag und links mit der Kalenderwoche. Er ist zum Planen da, nicht zum Bearbeiten. Jeder Tag zeigt:
@@ -89,7 +99,7 @@ Für diesen Termin ersetzt sie die persönliche Einstellung **Erinnerung vor Ter
 
 Unten im Editor stehen drei Dinge, die den Alltag leichter machen (siehe [Rituale](/guide/rituals)):
 
-- **Bild**: eines von 20 Bildern, etwa Kuchen, Pizza, Zoo oder Zelt. Es steht beim Termin auf **Heute**, im Kalender, an der Wand und beim Countdown. **Kein Bild** ist der Standard.
+- **Bild**: eines von 37 Bildern, etwa Kuchen, Zoo, Zahnarzt, Fahrrad oder die Putzhilfe, die kommt. Es steht beim Termin auf **Heute**, im Kalender, an der Wand und beim Countdown. **Kein Bild** ist der Standard.
 - **Darauf freuen wir uns**: Der Termin zählt an der Wand und auf dem Kinder-Tablet herunter, etwa „Zoo: noch 3× schlafen“.
 - **Familientradition**: etwas, das die Familie immer wieder macht, etwa der Spieleabend. Eine Tradition steht immer an der Wand, mit einem Band. Unter **Mit Essen** trägst du ein, welches Essen dazugehört, und wählst **Mittagessen** oder **Abendessen**.
 

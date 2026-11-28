@@ -55,6 +55,10 @@ const featurePackItems = 'pack-items';
 /// (ADR-023, specs/30 "Services"). Announced by the migration 20261115100000.
 const featureServices = 'services';
 
+/// The server finds appointments by what they say (FR-10.2, specs/05 "Finding an
+/// appointment"). Announced by the functions themselves: it needs no migration.
+const featureSearch = 'search';
+
 /// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
 /// signs in with a password, and a forgotten password is reset with a guardian's code
 /// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.

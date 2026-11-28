@@ -3725,6 +3725,22 @@
   "eventIcon_ferris": "Fair",
   "eventIcon_house": "Home",
   "eventIcon_broom": "Cleaning",
+  "eventIcon_cleaner": "Cleaner comes",
+  "eventIcon_doctor": "Doctor",
+  "eventIcon_dentist": "Dentist",
+  "eventIcon_haircut": "Hairdresser",
+  "eventIcon_vet": "Vet",
+  "eventIcon_bicycle": "Cycling",
+  "eventIcon_ski": "Skiing",
+  "eventIcon_dance": "Dance",
+  "eventIcon_riding": "Riding",
+  "eventIcon_tennis": "Tennis",
+  "eventIcon_guitar": "Instrument",
+  "eventIcon_laundry": "Laundry",
+  "eventIcon_garden": "Garden",
+  "eventIcon_car": "Car",
+  "eventIcon_work": "Work",
+  "eventIcon_shopping": "Shopping",
   "eventIcon_star": "Special",
   "kidWishTitle": "Your meal wish",
   "kidWishInvite": "What would you like to eat this week?",
@@ -5594,5 +5610,90 @@
   },
   "errPackItemInvalid": "That can’t be noted: up to 80 characters, for a child of the family, at most 20 things a day.",
   "errPackItemNotFound": "This thing to bring is no longer on the list.",
-  "errPackItemNotYours": "You can note things only for yourself."
+  "errPackItemNotYours": "You can note things only for yourself.",
+  "searchTitle": "Search",
+  "@searchTitle": {
+    "description": "Search for anything the family keeps: title of the search page and tooltip of the search button on the home bar"
+  },
+  "searchHint": "What are you looking for?",
+  "@searchHint": {
+    "description": "Hint in the empty field of the search over everything"
+  },
+  "searchIntro": "Finds events, chores and rewards, recipes, items on your shopping lists and settings.",
+  "@searchIntro": {
+    "description": "Search page before anything is typed: what the search finds"
+  },
+  "searchIntroLocal": "Finds chores and rewards, recipes, items on your shopping lists and settings.",
+  "@searchIntroLocal": {
+    "description": "Search page before anything is typed, on a server that cannot search events yet"
+  },
+  "searchEventsTitle": "Search events",
+  "@searchEventsTitle": {
+    "description": "Title of the search page opened from the calendar, and the calendar's menu entry and button that open it"
+  },
+  "searchEventsHint": "Title, place or note",
+  "@searchEventsHint": {
+    "description": "Hint in the empty field of the event search: what of an event is searched"
+  },
+  "searchEventsIntro": "Finds events by title, place and note: coming and past ones, and those from external calendars.",
+  "@searchEventsIntro": {
+    "description": "Event search before anything is typed: what it finds"
+  },
+  "searchClear": "Clear",
+  "@searchClear": {
+    "description": "Tooltip of the button that empties a search or filter field"
+  },
+  "searchNothingFound": "Nothing found.",
+  "@searchNothingFound": {
+    "description": "Shown when a search or a list filter has no result"
+  },
+  "searchSectionEvents": "Events",
+  "@searchSectionEvents": {
+    "description": "Search results: heading of the events that are running or to come"
+  },
+  "searchSectionPast": "Past events",
+  "@searchSectionPast": {
+    "description": "Search results: heading of the events that are over"
+  },
+  "searchSectionTasks": "Chores and rewards",
+  "@searchSectionTasks": {
+    "description": "Search results: heading of the chores and rewards"
+  },
+  "searchKindChore": "Chore",
+  "@searchKindChore": {
+    "description": "Search results: says that a result is a chore"
+  },
+  "searchKindReward": "Reward",
+  "@searchKindReward": {
+    "description": "Search results: says that a result is a reward"
+  },
+  "searchEventRepeats": "Repeats",
+  "@searchEventRepeats": {
+    "description": "Search results: spoken label of the icon of an event that repeats; the row shows its next date"
+  },
+  "searchMore": "There are more. Another word narrows it down.",
+  "@searchMore": {
+    "description": "Search results: under the events when the server found more than it lists"
+  },
+  "settingsSearchHint": "Search settings",
+  "@settingsSearchHint": {
+    "description": "Hint in the search field on top of the settings page"
+  },
+  "tasksFilterChores": "Filter chores",
+  "@tasksFilterChores": {
+    "description": "Hint in the filter field above a long list of chores"
+  },
+  "tasksFilterRewards": "Filter rewards",
+  "@tasksFilterRewards": {
+    "description": "Hint in the filter field above a long list of rewards"
+  },
+  "searchShowAll": "{count, plural, =1{Show 1} other{Show all {count}}}",
+  "@searchShowAll": {
+    "description": "Search results: button under a section that shows only its first rows, with the number of results",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -94,6 +94,16 @@ Future<ProviderContainer> _open(
 
 /// Taps something inside the sheet, scrolling it into view first.
 Future<void> _tap(WidgetTester t, Finder finder) async {
+  // `ensureVisible` stops short in the tall sheet (its picture row has 37 pictures since
+  // #297): the sheet is dragged until the target is on screen.
+  final scrollable = find
+      .ancestor(of: finder, matching: find.byType(Scrollable))
+      .first;
+  final screen = t.view.physicalSize / t.view.devicePixelRatio;
+  for (var i = 0; i < 20 && t.getRect(finder).bottom > screen.height; i++) {
+    await t.drag(scrollable, const Offset(0, -100));
+    await t.pumpAndSettle();
+  }
   await t.ensureVisible(finder);
   await t.pumpAndSettle();
   await t.tap(finder);

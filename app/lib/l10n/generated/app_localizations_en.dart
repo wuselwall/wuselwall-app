@@ -6234,6 +6234,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventIcon_broom => 'Cleaning';
 
   @override
+  String get eventIcon_cleaner => 'Cleaner comes';
+
+  @override
+  String get eventIcon_doctor => 'Doctor';
+
+  @override
+  String get eventIcon_dentist => 'Dentist';
+
+  @override
+  String get eventIcon_haircut => 'Hairdresser';
+
+  @override
+  String get eventIcon_vet => 'Vet';
+
+  @override
+  String get eventIcon_bicycle => 'Cycling';
+
+  @override
+  String get eventIcon_ski => 'Skiing';
+
+  @override
+  String get eventIcon_dance => 'Dance';
+
+  @override
+  String get eventIcon_riding => 'Riding';
+
+  @override
+  String get eventIcon_tennis => 'Tennis';
+
+  @override
+  String get eventIcon_guitar => 'Instrument';
+
+  @override
+  String get eventIcon_laundry => 'Laundry';
+
+  @override
+  String get eventIcon_garden => 'Garden';
+
+  @override
+  String get eventIcon_car => 'Car';
+
+  @override
+  String get eventIcon_work => 'Work';
+
+  @override
+  String get eventIcon_shopping => 'Shopping';
+
+  @override
   String get eventIcon_star => 'Special';
 
   @override
@@ -8818,4 +8866,75 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errPackItemNotYours => 'You can note things only for yourself.';
+
+  @override
+  String get searchTitle => 'Search';
+
+  @override
+  String get searchHint => 'What are you looking for?';
+
+  @override
+  String get searchIntro =>
+      'Finds events, chores and rewards, recipes, items on your shopping lists and settings.';
+
+  @override
+  String get searchIntroLocal =>
+      'Finds chores and rewards, recipes, items on your shopping lists and settings.';
+
+  @override
+  String get searchEventsTitle => 'Search events';
+
+  @override
+  String get searchEventsHint => 'Title, place or note';
+
+  @override
+  String get searchEventsIntro =>
+      'Finds events by title, place and note: coming and past ones, and those from external calendars.';
+
+  @override
+  String get searchClear => 'Clear';
+
+  @override
+  String get searchNothingFound => 'Nothing found.';
+
+  @override
+  String get searchSectionEvents => 'Events';
+
+  @override
+  String get searchSectionPast => 'Past events';
+
+  @override
+  String get searchSectionTasks => 'Chores and rewards';
+
+  @override
+  String get searchKindChore => 'Chore';
+
+  @override
+  String get searchKindReward => 'Reward';
+
+  @override
+  String get searchEventRepeats => 'Repeats';
+
+  @override
+  String get searchMore => 'There are more. Another word narrows it down.';
+
+  @override
+  String get settingsSearchHint => 'Search settings';
+
+  @override
+  String get tasksFilterChores => 'Filter chores';
+
+  @override
+  String get tasksFilterRewards => 'Filter rewards';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Show all $count',
+      one: 'Show 1',
+    );
+    return '$_temp0';
+  }
 }

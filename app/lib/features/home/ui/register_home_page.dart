@@ -111,6 +111,10 @@ class RegisterHomePage extends ConsumerWidget {
           icon: const Icon(Icons.developer_mode),
           onPressed: () => context.go(Routes.system),
         ),
+      // The search (FR-10.3), for adults. The Calendar tab has its own way in, which
+      // starts with the appointments: its bar is full, so the toolbar finds the place
+      // (CalendarToolbar).
+      if (adult && tab != HomeTab.calendar) const _SearchButton(),
       // A family tablet with nobody selected has no gear (specs/09).
       if (ref.watch(settingsGearVisibleProvider))
         IconButton(
@@ -227,6 +231,19 @@ class RegisterHomePage extends ConsumerWidget {
     // A personal device is offered its colours once, here (specs/20).
     return FirstLookPrompt(child: PixelShift(child: home));
   }
+}
+
+/// Opens the search over everything (FR-10.3).
+class _SearchButton extends StatelessWidget {
+  const _SearchButton();
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    key: const ValueKey('home-search'),
+    tooltip: context.l10n.searchTitle,
+    icon: const Icon(Icons.search),
+    onPressed: () => unawaited(context.push(Routes.search)),
+  );
 }
 
 /// Same destinations and tab state as the phone, with room for all labels. Scrolling

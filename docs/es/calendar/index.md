@@ -14,6 +14,16 @@ Arriba permanecen la **presencia**, una fila por persona, y los eventos de **tod
 
 Las citas cortas conservan la etiqueta en su hora real; sus bloques más altos y fáciles de tocar pueden quedar uno al lado del otro. Las fichas de plantillas se adaptan al tamaño de texto del dispositivo.
 
+## Buscar citas {#search}
+
+Desde el calendario, la búsqueda empieza solo con las citas: **Buscar eventos**. En una pantalla ancha, donde la barra muestra Día, 3 días, Semana y Mes como botones uno junto a otro, la lupa está justo después de esos botones. En cualquier otro caso, en el móvil y también en una tableta o una ventana donde las vistas forman un menú, es la última entrada del menú **Vista del calendario**.
+
+Escribe una palabra del título, del lugar o de la nota. Primero van las citas próximas y después las pasadas, bajo **Eventos pasados**. Una cita que se repite aparece una sola vez, con su próxima fecha. También se encuentran las de los [calendarios externos](#outside-calendars). Al tocar una, se abre su día en el calendario. Para buscar además tareas, recetas y compras, usa la [búsqueda general](/es/guide/concepts#search).
+
+::: tip Conexión y servidor
+La búsqueda de citas consulta el servidor de vuestra familia, así que necesita conexión. Si el servidor aún no puede hacerlo, la misma entrada se llama **Buscar** y abre la búsqueda de todo lo demás.
+:::
+
 ## Mes {#month}
 
 La vista **Mes** muestra seis semanas de un vistazo, de lunes a domingo, con el número de semana a la izquierda. Sirve para planificar, no para editar. Cada día muestra:
@@ -84,7 +94,7 @@ Para esta cita sustituye tu ajuste personal **Antes de una cita**: no llega una 
 
 Al final del editor hay tres cosas que hacen el día más ligero (ver [Rituales](/es/guide/rituals)):
 
-- **Imagen**: una de 20 imágenes, como una tarta, una pizza, el zoo o una tienda de campaña. Acompaña al evento en **Hoy**, en el calendario, en la pared y en su cuenta atrás. **Sin imagen** es lo predeterminado.
+- **Imagen**: una de 37 imágenes, como una tarta, el zoo, el dentista, una bici o la limpieza que viene. Acompaña al evento en **Hoy**, en el calendario, en la pared y en su cuenta atrás. **Sin imagen** es lo predeterminado.
 - **Nos hace ilusión**: el evento tiene cuenta atrás en la pantalla de pared y en la tableta de los niños, por ejemplo «Excursión al zoo: 3 noches más».
 - **Tradición familiar**: algo que la familia hace una y otra vez, como la noche de juegos. Una tradición está siempre en la pared, con una cinta. En **Con comida** escribes la comida que la acompaña y eliges **Almuerzo** o **Cena**.
 

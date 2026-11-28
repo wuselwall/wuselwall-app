@@ -329,6 +329,32 @@ A setting the app does not know follows its key's prefix into the matching group
 (`unusedSettingKeys`) are not offered. The pages take a parent route and may leave out the
 Basic/Advanced chip, so a shared device can show one group (Personal) on its own.
 
+### Finding a setting
+
+*Built 2026-11-28 (issue #299), FR-10.1.* Thirteen groups and two views answer "what is
+there?"; they do not answer "where is the thing I am looking for?". The top page has a field,
+*Einstellungen durchsuchen*. With a word in it the page lists what answers in place of the
+groups:
+
+- **What is searched**: every group that has a page on this device, and every row its page
+  shows under Advanced, by title, by the heading it stands under, by its group and by its
+  explanation, in that order of weight. The index is built from the same map and the same
+  `visibleSections` as the pages (`features/settings/ui/settings_search.dart`), so what this
+  device or person may not open (another device class, an older server, a non-guardian) is not
+  found either, and a new setting is searchable the moment it is placed in a group.
+- **Rows without a tile of their own** (the devices, the sign-in, the security, the server)
+  are found by the heading they stand under and by the words on them (`settingsTileText`):
+  "PIN" finds Security.
+- **Advanced rows are found from Basic** and marked *Erweitert*. Choosing one switches this
+  device to Advanced, the same kept choice as the chip (decided with the owner 2026-11-28: the
+  search finds everything, and what it finds has to be there when the page opens).
+- **The row is shown**: the group's page opens with `?row=` (a catalogue key, or the row's
+  name), scrolls the row into view and tints it for a moment; where motion is off it is in
+  view at once and the tint stays.
+- A member's own page on a shared device has no field: it is one short page.
+
+The same answers are part of the search over everything ([09](09-clients-and-ux.md#search)).
+
 *On a family tablet or the kitchen wall* ([09](09-clients-and-ux.md#screens-by-register)) a
 guardian sees all of this; a child, or an adult who is not a guardian, sees only the member-scope
 `self_service` rows of Personal (`member.wusel`, `member.wusel_outfit`, `member.completion_sound`;

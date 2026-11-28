@@ -10,6 +10,14 @@ La vue change seulement ce qui est affiché : les paramètres masqués restent a
 
 Chaque réglage propose une valeur par défaut. Une valeur différente est signalée comme personnalisée ; vous pouvez rétablir la valeur par défaut à tout moment.
 
+## Rechercher dans les paramètres {#search}
+
+En haut de la page se trouve le champ **Rechercher dans les paramètres**. Dès que vous saisissez un mot, une liste de résultats remplace les groupes : elle montre tous les réglages et toutes les lignes qui correspondent, dans tous les groupes. Chaque résultat indique son nom, le groupe (et la section) où il se trouve, et son explication. Majuscules, minuscules, tréma et accents n’ont aucune importance.
+
+La recherche trouve aussi les réglages que seule la vue **Avancés** affiche ; ils portent la mention **Avancés**. Si vous en choisissez un, cet appareil passe en vue **Avancés**, ouvre la page du groupe et met brièvement la ligne en évidence.
+
+Les mêmes résultats figurent dans la [recherche globale](/fr/guide/concepts#search), dans la barre en haut des onglets (dans le Calendrier : **Rechercher des événements**).
+
 ## Les groupes {#the-areas}
 
 - **Personnel** (dès que quelqu’un est choisi ; toujours sur votre propre téléphone) : **Wusel** et **La tenue de Wusel**, le **son** des tâches et, sur votre propre téléphone, les **notifications** : **Rappels** sur ce téléphone, résumé du matin, rappel avant les rendez-vous, rappel du matériel et rappel des événements incertains. Ils concernent seulement la personne choisie (voir [Wusel et les couleurs](/fr/guide/wusel#how-lively)).

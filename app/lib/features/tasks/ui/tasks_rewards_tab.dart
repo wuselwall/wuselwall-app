@@ -4,8 +4,10 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/text/search.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
+import 'package:wuselwall/core/ui/search_field.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -21,11 +23,25 @@ import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 
 /// The reward catalogue and the redemption history. A member asks for a reward as the
 /// acting profile; a guardian approves it in Freigaben and marks it handed over here.
-class TasksRewardsTab extends ConsumerWidget {
+class TasksRewardsTab extends ConsumerStatefulWidget {
   const TasksRewardsTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TasksRewardsTab> createState() => _TasksRewardsTabState();
+}
+
+class _TasksRewardsTabState extends ConsumerState<TasksRewardsTab> {
+  String _query = '';
+
+  /// The rewards the list shows: all of them, or with a filter typed into the field of
+  /// a long list ([listFilterFrom], FR-10.4) those it names.
+  List<Reward> _shown(List<Reward> list) =>
+      list.length >= listFilterFrom && searchTerms(_query).isNotEmpty
+      ? searchIn(_query, list, (r) => [r.title])
+      : list;
+
+  @override
+  Widget build(BuildContext context) {
     final rewards = ref.watch(rewardsProvider);
     // Without rewards and without a history there is nothing to list but the way in.
     final noHistory = ref.watch(redemptionsProvider).value?.isEmpty ?? false;
@@ -55,10 +71,24 @@ class TasksRewardsTab extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: Tokens.space2),
+                if (list.length >= listFilterFrom) ...[
+                  SearchField(
+                    key: const ValueKey('rewards-filter'),
+                    hint: context.l10n.tasksFilterRewards,
+                    onChanged: (text) => setState(() => _query = text),
+                  ),
+                  const SizedBox(height: Tokens.space2),
+                ],
                 if (list.isEmpty)
                   Text(context.l10n.tasksNoRewards)
+                else if (_shown(list).isEmpty)
+                  Padding(
+                    key: const ValueKey('rewards-filter-empty'),
+                    padding: const EdgeInsets.all(Tokens.space4),
+                    child: Text(context.l10n.searchNothingFound),
+                  )
                 else
-                  for (final r in list) _RewardTile(reward: r),
+                  for (final r in _shown(list)) _RewardTile(reward: r),
                 const SizedBox(height: Tokens.space6),
                 const _History(),
               ],

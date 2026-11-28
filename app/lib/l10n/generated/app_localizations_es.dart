@@ -6289,6 +6289,54 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventIcon_broom => 'Limpieza';
 
   @override
+  String get eventIcon_cleaner => 'Viene la limpieza';
+
+  @override
+  String get eventIcon_doctor => 'Médico';
+
+  @override
+  String get eventIcon_dentist => 'Dentista';
+
+  @override
+  String get eventIcon_haircut => 'Peluquería';
+
+  @override
+  String get eventIcon_vet => 'Veterinario';
+
+  @override
+  String get eventIcon_bicycle => 'Bici';
+
+  @override
+  String get eventIcon_ski => 'Esquí';
+
+  @override
+  String get eventIcon_dance => 'Baile';
+
+  @override
+  String get eventIcon_riding => 'Equitación';
+
+  @override
+  String get eventIcon_tennis => 'Tenis';
+
+  @override
+  String get eventIcon_guitar => 'Instrumento';
+
+  @override
+  String get eventIcon_laundry => 'Colada';
+
+  @override
+  String get eventIcon_garden => 'Jardín';
+
+  @override
+  String get eventIcon_car => 'Coche';
+
+  @override
+  String get eventIcon_work => 'Trabajo';
+
+  @override
+  String get eventIcon_shopping => 'Compras';
+
+  @override
   String get eventIcon_star => 'Especial';
 
   @override
@@ -8882,4 +8930,75 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errPackItemNotYours => 'Solo puedes anotar cosas para ti.';
+
+  @override
+  String get searchTitle => 'Buscar';
+
+  @override
+  String get searchHint => '¿Qué buscas?';
+
+  @override
+  String get searchIntro =>
+      'Encuentra eventos, tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.';
+
+  @override
+  String get searchIntroLocal =>
+      'Encuentra tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.';
+
+  @override
+  String get searchEventsTitle => 'Buscar eventos';
+
+  @override
+  String get searchEventsHint => 'Título, lugar o nota';
+
+  @override
+  String get searchEventsIntro =>
+      'Encuentra eventos por título, lugar y nota: próximos y pasados, también los de calendarios externos.';
+
+  @override
+  String get searchClear => 'Borrar';
+
+  @override
+  String get searchNothingFound => 'No se ha encontrado nada.';
+
+  @override
+  String get searchSectionEvents => 'Eventos';
+
+  @override
+  String get searchSectionPast => 'Eventos pasados';
+
+  @override
+  String get searchSectionTasks => 'Tareas y recompensas';
+
+  @override
+  String get searchKindChore => 'Tarea';
+
+  @override
+  String get searchKindReward => 'Recompensa';
+
+  @override
+  String get searchEventRepeats => 'Se repite';
+
+  @override
+  String get searchMore => 'Hay más. Otra palabra acota la búsqueda.';
+
+  @override
+  String get settingsSearchHint => 'Buscar en los ajustes';
+
+  @override
+  String get tasksFilterChores => 'Filtrar tareas';
+
+  @override
+  String get tasksFilterRewards => 'Filtrar recompensas';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mostrar los $count',
+      one: 'Mostrar 1',
+    );
+    return '$_temp0';
+  }
 }

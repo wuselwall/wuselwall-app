@@ -360,6 +360,50 @@ could not be said. An appointment can now carry its own reminder.
 `VALARM` in the outbound feed (a subscribed calendar would remind a second time beside the app),
 and a reminder in saved templates.
 
+## Finding an appointment
+
+*Built 2026-11-28 (issue #299), FR-10.2.* The views show a window: a week, a month. "When is
+the dentist?" and "when were we last at the vet?" ask about no particular window, so the answer
+cannot come from what the app holds (at most 62 days of occurrences). The server answers.
+
+- **A function, no table.** `search` (Edge Function, `_shared/search.ts`) takes `{query,
+  limit?}` and answers `{today, timezone, upcoming, past, more}`, the occurrences in the
+  shape `occurrences` uses. It acts as the caller, so RLS decides what is read: the caller's
+  `api.events`, `api.event_overrides` and `api.external_occurrences`. Matching and expansion
+  run in the function, like every expansion (never in SQL or the app). Nothing is indexed,
+  nothing about a query is stored or logged. A family's calendar is small enough to read
+  whole (ten pages of a thousand rows per view at most); an index in the database is the
+  next step should a family outgrow that, and would change nothing for the app.
+- **What matches.** The query's words, folded like the shopping search (case, umlauts,
+  accents); every word has to be found in the title, the place or the note. 2 to 80
+  characters (`query_invalid` otherwise).
+- **What comes back.** One answer per event.
+  - A one-off event is found at any date.
+  - A series is one answer: its next date that matches, or its last when none is to come,
+    400 days either way (more than a year, so a birthday always has its next one). A date of
+    a series that was renamed or moved elsewhere is matched by what it says itself: "Turnier"
+    finds the one training that became a tournament, and "Training" skips that date.
+    Cancelled events and cancelled dates are never found.
+  - A subscribed calendar's appointment is one answer per source event by the same rule,
+    within what the import keeps (30 days back, 400 ahead).
+  - `upcoming` (running or to come) is sorted soonest first, `past` latest first; in both, an
+    answer with every word in its title comes before one that matched in the place or note.
+    30 per side unless `limit` says otherwise (100 at most); `more` says that a side was cut.
+- **In the app** ([09](09-clients-and-ux.md#search)): *Termine suchen* opens from the
+  calendar's toolbar, as a button after the views where the bar shows them side by side and
+  as the last entry of the view menu elsewhere (a phone's bar has no room for one more
+  button). The page asks 350 ms after the last keystroke. A result shows the title, the date
+  with its year, the time and the place; a series has the repeat icon. A tap opens that day
+  in the calendar's day view, where the appointment stands among the day's others and opens
+  as it always does (the editor, the imported appointment's sheet, the trip). An appointment
+  still running is shown on today.
+- **Older servers and no network.** The functions announce the feature `search` themselves
+  (`runtimeFeatures`; it needs no migration). Without it the calendar's entry opens the search
+  over everything else and no request is made. Search answers are not kept in the read cache:
+  without the server there is a failure row with *Erneut versuchen*, and what the app holds
+  itself is still searched.
+- **The demo** answers from its in-memory calendar by the same rule (`DemoCalendarRepository.search`).
+
 ## Sharing one event
 
 *Added 2026-11-11 ([Q60](14-open-questions.md)), FR-1.20.* A family arranges a Spieleabend with

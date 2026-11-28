@@ -10465,6 +10465,102 @@ abstract class AppLocalizations {
   /// **'Cleaning'**
   String get eventIcon_broom;
 
+  /// No description provided for @eventIcon_cleaner.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaner comes'**
+  String get eventIcon_cleaner;
+
+  /// No description provided for @eventIcon_doctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor'**
+  String get eventIcon_doctor;
+
+  /// No description provided for @eventIcon_dentist.
+  ///
+  /// In en, this message translates to:
+  /// **'Dentist'**
+  String get eventIcon_dentist;
+
+  /// No description provided for @eventIcon_haircut.
+  ///
+  /// In en, this message translates to:
+  /// **'Hairdresser'**
+  String get eventIcon_haircut;
+
+  /// No description provided for @eventIcon_vet.
+  ///
+  /// In en, this message translates to:
+  /// **'Vet'**
+  String get eventIcon_vet;
+
+  /// No description provided for @eventIcon_bicycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycling'**
+  String get eventIcon_bicycle;
+
+  /// No description provided for @eventIcon_ski.
+  ///
+  /// In en, this message translates to:
+  /// **'Skiing'**
+  String get eventIcon_ski;
+
+  /// No description provided for @eventIcon_dance.
+  ///
+  /// In en, this message translates to:
+  /// **'Dance'**
+  String get eventIcon_dance;
+
+  /// No description provided for @eventIcon_riding.
+  ///
+  /// In en, this message translates to:
+  /// **'Riding'**
+  String get eventIcon_riding;
+
+  /// No description provided for @eventIcon_tennis.
+  ///
+  /// In en, this message translates to:
+  /// **'Tennis'**
+  String get eventIcon_tennis;
+
+  /// No description provided for @eventIcon_guitar.
+  ///
+  /// In en, this message translates to:
+  /// **'Instrument'**
+  String get eventIcon_guitar;
+
+  /// No description provided for @eventIcon_laundry.
+  ///
+  /// In en, this message translates to:
+  /// **'Laundry'**
+  String get eventIcon_laundry;
+
+  /// No description provided for @eventIcon_garden.
+  ///
+  /// In en, this message translates to:
+  /// **'Garden'**
+  String get eventIcon_garden;
+
+  /// No description provided for @eventIcon_car.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get eventIcon_car;
+
+  /// No description provided for @eventIcon_work.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get eventIcon_work;
+
+  /// No description provided for @eventIcon_shopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get eventIcon_shopping;
+
   /// No description provided for @eventIcon_star.
   ///
   /// In en, this message translates to:
@@ -14746,6 +14842,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can note things only for yourself.'**
   String get errPackItemNotYours;
+
+  /// Search for anything the family keeps: title of the search page and tooltip of the search button on the home bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchTitle;
+
+  /// Hint in the empty field of the search over everything
+  ///
+  /// In en, this message translates to:
+  /// **'What are you looking for?'**
+  String get searchHint;
+
+  /// Search page before anything is typed: what the search finds
+  ///
+  /// In en, this message translates to:
+  /// **'Finds events, chores and rewards, recipes, items on your shopping lists and settings.'**
+  String get searchIntro;
+
+  /// Search page before anything is typed, on a server that cannot search events yet
+  ///
+  /// In en, this message translates to:
+  /// **'Finds chores and rewards, recipes, items on your shopping lists and settings.'**
+  String get searchIntroLocal;
+
+  /// Title of the search page opened from the calendar, and the calendar's menu entry and button that open it
+  ///
+  /// In en, this message translates to:
+  /// **'Search events'**
+  String get searchEventsTitle;
+
+  /// Hint in the empty field of the event search: what of an event is searched
+  ///
+  /// In en, this message translates to:
+  /// **'Title, place or note'**
+  String get searchEventsHint;
+
+  /// Event search before anything is typed: what it finds
+  ///
+  /// In en, this message translates to:
+  /// **'Finds events by title, place and note: coming and past ones, and those from external calendars.'**
+  String get searchEventsIntro;
+
+  /// Tooltip of the button that empties a search or filter field
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get searchClear;
+
+  /// Shown when a search or a list filter has no result
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found.'**
+  String get searchNothingFound;
+
+  /// Search results: heading of the events that are running or to come
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get searchSectionEvents;
+
+  /// Search results: heading of the events that are over
+  ///
+  /// In en, this message translates to:
+  /// **'Past events'**
+  String get searchSectionPast;
+
+  /// Search results: heading of the chores and rewards
+  ///
+  /// In en, this message translates to:
+  /// **'Chores and rewards'**
+  String get searchSectionTasks;
+
+  /// Search results: says that a result is a chore
+  ///
+  /// In en, this message translates to:
+  /// **'Chore'**
+  String get searchKindChore;
+
+  /// Search results: says that a result is a reward
+  ///
+  /// In en, this message translates to:
+  /// **'Reward'**
+  String get searchKindReward;
+
+  /// Search results: spoken label of the icon of an event that repeats; the row shows its next date
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get searchEventRepeats;
+
+  /// Search results: under the events when the server found more than it lists
+  ///
+  /// In en, this message translates to:
+  /// **'There are more. Another word narrows it down.'**
+  String get searchMore;
+
+  /// Hint in the search field on top of the settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings'**
+  String get settingsSearchHint;
+
+  /// Hint in the filter field above a long list of chores
+  ///
+  /// In en, this message translates to:
+  /// **'Filter chores'**
+  String get tasksFilterChores;
+
+  /// Hint in the filter field above a long list of rewards
+  ///
+  /// In en, this message translates to:
+  /// **'Filter rewards'**
+  String get tasksFilterRewards;
+
+  /// Search results: button under a section that shows only its first rows, with the number of results
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Show 1} other{Show all {count}}}'**
+  String searchShowAll(int count);
 }
 
 class _AppLocalizationsDelegate
