@@ -87,7 +87,7 @@ For this appointment it replaces your personal setting **Reminder before appoint
 
 At the bottom of the editor are three things that make the day lighter (see [Rituals](/en/guide/rituals)):
 
-- **Picture**: one of 20 pictures, such as a cake, a pizza, the zoo or a tent. It is shown with the event on the wall and with its countdown. **No picture** is the default.
+- **Picture**: one of 37 pictures, such as a cake, the zoo, the dentist, a bike or the cleaner coming. It is shown with the event on the wall and with its countdown. **No picture** is the default.
 - **We are looking forward to it**: the event counts down on the wall and on the children's tablet, for example "Trip to the zoo: 3 more sleeps".
 - **Family tradition**: something the family does again and again, such as game night. A tradition is always on the wall, with a ribbon. Under **With a meal** you enter the meal that belongs to it and choose **Lunch** or **Dinner**.
 
