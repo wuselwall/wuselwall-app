@@ -67,63 +67,64 @@ class _MealWeekDetailState extends ConsumerState<MealWeekDetailBody> {
   Widget build(BuildContext context) {
     final board = widget.board;
     final acting = ref.watch(actingProfileProvider);
-    return Column(
-      children: [
-        Expanded(
-          child: BoardScrollFade(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(Tokens.space6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (acting != null)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: Tokens.space4),
-                      child: Text(
-                        context.l10n.mealsKioskHint,
-                        style: detailUi(24, context.ww.ink2),
-                      ),
+    return WithActingProfileBar(
+      // Below the bar's wrapper, so the padding it adds is read here.
+      child: Builder(
+        builder: (context) => BoardScrollFade(
+          child: SingleChildScrollView(
+            // The end leaves the room the floating person bar covers.
+            padding:
+                const EdgeInsets.all(Tokens.space6) +
+                EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (acting != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: Tokens.space4),
+                    child: Text(
+                      context.l10n.mealsKioskHint,
+                      style: detailUi(24, context.ww.ink2),
                     ),
-                  for (final day in board.days)
-                    DayRow(
-                      date: day.date,
-                      raised: isSameDay(day.date, board.today),
-                      past: day.date.isBefore(board.today),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: Tokens.space3,
-                        children: [
-                          // Lunch and dinner when both are warm; "nothing
-                          // planned" when none is.
-                          for (final meal in [
-                            ...day.meals,
-                            if (day.meals.isEmpty) null,
-                          ])
-                            _MealFacts(
-                              board: board,
-                              meal: meal,
-                              canEdit: acting != null,
-                              busy: {
-                                for (final m in board.members)
-                                  if (meal != null &&
-                                      _busy.contains(
-                                        '${day.date}|${meal.slot.name}|${m.id}',
-                                      ))
-                                    m.id,
-                              },
-                              onToggle: (member, meal) =>
-                                  _toggle(day, meal, member),
-                            ),
-                        ],
-                      ),
+                  ),
+                for (final day in board.days)
+                  DayRow(
+                    date: day.date,
+                    raised: isSameDay(day.date, board.today),
+                    past: day.date.isBefore(board.today),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: Tokens.space3,
+                      children: [
+                        // Lunch and dinner when both are warm; "nothing
+                        // planned" when none is.
+                        for (final meal in [
+                          ...day.meals,
+                          if (day.meals.isEmpty) null,
+                        ])
+                          _MealFacts(
+                            board: board,
+                            meal: meal,
+                            canEdit: acting != null,
+                            busy: {
+                              for (final m in board.members)
+                                if (meal != null &&
+                                    _busy.contains(
+                                      '${day.date}|${meal.slot.name}|${m.id}',
+                                    ))
+                                  m.id,
+                            },
+                            onToggle: (member, meal) =>
+                                _toggle(day, meal, member),
+                          ),
+                      ],
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         ),
-        if (acting == null) const ActingProfileBar(),
-      ],
+      ),
     );
   }
 }

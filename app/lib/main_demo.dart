@@ -3,6 +3,7 @@
 // The app runs on in-memory data (lib/demo). The scenario comes from the URL:
 //   ?scenario=setup | newfamily | adult | kid | kiosk   (default adult)
 //   ?scenario=noschool   adult, with no school yet
+//   ?scenario=tablet    the tablet for everyone: the adult register, tap to switch
 //   ?scenario=kidshopping   kid, with the family's Shopping tab switched on
 //   ?scenario=server   the store app's first question: which server (ADR-018)
 //   &still=1           nothing moves and Wusel's words are fixed, for screenshots
@@ -25,7 +26,6 @@ import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/wusel/wusel_tilt.dart';
 import 'package:wuselwall/demo/demo_notifications.dart';
 import 'package:wuselwall/demo/demo_overrides.dart';
-import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
 import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 
 const _scenarioDefine = String.fromEnvironment('DEMO_SCENARIO');
@@ -39,11 +39,6 @@ void main() {
       (_scenarioDefine.isEmpty ? 'adult' : _scenarioDefine);
   // Screenshots hold still: no animation, and Wusel always says the same (motion.dart).
   StillMode.enabled = Uri.base.queryParameters['still'] == '1';
-  // Prototype for issue #306: `&bar=fade` or `&bar=dock`.
-  ActingProfileBar.look = PersonBarLook.values.firstWhere(
-    (l) => l.name == Uri.base.queryParameters['bar'],
-    orElse: () => PersonBarLook.band,
-  );
   // On a phone or tablet the demo leans Wusel with the device, as the app does.
   WuselTilt.available =
       !kIsWeb &&

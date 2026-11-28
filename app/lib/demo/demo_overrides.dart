@@ -95,7 +95,7 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
     revoked: false,
     guardianVerifiedUntil: null,
   ),
-  // Prototype for issue #306: a tablet for everyone in the adult register.
+  // The tablet for everyone: the adult register, and whoever taps their name.
   'tablet' => DeviceInfo(
     deviceId: 'd-4',
     householdId: 'h1',

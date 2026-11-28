@@ -124,8 +124,9 @@ class _Columns extends StatelessWidget {
         // One scroll for the whole board, with a fade while there is more below.
         return BoardScrollFade(
           child: SingleChildScrollView(
+            // The room the floating person bar covers at the end.
             padding: EdgeInsets.only(
-              bottom: ActingProfileBar.dockClearance(context),
+              bottom: MediaQuery.paddingOf(context).bottom,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

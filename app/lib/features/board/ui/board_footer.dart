@@ -123,10 +123,7 @@ class BoardFooter extends StatelessWidget {
                     showBoardDetail(
                       context,
                       title: l10n.boardShoppingList,
-                      body: const WithActingProfileBar(
-                        behind: false,
-                        child: ShoppingBody(),
-                      ),
+                      body: const WithActingProfileBar(child: ShoppingBody()),
                     ),
                   ),
                   child: Row(
