@@ -14,16 +14,6 @@ Les **présences**, une ligne par personne, et les événements de **toute la jo
 
 Les libellés des rendez-vous courts restent à leur heure réelle ; leurs blocs plus hauts et faciles à toucher peuvent donc se côtoyer. Les fiches de modèles s’adaptent à la taille du texte de votre appareil.
 
-## Rechercher des rendez-vous {#search}
-
-Depuis le calendrier, la recherche commence par les rendez-vous seulement : **Rechercher des événements**. Sur un grand écran, où la barre montre Jour, 3 jours, Semaine et Mois comme des boutons côte à côte, la loupe se trouve juste après ces boutons. Partout ailleurs, sur téléphone mais aussi sur une tablette ou dans une fenêtre où les vues forment un menu, c’est la dernière entrée du menu **Vue du calendrier**.
-
-Saisissez un mot du titre, du lieu ou de la note. Les rendez-vous à venir passent d’abord, les passés suivent sous **Événements passés**. Un rendez-vous récurrent apparaît une seule fois, avec sa prochaine date. Ceux des [calendriers externes](#outside-calendars) sont trouvés aussi. Un appui ouvre le jour du rendez-vous dans le calendrier. Pour chercher aussi des tâches, des recettes et des courses, utilisez la [recherche globale](/fr/guide/concepts#search).
-
-::: tip Connexion et serveur
-La recherche de rendez-vous interroge le serveur de votre famille et exige donc une connexion. Si le serveur ne sait pas encore le faire, la même entrée s’appelle **Rechercher** et ouvre la recherche sur tout le reste.
-:::
-
 ## Mois {#month}
 
 La vue **Mois** montre six semaines d’un coup d’œil, du lundi au dimanche, avec le numéro de semaine à gauche. Elle sert à planifier, pas à modifier. Chaque jour indique :
@@ -49,7 +39,7 @@ Touchez **Nouvel événement** : il commence le jour affiché par le calendrier 
 
 Des tuiles s’affichent d’abord, pour ne pas tout saisir depuis le début :
 
-- **Modèles** : **Venue de l’aide ménagère**, **Entraînement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie en famille**, **Jeux avec les copains**, **Sortie au cinéma**, **Vacances en famille** et **Anniversaire** (toute la journée, tous les ans). Chacun remplit le titre, l’image, l’heure, la durée et les personnes. L’entraînement commence à 17:00 pour une heure, les jeux avec les copains à 15:00 pour deux heures avec les enfants, et la sortie au cinéma à 16:00 pour deux heures avec la famille. Une sortie en famille dure une journée ; les vacances en famille sont prévues sur sept jours au départ. **Venue de l’aide ménagère** se répète chaque semaine le jour choisi, à 09:00 pour trois heures, pour la personne qui saisit la visite. Une famille avec un enfant voit aussi **École** : **Réunion de classe** pour l’ensemble des parents, **Entretien avec l’enseignant** pour un rendez-vous individuel, **Sortie scolaire**, **Contrôle**, **Fête de l’école** et **Journée sportive scolaire**. Tu peux modifier toutes ces valeurs. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
+- **Modèles** : **Venue de l’aide ménagère**, **Entraînement sportif**, **Rendez-vous médical**, **Invités à dîner**, **Sortie en famille**, **Jeux avec les copains**, **Sortie au cinéma**, **Vacances en famille** et **Anniversaire** (toute la journée, tous les ans). Chacun remplit le titre, l’image, l’heure, la durée et les personnes. L’entraînement commence à 17:00 pour une heure, les jeux avec les copains à 15:00 pour deux heures avec les enfants, et la sortie au cinéma à 16:00 pour deux heures avec la famille. Une sortie en famille dure une journée ; les vacances en famille sont prévues sur sept jours au départ. **Venue de l’aide ménagère** se répète chaque semaine le jour choisi, à 09:00 pour trois heures, pour la personne qui saisit la visite. Une famille avec un enfant voit aussi **École** : **Réunion de classe** pour l’ensemble des parents, **Entretien avec l’enseignant** pour un rendez-vous individuel, **Sortie scolaire**, **Contrôle**, **Fête de l’école** et **Journée sportive scolaire**. Tu peux modifier toutes ces valeurs. Les modèles dont l’image correspond à ce que vous saisissez souvent passent devant : une famille qui saisit souvent « Entraînement de foot » voit d’abord l’entraînement sportif. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
 - **Vos modèles** : ceux que vous avez enregistrés. Dans l’éditeur, touchez **Enregistrer comme modèle** en haut ; le titre, l’image, l’heure, la durée, les personnes, le lieu et les notes sont gardés, ni la date ni la répétition.
 - **Souvent chez vous** : les événements saisis au moins trois fois, comme « Mamie et papi viennent ». WuselWall ne compte que vos propres événements, sur votre serveur ; rien n’en sort. Avec **⋮**, choisissez **Garder comme modèle** ou **Ne plus proposer**.
 
@@ -96,7 +86,7 @@ Pour ce rendez-vous, il remplace votre réglage personnel **Avant un rendez-vous
 
 En bas de l’éditeur, trois réglages rendent le quotidien plus léger (voir [Rituels](/fr/guide/rituals)) :
 
-- **Image** : une des 37 images, comme un gâteau, le zoo, le dentiste, un vélo ou l’aide ménagère qui vient. Elle accompagne l’événement dans **Aujourd’hui**, dans le calendrier, sur le mur et son compte à rebours. **Pas d’image** par défaut.
+- **Image** : une des 37 images, comme un gâteau, le zoo, le dentiste, un vélo ou l’aide ménagère qui vient. Elle accompagne l’événement dans **Aujourd’hui**, dans le calendrier, sur le mur et son compte à rebours. Pendant que tu tapes le titre, WuselWall propose une image qui convient, par exemple la dent pour « Dentiste ». Elle apparaît alors aussi au début du champ du titre et reste seulement entourée jusqu’à ce que tu touches toi-même une image ou **Pas d’image** ; ensuite ton choix reste. Si rien ne convient, c’est **Pas d’image**.
 - **On a hâte** : l’événement a un compte à rebours sur l’écran mural et la tablette des enfants, par exemple « Sortie au zoo : encore 3 dodos ».
 - **Tradition familiale** : ce que la famille fait encore et encore, comme la soirée jeux. Une tradition est toujours sur le mur, avec un ruban. **Avec un repas** indique le plat qui l’accompagne, au **Déjeuner** ou au **Dîner**.
 

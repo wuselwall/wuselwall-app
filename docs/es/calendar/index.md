@@ -14,16 +14,6 @@ Arriba permanecen la **presencia**, una fila por persona, y los eventos de **tod
 
 Las citas cortas conservan la etiqueta en su hora real; sus bloques más altos y fáciles de tocar pueden quedar uno al lado del otro. Las fichas de plantillas se adaptan al tamaño de texto del dispositivo.
 
-## Buscar citas {#search}
-
-Desde el calendario, la búsqueda empieza solo con las citas: **Buscar eventos**. En una pantalla ancha, donde la barra muestra Día, 3 días, Semana y Mes como botones uno junto a otro, la lupa está justo después de esos botones. En cualquier otro caso, en el móvil y también en una tableta o una ventana donde las vistas forman un menú, es la última entrada del menú **Vista del calendario**.
-
-Escribe una palabra del título, del lugar o de la nota. Primero van las citas próximas y después las pasadas, bajo **Eventos pasados**. Una cita que se repite aparece una sola vez, con su próxima fecha. También se encuentran las de los [calendarios externos](#outside-calendars). Al tocar una, se abre su día en el calendario. Para buscar además tareas, recetas y compras, usa la [búsqueda general](/es/guide/concepts#search).
-
-::: tip Conexión y servidor
-La búsqueda de citas consulta el servidor de vuestra familia, así que necesita conexión. Si el servidor aún no puede hacerlo, la misma entrada se llama **Buscar** y abre la búsqueda de todo lo demás.
-:::
-
 ## Mes {#month}
 
 La vista **Mes** muestra seis semanas de un vistazo, de lunes a domingo, con el número de semana a la izquierda. Sirve para planificar, no para editar. Cada día muestra:
@@ -49,7 +39,7 @@ Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras 
 
 Primero ves unas fichas, para no escribirlo todo desde cero:
 
-- **Plantillas**: **Servicio de limpieza**, **Entrenamiento deportivo**, **Cita médica**, **Invitados a cenar**, **Excursión en familia**, **Jugar con amigos**, **Ir al cine**, **Vacaciones en familia** y **Cumpleaños** (todo el día, cada año). Cada una rellena el título, la imagen, la hora, la duración y las personas. El entrenamiento empieza a las 17:00 y dura una hora; jugar con amigos, a las 15:00 durante dos horas con los niños; e ir al cine, a las 16:00 durante dos horas con la familia. Una excursión en familia dura un día; las vacaciones en familia tienen siete días como punto de partida. **Servicio de limpieza** se repite cada semana el día elegido, a las 09:00 durante tres horas, para quien registra la visita. Una familia con niños también ve **Colegio**: **Reunión de clase** para todas las familias, **Tutoría individual** para una cita con el docente, **Excursión escolar**, **Examen**, **Fiesta del colegio** y **Día del deporte escolar**. Puedes cambiar todos estos valores. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
+- **Plantillas**: **Servicio de limpieza**, **Entrenamiento deportivo**, **Cita médica**, **Invitados a cenar**, **Excursión en familia**, **Jugar con amigos**, **Ir al cine**, **Vacaciones en familia** y **Cumpleaños** (todo el día, cada año). Cada una rellena el título, la imagen, la hora, la duración y las personas. El entrenamiento empieza a las 17:00 y dura una hora; jugar con amigos, a las 15:00 durante dos horas con los niños; e ir al cine, a las 16:00 durante dos horas con la familia. Una excursión en familia dura un día; las vacaciones en familia tienen siete días como punto de partida. **Servicio de limpieza** se repite cada semana el día elegido, a las 09:00 durante tres horas, para quien registra la visita. Una familia con niños también ve **Colegio**: **Reunión de clase** para todas las familias, **Tutoría individual** para una cita con el docente, **Excursión escolar**, **Examen**, **Fiesta del colegio** y **Día del deporte escolar**. Puedes cambiar todos estos valores. Las plantillas cuya imagen encaja con lo que más apuntáis pasan delante: una familia que apunta a menudo «Entrenamiento de fútbol» ve primero el entrenamiento deportivo. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
 - **Vuestras plantillas**: las que habéis guardado. En el editor, toca **Guardar como plantilla** arriba; se guardan el título, la imagen, la hora, la duración, las personas, el lugar y las notas, pero no la fecha ni la repetición.
 - **Lo habitual en casa**: eventos que ya habéis apuntado al menos tres veces, como «Vienen los abuelos». WuselWall solo cuenta vuestros propios eventos en vuestro servidor; nada sale de él. Con **⋮** eliges **Guardar como plantilla** o **No volver a sugerir**.
 
@@ -94,7 +84,7 @@ Para esta cita sustituye tu ajuste personal **Antes de una cita**: no llega una 
 
 Al final del editor hay tres cosas que hacen el día más ligero (ver [Rituales](/es/guide/rituals)):
 
-- **Imagen**: una de 37 imágenes, como una tarta, el zoo, el dentista, una bici o la limpieza que viene. Acompaña al evento en **Hoy**, en el calendario, en la pared y en su cuenta atrás. **Sin imagen** es lo predeterminado.
+- **Imagen**: una de 37 imágenes, como una tarta, el zoo, el dentista, una bici o la limpieza que viene. Acompaña al evento en **Hoy**, en el calendario, en la pared y en su cuenta atrás. Mientras escribes el título, WuselWall propone una imagen adecuada, por ejemplo el diente para «Dentista». Aparece también al principio del campo del título y solo va enmarcada hasta que tocas tú una imagen o **Sin imagen**; a partir de ahí se queda tu elección. Si nada encaja, queda **Sin imagen**.
 - **Nos hace ilusión**: el evento tiene cuenta atrás en la pantalla de pared y en la tableta de los niños, por ejemplo «Excursión al zoo: 3 noches más».
 - **Tradición familiar**: algo que la familia hace una y otra vez, como la noche de juegos. Una tradición está siempre en la pared, con una cinta. En **Con comida** escribes la comida que la acompaña y eliges **Almuerzo** o **Cena**.
 

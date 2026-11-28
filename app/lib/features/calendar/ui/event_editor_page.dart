@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/text/suggest.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/suggest_field.dart';
@@ -32,6 +34,7 @@ import 'package:wuselwall/features/calendar/ui/share_event_sheet.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 import 'package:wuselwall/features/rituals/ui/event_ritual_fields.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
@@ -149,6 +152,13 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
   bool _submitted = false;
   bool _saving = false;
 
+  /// The picture was proposed from the title (specs/29 feature 3), not chosen: the next
+  /// title change may replace it, and the picture row marks it until it is touched.
+  bool _iconProposed = false;
+
+  /// A picture, or none, was chosen in the picture row: the title proposes no more.
+  bool _iconChosen = false;
+
   bool get _isEdit => widget.initial != null;
 
   /// The occurrence this editor was opened on, when it belongs to a series.
@@ -215,19 +225,42 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
   }
 
   /// A title was taken over from an earlier appointment: its usual place and picture
-  /// come along where the form has none yet. Date, time and people stay as they are.
+  /// come along where the form has none yet (a proposed picture gives way to it). Date,
+  /// time and people stay as they are. Without a picture of its own the title proposes
+  /// one, as typing does.
   void _titlePicked(TextSuggestion picked) {
     final place = picked.location;
     if (_locationText.text.trim().isEmpty && place != null) {
       _locationText.text = place;
     }
     final icon = picked.iconKey;
+    if (icon == null) {
+      _proposeIcon(picked.text);
+      return;
+    }
     setState(() {
-      if (_draft.iconKey == null &&
-          _draft.kind != EventKind.presence &&
-          icon != null) {
+      if (!_iconChosen &&
+          (_draft.iconKey == null || _iconProposed) &&
+          _draft.kind != EventKind.presence) {
         _draft.iconKey = icon;
+        _iconProposed = false;
       }
+    });
+  }
+
+  /// Proposes the picture the matcher finds for [title] (specs/29 feature 3), while no
+  /// picture was chosen by hand. A title that matches nothing takes the proposal back.
+  void _proposeIcon(String title) {
+    if (_draft.kind == EventKind.presence ||
+        !ref.read(lighterDaySupportedProvider)) {
+      return;
+    }
+    if (_iconChosen || (_draft.iconKey != null && !_iconProposed)) return;
+    final key = ref.read(eventsMatcherProvider)?.match(title)?.iconKey;
+    final known = eventIconAsset(key) != null;
+    setState(() {
+      _draft.iconKey = known ? key : null;
+      _iconProposed = known;
     });
   }
 
@@ -465,6 +498,8 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // Loads the dictionary while the form opens, so the first typed title can propose.
+    ref.watch(eventsMatcherProvider);
     final scheme = Theme.of(context).colorScheme;
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     final settings = ref.watch(householdSettingsProvider).value ?? const [];
@@ -553,11 +588,22 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 labelText: l10n.eventTitleLabel,
+                // The picture shows where the title is typed, so a proposal is seen
+                // without scrolling down to the picture row.
+                prefixIcon: switch (_draft.kind == EventKind.presence
+                    ? null
+                    : eventIconAsset(_draft.iconKey)) {
+                  final asset? => Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: EmojiPicture(asset, size: 24),
+                  ),
+                  null => null,
+                },
                 errorText: error == DraftError.titleRequired
                     ? l10n.eventTitleRequired
                     : null,
               ),
-              onChanged: (_) => setState(() {}),
+              onChanged: _proposeIcon,
             ),
             const SizedBox(height: 16),
             SegmentedButton<EventKind>(
@@ -727,7 +773,12 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
                 ref.watch(lighterDaySupportedProvider))
               EventRitualFields(
                 draft: _draft,
+                iconProposed: _iconProposed,
                 onChanged: () => setState(() {}),
+                onIconChosen: () => setState(() {
+                  _iconProposed = false;
+                  _iconChosen = true;
+                }),
               ),
             const SizedBox(height: 24),
             FilledButton(

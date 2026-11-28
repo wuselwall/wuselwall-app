@@ -194,6 +194,20 @@ the corpus, the renderer and the matcher without changing behaviour.
    preselect the picture the matcher proposes as the title is typed, marked as proposed until
    touched; `api.event_suggestions` groups signatures with `pg_trgm` similarity as specs/28
    foresaw; a built-in template whose icon matches is offered first on the tiles page.
+   *Built 2026-11-28 (#300):*
+   - *The editors.* While no picture was chosen by hand, each title change asks the
+     `events` or `tasks` matcher; a known picture is preselected and marked as proposed
+     (outlined, not filled, with the line "Vorschlag zum Titel"), a title that matches
+     nothing takes the proposal back. Tapping a picture, or *no picture*, ends it for this
+     form: the title proposes no more. An earlier title picked from the suggestions brings
+     its own picture, which wins over a proposal but not over a choice. An event's
+     picture also shows in the title field, so the proposal is seen without scrolling. An
+     existing event or chore keeps the picture it has. Only on servers with the lighter day
+     (the picture row exists there only).
+   - *The suggestions.* specs/28 rule 2 (`20261128110000_event_suggestions_similar.sql`).
+   - *The tiles.* A built-in starter whose picture is the picture of at least two of the
+     family's recent appointments (their own picture, or the matcher's for the title) moves
+     to the front of its section, the most frequent first; the others keep their order.
 4. **Imported calendars: a person and a picture per event.** `calendar-import` matches each
    imported title and description against the members' names and nicknames (whole words, folded)
    and the `events` dictionary, storing `member_ids` and `icon_key` per occurrence; the feed's

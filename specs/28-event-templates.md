@@ -1,8 +1,8 @@
 # 28 — Event templates: start a new event from a tile
 
 *Added 2026-10-25. Builds on [05](05-module-calendar.md) (events) and the tradition starters of
-[27](27-family-rituals.md#familientraditionen). Migration `20261025150000_event_templates.sql`
-(pgTAP 245), app code in `app/lib/features/calendar/{domain,data,application,ui}/`.*
+[27](27-family-rituals.md#familientraditionen). Migrations `20261025150000_event_templates.sql`
+and `20261128110000_event_suggestions_similar.sql` (pgTAP 245), app code in `app/lib/features/calendar/{domain,data,application,ui}/`.*
 
 ## Why
 
@@ -169,13 +169,36 @@ the events the caller may read.
    white space made one, leading and trailing white space and punctuation removed, and cut to
    120 characters
    ("Grosi kommt!" and "grosi  kommt" are one group), together with the kind.
-3. **Regular means at least three** events in the group.
+   *Alike signatures are one group (2026-11-28, specs/29 feature 3):* two signatures of the same
+   kind are alike (`app.event_signatures_alike`) when they are equal, or equal once spaces,
+   hyphens and other punctuation are removed ("Arzttermin" / "Arzt Termin", "Judokurs" /
+   "Judo-Kurs"), or have the same number of words (runs of spaces and hyphens separate them) and
+   every pair of words is equal or, with both words at least four characters long, has a `pg_trgm`
+   similarity (`extensions.similarity`) of at least **0.62** ("Grosi" / "Grossi" 0.625,
+   "Fussballtraining" / "Fußballtraining" 0.65, "Klavierstunde" / "Klavier-Stunde" by the first
+   rule). A different number of words is never alike, and a word under four characters must be
+   equal, so a name added or changed keeps titles apart: "Coiffeur" / "Coiffeur Mia",
+   "Zahnarzt Mia" / "Zahnarzt Lia", "Zahnarzt Mia" / "Zahnarzt Mia und Noah", "Oma kommt" / "Opa
+   kommt" (the word similarity of "papa" / "mama" is 0, of "turnen" / "tennis" 0.08, of
+   "Elternabend" / "Elterngespräch" 0.29). Among the distinct signatures of the window, ranked
+   by number of events, then most recent, then signature text, a *root* is one that no
+   higher-ranked signature is alike to; every signature joins the best-ranked root it is alike
+   to (a root joins itself). One hop, no chains, deterministic; the group's representative is
+   the root, and the suggestion's `signature` is the representative. Known limits: two names of
+   four or more letters that differ by one letter stay apart as long as the similarity is
+   below 0.62 ("Lina" / "Lena" 0.25, "Jonas" / "Jonah" 0.50, "Noah" / "Noahs" 0.57), but a
+   longer name pair that differs by one letter may pass, and a title that gains a word for a
+   reason other than a name ("Klavierstunde" / "Klavierstunde heute") stays apart.
+3. **Regular means at least three** events in the group, all its signatures counted together
+   ("Fussballtraining" twice and "Fussball-Training" once is a suggestion).
 4. **What a suggestion fills in** is what the group usually does: the title of its most recent
    event; the most frequent picture, all-day value, start time (in the event's time zone),
    length, people (as a set) and presence state; the most frequent place when at least half
    of the events have it.
-5. **Not suggested**: a hidden signature, and a signature that already has a saved template of
-   the same kind.
+5. **Not suggested**: a group with a hidden signature among its members, and a group with a
+   signature that already has a saved template of the same kind. Hiding and saving still name
+   one signature, the one the tile showed; a hidden or covered signature that has no event in
+   the window any more is not a member and hides nothing.
 6. **Order.** Each event weighs 1 in the last 90 days (or ahead) and ½ before. With `p_on`, a
    group whose most frequent ISO weekday is `p_on`'s counts 1.5 times. Highest first, then the
    most recent, then the signature. At most `p_limit`, clamped to 1–12 (null: 4). Ties in
@@ -195,11 +218,14 @@ whole line as its tooltip.
   near-duplicate titles and to read a typed sentence ("Abendessen mit Müllers Samstag 19 Uhr").
   Several GB of memory on every family's server, answers that are hard to predict, and it
   touches the paused assistant work ([deferred](deferred/mcp-and-ai-assistants.md)). Counting
-  covers "the things we do often". If near-duplicates turn out to matter, `pg_trgm` similarity
-  in the same function is the next step, not a model. *Amended 2026-10-31 by
-  [ADR-021](adr/ADR-021-local-matching.md): the rule is "no outside service; a bundled dictionary
-  or model only", and [29](29-local-matching.md) adds a title → picture matcher and the `pg_trgm`
-  signatures as its third feature.*
+  covers "the things we do often", and `pg_trgm` similarity in the same function merges
+  near-duplicate titles (rule 2; *done 2026-11-28*, a step the first version of this note
+  foresaw). *Amended 2026-10-31 by [ADR-021](adr/ADR-021-local-matching.md): the rule is "no
+  outside service; a bundled dictionary or model only", and [29](29-local-matching.md) adds a
+  title → picture matcher and the `pg_trgm` signatures as its third feature.*
+- **Transitive grouping** (a chain of similar titles is one group): "A" ≈ "B" ≈ "C" can drift
+  far from A, and the representative would depend on the order of merging. One hop from a root
+  is deterministic and easy to explain.
 - **Templates carrying a repeat.** Only the built-in Geburtstag does (yearly). A saved template
   would have to move a weekly rule to the new day; a series is the right tool for that.
 - **Folding Neue Tradition into the page.** Kept apart for now; the tile page may take it in

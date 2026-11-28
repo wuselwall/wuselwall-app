@@ -54,8 +54,8 @@ select is((select coalesce(string_agg(p.proname, ', '), '') from pg_proc p
            where n.nspname = 'app'
              and has_function_privilege('authenticated', p.oid, 'execute')
              and p.proname not in ('jwt_household', 'jwt_device', 'device_ok', 'session_alive', 'profile_has_account',
-                                   'event_signature')),
-  '', 'authenticated can execute only the RLS helpers in app (and the has-account check of api.members and the pure event signature of api.event_suggestions)');
+                                   'event_signature', 'event_signatures_alike')),
+  '', 'authenticated can execute only the RLS helpers in app (and the has-account check of api.members and the pure event signature and its comparison of api.event_suggestions)');
 
 select * from finish();
 rollback;

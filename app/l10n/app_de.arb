@@ -2385,6 +2385,7 @@
   "eventIcon_work": "Arbeit",
   "eventIcon_shopping": "Shopping",
   "eventIcon_star": "Besonderes",
+  "iconProposedFromTitle": "Vorschlag zum Titel. Tippe auf ein Bild, um ein anderes zu wählen.",
   "kidWishTitle": "Dein Wunschessen",
   "kidWishInvite": "Was möchtest du diese Woche essen?",
   "kidWishWaiting": "Du wünschst dir {title}. Deine Eltern suchen einen Tag aus.",

@@ -26,6 +26,7 @@ Parents also see what is waiting on **Today**: the card **Waiting for your appro
 
 In the **Chores** tab, tap **New chore**:
 
+- **Icon**: while you type the title, WuselWall proposes a fitting picture, such as the dishes for “Empty the dishwasher”. It is only lightly outlined until you tap a picture or **No picture** yourself.
 - **Type**: **Duty** is expected of everyone and earns few points. **Bonus** is optional and earns points.
 - **Points**
 - **Repeat**: once, daily, on weekdays, weekly, every 2 weeks or monthly

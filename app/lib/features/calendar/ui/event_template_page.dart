@@ -7,11 +7,13 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
+import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/application/event_import_providers.dart';
 import 'package:wuselwall/features/calendar/application/event_template_providers.dart';
 import 'package:wuselwall/features/calendar/data/event_templates_repository.dart';
@@ -79,6 +81,18 @@ class EventTemplatePage extends ConsumerWidget {
     // still start every event.
     final suggestions = ref.watch(eventSuggestionsProvider(day)).value ?? [];
     final saved = ref.watch(eventTemplatesProvider).value ?? [];
+    // The tiles of what the family enters most often come first (specs/29 feature 3);
+    // until the history and the matcher are loaded, or without them, the usual order.
+    final history = ref.watch(eventTitleHistoryProvider).value;
+    final matcher = ref.watch(eventsMatcherProvider);
+    List<EventStarter> byHabit(List<EventStarter> starters) =>
+        history == null || matcher == null
+        ? starters
+        : orderBuiltInsByHabit(
+            starters,
+            history,
+            (title) => matcher.match(title)?.iconKey,
+          );
 
     Widget section(String title, List<Widget> tiles) => SliverMainAxisGroup(
       slivers: [
@@ -220,7 +234,7 @@ class EventTemplatePage extends ConsumerWidget {
                         openNewTradition(context, inView: day, now: now),
                       ),
                     ),
-                  for (final s in EventStarter.general) ...[
+                  for (final s in byHabit(EventStarter.general)) ...[
                     starterTile(s),
                     // Beside the holiday tile, which keeps working as before: planning
                     // the whole trip (specs/30).
@@ -249,7 +263,8 @@ class EventTemplatePage extends ConsumerWidget {
                       icon: Icons.backpack_outlined,
                       onTap: () => unawaited(_packItem(context, now)),
                     ),
-                  for (final s in EventStarter.schoolOnes) starterTile(s),
+                  for (final s in byHabit(EventStarter.schoolOnes))
+                    starterTile(s),
                 ]),
               const SliverToBoxAdapter(child: SizedBox(height: Tokens.space6)),
             ],

@@ -3725,6 +3725,10 @@
   "eventIcon_work": "Work",
   "eventIcon_shopping": "Shopping",
   "eventIcon_star": "Special",
+  "iconProposedFromTitle": "Suggested from the title. Tap a picture to choose another.",
+  "@iconProposedFromTitle": {
+    "description": "Under the picture row of the event and task editors, while the picture shown was proposed from the typed title (specs/29) and not chosen by hand."
+  },
   "kidWishTitle": "Your meal wish",
   "kidWishInvite": "What would you like to eat this week?",
   "kidWishWaiting": "You wished for {title}. Your parents will find a day.",

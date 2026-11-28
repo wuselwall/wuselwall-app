@@ -20,6 +20,7 @@ Les parents voient aussi ce qui attend sur **Aujourd’hui** : la carte **En att
 
 Dans l’onglet des tâches, créez-en une et choisissez :
 
+- **icône** : pendant que tu tapes le titre, WuselWall propose une image qui convient, par exemple la vaisselle pour « Vider le lave-vaisselle » ; elle reste légèrement entourée jusqu’à ce que tu choisisses toi-même ;
 - **type** : obligation, attendue de tous avec peu de points, ou bonus facultatif ;
 - **points** ;
 - **répétition** : une fois, chaque jour, jours ouvrables, semaine, deux semaines ou mois ;
