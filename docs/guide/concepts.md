@@ -29,6 +29,22 @@ Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte*
 
 Auch **Erinnerungen einschalten** gehört auf deinem eigenen Telefon zu den ersten Schritten. Erlaubst du Mitteilungen, zählt der Schritt als erledigt und bleibt im Fortschritt enthalten. Lehnst du ab, bleibt er offen. **Brauchen wir nicht** blendet ihn auf diesem Gerät aus; es erteilt keine Erlaubnis. Wenn du die Erlaubnis in den Systemeinstellungen änderst, wird der Fortschritt beim Zurückkehren zur App aktualisiert.
 
+## Suchen {#search}
+
+Etwas Bestimmtes finden, ohne die Tabs abzuklappern: In der Ansicht der Erwachsenen steht oben in der Leiste der Tabs neben dem Zahnrad der Einstellungen eine Lupe, **Suchen**. Nur im Kalender fehlt sie; dort beginnt **Termine suchen** mit den Terminen (siehe [Termine suchen](/calendar/#search)). An der Küchenwand und in der Ansicht der Kinder gibt es keine Suche.
+
+<Shot name="search" alt="Die Suche mit „nudel“: ein Rezept unter Rezepte und ein Artikel unter Einkaufsliste" />
+
+Tippe ein Wort, und die Suche zeigt unter Überschriften, was dazu passt:
+
+- **Termine**: nach Titel, Ort und Notiz. Kommende stehen zuerst, vergangene darunter unter **Vergangene Termine**. Ein Termin, der sich wiederholt, steht einmal, mit seinem nächsten Datum. Auch Termine aus [Kalendern von außen](/calendar/#kalender-von-aussen) sind dabei.
+- **Aufgaben und Belohnungen**
+- **Rezepte**: nach Titel und Schlagwörtern
+- offene Artikel auf euren **Einkaufslisten**
+- **Einstellungen**
+
+Jede Gruppe zeigt fünf Treffer; **Alle 12 zeigen** öffnet den Rest. Groß- und Kleinschreibung, Umlaute und Akzente spielen keine Rolle. Ein Tipp auf einen Treffer führt hin: Ein Termin öffnet seinen Tag im Kalender, eine Aufgabe oder Belohnung ihren Editor, ein Rezept das Rezept, ein Artikel seine Einkaufsliste und eine Einstellung ihre Seite. Mehr dazu unter [Termine suchen](/calendar/#search) und [Einstellungen suchen](/settings/household#search).
+
 ## Der Haushalt
 
 Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitglieder** (jede Person hat einen Namen und eine eigene Farbe) und **Geräte** (Handys, Tablets, der Bildschirm in der Küche).

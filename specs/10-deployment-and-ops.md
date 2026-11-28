@@ -113,6 +113,8 @@ the sign-in methods and `features`. A front of the server's own also
 serves it at `/.well-known/wuselwall.json`. The app reads the `.well-known` path first,
 then the function, so a hosted project's `https://<id>.supabase.co` is a complete address.
 
+*Added 2026-11-28:* `search` (FR-10.2) is announced by the functions alone, as it needs no
+migration; a hosted project gets it when its functions are deployed.
 *Added 2026-10-24:* the function adds the features that depend on the stack's
 configuration rather than its migrations (`timetable-scan` when `OCR_URL` is set; the app
 greys the photo import out and says why where it is missing), and `server_version`, the

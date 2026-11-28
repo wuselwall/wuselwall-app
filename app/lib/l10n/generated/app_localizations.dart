@@ -14686,6 +14686,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can note things only for yourself.'**
   String get errPackItemNotYours;
+
+  /// Search for anything the family keeps: title of the search page and tooltip of the search button on the home bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchTitle;
+
+  /// Hint in the empty field of the search over everything
+  ///
+  /// In en, this message translates to:
+  /// **'What are you looking for?'**
+  String get searchHint;
+
+  /// Search page before anything is typed: what the search finds
+  ///
+  /// In en, this message translates to:
+  /// **'Finds events, chores and rewards, recipes, items on your shopping lists and settings.'**
+  String get searchIntro;
+
+  /// Search page before anything is typed, on a server that cannot search events yet
+  ///
+  /// In en, this message translates to:
+  /// **'Finds chores and rewards, recipes, items on your shopping lists and settings.'**
+  String get searchIntroLocal;
+
+  /// Title of the search page opened from the calendar, and the calendar's menu entry and button that open it
+  ///
+  /// In en, this message translates to:
+  /// **'Search events'**
+  String get searchEventsTitle;
+
+  /// Hint in the empty field of the event search: what of an event is searched
+  ///
+  /// In en, this message translates to:
+  /// **'Title, place or note'**
+  String get searchEventsHint;
+
+  /// Event search before anything is typed: what it finds
+  ///
+  /// In en, this message translates to:
+  /// **'Finds events by title, place and note: coming and past ones, and those from external calendars.'**
+  String get searchEventsIntro;
+
+  /// Tooltip of the button that empties a search or filter field
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get searchClear;
+
+  /// Shown when a search or a list filter has no result
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found.'**
+  String get searchNothingFound;
+
+  /// Search results: heading of the events that are running or to come
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get searchSectionEvents;
+
+  /// Search results: heading of the events that are over
+  ///
+  /// In en, this message translates to:
+  /// **'Past events'**
+  String get searchSectionPast;
+
+  /// Search results: heading of the chores and rewards
+  ///
+  /// In en, this message translates to:
+  /// **'Chores and rewards'**
+  String get searchSectionTasks;
+
+  /// Search results: says that a result is a chore
+  ///
+  /// In en, this message translates to:
+  /// **'Chore'**
+  String get searchKindChore;
+
+  /// Search results: says that a result is a reward
+  ///
+  /// In en, this message translates to:
+  /// **'Reward'**
+  String get searchKindReward;
+
+  /// Search results: spoken label of the icon of an event that repeats; the row shows its next date
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get searchEventRepeats;
+
+  /// Search results: under the events when the server found more than it lists
+  ///
+  /// In en, this message translates to:
+  /// **'There are more. Another word narrows it down.'**
+  String get searchMore;
+
+  /// Hint in the search field on top of the settings page
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings'**
+  String get settingsSearchHint;
+
+  /// Hint in the filter field above a long list of chores
+  ///
+  /// In en, this message translates to:
+  /// **'Filter chores'**
+  String get tasksFilterChores;
+
+  /// Hint in the filter field above a long list of rewards
+  ///
+  /// In en, this message translates to:
+  /// **'Filter rewards'**
+  String get tasksFilterRewards;
+
+  /// Search results: button under a section that shows only its first rows, with the number of results
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Show 1} other{Show all {count}}}'**
+  String searchShowAll(int count);
 }
 
 class _AppLocalizationsDelegate

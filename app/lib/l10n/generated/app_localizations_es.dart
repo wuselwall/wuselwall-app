@@ -8848,4 +8848,75 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errPackItemNotYours => 'Solo puedes anotar cosas para ti.';
+
+  @override
+  String get searchTitle => 'Buscar';
+
+  @override
+  String get searchHint => '¿Qué buscas?';
+
+  @override
+  String get searchIntro =>
+      'Encuentra eventos, tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.';
+
+  @override
+  String get searchIntroLocal =>
+      'Encuentra tareas y recompensas, recetas, artículos de vuestras listas de la compra y ajustes.';
+
+  @override
+  String get searchEventsTitle => 'Buscar eventos';
+
+  @override
+  String get searchEventsHint => 'Título, lugar o nota';
+
+  @override
+  String get searchEventsIntro =>
+      'Encuentra eventos por título, lugar y nota: próximos y pasados, también los de calendarios externos.';
+
+  @override
+  String get searchClear => 'Borrar';
+
+  @override
+  String get searchNothingFound => 'No se ha encontrado nada.';
+
+  @override
+  String get searchSectionEvents => 'Eventos';
+
+  @override
+  String get searchSectionPast => 'Eventos pasados';
+
+  @override
+  String get searchSectionTasks => 'Tareas y recompensas';
+
+  @override
+  String get searchKindChore => 'Tarea';
+
+  @override
+  String get searchKindReward => 'Recompensa';
+
+  @override
+  String get searchEventRepeats => 'Se repite';
+
+  @override
+  String get searchMore => 'Hay más. Otra palabra acota la búsqueda.';
+
+  @override
+  String get settingsSearchHint => 'Buscar en los ajustes';
+
+  @override
+  String get tasksFilterChores => 'Filtrar tareas';
+
+  @override
+  String get tasksFilterRewards => 'Filtrar recompensas';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mostrar los $count',
+      one: 'Mostrar 1',
+    );
+    return '$_temp0';
+  }
 }

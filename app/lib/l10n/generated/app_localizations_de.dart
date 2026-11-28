@@ -8842,6 +8842,78 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get errPackItemNotYours =>
       'Du kannst nur für dich selbst etwas notieren.';
+
+  @override
+  String get searchTitle => 'Suchen';
+
+  @override
+  String get searchHint => 'Wonach suchst du?';
+
+  @override
+  String get searchIntro =>
+      'Findet Termine, Aufgaben und Belohnungen, Rezepte, Artikel auf euren Einkaufslisten und Einstellungen.';
+
+  @override
+  String get searchIntroLocal =>
+      'Findet Aufgaben und Belohnungen, Rezepte, Artikel auf euren Einkaufslisten und Einstellungen.';
+
+  @override
+  String get searchEventsTitle => 'Termine suchen';
+
+  @override
+  String get searchEventsHint => 'Titel, Ort oder Notiz';
+
+  @override
+  String get searchEventsIntro =>
+      'Findet Termine nach Titel, Ort und Notiz: kommende und vergangene, auch die aus externen Kalendern.';
+
+  @override
+  String get searchClear => 'Leeren';
+
+  @override
+  String get searchNothingFound => 'Nichts gefunden.';
+
+  @override
+  String get searchSectionEvents => 'Termine';
+
+  @override
+  String get searchSectionPast => 'Vergangene Termine';
+
+  @override
+  String get searchSectionTasks => 'Aufgaben und Belohnungen';
+
+  @override
+  String get searchKindChore => 'Aufgabe';
+
+  @override
+  String get searchKindReward => 'Belohnung';
+
+  @override
+  String get searchEventRepeats => 'Wiederholt sich';
+
+  @override
+  String get searchMore =>
+      'Es gibt noch mehr. Ein weiteres Wort grenzt die Suche ein.';
+
+  @override
+  String get settingsSearchHint => 'Einstellungen durchsuchen';
+
+  @override
+  String get tasksFilterChores => 'Aufgaben filtern';
+
+  @override
+  String get tasksFilterRewards => 'Belohnungen filtern';
+
+  @override
+  String searchShowAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Alle $count zeigen',
+      one: '1 zeigen',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for German, as used in Austria (`de_AT`).

@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/text/search.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
+import 'package:wuselwall/core/ui/search_field.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -19,11 +21,20 @@ import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 
 /// Chore admin (specs/06): every active definition with its kind, rhythm and people,
 /// and the editor for each. An empty household is offered the starter pack instead.
-class TasksChoresTab extends ConsumerWidget {
+///
+/// A long list ([listFilterFrom] chores or more) has a filter field (FR-10.4).
+class TasksChoresTab extends ConsumerStatefulWidget {
   const TasksChoresTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TasksChoresTab> createState() => _TasksChoresTabState();
+}
+
+class _TasksChoresTabState extends ConsumerState<TasksChoresTab> {
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
     final definitions = ref.watch(taskDefinitionsProvider);
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     return AsyncValueView<List<TaskDefinition>>(
@@ -34,6 +45,11 @@ class TasksChoresTab extends ConsumerWidget {
         if (list.isEmpty) {
           return _Starter(onNew: () => _open(context, ref, members));
         }
+        // The filter only narrows a list long enough to have the field.
+        final shown =
+            list.length >= listFilterFrom && searchTerms(_query).isNotEmpty
+            ? searchIn(_query, list, (d) => [d.title])
+            : list;
         return ListView(
           padding: const EdgeInsets.all(Tokens.space4),
           children: [
@@ -46,7 +62,21 @@ class TasksChoresTab extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: Tokens.space2),
-            for (final d in list)
+            if (list.length >= listFilterFrom) ...[
+              SearchField(
+                key: const ValueKey('chores-filter'),
+                hint: l10n.tasksFilterChores,
+                onChanged: (text) => setState(() => _query = text),
+              ),
+              const SizedBox(height: Tokens.space2),
+            ],
+            if (shown.isEmpty)
+              Padding(
+                key: const ValueKey('chores-filter-empty'),
+                padding: const EdgeInsets.all(Tokens.space4),
+                child: Text(l10n.searchNothingFound),
+              ),
+            for (final d in shown)
               _DefinitionTile(
                 definition: d,
                 members: members,

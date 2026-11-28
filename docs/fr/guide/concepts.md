@@ -27,6 +27,22 @@ La carte **Premiers pas** reste en haut tant que la configuration est incomplèt
 
 **Activer les rappels** fait aussi partie des premières étapes sur votre téléphone personnel. Autoriser les notifications marque cette étape comme terminée et la conserve dans le total. Refuser la laisse ouverte. **Pas nécessaire** masque l’étape sur cet appareil sans accorder l’autorisation. Si vous changez l’autorisation dans les réglages du système, la progression se met à jour à votre retour dans l’application.
 
+## Rechercher {#search}
+
+Pour retrouver quelque chose sans ouvrir chaque onglet : dans la vue des adultes, la barre en haut de chaque onglet, sauf le Calendrier, a une loupe, **Rechercher**, à côté de la roue des paramètres. Dans le Calendrier, **Rechercher des événements** a sa propre entrée et commence par les événements (voir [Rechercher des rendez-vous](/fr/calendar/#search)). Il n’y a pas de recherche sur l’écran mural de la cuisine ni dans la vue des enfants.
+
+<Shot name="search" alt="Recherche de « pâtes » : une recette sous Recettes et un article sous Liste de courses" />
+
+Saisissez un mot : la recherche montre sous des titres ce qui correspond.
+
+- **Événements** : par titre, lieu et note. Les rendez-vous à venir passent d’abord, les passés suivent sous **Événements passés**. Un rendez-vous récurrent apparaît une seule fois, avec sa prochaine date. Les rendez-vous des [calendriers externes](/fr/calendar/#outside-calendars) sont inclus.
+- **Tâches et récompenses**
+- **Recettes** : par titre et étiquettes
+- les articles ouverts de vos **listes de courses**
+- les **paramètres**
+
+Chaque groupe montre cinq résultats ; **Afficher les 12** ouvre le reste. Majuscules, minuscules, tréma et accents n’ont aucune importance. Un résultat mène à son objet : un événement ouvre son jour dans le calendrier, une tâche ou une récompense son éditeur, une recette la recette, un article sa liste de courses et un paramètre sa page. Plus de détails dans [Rechercher des rendez-vous](/fr/calendar/#search) et [Rechercher dans les paramètres](/fr/settings/household#search).
+
 ## Le foyer {#the-household}
 
 Tout appartient à un **foyer**, votre famille. Il comprend des **membres**, avec leur nom et leur couleur, et des **appareils** : téléphones, tablettes, écran de cuisine.

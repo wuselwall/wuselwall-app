@@ -450,6 +450,40 @@ class TraditionMeal {
   };
 }
 
+/// The `search` function's reply (FR-10.2): the appointments that answer a query, one per
+/// event or series. A series stands with its next date, or its last when none is to come.
+class EventSearchResult {
+  const EventSearchResult({
+    this.upcoming = const [],
+    this.past = const [],
+    this.more = false,
+  });
+
+  factory EventSearchResult.fromJson(Map<String, dynamic> json) {
+    List<Occurrence> list(String key) => [
+      for (final row
+          in ((json[key] as List?) ?? const []).cast<Map<String, dynamic>>())
+        Occurrence.fromJson(row),
+    ];
+    return EventSearchResult(
+      upcoming: list('upcoming'),
+      past: list('past'),
+      more: json['more'] as bool? ?? false,
+    );
+  }
+
+  /// Running or to come, the soonest first.
+  final List<Occurrence> upcoming;
+
+  /// Over, the latest first.
+  final List<Occurrence> past;
+
+  /// The server found more than it sent: a longer query narrows it down.
+  final bool more;
+
+  bool get isEmpty => upcoming.isEmpty && past.isEmpty;
+}
+
 /// The `occurrences` function's reply: the window's occurrences, the zone they are
 /// written in and every member's "Termine bis" limit for the days in it.
 class OccurrenceWindow {

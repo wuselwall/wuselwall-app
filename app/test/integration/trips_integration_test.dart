@@ -44,7 +44,7 @@ import 'package:wuselwall/features/trips/domain/trip_models.dart';
 ///   * the database round trip: trips, the calendar entry, entries, combinations, checks, the
 ///     home place, the service settings and their secrecy, a child's refusals (api functions and
 ///     views only, so it needs nothing but PostgREST);
-///   * the Edge Functions `occurrences`, `services` and `trips`. CI's stack serves every
+///   * the Edge Functions `occurrences`, `search`, `services` and `trips`. CI's stack serves every
 ///     function of supabase/functions (`supabase start` starts the edge runtime; backend-ci.yml
 ///     excludes only studio, imgproxy, logflare and vector), so it runs by default. A stack that
 ///     does not serve them skips just this test: `--dart-define=WW_EDGE_FUNCTIONS=false`.
@@ -777,7 +777,7 @@ void main() {
   );
 
   test(
-    'the Edge Functions: occurrences with a trip, windows, discovery without a '
+    'the Edge Functions: occurrences and search with a trip, windows, discovery without a '
     'provider, the catalogue, a geocode that no provider answers',
     () async {
       final (phone, device) = await guardianPhone();
@@ -889,6 +889,30 @@ void main() {
           ),
         ),
       );
+
+      // --- the `search` function finds it by what it says (FR-10.2) -------------------------------------------
+      // Folded: the title is "Edge <stamp>", the query is lower case. The trip runs from
+      // today, so it is among the coming ones, once, in the shape `occurrences` gives.
+      final searched = await phone.calendar
+          .search('edge $stamp'.toLowerCase())
+          .must('search the appointments');
+      final hits = searched.upcoming.where((o) => o.tripId == tripId).toList();
+      expect(hits, hasLength(1));
+      expect(hits.single.eventId, saved.eventId);
+      expect(hits.single.title, 'Edge $stamp');
+      expect(
+        (hits.single.localStartDate, hits.single.localEndDate),
+        (day(0), day(3)),
+      );
+      expect(searched.past.where((o) => o.tripId == tripId), isEmpty);
+      // Every word has to be found: one that no appointment says finds nothing.
+      final none = await phone.calendar
+          .search('edge $stamp qqzzxx')
+          .must('search for what is not there');
+      expect(none.isEmpty, isTrue);
+      expect(none.more, isFalse);
+      // One letter is no query (query_invalid).
+      expect(await phone.calendar.search('e'), isA<Err<EventSearchResult>>());
 
       // --- `trips` / windows: the database only ---------------------------------------------------------------
       final windows = await phone.trips

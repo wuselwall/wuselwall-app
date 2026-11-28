@@ -19,6 +19,16 @@ Below them, the appointments follow by time.
 
 Short events keep their labels at the actual times, while taller, easy-to-tap blocks can sit side by side. Template cards adapt to your device’s text size.
 
+## Searching for appointments {#search}
+
+From the calendar, the search starts with appointments only: **Search events**. On a wide screen, where the bar shows Day, 3 days, Week and Month as buttons side by side, the magnifier stands right after those buttons. Everywhere else, on a phone and also on a tablet or in a window where the views are a menu, it is the last entry of the **Calendar view** menu.
+
+Type a word from the title, place or note. Coming appointments come first, past ones follow under **Past events**. A repeating appointment appears once, with its next date. Appointments from [outside calendars](#outside-calendars) are found too. A tap opens the appointment's day in the calendar. To search chores, recipes and shopping as well, use the [search over everything](/en/guide/concepts#search).
+
+::: tip Connection and server
+Searching appointments asks your family's server, so it needs a connection. If the server cannot do this yet, the same entry is called **Search** and opens the search over everything else.
+:::
+
 ## Month {#month}
 
 **Month** shows six weeks at a glance, Monday to Sunday, with the week number on the left. It is for planning, not for editing. Each day shows:
