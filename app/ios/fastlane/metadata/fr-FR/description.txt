@@ -2,6 +2,8 @@ WuselWall est l’organisateur familial pour toute la vie de la maison : calendr
 
 À savoir d’abord : WuselWall n’est pas un service en ligne. L’app se connecte à un serveur WuselWall que votre famille exploite elle-même – sur un NAS, un mini-PC, un serveur loué ou dans votre propre projet Supabase. Nous ne voyons jamais vos données. Sans serveur, vous pouvez essayer l’app avec une famille d’exemple : touchez « Essayer sans serveur » sur le premier écran.
 
+Retrouvez rendez-vous, recettes, tâches, articles de courses et paramètres dans une même recherche.
+
 UN TABLEAU HEBDOMADAIRE POUR LA CUISINE
 • Sept jours d’un seul coup d’œil, pensé pour une tablette au mur
 • Qui est où, ce qui arrive, ce qu’on mange
@@ -13,6 +15,7 @@ CALENDRIER PARTAGÉ
 • Rendez-vous récurrents et présences, comme les horaires de travail ou les déplacements
 • Abonnez-vous à des calendriers : club, collecte des déchets, école
 • En flux ICS dans Outlook, Calendrier d’Apple ou Google Agenda
+• WuselWall propose une image pendant la saisie du titre pour repérer le rendez-vous dans la vue Aujourd’hui et dans le calendrier
 
 EMPLOIS DU TEMPS SCOLAIRES
 • L’emploi du temps de chaque enfant, même avec plusieurs écoles
@@ -31,6 +34,7 @@ MENUS ET LISTE DE COURSES
 
 UN APPAREIL PAR PERSONNE OU PAR PIÈCE
 • Un appareil personnel pour les adultes, une tablette partagée pour la cuisine
+• Les moins de 12 ans voient leurs quatre prochains jours avec l’école, les rendez-vous et les affaires à emporter
 • Les enfants n’ont besoin ni de compte ni d’adresse e-mail
 • Connectez de nouveaux appareils avec un code QR, bloquez chaque appareil séparément
 • Connexion avec un code par e-mail ou avec un mot de passe
