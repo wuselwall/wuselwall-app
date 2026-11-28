@@ -6301,6 +6301,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventIcon_star => 'Especial';
 
   @override
+  String get iconProposedFromTitle =>
+      'Sugerida por el título. Toca una imagen para elegir otra.';
+
+  @override
   String get kidWishTitle => 'Tu comida favorita';
 
   @override

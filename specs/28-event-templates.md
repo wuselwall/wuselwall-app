@@ -1,8 +1,8 @@
 # 28 — Event templates: start a new event from a tile
 
 *Added 2026-10-25. Builds on [05](05-module-calendar.md) (events) and the tradition starters of
-[27](27-family-rituals.md#familientraditionen). Migration `20261025150000_event_templates.sql`
-(pgTAP 245), app code in `app/lib/features/calendar/{domain,data,application,ui}/`.*
+[27](27-family-rituals.md#familientraditionen). Migrations `20261025150000_event_templates.sql`
+and `20261128110000_event_suggestions_similar.sql` (pgTAP 245), app code in `app/lib/features/calendar/{domain,data,application,ui}/`.*
 
 ## Why
 
@@ -167,13 +167,29 @@ the events the caller may read.
    white space made one, leading and trailing white space and punctuation removed, and cut to
    120 characters
    ("Grosi kommt!" and "grosi  kommt" are one group), together with the kind.
-3. **Regular means at least three** events in the group.
+   *Near-identical signatures are one group (2026-11-28, specs/29 feature 3):* two signatures
+   of the same kind whose `pg_trgm` similarity (`extensions.similarity`) is at least **0.62**,
+   both at least four characters long, belong together. Among the distinct signatures of the
+   window, ranked by number of events, then most recent, then signature text, a *root* is one
+   that no higher-ranked signature is similar to; every signature joins the best-ranked root it
+   is similar to (a root joins itself). One hop, no chains, deterministic; the group's
+   representative is the root, and the suggestion's `signature` is the representative.
+   "Fussballtraining", "Fussball-Training" and "Fussball Training" are one group; "Oma kommt"
+   and "Opa kommt" (0.54), "Zahnarzt Mia" and "Zahnarzt Noah" (0.50) are not. The threshold lies
+   in the gap between "Zahnarzt Mia" / "Zahnarzt Mia und Noah" (0.59, apart) and "Arzt Termin" /
+   "Arzttermin" (0.64, together). Known limits: a child's name added to a title ("Coiffeur" /
+   "Coiffeur Mia", 0.69) merges, and short compounds written with a hyphen or space ("Judokurs" /
+   "Judo-Kurs", 0.58) do not.
+3. **Regular means at least three** events in the group, all its signatures counted together
+   ("Fussballtraining" twice and "Fussball-Training" once is a suggestion).
 4. **What a suggestion fills in** is what the group usually does: the title of its most recent
    event; the most frequent picture, all-day value, start time (in the event's time zone),
    length, people (as a set) and presence state; the most frequent place when at least half
    of the events have it.
-5. **Not suggested**: a hidden signature, and a signature that already has a saved template of
-   the same kind.
+5. **Not suggested**: a group with a hidden signature among its members, and a group with a
+   signature that already has a saved template of the same kind. Hiding and saving still name
+   one signature, the one the tile showed; a hidden or covered signature that has no event in
+   the window any more is not a member and hides nothing.
 6. **Order.** Each event weighs 1 in the last 90 days (or ahead) and ½ before. With `p_on`, a
    group whose most frequent ISO weekday is `p_on`'s counts 1.5 times. Highest first, then the
    most recent, then the signature. At most `p_limit`, clamped to 1–12 (null: 4). Ties in
@@ -193,11 +209,14 @@ whole line as its tooltip.
   near-duplicate titles and to read a typed sentence ("Abendessen mit Müllers Samstag 19 Uhr").
   Several GB of memory on every family's server, answers that are hard to predict, and it
   touches the paused assistant work ([deferred](deferred/mcp-and-ai-assistants.md)). Counting
-  covers "the things we do often". If near-duplicates turn out to matter, `pg_trgm` similarity
-  in the same function is the next step, not a model. *Amended 2026-10-31 by
-  [ADR-021](adr/ADR-021-local-matching.md): the rule is "no outside service; a bundled dictionary
-  or model only", and [29](29-local-matching.md) adds a title → picture matcher and the `pg_trgm`
-  signatures as its third feature.*
+  covers "the things we do often", and `pg_trgm` similarity in the same function merges
+  near-duplicate titles (rule 2; *done 2026-11-28*, a step the first version of this note
+  foresaw). *Amended 2026-10-31 by [ADR-021](adr/ADR-021-local-matching.md): the rule is "no
+  outside service; a bundled dictionary or model only", and [29](29-local-matching.md) adds a
+  title → picture matcher and the `pg_trgm` signatures as its third feature.*
+- **Transitive grouping** (a chain of similar titles is one group): "A" ≈ "B" ≈ "C" can drift
+  far from A, and the representative would depend on the order of merging. One hop from a root
+  is deterministic and easy to explain.
 - **Templates carrying a repeat.** Only the built-in Geburtstag does (yearly). A saved template
   would have to move a weekly rule to the new day; a series is the right tool for that.
 - **Folding Neue Tradition into the page.** Kept apart for now; the tile page may take it in

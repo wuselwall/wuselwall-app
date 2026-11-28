@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui' show Tristate;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,9 @@ import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/core/matching/dictionary.dart';
+import 'package:wuselwall/core/matching/matcher.dart' as wusel;
+import 'package:wuselwall/core/matching/matching_providers.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
@@ -115,10 +120,14 @@ Future<void> _pumpEditor(
   List<Member> members, {
   TaskDefinition? existing,
   FakeTasksApi? api,
+  wusel.Matcher? matcher,
 }) async {
   await t.pumpWidget(
     ProviderScope(
-      overrides: [if (api != null) apiClientProvider.overrideWithValue(api)],
+      overrides: [
+        if (api != null) apiClientProvider.overrideWithValue(api),
+        if (matcher != null) tasksMatcherProvider.overrideWithValue(matcher),
+      ],
       child: MaterialApp(
         theme: AppTheme.build(UiRegister.adult, Shade.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -448,6 +457,50 @@ void main() {
         greaterThan(api.calls.indexOf(save)),
         reason: 'the instances are made after the definition exists',
       );
+    });
+  });
+
+  group('a picture from the title (specs/29 feature 3)', () {
+    final matcher = wusel.Matcher(
+      MatchDictionaries.parse(
+        File('assets/matching/dictionary.json').readAsStringSync(),
+      ).byDomain['tasks']!,
+    );
+    final de = AppLocalizationsDe();
+
+    /// Whether the picture named [label] is the selected one.
+    bool selected(WidgetTester t, String label) =>
+        t.getSemantics(find.byTooltip(label)).flagsCollection.isSelected ==
+        Tristate.isTrue;
+
+    testWidgets('a typed title proposes its picture, which is saved', (
+      t,
+    ) async {
+      await _pumpEditor(t, testMembers, matcher: matcher);
+      await t.enterText(find.byType(TextField).first, 'Spülmaschine leeren');
+      await t.pumpAndSettle();
+
+      expect(find.text(de.iconProposedFromTitle), findsOneWidget);
+      expect(selected(t, taskIconName(de, 'dishes')), isTrue);
+
+      await t.enterText(find.byType(TextField).first, 'asdf');
+      await t.pumpAndSettle();
+      expect(find.text(de.iconProposedFromTitle), findsNothing);
+      expect(selected(t, de.tasksNoIcon), isTrue);
+    });
+
+    testWidgets('a picture tapped by hand ends the proposal and stays', (
+      t,
+    ) async {
+      await _pumpEditor(t, testMembers, matcher: matcher);
+      await t.enterText(find.byType(TextField).first, 'Spülmaschine leeren');
+      await t.pumpAndSettle();
+      await tapIn(t, find.byTooltip(de.tasksNoIcon));
+      expect(find.text(de.iconProposedFromTitle), findsNothing);
+
+      await t.enterText(find.byType(TextField).first, 'Tisch decken');
+      await t.pumpAndSettle();
+      expect(selected(t, de.tasksNoIcon), isTrue);
     });
   });
 

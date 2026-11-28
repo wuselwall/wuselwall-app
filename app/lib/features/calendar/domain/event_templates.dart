@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:wuselwall/core/text/suggest.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 
@@ -314,4 +315,44 @@ class EventTemplate {
       'countdown': kind != EventKind.presence && countdown,
     };
   }
+}
+
+/// How often a picture must show up in a family's appointments before its built-in
+/// tile moves to the front: one entry may be a one-off, two are a habit.
+const int habitMinimum = 2;
+
+/// [builtIns] with the tiles of the family's habits first (specs/29 feature 3): a tile
+/// counts every earlier appointment whose picture is the tile's own [EventStarter.iconKey]
+/// (the appointment's own picture, or when it has none what [iconOf] makes of its
+/// title). Tiles with at least [minimum] of them come first, the most used first; the
+/// others, and tiles with the same count, keep their order. With no history, or when
+/// [iconOf] knows nothing, the order is unchanged.
+List<EventStarter> orderBuiltInsByHabit(
+  List<EventStarter> builtIns,
+  Iterable<TextSuggestion> history,
+  String? Function(String title) iconOf, {
+  int minimum = habitMinimum,
+}) {
+  final used = <String, int>{};
+  for (final entry in history) {
+    final key = entry.iconKey ?? iconOf(entry.text);
+    if (key != null) used[key] = (used[key] ?? 0) + entry.count;
+  }
+  if (used.isEmpty) return builtIns;
+  int countOf(EventStarter s) => used[s.iconKey] ?? 0;
+  final habits = [
+    for (final s in builtIns)
+      if (countOf(s) >= minimum) s,
+  ];
+  // List.sort is not stable: the position breaks the tie.
+  final position = {for (final (i, s) in builtIns.indexed) s: i};
+  habits.sort((a, b) {
+    final byCount = countOf(b).compareTo(countOf(a));
+    return byCount != 0 ? byCount : position[a]!.compareTo(position[b]!);
+  });
+  return [
+    ...habits,
+    for (final s in builtIns)
+      if (countOf(s) < minimum) s,
+  ];
 }

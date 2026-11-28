@@ -6290,6 +6290,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventIcon_star => 'Besonderes';
 
   @override
+  String get iconProposedFromTitle =>
+      'Vorschlag zum Titel. Tippe auf ein Bild, um ein anderes zu wählen.';
+
+  @override
   String get kidWishTitle => 'Dein Wunschessen';
 
   @override

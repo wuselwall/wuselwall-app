@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/matching/dictionary.dart';
+import 'package:wuselwall/core/matching/matcher.dart' as wusel;
+import 'package:wuselwall/core/matching/matching_providers.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
@@ -78,6 +83,7 @@ Future<ProviderContainer> _app(
   List<SettingEntry> settings = const [],
   DateTime? now,
   bool reminders = true,
+  wusel.Matcher? matcher,
 }) async {
   final container = await pumpApp(
     t,
@@ -92,6 +98,7 @@ Future<ProviderContainer> _app(
       // A server before the event's own reminder (specs/05).
       if (!reminders)
         eventReminderSupportedProvider.overrideWith((ref) => false),
+      if (matcher != null) eventsMatcherProvider.overrideWithValue(matcher),
     ],
     calendar: calendar,
   );
@@ -109,6 +116,7 @@ Future<void> _open(
   List<SettingEntry> settings = const [],
   DateTime? now,
   bool reminders = true,
+  wusel.Matcher? matcher,
 }) async {
   final container = await _app(
     t,
@@ -116,6 +124,7 @@ Future<void> _open(
     settings: settings,
     now: now ?? _morning,
     reminders: reminders,
+    matcher: matcher,
   );
   // The push completes when the editor pops, so it is not awaited.
   unawaited(container.read(routerProvider).push(route, extra: args));
@@ -146,6 +155,7 @@ CalendarEvent _fixture({
   DateTime? startsAt,
   DateTime? endsAt,
   String? rrule,
+  String? iconKey,
 }) {
   final start = startsAt ?? DateTime(2026, 10, 14, 15);
   return CalendarEvent(
@@ -157,6 +167,7 @@ CalendarEvent _fixture({
     endsAt: endsAt ?? start.add(const Duration(hours: 1)),
     rrule: rrule,
     attendeeIds: const [guardianId],
+    iconKey: iconKey,
   );
 }
 
@@ -1067,5 +1078,170 @@ void main() {
       await _save(t);
       expect(cal.saved.single.title, 'tu');
     });
+  });
+  group('a picture from the title (specs/29 feature 3)', () {
+    // The bundled dictionary, read from the file: the tests start without one
+    // (flutter_test_config.dart).
+    final matcher = wusel.Matcher(
+      MatchDictionaries.parse(
+        File('assets/matching/dictionary.json').readAsStringSync(),
+      ).byDomain['events']!,
+    );
+
+    /// The picture shown in the title field, or null.
+    String? titlePicture(WidgetTester t) {
+      final pictures = find.descendant(
+        of: find.byType(TextField).first,
+        matching: find.byType(EmojiPicture),
+      );
+      return pictures.evaluate().isEmpty
+          ? null
+          : t.widget<EmojiPicture>(pictures).asset;
+    }
+
+    Future<void> tapPicture(WidgetTester t, String key) async {
+      final tile = find.byKey(ValueKey('event-icon-$key'));
+      await t.dragUntilVisible(
+        tile,
+        find.byType(Scrollable).first,
+        const Offset(0, -200),
+      );
+      await t.tap(tile);
+      await t.pumpAndSettle();
+      await _toTop(t);
+    }
+
+    testWidgets('a typed title proposes its picture, which is saved', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+        matcher: matcher,
+      );
+      await _title(t, 'Zahnarzt Mia');
+
+      expect(titlePicture(t), 'assets/emoji/events/dentist.png');
+      await _save(t);
+      expect(cal.saved.single.iconKey, 'dentist');
+    });
+
+    testWidgets('the proposal follows the title, and goes with a title that '
+        'matches nothing', (t) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+        matcher: matcher,
+      );
+      await _title(t, 'Putzfrau kommt');
+      expect(titlePicture(t), 'assets/emoji/events/cleaner.png');
+      await _title(t, 'Velotour');
+      expect(titlePicture(t), 'assets/emoji/events/bicycle.png');
+      await _title(t, 'Termin 14:00');
+      expect(titlePicture(t), isNull);
+
+      await _save(t);
+      expect(cal.saved.single.iconKey, isNull);
+    });
+
+    testWidgets('the picture row says the picture is proposed', (t) async {
+      await _open(
+        t,
+        args: EventEditArgs(date: _day),
+        matcher: matcher,
+      );
+      await _title(t, 'Zahnarzt Mia');
+      final line = find.text(_de.iconProposedFromTitle);
+      await t.dragUntilVisible(
+        line,
+        find.byType(Scrollable).first,
+        const Offset(0, -200),
+      );
+      expect(line, findsOneWidget);
+
+      await t.tap(find.byKey(const ValueKey('event-icon-dentist')));
+      await t.pumpAndSettle();
+      expect(line, findsNothing);
+    });
+
+    testWidgets('a picture chosen by hand is kept whatever the title says', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+        matcher: matcher,
+      );
+      await tapPicture(t, 'cleaner');
+      await _title(t, 'Zahnarzt Mia');
+
+      expect(titlePicture(t), 'assets/emoji/events/cleaner.png');
+      await _save(t);
+      expect(cal.saved.single.iconKey, 'cleaner');
+    });
+
+    testWidgets('no picture chosen by hand stays no picture', (t) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+        matcher: matcher,
+      );
+      await _title(t, 'Zahnarzt Mia');
+      await tapPicture(t, 'none');
+      await _title(t, 'Zahnarzt Noah');
+
+      await _save(t);
+      expect(cal.saved.single.iconKey, isNull);
+    });
+
+    testWidgets("an existing event's picture is not replaced", (t) async {
+      final cal = FakeCalendarRepository(const [], {
+        'e-1': _fixture(id: 'e-1', iconKey: 'football'),
+      });
+      await _open(
+        t,
+        calendar: cal,
+        args: const EventEditArgs(eventId: 'e-1'),
+        matcher: matcher,
+      );
+      await _title(t, 'Zahnarzt');
+
+      expect(titlePicture(t), 'assets/emoji/events/football.png');
+    });
+
+    testWidgets(
+      'an earlier title with its own picture wins over the proposal',
+      (t) async {
+        final cal = FakeCalendarRepository()
+          ..history = [
+            EventHistoryRow(
+              title: 'Zahnarzt Dr. Blum',
+              iconKey: 'star',
+              updatedAt: testNow().subtract(const Duration(days: 2)),
+            ),
+          ];
+        await _open(
+          t,
+          calendar: cal,
+          args: EventEditArgs(date: _day),
+          matcher: matcher,
+        );
+        await _title(t, 'Zahnarzt');
+        expect(titlePicture(t), 'assets/emoji/events/dentist.png');
+        await t.pumpAndSettle();
+        await t.tap(find.text('Zahnarzt Dr. Blum'));
+        await t.pumpAndSettle();
+
+        expect(titlePicture(t), 'assets/emoji/events/star.png');
+      },
+    );
   });
 }

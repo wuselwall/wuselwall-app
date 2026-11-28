@@ -3099,6 +3099,7 @@
   "eventIcon_work": "Trabajo",
   "eventIcon_shopping": "Compras",
   "eventIcon_star": "Especial",
+  "iconProposedFromTitle": "Sugerida por el título. Toca una imagen para elegir otra.",
   "kidWishTitle": "Tu comida favorita",
   "kidWishInvite": "¿Qué te apetece comer esta semana?",
   "kidWishWaiting": "Has pedido {title}. Tus padres buscarán un día.",

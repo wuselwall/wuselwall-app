@@ -26,6 +26,7 @@ Eltern sehen auch auf **Heute**, was wartet: die Karte **Wartet auf deine Freiga
 
 Tippe im Tab **Aufgaben** auf **Neue Aufgabe**:
 
+- **Bild**: Beim Tippen des Titels schlägt WuselWall ein passendes Bild vor, etwa bei „Spülmaschine ausräumen“ das Geschirr. Es ist nur hell umrandet, bis du selbst ein Bild oder **Kein Bild** antippst.
 - **Art**: **Pflicht** wird von allen erwartet und bringt wenig Punkte. **Extra** ist freiwillig und bringt Punkte.
 - **Punkte**
 - **Wiederholung**: einmalig, täglich, an Wochentagen, wöchentlich, alle 2 Wochen oder monatlich

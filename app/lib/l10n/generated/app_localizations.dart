@@ -10501,6 +10501,12 @@ abstract class AppLocalizations {
   /// **'Special'**
   String get eventIcon_star;
 
+  /// Under the picture row of the event and task editors, while the picture shown was proposed from the typed title (specs/29) and not chosen by hand.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested from the title. Tap a picture to choose another.'**
+  String get iconProposedFromTitle;
+
   /// No description provided for @kidWishTitle.
   ///
   /// In en, this message translates to:

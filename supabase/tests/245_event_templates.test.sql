@@ -1,9 +1,9 @@
 begin;
-select plan(114);
+select plan(123);
 
--- Event templates and suggestions (specs/28, migration 20261025150000): the signature, saved
--- templates with their rules and perimeter, hidden suggestions, and what api.event_suggestions
--- counts, leaves out and puts first.
+-- Event templates and suggestions (specs/28, migrations 20261025150000 and 20261128110000): the
+-- signature, saved templates with their rules and perimeter, hidden suggestions, and what
+-- api.event_suggestions counts, groups (near-identical titles), leaves out and puts first.
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -441,6 +441,52 @@ select is((select e ->> 'signature' from jsonb_array_elements(api.event_suggesti
 select api.event_template_save(null, '{"title":" GROSI kommt!!"}');
 select is(pg_temp.sigs(api.event_suggestions()), 'ausflug,fussball,homeoffice,schwimmen',
   'a saved template of the same kind and signature covers it');
+
+-- ================================================================ near-identical titles
+-- Signatures of one kind with a pg_trgm similarity of at least 0.62 (and four characters or
+-- more) are one group; the most frequent signature represents it.
+reset role;
+select pg_temp.ev('Klavierstunde', d, p_icon => 'music') from unnest(array[-40, -33]) d;
+select pg_temp.ev('Klavier-Stunde', -5, p_icon => 'music');
+select pg_temp.ev('Tanzstunde', d) from unnest(array[-50, -43]) d;
+select pg_temp.ev('Tanz stunde', -4);
+select pg_temp.ev('Judokurs', d) from unnest(array[-60, -53]) d;
+select pg_temp.ev('Judokurse', -3);
+select pg_temp.ev('Oma kommt', d) from unnest(array[-70, -63, -56]) d;
+select pg_temp.ev('Opa kommt', d) from unnest(array[-69, -62, -55]) d;
+select pg_temp.ev('Ab', d) from unnest(array[-20, -19, -18]) d;
+select pg_temp.ev('Ac', d) from unnest(array[-17, -16, -15]) d;
+select pg_temp.act_as_dev('papa');
+
+select is((select e ->> 'signature' || '|' || (e ->> 'title') || '|' || (e ->> 'count')
+             from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e where e ->> 'signature' like 'klavier%'),
+  'klavierstunde|Klavier-Stunde|3',
+  'near-identical titles are one suggestion: the combined count, the most recent title, the most frequent signature');
+select is((select count(*)::int from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e
+            where e ->> 'signature' like 'klavier%'), 1, 'and only one');
+select is((select count(*)::int from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e
+            where e ->> 'signature' in ('oma kommt', 'opa kommt') and (e ->> 'count')::int = 3),
+  2, 'dissimilar titles stay apart');
+select is((select string_agg((e ->> 'signature') || (e ->> 'count'), ',' order by e ->> 'signature')
+             from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e where e ->> 'signature' in ('ab', 'ac')),
+  'ab3,ac3', 'two different short titles do not merge');
+
+-- A hidden signature hides the whole group, whichever member it is.
+select is((select e ->> 'count' from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e
+            where e ->> 'signature' = 'tanzstunde'), '3', 'a group of two and one is offered');
+select api.event_suggestion_hide(null, 'tanz stunde');
+select is((select count(*)::int from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e
+            where e ->> 'signature' like 'tanz%'), 0, 'a hidden member signature hides the group');
+select api.event_suggestion_hide(null, 'tanz stunde', false);
+select is((select count(*)::int from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e
+            where e ->> 'signature' = 'tanzstunde'), 1, 'shown again, the group is offered again');
+
+-- A saved template of any member signature (same kind) covers the group.
+select is((select e ->> 'count' from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e
+            where e ->> 'signature' = 'judokurs'), '3', 'another group of two and one');
+select api.event_template_save(null, '{"title":"Judokurse"}');
+select is((select count(*)::int from jsonb_array_elements(api.event_suggestions(p_limit => 12)) e
+            where e ->> 'signature' like 'judo%'), 0, 'a saved template of a member signature covers the group');
 
 select pg_temp.act_as_dev('old');
 select is(api.event_suggestions(), '[]'::jsonb, 'a revoked device gets no suggestions');

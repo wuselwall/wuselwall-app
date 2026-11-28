@@ -5,8 +5,14 @@ import 'package:wuselwall/core/matching/matcher.dart';
 
 /// The bundled dictionaries, read once from the asset (specs/29).
 final matchDictionariesProvider = FutureProvider<MatchDictionaries>(
-  (ref) => loadMatchDictionaries(),
+  (ref) => matchDictionariesLoader(),
 );
+
+/// How the dictionaries are loaded. The tests replace it (`test/flutter_test_config.dart`):
+/// reading the bundle is real I/O that finishes whenever the event loop gets to it, so a
+/// test that does not care would see pictures proposed from titles at random.
+Future<MatchDictionaries> Function() matchDictionariesLoader =
+    loadMatchDictionaries;
 
 /// The matcher of the `shopping` domain: null while the dictionary loads, or when it
 /// holds no such domain. Callers treat null as "no suggestion", never as an error.

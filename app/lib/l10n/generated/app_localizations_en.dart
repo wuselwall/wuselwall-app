@@ -6247,6 +6247,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventIcon_star => 'Special';
 
   @override
+  String get iconProposedFromTitle =>
+      'Suggested from the title. Tap a picture to choose another.';
+
+  @override
   String get kidWishTitle => 'Your meal wish';
 
   @override
