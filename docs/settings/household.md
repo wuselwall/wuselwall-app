@@ -10,6 +10,14 @@ Die Ansicht ändert nur, was du siehst: Verborgene Einstellungen gelten weiter. 
 
 Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er passt für die meisten Familien. Weicht euer Wert davon ab, steht dort **angepasst**. Mit **Auf Standard zurücksetzen** geht es jederzeit zurück.
 
+## Einstellungen suchen {#search}
+
+Ganz oben auf der Seite steht das Feld **Einstellungen durchsuchen**. Sobald du tippst, ersetzt eine Liste der Treffer die Gruppen: Sie zeigt jede passende Einstellung und jede passende Zeile aus allen Gruppen. Zu jedem Treffer gehören sein Name, die Gruppe (und der Abschnitt), in der er steht, und seine Erklärung. Groß- und Kleinschreibung, Umlaute und Akzente spielen keine Rolle.
+
+Die Suche findet auch Einstellungen, die nur die Ansicht **Erweitert** zeigt; sie sind mit **Erweitert** gekennzeichnet. Wählst du so einen Treffer, schaltet dieses Gerät auf **Erweitert**, öffnet die Seite der Gruppe und hebt die Zeile kurz hervor.
+
+Dieselben Treffer findest du auch in der [Suche über alles](/guide/concepts#search), die oben in der Leiste der Tabs liegt (im Kalender als **Termine suchen**).
+
 ## Die Gruppen {#the-areas}
 
 - **Persönlich** (sobald jemand ausgewählt ist; auf dem eigenen Handy immer): **Wusel** und **Was Wusel trägt**, der **Ton** beim Abhaken und auf dem eigenen Handy die **Benachrichtigungen**: **Erinnerungen** auf diesem Handy, Morgenübersicht, Erinnerung vor Terminen, Einpack-Erinnerung und wann unsichere Termine nachgefragt werden. Sie gelten nur für die ausgewählte Person (siehe [Wusel und Farben](/guide/wusel#how-lively))

@@ -3,6 +3,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/text/fold.dart';
+import 'package:wuselwall/core/text/search.dart';
 import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
@@ -1398,6 +1399,45 @@ class DemoCalendarRepository implements CalendarRepository {
         timezone: 'Europe/Berlin',
         occurrences: out,
         publicHolidays: holidays ? demoPublicHolidays(first, last) : null,
+      ),
+    );
+  }
+
+  /// The server's rule on the demo's data: every appointment 400 days either way that
+  /// says [query], one per event, its next date or else its last.
+  @override
+  Future<Result<EventSearchResult>> search(String query, {int? limit}) async {
+    final terms = searchTerms(query);
+    if (terms.isEmpty) return const Ok(EventSearchResult());
+    final today = dateOnly(_clock());
+    final window = await occurrences(
+      _addDays(today, -400),
+      _addDays(today, 400),
+    );
+    final hits = [
+      for (final o in window.unwrap().occurrences)
+        if (searchRank(terms, [o.title, o.location, o.description]) != null) o,
+    ];
+    final next = <String, Occurrence>{};
+    final last = <String, Occurrence>{};
+    for (final o in hits) {
+      if (o.localEndDate.isBefore(today)) {
+        last[o.eventId] = o;
+      } else {
+        next.putIfAbsent(o.eventId, () => o);
+      }
+    }
+    final cap = limit ?? 30;
+    final upcoming = next.values.toList();
+    final past = [
+      for (final o in last.values)
+        if (!next.containsKey(o.eventId)) o,
+    ]..sort((a, b) => b.start.compareTo(a.start));
+    return Ok(
+      EventSearchResult(
+        upcoming: upcoming.take(cap).toList(),
+        past: past.take(cap).toList(),
+        more: upcoming.length > cap || past.length > cap,
       ),
     );
   }

@@ -52,6 +52,9 @@ on the parent's phone gives `kid` or `kiosk`.
   packing list and to-dos, the comparison of options with combinations, the time windows and
   discovery. Adults only; the kid register and the wall see the calendar entry and the
   countdown.
+- Search (*added 2026-11-28*, FR-10, [below](#search)): not a tab. A magnifier in the home
+  bar beside the gear opens it; the Calendar tab has its own entry, which starts with the
+  appointments. Adults only.
 - Settings: account and sign-in methods; members (edit, order, invite) and invitations;
   devices (connect, rename, revoke); the family (name, timezone, export, delete); household
   settings, presence baselines, feed tokens, subscribed calendars, reminders, getting
@@ -142,6 +145,43 @@ left out rather than shown as a card.
 - The **week board** (below): the standard screen, seven days at once.
 - Tap-through detail: one day in full, one child's Stundenplan, one member's tasks.
   Everything reverts to the week board after 60 s.
+
+## Search
+
+*Built 2026-11-28 (issue #299), FR-10.* One page (`/search`, `features/search`), one field
+that has the focus when the page opens, and under it what answers, grouped by kind in the
+order of the home's tabs: appointments (then past appointments), chores and rewards, recipes
+(title and tags), open items of the shopping lists, settings.
+
+- **Two sources.** Chores, rewards, recipes, shopping items and settings are what the app
+  already holds; they are searched on the device as each letter is typed and work without
+  network. Appointments are asked of the server ([05](05-module-calendar.md#finding-an-appointment)),
+  350 ms after the last keystroke; their section holds its place with a progress line while
+  the answer is under way, so only its rows move what is below.
+- **One rule** for all of it (`core/text/search.dart`): the folding of the shopping search,
+  every word has to be found, a title match first. The same field widget everywhere
+  (`core/ui/search_field.dart`): a magnifier, a hint that says what is searched, a button
+  that empties it.
+- **Five rows a section**, then *Alle n zeigen*: five kinds share one screen. From the
+  calendar (`/search?scope=events`) the page shows appointments only, all of them.
+- **A result leads to its thing**: an appointment to its day in the calendar, a chore or
+  reward to its editor, a recipe to the recipe, a shopping item to its list in the Shopping
+  tab, a setting to its group's page with the row in view
+  ([21](21-household-settings.md#finding-a-setting)). Settings are among the answers only for
+  someone who may open all of Einstellungen.
+- **Where it opens.** The magnifier stands beside the gear on every adult home tab but the
+  calendar's. That bar is full (a 48 px button there pushes the date or "Heute" out, and the
+  module picture of [26](26-colour-and-ambience.md) keeps its place), so the calendar's
+  toolbar has the entry itself: a button after the four view buttons where the bar shows
+  them, the last entry of the view menu elsewhere.
+- **Not** on the wall (FR-8.12) and not in the kid register.
+- **List filters** (FR-10.4): the chores and the rewards under Tasks get the same field above
+  the list from seven entries on (`listFilterFrom`, the wish picker's rule for recipes); below
+  that the eye is quicker than the keyboard. The recipes page, which had its own field, uses
+  the shared one.
+
+Not built: past meals and shopping history ("when did we last buy it?"), which would ride on
+the same function, and a filter for the family's own table questions.
 
 ## Gestures
 

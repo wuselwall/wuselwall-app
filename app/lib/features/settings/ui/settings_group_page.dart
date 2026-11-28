@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
@@ -7,6 +10,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
@@ -44,10 +48,16 @@ class SettingsGroupPage extends ConsumerWidget {
     this.showViewSwitch = true,
     this.title,
     this.subtitle,
+    this.focusRow,
     super.key,
   });
 
   final SettingsGroup group;
+
+  /// The row a search result led here for ([SettingsItem.rowId], the link's `row`): the
+  /// page scrolls to it and marks it for a moment. Null, or a row this device does not
+  /// show, changes nothing.
+  final String? focusRow;
   final String parentRoute;
   final bool showViewSwitch;
 
@@ -85,6 +95,11 @@ class SettingsGroupPage extends ConsumerWidget {
         body: ContentWidth(
           child: ListView(
             padding: const EdgeInsets.all(Tokens.space4),
+            // A list builds only what is near the screen, and a row that is not built
+            // cannot be scrolled to: with a row to show, the whole page is built.
+            scrollCacheExtent: focusRow == null
+                ? null
+                : const ScrollCacheExtent.pixels(_wholePage),
             children: [
               if (hasSettings && settings.isLoading && !settings.hasValue)
                 const LinearProgressIndicator(),
@@ -98,10 +113,16 @@ class SettingsGroupPage extends ConsumerWidget {
               for (final (i, section) in sections.indexed) ...[
                 _SectionHeader(title: _headingOf(l10n, section), first: i == 0),
                 for (final item in section.items)
-                  switch (item) {
-                    SettingKey(:final key) => _SettingRowItem(settingKey: key),
-                    SettingTileItem(:final tile) => _tileWidget(tile),
-                  },
+                  _FocusedRow(
+                    key: ValueKey('settings-row-${item.rowId}'),
+                    focused: item.rowId == focusRow,
+                    child: switch (item) {
+                      SettingKey(:final key) => _SettingRowItem(
+                        settingKey: key,
+                      ),
+                      SettingTileItem(:final tile) => _tileWidget(tile),
+                    },
+                  ),
               ],
               if (hasHiddenSettings(env, group: group))
                 const MoreSettingsHint(),
@@ -109,6 +130,78 @@ class SettingsGroupPage extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Far more than any group page is long, so [SettingsGroupPage.focusRow] is always built.
+const _wholePage = 20000.0;
+
+/// A row of the page. The one a search result named ([focused]) is brought into view
+/// when the page opens and tinted for a moment, so the eye finds it among its neighbours;
+/// where motion is off (specs/26) it is there at once and the tint stays.
+class _FocusedRow extends StatefulWidget {
+  const _FocusedRow({required this.focused, required this.child, super.key});
+
+  final bool focused;
+  final Widget child;
+
+  @override
+  State<_FocusedRow> createState() => _FocusedRowState();
+}
+
+class _FocusedRowState extends State<_FocusedRow>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _fade;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.focused) return;
+    _fade = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final moves = motionAllowed(context);
+      unawaited(
+        Scrollable.ensureVisible(
+          context,
+          alignment: 0.2,
+          duration: moves ? const Duration(milliseconds: 300) : Duration.zero,
+          curve: Curves.easeOut,
+        ),
+      );
+      if (moves) unawaited(_fade!.forward());
+    });
+  }
+
+  @override
+  void dispose() {
+    _fade?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fade = _fade;
+    if (fade == null) return widget.child;
+    final tint = Theme.of(context).colorScheme.secondaryContainer;
+    return AnimatedBuilder(
+      animation: fade,
+      builder: (context, child) => DecoratedBox(
+        key: const ValueKey('settings-row-focused'),
+        decoration: BoxDecoration(
+          // Full for the first two thirds, then gone.
+          color: tint.withValues(
+            alpha: 1 - const Interval(0.66, 1).transform(fade.value),
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: child,
+      ),
+      child: widget.child,
     );
   }
 }
@@ -155,54 +248,47 @@ class _SectionHeader extends StatelessWidget {
 /// The widget of a row that is not a catalogue setting.
 Widget _tileWidget(SettingsTile tile) => switch (tile) {
   SettingsTile.familyProfile => const _NavTile(
+    tile: SettingsTile.familyProfile,
     tileKey: 'settings-family',
     icon: Icons.family_restroom_outlined,
     route: Routes.familyProfile,
-    title: _familyProfileTitle,
-    subtitle: _familyProfileSubtitle,
     basicSubtitle: _familyProfileSubtitleBasic,
   ),
   SettingsTile.members => const _NavTile(
+    tile: SettingsTile.members,
     tileKey: 'settings-members',
     icon: Icons.groups_outlined,
     route: Routes.settingsMembers,
-    title: _membersTitle,
-    subtitle: _membersSubtitle,
   ),
   SettingsTile.baselines => const _NavTile(
+    tile: SettingsTile.baselines,
     tileKey: 'settings-baselines',
     icon: Icons.home_outlined,
     route: Routes.baselines,
-    title: _baselineTitle,
-    subtitle: _baselineSubtitle,
   ),
   SettingsTile.reminders => const _NavTile(
+    tile: SettingsTile.reminders,
     tileKey: 'settings-reminders',
     icon: Icons.notifications_outlined,
     route: Routes.reminders,
-    title: _remindersTitle,
-    subtitle: _remindersSubtitle,
   ),
   SettingsTile.feedTokens => const _NavTile(
+    tile: SettingsTile.feedTokens,
     tileKey: 'settings-feeds',
     icon: Icons.rss_feed,
     route: Routes.feedTokens,
-    title: _feedTitle,
-    subtitle: _feedSubtitle,
   ),
   SettingsTile.externalCalendars => const _NavTile(
+    tile: SettingsTile.externalCalendars,
     tileKey: 'settings-external-calendars',
     icon: Icons.cloud_download_outlined,
     route: Routes.externalCalendars,
-    title: _extCalTitle,
-    subtitle: _extCalSubtitle,
   ),
   SettingsTile.services => const _NavTile(
+    tile: SettingsTile.services,
     tileKey: 'settings-services',
     icon: Icons.cloud_queue_outlined,
     route: Routes.servicesSettings,
-    title: _servicesTitle,
-    subtitle: _servicesSubtitle,
   ),
   SettingsTile.familyQuestions => const FamilyQuestionsTile(),
   SettingsTile.language => const LanguageTile(),
@@ -219,44 +305,24 @@ Widget _tileWidget(SettingsTile tile) => switch (tile) {
   SettingsTile.licences => const LicencesTile(),
 };
 
-String _familyProfileTitle(AppLocalizations l10n) => l10n.familyProfileTitle;
-String _familyProfileSubtitle(AppLocalizations l10n) =>
-    l10n.familySettingsSubtitle;
 String _familyProfileSubtitleBasic(AppLocalizations l10n) =>
     l10n.familySettingsSubtitleBasic;
-String _membersTitle(AppLocalizations l10n) => l10n.settingsMembers;
-String _membersSubtitle(AppLocalizations l10n) => l10n.settingsMembersSubtitle;
-String _baselineTitle(AppLocalizations l10n) => l10n.baselineTitle;
-String _baselineSubtitle(AppLocalizations l10n) =>
-    l10n.baselineSettingsSubtitle;
-String _remindersTitle(AppLocalizations l10n) => l10n.reminderSettingsTitle;
-String _remindersSubtitle(AppLocalizations l10n) =>
-    l10n.reminderSettingsSubtitle;
-String _feedTitle(AppLocalizations l10n) => l10n.feedTitle;
-String _feedSubtitle(AppLocalizations l10n) => l10n.feedSettingsSubtitle;
-String _extCalTitle(AppLocalizations l10n) => l10n.extCalTitle;
-String _extCalSubtitle(AppLocalizations l10n) => l10n.extCalSettingsSubtitle;
-String _servicesTitle(AppLocalizations l10n) => l10n.settingsServicesTitle;
-String _servicesSubtitle(AppLocalizations l10n) =>
-    l10n.settingsServicesSubtitle;
 
-/// A row that opens another settings page. [basicSubtitle] names what that page shows in
-/// Basic, where it shows less.
+/// A row that opens another settings page, titled as [settingsTileText] says.
+/// [basicSubtitle] names what that page shows in Basic, where it shows less.
 class _NavTile extends ConsumerWidget {
   const _NavTile({
+    required this.tile,
     required this.tileKey,
     required this.icon,
     required this.route,
-    required this.title,
-    required this.subtitle,
     this.basicSubtitle,
   });
 
+  final SettingsTile tile;
   final String tileKey;
   final IconData icon;
   final String route;
-  final String Function(AppLocalizations l10n) title;
-  final String Function(AppLocalizations l10n) subtitle;
   final String Function(AppLocalizations l10n)? basicSubtitle;
 
   @override
@@ -264,14 +330,15 @@ class _NavTile extends ConsumerWidget {
     final l10n = context.l10n;
     final basic = basicSubtitle;
     final advanced = ref.watch(settingsEnvProvider).advanced;
+    final text = settingsTileText(l10n, tile);
     return ListTile(
       key: ValueKey(tileKey),
       // The page already pads 16 px: flush, the icon and chevron line up with the
       // headings and the setting rows, as "Unsere Fragen" does.
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon),
-      title: Text(title(l10n)),
-      subtitle: Text(basic == null || advanced ? subtitle(l10n) : basic(l10n)),
+      title: Text(text.title),
+      subtitle: Text(basic == null || advanced ? text.help : basic(l10n)),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => context.go(route),
     );

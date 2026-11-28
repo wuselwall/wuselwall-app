@@ -10,6 +10,14 @@ La vista solo cambia lo que ves: los ajustes ocultos siguen activos. Una nota al
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 
+## Buscar en los ajustes {#search}
+
+Arriba de la página está el campo **Buscar en los ajustes**. En cuanto escribes, una lista de resultados sustituye a los grupos: muestra cada ajuste y cada fila que encaja, de todos los grupos. Cada resultado indica su nombre, el grupo (y la sección) donde está y su explicación. Mayúsculas, minúsculas, diéresis y tildes no importan.
+
+La búsqueda también encuentra ajustes que solo muestra la vista **Avanzados**; llevan la marca **Avanzados**. Si eliges uno, este dispositivo pasa a la vista **Avanzados**, abre la página del grupo y resalta un momento la fila.
+
+Los mismos resultados aparecen en la [búsqueda general](/es/guide/concepts#search), en la barra superior de las pestañas (en el Calendario: **Buscar eventos**).
+
 ## Los grupos {#the-areas}
 
 - **Personal** (en cuanto hay alguien elegido; siempre en tu propio teléfono): **Wusel** y **La ropa de Wusel**, el **sonido** de las tareas y, en tu propio teléfono, las **notificaciones**: **Recordatorios** en este teléfono, resumen matinal, recordatorio antes de las citas, recordatorio de material y aviso de eventos inciertos. Solo afectan a la persona elegida (ver [Wusel y los colores](/es/guide/wusel#how-lively)).

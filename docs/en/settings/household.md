@@ -10,6 +10,14 @@ The view changes only what you see: hidden settings still apply. A note at the b
 
 Every setting has a **default**, which WuselWall suggests. It suits most families. If your value differs, the setting says **Customised**. **Reset to default** brings it back at any time.
 
+## Searching the settings {#search}
+
+At the top of the page is the **Search settings** field. As soon as you type, a list of results replaces the groups: it shows every matching setting and row from all groups. Each result shows its name, the group (and section) it lives in, and its explanation. Upper and lower case, umlauts and accents do not matter.
+
+The search also finds settings that only the **Advanced** view shows; they are marked **Advanced**. If you choose one, this device switches to **Advanced**, opens the group's page and briefly highlights the row.
+
+The same results are in the [search over everything](/en/guide/concepts#search) in the bar at the top of the tabs (in the Calendar as **Search events**).
+
 ## The groups {#the-areas}
 
 - **Personal** (as soon as someone is chosen; always on your own phone): **Wusel** and **Wusel's outfit**, the **sound** when a chore is ticked and, on your own phone, the **notifications**: **Reminders** on this phone, the morning summary, the reminder before appointments, the packing reminder and when uncertain appointments are asked about. They apply only to the person chosen (see [Wusel and colours](/en/guide/wusel#how-lively))

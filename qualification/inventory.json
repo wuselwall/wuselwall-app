@@ -358,6 +358,22 @@
       ]
     },
     {
+      "id": "search",
+      "widget": "SearchPage",
+      "titleKey": "searchTitle",
+      "scenario": "adult",
+      "route": "/search",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ]
+    },
+    {
       "id": "family-profile",
       "widget": "FamilyPage",
       "titleKey": "familyProfileTitle",

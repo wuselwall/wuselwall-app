@@ -35,6 +35,17 @@ class CalendarRepository {
     parse: (json) => OccurrenceWindow.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// The appointments that say [query] (FR-10.2): the `search` Edge Function, which
+  /// reads as the caller and expands series. Not stored: an answer to a query is asked
+  /// again, and without the server there is none. Only on servers that announce `search`.
+  Future<Result<EventSearchResult>> search(String query, {int? limit}) =>
+      _api.function(
+        'search',
+        body: {'query': query.trim(), 'limit': ?limit},
+        parse: (json) =>
+            EventSearchResult.fromJson(json! as Map<String, dynamic>),
+      );
+
   /// One event for the editor. Missing or deleted events are a [NotFoundFailure].
   Future<Result<CalendarEvent>> event(String id) async {
     final rows = await _api.select(

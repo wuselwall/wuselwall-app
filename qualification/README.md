@@ -4,7 +4,7 @@ The [qualification design](../specs/accessibility-and-ui-qualification.md) is im
 as a manually dispatched evidence suite and an enforced beta/live app/server release gate.
 During alpha it is optional; [release policy and routine steps](../specs/releasing.md)
 require ordinary app/security/backend checks without the exhaustive matrix. The shared
-inventory contains 84 states and accounts for every release route. Two exclusions are
+inventory contains 85 states and accounts for every release route. Two exclusions are
 checked against the production router: the legacy settings redirect and the developer-only
 diagnostics page. Route coverage does not mean every dialog, permission state or backend
 journey has been exercised.
