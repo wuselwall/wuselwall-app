@@ -31,6 +31,7 @@ import 'package:wuselwall/features/kid/ui/kid_new_badge.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/application/today_tradition_provider.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
@@ -858,6 +859,10 @@ class _EventsSection extends ConsumerWidget {
                               ),
                         ),
                       ),
+                      if (eventIconAsset(o.iconKey) case final asset?) ...[
+                        EmojiPicture(asset, size: 40),
+                        const SizedBox(width: Tokens.space3),
+                      ],
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
