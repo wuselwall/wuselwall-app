@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertFalse } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals, assertFalse } from "jsr:@std/assert@1.0.19";
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
 import {
   type EventRow,

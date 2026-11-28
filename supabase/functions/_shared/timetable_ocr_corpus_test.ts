@@ -3,7 +3,7 @@
 // A tuning that changes a sheet's grid fails here, so no sheet is lost in silence. The
 // expectations are the parser's reading at the time they were written: when a change reads a
 // sheet better, update them deliberately (specs/24 "Recognition roadmap", step 7).
-import { assertEquals } from "jsr:@std/assert@1.0.13";
+import { assertEquals } from "jsr:@std/assert@1.0.19";
 import { type OcrLine, parseTimetableScan } from "./timetable_ocr.ts";
 
 type Expected = {

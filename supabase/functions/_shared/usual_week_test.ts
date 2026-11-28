@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert@1.0.13";
+import { assertEquals } from "jsr:@std/assert@1.0.19";
 import { abWeekOf, isoWeekday, usualDay, usualOn, type UsualSlotRow, type UsualWeekRow } from "./usual_week.ts";
 
 const slot = (p: Partial<UsualSlotRow> & { weekday: number; state: string }): UsualSlotRow => ({

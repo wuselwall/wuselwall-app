@@ -14572,6 +14572,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You are the only parent with a signed-in account. If you lose access to your authenticator, another parent cannot reset your second factor. Invite a second parent and have them sign in first, or keep a separate backup of your authenticator. Otherwise you will need help from whoever runs your server. Turn on anyway?'**
   String get totpSingleGuardianWarning;
+
+  /// No description provided for @packItemTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Something to bring'**
+  String get packItemTile;
+
+  /// No description provided for @packItemTileHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For one child, on one day'**
+  String get packItemTileHelp;
+
+  /// No description provided for @packItemAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Something to bring'**
+  String get packItemAdd;
+
+  /// No description provided for @packItemWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who brings it'**
+  String get packItemWho;
+
+  /// No description provided for @packItemWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get packItemWhen;
+
+  /// No description provided for @packItemToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get packItemToday;
+
+  /// No description provided for @packItemTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get packItemTomorrow;
+
+  /// No description provided for @packItemDayAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Day after tomorrow'**
+  String get packItemDayAfter;
+
+  /// No description provided for @packItemOtherDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Another day …'**
+  String get packItemOtherDay;
+
+  /// No description provided for @packItemWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What'**
+  String get packItemWhat;
+
+  /// No description provided for @packItemWhatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. gym bag, signed form'**
+  String get packItemWhatHint;
+
+  /// No description provided for @packItemSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get packItemSave;
+
+  /// No description provided for @packItemSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Noted for {name}: {title}'**
+  String packItemSaved(String name, String title);
+
+  /// No description provided for @packItemRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {title}'**
+  String packItemRemove(String title);
+
+  /// No description provided for @packItemRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} removed'**
+  String packItemRemoved(String title);
+
+  /// No description provided for @errPackItemInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That can’t be noted: up to 80 characters, for a child of the family, at most 20 things a day.'**
+  String get errPackItemInvalid;
+
+  /// No description provided for @errPackItemNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This thing to bring is no longer on the list.'**
+  String get errPackItemNotFound;
+
+  /// No description provided for @errPackItemNotYours.
+  ///
+  /// In en, this message translates to:
+  /// **'You can note things only for yourself.'**
+  String get errPackItemNotYours;
 }
 
 class _AppLocalizationsDelegate

@@ -9,6 +9,7 @@ import {
   regionCovers,
 } from "./openholidays.ts";
 import type { HolidayRow, SchoolDayJson, TimetableJson } from "./school.ts";
+import type { PackItemJson } from "./school_data.ts";
 import { usualDay, type UsualJson, type UsualWeekRow } from "./usual_week.ts";
 
 /** A row of `api.busy_until` (profile_id, on_date, until). */
@@ -59,6 +60,8 @@ export type BoardDayJson = {
   holiday?: DayHolidayJson | null;
   /** Each member's usual places; absent from servers before the usual week (issue #81). */
   usual?: UsualJson[];
+  /** The one-off things to bring of the day (specs/15); absent from servers before them. */
+  pack?: PackItemJson[];
   [key: string]: unknown;
 };
 
@@ -212,6 +215,21 @@ export function fillSchool(
     days: base.days.map((day) => ({
       ...day,
       school: days.filter((s) => s.date === day.date),
+    })),
+  };
+}
+
+/**
+ * Returns a new board with each day's `pack`: the one-off things to bring dated that day, in
+ * the order given (school_data.ts sorts them), for every child, with a timetable or not.
+ * `base` is not mutated.
+ */
+export function fillPack(base: BoardJson, items: PackItemJson[]): BoardJson {
+  return {
+    ...base,
+    days: base.days.map((day) => ({
+      ...day,
+      pack: items.filter((i) => i.date === day.date),
     })),
   };
 }

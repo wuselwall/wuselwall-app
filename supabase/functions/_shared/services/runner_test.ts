@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.19";
 import { makeServices, normaliseQuery, type CacheRow, type ChainEntry, type ServiceDb } from "./runner.ts";
 import {
   CACHE_TTL_SECONDS,

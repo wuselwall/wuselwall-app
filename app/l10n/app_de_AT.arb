@@ -14,5 +14,6 @@
   "mealIcon_pancakes": "Palatschinken",
   "mealIcon_potato": "Erdäpfel",
   "eventStarterSchoolTrip": "Wandertag",
-  "eventStarterSchoolTest": "Schularbeit"
+  "eventStarterSchoolTest": "Schularbeit",
+  "packItemWhatHint": "z. B. Turnsackerl, unterschriebener Zettel"
 }

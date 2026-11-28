@@ -11,7 +11,8 @@
 //
 // The household setting school.equipment_hint (specs/21, FR-7.12) is applied here too: when
 // it is off, the subjects' equipment notes are left out, so no lesson carries equipment and
-// no "Morgen einpacken" appears anywhere, whatever the app version.
+// no "Morgen einpacken" appears anywhere, whatever the app version. It does not touch the
+// one-off things to bring (api.pack_items, specs/15): what a person wrote down for a day shows.
 import type { userClient } from "./client.ts";
 import type { HolidayFeedRow } from "./openholidays.ts";
 import { countriesFromRegions } from "./openholidays.ts";
@@ -38,6 +39,25 @@ export type SchoolLoad = SchoolData & {
   locale: string;
   /** The public holiday cache rows that overlap the window and cover a region in use. */
   publicFeed: HolidayFeedRow[];
+  /** The one-off things to bring dated inside the window (empty before the migration). */
+  packItems: PackItemJson[];
+};
+
+/** An api.pack_items row. */
+export type PackItemRow = {
+  id: string;
+  profile_id: string;
+  on_date: string;
+  title: string;
+  created_at: string;
+};
+
+/** One thing to bring as the functions answer it: by date, then in the order it was noted. */
+export type PackItemJson = {
+  id: string;
+  member_id: string;
+  date: string;
+  title: string;
 };
 
 /** The rows of one query, or its error thrown. */
@@ -75,6 +95,7 @@ export async function loadSchoolData(
     exceptions,
     ownHolidays,
     household,
+    packItems,
   ] = await Promise.all([
     rows<SchoolRow>(client.from("schools").select("*")),
     rows<PeriodRow>(client.from("school_periods").select("*")),
@@ -93,6 +114,7 @@ export async function loadSchoolData(
         .lte("starts_on", to).gte("ends_on", from),
     ),
     loadHousehold(client),
+    loadPackItems(client, from, to),
   ]);
 
   const subjectsShown = household.equipmentHint
@@ -121,7 +143,43 @@ export async function loadSchoolData(
     householdRegion: household.region,
     locale: household.locale,
     publicFeed,
+    packItems,
   };
+}
+
+/**
+ * The one-off things to bring dated `from`..`to` (inclusive), in the answer's order. Functions
+ * deployed before the pack-items migration find no view and answer none.
+ */
+export async function loadPackItems(
+  client: Client,
+  from: string,
+  to: string,
+): Promise<PackItemJson[]> {
+  const { data, error } = await client.from("pack_items")
+    .select("id, profile_id, on_date, title, created_at")
+    .gte("on_date", from).lte("on_date", to);
+  if (error) {
+    const code = (error as { code?: string }).code;
+    if (code === "PGRST205" || code === "42P01") return [];
+    throw error;
+  }
+  return packItemsJson((data ?? []) as PackItemRow[]);
+}
+
+/** The rows as the functions answer them, by date, then by when they were noted. */
+export function packItemsJson(rows: PackItemRow[]): PackItemJson[] {
+  return [...rows]
+    .sort((a, b) =>
+      a.on_date.localeCompare(b.on_date) ||
+      a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id)
+    )
+    .map((r) => ({
+      id: r.id,
+      member_id: r.profile_id,
+      date: r.on_date,
+      title: r.title,
+    }));
 }
 
 /**

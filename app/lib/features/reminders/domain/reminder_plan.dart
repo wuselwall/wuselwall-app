@@ -26,9 +26,9 @@ class ReminderPlan {
   final List<Reminder> reminders;
 }
 
-/// What one child is to pack for a school day: the equipment of that day's lessons
-/// (FR-7.12, the projection's `equipment`), already empty when the household switched
-/// the hint off.
+/// What one child is to pack for a day: the equipment of that day's lessons (FR-7.12, the
+/// projection's `equipment`, already empty when the household switched the hint off),
+/// then the things a person noted for the day (FR-7.15).
 class PackList {
   const PackList({
     required this.day,
@@ -37,7 +37,7 @@ class PackList {
     required this.items,
   });
 
-  /// The school day the things are for.
+  /// The day the things are for.
   final DateTime day;
   final String profileId;
   final String name;

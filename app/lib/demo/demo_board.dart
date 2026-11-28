@@ -3,6 +3,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
+import 'package:wuselwall/demo/demo_pack.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/usual_week.dart';
@@ -300,6 +301,7 @@ Map<String, dynamic> _json(DateTime now) {
               ? {'name': _freeDay, 'source': 'household'}
               : null,
           'events': _events(i),
+          'pack': DemoPackItems.between(dates[i], dates[i]),
           // As the server does it: nothing usual on the free day.
           'usual': [
             if (i != _holidayDay)

@@ -3,7 +3,7 @@ import {
   assertEquals,
   assertStringIncludes,
   assertThrows,
-} from "jsr:@std/assert@1.0.13";
+} from "jsr:@std/assert@1.0.19";
 import {
   escapeHtml,
   FALLBACK_SUBJECT,
