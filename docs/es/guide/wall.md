@@ -27,7 +27,7 @@ Un día por venir en el que no hay nada lo dice: «Todavía no hay nada previsto
 
 Al final hay una tarjeta **Compra**, pero solo si la familia ha activado la compra para los niños (ver [más abajo](#kids-switches)). Abre las tarjetas; **Atrás** vuelve a la página.
 
-En un dispositivo compartido, la fila de nombres se queda abajo para pasar el dispositivo a otra persona (ver [¿Quién eres?](/es/guide/who-are-you)).
+En un dispositivo compartido, **su nombre con una puerta**, abajo a la derecha, pasa el dispositivo a otra persona cuando ha terminado (ver [¿Quién eres?](/es/guide/who-are-you)).
 
 ### Niños de 12 años o más {#older-children}
 

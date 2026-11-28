@@ -6,7 +6,6 @@ import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
-import 'package:wuselwall/core/ui/system_bars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/last_updated.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
@@ -177,32 +176,27 @@ class _KidSimpleHomeState extends ConsumerState<KidSimpleHome> {
               ),
               const StaleStrip(),
               Expanded(
-                child: SafeArea(
-                  top: false,
-                  bottom: false,
-                  child: KidDecorScope(
-                    decor: decor,
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          maxWidth: KidHome.maxContentWidth,
+                child: WithActingProfileBar(
+                  // Who is here floats over the page (#311); a child's own phone has
+                  // none.
+                  child: SafeArea(
+                    top: false,
+                    bottom: false,
+                    child: KidDecorScope(
+                      decor: decor,
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: KidHome.maxContentWidth,
+                          ),
+                          child: body,
                         ),
-                        child: body,
                       ),
                     ),
                   ),
                 ),
               ),
             ],
-          ),
-          // Who is here: on a shared device the avatars, where the child hands the
-          // device on. A child's own phone has none.
-          bottomNavigationBar: SystemBars(
-            navigationColor: Theme.of(context).colorScheme.surfaceContainer,
-            child: MediaQuery.withClampedTextScaling(
-              maxScaleFactor: 1.3,
-              child: const ActingProfileBar(),
-            ),
           ),
         ),
       ),

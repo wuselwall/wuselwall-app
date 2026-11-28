@@ -27,7 +27,7 @@ Un jour à venir sans rien de prévu le dit : « Rien n’est encore prévu. »
 
 À la fin se trouve une carte **Courses**, mais seulement si la famille a activé les courses pour les enfants (voir [plus bas](#kids-switches)). Elle ouvre les tuiles ; **Retour** ramène à la page.
 
-Sur un appareil partagé, la rangée des prénoms reste en bas, pour passer l’appareil à quelqu’un d’autre (voir [Qui êtes-vous ?](/fr/guide/who-are-you)).
+Sur un appareil partagé, **son prénom avec une porte**, en bas à droite, passe l’appareil à quelqu’un d’autre quand il a terminé (voir [Qui êtes-vous ?](/fr/guide/who-are-you)).
 
 ### Enfants de 12 ans et plus {#older-children}
 

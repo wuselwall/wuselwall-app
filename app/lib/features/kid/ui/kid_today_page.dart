@@ -863,6 +863,8 @@ class KidEventsSection extends ConsumerWidget {
       data: (w) {
         final list = kidEventsFor(w.occurrences, actor, day);
         if (list.isEmpty) return const SizedBox.shrink();
+        // When one card has a picture, the others keep its place, so the titles line up.
+        final anyPicture = list.any((o) => eventIconAsset(o.iconKey) != null);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -870,7 +872,7 @@ class KidEventsSection extends ConsumerWidget {
             for (final o in list)
               Padding(
                 padding: const EdgeInsets.only(bottom: Tokens.space2),
-                child: KidEventCard(occurrence: o),
+                child: KidEventCard(occurrence: o, pictureSlot: anyPicture),
               ),
           ],
         );
@@ -882,9 +884,17 @@ class KidEventsSection extends ConsumerWidget {
 /// One appointment as a kid card: its picture where it has one, the time, the title
 /// and the place.
 class KidEventCard extends StatelessWidget {
-  const KidEventCard({required this.occurrence, super.key});
+  const KidEventCard({
+    required this.occurrence,
+    this.pictureSlot = false,
+    super.key,
+  });
 
   final Occurrence occurrence;
+
+  /// Keeps the picture's place when this appointment has none, so its time lines up
+  /// with the cards of the same day that have one.
+  final bool pictureSlot;
 
   @override
   Widget build(BuildContext context) {
@@ -898,7 +908,8 @@ class KidEventCard extends StatelessWidget {
           if (picture != null) ...[
             ExcludeSemantics(child: EmojiPicture(picture, size: 40)),
             const SizedBox(width: Tokens.space3),
-          ],
+          ] else if (pictureSlot)
+            const SizedBox(width: 40 + Tokens.space3),
           // The time's own column, so the titles of a day line up; a gap after it,
           // since "3:30 PM" fills the column.
           ConstrainedBox(

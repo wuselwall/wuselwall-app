@@ -1,0 +1,13 @@
+# The Python packages of the text recognition image (Dockerfile). Pinned here, in a file of
+# their own, so that Dependabot proposes updates and CI's audit job (osv-scanner) reads them.
+# What these packages need themselves (Starlette, OpenCV, ...) is resolved when the image is
+# built, so a rebuild brings their fixes.
+rapidocr==3.10.0
+onnxruntime==1.32.0
+fastapi==0.165.0
+uvicorn==0.54.0
+python-multipart==0.0.34
+pillow==13.0.0
+pillow-heif==1.8.1
+pypdfium2==5.15.2
+numpy==2.5.5

@@ -27,7 +27,7 @@ A day ahead with nothing on it says: "Nothing is planned yet."
 
 At the end is a **Shopping** card, but only if the family has switched on shopping for children (see [below](#kids-switches)). It opens the tiles; **Back** returns to the page.
 
-On a shared device the row of names stays at the bottom, so the device can be handed to someone else (see [Who are you?](/en/guide/who-are-you)).
+On a shared device, **their name with a door** at the bottom right hands the device on when they are done (see [Who are you?](/en/guide/who-are-you)).
 
 ### Children aged 12 and older {#older-children}
 

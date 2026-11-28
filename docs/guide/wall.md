@@ -27,7 +27,7 @@ Ein Tag in der Zukunft, an dem nichts ansteht, sagt: „Noch ist nichts geplant.
 
 Am Ende steht die Karte **Einkaufen**, aber nur, wenn die Familie das Einkaufen für Kinder eingeschaltet hat (siehe [unten](#kids-switches)). Sie öffnet die Kacheln; mit **Zurück** geht es wieder zur Seite.
 
-Auf einem geteilten Gerät bleibt unten die Reihe der Namen stehen, damit das Gerät weitergereicht werden kann (siehe [Wer bist du?](/guide/who-are-you)).
+Auf einem geteilten Gerät gibt unten rechts **sein Name mit einer Tür** das Gerät weiter, wenn es fertig ist (siehe [Wer bist du?](/guide/who-are-you)).
 
 ### Kinder ab 12 {#older-children}
 

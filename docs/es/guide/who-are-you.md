@@ -6,9 +6,11 @@ En dispositivos compartidos y en la pantalla de pared, toca **tu nombre y color*
 
 Sin elegir un nombre no se puede modificar nada. En la pantalla de pared, la selección desaparece tras **un minuto sin tocar**, para que nadie actúe por accidente con tu nombre.
 
+Cuando has tocado tu nombre, los nombres dejan sitio a la página. Abajo a la derecha aparece entonces **tu nombre con una puerta**. Tócalo cuando hayas **terminado**: el dispositivo vuelve a no ser de nadie y pregunta a la siguiente persona.
+
 ## Lo que ven los niños {#what-children-see}
 
-Cuando un **niño menor de 12 años** toca su nombre, se abre su **vista sencilla** en cualquier dispositivo compartido: una página sin pestañas, solo con sus propias cosas (ver [Tableta infantil](/es/guide/wall#simple-view)). La fila de nombres se queda abajo para pasar el dispositivo a otra persona. Un niño de 12 años o más conserva sus pestañas en la tableta infantil, y en la tableta para todos las pestañas de los adultos, sin **Calendario** ni **Compra** donde estén desactivados para los niños.
+Cuando un **niño menor de 12 años** toca su nombre, se abre su **vista sencilla** en cualquier dispositivo compartido: una página sin pestañas, solo con sus propias cosas (ver [Tableta infantil](/es/guide/wall#simple-view)). Abajo a la derecha, **su nombre con una puerta** pasa el dispositivo a otra persona cuando ha terminado. Un niño de 12 años o más conserva sus pestañas en la tableta infantil, y en la tableta para todos las pestañas de los adultos, sin **Calendario** ni **Compra** donde estén desactivados para los niños.
 
 Mientras nadie haya tocado su nombre, una **tableta para todos** muestra las pestañas que un niño puede ver, porque puede haber un niño delante. **Compra** y **Calendario** faltan entonces donde los padres los han desactivado para los niños en [Ajustes → Familia](/es/settings/household#the-areas) (**Compra para los niños**, **Calendario para los niños**). En cuanto un adulto toca su nombre, todo vuelve.
 
@@ -28,7 +30,7 @@ Cuando el dispositivo vuelve a «nadie», por ejemplo tras un minuto sin tocar l
 
 ## El PIN de los padres {#the-guardian-pin}
 
-Añadir o bloquear dispositivos está reservado a los padres. En un dispositivo **compartido**, toca tu nombre e introduce tu **PIN de seis cifras**. La autorización dura **5 minutos** —menos en cuanto alguien toca otro nombre, la pared vuelve a «nadie» o sales de los ajustes— y solo es tuya: elegir otro nombre no transfiere permisos.
+Añadir o bloquear dispositivos está reservado a los padres. En un dispositivo **compartido**, toca tu nombre e introduce tu **PIN de seis cifras**. La autorización dura **5 minutos** —menos en cuanto tocas tu nombre con la puerta abajo a la derecha, la pared vuelve a «nadie» o sales de los ajustes— y solo es tuya: quien toca su nombre después de ti no recibe tus permisos.
 
 Un error muestra los intentos restantes. Tras varios errores hay que esperar; con diez, el PIN queda bloqueado. Puedes desbloquearlo o cambiar uno olvidado desde **tu móvil personal conectado**, en **Ajustes → Cuenta y seguridad → Seguridad → PIN de los padres**. El nuevo PIN funciona inmediatamente.
 

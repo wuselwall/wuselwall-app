@@ -225,8 +225,9 @@ void main() {
     expect(find.byType(ActingProfileBar), findsNothing);
 
     await _pickEmma(tester);
-    // Picked: the bar comes back to switch between children.
+    // Picked: the bar is back as the way out, for the next child.
     expect(find.byType(ActingProfileBar), findsOneWidget);
+    expect(find.byKey(const ValueKey('acting-exit')), findsOneWidget);
     await unmountApp(tester, container);
   });
 

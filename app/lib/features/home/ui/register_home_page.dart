@@ -198,15 +198,22 @@ class RegisterHomePage extends ConsumerWidget {
                 child: Column(
                   children: [
                     const StaleStrip(),
-                    Expanded(child: section.body),
-                    const ActingProfileBar(),
+                    Expanded(child: WithActingProfileBar(child: section.body)),
                   ],
                 ),
               ),
             ],
           ),
         ),
-        floatingActionButton: section.fab?.call(context),
+        // A page's own floating buttons sit above the person bar of a shared device.
+        floatingActionButton: section.fab == null
+            ? null
+            : Padding(
+                padding: EdgeInsets.only(
+                  bottom: ActingProfileBar.extentOf(context, ref),
+                ),
+                child: section.fab!(context),
+              ),
         bottomNavigationBar: adult && !rail
             ? _AdultNavBar(
                 tabs: tabs,

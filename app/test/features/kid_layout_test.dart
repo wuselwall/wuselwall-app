@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
-import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
 import 'package:wuselwall/features/kid/ui/kid_picker.dart';
 import 'package:wuselwall/features/kid/ui/kid_today_page.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
@@ -190,18 +189,11 @@ void main() {
         findsOneWidget,
       );
       _expectOneLine(tester);
-      // The whole family in one row, every name whole.
-      final tops = {
-        for (final m in _members)
-          tester.getTopLeft(find.byKey(ValueKey('avatar-${m.id}'))).dy,
-      };
-      expect(tops, hasLength(1));
-      for (final m in _members) {
-        expect(
-          tester.getRect(find.byKey(ValueKey('avatar-${m.id}'))).right,
-          lessThanOrEqualTo(320),
-        );
-      }
+      // Someone is here: the family's row is gone, and the way out is on the page.
+      expect(find.byKey(const ValueKey('acting-dock')), findsNothing);
+      final exit = tester.getRect(find.byKey(const ValueKey('acting-exit')));
+      expect(exit.left, greaterThanOrEqualTo(0));
+      expect(exit.right, lessThanOrEqualTo(320));
       await unmountApp(tester, container);
     },
   );
@@ -267,22 +259,38 @@ void main() {
     await unmountApp(tester, container);
   });
 
-  testWidgets('on a phone the family fits one row of the avatar bar', (
+  testWidgets('on a small phone the family fits one row of the dock', (
     tester,
   ) async {
     final container = await pumpApp(
       tester,
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _chores(),
-      size: _phone,
+      size: const Size(320, 568),
     );
-    await _pickEmma(tester);
+    // The family's page is open to everyone: nobody is chosen, the dock asks.
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Familie'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    // The whole family in one row, every circle on the screen.
     final tops = {
       for (final m in _members)
         tester.getTopLeft(find.byKey(ValueKey('avatar-${m.id}'))).dy,
     };
     expect(tops, hasLength(1));
-    expect(tester.getSize(find.byType(ActingProfileBar)).height, lessThan(130));
+    for (final m in _members) {
+      final circle = tester.getRect(find.byKey(ValueKey('avatar-${m.id}')));
+      expect(circle.left, greaterThanOrEqualTo(0), reason: m.displayName);
+      expect(circle.right, lessThanOrEqualTo(320), reason: m.displayName);
+    }
+    expect(
+      tester.getSize(find.byKey(const ValueKey('acting-dock'))).height,
+      lessThan(130),
+    );
     await unmountApp(tester, container);
   });
 

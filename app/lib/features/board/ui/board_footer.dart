@@ -281,29 +281,25 @@ class _WallShopping extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // A child under twelve who taps their name here gets their simple view, which has
     // the list where the family offers it (the detail closes itself, board_detail.dart).
-    return Column(
-      children: [
-        Expanded(
-          child: ref.watch(shoppingOfferedProvider)
-              ? const ShoppingBody()
-              : Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Text(
-                      context.l10n.boardShoppingAskAdult,
-                      key: const ValueKey('wall-shopping-adults'),
-                      style: boardUi(
-                        28,
-                        weight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+    // The bar floats over the list, as on every page with it (#311).
+    return WithActingProfileBar(
+      child: ref.watch(shoppingOfferedProvider)
+          ? const ShoppingBody()
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  context.l10n.boardShoppingAskAdult,
+                  key: const ValueKey('wall-shopping-adults'),
+                  style: boardUi(
+                    28,
+                    weight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-        ),
-        const ActingProfileBar(),
-      ],
+              ),
+            ),
     );
   }
 }

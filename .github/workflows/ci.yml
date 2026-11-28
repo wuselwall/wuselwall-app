@@ -132,8 +132,8 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     env:
-      OSV_VERSION: v2.6.0
-      OSV_SHA256: ca69b3d3cd08f889a49dc0a383122f71cc528b83803671df5fd874d97485b108
+      OSV_VERSION: v2.7.1
+      OSV_SHA256: fb7dab19a8bd9bbe5c3189f09d4b7ee1820c9553a23bac202648a56efd2f6ee8
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
@@ -141,6 +141,10 @@ jobs:
           curl -fsSLo osv-scanner "https://github.com/google/osv-scanner/releases/download/$OSV_VERSION/osv-scanner_linux_amd64"
           echo "$OSV_SHA256  osv-scanner" | sha256sum -c
           chmod +x osv-scanner
-          ./osv-scanner scan source --lockfile=app/pubspec.lock \
+          # --no-resolve: the text recognition image's requirements.txt is read as it is
+          # written. Left to guess what those packages need in turn, the scanner invents
+          # versions the image never installs (requests 2.9.2, h11 0.9.0) and reports them.
+          ./osv-scanner scan source --no-resolve --lockfile=app/pubspec.lock \
             --lockfile=app/ios/Gemfile.lock --lockfile=app/android/Gemfile.lock \
-            --lockfile=package-lock.json
+            --lockfile=package-lock.json --lockfile=scripts/local-pgtap/package-lock.json \
+            --lockfile=infra/supabase/ocr/requirements.txt
