@@ -40,6 +40,8 @@ Einrichten, im Ordner des Stacks:
 2. Den Container bauen und starten: `docker compose --profile ocr up -d --build`. Beim ersten Bau lädt er die Erkennungsmodelle (etwa 20 MB) herunter; danach läuft er ohne Internet.
 3. Die Funktionen neu starten, damit sie die Adresse kennen: `docker compose restart functions`.
 
+Bei jedem Update baut `wuselwall update` den Container neu, damit er die aktuellen Fassungen seiner Programmteile bekommt. Das dauert höchstens ein paar Minuten und braucht Internet. Schlägt der Bau fehl, läuft der alte Container weiter, und das Update sagt, wie ihr den Bau nachholt.
+
 Danach bietet die App unter **Einlesen…** den Punkt **Foto scannen** an. Ohne diese Zeile fehlt er nicht, aber die App sagt, dass der Server keine Texterkennung hat. Die Erkennung nutzt RapidOCR mit den PP-OCR-Modellen von PaddleOCR (beides Apache-2.0, derselbe Unterbau, den auch die Fotoverwaltung Immich für ihre Texterkennung verwendet).
 
 Mit dem Bild schickt die App ihre Sprache und die Namen und Kürzel eurer Fächer. So liest der Server eure Wörter als eure Fächer. Die Funktion nimmt Fotos (JPEG, PNG, WebP, HEIC) und PDF-Dateien bis 6 MB an, nur von einem Gerät eurer Familie und höchstens zehnmal in zehn Minuten je Konto, speichert nichts und schreibt kein Bild ins Protokoll. Der Container liest Bilder bis 40 Megapixel und hängt an einem eigenen, internen Docker-Netz, das nur die Funktionen erreichen; er kommt weder ins Internet noch ins Heimnetz. Was der Server vom Blatt liest und wo seine Grenzen sind, steht unter [Stundenplan einlesen](/school/#stundenplan-einlesen).
