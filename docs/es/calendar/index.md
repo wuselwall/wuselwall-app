@@ -84,7 +84,7 @@ Para esta cita sustituye tu ajuste personal **Antes de una cita**: no llega una 
 
 Al final del editor hay tres cosas que hacen el día más ligero (ver [Rituales](/es/guide/rituals)):
 
-- **Imagen**: una de 37 imágenes, como una tarta, el zoo, el dentista, una bici o la limpieza que viene. Acompaña al evento en la pared y en su cuenta atrás. Mientras escribes el título, WuselWall propone una imagen adecuada, por ejemplo el diente para «Dentista». Aparece también al principio del campo del título y solo va enmarcada hasta que tocas tú una imagen o **Sin imagen**; a partir de ahí se queda tu elección. Si nada encaja, queda **Sin imagen**.
+- **Imagen**: una de 37 imágenes, como una tarta, el zoo, el dentista, una bici o la limpieza que viene. Acompaña al evento en **Hoy**, en el calendario, en la pared y en su cuenta atrás. Mientras escribes el título, WuselWall propone una imagen adecuada, por ejemplo el diente para «Dentista». Aparece también al principio del campo del título y solo va enmarcada hasta que tocas tú una imagen o **Sin imagen**; a partir de ahí se queda tu elección. Si nada encaja, queda **Sin imagen**.
 - **Nos hace ilusión**: el evento tiene cuenta atrás en la pantalla de pared y en la tableta de los niños, por ejemplo «Excursión al zoo: 3 noches más».
 - **Tradición familiar**: algo que la familia hace una y otra vez, como la noche de juegos. Una tradición está siempre en la pared, con una cinta. En **Con comida** escribes la comida que la acompaña y eliges **Almuerzo** o **Cena**.
 

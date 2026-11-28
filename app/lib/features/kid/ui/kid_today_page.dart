@@ -31,6 +31,7 @@ import 'package:wuselwall/features/kid/ui/kid_new_badge.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/application/today_tradition_provider.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
@@ -844,6 +845,8 @@ class _EventsSection extends ConsumerWidget {
       data: (w) {
         final list = kidEventsFor(w.occurrences, actor, today);
         if (list.isEmpty) return const SizedBox.shrink();
+        // When one card has a picture, the others keep its place, so the titles line up.
+        final anyPicture = list.any((o) => eventIconAsset(o.iconKey) != null);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -856,7 +859,8 @@ class _EventsSection extends ConsumerWidget {
                     children: [
                       SizedBox(
                         width: 104,
-                        child: Text(
+                        // "ganztägig" shrinks rather than breaking mid-word (specs/09).
+                        child: WholeWordsText(
                           o.localStarts == null
                               ? l10n.kidAllDay
                               : context.time(o.localStarts!),
@@ -870,6 +874,16 @@ class _EventsSection extends ConsumerWidget {
                               ),
                         ),
                       ),
+                      if (anyPicture) ...[
+                        SizedBox.square(
+                          dimension: 40,
+                          child: switch (eventIconAsset(o.iconKey)) {
+                            final asset? => EmojiPicture(asset, size: 40),
+                            null => null,
+                          },
+                        ),
+                        const SizedBox(width: Tokens.space3),
+                      ],
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

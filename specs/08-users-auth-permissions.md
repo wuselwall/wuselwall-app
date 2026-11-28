@@ -198,12 +198,17 @@ profile, and is never left signed in on a machine others use.
 
 ## Profile switching UX
 
-- **Shared and kiosk devices:** a persistent avatar row along one edge. Tap to become
-  that person; the accent colour of the whole interface changes to theirs, so "who am I
-  right now" is answerable from two metres away without reading.
+- **Shared and kiosk devices:** while nobody is chosen, a dock with the family's avatars
+  floats over the end of the page and asks who is here. Tap to become that person; the
+  accent colour of the whole interface changes to theirs, so "who am I right now" is
+  answerable from two metres away without reading. The dock then leaves the page to that
+  person, and a button at the bottom end shows their avatar and name with a door: a tap
+  gives the device back to nobody and ends an open PIN window. Becoming someone else is
+  two taps (leave, then choose), so nobody acts under the name that was left selected
+  ([09](09-clients-and-ux.md#who-is-here), decided 2026-11-28, issue #306).
 - **Kiosk:** after 60 seconds of inactivity, revert to no active profile and return to
   the family dashboard. Nobody stays logged in as the last person to walk past.
-- **Personal devices:** no avatar row at all. The profile is fixed and the UI does not
+- **Personal devices:** no dock and no button at all. The profile is fixed and the UI does not
   waste space implying otherwise.
 
 ## Audit log

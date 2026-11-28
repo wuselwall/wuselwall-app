@@ -86,7 +86,7 @@ Pour ce rendez-vous, il remplace votre réglage personnel **Avant un rendez-vous
 
 En bas de l’éditeur, trois réglages rendent le quotidien plus léger (voir [Rituels](/fr/guide/rituals)) :
 
-- **Image** : une des 37 images, comme un gâteau, le zoo, le dentiste, un vélo ou l’aide ménagère qui vient. Elle accompagne l’événement sur le mur et son compte à rebours. Pendant que tu tapes le titre, WuselWall propose une image qui convient, par exemple la dent pour « Dentiste ». Elle apparaît alors aussi au début du champ du titre et reste seulement entourée jusqu’à ce que tu touches toi-même une image ou **Pas d’image** ; ensuite ton choix reste. Si rien ne convient, c’est **Pas d’image**.
+- **Image** : une des 37 images, comme un gâteau, le zoo, le dentiste, un vélo ou l’aide ménagère qui vient. Elle accompagne l’événement dans **Aujourd’hui**, dans le calendrier, sur le mur et son compte à rebours. Pendant que tu tapes le titre, WuselWall propose une image qui convient, par exemple la dent pour « Dentiste ». Elle apparaît alors aussi au début du champ du titre et reste seulement entourée jusqu’à ce que tu touches toi-même une image ou **Pas d’image** ; ensuite ton choix reste. Si rien ne convient, c’est **Pas d’image**.
 - **On a hâte** : l’événement a un compte à rebours sur l’écran mural et la tablette des enfants, par exemple « Sortie au zoo : encore 3 dodos ».
 - **Tradition familiale** : ce que la famille fait encore et encore, comme la soirée jeux. Une tradition est toujours sur le mur, avec un ruban. **Avec un repas** indique le plat qui l’accompagne, au **Déjeuner** ou au **Dîner**.
 

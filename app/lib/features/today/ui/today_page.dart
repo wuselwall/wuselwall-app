@@ -7,6 +7,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
@@ -14,6 +15,7 @@ import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 import 'package:wuselwall/features/rituals/ui/ritual_cards.dart';
 import 'package:wuselwall/features/tasks/application/task_actions.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
@@ -246,7 +248,24 @@ class _EventRow extends StatelessWidget {
         ? l10n.todayAllDay
         : MaterialLocalizations.of(context)
               .formatTimeOfDay(start, alwaysUse24HourFormat: true);
+    final asset = eventIconAsset(event.iconKey);
     return ListTile(
+      // The event's picture, as a task row shows its own; a neutral calendar mark
+      // keeps the titles in line when it has none. The title says what it is.
+      leading: ExcludeSemantics(
+        child: SizedBox.square(
+          dimension: 28 * 1.4,
+          child: Center(
+            child: asset == null
+                ? Icon(
+                    Icons.event_outlined,
+                    size: 28,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  )
+                : EmojiPicture(asset, size: 28),
+          ),
+        ),
+      ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

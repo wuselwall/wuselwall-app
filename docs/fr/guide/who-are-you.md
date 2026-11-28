@@ -6,6 +6,8 @@ Sur une tablette partagée ou l’écran mural, touchez **votre prénom et votre
 
 Sans prénom sélectionné, aucune modification n’est possible. Sur l’écran mural, la sélection est effacée après **une minute sans interaction**, pour que la personne suivante n’agisse pas sous votre nom.
 
+Une fois votre prénom touché, les prénoms laissent la place à la page. En bas à droite s’affiche alors **votre prénom avec une porte**. Touchez-le quand vous avez **terminé** : l’appareil n’appartient de nouveau à personne et pose la question à la personne suivante.
+
 ## Les paramètres sur la tablette et au mur {#settings-on-shared-devices}
 
 Sur une **tablette pour tous**, la roue dentée des **Paramètres** n’apparaît que lorsque quelqu’un a touché son prénom. Ce que vous y trouvez dépend de qui vous êtes :
@@ -18,7 +20,7 @@ Quand l’appareil revient à « personne », par exemple après une minute sans
 
 ## Le PIN parental {#the-guardian-pin}
 
-L’ajout et le blocage d’appareils, entre autres, sont réservés aux parents. Sur un appareil **partagé**, touchez votre prénom et saisissez votre **PIN à six chiffres**. L’autorisation dure **5 minutes** – moins dès que quelqu’un touche un autre prénom, que le mur revient à « personne » ou que vous quittez les paramètres – et reste liée à vous : une autre personne qui touche son prénom n’obtient pas vos droits.
+L’ajout et le blocage d’appareils, entre autres, sont réservés aux parents. Sur un appareil **partagé**, touchez votre prénom et saisissez votre **PIN à six chiffres**. L’autorisation dure **5 minutes** – moins dès que vous touchez votre prénom avec la porte en bas à droite, que le mur revient à « personne » ou que vous quittez les paramètres – et reste liée à vous : la personne qui touche son prénom après vous n’obtient pas vos droits.
 
 Un PIN erroné affiche le nombre d’essais restants. Après plusieurs erreurs, il faut patienter ; après dix, le PIN est bloqué.
 

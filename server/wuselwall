@@ -20,7 +20,8 @@
 #   update [release.tar.gz | version] [--allow-downgrade]
 #                         backup, then the new release's stack, migrations and jobs; a
 #                         release is checked (signature, checksum) before it is unpacked,
-#                         and one older than the installed release needs --allow-downgrade
+#                         and one older than the installed release needs --allow-downgrade.
+#                         Rebuilds the text recognition image when the server uses it.
 #   verify <release.tar.gz | version>
 #                         only the check: downloads a version into a temporary directory
 #   backup [label]        a dump of the whole database into backups/ (BACKUP_DIR)
@@ -522,6 +523,24 @@ cmd_verify() {
   rm -rf "$dir"
 }
 
+# The text recognition image (stack/ocr) is built on this server, and Compose never builds an
+# image that exists: without this step an update would leave it on the Python packages and
+# the base image of the day it was first built, with their known flaws. Only on a server
+# that uses the stack's own container (OCR_URL names the service `ocr`). Docker's cache
+# keeps it short when neither the release nor the base image changed; otherwise it takes a
+# few minutes and needs the internet. A failed build never stops the update: the old image
+# keeps reading, and the warning says how to try again.
+uses_own_ocr() { grep -Eq "^OCR_URL=['\"]?http://ocr[:/]" "$STACK/.env"; }
+rebuild_ocr() {
+  uses_own_ocr || return 0
+  say "Rebuilding the text recognition image"
+  if compose build --pull ocr; then
+    ocr_rebuilt=1
+  else
+    warn "the text recognition image was not rebuilt and keeps its old packages. Try again: ./wuselwall compose build --pull ocr && ./wuselwall compose up -d ocr"
+  fi
+}
+
 cmd_update() {
   local release='' allow='' arg
   for arg in "$@"; do
@@ -556,7 +575,11 @@ cmd_update() {
   sh "$STACK/mail-language.sh" "$STACK/.env"
   # The release the app's settings show (the discovery document's server_version).
   set_env WW_SERVER_VERSION "$(cat "$ROOT/VERSION")"
+  ocr_rebuilt=''
+  rebuild_ocr
   compose up -d --remove-orphans
+  # Named, so it also restarts on a server that started it with --profile ocr by hand.
+  [ -z "$ocr_rebuilt" ] || compose up -d ocr
   wait_for_db
   wait_for_stack
   say "Database changes"

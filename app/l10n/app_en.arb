@@ -113,6 +113,15 @@
     }
   },
   "actingWho": "Who are you?",
+  "actingDone": "{name} is done",
+  "@actingDone": {
+    "description": "Label of the button a person taps on a shared device or the wall when they are done: the device belongs to nobody again.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "pinTitle": "Parent PIN",
   "pinPrompt": "Enter the PIN for {name}",
   "@pinPrompt": {

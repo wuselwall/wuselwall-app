@@ -95,6 +95,14 @@
     }
   },
   "actingWho": "Wer bist du?",
+  "actingDone": "{name} ist fertig",
+  "@actingDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "pinTitle": "PIN für Eltern",
   "pinPrompt": "PIN für {name} eingeben",
   "@pinPrompt": {
