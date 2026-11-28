@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash, generateKeyPairSync, randomBytes, sign } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { delimiter, dirname, join } from 'node:path';
@@ -289,7 +289,8 @@ test('update rebuilds the text recognition image only where the stack\'s own con
     rmSync(log, { force: true });
     const result = run(`STACK='${server}/stack'; ocr_rebuilt=''; rebuild_ocr; echo "rebuilt=$ocr_rebuilt"`, { ...env, ...extra }, server);
     assert.equal(result.status, 0, result.stderr);
-    const asked = spawnSync('cat', [log], { encoding: 'utf8' }).stdout.trim();
+    // The fake docker writes the log only when it is called.
+    const asked = existsSync(log) ? readFileSync(log, 'utf8').trim() : '';
     return { asked, out: result.stdout, err: result.stderr };
   };
   // As the server guide writes the line, as make-env.mjs quotes values, and with a path only.
