@@ -20,7 +20,7 @@ Los padres ven también en **Hoy** lo que espera: la tarjeta **Pendiente de tu a
 
 En la pestaña de tareas, crea una y elige:
 
-- imagen: mientras escribes el título, WuselWall propone una imagen adecuada, por ejemplo los platos para «Vaciar el lavavajillas»; va enmarcada en claro hasta que eliges tú;
+- icono: mientras escribes el título, WuselWall propone una imagen adecuada, por ejemplo los platos para «Vaciar el lavavajillas»; va enmarcada en claro hasta que eliges tú;
 - tipo: obligación, esperada de todos con pocos puntos, o bonus opcional;
 - puntos;
 - repetición: una vez, diaria, laborables, semanal, quincenal o mensual;
