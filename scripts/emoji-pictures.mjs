@@ -189,6 +189,25 @@ const sets = {
     swim: 'Water wave/Flat/water_wave_flat.svg', ferris: 'Ferris wheel/Flat/ferris_wheel_flat.svg',
     house: 'House/Flat/house_flat.svg', star: 'Star/Flat/star_flat.svg',
     broom: 'Broom/Flat/broom_flat.svg',
+    // The cleaner comes: there is no emoji of a person cleaning, so one is layered (see
+    // `layers` below), a person with a bucket and a mop. The broom stays the chore.
+    cleaner: [
+      { file: 'Broom/Flat/broom_flat.svg', size: 0.7, left: 0.3, top: 0.1 },
+      { file: 'Person/Default/Flat/person_flat_default.svg', size: 0.75, left: 0, top: 0.05 },
+      { file: 'Bucket/Flat/bucket_flat.svg', size: 0.5, left: 0.5, top: 0.5 },
+    ],
+    // Health and care.
+    doctor: 'Stethoscope/Flat/stethoscope_flat.svg', dentist: 'Tooth/Flat/tooth_flat.svg',
+    haircut: 'Person getting haircut/Default/Flat/person_getting_haircut_flat_default.svg',
+    vet: 'Paw prints/Flat/paw_prints_flat.svg',
+    // Sports and hobbies.
+    bicycle: 'Bicycle/Flat/bicycle_flat.svg', ski: 'Skier/Flat/skier_flat.svg',
+    dance: 'Ballet shoes/Flat/ballet_shoes_flat.svg', riding: 'Horse/Flat/horse_flat.svg',
+    tennis: 'Tennis/Flat/tennis_flat.svg', guitar: 'Guitar/Flat/guitar_flat.svg',
+    // Home and errands.
+    laundry: 'Basket/Flat/basket_flat.svg', garden: 'Seedling/Flat/seedling_flat.svg',
+    car: 'Automobile/Flat/automobile_flat.svg', work: 'Briefcase/Flat/briefcase_flat.svg',
+    shopping: 'Shopping bags/Flat/shopping_bags_flat.svg',
   },
   // Dishes: the pictures of recipes, meal suggestions and meal wishes (specs/27
   // "Wunschessen"); meal_wish.icon_key, and the icon_key app.meal_icon_for() picks from a
@@ -264,6 +283,24 @@ async function render(svg, px) {
     .toBuffer();
 }
 
+// A picture made of several: each layer's SVG drawn at a fraction of the picture's size
+// ([size]) and placed at fractions of it ([left], [top]), first layer at the back.
+async function renderLayers(key, layers, px) {
+  const parts = [];
+  for (const { file, size, left, top } of layers) {
+    const svg = await fetchSvg(key, file);
+    parts.push({
+      input: await render(svg, Math.round(px * size)),
+      left: Math.round(px * left),
+      top: Math.round(px * top),
+    });
+  }
+  return sharp({ create: { width: px, height: px, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite(parts)
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+}
+
 // Sets named on the command line only (`node scripts/emoji-pictures.mjs events`), so adding a
 // set does not rewrite the others' files; all of them without arguments.
 const only = process.argv.slice(2);
@@ -280,9 +317,11 @@ for (const [set, icons] of Object.entries(sets)) {
     await fs.mkdir(dir, { recursive: true });
   }
   for (const key of Object.keys(icons)) {
-    const svg = await fetchSvg(key, icons[key]);
+    const source = icons[key];
+    const svg = Array.isArray(source) ? null : await fetchSvg(key, source);
     for (const { dir, px } of SIZES) {
-      await fs.writeFile(path.join(dir, `${key}.png`), await render(svg, px));
+      const png = svg ? await render(svg, px) : await renderLayers(key, source, px);
+      await fs.writeFile(path.join(dir, `${key}.png`), png);
     }
     total += 1;
     console.log(`${set}/${key}`);

@@ -6250,6 +6250,54 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventIcon_broom => 'Limpieza';
 
   @override
+  String get eventIcon_cleaner => 'Viene la limpieza';
+
+  @override
+  String get eventIcon_doctor => 'Médico';
+
+  @override
+  String get eventIcon_dentist => 'Dentista';
+
+  @override
+  String get eventIcon_haircut => 'Peluquería';
+
+  @override
+  String get eventIcon_vet => 'Veterinario';
+
+  @override
+  String get eventIcon_bicycle => 'Bici';
+
+  @override
+  String get eventIcon_ski => 'Esquí';
+
+  @override
+  String get eventIcon_dance => 'Baile';
+
+  @override
+  String get eventIcon_riding => 'Equitación';
+
+  @override
+  String get eventIcon_tennis => 'Tenis';
+
+  @override
+  String get eventIcon_guitar => 'Instrumento';
+
+  @override
+  String get eventIcon_laundry => 'Colada';
+
+  @override
+  String get eventIcon_garden => 'Jardín';
+
+  @override
+  String get eventIcon_car => 'Coche';
+
+  @override
+  String get eventIcon_work => 'Trabajo';
+
+  @override
+  String get eventIcon_shopping => 'Compras';
+
+  @override
   String get eventIcon_star => 'Especial';
 
   @override

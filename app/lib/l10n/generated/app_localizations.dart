@@ -10399,6 +10399,102 @@ abstract class AppLocalizations {
   /// **'Cleaning'**
   String get eventIcon_broom;
 
+  /// No description provided for @eventIcon_cleaner.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaner comes'**
+  String get eventIcon_cleaner;
+
+  /// No description provided for @eventIcon_doctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor'**
+  String get eventIcon_doctor;
+
+  /// No description provided for @eventIcon_dentist.
+  ///
+  /// In en, this message translates to:
+  /// **'Dentist'**
+  String get eventIcon_dentist;
+
+  /// No description provided for @eventIcon_haircut.
+  ///
+  /// In en, this message translates to:
+  /// **'Hairdresser'**
+  String get eventIcon_haircut;
+
+  /// No description provided for @eventIcon_vet.
+  ///
+  /// In en, this message translates to:
+  /// **'Vet'**
+  String get eventIcon_vet;
+
+  /// No description provided for @eventIcon_bicycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycling'**
+  String get eventIcon_bicycle;
+
+  /// No description provided for @eventIcon_ski.
+  ///
+  /// In en, this message translates to:
+  /// **'Skiing'**
+  String get eventIcon_ski;
+
+  /// No description provided for @eventIcon_dance.
+  ///
+  /// In en, this message translates to:
+  /// **'Dance'**
+  String get eventIcon_dance;
+
+  /// No description provided for @eventIcon_riding.
+  ///
+  /// In en, this message translates to:
+  /// **'Riding'**
+  String get eventIcon_riding;
+
+  /// No description provided for @eventIcon_tennis.
+  ///
+  /// In en, this message translates to:
+  /// **'Tennis'**
+  String get eventIcon_tennis;
+
+  /// No description provided for @eventIcon_guitar.
+  ///
+  /// In en, this message translates to:
+  /// **'Instrument'**
+  String get eventIcon_guitar;
+
+  /// No description provided for @eventIcon_laundry.
+  ///
+  /// In en, this message translates to:
+  /// **'Laundry'**
+  String get eventIcon_laundry;
+
+  /// No description provided for @eventIcon_garden.
+  ///
+  /// In en, this message translates to:
+  /// **'Garden'**
+  String get eventIcon_garden;
+
+  /// No description provided for @eventIcon_car.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get eventIcon_car;
+
+  /// No description provided for @eventIcon_work.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get eventIcon_work;
+
+  /// No description provided for @eventIcon_shopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get eventIcon_shopping;
+
   /// No description provided for @eventIcon_star.
   ///
   /// In en, this message translates to:

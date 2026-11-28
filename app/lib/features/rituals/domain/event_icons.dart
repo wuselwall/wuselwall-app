@@ -12,7 +12,14 @@ const eventIconKeys = [
   'hiking',
   'beach', //
   'plane', 'zoo', 'tent', 'football', 'music', 'gift', 'balloon', 'backpack', //
-  'swim', 'ferris', 'house', 'broom', 'star',
+  'swim', 'ferris', 'house', 'broom', 'cleaner', //
+  // Health and care.
+  'doctor', 'dentist', 'haircut', 'vet', //
+  // Sports and hobbies.
+  'bicycle', 'ski', 'dance', 'riding', 'tennis', 'guitar', //
+  // Home and errands.
+  'laundry', 'garden', 'car', 'work', 'shopping', //
+  'star',
 ];
 
 /// The picture of [key]; null for none or an icon this app does not know.
@@ -43,5 +50,21 @@ String eventIconName(AppLocalizations l10n, String key) => switch (key) {
   'ferris' => l10n.eventIcon_ferris,
   'house' => l10n.eventIcon_house,
   'broom' => l10n.eventIcon_broom,
+  'cleaner' => l10n.eventIcon_cleaner,
+  'doctor' => l10n.eventIcon_doctor,
+  'dentist' => l10n.eventIcon_dentist,
+  'haircut' => l10n.eventIcon_haircut,
+  'vet' => l10n.eventIcon_vet,
+  'bicycle' => l10n.eventIcon_bicycle,
+  'ski' => l10n.eventIcon_ski,
+  'dance' => l10n.eventIcon_dance,
+  'riding' => l10n.eventIcon_riding,
+  'tennis' => l10n.eventIcon_tennis,
+  'guitar' => l10n.eventIcon_guitar,
+  'laundry' => l10n.eventIcon_laundry,
+  'garden' => l10n.eventIcon_garden,
+  'car' => l10n.eventIcon_car,
+  'work' => l10n.eventIcon_work,
+  'shopping' => l10n.eventIcon_shopping,
   _ => l10n.eventIcon_star,
 };
