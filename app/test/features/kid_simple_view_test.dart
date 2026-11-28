@@ -225,6 +225,14 @@ Future<ProviderContainer> _pump(
 /// Takes the device as [who]: from the picker the kids' tablet shows to nobody, else
 /// from the avatar bar, as a child does.
 Future<void> _choose(WidgetTester t, String who) async {
+  // Someone is still here: since #311 they leave first (the button with the door),
+  // then the next person chooses their name.
+  final exit = find.byKey(const ValueKey('acting-exit'));
+  if (exit.evaluate().isNotEmpty) {
+    await t.ensureVisible(exit);
+    await t.tap(exit);
+    await t.pumpAndSettle();
+  }
   final picker = find.byKey(ValueKey('kid-pick-$who'));
   final avatar = picker.evaluate().isNotEmpty
       ? picker
