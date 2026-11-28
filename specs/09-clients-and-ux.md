@@ -384,7 +384,7 @@ place to type, and a mis-tap while cooking must not be able to change data.
 | Tap | Opens | Reverts |
 |---|---|---|
 | A day column | That day in full: every appointment, every child's lessons, every meal | 60 s |
-| A child's row | That child's **Stundenplan for the week** — the paper timetable's own shape: numbered Stunden down the left with their bell times, weekdays across the top, today's column marked, Entfall struck through, Vertretung labelled, and a "morgen einpacken" line at the bottom | 60 s |
+| A child's row | That child's **Stundenplan for the week** — the paper timetable's own shape: numbered Stunden down the left with their bell times, weekdays across the top, today's column marked, Entfall struck through, Vertretung labelled, and a "morgen einpacken" line at the bottom (subjects' equipment plus the one-off things noted for that day, FR-7.15, with chips to add and remove while someone is acting) | 60 s |
 | An adult's row | That person's week: baseline, deviations, their appointments and what they are cooking | 60 s |
 | The meal zone | The week's meal plan; two taps to correct who is eating | 60 s |
 | A day's school cell (the `8:00–14:25`) | **That child's school day**: every Stunde with its bell times, subject and room, the long breaks between them, what is already over, plus Vertretung and Entfall in place — and the full week grid underneath with that day's column raised | 60 s |

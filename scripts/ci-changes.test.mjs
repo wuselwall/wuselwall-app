@@ -8,7 +8,7 @@ import { classifyPaths, detectChecks, fullChecks } from './ci-changes.mjs';
 
 const none = { app: false, browser: false, backend: false, edge: false };
 const app = { ...none, app: true };
-for (const file of ['docs/en/guide/setup.md', 'specs/20-onboarding.md', 'README.md', '.github/pull_request_template.md']) {
+for (const file of ['docs/en/guide/setup.md', 'specs/20-onboarding.md', 'README.md', '.github/pull_request_template.md', 'pr-screenshots/289-pack-items/after-my-day.png', '.agents/skills/request-to-pr/SKILL.md', '.claude/skills/request-to-pr', '.gitattributes']) {
   test(`documentation does not start app/database builds: ${file}`, () => assert.deepEqual(classifyPaths([file]), none));
 }
 for (const file of ['app/lib/features/household/ui/new_family_page.dart', 'app/lib/features/calendar/ui/calendar_page.dart', 'app/lib/demo/demo_repositories.dart', 'app/l10n/app_fr.arb', 'app/assets/picture.png', 'app/test/features/layout_test.dart']) {
@@ -27,7 +27,7 @@ test('migrations run the database; Edge Functions run the database and Deno', ()
   assert.deepEqual(classifyPaths(['supabase/functions/_shared/fixtures/timetables/expected.json']), { ...none, backend: true, edge: true });
 });
 test('dependencies, workflow/detector changes and unknown paths run everything', () => {
-  for (const file of ['package.json', 'package-lock.json', 'deno.lock', '.github/workflows/docs.yml', 'scripts/ci-changes.mjs', 'scripts/ci-gate.test.mjs', 'new-build-input/config', 'app/lib/core/new_transport/client.dart', 'app/lib/features/new_feature/service/client.dart']) {
+  for (const file of ['package.json', 'package-lock.json', 'deno.lock', '.github/workflows/docs.yml', 'scripts/ci-changes.mjs', 'scripts/ci-gate.test.mjs', 'new-build-input/config', '.claude/settings.json', '.agents/hooks/run.sh', 'app/lib/core/new_transport/client.dart', 'app/lib/features/new_feature/service/client.dart']) {
     assert.deepEqual(classifyPaths([file]), fullChecks(), file);
   }
 });

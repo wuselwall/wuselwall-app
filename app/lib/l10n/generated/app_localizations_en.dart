@@ -8766,4 +8766,66 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get totpSingleGuardianWarning =>
       'You are the only parent with a signed-in account. If you lose access to your authenticator, another parent cannot reset your second factor. Invite a second parent and have them sign in first, or keep a separate backup of your authenticator. Otherwise you will need help from whoever runs your server. Turn on anyway?';
+
+  @override
+  String get packItemTile => 'Something to bring';
+
+  @override
+  String get packItemTileHelp => 'For one child, on one day';
+
+  @override
+  String get packItemAdd => 'Something to bring';
+
+  @override
+  String get packItemWho => 'Who brings it';
+
+  @override
+  String get packItemWhen => 'When';
+
+  @override
+  String get packItemToday => 'Today';
+
+  @override
+  String get packItemTomorrow => 'Tomorrow';
+
+  @override
+  String get packItemDayAfter => 'Day after tomorrow';
+
+  @override
+  String get packItemOtherDay => 'Another day …';
+
+  @override
+  String get packItemWhat => 'What';
+
+  @override
+  String get packItemWhatHint => 'e.g. gym bag, signed form';
+
+  @override
+  String get packItemSave => 'Add';
+
+  @override
+  String packItemSaved(String name, String title) {
+    return 'Noted for $name: $title';
+  }
+
+  @override
+  String packItemRemove(String title) {
+    return 'Remove $title';
+  }
+
+  @override
+  String packItemRemoved(String title) {
+    return '$title removed';
+  }
+
+  @override
+  String get errPackItemInvalid =>
+      'That can’t be noted: up to 80 characters, for a child of the family, at most 20 things a day.';
+
+  @override
+  String get errPackItemNotFound =>
+      'This thing to bring is no longer on the list.';
+
+  @override
+  String get errPackItemNotYours => 'You can note things only for yourself.';
 }

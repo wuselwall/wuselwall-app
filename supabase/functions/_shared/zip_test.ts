@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects } from "jsr:@std/assert@1.0.13";
+import { assertEquals, assertRejects } from "jsr:@std/assert@1.0.19";
 import { crc32, type ZipEntry, zipChunks } from "./zip.ts";
 
 const encoder = new TextEncoder();

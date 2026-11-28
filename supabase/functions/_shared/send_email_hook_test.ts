@@ -2,7 +2,7 @@ import {
   assert,
   assertEquals,
   assertStringIncludes,
-} from "jsr:@std/assert@1.0.13";
+} from "jsr:@std/assert@1.0.19";
 import {
   deliveriesFor,
   type HookSettings,

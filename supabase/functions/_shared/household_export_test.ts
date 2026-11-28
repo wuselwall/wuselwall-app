@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert@1.0.13";
+import { assertEquals } from "jsr:@std/assert@1.0.19";
 import {
   type ExportPage,
   exportEntries,

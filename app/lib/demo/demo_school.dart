@@ -3,6 +3,7 @@ import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_holidays.dart';
+import 'package:wuselwall/demo/demo_pack.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 
@@ -239,8 +240,29 @@ class DemoSchoolRepository implements SchoolRepository {
             },
         ],
         'days': days,
+        'pack': DemoPackItems.between(_ymd(from), _ymd(to)),
       }),
     );
+  }
+
+  @override
+  Future<Result<String>> savePackItem({
+    required String? actor,
+    String? id,
+    required String profileId,
+    required DateTime date,
+    required String title,
+  }) async => Ok(
+    DemoPackItems.save(id: id, memberId: profileId, date: date, title: title),
+  );
+
+  @override
+  Future<Result<void>> deletePackItem({
+    required String? actor,
+    required String id,
+  }) async {
+    DemoPackItems.delete(id);
+    return const Ok(null);
   }
 
   Map<String, dynamic> _day(_Plan plan, DateTime date) {

@@ -45,6 +45,8 @@ Des tuiles s’affichent d’abord, pour ne pas tout saisir depuis le début :
 
 Ce que la tuile remplit n’est qu’un point de départ : modifiez ce qui change, puis enregistrez. **Retour** ramène aux tuiles.
 
+Sous **École**, il y a aussi **À apporter** (« Pour un enfant, un jour »). Ce n’est pas un événement : vous notez une chose ponctuelle pour un enfant, par exemple un sac de sport, et elle rejoint sa liste de cartable (voir [Noter une chose à apporter une seule fois](/fr/school/#one-off)).
+
 À côté de **Vacances / voyage** se trouve la tuile **Planifier un voyage** : elle ouvre [Voyages](/fr/trips/#find), où vous comparez des options, cherchez des périodes libres et préparez la liste de valise. **Vacances / voyage** ne crée en revanche qu’un simple rendez-vous.
 
 <Shot name="calendar-templates" alt="Nouvel événement avec des tuiles : Souvent chez vous, Vos modèles et des modèles comme Anniversaire et Invités à dîner" />

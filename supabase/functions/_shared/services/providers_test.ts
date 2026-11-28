@@ -3,7 +3,7 @@
 // days); the keyed providers' fixtures are written from the structures their documentation
 // shows, since no key was available. The fetch is always a fake that answers by URL and goes
 // through guardedFetch, so a plug-in that uses a host it did not declare fails here.
-import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.19";
 import { guardedFetch } from "./http.ts";
 import { alpha2 } from "./countries.ts";
 import { PROVIDERS } from "./registry.ts";

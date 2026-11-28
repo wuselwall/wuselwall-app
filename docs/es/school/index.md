@@ -162,7 +162,21 @@ Toca una clase para marcarla **cancelada**, con **suplencia** (docente y nota) o
 
 ## Preparar la mochila {#pack-for-tomorrow}
 
-La pared y la vista del día del niño muestran el material del día siguiente, como ropa de deporte. El móvil puede enviar un [recordatorio la víspera](/es/settings/reminders). Desactivar el aviso en los ajustes del hogar lo oculta en todas partes.
+La pared y la vista del día del niño muestran el material del día siguiente, como ropa de deporte. El móvil puede enviar un [recordatorio la víspera](/es/settings/reminders). Desactivar el aviso en los ajustes del hogar lo oculta en todas partes. Lo que hayáis [anotado una vez](#one-off) no se ve afectado.
+
+## Anotar algo para llevar una sola vez {#one-off}
+
+A veces algo hay que llevarlo solo una vez: la bolsa de deporte, un papel firmado, 5 francos para la excursión. Lo anotáis para un niño, en un día. Aparece donde aparece el material del horario, después de él, una sola vez.
+
+Hay tres maneras:
+
+- **Calendario → Nuevo evento → Para llevar** (en **Colegio**, «Para un niño, en un día»). Escribes **Qué** (hasta 80 caracteres), eliges **Quién lo lleva** (solo si hay más de un niño) y **Cuándo**: **Hoy**, **Mañana**, **Pasado mañana** u **Otro día …**. **Añadir** lo anota. Por defecto es mañana.
+- **Horario escolar**: bajo la semana de un niño, junto a «Preparar la mochila», las cosas de mañana aparecen como fichas. La × quita una, **Algo para llevar** añade una, también para otro día.
+- **Pared de la cocina**: toca el nombre de un niño. Mientras haya alguien elegido, están las mismas fichas para quitar y añadir.
+
+Sirve para cualquier niño y cualquier día, también para un niño sin horario o en sábado. Un adulto anota para cualquier niño, un niño solo para sí mismo. Lo mismo el mismo día se guarda una sola vez, y hay como máximo 20 por niño y día.
+
+El recordatorio de la víspera también las nombra, y Siri responde a «¿Qué tiene Mia mañana?» con «Para llevar: ropa de deporte y bolsa de deporte.» El ajuste **Material para mañana** en [Ajustes → Calendario y colegio](/es/settings/household) solo afecta al material del horario: lo que habéis anotado vosotros se muestra siempre. Si vuestro servidor aún no tiene la función, faltan la ficha y las fichas pequeñas y solo aparece el material del horario.
 
 ## Los niños informan de cambios {#children-report-changes}
 

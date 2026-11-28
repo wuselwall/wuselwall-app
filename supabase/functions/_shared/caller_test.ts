@@ -1,5 +1,5 @@
-import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
-import type { User } from "npm:@supabase/supabase-js@2.75.0";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.19";
+import type { User } from "npm:@supabase/supabase-js@2.119.2";
 import {
   aalOf,
   amrOf,

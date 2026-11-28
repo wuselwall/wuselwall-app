@@ -105,5 +105,6 @@
   "shoppingSearchClear": "Leeren und schliessen",
   "settingAmbienceStNicholasTitle": "Samichlaus",
   "eventImportTooLarge": "Diese Datei ist zu gross für einen einzelnen Termin.",
-  "eventImportUnreadable": "Die Datei liess sich nicht öffnen."
+  "eventImportUnreadable": "Die Datei liess sich nicht öffnen.",
+  "packItemWhatHint": "z. B. Turnsack, unterschriebener Zettel"
 }

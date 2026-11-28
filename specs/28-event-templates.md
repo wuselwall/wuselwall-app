@@ -98,6 +98,8 @@ children never sees it. The general section lists only the nine above. The tiles
 | Schulfest | balloon | 16:00 | 3 h | whole family | |
 | Sporttag der Schule | — (a running icon) | all day | 1 day | the children | |
 
+The *Schule* section also holds one tile that is not an event template: **Mitbringen** ("Für ein Kind, an einem Tag"; *added 2026-11-17, issue #289*). It opens a small sheet that notes a one-off thing for a child's packing list and writes no event ([15](15-module-school-timetable.md), FR-7.15); it hides on a server without the `pack-items` feature.
+
 Regional German names them as the school does: *Schulreise*, *Prüfung* and *Sporttag* in
 Switzerland, *Wandertag* and *Schularbeit* in
 Austria; *Elternabend*, *Elterngespräch*, *Schulfest* and the rest stay as in German.

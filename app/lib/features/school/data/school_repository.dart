@@ -95,6 +95,37 @@ class SchoolRepository {
     parse: (json) => SchoolWeek.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// Notes a thing [profileId] (a child) has to bring on [date], or changes the one with
+  /// [id] (specs/15 "One-off things to bring"). Answers its id; the same title again for
+  /// the same child and day answers the one already there. An adult for any child, a
+  /// child only for itself (`pack_item_not_yours`).
+  Future<Result<String>> savePackItem({
+    required String? actor,
+    String? id,
+    required String profileId,
+    required DateTime date,
+    required String title,
+  }) => _api.rpc(
+    'pack_item_save',
+    params: {
+      'p_actor': actor,
+      'p_id': id,
+      'p_profile_id': profileId,
+      'p_on_date': ymd(date),
+      'p_title': title,
+    },
+    parse: _id,
+  );
+
+  Future<Result<void>> deletePackItem({
+    required String? actor,
+    required String id,
+  }) => _api.rpc(
+    'pack_item_delete',
+    params: {'p_actor': actor, 'p_id': id},
+    parse: (_) {},
+  );
+
   /// [regionCode] is any depth (`DE-BE`, `CH-ZH-ZH-ZH`); null clears it. [timezone] is sent
   /// only when given: the server takes the household's for a new school and keeps the
   /// stored value of an existing one. [language] is the app's language; a new school's

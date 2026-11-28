@@ -24,6 +24,7 @@ import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/ui/lesson_sheet.dart';
 import 'package:wuselwall/features/school/ui/open_timetable_editor.dart';
+import 'package:wuselwall/features/school/ui/pack_item_sheet.dart';
 import 'package:wuselwall/features/school/ui/school_week_grid.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_menu.dart';
 
@@ -293,7 +294,9 @@ class _Week extends ConsumerWidget {
     final tomorrow = DateTime(now.year, now.month, now.day + 1);
     final pack = ref.watch(schoolWeekProvider((tomorrow, tomorrow)));
     final tomorrowItems =
-        pack.value?.dayOf(child.id, tomorrow)?.equipment ?? const <String>[];
+        pack.value?.toBringOf(child.id, tomorrow) ?? const <String>[];
+    final tomorrowNoted =
+        pack.value?.packOf(child.id, tomorrow) ?? const <PackItem>[];
 
     // The label column is measured per layout (real fonts, text scale): the full period
     // name over its bell times, which the week arrows give way to on a phone; only
@@ -407,6 +410,19 @@ class _Week extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ],
+                  // The things noted for tomorrow, to remove, and one more for any
+                  // day (specs/15 "One-off things to bring").
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: PackItemChips(
+                        childId: child.id,
+                        date: tomorrow,
+                        items: tomorrowNoted,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -3,7 +3,7 @@
 //
 // The client forwards the caller's JWT, so every read runs under RLS as that caller
 // (ADR-010). The one exception is serviceClient(), for functions without a user.
-import { createClient } from "npm:@supabase/supabase-js@2.75.0";
+import { createClient } from "npm:@supabase/supabase-js@2.119.2";
 
 export const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",

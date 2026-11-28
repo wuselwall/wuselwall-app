@@ -482,9 +482,13 @@ class SchoolWeekDay {
   final SchoolDay day;
 }
 
-/// `POST school-week` → `{timetables, days}`.
+/// `POST school-week` → `{timetables, days, pack}`.
 class SchoolWeek {
-  const SchoolWeek({required this.timetables, required this.days});
+  const SchoolWeek({
+    required this.timetables,
+    required this.days,
+    this.pack = const [],
+  });
 
   factory SchoolWeek.fromJson(Map<String, dynamic> json) => SchoolWeek(
     timetables: [
@@ -495,10 +499,18 @@ class SchoolWeek {
       for (final d in (json['days'] as List? ?? const []))
         SchoolWeekDay.fromJson(d as Map<String, dynamic>),
     ],
+    pack: [
+      for (final p in (json['pack'] as List? ?? const []))
+        PackItem.fromJson(p as Map<String, dynamic>),
+    ],
   );
 
   final List<BoardTimetable> timetables;
   final List<SchoolWeekDay> days;
+
+  /// The one-off things to bring of the window, for every child, with a timetable or not;
+  /// empty from servers before them.
+  final List<PackItem> pack;
 
   BoardTimetable? timetableOf(String memberId) =>
       timetables.where((t) => t.memberId == memberId).firstOrNull;
@@ -508,4 +520,15 @@ class SchoolWeek {
       .where((d) => d.date == date && d.day.memberId == memberId)
       .firstOrNull
       ?.day;
+
+  /// The things noted for [memberId] on [date].
+  List<PackItem> packOf(String memberId, DateTime date) =>
+      pack.where((p) => p.memberId == memberId && p.date == date).toList();
+
+  /// What [memberId] packs for [date]: the equipment of the day's lessons, then the
+  /// things noted for it, each once.
+  List<String> toBringOf(String memberId, DateTime date) => toBring(
+    dayOf(memberId, date)?.equipment ?? const [],
+    packOf(memberId, date),
+  );
 }
