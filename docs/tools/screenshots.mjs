@@ -338,7 +338,19 @@ const shots = [
   { name: 'settings-tasks', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await openGroup(p, t.gTasks); } },
   { name: 'kid-who', scenario: 'kid', viewport: TABLET },
   // The daughter is under twelve: her simple view, where the list is the card at the end.
-  { name: 'kid-shopping', scenario: 'kidshopping', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await scrollUntil(p, t.kidShopping, { any: true }); await tapAny(p, t.kidShopping, { exact: false }); await p.mouse.move(0, 0); await settle(p); } },
+  { name: 'kid-shopping', scenario: 'kidshopping', viewport: TABLET, steps: async (p, t) => {
+    await press(p, t.daughter);
+    // The card ends a long page and enters the semantics tree only near the view: scroll
+    // until it exists and on to the end, then press it where it is drawn (a click on the
+    // node the moment it appears lands on the card above it).
+    const card = p.getByRole('button', { name: t.kidShopping, exact: true });
+    for (let i = 0; i < 20 && !(await card.count()); i++) await scrollDown(p, 600);
+    await scrollDown(p, 1200);
+    await settle(p, 1000);
+    await card.first().click();
+    await p.mouse.move(0, 0);
+    await settle(p);
+  } },
   // Her day after tomorrow's button: school, what to pack, her appointments, the meal.
   { name: 'kid-days', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await press(p, new RegExp(`^${t.tomorrow},`)); await p.mouse.move(0, 0); await settle(p); } },
   // The tablet for everyone with nobody chosen: no Shopping tab while it is off for children.
