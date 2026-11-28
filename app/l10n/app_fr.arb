@@ -95,6 +95,14 @@
     }
   },
   "actingWho": "Qui es-tu ?",
+  "actingDone": "{name} a terminé",
+  "@actingDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "pinTitle": "Code PIN parental",
   "pinPrompt": "Saisis le code PIN de {name}",
   "@pinPrompt": {

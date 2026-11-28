@@ -93,16 +93,12 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:axe-core@4.14.0",
+        "npm:axe-core@4.14.1",
         "npm:playwright@^1.65.1",
         "npm:sharp@~0.35.5",
-        "npm:supabase@^3.1.0",
+        "npm:supabase@^3.2.0",
         "npm:vitepress@^1.6.4"
-      ],
-      "overrides": {
-        "esbuild": "^0.25.12",
-        "vite": "^6.4.5"
-      }
+      ]
     }
   }
 }

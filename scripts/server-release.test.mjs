@@ -272,3 +272,48 @@ test('unpack refuses an older archive after checking it, before extracting anyth
   assert.equal(result.status, 0, result.stderr);
   assert.equal(readFileSync(join(installed, 'VERSION'), 'utf8'), `${version}\n`);
 });
+
+// Compose never rebuilds an image that exists, so `update` builds the text recognition image
+// itself: only on a server that uses the stack's own container, and never fatally.
+test('update rebuilds the text recognition image only where the stack\'s own container is used', () => {
+  const server = join(dir, 'ocr-rebuild');
+  const bin = join(server, 'bin');
+  mkdirSync(join(server, 'stack'), { recursive: true });
+  mkdirSync(bin);
+  const log = join(server, 'docker.log');
+  // A docker that only writes down what it was asked, and fails a build when told to.
+  writeFileSync(join(bin, 'docker'), `#!/bin/sh\necho "$*" >> '${log}'\n[ "$2" != build ] || exit \${FAKE_BUILD_STATUS:-0}\n`, { mode: 0o755 });
+  const env = { PATH: `${bin}${delimiter}${process.env.PATH}` };
+  const calls = (line, extra = {}) => {
+    writeFileSync(join(server, 'stack', '.env'), `POSTGRES_PASSWORD='x'\n${line}\n`);
+    rmSync(log, { force: true });
+    const result = run(`STACK='${server}/stack'; ocr_rebuilt=''; rebuild_ocr; echo "rebuilt=$ocr_rebuilt"`, { ...env, ...extra }, server);
+    assert.equal(result.status, 0, result.stderr);
+    const asked = spawnSync('cat', [log], { encoding: 'utf8' }).stdout.trim();
+    return { asked, out: result.stdout, err: result.stderr };
+  };
+  // As the server guide writes the line, as make-env.mjs quotes values, and with a path only.
+  for (const line of ['OCR_URL=http://ocr:9003/ocr', "OCR_URL='http://ocr:9003/ocr'", 'OCR_URL="http://ocr/ocr"']) {
+    const { asked, out } = calls(line);
+    assert.equal(asked, 'compose build --pull ocr', line);
+    assert.match(out, /rebuilt=1/, line);
+  }
+  // Not switched on, empty, or an engine of the operator's own elsewhere: nothing is built.
+  for (const line of ['', "OCR_URL=''", 'OCR_URL=', "OCR_URL='http://ocr.example.org/ocr'", "OCR_URL='https://reader.example.org/ocr'", '# OCR_URL=http://ocr:9003/ocr']) {
+    const { asked, out } = calls(line);
+    assert.equal(asked, '', line);
+    assert.match(out, /rebuilt=$/m, line);
+  }
+  // A build that fails (no internet) warns with the way to try again; the update goes on.
+  const failed = calls("OCR_URL='http://ocr:9003/ocr'", { FAKE_BUILD_STATUS: '1' });
+  assert.equal(failed.asked, 'compose build --pull ocr');
+  assert.match(failed.out, /rebuilt=$/m);
+  assert.match(failed.err, /WARNING: the text recognition image was not rebuilt.*compose build --pull ocr/);
+});
+
+test('update builds the image before the stack restarts, then starts the container by name', () => {
+  const update = readFileSync(script, 'utf8').split('cmd_update() {')[1].split('\n}\n')[0];
+  const at = (text) => { const i = update.indexOf(text); assert.notEqual(i, -1, text); return i; };
+  assert.ok(at('rebuild_ocr') < at('compose up -d --remove-orphans'));
+  assert.ok(at('compose up -d --remove-orphans') < at('compose up -d ocr'));
+});

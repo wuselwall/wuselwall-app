@@ -572,6 +572,12 @@ abstract class AppLocalizations {
   /// **'Who are you?'**
   String get actingWho;
 
+  /// Label of the button a person taps on a shared device or the wall when they are done: the device belongs to nobody again.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is done'**
+  String actingDone(String name);
+
   /// No description provided for @pinTitle.
   ///
   /// In en, this message translates to:
