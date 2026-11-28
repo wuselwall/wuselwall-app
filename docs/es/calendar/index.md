@@ -94,7 +94,7 @@ Para esta cita sustituye tu ajuste personal **Antes de una cita**: no llega una 
 
 Al final del editor hay tres cosas que hacen el día más ligero (ver [Rituales](/es/guide/rituals)):
 
-- **Imagen**: una de 20 imágenes, como una tarta, una pizza, el zoo o una tienda de campaña. Acompaña al evento en la pared y en su cuenta atrás. **Sin imagen** es lo predeterminado.
+- **Imagen**: una de 20 imágenes, como una tarta, una pizza, el zoo o una tienda de campaña. Acompaña al evento en **Hoy**, en el calendario, en la pared y en su cuenta atrás. **Sin imagen** es lo predeterminado.
 - **Nos hace ilusión**: el evento tiene cuenta atrás en la pantalla de pared y en la tableta de los niños, por ejemplo «Excursión al zoo: 3 noches más».
 - **Tradición familiar**: algo que la familia hace una y otra vez, como la noche de juegos. Una tradición está siempre en la pared, con una cinta. En **Con comida** escribes la comida que la acompaña y eliges **Almuerzo** o **Cena**.
 

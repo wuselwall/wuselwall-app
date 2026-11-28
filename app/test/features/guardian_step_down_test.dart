@@ -1,5 +1,5 @@
 // The PIN step-up ends early on a shared device or the wall (specs/08, security review
-// 2026-11-01 F13): when another avatar is tapped and when the wall reverts to nobody, the
+// 2026-11-01 F13): when the acting person leaves and when the wall reverts to nobody, the
 // client forgets the window and tells the server (api.guardian_step_down). Without an open
 // window nothing is sent.
 import 'package:flutter/material.dart';
@@ -57,7 +57,7 @@ void main() {
   ProviderContainer containerOf(WidgetTester tester) =>
       ProviderScope.containerOf(tester.element(find.byType(ActingProfileBar)));
 
-  testWidgets('tapping another avatar ends an open PIN window', (tester) async {
+  testWidgets('leaving ends an open PIN window', (tester) async {
     await tester.pumpWidget(
       _host(const ActingProfileBar(), overrides: overrides(DeviceClass.shared)),
     );
@@ -67,23 +67,24 @@ void main() {
     container
         .read(guardianVerifiedProvider.notifier)
         .set(DateTime.now().add(const Duration(minutes: 5)));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    // The same avatar again: nothing changes.
-    await tester.tap(find.byKey(const ValueKey('avatar-$guardianId')));
-    await tester.pump();
+    // Someone is here: nobody else can be tapped until they leave.
+    expect(find.byKey(const ValueKey('avatar-$kidId')), findsNothing);
     expect(stepUp.calls, 0);
-    expect(container.read(guardianVerifiedProvider), isNotNull);
 
-    await tester.tap(find.byKey(const ValueKey('avatar-$kidId')));
-    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('acting-exit')));
+    await tester.pumpAndSettle();
     expect(stepUp.calls, 1);
     expect(container.read(guardianVerifiedProvider), isNull);
-    expect(container.read(actingProfileProvider), kidId);
+    expect(container.read(actingProfileProvider), isNull);
 
-    // Without a window there is nothing to end: no request.
-    await tester.tap(find.byKey(const ValueKey('avatar-$guardianId')));
-    await tester.pump();
+    // The next person, and without a window there is nothing to end: no request.
+    await tester.tap(find.byKey(const ValueKey('avatar-$kidId')));
+    await tester.pumpAndSettle();
+    expect(container.read(actingProfileProvider), kidId);
+    await tester.tap(find.byKey(const ValueKey('acting-exit')));
+    await tester.pumpAndSettle();
     expect(stepUp.calls, 1);
   });
 

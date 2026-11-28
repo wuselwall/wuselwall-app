@@ -142,6 +142,12 @@ by the node test), `app.match_dictionary` runs the same layers in plpgsql and fe
 `rankTiles` falls back to the matcher and the "Neu" tile shows the matched picture; a person's
 category choice is remembered per household in `app.match_correction` (Einstellungen > Einkaufen >
 Gelernte Wörter, Advanced, guardians forget).
+Who is here (2026-11-28, issue #306, [specs/09](specs/09-clients-and-ux.md#who-is-here) "Who is
+here"): on a shared device and the wall the avatars no longer sit in a band under the page.
+`ActingProfileBar` floats, placed by `WithActingProfileBar`: a soft-edged dock asks while nobody is
+chosen, then leaves, and a button at the bottom end (avatar, name, a door; `actingDone`) gives the
+device back to nobody. The page reads the covered room as `MediaQuery` bottom padding. The demo has
+`?scenario=tablet` (a shared tablet in the adult register).
 Proposals while typing (2026-11-14, issue #239, specs/05 "Proposals while typing"): an event's
 title and place and a chore's title propose what the family entered before (`SuggestField` in
 `core/ui`, ranked by `core/text/suggest.dart` from `api.events` and `api.task_definitions`; no

@@ -33,6 +33,8 @@ Para configurarlo, en la carpeta de la pila:
 2. Construye y arranca el contenedor: `docker compose --profile ocr up -d --build`. La primera construcción descarga los modelos de reconocimiento (unos 20 MB); después funciona sin internet.
 3. Reinicia las funciones para que conozcan la dirección: `docker compose restart functions`.
 
+En cada actualización, `wuselwall update` vuelve a construir el contenedor para que reciba las versiones actuales de sus componentes. Tarda como mucho unos minutos y necesita internet. Si la construcción falla, el contenedor anterior sigue funcionando y la actualización indica cómo repetirla.
+
 La app ofrece entonces **Escanear una foto** en **Importar…**. Sin esa línea la opción sigue ahí, pero la app dice que el servidor no tiene reconocimiento de texto. El reconocimiento usa RapidOCR con los modelos PP-OCR de PaddleOCR (ambos Apache-2.0, la misma base que usa el gestor de fotos Immich para su reconocimiento de texto).
 
 Con la imagen, la app envía su idioma y los nombres y abreviaturas de vuestras asignaturas. Así el servidor lee vuestras palabras como vuestras asignaturas. La función acepta fotos (JPEG, PNG, WebP, HEIC) y PDF de hasta 6 MB, solo desde un dispositivo de vuestra familia y como máximo diez veces en diez minutos por cuenta, no guarda nada y no escribe ninguna imagen en el registro. El contenedor lee imágenes de hasta 40 megapíxeles y está en una red Docker interna propia a la que solo llegan las funciones; no sale ni a internet ni a la red doméstica. Lo que el servidor lee de una hoja, y dónde están sus límites, está en [Importar un horario](/es/school/#reading-in).

@@ -1979,6 +1979,7 @@ List<_Weekly> get _weekly => [
     start: const TimeOfDay(hour: 15, minute: 30),
     end: const TimeOfDay(hour: 16, minute: 0),
     attendees: const [DemoData.daughter],
+    iconKey: 'music',
   ),
   // A family tradition (specs/27): every Friday, the whole family.
   _Weekly(

@@ -115,7 +115,7 @@ counts); when the acting person becomes nobody, the open settings page leaves fo
 
 How the kid register fits its screen (decided 2026-10-26, after layout checks on phones,
 tablets and the web from 320 to 1920 px):
-- **Phones stay upright.** Held sideways, the tabs and the avatar bar left about 115 dp
+- **Phones stay upright.** Held sideways, the tabs left too little height
   for the page, so on a phone (shortest side under 600 dp) the kid home is portrait only;
   tablets turn freely.
 - **Pages are at most 840 px wide**, centred, so a tick stays near its chore's title.
@@ -145,6 +145,26 @@ left out rather than shown as a card.
 - The **week board** (below): the standard screen, seven days at once.
 - Tap-through detail: one day in full, one child's Stundenplan, one member's tasks.
   Everything reverts to the week board after 60 s.
+
+### Who is here
+
+On a shared device and on the wall the question "who is acting" floats over the page
+instead of taking a band from it (2026-11-28, issue #306; before, a row of avatars in its
+own colour cut the page with a hard line):
+
+- **Nobody chosen:** a dock at the bottom centre, as wide as the family, with the
+  question and one avatar per active member (circle, initial, name). It has no outline:
+  its edge fades into the page and a soft shadow lifts it
+  ([17](17-design-system.md#who-is-here)). A large family scrolls sideways inside it.
+- **Someone chosen:** the dock sinks away and a button at the bottom end shows who is
+  acting (avatar, name, a door), at least 48 dp high. A tap gives the device back to
+  nobody; the kiosk also does that after 60 s without a touch.
+- **The page under it** is told the room the bar covers as bottom padding, like a gesture
+  bar's, so its last entry scrolls clear; a page's own floating buttons sit above the bar.
+  A tap beside the dock or the button reaches the page.
+- The kid home's big picker is the one place to say who is here while it is shown: no
+  dock under it.
+- Where motion is off, the dock and the button swap without moving (specs/26 "Motion").
 
 ## Search
 

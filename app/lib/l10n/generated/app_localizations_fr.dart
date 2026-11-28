@@ -256,6 +256,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get actingWho => 'Qui es-tu ?';
 
   @override
+  String actingDone(String name) {
+    return '$name a terminé';
+  }
+
+  @override
   String get pinTitle => 'Code PIN parental';
 
   @override

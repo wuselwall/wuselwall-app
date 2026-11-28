@@ -109,7 +109,7 @@ jobs:
       # Gem keeps its cache under XDG_CACHE_HOME; the self-hosted runner's ~/.cache is not
       # the job's to write (the fleet mounts its own caches there), so the job uses its
       # temporary directory.
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: ruby/setup-ruby@be3c7df29b3349ec6bcfc6b4792f1cf9f5237d18 # v1.343.0
         with: { ruby-version: '3.3', bundler-cache: false, working-directory: app/android }
         env:
           XDG_CACHE_HOME: ${{ runner.temp }}/cache

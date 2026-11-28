@@ -95,7 +95,6 @@ void main() {
           isButton: true,
           isFocusable: true,
           hasTapAction: true,
-          hasSelectedState: true,
         ),
       );
       handle.dispose();
