@@ -76,6 +76,17 @@ by `api.events` and the `occurrences` function (migration `20261114120000_event_
 `310_event_reminder.test.sql`, feature flag `event-reminder`); the editor's *Erinnerung vorher*
 (15 minutes to 1 week, whole days for an all-day event), planned on each concerned person's phone
 as a local notification in place of their `notify.event_reminder`.
+One-off things to bring (2026-11-17, issue #289, [specs/15](specs/15-module-school-timetable.md) "One-off
+things to bring", FR-7.15): `app.pack_item` (a title of 1–80 characters for one child on one day,
+at most 20 a day, the same title kept once), written by `api.pack_item_save` and
+`api.pack_item_delete`, read through `api.pack_items` (migration `20261117100000_pack_items.sql`,
+pgTAP `325_pack_items.test.sql`, feature flag `pack-items`); every adult may note for any child, a
+child only for itself. The things join a day's packing list after the subjects' equipment (`toBring()`,
+`school-week` and `board-week` answer `pack`) on the child's Today, in the Stundenplan section, on the
+wall's pack strip, in `notify.packing_reminder` and in Siri's school answer, also for a child without a
+timetable; `school.equipment_hint` switches off only the subjects' equipment. Three entry points: the
+*Mitbringen* tile in *Neuer Termin* → *Schule*, the chips in the Stundenplan section, and the chips in
+the wall's child detail while someone is acting (`pack_item_sheet.dart`).
 Trips (2026-11-15, issue #265, [specs/30](specs/30-trips.md), FR-9): adults plan a vacation in one
 place. A trip is an idea, planned or fixed (`app.trip`, `trip_member`); what the family finds are
 entries (`trip_entry`: transport, stay, rental, activity, note; option, chosen or booked; prices
@@ -193,11 +204,28 @@ committed files; real values in git-ignored files (`scripts/remote.env`,
 ## Development workflow
 
 The whole process is in [CONTRIBUTING.md](CONTRIBUTING.md); these are the rules an agent
-follows without being asked.
+follows without being asked. Two skills hold the steps. Read the skill before doing what it
+covers:
 
-- **Never commit to `main` or push to it.** It is protected (pull request, required checks,
-  squash only, no administrator bypass). Work in a branch, in its own worktree under
-  `.worktrees/` when another checkout is in use.
+| Skill | Read it |
+|---|---|
+| [request-to-pr](.agents/skills/request-to-pr/SKILL.md) | before the first edit of every request, and again when the work is ready to commit |
+| [pr-screenshots](.agents/skills/pr-screenshots/SKILL.md) | whenever a change alters what a family sees |
+
+The skills live in `.agents/skills/<name>/SKILL.md`; `.claude/skills/<name>` links to each
+one. A new skill gets its folder, its link and its row in this table
+(`scripts/repository-boundaries.test.mjs` checks all three).
+
+- **Every request that changes a file is worked in its own worktree and ends in a pull
+  request.** Cut the worktree under `.worktrees/` from `origin/main`, on a new branch; leave
+  the main checkout and other worktrees alone. Commit, push and open the pull request
+  without being asked: the request is not finished before the pull request exists. `main`
+  itself takes changes only through a pull request (required checks, squash only, no
+  administrator bypass).
+- **A pull request that changes a screen shows it.** Before/after pictures go in
+  `pr-screenshots/<branch>/` on the pull request's branch and nowhere else: that folder is
+  in no build ([pr-screenshots/README.md](pr-screenshots/README.md)).
+  `node scripts/pr-screenshots.mjs` prints the Markdown for the description. Demo data only.
 - **A feature or a fix needs an issue in a release milestone before the code.** Find the
   issue or create it (`gh issue create --label enhancement --milestone v1.12.0`, or `bug`),
   with the outcome and acceptance checkboxes. Milestones are releases (`v<app version>`);

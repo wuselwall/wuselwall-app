@@ -181,9 +181,10 @@ class PackStrip extends StatelessWidget {
   }
 }
 
-/// The pack strip for [memberId]: today's equipment when [viewedIndex] is today, else
-/// tomorrow's (relative to today). Null when nothing is to be packed, or no such day
-/// is in reach (today outside the week, or tomorrow past Sunday).
+/// The pack strip for [memberId]: today's equipment and noted things (specs/15) when
+/// [viewedIndex] is today, else tomorrow's (relative to today). Null when nothing is to
+/// be packed, or no such day is in reach (today outside the week, or tomorrow past
+/// Sunday).
 Widget? packStripFor(
   BuildContext context,
   WeekBoard board,
@@ -194,15 +195,13 @@ Widget? packStripFor(
   if (today == null) return null;
   final l10n = context.l10n;
   if (viewedIndex == today) {
-    final items =
-        board.days[today].school[memberId]?.equipment ?? const <String>[];
+    final items = board.days[today].toBringOf(memberId);
     if (items.isEmpty) return null;
     return PackStrip(l10n.boardPackToday(items.join(', ')));
   }
   final tomorrow = today + 1;
   if (tomorrow >= board.days.length) return null;
-  final items =
-      board.days[tomorrow].school[memberId]?.equipment ?? const <String>[];
+  final items = board.days[tomorrow].toBringOf(memberId);
   if (items.isEmpty) return null;
   return PackStrip(l10n.boardPackTomorrow(items.join(', ')));
 }

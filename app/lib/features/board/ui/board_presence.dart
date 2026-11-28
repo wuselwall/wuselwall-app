@@ -51,8 +51,12 @@ class _MemberRow extends ConsumerWidget {
     final nowMinutes = ref.watch(
       nowProvider.select((now) => now.hour * 60 + now.minute),
     );
-    // A child under twelve has no week sheet: their name opens their simple view,
-    // which takes the wall until they leave it (specs/09 "The simple view").
+    // A child under twelve has no week sheet of their own: their name opens their
+    // simple view, which takes the wall until they leave it (specs/09 "The simple
+    // view"). For an adult who has chosen their name it stays the timetable, where
+    // they note what the child has to bring (specs/15).
+    final acting = ref.watch(actingMemberProvider);
+    final adultHere = acting != null && !acting.isChild;
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     final young =
         members
@@ -63,7 +67,7 @@ class _MemberRow extends ConsumerWidget {
     return _build(
       context,
       nowMinutes,
-      openSimpleView: young
+      openSimpleView: young && !adultHere
           ? () {
               guardianStepDown(ref);
               ref.read(actingProfileProvider.notifier).select(member.id);

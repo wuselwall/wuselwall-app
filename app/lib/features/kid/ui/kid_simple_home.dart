@@ -492,7 +492,7 @@ class _DayChip extends StatelessWidget {
 /// School on [day] as one card: the hours, on today the lesson running now, and the
 /// changes. A tap shows the day's lessons. Under it what to pack: on today what
 /// tomorrow needs, on another day what that day needs. A child without a timetable
-/// has no card at all.
+/// has only that, when something is noted.
 class _School extends ConsumerWidget {
   const _School({
     required this.actor,
@@ -516,17 +516,20 @@ class _School extends ConsumerWidget {
     final theme = Theme.of(context);
     final w = ref.watch(schoolWeekProvider(range)).value;
     // While it loads there is no card; a failure shows on the chores above already.
-    if (w == null || w.timetableOf(actor) == null) {
-      return const SizedBox.shrink();
+    if (w == null) return const SizedBox.shrink();
+    // The lessons' equipment and the things noted for the day (specs/15): on today
+    // tomorrow's, to pack tonight; on another day that day's own.
+    final needs = w.toBringOf(actor, isToday ? kidTomorrowOf(day) : day);
+    if (w.timetableOf(actor) == null) {
+      return needs.isEmpty
+          ? const SizedBox.shrink()
+          : KidPackCard(needs, forTomorrow: isToday);
     }
     final school = w.dayOf(actor, day);
     final summary = kidSchoolSummary(
       school,
       isToday ? ref.watch(kidMinutesProvider) : -1,
     );
-    final needs = isToday
-        ? w.dayOf(actor, kidTomorrowOf(day))?.equipment ?? const <String>[]
-        : school?.equipment ?? const <String>[];
     final lines = summary == null
         ? [
             school?.holidayName != null
@@ -589,27 +592,7 @@ class _School extends ConsumerWidget {
         if (needs.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: Tokens.space3),
-            child: KidCard(
-              color: context.ww.paper(
-                PaperTints.tints.firstWhere((t) => t.key == 'lemon'),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.backpack_rounded, size: 32),
-                  const SizedBox(width: Tokens.space3),
-                  Expanded(
-                    child: Text(
-                      isToday
-                          ? l10n.kidTomorrowNeeds(needs.join(', '))
-                          : l10n.kidSimpleNeeds(needs.join(', ')),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: KidPackCard(needs, forTomorrow: isToday),
           ),
       ],
     );
@@ -617,7 +600,7 @@ class _School extends ConsumerWidget {
 }
 
 /// A day ahead with nothing on it says so, instead of an empty page under the chips:
-/// no school card, no appointment and no meal. Nothing while any of them still loads.
+/// no school card, nothing to pack, no appointment and no meal. Nothing while any of them still loads.
 class _NothingPlanned extends ConsumerWidget {
   const _NothingPlanned({
     required this.actor,
@@ -636,6 +619,7 @@ class _NothingPlanned extends ConsumerWidget {
     if (!school.hasValue || !window.hasValue) return const SizedBox.shrink();
     final nothing =
         school.requireValue.timetableOf(actor) == null &&
+        school.requireValue.toBringOf(actor, day).isEmpty &&
         kidEventsFor(window.requireValue.occurrences, actor, day).isEmpty &&
         ref.watch(kidMealsProvider(day)).isEmpty;
     if (!nothing) return const SizedBox.shrink();

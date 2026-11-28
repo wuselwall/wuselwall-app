@@ -50,6 +50,8 @@ Zuerst siehst du Kacheln, damit du nicht alles von vorn eintippen musst:
 
 Was die Kachel ausfüllt, ist nur ein Anfang: Du änderst im Editor, was anders ist, und speicherst. Mit **Zurück** kommst du wieder zu den Kacheln.
 
+Im Bereich **Schule** steht auch **Mitbringen** („Für ein Kind, an einem Tag“). Das ist kein Termin: Du notierst eine einmalige Sache für ein Kind, zum Beispiel einen Turnbeutel, und sie steht dann in dessen Einpackliste (siehe [Etwas Einmaliges mitbringen](/school/#one-off)).
+
 Neben **Urlaub / Reise** steht die Kachel **Reise planen**: Sie öffnet [Reisen](/trips/#find), wo ihr Optionen vergleicht, Zeitfenster sucht und die Packliste anlegt. **Urlaub / Reise** legt dagegen nur einen einzelnen Termin an.
 
 <Shot name="calendar-templates" alt="Neuer Termin mit Kacheln: Häufig bei euch, Eure Vorlagen und Vorlagen wie Geburtstag und Gäste zum Essen" />

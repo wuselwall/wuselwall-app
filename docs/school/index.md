@@ -180,7 +180,21 @@ Tippe auf eine Stunde, wenn sich etwas ändert:
 
 ## Morgen einpacken
 
-Auf der Küchenwand steht bei einem Kind **Morgen einpacken**, wenn morgen etwas mitzubringen ist, zum Beispiel Sportsachen. Dasselbe zeigt die Heute-Ansicht des Kindes, und auf dem eigenen Handy kommt am Vorabend eine [Einpack-Erinnerung](/settings/reminders). Ob diese Hinweise erscheinen, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest: ausgeschaltet verschwinden sie überall.
+Auf der Küchenwand steht bei einem Kind **Morgen einpacken**, wenn morgen etwas mitzubringen ist, zum Beispiel Sportsachen. Dasselbe zeigt die Heute-Ansicht des Kindes, und auf dem eigenen Handy kommt am Vorabend eine [Einpack-Erinnerung](/settings/reminders). Ob diese Hinweise erscheinen, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest: ausgeschaltet verschwinden sie überall. Etwas, das ihr [einmalig notiert](#one-off) habt, bleibt davon unberührt.
+
+## Etwas Einmaliges mitbringen {#one-off}
+
+Manchmal ist etwas nur ein einziges Mal mitzubringen: der Turnbeutel, ein unterschriebener Zettel, 5 Franken für den Ausflug. Das notiert ihr für ein Kind an einem Tag. Es steht dann dort, wo auch die Sachen aus dem Stundenplan stehen, danach und jedes nur einmal.
+
+Es gibt drei Wege:
+
+- **Kalender → Neuer Termin → Mitbringen** (bei **Schule**, „Für ein Kind, an einem Tag“). Du schreibst **Was** (bis zu 80 Zeichen), wählst **Wer bringt es mit** (nur wenn ihr mehr als ein Kind habt) und **Wann**: **Heute**, **Morgen**, **Übermorgen** oder **Anderer Tag …**. Mit **Hinzufügen** ist es notiert. Vorgabe ist morgen.
+- **Stundenplan**: Unter der Woche eines Kindes stehen bei „Morgen einpacken“ die Dinge für morgen als Chips. Mit dem × entfernst du eines, mit **Etwas mitbringen** fügst du eines hinzu, auch für einen anderen Tag.
+- **Küchenwand**: Tippe auf den Namen eines Kindes. Ist jemand ausgewählt, gibt es dort dieselben Chips zum Entfernen und Hinzufügen.
+
+Das geht für jedes Kind und jeden Tag, auch für ein Kind ohne Stundenplan oder an einem Samstag. Erwachsene notieren für jedes Kind, ein Kind nur für sich. Dieselbe Sache am selben Tag steht nur einmal, und es sind höchstens 20 pro Kind und Tag.
+
+Die Einpack-Erinnerung am Vorabend nennt die Dinge ebenfalls, und auch Siri antwortet auf „Was hat Mia morgen?“ mit „Einpacken: Sportsachen und Turnbeutel.“ Der Schalter **Hinweis auf Sachen für morgen** unter [Einstellungen → Kalender & Schule](/settings/household) betrifft nur die Sachen aus dem Stundenplan: Was ihr selbst notiert habt, steht immer da. Hat euer Server die Funktion noch nicht, fehlen die Kachel und die Chips, und es erscheinen nur die Sachen aus dem Stundenplan.
 
 ## Kinder melden Änderungen
 

@@ -146,6 +146,7 @@ Added 2026-08-30. Specified in [15](15-module-school-timetable.md); decision con
 | FR-7.12 | Equipment reminders derived from tomorrow's subjects ("Morgen brauchst du: Sportsachen") | C | late |
 | FR-7.13 | The ICS feed carries the school day collapsed to one block per child per day, configurable per token and off by default | S | late |
 | FR-7.14 | Automatic import from a school portal (WebUntis, IServ, Schulmanager) | W | — |
+| FR-7.15 | A person notes a one-off thing for one child on one day ("Turnbeutel", "Zettel unterschrieben"); it joins that day's packing list after the subjects' equipment (child's Today, Stundenplan section, wall, evening reminder, Siri), also for a child without a timetable. *Built 2026-11-17, issue #289* | C | late |
 
 ## FR-8 Wall Display — the week board (B2)
 

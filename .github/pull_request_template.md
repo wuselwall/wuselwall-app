@@ -9,7 +9,8 @@ Closes #
 
 ## How it was checked
 
-<!-- Commands run and what they showed; screenshots for a changed screen. -->
+<!-- Commands run and what they showed. A changed screen: before/after pictures committed in
+     pr-screenshots/<branch>/, shown here with the output of `node scripts/pr-screenshots.mjs`. -->
 
 ## Checklist
 

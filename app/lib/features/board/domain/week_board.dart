@@ -388,6 +388,7 @@ class BoardDay {
     this._meals,
     this.holiday,
     this.usual,
+    this.pack = const [],
   });
 
   factory BoardDay.fromJson(Map<String, dynamic> json) => BoardDay(
@@ -410,6 +411,7 @@ class BoardDay {
         ? null
         : BoardHoliday.fromJson(json['holiday'] as Map<String, dynamic>),
     usual: json['usual'] == null ? null : _usualByMember(json['usual']),
+    pack: _list(json['pack'], PackItem.fromJson),
   );
 
   final DateTime date;
@@ -442,7 +444,56 @@ class BoardDay {
   /// absent. Null from servers before the usual week: see [WeekBoard.usualOn].
   final Map<String, List<UsualPlace>>? usual;
 
+  /// The one-off things to bring of the day, for any child, in the order they were noted;
+  /// empty from servers before them (specs/15 "One-off things to bring").
+  final List<PackItem> pack;
+
   List<BoardEvent> get keyEvents => events.where((e) => e.isKey).toList();
+
+  /// The things [memberId] has to bring on the day.
+  List<PackItem> packOf(String memberId) =>
+      pack.where((p) => p.memberId == memberId).toList();
+
+  /// What [memberId] packs for the day: the equipment of the day's lessons, then the
+  /// things noted for it, each once (also for a child without a timetable).
+  List<String> toBringOf(String memberId) =>
+      toBring(school[memberId]?.equipment ?? const [], packOf(memberId));
+}
+
+/// One thing a child has to bring on one day ("Turnbeutel", "Zettel unterschrieben"),
+/// noted by a person; `api.pack_items`, sent by `school-week` and `board-week` (specs/15
+/// "One-off things to bring").
+class PackItem {
+  const PackItem({
+    required this.id,
+    required this.memberId,
+    required this.date,
+    required this.title,
+  });
+
+  factory PackItem.fromJson(Map<String, dynamic> json) => PackItem(
+    id: json['id'] as String,
+    memberId: json['member_id'] as String,
+    date: parseDate(json['date'] as String),
+    title: json['title'] as String,
+  );
+
+  final String id;
+  final String memberId;
+
+  /// A local date at midnight.
+  final DateTime date;
+  final String title;
+}
+
+/// The packing list of a day: [equipment] (the lessons' notes) first, then the titles of
+/// [items], each once; two that differ only in case are one.
+List<String> toBring(List<String> equipment, Iterable<PackItem> items) {
+  final seen = <String>{};
+  return [
+    for (final t in [...equipment, for (final i in items) i.title])
+      if (seen.add(t.trim().toLowerCase())) t,
+  ];
 }
 
 /// The public holiday of a day ("Auffahrt"), in the household's language.

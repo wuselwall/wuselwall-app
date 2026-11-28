@@ -578,6 +578,20 @@ void main() {
       expect(find.byType(WeekBoardPage), findsOneWidget);
     });
 
+    _test('for an adult who chose their name, a child of eight\'s name opens '
+        'the timetable, where things to bring are noted', (t) async {
+      final c = await pumpWall(t);
+      c.read(actingProfileProvider.notifier).select(guardianId);
+      await t.pump();
+
+      await t.tap(nameOf('Anna'));
+      await t.pumpAndSettle();
+
+      expect(find.byType(ChildWeekDetailBody), findsOneWidget);
+      expect(acting(c), guardianId);
+      expect(_simple, findsNothing);
+    });
+
     _test('a tap on an adult opens their week, nobody acts', (t) async {
       final c = await pumpWall(t);
 

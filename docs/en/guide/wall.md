@@ -82,8 +82,8 @@ In compact rows the **whole member row** is one large button: it opens the simpl
 A tap shows more, and after a minute the display returns to the week by itself:
 
 - on a **day header**: that whole day
-- on the **name of a child under 12**: the child's [simple view](#simple-view), filling the screen. **Back to the week** at the top left returns to the week board, and after a minute without a touch the wall goes back to it by itself.
-- on the **name of a child aged 12 or older**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown.
+- on the **name of a child under 12**: the child's [simple view](#simple-view), filling the screen. **Back to the week** at the top left returns to the week board, and after a minute without a touch the wall goes back to it by itself. If an adult has chosen their name on the wall first, the tap opens the child's timetable instead, as for an older child.
+- on the **name of a child aged 12 or older**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown. Whoever is chosen can also [note or remove something to bring once](/en/school/#one-off) there.
 - on a **school time in a compact row**: for a child aged 12 or older, the weekly timetable; use the day header for an individual school day
 - on an **adult's name**: their week
 - on the **meal area**: the meals of the week

@@ -34,7 +34,7 @@ export function classifyPaths(paths) {
     if (path === 'specs/mockups/shopping-quick-add.html') checks.browser = true;
     // These have their own script, documentation or candidate checks. They are not
     // Flutter test or app-server contract inputs. Everything else fails open below.
-    if (/^(docs\/|specs\/|scripts\/|qualification\/|dictionary\/|server\/|infra\/|licenses\/|store\/|\.github\/(ISSUE_TEMPLATE\/|rulesets\/|[^/]+$))/.test(path) || /^[^/]+\.(md|txt)$/.test(path) || /^(LICENSE|NOTICE|\.gitignore|\.gitattributes|osv-scanner\.toml)$/.test(path)) continue;
+    if (/^(docs\/|specs\/|scripts\/|qualification\/|dictionary\/|server\/|infra\/|licenses\/|store\/|pr-screenshots\/|\.agents\/skills\/|\.claude\/skills\/|\.github\/(ISSUE_TEMPLATE\/|rulesets\/|[^/]+$))/.test(path) || /^[^/]+\.(md|txt)$/.test(path) || /^(LICENSE|NOTICE|\.gitignore|\.gitattributes|osv-scanner\.toml)$/.test(path)) continue;
     return fullChecks();
   }
   return checks;

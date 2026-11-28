@@ -657,8 +657,9 @@ class _TickPopState extends State<_TickPop>
 
 /// Today's school as one card, from `school-week` (today and tomorrow in one call):
 /// the hours, the lesson running now and the changes. A tap opens the timetable tab,
-/// where the lessons are; *Mein Tag* does not list them twice. Tomorrow's equipment is
-/// a footer. A child without a timetable has no school section at all.
+/// where the lessons are; *Mein Tag* does not list them twice. What to pack for
+/// tomorrow (the lessons' equipment and the things noted for the day, specs/15) is a
+/// footer. A child without a timetable sees only that footer, when there is one.
 class _SchoolSection extends ConsumerWidget {
   const _SchoolSection({required this.actor});
 
@@ -677,10 +678,12 @@ class _SchoolSection extends ConsumerWidget {
       value: week,
       onRetry: () => ref.invalidate(schoolWeekProvider((today, tomorrow))),
       data: (w) {
-        if (w.timetableOf(actor) == null) return const SizedBox.shrink();
+        final needs = w.toBringOf(actor, tomorrow);
+        if (w.timetableOf(actor) == null) {
+          return needs.isEmpty ? const SizedBox.shrink() : KidPackCard(needs);
+        }
         final day = w.dayOf(actor, today);
         final summary = kidSchoolSummary(day, minutes);
-        final needs = w.dayOf(actor, tomorrow)?.equipment ?? const <String>[];
         final lines = summary == null
             ? [
                 day?.holidayName != null
@@ -738,31 +741,47 @@ class _SchoolSection extends ConsumerWidget {
             if (needs.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: Tokens.space3),
-                child: KidCard(
-                  color: context.ww.paper(
-                    PaperTints.tints.firstWhere((t) => t.key == 'lemon'),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.backpack_rounded, size: 32),
-                      const SizedBox(width: Tokens.space3),
-                      Expanded(
-                        child: Text(
-                          l10n.kidTomorrowNeeds(needs.join(', ')),
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                child: KidPackCard(needs),
               ),
           ],
         );
       },
     );
   }
+}
+
+/// What to pack, on the lemon paper: "Morgen brauchst du: …" on today's page, and
+/// "Du brauchst: …" where the page is about the day itself (the simple view's days
+/// ahead).
+class KidPackCard extends StatelessWidget {
+  const KidPackCard(this.needs, {this.forTomorrow = true, super.key});
+
+  final List<String> needs;
+
+  /// Whether [needs] are tomorrow's, seen from today.
+  final bool forTomorrow;
+
+  @override
+  Widget build(BuildContext context) => KidCard(
+    color: context.ww.paper(
+      PaperTints.tints.firstWhere((t) => t.key == 'lemon'),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.backpack_rounded, size: 32),
+        const SizedBox(width: Tokens.space3),
+        Expanded(
+          child: Text(
+            forTomorrow
+                ? context.l10n.kidTomorrowNeeds(needs.join(', '))
+                : context.l10n.kidSimpleNeeds(needs.join(', ')),
+            style: Theme.of(context).textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.w700),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 /// The warm meals of [day], and on another day than today plainly "Dinner: …". The

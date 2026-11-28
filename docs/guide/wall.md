@@ -82,8 +82,8 @@ In kompakten Zeilen ist die **ganze Mitgliederzeile** eine einzige große Schalt
 Ein Tipp zeigt mehr, und nach einer Minute geht die Anzeige von selbst zurück zur Woche:
 
 - auf die **Tagesüberschrift**: der ganze Tag
-- auf den **Namen eines Kindes unter 12**: die [einfache Ansicht](#simple-view) des Kindes, bildschirmfüllend. Oben links führt **Zurück zur Woche** wieder zur Wochenübersicht, und nach einer Minute ohne Berührung kehrt die Wand von selbst dorthin zurück.
-- auf den **Namen eines Kindes ab 12**: der Stundenplan der Woche. Entfall ist durchgestrichen, Vertretungen sind markiert, und „Morgen einpacken“ steht dabei.
+- auf den **Namen eines Kindes unter 12**: die [einfache Ansicht](#simple-view) des Kindes, bildschirmfüllend. Oben links führt **Zurück zur Woche** wieder zur Wochenübersicht, und nach einer Minute ohne Berührung kehrt die Wand von selbst dorthin zurück. Hat vorher ein Erwachsener an der Wand seinen Namen gewählt, öffnet der Tipp stattdessen den Stundenplan des Kindes, wie bei einem älteren Kind.
+- auf den **Namen eines Kindes ab 12**: der Stundenplan der Woche. Entfall ist durchgestrichen, Vertretungen sind markiert, und „Morgen einpacken“ steht dabei. Wer ausgewählt ist, kann dort auch [etwas Einmaliges zum Mitbringen](/school/#one-off) notieren oder entfernen.
 - auf eine **Schulzeit in einer kompakten Zeile**: bei einem Kind ab 12 der Wochenstundenplan; den einzelnen Schultag erreicht ihr über die Tagesüberschrift
 - auf den **Namen eines Erwachsenen**: seine Woche
 - auf den **Essensbereich**: die Mahlzeiten der Woche

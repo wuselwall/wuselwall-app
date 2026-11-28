@@ -1,9 +1,9 @@
 {
   "devDependencies": {
     "axe-core": "4.14.0",
-    "playwright": "^1.65.0",
+    "playwright": "^1.65.1",
     "sharp": "^0.35.5",
-    "supabase": "^3.0.0",
+    "supabase": "^3.1.0",
     "vitepress": "^1.6.4"
   },
   "overrides": {

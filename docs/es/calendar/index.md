@@ -45,6 +45,8 @@ Primero ves unas fichas, para no escribirlo todo desde cero:
 
 Lo que rellena la ficha es solo un comienzo: cambia lo que sea distinto y guarda. **Atrás** vuelve a las fichas.
 
+En **Colegio** hay también **Para llevar** («Para un niño, en un día»). No es un evento: anotas algo puntual para un niño, por ejemplo una bolsa de deporte, y pasa a su lista de la mochila (ver [Anotar algo para llevar una sola vez](/es/school/#one-off)).
+
 Junto a **Vacaciones / viaje** está la ficha **Planear un viaje**: abre [Viajes](/es/trips/#find), donde comparáis opciones, buscáis fechas libres y hacéis la lista del equipaje. **Vacaciones / viaje**, en cambio, solo crea un único evento.
 
 <Shot name="calendar-templates" alt="Nuevo evento con fichas: Lo habitual en casa, Vuestras plantillas y plantillas como Cumpleaños e Invitados a cenar" />
