@@ -15,7 +15,7 @@ enum StarterPeople { family, children, actor }
 /// with a child.
 enum EventStarter {
   cleaning(
-    iconKey: 'broom',
+    iconKey: 'cleaner',
     startMinute: 9 * 60,
     minutes: 180,
     people: StarterPeople.actor,
@@ -27,7 +27,7 @@ enum EventStarter {
     minutes: 60,
     people: StarterPeople.actor,
   ),
-  doctor(people: StarterPeople.actor),
+  doctor(iconKey: 'doctor', people: StarterPeople.actor),
   guestDinner(
     iconKey: 'house',
     startMinute: 18 * 60 + 30,

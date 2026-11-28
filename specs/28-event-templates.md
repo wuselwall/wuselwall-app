@@ -54,9 +54,9 @@ last (*reordered 2026-11-01*, when Putzhilfe was added).
 
 | Template | Picture | When | Length | Who | Also |
 |---|---|---|---|---|---|
-| Putzhilfe kommt | broom | 09:00 | 3 h | the person creating it | weekly on the day's weekday |
+| Putzhilfe kommt | cleaner (broom until #297) | 09:00 | 3 h | the person creating it | weekly on the day's weekday |
 | Sporttraining | football | 17:00 | 1 h | the person creating it | |
-| Arzttermin | — | next full hour | 1 h | the person creating it | |
+| Arzttermin | doctor (none until #297) | next full hour | 1 h | the person creating it | |
 | Gäste zum Essen | house | 18:30 | 3 h | whole family | |
 | Familienausflug | hiking | all day | 1 day | whole family | Darauf freuen wir uns |
 | Spielen mit Freunden | game_die | 15:00 | 2 h | the children | |

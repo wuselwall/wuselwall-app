@@ -127,7 +127,7 @@ void main() {
       expect(draft.end, DateTime(2026, 10, 14, 12));
       expect(draft.recurrence.kind, RepeatKind.weekly);
       expect(draft.recurrence.toRrule(draft.start), 'FREQ=WEEKLY;BYDAY=WE');
-      expect(draft.iconKey, 'broom');
+      expect(draft.iconKey, 'cleaner');
       expect(draft.attendeeIds, {'p-1'});
     });
 
@@ -302,7 +302,7 @@ void main() {
         expect(draft.start, DateTime(2026, 10, 14, 11));
         expect(draft.end, DateTime(2026, 10, 14, 12));
         expect(draft.attendeeIds, {'p-2'});
-        expect(draft.iconKey, isNull);
+        expect(draft.iconKey, 'doctor');
       },
     );
 
