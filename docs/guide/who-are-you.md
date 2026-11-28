@@ -5,6 +5,7 @@ Auf **geteilten Geräten** und an der **Wandanzeige** benutzen mehrere Personen 
 <Shot name="kid-who" alt="Kinder-Tablet mit den Namen der Familie unten" wide />
 
 - Ohne Namen kann man nichts ändern. Das Gerät fordert dazu auf: „Tippe zuerst auf deinen Namen.“
+- Hast du deinen Namen getippt, machen die Namen Platz für die Seite. Unten rechts steht dann **dein Name mit einer Tür**. Tippe darauf, wenn du **fertig** bist: Das Gerät gehört wieder niemandem und fragt die nächste Person.
 - An der **Wandanzeige** springt das Gerät nach **einer Minute ohne Berührung** auf „niemand“ zurück, damit die nächste Person nicht aus Versehen als du handelt.
 
 ## Einstellungen auf dem Tablet und an der Wand {#settings-on-shared-devices}
@@ -19,9 +20,9 @@ Springt das Gerät auf „niemand“ zurück, zum Beispiel nach einer Minute ohn
 
 ## Die PIN für Eltern
 
-Manche Dinge dürfen nur Eltern – zum Beispiel Geräte hinzufügen oder sperren. Auf einem **geteilten Gerät** tippst du dazu auf deinen Namen und gibst deine **6-stellige PIN** ein. Danach kannst du **5 Minuten** lang Aktionen ausführen, die Eltern vorbehalten sind. Die Zeit endet früher, sobald jemand einen anderen Namen tippt, die Wand auf „niemand“ zurückspringt oder du die Einstellungen verlässt.
+Manche Dinge dürfen nur Eltern – zum Beispiel Geräte hinzufügen oder sperren. Auf einem **geteilten Gerät** tippst du dazu auf deinen Namen und gibst deine **6-stellige PIN** ein. Danach kannst du **5 Minuten** lang Aktionen ausführen, die Eltern vorbehalten sind. Die Zeit endet früher, sobald du unten rechts auf deinen Namen mit der Tür tippst, die Wand auf „niemand“ zurückspringt oder du die Einstellungen verlässt.
 
-- Die PIN gilt nur für **dich**: Tippt jemand anderes in dieser Zeit auf einen anderen Namen, bekommt er dadurch keine Rechte.
+- Die PIN gilt nur für **dich**: Wer nach dir seinen Namen tippt, bekommt dadurch keine Rechte.
 - Bei einer falschen PIN siehst du, wie viele Versuche übrig sind. Nach einigen Fehlversuchen musst du kurz warten, nach zehn ist die PIN gesperrt.
 - **PIN gesperrt oder vergessen?** Melde dich auf deinem **eigenen Handy** an und setze unter **Einstellungen → Konto & Sicherheit → Sicherheit → PIN für Eltern** eine neue PIN. Das entsperrt sie sofort.
 

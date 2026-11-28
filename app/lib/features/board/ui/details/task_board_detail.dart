@@ -31,12 +31,8 @@ class TaskBoardDetailBody extends StatelessWidget {
   const TaskBoardDetailBody({super.key});
 
   @override
-  Widget build(BuildContext context) => const Column(
-    children: [
-      Expanded(child: _Board()),
-      ActingProfileBar(),
-    ],
-  );
+  Widget build(BuildContext context) =>
+      const WithActingProfileBar(child: _Board());
 }
 
 /// Columns are never narrower than this, so a chore's longer words fit their line
@@ -128,6 +124,10 @@ class _Columns extends StatelessWidget {
         // One scroll for the whole board, with a fade while there is more below.
         return BoardScrollFade(
           child: SingleChildScrollView(
+            // The room the floating person bar covers at the end.
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.paddingOf(context).bottom,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

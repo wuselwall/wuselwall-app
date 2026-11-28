@@ -6,6 +6,8 @@ En dispositivos compartidos y en la pantalla de pared, toca **tu nombre y color*
 
 Sin elegir un nombre no se puede modificar nada. En la pantalla de pared, la selección desaparece tras **un minuto sin tocar**, para que nadie actúe por accidente con tu nombre.
 
+Cuando has tocado tu nombre, los nombres dejan sitio a la página. Abajo a la derecha aparece entonces **tu nombre con una puerta**. Tócalo cuando hayas **terminado**: el dispositivo vuelve a no ser de nadie y pregunta a la siguiente persona.
+
 ## Los ajustes en la tableta y en la pared {#settings-on-shared-devices}
 
 En una **tableta para todos**, la rueda de **Ajustes** solo aparece cuando alguien ha tocado su nombre. Lo que encuentras entonces depende de quién seas:
@@ -18,7 +20,7 @@ Cuando el dispositivo vuelve a «nadie», por ejemplo tras un minuto sin tocar l
 
 ## El PIN de los padres {#the-guardian-pin}
 
-Añadir o bloquear dispositivos está reservado a los padres. En un dispositivo **compartido**, toca tu nombre e introduce tu **PIN de seis cifras**. La autorización dura **5 minutos** —menos en cuanto alguien toca otro nombre, la pared vuelve a «nadie» o sales de los ajustes— y solo es tuya: elegir otro nombre no transfiere permisos.
+Añadir o bloquear dispositivos está reservado a los padres. En un dispositivo **compartido**, toca tu nombre e introduce tu **PIN de seis cifras**. La autorización dura **5 minutos** —menos en cuanto tocas tu nombre con la puerta abajo a la derecha, la pared vuelve a «nadie» o sales de los ajustes— y solo es tuya: quien toca su nombre después de ti no recibe tus permisos.
 
 Un error muestra los intentos restantes. Tras varios errores hay que esperar; con diez, el PIN queda bloqueado. Puedes desbloquearlo o cambiar uno olvidado desde **tu móvil personal conectado**, en **Ajustes → Cuenta y seguridad → Seguridad → PIN de los padres**. El nuevo PIN funciona inmediatamente.
 

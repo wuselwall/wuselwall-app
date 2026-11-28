@@ -269,6 +269,17 @@ fades out at the edge where more lies beyond it (`EdgeFade` in `core/ui`), so a 
 the edge reads as "scroll for more"; a control beside the row (the list pencil) sits
 outside it and never over a chip.
 
+### Who is here
+
+The dock that asks who is acting and the button that lets them go
+([09](09-clients-and-ux.md#who-is-here)) are the app's one floating surface without an
+outline. Fill `sunken` (`surfaceContainer`); corners 40 for the dock, a full pill for the
+button; the edge is the surface's own colour blurred outwards (14 blur, 3 spread), so it
+fades into whatever page lies under it; a wide, faint shadow (32 blur, 10 down, 22 % of
+the scheme's shadow) lifts it. 12 around it, 12 above and below the avatars, 24 at the
+dock's ends. The avatars keep their inks; the chosen person's ring is gone, because only
+one person is shown once someone is chosen.
+
 ### Choosing a time
 
 *Added 2026-11-14 (issue #241), after a family called Material's clock dial "weird".* A time of
