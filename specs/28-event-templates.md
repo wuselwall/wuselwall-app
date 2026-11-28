@@ -167,19 +167,26 @@ the events the caller may read.
    white space made one, leading and trailing white space and punctuation removed, and cut to
    120 characters
    ("Grosi kommt!" and "grosi  kommt" are one group), together with the kind.
-   *Near-identical signatures are one group (2026-11-28, specs/29 feature 3):* two signatures
-   of the same kind whose `pg_trgm` similarity (`extensions.similarity`) is at least **0.62**,
-   both at least four characters long, belong together. Among the distinct signatures of the
-   window, ranked by number of events, then most recent, then signature text, a *root* is one
-   that no higher-ranked signature is similar to; every signature joins the best-ranked root it
-   is similar to (a root joins itself). One hop, no chains, deterministic; the group's
-   representative is the root, and the suggestion's `signature` is the representative.
-   "Fussballtraining", "Fussball-Training" and "Fussball Training" are one group; "Oma kommt"
-   and "Opa kommt" (0.54), "Zahnarzt Mia" and "Zahnarzt Noah" (0.50) are not. The threshold lies
-   in the gap between "Zahnarzt Mia" / "Zahnarzt Mia und Noah" (0.59, apart) and "Arzt Termin" /
-   "Arzttermin" (0.64, together). Known limits: a child's name added to a title ("Coiffeur" /
-   "Coiffeur Mia", 0.69) merges, and short compounds written with a hyphen or space ("Judokurs" /
-   "Judo-Kurs", 0.58) do not.
+   *Alike signatures are one group (2026-11-28, specs/29 feature 3):* two signatures of the same
+   kind are alike (`app.event_signatures_alike`) when they are equal, or equal once spaces,
+   hyphens and other punctuation are removed ("Arzttermin" / "Arzt Termin", "Judokurs" /
+   "Judo-Kurs"), or have the same number of words (runs of spaces and hyphens separate them) and
+   every pair of words is equal or, with both words at least four characters long, has a `pg_trgm`
+   similarity (`extensions.similarity`) of at least **0.62** ("Grosi" / "Grossi" 0.625,
+   "Fussballtraining" / "Fußballtraining" 0.65, "Klavierstunde" / "Klavier-Stunde" by the first
+   rule). A different number of words is never alike, and a word under four characters must be
+   equal, so a name added or changed keeps titles apart: "Coiffeur" / "Coiffeur Mia",
+   "Zahnarzt Mia" / "Zahnarzt Lia", "Zahnarzt Mia" / "Zahnarzt Mia und Noah", "Oma kommt" / "Opa
+   kommt" (the word similarity of "papa" / "mama" is 0, of "turnen" / "tennis" 0.08, of
+   "Elternabend" / "Elterngespräch" 0.29). Among the distinct signatures of the window, ranked
+   by number of events, then most recent, then signature text, a *root* is one that no
+   higher-ranked signature is alike to; every signature joins the best-ranked root it is alike
+   to (a root joins itself). One hop, no chains, deterministic; the group's representative is
+   the root, and the suggestion's `signature` is the representative. Known limits: two names of
+   four or more letters that differ by one letter stay apart as long as the similarity is
+   below 0.62 ("Lina" / "Lena" 0.25, "Jonas" / "Jonah" 0.50, "Noah" / "Noahs" 0.57), but a
+   longer name pair that differs by one letter may pass, and a title that gains a word for a
+   reason other than a name ("Klavierstunde" / "Klavierstunde heute") stays apart.
 3. **Regular means at least three** events in the group, all its signatures counted together
    ("Fussballtraining" twice and "Fussball-Training" once is a suggestion).
 4. **What a suggestion fills in** is what the group usually does: the title of its most recent

@@ -2,12 +2,18 @@
 --
 -- api.event_suggestions grouped by the exact signature, so "Fussballtraining", "Fussball-
 -- Training" and "Fussball Training" were three groups of one or two events and never reached
--- the three that make a suggestion regular. Now signatures of the same kind whose pg_trgm
--- similarity is at least 0.62 (both at least four characters long) are one group:
+-- the three that make a suggestion regular. Now signatures of the same kind that app.event_
+-- signatures_alike calls alike are one group:
 --
+--   * Alike, word by word (see the function): equal; or equal once spaces, hyphens and other
+--     punctuation are removed ("arzttermin" / "arzt termin", "judokurs" / "judo-kurs"); or the
+--     same number of words, each pair equal or, from four characters, a pg_trgm similarity of
+--     at least 0.62 ("grosi" / "grossi"). An added or a different name keeps titles apart:
+--     "coiffeur" / "coiffeur mia" (a word more), "zahnarzt mia" / "zahnarzt lia" (names under
+--     four characters must be equal), "oma kommt" / "opa kommt".
 --   * Within a kind the distinct signatures of the window are ranked: most events, then the most
---     recent, then the signature text. A root is a signature no higher-ranked one is similar to;
---     each signature joins the best-ranked root it is similar to (a root joins itself). One hop,
+--     recent, then the signature text. A root is a signature no higher-ranked one is alike to;
+--     each signature joins the best-ranked root it is alike to (a root joins itself). One hop,
 --     no chains, deterministic; the group's representative is a signature that has events of its
 --     own in it, and the suggestion's `signature` is the representative.
 --   * The count (at least three), the weights, the weekday bonus and every most-frequent pick
@@ -20,6 +26,53 @@
 -- extensions schema as fuzzystrmatch is (20261031151000).
 
 create extension if not exists pg_trgm with schema extensions;
+
+-- Whether two signatures (app.event_signature) name the same thing, word by word:
+--   1. equal;
+--   2. equal once every space, hyphen and other punctuation is removed;
+--   3. otherwise the same number of words (runs of spaces and hyphens separate them) and every
+--      pair of words equal or, when both have at least four characters, with a pg_trgm
+--      similarity of at least c_word_similar.
+-- A different number of words is never alike, so an added name keeps titles apart ("coiffeur" /
+-- "coiffeur mia", "zahnarzt mia" / "zahnarzt mia und noah"); words under four characters must
+-- be equal, so "mia" and "lia" or "oma" and "opa" never merge. Measured (specs/28): "grosi" /
+-- "grossi" 0.625, "mia" / "lia" 0.14, "papa" / "mama" 0.00, "turnen" / "tennis" 0.08,
+-- "elternabend" / "elterngespräch" 0.29; the threshold passes the first and none of the rest.
+-- Symmetric; the relation is not transitive, and the grouping does not need it to be.
+create function app.event_signatures_alike(p_a text, p_b text) returns boolean
+language plpgsql immutable parallel safe set search_path = '' as $$
+declare
+  c_word_similar constant real := 0.62;
+  c_min_length   constant int := 4;
+  v_a text[];
+  v_b text[];
+begin
+  if p_a is null or p_b is null then
+    return false;
+  end if;
+  if p_a = p_b then
+    return true;
+  end if;
+  if regexp_replace(p_a, '[[:space:][:punct:]]+', '', 'g') = regexp_replace(p_b, '[[:space:][:punct:]]+', '', 'g')
+     and regexp_replace(p_a, '[[:space:][:punct:]]+', '', 'g') <> '' then
+    return true;
+  end if;
+  v_a := regexp_split_to_array(p_a, '[[:space:]-]+');
+  v_b := regexp_split_to_array(p_b, '[[:space:]-]+');
+  if cardinality(v_a) <> cardinality(v_b) then
+    return false;
+  end if;
+  return not exists (
+    select 1
+      from unnest(v_a, v_b) as w(x, y)
+     where x <> y
+       and not (length(x) >= c_min_length and length(y) >= c_min_length
+                and extensions.similarity(x, y) >= c_word_similar));
+end $$;
+
+-- api.event_suggestions runs as the caller and calls it (it reads nothing).
+revoke all on function app.event_signatures_alike(text, text) from public, anon, authenticated;
+grant execute on function app.event_signatures_alike(text, text) to authenticated;
 
 -- What the family enters often (specs/28 "Suggestions from the family's history"), as a jsonb
 -- array of at most p_limit (1–12) elements:
@@ -49,16 +102,6 @@ declare
   v_today     date;
   v_limit     int := least(greatest(coalesce(p_limit, 4), 1), 12);
   v_result    jsonb;
-  -- Two signatures of one kind are "the same thing" from this trigram similarity on, when both
-  -- have at least c_min_length characters (specs/28). Measured on the titles a family types:
-  -- "fussballtraining" / "fussball training" 0.75, "grosi kommt" / "grossi kommt" 0.79,
-  -- "klavierstunde" / "klavier stunde" 0.71, "fussballtraining" / "fußballtraining" 0.65,
-  -- "arzt termin" / "arzttermin" 0.64; but "zahnarzt mia" / "zahnarzt mia und noah" 0.59,
-  -- "oma kommt" / "opa kommt" 0.54, "zahnarzt mia" / "zahnarzt noah" 0.50, "turnen" / "tennis"
-  -- 0.08. 0.62 lies in the gap between 0.59 and 0.64. Very short strings share too few trigrams to
-  -- mean anything.
-  c_similar    constant real := 0.62;
-  c_min_length constant int := 4;
 begin
   if v_household is null or not app.device_ok() then
     return '[]'::jsonb;
@@ -109,11 +152,10 @@ begin
     select a.kind, a.signature as sig, b.signature as other, b.rk as other_rk
       from sig a
       join sig b on b.kind = a.kind and b.signature <> a.signature
-     where length(a.signature) >= c_min_length and length(b.signature) >= c_min_length
-       and extensions.similarity(a.signature, b.signature) >= c_similar
+     where app.event_signatures_alike(a.signature, b.signature)
   ),
-  -- A root is a signature no higher-ranked one is similar to. Every signature joins the
-  -- best-ranked root it is similar to (a root joins itself): one hop, no chains, and the
+  -- A root is a signature no higher-ranked one is alike to. Every signature joins the
+  -- best-ranked root it is alike to (a root joins itself): one hop, no chains, and the
   -- representative is always a signature whose own events are in its group.
   roots as (
     select s.kind, s.signature, s.rk
