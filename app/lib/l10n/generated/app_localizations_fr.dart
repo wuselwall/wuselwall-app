@@ -8857,4 +8857,65 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get totpSingleGuardianWarning =>
       'Tu es le seul parent avec un compte connecté. Si tu perds l’accès à ton application d’authentification, aucun autre parent ne pourra réinitialiser ton second facteur. Invite d’abord un deuxième parent et demande-lui de se connecter, ou conserve une sauvegarde séparée de ton authentificateur. Sinon, il faudra l’aide de la personne qui gère votre serveur. Activer quand même ?';
+
+  @override
+  String get packItemTile => 'À apporter';
+
+  @override
+  String get packItemTileHelp => 'Pour un enfant, un jour donné';
+
+  @override
+  String get packItemAdd => 'Quelque chose à apporter';
+
+  @override
+  String get packItemWho => 'Qui l’apporte';
+
+  @override
+  String get packItemWhen => 'Quand';
+
+  @override
+  String get packItemToday => 'Aujourd’hui';
+
+  @override
+  String get packItemTomorrow => 'Demain';
+
+  @override
+  String get packItemDayAfter => 'Après-demain';
+
+  @override
+  String get packItemOtherDay => 'Un autre jour …';
+
+  @override
+  String get packItemWhat => 'Quoi';
+
+  @override
+  String get packItemWhatHint => 'p. ex. sac de sport, mot signé';
+
+  @override
+  String get packItemSave => 'Ajouter';
+
+  @override
+  String packItemSaved(String name, String title) {
+    return 'Noté pour $name : $title';
+  }
+
+  @override
+  String packItemRemove(String title) {
+    return 'Retirer $title';
+  }
+
+  @override
+  String packItemRemoved(String title) {
+    return '$title retiré';
+  }
+
+  @override
+  String get errPackItemInvalid =>
+      'Impossible de le noter : 80 caractères au plus, pour un enfant de la famille, 20 choses par jour au plus.';
+
+  @override
+  String get errPackItemNotFound => 'Cet élément n’est plus sur la liste.';
+
+  @override
+  String get errPackItemNotYours => 'Tu ne peux noter que pour toi.';
 }

@@ -44,7 +44,7 @@ In compact rows the **whole member row** is one large button: it opens a child's
 A tap shows more, and after a minute the display returns to the week by itself:
 
 - on a **day header**: that whole day
-- on a **child's name**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown.
+- on a **child's name**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown. Whoever is chosen can also [note or remove something to bring once](/en/school/#one-off) there.
 - on a **school time in a compact row**: the child's weekly timetable; use the day header for an individual school day
 - on an **adult's name**: their week
 - on the **meal area**: the meals of the week

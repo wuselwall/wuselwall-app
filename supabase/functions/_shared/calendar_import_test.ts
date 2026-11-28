@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.19";
 import { type Calendar, importCalendar } from "./calendar_import.ts";
 import { type FetchOptions, type FetchResult } from "./safe_fetch.ts";
 

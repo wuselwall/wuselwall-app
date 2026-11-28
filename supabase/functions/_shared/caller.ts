@@ -2,7 +2,7 @@
 // caller's JWT is verified with Auth (getUser), and the sign-in methods it records (`amr`) and
 // its assurance level (`aal`) are read from the same token, so a recent re-authentication and
 // the second factor can be checked (security review 2026-11-01, F3 and F10).
-import type { User } from "npm:@supabase/supabase-js@2.75.0";
+import type { User } from "npm:@supabase/supabase-js@2.119.2";
 import { RequestError, userClient } from "./client.ts";
 
 /** The bearer token of the request. */

@@ -44,7 +44,7 @@ In kompakten Zeilen ist die **ganze Mitgliederzeile** eine einzige große Schalt
 Ein Tipp zeigt mehr, und nach einer Minute geht die Anzeige von selbst zurück zur Woche:
 
 - auf die **Tagesüberschrift**: der ganze Tag
-- auf den **Namen eines Kindes**: der Stundenplan der Woche. Entfall ist durchgestrichen, Vertretungen sind markiert, und „Morgen einpacken“ steht dabei.
+- auf den **Namen eines Kindes**: der Stundenplan der Woche. Entfall ist durchgestrichen, Vertretungen sind markiert, und „Morgen einpacken“ steht dabei. Wer ausgewählt ist, kann dort auch [etwas Einmaliges zum Mitbringen](/school/#one-off) notieren oder entfernen.
 - auf eine **Schulzeit in einer kompakten Zeile**: der Wochenstundenplan des Kindes; den einzelnen Schultag erreicht ihr über die Tagesüberschrift
 - auf den **Namen eines Erwachsenen**: seine Woche
 - auf den **Essensbereich**: die Mahlzeiten der Woche

@@ -8827,6 +8827,68 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get totpSingleGuardianWarning =>
       'Du hast als einziger Elternteil ein angemeldetes Konto. Wenn du den Zugang zu deiner Authenticator-App verlierst, kann kein anderer Elternteil deinen zweiten Faktor zurücksetzen. Lade zuerst einen zweiten Elternteil ein und lass ihn sich anmelden, oder sichere deinen Authenticator getrennt. Sonst brauchst du Hilfe von der Person, die euren Server betreibt. Trotzdem einschalten?';
+
+  @override
+  String get packItemTile => 'Mitbringen';
+
+  @override
+  String get packItemTileHelp => 'Für ein Kind, an einem Tag';
+
+  @override
+  String get packItemAdd => 'Etwas mitbringen';
+
+  @override
+  String get packItemWho => 'Wer bringt es mit';
+
+  @override
+  String get packItemWhen => 'Wann';
+
+  @override
+  String get packItemToday => 'Heute';
+
+  @override
+  String get packItemTomorrow => 'Morgen';
+
+  @override
+  String get packItemDayAfter => 'Übermorgen';
+
+  @override
+  String get packItemOtherDay => 'Anderer Tag …';
+
+  @override
+  String get packItemWhat => 'Was';
+
+  @override
+  String get packItemWhatHint => 'z. B. Turnbeutel, unterschriebener Zettel';
+
+  @override
+  String get packItemSave => 'Hinzufügen';
+
+  @override
+  String packItemSaved(String name, String title) {
+    return 'Für $name notiert: $title';
+  }
+
+  @override
+  String packItemRemove(String title) {
+    return '$title entfernen';
+  }
+
+  @override
+  String packItemRemoved(String title) {
+    return '$title entfernt';
+  }
+
+  @override
+  String get errPackItemInvalid =>
+      'Das lässt sich so nicht notieren: höchstens 80 Zeichen, für ein Kind der Familie, höchstens 20 Dinge pro Tag.';
+
+  @override
+  String get errPackItemNotFound => 'Das steht nicht mehr auf der Packliste.';
+
+  @override
+  String get errPackItemNotYours =>
+      'Du kannst nur für dich selbst etwas notieren.';
 }
 
 /// The translations for German, as used in Austria (`de_AT`).
@@ -8888,6 +8950,9 @@ class AppLocalizationsDeAt extends AppLocalizationsDe {
 
   @override
   String get eventStarterSchoolTest => 'Schularbeit';
+
+  @override
+  String get packItemWhatHint => 'z. B. Turnsackerl, unterschriebener Zettel';
 }
 
 /// The translations for German, as used in Switzerland (`de_CH`).
@@ -9336,4 +9401,7 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get shoppingSearchClear => 'Leeren und schliessen';
+
+  @override
+  String get packItemWhatHint => 'z. B. Turnsack, unterschriebener Zettel';
 }

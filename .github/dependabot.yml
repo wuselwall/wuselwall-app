@@ -6,6 +6,9 @@
 # - Supabase images (infra/supabase): they follow the Supabase CLI in package.json, which
 #   the npm entry below bumps; specs/10#updates carries them over by hand.
 # - Gradle plugins (app/android): AGP and Kotlin move with Flutter's own requirements.
+# - The Caddy and nginx images (infra/supabase), the Edge Functions' imports (deno.lock), the
+#   local pgTAP helper (scripts/local-pgtap) and the tools CI downloads by version
+#   (osv-scanner, Deno, minisign): by hand, specs/10#updates.
 version: 2
 updates:
   - package-ecosystem: pub
@@ -21,6 +24,15 @@ updates:
     cooldown: { default-days: 7 }
     groups:
       tooling-minor-and-patch: { update-types: [minor, patch] }
+
+  # The Python packages of the optional text recognition image. No CI job builds that image:
+  # before merging, build it (`docker build infra/supabase/ocr`), which also reads a test line.
+  - package-ecosystem: pip
+    directory: /infra/supabase/ocr
+    schedule: { interval: weekly, day: monday }
+    cooldown: { default-days: 7 }
+    groups:
+      ocr: { patterns: ["*"] }
 
   - package-ecosystem: bundler
     directories: [/app/ios, /app/android]   # fastlane; one PR keeps both locks equal

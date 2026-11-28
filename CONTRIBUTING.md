@@ -46,6 +46,10 @@ hand wins over the prefix.
   a prefix. It becomes the commit on `main` and a line of the release notes.
 - A feature or a fix writes `Closes #<issue>` in the description. Fill in the template's
   "How it was checked".
+- A change to a screen shows the view before and after. Commit the pictures in
+  `pr-screenshots/<branch without its prefix>/` ([pr-screenshots/README.md](pr-screenshots/README.md)):
+  no build reads that folder. `node scripts/pr-screenshots.mjs` prints the Markdown that
+  shows them in the description. Demo data only.
 - Keep a pull request to one outcome. Commits inside it are yours to arrange: they are
   squashed.
 - Open it as a draft while it is unfinished.

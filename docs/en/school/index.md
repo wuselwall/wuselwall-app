@@ -180,7 +180,21 @@ Tap a lesson when something changes:
 
 ## Pack for tomorrow
 
-On the kitchen wall, a child's card shows **Pack for tomorrow** when something needs to come along, for example sports kit. The child's Today view shows the same, and your own phone gives a [packing reminder](/en/settings/reminders) the evening before. Whether these hints appear is set under [Settings → Calendar & school](/en/settings/household): switched off, they disappear everywhere.
+On the kitchen wall, a child's card shows **Pack for tomorrow** when something needs to come along, for example sports kit. The child's Today view shows the same, and your own phone gives a [packing reminder](/en/settings/reminders) the evening before. Whether these hints appear is set under [Settings → Calendar & school](/en/settings/household): switched off, they disappear everywhere. A thing you [noted once](#one-off) is not affected.
+
+## Note something to bring once {#one-off}
+
+Sometimes a thing is needed just once: the gym bag, a signed form, 5 francs for the trip. You note it for one child on one day. It then shows wherever the things from the timetable show, after them, each thing once.
+
+There are three ways:
+
+- **Calendar → New event → Something to bring** (under **School**, "For one child, on one day"). You write **What** (up to 80 characters), choose **Who brings it** (only if you have more than one child) and **When**: **Today**, **Tomorrow**, **Day after tomorrow** or **Another day …**. **Add** notes it. Tomorrow is the default.
+- **Timetable**: under a child's week, next to "Pack for tomorrow", the things for tomorrow show as chips. The × removes one, **Something to bring** adds one, also for another day.
+- **Kitchen wall**: tap a child's name. While someone is chosen, the same chips to remove and add are there.
+
+It works for any child on any day, also a child without a timetable or on a Saturday. Adults note for any child, a child only for themselves. The same thing on the same day is kept once, and there are at most 20 per child and day.
+
+The packing reminder the evening before names these things too, and Siri answers "What does Mia have tomorrow?" with "Pack: sports kit and gym bag." The **Equipment hint for tomorrow** switch under [Settings → Calendar & school](/en/settings/household) affects only the things from the timetable: what you noted yourselves always shows. If your server does not have the feature yet, the tile and the chips are missing and only the things from the timetable appear.
 
 ## Children report changes
 

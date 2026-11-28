@@ -8834,4 +8834,65 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get totpSingleGuardianWarning =>
       'Eres el único padre o madre con una cuenta conectada. Si pierdes el acceso a tu aplicación de autenticación, nadie más podrá restablecer tu segundo factor. Invita primero a otro padre o madre y pídele que inicie sesión, o guarda una copia de seguridad separada de tu autenticador. De lo contrario, necesitarás ayuda de quien administra vuestro servidor. ¿Activar de todos modos?';
+
+  @override
+  String get packItemTile => 'Para llevar';
+
+  @override
+  String get packItemTileHelp => 'Para un niño, un día concreto';
+
+  @override
+  String get packItemAdd => 'Algo para llevar';
+
+  @override
+  String get packItemWho => 'Quién lo lleva';
+
+  @override
+  String get packItemWhen => 'Cuándo';
+
+  @override
+  String get packItemToday => 'Hoy';
+
+  @override
+  String get packItemTomorrow => 'Mañana';
+
+  @override
+  String get packItemDayAfter => 'Pasado mañana';
+
+  @override
+  String get packItemOtherDay => 'Otro día …';
+
+  @override
+  String get packItemWhat => 'Qué';
+
+  @override
+  String get packItemWhatHint => 'p. ej. bolsa de deporte, nota firmada';
+
+  @override
+  String get packItemSave => 'Añadir';
+
+  @override
+  String packItemSaved(String name, String title) {
+    return 'Anotado para $name: $title';
+  }
+
+  @override
+  String packItemRemove(String title) {
+    return 'Quitar $title';
+  }
+
+  @override
+  String packItemRemoved(String title) {
+    return '$title quitado';
+  }
+
+  @override
+  String get errPackItemInvalid =>
+      'No se puede anotar: como mucho 80 caracteres, para un niño de la familia, como mucho 20 cosas al día.';
+
+  @override
+  String get errPackItemNotFound => 'Esto ya no está en la lista.';
+
+  @override
+  String get errPackItemNotYours => 'Solo puedes anotar cosas para ti.';
 }

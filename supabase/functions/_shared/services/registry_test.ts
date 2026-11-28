@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertNotEquals } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals, assertNotEquals } from "jsr:@std/assert@1.0.19";
 import { catalogue, findProvider, PROVIDERS } from "./registry.ts";
 import { CACHE_TTL_SECONDS, cacheKey, capabilitiesOf, CAPABILITIES } from "./types.ts";
 import { serviceErrorResponse, SERVICE_ERROR_STATUS } from "./errors.ts";

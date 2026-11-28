@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.19";
 import type { EventRow } from "./occurrences.ts";
 import type {
   ExceptionRow,
@@ -766,6 +766,44 @@ Deno.test("school: the equipment line follows the household setting", () => {
   assertEquals(
     answerSchool(c, members[2], "2026-10-16", null, DE).text,
     "Emma hat morgen von 08:00 bis 10:40 Schule: Deutsch, Mathematik und Sport.",
+  );
+});
+
+Deno.test("school: one-off things to bring join the day, also without a timetable", () => {
+  const c = {
+    ...schoolCtx(),
+    pack: [
+      { member_id: "emma", date: "2026-10-16", title: "Turnbeutel" },
+      // Already on the list through the subject: named once.
+      { member_id: "emma", date: "2026-10-16", title: "Sportsachen" },
+      { member_id: "emma", date: "2026-10-17", title: "Kuchen" },
+      { member_id: "paul", date: "2026-10-16", title: "Hausschuhe" },
+    ],
+  };
+  assertEquals(
+    answerSchool(c, members[2], "2026-10-16", null, DE).text,
+    "Emma hat morgen von 08:00 bis 10:40 Schule: Deutsch, Mathematik und Sport. Einpacken: Sportsachen und Turnbeutel.",
+  );
+  assertEquals(
+    answerSchool(c, members[2], "2026-10-17", null, DE).text,
+    "Emma hat übermorgen keine Schule, es ist Wochenende. Einpacken: Kuchen.",
+  );
+  const paul = answerSchool(c, members[3], "2026-10-16", null, DE);
+  assertEquals(
+    paul.text,
+    "Für Paul ist kein Stundenplan eingetragen. Einpacken: Hausschuhe.",
+  );
+  assertEquals(paul.data.equipment, ["Hausschuhe"]);
+  // The setting switches off the subjects' notes, not what a person noted.
+  assertEquals(
+    answerSchool(
+      { ...c, equipment_hint: false },
+      members[2],
+      "2026-10-16",
+      null,
+      DE,
+    ).text,
+    "Emma hat morgen von 08:00 bis 10:40 Schule: Deutsch, Mathematik und Sport. Einpacken: Turnbeutel und Sportsachen.",
   );
 });
 

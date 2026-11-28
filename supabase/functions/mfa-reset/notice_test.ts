@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertStringIncludes } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals, assertStringIncludes } from "jsr:@std/assert@1.0.19";
 import { notifyTarget } from "./notice.ts";
 import { MAIL_FR } from "../_shared/mail_fr.ts";
 

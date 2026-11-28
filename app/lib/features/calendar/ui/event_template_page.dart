@@ -25,6 +25,7 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/rituals/domain/event_icons.dart';
+import 'package:wuselwall/features/school/ui/pack_item_sheet.dart';
 import 'package:wuselwall/features/trips/application/trip_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -252,6 +253,16 @@ class EventTemplatePage extends ConsumerWidget {
               // School events: only a family with a child has any use for them.
               if (active.any((m) => m.isChild))
                 section(l10n.eventTemplatesSchool, [
+                  // Not an event: a thing a child brings on a day, which joins that
+                  // day's packing list (specs/15 "One-off things to bring").
+                  if (ref.watch(canNotePackItemProvider))
+                    _TemplateTile(
+                      key: const ValueKey('event-template-pack-item'),
+                      title: l10n.packItemTile,
+                      line: l10n.packItemTileHelp,
+                      icon: Icons.backpack_outlined,
+                      onTap: () => unawaited(_packItem(context, now)),
+                    ),
                   for (final s in byHabit(EventStarter.schoolOnes))
                     starterTile(s),
                 ]),
@@ -261,6 +272,18 @@ class EventTemplatePage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Notes a thing to bring, for the day in view when it is ahead, else for tomorrow;
+  /// when one was noted, this page closes as well.
+  Future<void> _packItem(BuildContext context, DateTime now) async {
+    final today = dateOnly(now);
+    final inView = args?.date == null ? null : dateOnly(args!.date!);
+    final noted = await showPackItemSheet(
+      context,
+      date: inView != null && inView.isAfter(today) ? inView : null,
+    );
+    if (noted && context.mounted) context.pop();
   }
 
   /// Opens the editor; when it saved, this page closes as well.

@@ -47,6 +47,10 @@ const featureEventReminder = 'event-reminder';
 /// 20261115110000.
 const featureTrips = 'trips';
 
+/// The server keeps one-off things a child has to bring on a day (specs/15 "One-off
+/// things to bring"). Announced by the migration 20261117100000.
+const featurePackItems = 'pack-items';
+
 /// The server offers opt-in weather and map services through the family's own server
 /// (ADR-023, specs/30 "Services"). Announced by the migration 20261115100000.
 const featureServices = 'services';
@@ -84,6 +88,12 @@ final appVersionProvider = FutureProvider<String>(
 /// Whether the server has the trips (specs/30); without, every entry point is hidden.
 final tripsSupportedProvider = Provider<bool>(
   (ref) => ref.watch(serverSupportsProvider(featureTrips)),
+);
+
+/// Whether the server keeps one-off things to bring; without, every way to note one is
+/// hidden (the packing list still shows the subjects' equipment).
+final packItemsSupportedProvider = Provider<bool>(
+  (ref) => ref.watch(serverSupportsProvider(featurePackItems)),
 );
 
 /// Whether the server has the opt-in services (ADR-023); without, the settings page and
