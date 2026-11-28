@@ -76,5 +76,11 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          # Optional, all four or none: whom App Review may contact. Without them the
+          # review notes are left out of the upload.
+          ASC_REVIEW_FIRST_NAME: ${{ secrets.ASC_REVIEW_FIRST_NAME }}
+          ASC_REVIEW_LAST_NAME: ${{ secrets.ASC_REVIEW_LAST_NAME }}
+          ASC_REVIEW_PHONE: ${{ secrets.ASC_REVIEW_PHONE }}
+          ASC_REVIEW_EMAIL: ${{ secrets.ASC_REVIEW_EMAIL }}
           LISTING_VALIDATE_ONLY: ${{ inputs.validate_only && '1' || '' }}
           XDG_CACHE_HOME: ${{ runner.temp }}/cache

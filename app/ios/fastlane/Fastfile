@@ -67,6 +67,23 @@ def check_listing_files
   UI.success("Listing files of #{locales.join(', ')} are within App Store Connect's limits")
 end
 
+# The person App Review may contact, from four optional secrets: App Store Connect accepts
+# the review notes (metadata/review_information) only together with a complete contact.
+# Returns nil when none is set, and stops when only some are.
+REVIEW_CONTACT = {
+  first_name: "ASC_REVIEW_FIRST_NAME", last_name: "ASC_REVIEW_LAST_NAME",
+  phone_number: "ASC_REVIEW_PHONE", email_address: "ASC_REVIEW_EMAIL",
+}.freeze
+
+def review_contact
+  contact = REVIEW_CONTACT.transform_values { |name| ENV.fetch(name, "").strip }
+  return nil if contact.values.all?(&:empty?)
+  missing = REVIEW_CONTACT.values.select { |name| ENV.fetch(name, "").strip.empty? }
+  UI.user_error!("the review contact is incomplete: #{missing.join(', ')} not set") unless missing.empty?
+  UI.user_error!("ASC_REVIEW_PHONE must start with + and the country code, like +44 844 209 0611") unless contact[:phone_number].match?(/\A\+\d[\d ]{6,}\z/)
+  contact
+end
+
 platform :ios do
   desc "Sign with the match profile, archive and upload to TestFlight"
   lane :beta do
@@ -134,17 +151,32 @@ platform :ios do
       else
         UI.message("No version being prepared; the upload would create #{version}")
       end
+      UI.message(review_contact ? "Review contact set: the review notes would be uploaded" : "No review contact (ASC_REVIEW_*): the review notes would be left out")
       UI.success("Validated only: nothing was changed in App Store Connect")
     else
-      deliver(
+      contact = review_contact
+      metadata = File.expand_path("metadata")
+      unless contact
+        # Without a contact App Store Connect refuses the notes and deliver stops before the
+        # screenshots, so the upload goes without the review information.
+        UI.important("No review contact (ASC_REVIEW_*): uploading without the review notes")
+        require "tmpdir"
+        metadata = File.join(Dir.mktmpdir("listing"), "metadata")
+        FileUtils.cp_r(File.expand_path("metadata"), metadata)
+        FileUtils.rm_rf(File.join(metadata, "review_information"))
+      end
+      options = {
         api_key: api_key,
         app_version: version,
+        metadata_path: metadata,
         skip_binary_upload: true,
         overwrite_screenshots: true,
         force: true, # no HTML preview to confirm on CI
         submit_for_review: false,
         run_precheck_before_submit: false,
-      )
+      }
+      options[:app_review_information] = contact if contact
+      deliver(**options)
     end
   end
 end

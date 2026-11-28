@@ -573,7 +573,11 @@ nothing. The two keys need more than an upload: the Play service account the per
 "Manage store presence", the App Store Connect key the role App Manager. What the APIs
 cannot set stays in the consoles: on Play the content rating, target audience, Data safety
 and the other App content forms, the category and the privacy policy address; on App Store
-Connect the App Privacy labels and the age rating.
+Connect the App Privacy labels and the age rating. App Store Connect takes the review notes
+(`metadata/review_information`) only together with a complete review contact: the lane
+reads it from the optional secrets `ASC_REVIEW_FIRST_NAME`, `ASC_REVIEW_LAST_NAME`,
+`ASC_REVIEW_PHONE` and `ASC_REVIEW_EMAIL` (all four or none) and uploads the texts and
+screenshots without the notes when they are not set.
 
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.
@@ -777,6 +781,7 @@ manager.
 | `MATCH_PASSWORD`, `MATCH_GIT_BASIC_AUTHORIZATION` | GitHub secrets | iOS signing |
 | `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | GitHub secrets | Android signing |
 | `PLAY_SERVICE_ACCOUNT_JSON` | GitHub secrets | Play upload |
+| `ASC_REVIEW_FIRST_NAME`, `ASC_REVIEW_LAST_NAME`, `ASC_REVIEW_PHONE`, `ASC_REVIEW_EMAIL` (optional) | GitHub secrets | App Review's contact, sent with the review notes of the App Store listing |
 | `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `backup.env` next to the server's tool (`BACKUP_ENV`) | backups |
 | `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
