@@ -86,7 +86,7 @@ Pour ce rendez-vous, il remplace votre réglage personnel **Avant un rendez-vous
 
 En bas de l’éditeur, trois réglages rendent le quotidien plus léger (voir [Rituels](/fr/guide/rituals)) :
 
-- **Image** : une des 20 images, comme un gâteau, une pizza, le zoo ou une tente. Elle accompagne l’événement sur le mur et son compte à rebours. **Pas d’image** par défaut.
+- **Image** : une des 20 images, comme un gâteau, une pizza, le zoo ou une tente. Elle accompagne l’événement dans **Aujourd’hui**, dans le calendrier, sur le mur et son compte à rebours. **Pas d’image** par défaut.
 - **On a hâte** : l’événement a un compte à rebours sur l’écran mural et la tablette des enfants, par exemple « Sortie au zoo : encore 3 dodos ».
 - **Tradition familiale** : ce que la famille fait encore et encore, comme la soirée jeux. Une tradition est toujours sur le mur, avec un ruban. **Avec un repas** indique le plat qui l’accompagne, au **Déjeuner** ou au **Dîner**.
 
