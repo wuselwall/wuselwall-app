@@ -1,6 +1,6 @@
 // Repository boundary and Pages opt-in regressions; no third-party dependencies.
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, readdirSync, readlinkSync } from 'node:fs';
 import { test } from 'node:test';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -84,4 +84,30 @@ test('the reusable backend runner serializes and removes its disposable stack', 
   assert.match(backend, /group: backend-ci-local-stack\n\s+cancel-in-progress: false\n\s+queue: max\n/);
   assert.match(backend, /name: Stop the disposable backend\n\s+if: always\(\)/);
   assert.match(backend, /npx --no-install supabase stop --no-backup/);
+});
+
+test('pull request screenshots are in no build and no source archive', () => {
+  assert.ok(existsSync(new URL('../pr-screenshots/README.md', import.meta.url)));
+  for (const path of ['app/pubspec.yaml', 'scripts/build-server-release.sh', 'scripts/deploy-web.sh', 'scripts/store-listing.mjs', 'docs/.vitepress/config.mts', 'docs/tools/screenshots.mjs']) {
+    assert.doesNotMatch(read(path), /pr-screenshots/, path);
+  }
+  assert.match(read('.gitattributes'), /^\/pr-screenshots export-ignore$/m);
+});
+
+test('every agent skill has its Claude Code link and its row in AGENTS.md', () => {
+  const skills = readdirSync(new URL('../.agents/skills/', import.meta.url));
+  assert.ok(skills.length > 0);
+  assert.deepEqual(readdirSync(new URL('../.claude/skills/', import.meta.url)).sort(), [...skills].sort());
+  for (const name of skills) {
+    assert.match(name, /^[a-z0-9]+(-[a-z0-9]+)*$/, name);
+    const [, front] = /^---\n([\s\S]*?)\n---\n/.exec(read(`.agents/skills/${name}/SKILL.md`)) ?? [];
+    assert.ok(front, `${name}: front matter`);
+    assert.equal(/^name: (.+)$/m.exec(front)?.[1], name);
+    const description = /^description: (.+)$/m.exec(front)?.[1] ?? '';
+    assert.ok(description.length >= 40 && description.length <= 1024, `${name}: description of 40 to 1024 characters`);
+    const link = new URL(`../.claude/skills/${name}`, import.meta.url);
+    assert.ok(lstatSync(link).isSymbolicLink(), `${name}: .claude/skills/${name} is a link`);
+    assert.equal(readlinkSync(link), `../../.agents/skills/${name}`);
+    assert.ok(read('AGENTS.md').includes(`(.agents/skills/${name}/SKILL.md)`), `${name}: linked in AGENTS.md`);
+  }
 });

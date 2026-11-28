@@ -185,11 +185,28 @@ committed files; real values in git-ignored files (`scripts/remote.env`,
 ## Development workflow
 
 The whole process is in [CONTRIBUTING.md](CONTRIBUTING.md); these are the rules an agent
-follows without being asked.
+follows without being asked. Two skills hold the steps. Read the skill before doing what it
+covers:
 
-- **Never commit to `main` or push to it.** It is protected (pull request, required checks,
-  squash only, no administrator bypass). Work in a branch, in its own worktree under
-  `.worktrees/` when another checkout is in use.
+| Skill | Read it |
+|---|---|
+| [request-to-pr](.agents/skills/request-to-pr/SKILL.md) | before the first edit of every request, and again when the work is ready to commit |
+| [pr-screenshots](.agents/skills/pr-screenshots/SKILL.md) | whenever a change alters what a family sees |
+
+The skills live in `.agents/skills/<name>/SKILL.md`; `.claude/skills/<name>` links to each
+one. A new skill gets its folder, its link and its row in this table
+(`scripts/repository-boundaries.test.mjs` checks all three).
+
+- **Every request that changes a file is worked in its own worktree and ends in a pull
+  request.** Cut the worktree under `.worktrees/` from `origin/main`, on a new branch; leave
+  the main checkout and other worktrees alone. Commit, push and open the pull request
+  without being asked: the request is not finished before the pull request exists. `main`
+  itself takes changes only through a pull request (required checks, squash only, no
+  administrator bypass).
+- **A pull request that changes a screen shows it.** Before/after pictures go in
+  `pr-screenshots/<branch>/` on the pull request's branch and nowhere else: that folder is
+  in no build ([pr-screenshots/README.md](pr-screenshots/README.md)).
+  `node scripts/pr-screenshots.mjs` prints the Markdown for the description. Demo data only.
 - **A feature or a fix needs an issue in a release milestone before the code.** Find the
   issue or create it (`gh issue create --label enhancement --milestone v1.12.0`, or `bug`),
   with the outcome and acceptance checkboxes. Milestones are releases (`v<app version>`);
