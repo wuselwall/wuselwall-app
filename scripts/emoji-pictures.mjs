@@ -190,10 +190,10 @@ const sets = {
     house: 'House/Flat/house_flat.svg', star: 'Star/Flat/star_flat.svg',
     broom: 'Broom/Flat/broom_flat.svg',
     // The cleaner comes: there is no emoji of a person cleaning, so one is layered (see
-    // `layers` below), a person with a bucket and a mop. The broom stays the chore.
+    // `layers` below), a woman with a bucket and a mop. The broom stays the chore.
     cleaner: [
       { file: 'Broom/Flat/broom_flat.svg', size: 0.7, left: 0.3, top: 0.1 },
-      { file: 'Person/Default/Flat/person_flat_default.svg', size: 0.75, left: 0, top: 0.05 },
+      { file: 'Woman/Default/Flat/woman_flat_default.svg', size: 0.75, left: 0, top: 0.05 },
       { file: 'Bucket/Flat/bucket_flat.svg', size: 0.5, left: 0.5, top: 0.5 },
     ],
     // Health and care.
