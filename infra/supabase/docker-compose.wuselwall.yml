@@ -104,7 +104,7 @@ services:
   # No public ports, no Caddy dependency, no credentials or household data. Auth fetches
   # raw Go templates over the Compose network; SMTP remains the operator's choice.
   mail-templates:
-    image: nginx:1.28.0-alpine
+    image: nginx:1.30.8-alpine
     restart: unless-stopped
     volumes:
       - ./volumes/mail-templates:/usr/share/nginx/html:ro,z

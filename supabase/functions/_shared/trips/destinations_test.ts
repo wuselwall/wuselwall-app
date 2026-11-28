@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.19";
 import { DESTINATIONS, LANGS, TAGS } from "./destinations.ts";
 
 // [south, north, west, east] of each country the catalogue uses, rounded outwards. A box
