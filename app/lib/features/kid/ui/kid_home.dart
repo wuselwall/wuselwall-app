@@ -194,7 +194,7 @@ class KidHome extends ConsumerWidget {
                 ),
                 // While the big picker fills the page it is the one place to say who is
                 // here; the bar below would only repeat it.
-                if (!picking) const ActingProfileBar(),
+                if (!picking) const ActingProfileBar(attached: true),
               ],
             ),
           ),

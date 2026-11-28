@@ -95,6 +95,17 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
     revoked: false,
     guardianVerifiedUntil: null,
   ),
+  // Prototype for issue #306: a tablet for everyone in the adult register.
+  'tablet' => DeviceInfo(
+    deviceId: 'd-4',
+    householdId: 'h1',
+    label: DemoData.kidsTablet,
+    deviceClass: DeviceClass.shared,
+    register: UiRegister.adult,
+    profileId: null,
+    revoked: false,
+    guardianVerifiedUntil: null,
+  ),
   _ => DeviceInfo(
     deviceId: 'd-1',
     householdId: 'h1',

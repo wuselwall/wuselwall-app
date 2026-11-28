@@ -163,8 +163,7 @@ class RegisterHomePage extends ConsumerWidget {
                 child: Column(
                   children: [
                     const StaleStrip(),
-                    Expanded(child: section.body),
-                    const ActingProfileBar(),
+                    Expanded(child: WithActingProfileBar(child: section.body)),
                   ],
                 ),
               ),

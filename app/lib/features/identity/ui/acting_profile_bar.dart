@@ -11,11 +11,41 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 
+/// Prototype for issue #306: how the bar meets the page above it. The demo chooses it
+/// with `?bar=fade` or `?bar=dock`; the app itself still draws the band.
+enum PersonBarLook {
+  /// A flat band in its own colour (today).
+  band,
+
+  /// The page's own colour, and the content fades out above it.
+  fade,
+
+  /// A rounded capsule that floats over the content.
+  dock,
+}
+
 /// "Who am I right now?" — one avatar per household member on shared and kiosk
 /// devices. Each is a colour *and* an initial, never colour alone (NFR-13). Personal
 /// devices show nothing: their profile is fixed.
 class ActingProfileBar extends ConsumerWidget {
-  const ActingProfileBar({super.key});
+  const ActingProfileBar({this.attached = false, this.fades = true, super.key});
+
+  static PersonBarLook look = PersonBarLook.band;
+
+  /// How far the fade reaches into the content above the bar.
+  static const fadeExtent = 40.0;
+
+  /// The room a scroll view leaves at its end so its last entry clears the dock.
+  static double dockClearance(BuildContext context) =>
+      look == PersonBarLook.dock ? 132 : 0;
+
+  /// Under another bottom bar (the kid home's tabs): it continues that bar's colour
+  /// whatever the look.
+  final bool attached;
+
+  /// False under a page that ends in its own action (the shopping list's button):
+  /// nothing scrolls into the bar there, so nothing fades out above it.
+  final bool fades;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,11 +62,102 @@ class ActingProfileBar extends ConsumerWidget {
     final narrow = width < 480;
     final target = ref.watch(uiRegisterProvider).touchTarget;
     final size = narrow ? target : target + 8;
+    final look = attached ? PersonBarLook.band : ActingProfileBar.look;
+    final scheme = Theme.of(context).colorScheme;
+    // The page the bar sits on: the wall's detail and a home have different ones.
+    final page = Material.maybeOf(context)?.color ?? scheme.surface;
+    final color = look == PersonBarLook.fade ? page : scheme.surfaceContainer;
 
-    final color = Theme.of(context).colorScheme.surfaceContainer;
+    Widget people(List<Member> list) => Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final m in list.where((m) => m.active))
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: narrow ? 0 : Tokens.space2,
+            ),
+            child: _Avatar(
+              member: m,
+              size: size,
+              nameWidth: narrow ? size + Tokens.space2 : size + Tokens.space6,
+              selected: m.id == acting,
+              onTap: () {
+                // Another person: a guardian's PIN window ends with the switch
+                // (specs/08, step-up on a shared device), on the server too.
+                if (m.id != acting) {
+                  guardianStepDown(ref);
+                }
+                ref.read(actingProfileProvider.notifier).select(m.id);
+              },
+            ),
+          ),
+      ],
+    );
+    final question = !narrow && acting == null;
+
+    if (look == PersonBarLook.dock) {
+      // The capsule is as wide as the family; a large one scrolls sideways inside it.
+      return SystemBars(
+        navigationColor: page,
+        child: GuardianStepDownOnLeave(
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Tokens.space3,
+                0,
+                Tokens.space3,
+                Tokens.space3,
+              ),
+              child: Center(
+                heightFactor: 1,
+                child: Material(
+                  color: color,
+                  elevation: 10,
+                  shadowColor: Colors.black.withValues(alpha: 0.6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(36),
+                    side: BorderSide(color: context.ww.line),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: Tokens.space2,
+                      horizontal: narrow ? Tokens.space2 : Tokens.space4,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (question) ...[
+                          Text(l10n.actingWho),
+                          const SizedBox(width: Tokens.space3),
+                        ],
+                        Flexible(
+                          child: members.when(
+                            data: (list) => SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: people(list),
+                            ),
+                            loading: () => const SizedBox.shrink(),
+                            error: (_, _) => const SizedBox.shrink(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     // The bar is on every home of a shared device and the wall, and stays mounted while
     // the settings are open above it: it ends a guardian's PIN window when they are left.
-    return SystemBars(
+    final bar = SystemBars(
       navigationColor: color,
       child: GuardianStepDownOnLeave(
         child: Material(
@@ -50,7 +171,7 @@ class ActingProfileBar extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  if (!narrow && acting == null) ...[
+                  if (question) ...[
                     Text(l10n.actingWho),
                     const SizedBox(width: Tokens.space3),
                   ],
@@ -66,41 +187,10 @@ class ActingProfileBar extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   minWidth: constraints.maxWidth,
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    for (final m in list.where((m) => m.active))
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: narrow
-                                              ? 0
-                                              : Tokens.space2,
-                                        ),
-                                        child: _Avatar(
-                                          member: m,
-                                          size: size,
-                                          nameWidth: narrow
-                                              ? size + Tokens.space2
-                                              : size + Tokens.space6,
-                                          selected: m.id == acting,
-                                          onTap: () {
-                                            // Another person: a guardian's PIN window ends
-                                            // with the switch (specs/08, step-up on a shared
-                                            // device), on the server too.
-                                            if (m.id != acting) {
-                                              guardianStepDown(ref);
-                                            }
-                                            ref
-                                                .read(
-                                                  actingProfileProvider
-                                                      .notifier,
-                                                )
-                                                .select(m.id);
-                                          },
-                                        ),
-                                      ),
-                                  ],
+                                child: Center(
+                                  widthFactor: 1,
+                                  heightFactor: 1,
+                                  child: people(list),
                                 ),
                               ),
                             ),
@@ -115,6 +205,88 @@ class ActingProfileBar extends ConsumerWidget {
           ),
         ),
       ),
+    );
+    if (look != PersonBarLook.fade || !fades) return bar;
+    // The last of the content dissolves into the page just above the avatars. The
+    // bar is the later child of its column, so this paints over the content's end.
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          top: -fadeExtent,
+          height: fadeExtent,
+          child: IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0, 0.35, 0.7, 1],
+                  colors: [
+                    page.withValues(alpha: 0),
+                    page.withValues(alpha: 0.35),
+                    page.withValues(alpha: 0.82),
+                    page,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        bar,
+      ],
+    );
+  }
+}
+
+/// A page with the bar at its end: under it, or, as a dock, floating over it.
+class WithActingProfileBar extends StatelessWidget {
+  const WithActingProfileBar({
+    required this.child,
+    this.show = true,
+    this.behind = true,
+    super.key,
+  });
+
+  final Widget child;
+
+  /// Whether the page runs on behind a dock. False for a page that ends in its own
+  /// action (the shopping list's button): the dock sits under it instead.
+  final bool behind;
+
+  /// False where a page leaves the bar out for a while.
+  final bool show;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!show) return child;
+    if (ActingProfileBar.look == PersonBarLook.dock) {
+      return Stack(
+        children: [
+          Positioned.fill(
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: behind ? 0 : ActingProfileBar.dockClearance(context),
+              ),
+              child: child,
+            ),
+          ),
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: ActingProfileBar(),
+          ),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        Expanded(child: child),
+        ActingProfileBar(fades: behind),
+      ],
     );
   }
 }
