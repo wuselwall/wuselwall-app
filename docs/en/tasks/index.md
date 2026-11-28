@@ -50,6 +50,10 @@ Each reward costs points. **Stock** limits the number; empty means unlimited.
 - Anyone who wants a reward taps **Ask for it**.
 - The **History** shows what is waiting, redeemed and already handed over. Mark a reward with **Mark as handed over**.
 
+## Filtering
+
+With seven or more entries, the **Chores** tab shows a **Filter chores** field above the list and the **Rewards** tab a **Filter rewards** field. Type a word and the list shows only what fits. To search everything at once, use the [search](/en/guide/concepts#search).
+
 ## Points
 
 The **Points** tab shows each person's **balance** and all **movements**: chores done, ticks taken back, rewards redeemed, corrections and badges. A correction is made with **Correct**, and it always needs a reason.

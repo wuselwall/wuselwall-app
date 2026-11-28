@@ -38,6 +38,10 @@ Chaque récompense coûte des points. Un stock vide signifie illimité. Si l’a
 
 Une demande rejoint l’historique des récompenses en attente, échangées ou remises. Marquez la récompense une fois remise.
 
+## Filtrer {#filter}
+
+À partir de sept entrées, l’onglet des tâches affiche au-dessus de la liste un champ **Filtrer les tâches**, et l’onglet des récompenses un champ **Filtrer les récompenses**. Saisissez un mot : la liste ne montre que ce qui correspond. Pour tout chercher à la fois, utilisez la [recherche](/fr/guide/concepts#search).
+
 ## Points {#points}
 
 Le solde et les mouvements détaillent les tâches terminées ou annulées, récompenses, corrections et badges. Une correction demande toujours un motif.

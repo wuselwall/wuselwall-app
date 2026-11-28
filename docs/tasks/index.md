@@ -50,6 +50,10 @@ Jede Belohnung kostet Punkte. Mit **Vorrat** begrenzt du die Anzahl; leer heißt
 - Wer eine Belohnung haben möchte, tippt auf **Wünschen**.
 - Im **Verlauf** sieht man, was wartet, eingelöst und schon übergeben ist. Übergeben markierst du mit **Als übergeben markieren**.
 
+## Filtern
+
+Sind es sieben oder mehr Einträge, steht über der Liste im Tab **Aufgaben** das Feld **Aufgaben filtern** und im Tab **Belohnungen** das Feld **Belohnungen filtern**. Tippe ein Wort, und die Liste zeigt nur, was passt. Über alle Bereiche hinweg sucht die [Suche](/guide/concepts#search).
+
 ## Punkte
 
 Der Tab **Punkte** zeigt den **Stand** jeder Person und alle **Bewegungen**: erledigte Aufgaben, zurückgenommene Häkchen, eingelöste Belohnungen, Korrekturen und Abzeichen. Eine Korrektur ist mit **Korrigieren** möglich. Sie braucht immer einen Grund.

@@ -74,6 +74,15 @@ for (const [lang, labels] of Object.entries(SETTINGS_GROUPS)) Object.assign(T[la
 // The calendar bar's view menu (its tooltip), where the bar has no room for the view buttons.
 const CALENDAR_VIEW = { de: 'Kalenderansicht', en: 'Calendar view', fr: 'Vue du calendrier', es: 'Vista del calendario' };
 for (const [lang, chooseView] of Object.entries(CALENDAR_VIEW)) T[lang].chooseView = chooseView;
+// The search page (/search): its field's hint, and a word the demo's data answers in each language
+// (the pasta recipe and the shopping list's pasta).
+const SEARCH = {
+  de: { searchHint: 'Wonach suchst du?', searchWord: 'nudel' },
+  en: { searchHint: 'What are you looking for?', searchWord: 'pasta' },
+  fr: { searchHint: 'Que cherches-tu ?', searchWord: 'pâtes' },
+  es: { searchHint: '¿Qué buscas?', searchWord: 'pasta' },
+};
+for (const [lang, labels] of Object.entries(SEARCH)) Object.assign(T[lang], labels);
 
 async function open(page, scenario, route = '', query = '') {
   // still=1: nothing moves and Wusel's words are fixed, so every run gives the same picture.
@@ -342,6 +351,7 @@ const shots = [
   { name: 'wall-day', scenario: 'kiosk', viewport: WALL, steps: async (p) => { await p.getByRole('button', { name: /^(Mittwoch|Wednesday|mercredi|miércoles)/i }).first().click(); await settle(p); } },
   // The board has no avatars: open the footer's shopping list first, then tap the name in its bar.
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await p.getByRole('button', { name: t.shopping }).first().click(); await settle(p); await p.getByRole('button', { name: t.daughter, exact: true }).last().click(); await settle(p); } },
+  { name: 'search', scenario: 'adult', viewport: PHONE, route: '/search', steps: async (p, t) => { await p.getByLabel(t.searchHint, { exact: true }).fill(t.searchWord); await settle(p, 1500); } },
   { name: 'settings-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.settings) },
   // The colours a personal phone is offered once on its first arrival at home (specs/20 "The first look"):
   // the sheet opens by itself, and it follows the browser's scheme like the page behind it.

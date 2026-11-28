@@ -27,6 +27,7 @@ import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/search/ui/search_page.dart';
 import 'package:wuselwall/features/services/ui/services_page.dart';
 import 'package:wuselwall/features/settings/ui/family_members_page.dart';
 import 'package:wuselwall/features/settings/ui/family_page.dart';
@@ -98,6 +99,7 @@ bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'RemindersPage' => widget is RemindersPage,
   'ScheduleBody' => widget is ScheduleBody,
   'SchoolSetupPage' => widget is SchoolSetupPage,
+  'SearchPage' => widget is SearchPage,
   'ServerChoicePage' => widget is ServerChoicePage,
   'ServicesPage' => widget is ServicesPage,
   'SettingsGroupPage' => widget is SettingsGroupPage,

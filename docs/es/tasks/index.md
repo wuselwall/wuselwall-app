@@ -38,6 +38,10 @@ Cada recompensa cuesta puntos. Sin existencias indicadas, no hay límite. Si req
 
 Las solicitudes aparecen en el historial como pendientes, canjeadas o entregadas. Márcalas cuando las entregues.
 
+## Filtrar {#filter}
+
+Con siete o más entradas, la pestaña de tareas muestra sobre la lista un campo **Filtrar tareas**, y la de recompensas un campo **Filtrar recompensas**. Escribe una palabra y la lista muestra solo lo que encaja. Para buscarlo todo a la vez, usa la [búsqueda](/es/guide/concepts#search).
+
 ## Puntos {#points}
 
 El saldo y los movimientos detallan tareas hechas o deshechas, recompensas, correcciones e insignias. Las correcciones siempre exigen un motivo.

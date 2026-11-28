@@ -6,8 +6,10 @@ import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/text/search.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/module_band.dart';
+import 'package:wuselwall/core/ui/search_field.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -15,6 +17,7 @@ import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/ui/own_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_text.dart';
+import 'package:wuselwall/features/settings/ui/settings_search.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
 /// Einstellungen: a short page of groups, each opening its own page (specs/21, "Where the
@@ -24,11 +27,21 @@ import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 ///
 /// Basic shows what a family needs to get going; Advanced adds the rest. Hiding a row
 /// changes nothing it controls.
-class SettingsPage extends ConsumerWidget {
+///
+/// The field on top searches every group (FR-10.1): with a query the page lists what
+/// answers it in place of the groups, rows only Advanced shows included.
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends ConsumerState<SettingsPage> {
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
     // A child, or an adult who is not a guardian, at a shared device: their own page only.
     if (ref.watch(settingsAccessProvider) == SettingsAccess.own) {
       return const OwnSettingsPage();
@@ -73,16 +86,28 @@ class SettingsPage extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.all(Tokens.space4),
             children: [
-              for (final group in visibleGroups(env))
-                ListTile(
-                  key: ValueKey('settings-group-${group.name}'),
-                  leading: Icon(group.icon),
-                  title: Text(group.title(l10n)),
-                  subtitle: Text(group.subtitle(l10n, advanced: env.advanced)),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go(group.route),
-                ),
-              if (hasHiddenSettings(env)) const MoreSettingsHint(),
+              SearchField(
+                key: const ValueKey('settings-search'),
+                hint: l10n.settingsSearchHint,
+                onChanged: (text) => setState(() => _query = text),
+              ),
+              const SizedBox(height: Tokens.space2),
+              if (searchTerms(_query).isNotEmpty)
+                ..._results(l10n, env)
+              else ...[
+                for (final group in visibleGroups(env))
+                  ListTile(
+                    key: ValueKey('settings-group-${group.name}'),
+                    leading: Icon(group.icon),
+                    title: Text(group.title(l10n)),
+                    subtitle: Text(
+                      group.subtitle(l10n, advanced: env.advanced),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.go(group.route),
+                  ),
+                if (hasHiddenSettings(env)) const MoreSettingsHint(),
+              ],
               const SizedBox(height: Tokens.space6),
               OutlinedButton.icon(
                 onPressed: () => thisDevice?.deviceClass == DeviceClass.personal
@@ -96,5 +121,20 @@ class SettingsPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// What answers the query, or one line saying that nothing does.
+  List<Widget> _results(AppLocalizations l10n, SettingsEnv env) {
+    final hits = searchSettings(l10n, settingsSearchIndex(l10n, env), _query);
+    if (hits.isEmpty) {
+      return [
+        Padding(
+          key: const ValueKey('settings-search-empty'),
+          padding: const EdgeInsets.all(Tokens.space4),
+          child: Text(l10n.searchNothingFound),
+        ),
+      ];
+    }
+    return [for (final hit in hits) SettingsHitTile(hit: hit)];
   }
 }

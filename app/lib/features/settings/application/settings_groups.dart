@@ -103,6 +103,10 @@ enum SettingsTile {
 
 sealed class SettingsItem {
   const SettingsItem();
+
+  /// The row's name in a link to its group page (`?row=`): the search opens the page
+  /// with it and the page shows that row. A catalogue key has a dot, a tile's name none.
+  String get rowId;
 }
 
 /// A catalogue setting, drawn as a [SettingRow].
@@ -110,12 +114,18 @@ final class SettingKey extends SettingsItem {
   const SettingKey(this.key);
 
   final String key;
+
+  @override
+  String get rowId => key;
 }
 
 final class SettingTileItem extends SettingsItem {
   const SettingTileItem(this.tile);
 
   final SettingsTile tile;
+
+  @override
+  String get rowId => tile.name;
 }
 
 class SettingsSection {
