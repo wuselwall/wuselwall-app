@@ -17,3 +17,23 @@ final shoppingMatcherProvider = Provider<Matcher?>((ref) {
       ?.byDomain['shopping'];
   return dictionary == null ? null : Matcher(dictionary);
 });
+
+/// The matcher of the `events` domain (specs/29 feature 3): an event title to its
+/// picture. Null while the dictionary loads.
+final eventsMatcherProvider = Provider<Matcher?>((ref) {
+  final dictionary = ref
+      .watch(matchDictionariesProvider)
+      .value
+      ?.byDomain['events'];
+  return dictionary == null ? null : Matcher(dictionary);
+});
+
+/// The matcher of the `tasks` domain: a chore's title to its picture. Null while the
+/// dictionary loads.
+final tasksMatcherProvider = Provider<Matcher?>((ref) {
+  final dictionary = ref
+      .watch(matchDictionariesProvider)
+      .value
+      ?.byDomain['tasks'];
+  return dictionary == null ? null : Matcher(dictionary);
+});
