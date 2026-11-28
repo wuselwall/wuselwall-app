@@ -552,7 +552,8 @@ or live-host changes are implied by the prepared workflow.
 |---|---|---|
 | Supabase images | Bump the pinned CLI in `package.json`, run CI, set the same tags in `docker-compose.wuselwall.yml`, release | Quarterly, or for a security fix |
 | Upstream compose file | Copy `docker/` from a newer upstream commit into `infra/supabase/` (never edit it), note the commit in the layer's header, diff the rendered config | When an image bump needs it, or yearly |
-| `pub`, npm, fastlane, GitHub Actions, Deno | Dependabot PRs, reviewed; `osv-scanner` in CI | Weekly PRs, merged monthly; security fixes at once |
+| `pub`, npm, fastlane, GitHub Actions, the text recognition image's Python packages (`infra/supabase/ocr/requirements.txt`) | Dependabot PRs, reviewed; `osv-scanner` in CI. No CI job builds the text recognition image: run `docker build infra/supabase/ocr` before merging its PR | Weekly PRs, merged monthly; security fixes at once |
+| What Dependabot does not see: the Caddy and nginx images, the Edge Functions' imports (`deno.lock`), `scripts/local-pgtap`, the tools CI downloads by version (osv-scanner, Deno, minisign) | By hand: look for newer versions and advisories, change the pin and run its check. nginx is also named in `scripts/email-code-smtp.smoke.mjs`; a Deno import is named in every file that uses it, and `deno test` without `--frozen` renews `deno.lock` | Quarterly, or for a security fix |
 | iOS signing certificate, Apple Developer Program | `fastlane match` renewal; renewal | Yearly |
 | SMTP provider (if mail is on) | Deliverability check (`wuselwall mail test`); a Gmail app password stops working when the Google password changes | Quarterly, and after any DNS or password change |
 | TestFlight builds | Any new release | Expire after 90 days |

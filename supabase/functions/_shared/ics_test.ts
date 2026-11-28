@@ -3,7 +3,7 @@ import {
   assertEquals,
   assertFalse,
   assertMatch,
-} from "jsr:@std/assert@1.0.13";
+} from "jsr:@std/assert@1.0.19";
 import ICALPkg from "npm:ical.js@2.2.1";
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
 import {

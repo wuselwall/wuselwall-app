@@ -19,7 +19,7 @@ const delay = () => new Promise((r) => setTimeout(r, 500));
 // serves for the tag.
 const mailpitImage = 'ghcr.io/supabase/mailpit:v1.31.3';
 const gotrueImage = 'ghcr.io/supabase/gotrue:v2.197.0';
-const images = ['postgres:15-alpine', 'nginx:1.28.0-alpine',
+const images = ['postgres:15-alpine', 'nginx:1.30.8-alpine',
   { ref: mailpitImage, digest: 'sha256:ed9b00c609e77e99c79b93f1178255ebc271868920f2c69a8d166bd5634ed10d',
     mirrors: ['public.ecr.aws/supabase/mailpit'] },
   { ref: gotrueImage, digest: 'sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b',
@@ -48,7 +48,7 @@ try {
   docker('run', '-d', '--name', mailpit, '--network', prefix, '--network-alias', 'mailpit',
     mailpitImage);
   docker('run', '-d', '--name', templates, '--network', prefix, '--network-alias', 'mail-templates',
-    'nginx:1.28.0-alpine');
+    'nginx:1.30.8-alpine');
   for (const kind of ['confirmation', 'magic_link', 'recovery', 'email_change', 'reauthentication', 'invite']) {
     docker('cp', new URL(`../supabase/templates/fr/${kind}.html`, import.meta.url).pathname,
       `${templates}:/usr/share/nginx/html/${kind}.html`);

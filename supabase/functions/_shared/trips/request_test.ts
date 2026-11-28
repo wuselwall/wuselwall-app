@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.13";
+import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.19";
 import { RequestError } from "../client.ts";
 import { parseDiscoverRequest, parseWindowsRequest } from "./request.ts";
 

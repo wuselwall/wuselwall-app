@@ -1,4 +1,4 @@
-import { assertEquals, assertNotEquals } from "jsr:@std/assert@1.0.13";
+import { assertEquals, assertNotEquals } from "jsr:@std/assert@1.0.19";
 import {
   type BoardJson,
   type BusyRow,

@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertThrows } from "jsr:@std/assert@1.0.13";
+import { assert, assertEquals, assertThrows } from "jsr:@std/assert@1.0.19";
 import {
   constantTimeEquals,
   decodeSecret,

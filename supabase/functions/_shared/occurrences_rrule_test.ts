@@ -5,7 +5,7 @@
 // so that unusual combinations (negative month days, BYSETPOS, WKST, long intervals) are
 // covered too. Rules the parser refuses are not compared: rrule.js would walk some of them to
 // the year 9999, which is the reason the walk exists.
-import { assertEquals } from "jsr:@std/assert@1.0.13";
+import { assertEquals } from "jsr:@std/assert@1.0.19";
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
 import rrulePkg from "npm:rrule@2.8.1";
 import { parseRrule, untilLocal, walkRule } from "./occurrences.ts";
