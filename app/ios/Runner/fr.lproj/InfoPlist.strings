@@ -1,3 +1,4 @@
 /* System permission prompts, shown by iOS in the device language. Keep in step with the other lproj files. */
 "NSCameraUsageDescription" = "L’appareil photo permet de scanner le code QR pour configurer cet appareil.";
 "NSMotionUsageDescription" = "Wusel se penche sur le côté quand l’appareil est incliné.";
+"NSPhotoLibraryUsageDescription" = "WuselWall lit l’emploi du temps sur une photo que tu choisis.";
