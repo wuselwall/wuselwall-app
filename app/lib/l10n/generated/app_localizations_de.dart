@@ -6244,6 +6244,54 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventIcon_broom => 'Putzen';
 
   @override
+  String get eventIcon_cleaner => 'Putzhilfe kommt';
+
+  @override
+  String get eventIcon_doctor => 'Arzt';
+
+  @override
+  String get eventIcon_dentist => 'Zahnarzt';
+
+  @override
+  String get eventIcon_haircut => 'Friseur';
+
+  @override
+  String get eventIcon_vet => 'Tierarzt';
+
+  @override
+  String get eventIcon_bicycle => 'Radfahren';
+
+  @override
+  String get eventIcon_ski => 'Skifahren';
+
+  @override
+  String get eventIcon_dance => 'Tanzen';
+
+  @override
+  String get eventIcon_riding => 'Reiten';
+
+  @override
+  String get eventIcon_tennis => 'Tennis';
+
+  @override
+  String get eventIcon_guitar => 'Instrument';
+
+  @override
+  String get eventIcon_laundry => 'Wäsche';
+
+  @override
+  String get eventIcon_garden => 'Garten';
+
+  @override
+  String get eventIcon_car => 'Auto';
+
+  @override
+  String get eventIcon_work => 'Arbeit';
+
+  @override
+  String get eventIcon_shopping => 'Shopping';
+
+  @override
   String get eventIcon_star => 'Besonderes';
 
   @override
@@ -9368,6 +9416,12 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get eventIcon_croissant => 'Zmorge';
+
+  @override
+  String get eventIcon_haircut => 'Coiffeur';
+
+  @override
+  String get eventIcon_bicycle => 'Velofahren';
 
   @override
   String get wishPickerOwnHint => 'z. B. Omeletten';

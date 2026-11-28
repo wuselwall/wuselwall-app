@@ -125,7 +125,7 @@ before the exact Damerau-Levenshtein distance. The four domains:
 |---|---|---|
 | `shopping` | the 60 shopping pictures | words in six tags, and the icon's seeded categories, most likely first (`milk -> dairy`), which gives a new item its category (the `i(icon, keys)` table of #195 moves here) |
 | `meals` | the 35 meal pictures | dishes in six tags |
-| `events` | the 20 event pictures | title words: *Geburtstag* → `cake`, *Schwimmkurs* → `swim`, *Chilbi* → `ferris` |
+| `events` | the 36 event pictures (and `star`, the fallback) | title words: *Geburtstag* → `cake`, *Schwimmkurs* → `swim`, *Chilbi* → `ferris`, *Zahnarzt* → `dentist`, *Putzfrau* → `cleaner` (against *Frühjahrsputz* → `broom`) |
 | `tasks` | the 18 task pictures | chore words: *Spülmaschine ausräumen* → `dishes`, *Ufzgi* → `book` |
 
 A regional word (`de-CH`, `de-AT`) is matched for every family: the tag documents where the
@@ -133,9 +133,10 @@ word comes from and guides the regional review, it does not gate the match. Serv
 text stays in the German of Germany ([09](09-clients-and-ux.md#regional-german)); this file
 only *reads* dialect.
 
-**Words that must stay out.** An appointment (*Zahnarzt*, *Friseur*, *Termin*) has no fitting
-event picture, and a name is not a thing. Such words are deliberately absent, so the matcher
-answers *unknown* rather than *star*. Pictures the set lacks and the corpus asks for are listed
+**Words that must stay out.** A bare *Termin* has no fitting event picture (*Zahnarzt*,
+*Arzt*, *Friseur* and *Tierarzt* have since #297), *Dienst* is a presence kind of the app, and a
+name is not a thing. Such words are deliberately absent, so the matcher answers *unknown*
+rather than *star*. Pictures the set lacks and the corpus asks for are listed
 in the dictionary's README as candidates for the icon expansion that #196 deferred.
 
 ## The corpus
