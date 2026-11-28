@@ -137,6 +137,9 @@ class SettingsGroupPage extends ConsumerWidget {
 /// Far more than any group page is long, so [SettingsGroupPage.focusRow] is always built.
 const _wholePage = 20000.0;
 
+/// How far the tint of the row in focus reaches beyond the row: half the page's padding.
+const _tintOutset = Tokens.space2;
+
 /// A row of the page. The one a search result named ([focused]) is brought into view
 /// when the page opens and tinted for a moment, so the eye finds it among its neighbours;
 /// where motion is off (specs/26) it is there at once and the tint stays.
@@ -188,20 +191,35 @@ class _FocusedRowState extends State<_FocusedRow>
     final fade = _fade;
     if (fade == null) return widget.child;
     final tint = Theme.of(context).colorScheme.secondaryContainer;
-    return AnimatedBuilder(
-      animation: fade,
-      builder: (context, child) => DecoratedBox(
-        key: const ValueKey('settings-row-focused'),
-        decoration: BoxDecoration(
-          // Full for the first two thirds, then gone.
-          color: tint.withValues(
-            alpha: 1 - const Interval(0.66, 1).transform(fade.value),
+    // The tint reaches a little beyond the row on every side, into the page's own
+    // padding, so the row's text does not touch its edge; the row itself stays where its
+    // neighbours are.
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Positioned(
+          left: -_tintOutset,
+          right: -_tintOutset,
+          top: -_tintOutset / 2,
+          bottom: -_tintOutset / 2,
+          child: IgnorePointer(
+            child: AnimatedBuilder(
+              animation: fade,
+              builder: (context, _) => DecoratedBox(
+                key: const ValueKey('settings-row-focused'),
+                decoration: BoxDecoration(
+                  // Full for the first two thirds, then gone.
+                  color: tint.withValues(
+                    alpha: 1 - const Interval(0.66, 1).transform(fade.value),
+                  ),
+                  borderRadius: BorderRadius.circular(Tokens.space2),
+                ),
+              ),
+            ),
           ),
-          borderRadius: BorderRadius.circular(8),
         ),
-        child: child,
-      ),
-      child: widget.child,
+        widget.child,
+      ],
     );
   }
 }

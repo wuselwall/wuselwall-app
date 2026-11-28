@@ -450,10 +450,17 @@ void main() {
         find.byKey(const ValueKey('settings-row-focused')),
         findsOneWidget,
       );
-      // The row that is marked is the one asked for.
+      // The row that is marked is the one asked for: the mark is drawn behind it.
       expect(
         find.descendant(
-          of: find.byKey(const ValueKey('settings-row-focused')),
+          of: find.byKey(const ValueKey('settings-row-board.rollover')),
+          matching: find.byKey(const ValueKey('settings-row-focused')),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('settings-row-board.rollover')),
           matching: find.byKey(const ValueKey('setting-board.rollover')),
         ),
         findsOneWidget,
@@ -477,10 +484,8 @@ void main() {
       );
       expect(
         find.descendant(
-          of: find.byKey(const ValueKey('settings-row-focused')),
-          matching: find.byKey(
-            const ValueKey('setting-tasks.jokers_per_month'),
-          ),
+          of: find.byKey(const ValueKey('settings-row-tasks.jokers_per_month')),
+          matching: find.byKey(const ValueKey('settings-row-focused')),
         ),
         findsOneWidget,
       );
@@ -524,6 +529,17 @@ void main() {
       }
 
       expect(tint()!.a, greaterThan(0.9));
+      // The tint is wider and taller than the row, so its text keeps a margin inside.
+      final row = t.getRect(
+        find.byKey(const ValueKey('settings-row-tasks.jokers_per_month')),
+      );
+      final mark = t.getRect(
+        find.byKey(const ValueKey('settings-row-focused')),
+      );
+      expect(mark.left, row.left - 8);
+      expect(mark.right, row.right + 8);
+      expect(mark.top, row.top - 4);
+      expect(mark.bottom, row.bottom + 4);
       // ... and the 2.4 s fade ends clear.
       await t.pumpAndSettle();
       expect(tint()!.a, 0);
