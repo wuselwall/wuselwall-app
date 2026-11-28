@@ -45,7 +45,8 @@ final calendarSection = HomeSection(
 /// (specs/30), only where an adult can plan trips. A phone keeps the one button, so less
 /// of the grid is covered; the tradition and the trips start from tiles on the *Neuer
 /// Termin* page there. (The app bar has no room: a 48 px action there pushes "Heute" and
-/// the date out of a narrow bar.)
+/// the date out of a narrow bar.) A child's calendar, their own four days, has the one
+/// button as well.
 class CalendarFab extends ConsumerWidget {
   const CalendarFab({super.key});
 
@@ -54,11 +55,13 @@ class CalendarFab extends ConsumerWidget {
 
   /// Whether the small tradition button floats above "Neuer Termin" in this [context].
   static bool showsTradition(BuildContext context, WidgetRef ref) =>
+      ref.watch(childCalendarProvider) == null &&
       ref.watch(lighterDaySupportedProvider) &&
       MediaQuery.sizeOf(context).width >= phoneWidth;
 
   /// Whether the small trips button floats in this [context].
   static bool showsTrips(BuildContext context, WidgetRef ref) =>
+      ref.watch(childCalendarProvider) == null &&
       ref.watch(tripsOfferedProvider) &&
       MediaQuery.sizeOf(context).width >= phoneWidth;
 

@@ -263,6 +263,9 @@ class _Days extends ConsumerWidget {
   final VoidCallback onLessons;
   final VoidCallback? onShopping;
 
+  /// Narrower than this, the four day buttons take two rows.
+  static const _twoRowsBelow = 480.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
@@ -318,24 +321,39 @@ class _Days extends ConsumerWidget {
         ],
         if (days.length > 1) ...[
           const SizedBox(height: Tokens.space4),
-          Row(
-            children: [
-              for (var i = 0; i < days.length; i++)
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Tokens.space1,
-                    ),
-                    child: _DayChip(
-                      key: ValueKey('kid-simple-day-$i'),
-                      date: days[i],
-                      offset: i,
-                      selected: i == selected,
-                      onTap: () => onDay(i),
-                    ),
+          // One row on a tablet; on a phone two rows of two, so every word keeps
+          // the same size ("Tomorrow" and "Wednesday" do not fit a quarter of 360 dp).
+          LayoutBuilder(
+            builder: (context, box) {
+              final perRow = box.maxWidth < _twoRowsBelow ? 2 : days.length;
+              Widget chip(int i) => Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(Tokens.space1),
+                  child: _DayChip(
+                    key: ValueKey('kid-simple-day-$i'),
+                    date: days[i],
+                    offset: i,
+                    selected: i == selected,
+                    onTap: () => onDay(i),
                   ),
                 ),
-            ],
+              );
+              return Column(
+                children: [
+                  for (var row = 0; row < days.length; row += perRow)
+                    Row(
+                      children: [
+                        for (
+                          var i = row;
+                          i < row + perRow && i < days.length;
+                          i++
+                        )
+                          chip(i),
+                      ],
+                    ),
+                ],
+              );
+            },
           ),
         ],
         if (isToday) ...[

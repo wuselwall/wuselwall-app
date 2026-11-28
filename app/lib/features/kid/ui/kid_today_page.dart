@@ -880,8 +880,10 @@ class KidEventCard extends StatelessWidget {
             ExcludeSemantics(child: EmojiPicture(picture, size: 40)),
             const SizedBox(width: Tokens.space3),
           ],
-          SizedBox(
-            width: 104,
+          // The time's own column, so the titles of a day line up; a gap after it,
+          // since "3:30 PM" fills the column.
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 104),
             child: Text(
               o.localStarts == null
                   ? l10n.kidAllDay
@@ -893,6 +895,7 @@ class KidEventCard extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(width: Tokens.space3),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
