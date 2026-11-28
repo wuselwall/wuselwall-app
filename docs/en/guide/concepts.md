@@ -54,7 +54,7 @@ Everything belongs to one **household**: your family. A household has **members*
 | | May |
 |---|---|
 | **Parents** | everything: add members, connect and block devices, manage security |
-| **Children and other adults** | use the shopping list: add items, tick them, finish the trip |
+| **Children and other adults** | use the shopping list: add items, tick them, finish the trip. For children this holds only where the family has switched on **Shopping for children** |
 
 ## Three kinds of devices
 

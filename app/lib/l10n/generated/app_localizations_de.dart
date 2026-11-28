@@ -818,6 +818,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get boardBackToWeek => 'Zurück zur Woche';
 
   @override
+  String get boardShoppingAskAdult =>
+      'Die Einkaufsliste ist für die Großen. Tipp auf deinen Namen.';
+
+  @override
   String get boardTentative => 'noch nicht sicher';
 
   @override
@@ -1242,6 +1246,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get calendarToday => 'Heute';
+
+  @override
+  String get calendarChildDays => 'Heute und die nächsten drei Tage';
 
   @override
   String calendarRange(String from, String to) {
@@ -2803,6 +2810,26 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => 'Hallo! Tipp auf deinen Namen.';
+
+  @override
+  String get kidSimpleBack => 'Zurück';
+
+  @override
+  String get kidSimpleTomorrow => 'Morgen';
+
+  @override
+  String get kidSimpleAppointments => 'Meine Termine';
+
+  @override
+  String get kidSimpleNoSchool => 'Keine Schule.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'Du brauchst: $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Noch ist nichts geplant.';
 
   @override
   String kidGreeting(String name) {
@@ -5570,12 +5597,18 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Flagge eures Landes auf dem Hügel an seinem Nationalfeiertag, etwa am 1. August in der Schweiz. Das Land kommt aus eurer Region.';
 
   @override
-  String get settingHouseholdKidShoppingTitle =>
-      'Einkaufen in der Kinder-Ansicht';
+  String get settingHouseholdKidShoppingTitle => 'Einkaufen für Kinder';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Zeigt in der Kinder-Ansicht den Reiter Einkaufen, dort fügen Kinder Artikel hinzu und haken sie ab. Am Wanddisplay können sie in jedem Fall Artikel hinzufügen.';
+      'Kinder fügen auf der Einkaufsliste Artikel hinzu und haken sie ab. Aus: Kinder haben keine Einkaufsliste, und am Tablet für alle und am Wanddisplay öffnet sie sich erst, wenn ein Erwachsener auf seinen Namen getippt hat.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Kalender für Kinder';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Kinder sehen ihre eigenen Termine für heute und die nächsten drei Tage. Aus: nur heute. Das Tablet für alle hat dann keinen Reiter Kalender, bis ein Erwachsener auf seinen Namen tippt.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Vorfreude beginnt';
@@ -9038,6 +9071,10 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get close => 'Schliessen';
+
+  @override
+  String get boardShoppingAskAdult =>
+      'Die Einkaufsliste ist für die Grossen. Tipp auf deinen Namen.';
 
   @override
   String boardPeriod(int index) {

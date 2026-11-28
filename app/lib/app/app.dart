@@ -46,7 +46,9 @@ class WuselWallApp extends ConsumerWidget {
     // The wall display switches to its night shade in its night hours
     // (`device.night_hours`) whatever the OS or the device's appearance says;
     // otherwise the appearance picks light or dark, by default as the OS does.
-    final night = register == UiRegister.kiosk && ref.watch(nightProvider);
+    final night =
+        ref.watch(deviceRegisterProvider) == UiRegister.kiosk &&
+        ref.watch(nightProvider);
     // Each device shows the light and the dark theme it chose (specs/17 "Themes").
     final looks = ref.watch(looksProvider).value ?? const Looks();
 

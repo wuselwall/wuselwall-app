@@ -101,7 +101,7 @@ final currentListProvider = Provider.autoDispose<AsyncValue<ShoppingList?>>((
   ref,
 ) {
   // The wall display only ever writes to the default list (FR-8.12).
-  final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
+  final kiosk = ref.watch(deviceRegisterProvider) == UiRegister.kiosk;
   final selected = kiosk ? null : ref.watch(selectedListIdProvider);
   return ref.watch(shoppingListsProvider).whenData((lists) {
     if (lists.isEmpty) return null;

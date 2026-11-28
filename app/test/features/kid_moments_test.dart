@@ -32,7 +32,7 @@ Member _emmaMember({DateTime? birthday}) => Member(
   role: Role.member,
   active: true,
   isChild: true,
-  birthday: birthday,
+  birthday: birthday ?? olderChildBirthday(),
 );
 
 const _papaMember = Member(
@@ -61,7 +61,7 @@ class _KidIdentity extends FakeIdentityRepository {
     final now = testNow();
     return Ok([
       _emmaMember(
-        birthday: birthday ? DateTime(now.year - 8, now.month, now.day) : null,
+        birthday: birthday ? DateTime(now.year - 13, now.month, now.day) : null,
       ),
       _papaMember,
     ]);

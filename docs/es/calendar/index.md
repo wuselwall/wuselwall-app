@@ -120,7 +120,7 @@ Normalmente trabajas en la oficina los martes. Guárdalo una vez en la **semana 
 
 ## Niños y citas {#children-and-appointments}
 
-El grupo [Ajustes → Calendario y colegio](/es/settings/household) decide si los niños pueden crear y cambiar sus citas. Eliminar las de otra persona sigue reservado a los padres.
+El grupo [Ajustes → Calendario y colegio](/es/settings/household) decide si los niños pueden crear y cambiar sus citas. Eliminar las de otra persona sigue reservado a los padres. Lo que ven los niños se explica en [Tableta infantil](/es/guide/wall#kids-switches): sus propias citas de hoy y de los tres días siguientes, o solo hoy si **Calendario para los niños** está desactivado.
 
 ## Enviar un evento a otra familia {#share-event}
 

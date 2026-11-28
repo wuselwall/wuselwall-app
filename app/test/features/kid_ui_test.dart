@@ -20,23 +20,25 @@ const _papa = 'p-papa';
 
 /// The shared kid iPad's household: two children and a guardian, in that order.
 final _kidMembers = [
-  const Member(
+  Member(
     id: _emma,
     displayName: 'Emma',
     color: Color(0xFFB5306B),
     role: Role.member,
     active: true,
     isChild: true,
+    birthday: olderChildBirthday(),
   ),
-  const Member(
+  Member(
     id: _paul,
     displayName: 'Paul',
     color: Color(0xFF2E7D6B),
     role: Role.member,
     active: true,
     isChild: true,
+    birthday: olderChildBirthday(),
   ),
-  const Member(
+  Member(
     id: _papa,
     displayName: 'Papa',
     color: Color(0xFF1D4E89),
@@ -75,7 +77,7 @@ class _BirthdayIdentity extends _KidIdentity {
         role: emma.role,
         active: true,
         isChild: true,
-        birthday: DateTime(now.year - 8, now.month, now.day),
+        birthday: DateTime(now.year - 13, now.month, now.day),
       ),
       ..._kidMembers.skip(1),
     ]);

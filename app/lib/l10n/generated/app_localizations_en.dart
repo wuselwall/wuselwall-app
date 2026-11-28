@@ -813,6 +813,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardBackToWeek => 'Back to the week';
 
   @override
+  String get boardShoppingAskAdult =>
+      'The shopping list is for the grown-ups. Tap your name.';
+
+  @override
   String get boardTentative => 'not certain yet';
 
   @override
@@ -1234,6 +1238,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarToday => 'Today';
+
+  @override
+  String get calendarChildDays => 'Today and the next three days';
 
   @override
   String calendarRange(String from, String to) {
@@ -2787,6 +2794,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidWhoAreYou => 'Hi! Tap your name.';
+
+  @override
+  String get kidSimpleBack => 'Back';
+
+  @override
+  String get kidSimpleTomorrow => 'Tomorrow';
+
+  @override
+  String get kidSimpleAppointments => 'My appointments';
+
+  @override
+  String get kidSimpleNoSchool => 'No school.';
+
+  @override
+  String kidSimpleNeeds(String items) {
+    return 'You need: $items';
+  }
+
+  @override
+  String get kidSimpleNothing => 'Nothing is planned yet.';
 
   @override
   String kidGreeting(String name) {
@@ -5529,12 +5556,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your country\'s flag on the hill on its national day, such as 1 August in Switzerland. The country comes from your region.';
 
   @override
-  String get settingHouseholdKidShoppingTitle =>
-      'Shopping in the children\'s view';
+  String get settingHouseholdKidShoppingTitle => 'Shopping for children';
 
   @override
   String get settingHouseholdKidShoppingHelp =>
-      'Adds the Shopping tab to the children\'s view, where they add and tick items. On the wall display they can add items either way.';
+      'Children add and tick items on the shopping list. Off: children have no shopping list, and on the tablet for everyone and the wall display it opens only once an adult has tapped their name.';
+
+  @override
+  String get settingHouseholdKidCalendarTitle => 'Calendar for children';
+
+  @override
+  String get settingHouseholdKidCalendarHelp =>
+      'Children see their own appointments for today and the next three days. Off: only today. Until an adult taps their name, the tablet for everyone then has no Calendar tab.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Start looking forward';

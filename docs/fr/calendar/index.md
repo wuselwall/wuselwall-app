@@ -122,7 +122,7 @@ Vous travaillez habituellement au bureau le mardi. Enregistrez-le une fois dans 
 
 ## Les enfants {#children-and-appointments}
 
-Le groupe [Paramètres → Calendrier et école](/fr/settings/household) détermine si les enfants peuvent créer et modifier leurs rendez-vous. Supprimer le rendez-vous d’une autre personne reste réservé aux parents.
+Le groupe [Paramètres → Calendrier et école](/fr/settings/household) détermine si les enfants peuvent créer et modifier leurs rendez-vous. Supprimer le rendez-vous d’une autre personne reste réservé aux parents. Ce que voient les enfants est décrit sous [Tablette des enfants](/fr/guide/wall#kids-switches) : leurs propres rendez-vous d’aujourd’hui et des trois jours suivants, ou seulement aujourd’hui si **Calendrier pour les enfants** est désactivé.
 
 ## Envoyer un événement à une autre famille {#share-event}
 

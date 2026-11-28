@@ -16,6 +16,7 @@ import 'package:wuselwall/features/calendar/ui/calendar_month.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/kid/application/child_view.dart';
 
 /// The calendar tab's body: the grid for the chosen mode. The home page owns the app
 /// bar (its toolbar is [CalendarToolbar]), so this has no Scaffold of its own.
@@ -49,6 +50,16 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final clearance = calendarFabClearance(
       traditions: CalendarFab.showsTradition(context, ref),
     );
+    // A child has one calendar: their own appointments, today and the next three
+    // days, with no way to another day or to anyone else's (specs/09).
+    final child = ref.watch(childCalendarProvider);
+    if (child != null) {
+      return _grid(
+        CalendarView(mode: CalendarMode.nextDays, anchor: child.from),
+        clearance,
+        onlyOf: child.id,
+      );
+    }
     // A swipe is the toolbar's previous and next (specs/09 "Gestures").
     return SwipeStepper(
       onPrevious: nav.previous,
@@ -59,7 +70,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     );
   }
 
-  Widget _grid(CalendarView view, double clearance) {
+  Widget _grid(CalendarView view, double clearance, {String? onlyOf}) {
     final window = (from: view.from, to: view.to);
     final occurrences = ref.watch(occurrencesProvider(window));
     final members = ref.watch(membersProvider).value ?? const <Member>[];
@@ -72,7 +83,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
       onRetry: () => ref.invalidate(occurrencesProvider(window)),
       data: (data) => CalendarBoard(
         view: view,
-        window: data,
+        window: onlyOf == null ? data : occurrencesOfChild(data, onlyOf),
         members: members,
         now: now,
         bottomClearance: clearance,
@@ -96,6 +107,18 @@ class CalendarToolbar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    // A child's calendar has nothing to choose: the bar only says what it shows.
+    if (ref.watch(childCalendarProvider) != null) {
+      return Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          l10n.calendarChildDays,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+      );
+    }
     final view = ref.watch(calendarViewProvider);
     final nav = ref.read(calendarViewProvider.notifier);
     // The calendar's way into the search (FR-10.2): for appointments where the server
@@ -164,7 +187,8 @@ class CalendarToolbar extends ConsumerWidget {
           initialValue: view.mode,
           icon: Icon(switch (view.mode) {
             CalendarMode.day => Icons.view_day_outlined,
-            CalendarMode.threeDays => Icons.view_column_outlined,
+            CalendarMode.threeDays ||
+            CalendarMode.nextDays => Icons.view_column_outlined,
             CalendarMode.week => Icons.view_week_outlined,
             CalendarMode.month => Icons.calendar_view_month_outlined,
           }),

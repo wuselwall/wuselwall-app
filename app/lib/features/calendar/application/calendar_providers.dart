@@ -14,6 +14,10 @@ enum CalendarMode {
   threeDays(3),
   week(7),
 
+  /// Today and the next three days: a child's whole calendar (specs/09 "What a child
+  /// sees"). Never offered in the toolbar; a child has no other mode.
+  nextDays(4),
+
   /// The read-only month overview: six weeks from the Monday on or before the first
   /// of the month, so every month fits the same grid.
   month(42);

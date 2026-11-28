@@ -434,6 +434,7 @@
   "boardShoppingList": "Liste de courses",
   "boardNightMode": "Vue de nuit",
   "boardBackToWeek": "Revenir à la semaine",
+  "boardShoppingAskAdult": "La liste de courses est pour les grands. Appuie sur ton prénom.",
   "boardTentative": "pas encore confirmé",
   "boardNoAppointments": "Aucun rendez-vous",
   "boardSchool": "École",
@@ -656,6 +657,7 @@
   "@calendarNext": {},
   "calendarChooseView": "Vue du calendrier",
   "calendarToday": "Aujourd’hui",
+  "calendarChildDays": "Aujourd’hui et les trois jours suivants",
   "@calendarToday": {},
   "calendarRange": "{from} – {to}",
   "@calendarRange": {
@@ -1483,6 +1485,19 @@
   "kidTabShopping": "Courses",
   "kidTabFamily": "Famille",
   "kidWhoAreYou": "Salut ! Appuie sur ton prénom.",
+  "kidSimpleBack": "Retour",
+  "kidSimpleTomorrow": "Demain",
+  "kidSimpleAppointments": "Mes rendez-vous",
+  "kidSimpleNoSchool": "Pas d’école.",
+  "kidSimpleNeeds": "Tu auras besoin de : {items}",
+  "@kidSimpleNeeds": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "kidSimpleNothing": "Rien n’est encore prévu.",
   "kidGreeting": "Salut, {name} !",
   "@kidGreeting": {
     "placeholders": {
@@ -2915,8 +2930,10 @@
   "settingAmbienceStNicholasHelp": "Une botte remplie le 6 décembre (le 5 aux Pays-Bas).",
   "settingAmbienceNationalDayTitle": "Fête nationale",
   "settingAmbienceNationalDayHelp": "Le drapeau de votre pays sur la colline le jour de sa fête nationale, par exemple le 1er août en Suisse. Le pays vient de votre région.",
-  "settingHouseholdKidShoppingTitle": "Courses dans la vue des enfants",
-  "settingHouseholdKidShoppingHelp": "Ajoute l’onglet Courses à la vue des enfants, où ils ajoutent et cochent des articles. Sur l’écran mural, ils peuvent en ajouter dans tous les cas.",
+  "settingHouseholdKidShoppingTitle": "Courses pour les enfants",
+  "settingHouseholdKidShoppingHelp": "Les enfants ajoutent et cochent des articles sur la liste de courses. Désactivé : les enfants n’ont pas de liste de courses, et sur la tablette commune et l’écran mural elle ne s’ouvre qu’une fois qu’un adulte a appuyé sur son prénom.",
+  "settingHouseholdKidCalendarTitle": "Calendrier pour les enfants",
+  "settingHouseholdKidCalendarHelp": "Les enfants voient leurs propres rendez-vous d’aujourd’hui et des trois jours suivants. Désactivé : seulement aujourd’hui. La tablette commune n’a alors pas d’onglet Calendrier tant qu’un adulte n’a pas appuyé sur son prénom.",
   "settingRitualsCountdownDaysTitle": "Le compte à rebours commence",
   "settingRitualsCountdownDaysHelp": "Combien de jours avant un anniversaire, les vacances ou un évènement marqué le compte à rebours apparaît.",
   "settingRitualsCountdownReturnTitle": "Compte à rebours avant un retour",

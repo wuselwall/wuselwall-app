@@ -168,6 +168,7 @@ const settingsGroupSections = <SettingsGroup, List<SettingsSection>>{
       SettingTileItem(SettingsTile.members),
       SettingTileItem(SettingsTile.baselines),
       SettingKey('household.kid_shopping'),
+      SettingKey('household.kid_calendar'),
     ]),
   ],
   SettingsGroup.tasks: [
@@ -304,6 +305,7 @@ const unusedSettingKeys = {
 const basicSettingKeys = {
   'household.region',
   'household.kid_shopping',
+  'household.kid_calendar',
   'tasks.jokers_per_month',
   'tasks.reward_approval_default',
   'calendar.members_edit_own_events',

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
-import 'package:wuselwall/features/board/application/board_providers.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_bands.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -12,6 +12,10 @@ import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/board_details.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 
 /// Zone "Wer ist wo": one equal-height row per member, in household order. Children
 /// show their school span; adults show their usual week quietly and their deviations
@@ -47,10 +51,36 @@ class _MemberRow extends ConsumerWidget {
     final nowMinutes = ref.watch(
       nowProvider.select((now) => now.hour * 60 + now.minute),
     );
-    return _build(context, nowMinutes);
+    // A child under twelve has no week sheet of their own: their name opens their
+    // simple view, which takes the wall until they leave it (specs/09 "The simple
+    // view"). For an adult who has chosen their name it stays the timetable, where
+    // they note what the child has to bring (specs/15).
+    final acting = ref.watch(actingMemberProvider);
+    final adultHere = acting != null && !acting.isChild;
+    final members = ref.watch(membersProvider).value ?? const <Member>[];
+    final young =
+        members
+            .where((m) => m.id == member.id)
+            .firstOrNull
+            ?.isYoungChildOn(ref.watch(todayProvider)) ??
+        false;
+    return _build(
+      context,
+      nowMinutes,
+      openSimpleView: young && !adultHere
+          ? () {
+              guardianStepDown(ref);
+              ref.read(actingProfileProvider.notifier).select(member.id);
+            }
+          : null,
+    );
   }
 
-  Widget _build(BuildContext context, int nowMinutes) => LayoutBuilder(
+  Widget _build(
+    BuildContext context,
+    int nowMinutes, {
+    VoidCallback? openSimpleView,
+  }) => LayoutBuilder(
     builder: (context, constraints) {
       final board = frame.board;
       final rowHeight = constraints.maxHeight;
@@ -65,6 +95,7 @@ class _MemberRow extends ConsumerWidget {
       final name = context.memberName(board, member);
 
       void openWeek() {
+        if (openSimpleView != null) return openSimpleView();
         unawaited(
           member.isChild
               ? openChildWeek(context, board, member.id)

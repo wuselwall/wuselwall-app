@@ -5,8 +5,10 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
@@ -141,9 +143,34 @@ final isEnrolledProvider = Provider<bool>(
   (ref) => ref.watch(deviceProvider).value != null,
 );
 
-/// The register comes from the device record; adult until a device is known.
-final uiRegisterProvider = Provider<UiRegister>(
+/// The register of the device record; adult until a device is known. What the device
+/// is (a wall stays a wall); what it shows now says [uiRegisterProvider].
+final deviceRegisterProvider = Provider<UiRegister>(
   (ref) => ref.watch(deviceProvider).value?.register ?? UiRegister.adult,
+);
+
+/// The person acting at this device, once the members are known; null for nobody.
+final actingMemberProvider = Provider<Member?>((ref) {
+  final acting = ref.watch(actingProfileProvider);
+  if (acting == null) return null;
+  final members = ref.watch(membersProvider).value ?? const <Member>[];
+  return members.where((m) => m.id == acting).firstOrNull;
+});
+
+/// Whether a child under twelve is acting (specs/09 "The simple view").
+final youngChildActingProvider = Provider<bool>((ref) {
+  final member = ref.watch(actingMemberProvider);
+  if (member == null || !member.isChild) return false;
+  return member.isYoungChildOn(ref.watch(todayProvider));
+});
+
+/// The register on screen: the device's, except that a child under twelve always gets
+/// the kid register, on the wall and on the tablet for everyone too, where it shows
+/// their simple view (specs/09 "The simple view").
+final uiRegisterProvider = Provider<UiRegister>(
+  (ref) => ref.watch(youngChildActingProvider)
+      ? UiRegister.kid
+      : ref.watch(deviceRegisterProvider),
 );
 
 /// Identity of the device without the volatile parts, so dependants do not reset when

@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
+import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/kid/application/child_view.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
-import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 
 /// The destinations of the kid register (specs/09 "Screens by register"); which of them a
 /// family has says [kidTabsProvider].
@@ -25,14 +26,7 @@ enum KidTab {
 /// so does a device that cannot read the settings, as a child only adds and ticks there.
 /// While they load the tab waits, so a family without it never sees it come and go.
 final kidTabsProvider = Provider<List<KidTab>>((ref) {
-  final settings = ref.watch(householdSettingsProvider);
-  final entries = settings.value;
-  final shopping = entries == null
-      ? settings.hasError
-      : switch (resolveSetting(entries, 'household.kid_shopping')) {
-          null => true,
-          final entry => entry.value == true,
-        };
+  final shopping = ref.watch(childSwitchProvider(kidShoppingKey));
   return [
     for (final tab in KidTab.values)
       if (tab != KidTab.shopping || shopping) tab,
@@ -73,6 +67,22 @@ final kidTodayProvider = Provider<DateTime>(
 /// Minutes since midnight, changing once a minute: drives the "current lesson".
 final kidMinutesProvider = Provider<int>(
   (ref) => ref.watch(nowProvider.select((now) => now.hour * 60 + now.minute)),
+);
+
+/// The warm meals of [day] (local midnight): from the week board while the day is in
+/// its week, else from the board of the day's own week, which a child's look ahead
+/// reaches on a Friday. Empty while that board loads or when it cannot be read.
+final kidMealsProvider = Provider.autoDispose.family<List<BoardMeal>, DateTime>(
+  (ref, day) {
+    List<BoardMeal>? on(WeekBoard? board) =>
+        board?.days.where((d) => d.date == day).firstOrNull?.meals;
+    final board = ref.watch(boardProvider).board;
+    if (board == null) return const [];
+    final here = on(board);
+    if (here != null) return here;
+    final monday = DateTime(day.year, day.month, day.day - (day.weekday - 1));
+    return on(ref.watch(boardWeekProvider(monday)).value) ?? const [];
+  },
 );
 
 /// A child's badges (earned and unearned). Refetched on the `tasks` topic, with the

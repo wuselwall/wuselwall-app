@@ -141,7 +141,9 @@ LighterDay resolveLighterDay({
 final lighterDayProvider = Provider.autoDispose<LighterDay>((ref) {
   final entries =
       ref.watch(householdSettingsProvider).value ?? const <SettingEntry>[];
-  final register = ref.watch(uiRegisterProvider);
+  // The device's own register: its sounds and pixel shift do not change with who
+  // is at it (a child under twelve turns the wall into the kid register).
+  final register = ref.watch(deviceRegisterProvider);
   final deviceId = ref.watch(deviceProvider).value?.deviceId;
   final actingId = ref.watch(actingProfileProvider);
   final members = ref.watch(membersProvider).value ?? const <Member>[];

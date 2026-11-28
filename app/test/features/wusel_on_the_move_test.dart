@@ -15,7 +15,7 @@ import '../support/fakes.dart';
 
 const _emma = 'p-emma';
 
-const _members = [
+final _members = [
   Member(
     id: _emma,
     displayName: 'Emma',
@@ -23,6 +23,7 @@ const _members = [
     role: Role.member,
     active: true,
     isChild: true,
+    birthday: olderChildBirthday(),
   ),
   Member(
     id: 'p-papa',

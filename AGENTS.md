@@ -158,6 +158,14 @@ are separate accessible controls. The original full Chromium capture passed all 
 cases; current qualification still keeps genuinely undersized and nested controls blocking.
 Its refusal fixture now has no events (multiple events can go into a trip), and browser
 readiness requires the exact refusal text/title plus only the localized Close action.
+The simple view (2026-11-28, issue #298, [specs/09](specs/09-clients-and-ux.md) "The simple
+view" and "What a child sees", FR-5.21/5.22): a child under twelve, or without a birthday, gets
+`KidSimpleHome` on every device once chosen (the wall and the tablet for everyone turn into the kid
+register for them: `uiRegisterProvider` is the register on screen, `deviceRegisterProvider` the
+device's own); every child sees only their own appointments for today and the next three days;
+`household.kid_shopping` and the new `household.kid_calendar` (migration
+`20261128100000_kid_calendar.sql`, on by default, a server without the row counts as on) also apply
+to a shared device with nobody chosen (`features/kid/application/child_view.dart`).
 A restart without network (step 10.6, issue #128, 2026-11-10): reads given a `cacheKey` in
 `ApiClient` keep their last good JSON answer in a second drift database
 (`app/lib/core/cache/`, ADR-006's read cache) and fall back to it on a network failure only:

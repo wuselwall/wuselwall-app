@@ -54,7 +54,7 @@ Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitgliede
 | | Darf |
 |---|---|
 | **Eltern** | alles: Personen hinzufügen, Geräte verbinden und sperren, Sicherheit einstellen |
-| **Weitere Erwachsene** (zum Beispiel Au-pair oder Großeltern) und **Kinder** | die Einkaufsliste benutzen: Artikel hinzufügen, abhaken, Einkauf beenden |
+| **Weitere Erwachsene** (zum Beispiel Au-pair oder Großeltern) und **Kinder** | die Einkaufsliste benutzen: Artikel hinzufügen, abhaken, Einkauf beenden. Für Kinder gilt das nur, wo die Familie **Einkaufen für Kinder** eingeschaltet hat |
 
 ## Drei Arten von Geräten
 

@@ -125,7 +125,7 @@ Du arbeitest normalerweise dienstags im Büro. Trage das einmal in der **üblich
 
 ## Kinder und Termine
 
-Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest. Fremde Termine löschen bleibt Sache der Eltern.
+Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest. Fremde Termine löschen bleibt Sache der Eltern. Welche Termine Kinder sehen, steht unter [Kinder-Tablet](/guide/wall#kids-switches): ihre eigenen, für heute und die nächsten drei Tage, oder mit **Kalender für Kinder** aus nur für heute.
 
 ## Einen Termin an eine andere Familie senden {#share-event}
 

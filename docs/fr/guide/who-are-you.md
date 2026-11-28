@@ -8,6 +8,16 @@ Sans prénom sélectionné, aucune modification n’est possible. Sur l’écran
 
 Une fois votre prénom touché, les prénoms laissent la place à la page. En bas à droite s’affiche alors **votre prénom avec une porte**. Touchez-le quand vous avez **terminé** : l’appareil n’appartient de nouveau à personne et pose la question à la personne suivante.
 
+## Ce que voient les enfants {#what-children-see}
+
+Quand un **enfant de moins de 12 ans** touche son prénom, sa **vue simple** s’ouvre sur chaque appareil partagé : une page sans onglets, avec seulement ses propres affaires (voir [Tablette des enfants](/fr/guide/wall#simple-view)). En bas à droite, **son prénom avec une porte** passe l’appareil à quelqu’un d’autre quand il a terminé. Un enfant de 12 ans et plus garde ses onglets sur la tablette des enfants, et sur la tablette pour tous les onglets des adultes, sans **Calendrier** ni **Courses** là où ils sont désactivés pour les enfants.
+
+Tant que personne n’a touché son prénom, une **tablette pour tous** montre les onglets qu’un enfant peut voir, car un enfant peut se trouver devant. **Courses** et **Calendrier** manquent alors partout où les parents les ont désactivés pour les enfants dans [Paramètres → Famille](/fr/settings/household#the-areas) (**Courses pour les enfants**, **Calendrier pour les enfants**). Dès qu’un adulte touche son prénom, tout est de retour.
+
+<Shot name="tablet-nobody" alt="Tablette pour tous sans personne de choisi et avec les courses désactivées pour les enfants : cinq onglets, la rangée des prénoms en bas" wide />
+
+Les prénoms sont un accord, pas une serrure : si un enfant touche le prénom d’un parent, il voit la vue de ce parent. Les actions de parents qui comptent demandent toujours le PIN (voir la section sur le PIN plus bas).
+
 ## Les paramètres sur la tablette et au mur {#settings-on-shared-devices}
 
 Sur une **tablette pour tous**, la roue dentée des **Paramètres** n’apparaît que lorsque quelqu’un a touché son prénom. Ce que vous y trouvez dépend de qui vous êtes :

@@ -105,6 +105,8 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 | FR-5.18 | The guardian PIN is asked for when the first shared or kiosk device is connected, not during household creation | M | D |
 | FR-5.19 | The store app has **no default server**: a household's server is chosen by an invitation or pairing link, the server's QR code or its typed address (discovery via `/.well-known/wuselwall.json`), and a demo mode works without one. Passkeys are offered only by a build that names its own server; the project runs no server (amended 2026-10-21) | M | user 2026-10-13, [ADR-018](adr/ADR-018-self-hosted-only.md) (was: Cloud by default, ADR-015) |
 | FR-5.20 | Every household-specific behaviour is a **setting with a curated default**: guardians change it in Einstellungen, see whether it still is the default, and reset it; household creation asks nothing beyond [20, J1](20-onboarding.md#j1--start-a-family), and its starter examples are the curated starter content ([21](21-household-settings.md)) | M | late, 2026-10-11 |
+| FR-5.21 | A child under twelve (a child without a birthday counts as one) has a **simple view** on every device once chosen: one page without tabs, with only their own chores, school, appointments and the meal | M | user 2026-11-28, #298 |
+| FR-5.22 | A child sees today and the next three days, never more. Guardians can switch the shopping list and this look ahead off for children; both switches also apply on a shared device while nobody is chosen | M | user 2026-11-28, #298 |
 
 ## FR-6 Assistant Integration (B4)
 

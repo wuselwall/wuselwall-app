@@ -81,17 +81,34 @@ final testMembers = [
     role: Role.guardian,
     active: true,
   ),
-  // A child has no account of their own (ADR-014).
-  const Member(
+  // A child has no account of their own (ADR-014). Thirteen, so she keeps the
+  // registers these tests are about; the simple view of a child under twelve has
+  // its own tests (kid_simple_view_test.dart).
+  Member(
     id: kidId,
     displayName: 'Anna',
-    color: Color(0xFFFF8800),
+    color: const Color(0xFFFF8800),
     role: Role.member,
     active: true,
     isChild: true,
     hasAccount: false,
+    birthday: olderChildBirthday(),
   ),
 ];
+
+/// A birthday that makes a fixture child thirteen, with the day itself half a year
+/// away, so no test meets a birthday or its countdown by the calendar. A child without
+/// a birthday counts as under twelve and gets the simple view (specs/09).
+DateTime olderChildBirthday() {
+  final now = DateTime.now();
+  return DateTime(now.year - 14, now.month + 6, now.day);
+}
+
+/// The same for a fixture child of eight: the simple view.
+DateTime youngChildBirthday() {
+  final now = DateTime.now();
+  return DateTime(now.year - 9, now.month + 6, now.day);
+}
 
 DeviceInfo device({
   DeviceClass deviceClass = DeviceClass.personal,

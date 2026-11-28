@@ -105,7 +105,8 @@ belongs to; *self* means a member may change it for themselves.
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
 | `household.region` | household | asked with the first school, country from the device | region picker: any OpenHolidays subdivision (`DE-BE`, `AT-NÖ`, `CH-ZH-ZH-ZH`, `LI`) | Proposes the timezone; the public holidays of the region apply automatically, and Ferien are imported from it. Changeable under Einstellungen. Hand-entered holidays work in any region. *Decided 2026-10-14* | Q18 |
-| `household.kid_shopping` | household | off (on for families that existed on 2026-11-04) | on · off | Whether the kid register has the Shopping tab. Off so that a child's bar and day stay about the child; a family whose children do help with the list switches it on | [09](09-clients-and-ux.md#screens-by-register) |
+| `household.kid_shopping` | household | off (on for families that existed on 2026-11-04) | on · off | Whether children have the shopping list: the kid register's tab, the simple view's card, and, on the tablet for everyone and the wall, the list while nobody or a child is chosen. Off so that a child's bar and day stay about the child; a family whose children do help with the list switches it on | [09](09-clients-and-ux.md#screens-by-register) |
+| `household.kid_calendar` | household | on | on · off | Whether children look ahead: their own appointments for today and the next three days. Off: only today, and the tablet for everyone has no Calendar tab while nobody or a child is chosen. On by default: the look ahead is the child's own plan. *Decided 2026-11-28* | [09](09-clients-and-ux.md#screens-by-register) |
 | `board.member_label` | household | full name | name · initial | The kitchen is private, and a name is easier to read than an initial at two metres. A household with frequent visitors may prefer initials | Q27 |
 | `member.completion_sound` | member, self | on | on · off | Ticking a chore off makes a short sound. The sound is part of the motivation for a young child; a child may switch it off | [06](06-module-tasks.md#screens) |
 
@@ -229,9 +230,10 @@ Turning any of these on is one deliberate checkbox on that token
 - **Baumarkt:** Werkzeug, Elektro, Garten, Farbe.
 
 Lists can be renamed, added and removed, and any of them can become the default.
-Children may add items (Q30) and the wall may add items by tile (Q33); both are design
-rules, not settings. Whether the kid register has a Shopping tab for it is
-`household.kid_shopping` ([09](09-clients-and-ux.md#screens-by-register)).
+The wall may add items by tile (Q33): a design rule, not a setting. Whether children may
+(Q30) is `household.kid_shopping`, which since 2026-11-28 covers the kid register, the
+simple view and a shared device with nobody chosen
+([09](09-clients-and-ux.md#screens-by-register)).
 
 ### The kitchen display
 
@@ -299,7 +301,7 @@ a test checks that every key with a title is placed in exactly one group.
 | Group | Holds |
 |---|---|
 | Personal (someone must be acting) | Wusel: `member.wusel`, `member.wusel_outfit` · `member.completion_sound` · Notifications (personal phone only): Reminders on this phone, `notify.morning_summary`, `notify.event_reminder`, `notify.packing_reminder`, `notify.shopping_start`, `calendar.tentative_nudge` |
-| Family | family profile (name, time zone, export, delete) · `household.region` · Members (reorder, add, invite) · usual week · `household.kid_shopping` |
+| Family | family profile (name, time zone, export, delete) · `household.region` · Members (reorder, add, invite) · usual week · `household.kid_shopping` · `household.kid_calendar` |
 | Tasks and rewards | `tasks.*` |
 | Calendar and school | `calendar.members_edit_own_events`, `calendar.key_default`, `school.*` · Connections (Advanced): calendar feeds, subscribed calendars |
 | Meals | `meals.*`, including the wishes |

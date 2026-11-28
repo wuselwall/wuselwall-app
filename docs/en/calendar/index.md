@@ -125,7 +125,7 @@ You normally work in the office on Tuesdays. Set that once in your **usual week*
 
 ## Children and appointments
 
-You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the parents.
+You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the parents. What children see is described under [Children's tablet](/en/guide/wall#kids-switches): their own appointments for today and the next three days, or only today with **Calendar for children** off.
 
 ## Sending an appointment to another family {#share-event}
 

@@ -6,7 +6,7 @@ Pour tous :
 
 - **Un rituel n’est jamais une corvée.** Il ne rapporte pas de points, n’a pas de série et ne peut pas être « manqué ». Si vous le sautez, rien n’en garde la trace.
 - **Personne n’est comparé.** Rien ne compte une personne contre une autre.
-- **Pas de notifications.** Les rituels apparaissent là où vous regardez déjà : sur le mur, dans **Aujourd’hui** et dans **Ma journée** des enfants.
+- **Pas de notifications.** Les rituels apparaissent là où vous regardez déjà : sur le mur, dans **Aujourd’hui** et dans la vue des enfants (dans **Ma journée** pour les enfants de 12 ans et plus).
 - **Tout se désactive**, chacun séparément, dans **Paramètres → Rituels** (voir [Tous les paramètres](/fr/settings/household#rituals)). Au départ, tout est activé.
 
 <Shot name="wall-board" alt="L’écran mural avec Wusel dans l’en-tête, une tradition familiale le vendredi, un repas souhaité avec une étoile et le compte à rebours d’un anniversaire en pied de page" wide />
@@ -31,7 +31,7 @@ Dans un [abonnement au calendrier familial](/fr/calendar/feeds), chaque annivers
 - tout événement pour lequel **On a hâte** est activé dans l’éditeur, comme une sortie au zoo (voir [Calendrier](/fr/calendar/#creating-an-appointment))
 - un **voyage décidé** (voir [Voyages](/fr/trips/#from-idea-to-fixed))
 
-Il s’affiche sur le **mur** en pied de page (autant qu’il en tient), dans **Ma journée** sous **Ce qui m’attend** (les comptes à rebours de l’enfant et ceux de toute la famille) et dans **Aujourd’hui** sur une ligne avec le plus proche.
+Il s’affiche sur le **mur** en pied de page (autant qu’il en tient), pour les enfants de 12 ans et plus dans **Ma journée** sous **Ce qui m’attend** (les comptes à rebours de l’enfant et ceux de toute la famille) et dans **Aujourd’hui** sur une ligne avec le plus proche.
 
 Les enfants et le mur comptent en nuits jusqu’à une semaine avant (« encore 3 dodos »), en jours avant cela (« encore 9 jours »). Les adultes lisent « dans 3 jours ». La veille affiche **Demain !**, le jour même **Aujourd’hui !**, et Wusel fait signe en haut du mur. Puis le compte à rebours disparaît.
 
@@ -49,12 +49,12 @@ Si une tradition n’a pas lieu une semaine, supprimez **Cet événement uniquem
 
 Chaque enfant peut souhaiter un repas ; vous décidez combien de souhaits peuvent attendre à la fois (un par défaut). Les enfants ont ainsi leur mot à dire sur les menus.
 
-- **Dans Ma journée**, la carte **Ton repas préféré** s’affiche. **Choisir** ouvre le choix : d’abord **Les favoris de la famille**, les repas que vous avez le plus cuisinés ces derniers temps, puis **Nos recettes**, chacune avec son image (avec beaucoup de recettes, **Chercher une recette** aide), et en bas **Autre chose** en quelques mots, comme « des crêpes », avec une image (**Choisis une image**). Avec **Je choisis ça**, le souhait est parti. Tant qu’il n’est pas planifié, il peut être **changé**.
+- Dans la vue des enfants, la carte **Ton repas préféré** s’affiche dans **Aujourd’hui** (dans **Ma journée** pour les enfants de 12 ans et plus). **Choisir** ouvre le choix : d’abord **Les favoris de la famille**, les repas que vous avez le plus cuisinés ces derniers temps, puis **Nos recettes**, chacune avec son image (avec beaucoup de recettes, **Chercher une recette** aide), et en bas **Autre chose** en quelques mots, comme « des crêpes », avec une image (**Choisis une image**). Avec **Je choisis ça**, le souhait est parti. Tant qu’il n’est pas planifié, il peut être **changé**.
 - **Les parents** voient les souhaits en haut des [menus](/fr/meals/#wishes) sous **Souhaits**, chacun avec son image, et dans une carte discrète dans **Aujourd’hui**. Touchez un souhait, choisissez un jour et un repas : il est planifié.
 - **Quand tout le monde peut souhaiter**, les adultes font aussi leur souhait dans les menus : **Faire un souhait** dans la ligne **Souhaits** ouvre le même choix, **Changer mon souhait** change celui en attente.
 - **Une fois planifié**, le repas porte une étoile et « Souhait de Paul » dans les menus et sur le mur. La carte de l’enfant indique alors, par exemple : « Ton souhait Crêpes, c’est pour le jeudi ! ».
 
-<Shot name="kid-wish" alt="Ma journée sur la tablette des enfants avec la carte Ton repas préféré" wide />
+<Shot name="kid-wish" alt="La vue simple d’un enfant avec la carte Ton repas préféré" wide />
 
 L’appli ne **refuse jamais** un souhait. Un souhait non planifié attend, tout simplement, la semaine suivante avec la mention **de la semaine dernière**. Au bout de quatre semaines, un souhait jamais planifié quitte discrètement la liste et ne compte plus ; l’enfant peut simplement en faire un nouveau. Les parents peuvent retirer un souhait ; le pourquoi se discute en famille.
 
@@ -64,7 +64,7 @@ L’appli ne **refuse jamais** un souhait. Un souhait non planifié attend, tout
 
 Une question pour discuter à table, à laquelle on répond à voix haute. Rien n’est enregistré : ni qui a répondu, ni quoi, ni même si la question a été posée.
 
-La question apparaît pendant le repas : en haut de l’en-tête du mur, dans **Ma journée** et dans **Aujourd’hui**. Tous les appareils montrent la même question, et aucune ne revient avant que les autres soient passées.
+La question apparaît pendant le repas : en haut de l’en-tête du mur, dans la vue des enfants et dans **Aujourd’hui**. Tous les appareils montrent la même question, et aucune ne revient avant que les autres soient passées.
 
 - **Autre question** montre la suivante, mais seulement sur cet appareil. Dites simplement « prends la suivante ».
 - Pour une devinette, **Voir la réponse** donne la solution.
@@ -73,7 +73,7 @@ La question apparaît pendant le repas : en haut de l’en-tête du mur, dans **
 
 Réglages : **Question à table** s’applique au **Repas chaud** (par défaut), au **Déjeuner et dîner**, ou est **Désactivé**. **Question au déjeuner** et **Question au dîner** fixent les horaires ; aucun repas n’a besoin d’être planifié. Par défaut, ils suivent le pays de votre région : 11 h 30 à 13 h 30 et 17 h 30 à 19 h 30, en France 19 h à 21 h pour le dîner, en Espagne 13 h 30 à 15 h 30 et 20 h à 22 h. **Limite d’âge**, désactivée par défaut, masque les questions à partir d’un âge choisi.
 
-Les questions suivent l’âge des enfants, d’après leur anniversaire. Deux enfants qui ont 5 ans d’écart ou plus reçoivent chacun leur question : côte à côte sur le mur, une carte chacun dans **Aujourd’hui**, et dans **Ma journée** seulement la question de l’âge de l’enfant. Sans aucun anniversaire, les questions conviennent aux enfants de 5 à 7 ans.
+Les questions suivent l’âge des enfants, d’après leur anniversaire. Deux enfants qui ont 5 ans d’écart ou plus reçoivent chacun leur question : côte à côte sur le mur, une carte chacun dans **Aujourd’hui**, et dans la vue de l’enfant seulement la question de son âge. Sans aucun anniversaire, les questions conviennent aux enfants de 5 à 7 ans.
 
 ::: info Langues
 Chaque appareil affiche les questions dans sa langue : environ 150 en allemand et en anglais, environ 50 en français et en espagnol.
@@ -81,7 +81,7 @@ Chaque appareil affiche les questions dans sa langue : environ 150 en allemand e
 
 ## Notre semaine {#week-review}
 
-Le dimanche, vous regardez ensemble **Notre semaine** : ce que *nous* avons fait. Du dimanche 16 h au lundi 10 h, une carte s’affiche dans **Aujourd’hui** et **Ma journée**, et une tuile dans le pied de page du mur. Un toucher ouvre une histoire de cinq cartes au plus, une à la fois, en plein écran :
+Le dimanche, vous regardez ensemble **Notre semaine** : ce que *nous* avons fait. Du dimanche 16 h au lundi 10 h, une carte s’affiche dans **Aujourd’hui** et dans la vue des enfants, et une tuile dans le pied de page du mur. Un toucher ouvre une histoire de cinq cartes au plus, une à la fois, en plein écran :
 
 - **Suivante** d’un toucher à droite, d’un glissement vers la gauche ou avec la touche flèche ; **précédente** d’un toucher sur le tiers gauche, d’un glissement vers la droite ou avec l’autre flèche. Les flèches en bas font de même.
 - Les traits en haut montrent combien de cartes il y a et où vous en êtes. Après la dernière carte, avec **Fermer** ou avec Échap, le récapitulatif se ferme.
